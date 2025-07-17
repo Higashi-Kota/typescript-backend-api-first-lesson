@@ -1,0 +1,29 @@
+{
+  "name": "@beauty-salon-backend/server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "clean": "rm -rf dist *.tsbuildinfo",
+    "typecheck": "tsc --noEmit",
+    "format": "biome format --write .",
+    "format:fix": "biome check . --fix --unsafe",
+    "lint": "biome lint .",
+    "lint:fix": "biome lint . --write",
+    "test": "vitest",
+    "test:ui": "vitest --ui"
+  },
+  "dependencies": {
+    "@beauty-salon-backend/api": "workspace:*",
+    "@beauty-salon-backend/config": "workspace:*",
+    "@beauty-salon-backend/infrastructure": "workspace:*",
+    "@hono/node-server": "^1.16.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.13",
+    "tsx": "^4.20.3"
+  }
+}

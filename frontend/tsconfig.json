@@ -1,0 +1,29 @@
+{
+  "extends": "@beauty-salon-shared/config/frontend.json",
+  "compilerOptions": {
+    "composite": false,
+    "noEmit": true,
+    "rootDir": ".",
+    "baseUrl": ".",
+    "types": [],
+    "paths": {
+      "@beauty-salon/ui": ["./packages/ui/src"],
+      "@beauty-salon/ui/*": ["./packages/ui/src/*"],
+      "@beauty-salon/types/*": ["./packages/types/src/*"],
+      "@beauty-salon/api-client": ["./packages/api-client/src"],
+      "@beauty-salon/api-client/*": ["./packages/api-client/src/*"]
+    }
+  },
+  "references": [
+    { "path": "./packages/types" },
+    { "path": "./packages/ui" },
+    { "path": "./packages/api-client" },
+    { "path": "./packages/utils" },
+    { "path": "./packages/assets" },
+    { "path": "./packages/config" },
+    { "path": "./packages/io" },
+    { "path": "./packages/message" },
+    { "path": "./packages/stores" },
+    { "path": "./packages/validations" }
+  ]
+}

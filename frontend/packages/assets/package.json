@@ -1,0 +1,43 @@
+{
+  "devDependencies": {
+    "@beauty-salon-shared/config": "workspace:*",
+    "@biomejs/biome": "^1.9.4",
+    "@rslib/core": "^0.10.5",
+    "@types/node": "^24.0.13",
+    "taze": "^19.1.0",
+    "tsup": "^8.5.0",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.4",
+    "vite-plugin-dts": "^4.5.4"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": ["dist"],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "name": "@beauty-salon-frontend/assets",
+  "sideEffects": false,
+  "private": true,
+  "scripts": {
+    "clean": "rm -rf dist node_modules *.tsbuildinfo",
+    "build:dev": "tsc --build && vite build --mode dev",
+    "build:test": "tsc --build && vite build --mode test",
+    "build:stg": "tsc --build && vite build --mode staging",
+    "build:prod": "tsc --build && vite build --mode production",
+    "build:watch": "tsc --build --watch & vite build --watch --mode dev",
+    "package:check": "taze",
+    "knip": "knip --include dependencies,optionalPeerDependencies,unlisted,binaries,unresolved",
+    "typecheck": "tsc --build",
+    "format": "biome format --write .",
+    "format:fix": "biome check . --fix --unsafe",
+    "dev": "vite build --watch",
+    "dev:tsc": "tsc --build --watch"
+  },
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "version": "0.0.0"
+}

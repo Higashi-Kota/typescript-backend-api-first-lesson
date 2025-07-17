@@ -1,0 +1,30 @@
+{
+  "extends": "@beauty-salon-shared/config/backend.json",
+  "compilerOptions": {
+    "composite": false,
+    "noEmit": true,
+    "rootDir": ".",
+    "baseUrl": ".",
+    "types": [],
+    "paths": {
+      "@beauty-salon/core": ["./packages/core/src"],
+      "@beauty-salon/core/*": ["./packages/core/src/*"],
+      "@beauty-salon/types/*": ["./packages/types/src/*"],
+      "@beauty-salon/infrastructure": ["./packages/infrastructure/src"],
+      "@beauty-salon/infrastructure/*": ["./packages/infrastructure/src/*"],
+      "@beauty-salon/api": ["./packages/api/src"],
+      "@beauty-salon/api/*": ["./packages/api/src/*"],
+      "@beauty-salon/config": ["./packages/config/src"],
+      "@beauty-salon/config/*": ["./packages/config/src/*"]
+    }
+  },
+  "references": [
+    { "path": "./packages/types" },
+    { "path": "./packages/config" },
+    { "path": "./packages/usecase" },
+    { "path": "./packages/infrastructure" },
+    { "path": "./packages/api" },
+    { "path": "./apps/server" },
+    { "path": "./apps/migration" }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "name": "@beauty-salon-frontend/admin-app",
+  "private": true,
+  "type": "module",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite --force --port 3002",
+    "build:dev": "vite build --mode dev",
+    "build:test": "vite build --mode test",
+    "build:stg": "vite build --mode staging",
+    "build:prod": "vite build --mode production",
+    "build:analyze": "vite build --mode analyze",
+    "preview": "vite preview --port 3002",
+    "typecheck": "tsc --build",
+    "format": "biome format --write .",
+    "format:fix": "biome check . --fix --unsafe",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "knip": "knip --include dependencies,optionalPeerDependencies,unlisted,binaries,unresolved",
+    "package:check": "taze"
+  },
+  "dependencies": {
+    "@beauty-salon-frontend/api-client": "workspace:*",
+    "@beauty-salon-frontend/types": "workspace:*",
+    "@beauty-salon-frontend/ui": "workspace:*",
+    "@tanstack/react-query": "^5.83.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router-dom": "^7.6.3",
+    "recharts": "^3.1.0"
+  },
+  "devDependencies": {
+    "@beauty-salon-shared/config": "workspace:*",
+    "@biomejs/biome": "^1.9.4",
+    "@tanstack/react-query-devtools": "^5.83.0",
+    "@types/node": "^24.0.13",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react-swc": "^3.10.2",
+    "msw": "^2.10.4",
+    "knip": "^5.61.3",
+    "rollup-plugin-visualizer": "^6.0.3",
+    "sass-embedded": "^1.89.2",
+    "taze": "^19.1.0",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.4"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "name": "@beauty-salon-backend/infrastructure",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "files": ["dist"],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./database": {
+      "import": "./dist/database/index.js",
+      "types": "./dist/database/index.d.ts"
+    },
+    "./src/database/schema": {
+      "import": "./dist/database/schema.js",
+      "types": "./dist/database/schema.d.ts"
+    },
+    "./src/test/db-test-helper": {
+      "import": "./dist/test/db-test-helper.js",
+      "types": "./dist/test/db-test-helper.d.ts"
+    },
+    "./test/db-test-helper": {
+      "import": "./dist/test/db-test-helper.js",
+      "types": "./dist/test/db-test-helper.d.ts"
+    }
+  },
+  "scripts": {
+    "clean": "rm -rf dist node_modules *.tsbuildinfo",
+    "build:dev": "NODE_ENV=development rslib build",
+    "build:test": "NODE_ENV=test rslib build",
+    "build:stg": "NODE_ENV=staging rslib build",
+    "build:prod": "NODE_ENV=production rslib build",
+    "build": "NODE_ENV=production rslib build",
+    "build:watch": "NODE_ENV=development rslib build --watch",
+    "dev": "NODE_ENV=development rslib build --watch",
+    "dev:tsc": "tsc --build --watch",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "typecheck": "tsc --build",
+    "format": "biome format --write .",
+    "format:fix": "biome check . --fix --unsafe",
+    "lint": "biome lint .",
+    "lint:fix": "biome lint . --write",
+    "knip": "knip --include dependencies,optionalPeerDependencies,unlisted,binaries,unresolved",
+    "package:check": "taze -r"
+  },
+  "dependencies": {
+    "@backend/domain": "workspace:*",
+    "@beauty-salon-backend/config": "workspace:*",
+    "@beauty-salon-backend/types": "workspace:*",
+    "drizzle-orm": "^0.44.2",
+    "postgres": "^3.4.7"
+  },
+  "devDependencies": {
+    "@beauty-salon-shared/config": "workspace:*",
+    "@biomejs/biome": "^1.9.4",
+    "@rslib/core": "^0.10.5",
+    "@testcontainers/postgresql": "^11.2.1",
+    "@types/node": "^24.0.13",
+    "drizzle-kit": "^0.31.4",
+    "knip": "^5.61.3",
+    "taze": "^19.1.0",
+    "testcontainers": "^11.2.1",
+    "tsup": "^8.5.0",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.4",
+    "vite-plugin-dts": "^4.5.4",
+    "vitest": "^3.2.4"
+  }
+}

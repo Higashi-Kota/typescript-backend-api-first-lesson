@@ -1,0 +1,11 @@
+/* Import shared Tailwind v4 configuration */
+@import "@beauty-salon-shared/config/tailwind.css";
+
+/* App-specific customizations can be added below */
+/* Example:
+@layer components {
+  .admin-button {
+    @apply bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700;
+  }
+}
+*/

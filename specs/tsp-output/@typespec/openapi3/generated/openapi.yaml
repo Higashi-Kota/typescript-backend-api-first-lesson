@@ -1,0 +1,3585 @@
+openapi: 3.0.0
+info:
+  title: (title)
+  description: Comprehensive API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, and reviews.
+  version: 0.0.0
+tags:
+  - name: Salons
+  - name: Staff
+  - name: Services
+  - name: Customers
+  - name: Reservations
+  - name: Bookings
+  - name: Reviews
+paths:
+  /bookings:
+    get:
+      operationId: BookingOperations_list
+      summary: List bookings
+      parameters:
+        - name: salonId
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Models.SalonId'
+          explode: false
+        - name: customerId
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Models.CustomerId'
+          explode: false
+        - name: status
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Models.BookingStatus'
+          explode: false
+        - name: from
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+          explode: false
+        - name: to
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+          explode: false
+        - $ref: '#/components/parameters/Models.PaginationParams.limit'
+        - $ref: '#/components/parameters/Models.PaginationParams.offset'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - total
+                  - limit
+                  - offset
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Models.BookingDetail'
+                  total:
+                    type: integer
+                    format: int32
+                  limit:
+                    type: integer
+                    format: int32
+                  offset:
+                    type: integer
+                    format: int32
+      tags:
+        - Bookings
+    post:
+      operationId: BookingOperations_create
+      summary: Create booking
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          headers:
+            location:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Booking'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Bookings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.CreateBookingRequest'
+  /bookings/{id}:
+    get:
+      operationId: BookingOperations_get
+      summary: Get booking
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.BookingId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.BookingDetail'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Bookings
+    patch:
+      operationId: BookingOperations_update
+      summary: Update booking
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.BookingId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Booking'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Bookings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.UpdateBookingRequest'
+    delete:
+      operationId: BookingOperations_delete
+      summary: Delete booking
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.BookingId'
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Bookings
+  /bookings/{id}/cancel:
+    post:
+      operationId: BookingOperations_cancel
+      summary: Cancel booking
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.BookingId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Booking'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Bookings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+                cancelReservations:
+                  type: boolean
+  /bookings/{id}/confirm:
+    post:
+      operationId: BookingOperations_confirm
+      summary: Confirm booking
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.BookingId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Booking'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Bookings
+  /bookings/{id}/payment:
+    post:
+      operationId: BookingOperations_processPayment
+      summary: Process payment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.BookingId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  booking:
+                    $ref: '#/components/schemas/Models.Booking'
+                  paymentId:
+                    type: string
+                required:
+                  - booking
+                  - paymentId
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Bookings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                paymentMethod:
+                  type: string
+                amount:
+                  type: integer
+                  format: int32
+                transactionId:
+                  type: string
+              required:
+                - paymentMethod
+                - amount
+  /bookings/{id}/reservations:
+    post:
+      operationId: BookingOperations_addReservation
+      summary: Add reservation to booking
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.BookingId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Booking'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Bookings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reservationId:
+                  $ref: '#/components/schemas/Models.ReservationId'
+              required:
+                - reservationId
+  /bookings/{id}/reservations/{reservationId}:
+    delete:
+      operationId: BookingOperations_removeReservation
+      summary: Remove reservation from booking
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.BookingId'
+        - name: reservationId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.ReservationId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Booking'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Bookings
+  /customers:
+    get:
+      operationId: CustomerOperations_list
+      summary: List customers
+      parameters:
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+          explode: false
+        - name: tags
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+        - $ref: '#/components/parameters/Models.PaginationParams.limit'
+        - $ref: '#/components/parameters/Models.PaginationParams.offset'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - total
+                  - limit
+                  - offset
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Models.Customer'
+                  total:
+                    type: integer
+                    format: int32
+                  limit:
+                    type: integer
+                    format: int32
+                  offset:
+                    type: integer
+                    format: int32
+      tags:
+        - Customers
+    post:
+      operationId: CustomerOperations_create
+      summary: Create customer
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          headers:
+            location:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Customer'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Customers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.CreateCustomerRequest'
+  /customers/merge:
+    post:
+      operationId: CustomerOperations_merge
+      summary: Merge customer records
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Customer'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Customers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                primaryCustomerId:
+                  $ref: '#/components/schemas/Models.CustomerId'
+                secondaryCustomerId:
+                  $ref: '#/components/schemas/Models.CustomerId'
+              required:
+                - primaryCustomerId
+                - secondaryCustomerId
+  /customers/{id}:
+    get:
+      operationId: CustomerOperations_get
+      summary: Get customer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.CustomerId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Customer'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Customers
+    put:
+      operationId: CustomerOperations_update
+      summary: Update customer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.CustomerId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Customer'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Customers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.UpdateCustomerRequest'
+    delete:
+      operationId: CustomerOperations_delete
+      summary: Delete customer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.CustomerId'
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Customers
+  /customers/{id}/bookings:
+    get:
+      operationId: CustomerOperations_getBookings
+      summary: Get customer bookings
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.CustomerId'
+        - name: status
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Models.BookingStatus'
+          explode: false
+        - $ref: '#/components/parameters/Models.PaginationParams.limit'
+        - $ref: '#/components/parameters/Models.PaginationParams.offset'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - total
+                  - limit
+                  - offset
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Models.BookingDetail'
+                  total:
+                    type: integer
+                    format: int32
+                  limit:
+                    type: integer
+                    format: int32
+                  offset:
+                    type: integer
+                    format: int32
+      tags:
+        - Customers
+  /customers/{id}/profile:
+    get:
+      operationId: CustomerOperations_getProfile
+      summary: Get customer profile
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.CustomerId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.CustomerProfile'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Customers
+  /customers/{id}/reservations:
+    get:
+      operationId: CustomerOperations_getReservations
+      summary: Get customer reservations
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.CustomerId'
+        - name: status
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Models.ReservationStatus'
+          explode: false
+        - name: from
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+          explode: false
+        - name: to
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+          explode: false
+        - $ref: '#/components/parameters/Models.PaginationParams.limit'
+        - $ref: '#/components/parameters/Models.PaginationParams.offset'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - total
+                  - limit
+                  - offset
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Models.ReservationDetail'
+                  total:
+                    type: integer
+                    format: int32
+                  limit:
+                    type: integer
+                    format: int32
+                  offset:
+                    type: integer
+                    format: int32
+      tags:
+        - Customers
+  /reservations:
+    get:
+      operationId: ReservationOperations_list
+      summary: List reservations
+      parameters:
+        - name: salonId
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Models.SalonId'
+          explode: false
+        - name: customerId
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Models.CustomerId'
+          explode: false
+        - name: staffId
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Models.StaffId'
+          explode: false
+        - name: status
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Models.ReservationStatus'
+          explode: false
+        - name: from
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+          explode: false
+        - name: to
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+          explode: false
+        - $ref: '#/components/parameters/Models.PaginationParams.limit'
+        - $ref: '#/components/parameters/Models.PaginationParams.offset'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - total
+                  - limit
+                  - offset
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Models.ReservationDetail'
+                  total:
+                    type: integer
+                    format: int32
+                  limit:
+                    type: integer
+                    format: int32
+                  offset:
+                    type: integer
+                    format: int32
+      tags:
+        - Reservations
+    post:
+      operationId: ReservationOperations_create
+      summary: Create reservation
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          headers:
+            location:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Reservation'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Reservations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.CreateReservationRequest'
+  /reservations/{id}:
+    get:
+      operationId: ReservationOperations_get
+      summary: Get reservation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.ReservationId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ReservationDetail'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Reservations
+    patch:
+      operationId: ReservationOperations_update
+      summary: Update reservation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.ReservationId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Reservation'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Reservations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.UpdateReservationRequest'
+  /reservations/{id}/cancel:
+    post:
+      operationId: ReservationOperations_cancel
+      summary: Cancel reservation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.ReservationId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Reservation'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Reservations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+  /reservations/{id}/complete:
+    post:
+      operationId: ReservationOperations_complete
+      summary: Complete reservation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.ReservationId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Reservation'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Reservations
+  /reservations/{id}/reschedule:
+    post:
+      operationId: ReservationOperations_reschedule
+      summary: Reschedule reservation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.ReservationId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Reservation'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Reservations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newStartTime:
+                  type: string
+                  format: date-time
+                staffId:
+                  $ref: '#/components/schemas/Models.StaffId'
+              required:
+                - newStartTime
+  /reviews:
+    get:
+      operationId: ReviewOperations_list
+      summary: List reviews
+      parameters:
+        - name: salonId
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Models.SalonId'
+          explode: false
+        - name: customerId
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Models.CustomerId'
+          explode: false
+        - name: staffId
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Models.StaffId'
+          explode: false
+        - name: minRating
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+          explode: false
+        - name: isVerified
+          in: query
+          required: false
+          schema:
+            type: boolean
+          explode: false
+        - $ref: '#/components/parameters/Models.PaginationParams.limit'
+        - $ref: '#/components/parameters/Models.PaginationParams.offset'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - total
+                  - limit
+                  - offset
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Models.Review'
+                  total:
+                    type: integer
+                    format: int32
+                  limit:
+                    type: integer
+                    format: int32
+                  offset:
+                    type: integer
+                    format: int32
+      tags:
+        - Reviews
+    post:
+      operationId: ReviewOperations_create
+      summary: Create review
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          headers:
+            location:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Review'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Reviews
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.CreateReviewRequest'
+  /reviews/{id}:
+    get:
+      operationId: ReviewOperations_get
+      summary: Get review
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.ReviewId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Review'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Reviews
+    patch:
+      operationId: ReviewOperations_update
+      summary: Update review
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.ReviewId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Review'
+        '403':
+          description: Access is forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Reviews
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.UpdateReviewRequest'
+    delete:
+      operationId: ReviewOperations_delete
+      summary: Delete review
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.ReviewId'
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '403':
+          description: Access is forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Reviews
+  /reviews/{id}/helpful:
+    post:
+      operationId: ReviewOperations_markHelpful
+      summary: Mark review as helpful
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.ReviewId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  helpfulCount:
+                    type: integer
+                    format: int32
+                required:
+                  - helpfulCount
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Reviews
+  /reviews/{id}/report:
+    post:
+      operationId: ReviewOperations_report
+      summary: Report review
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.ReviewId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reportId:
+                    type: string
+                required:
+                  - reportId
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Reviews
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+                details:
+                  type: string
+              required:
+                - reason
+  /salons:
+    get:
+      operationId: SalonOperations_list
+      summary: List all salons
+      parameters:
+        - $ref: '#/components/parameters/Models.PaginationParams.limit'
+        - $ref: '#/components/parameters/Models.PaginationParams.offset'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - total
+                  - limit
+                  - offset
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Models.SalonSummary'
+                  total:
+                    type: integer
+                    format: int32
+                  limit:
+                    type: integer
+                    format: int32
+                  offset:
+                    type: integer
+                    format: int32
+      tags:
+        - Salons
+    post:
+      operationId: SalonOperations_create
+      summary: Create a new salon
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          headers:
+            location:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Salon'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Salons
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.CreateSalonRequest'
+  /salons/search:
+    get:
+      operationId: SalonOperations_search
+      summary: Search salons
+      parameters:
+        - name: keyword
+          in: query
+          required: false
+          schema:
+            type: string
+          explode: false
+        - name: city
+          in: query
+          required: false
+          schema:
+            type: string
+          explode: false
+        - name: category
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Models.ServiceCategory'
+          explode: false
+        - $ref: '#/components/parameters/Models.PaginationParams.limit'
+        - $ref: '#/components/parameters/Models.PaginationParams.offset'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - total
+                  - limit
+                  - offset
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Models.SalonSummary'
+                  total:
+                    type: integer
+                    format: int32
+                  limit:
+                    type: integer
+                    format: int32
+                  offset:
+                    type: integer
+                    format: int32
+      tags:
+        - Salons
+  /salons/{id}:
+    get:
+      operationId: SalonOperations_get
+      summary: Get salon by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.SalonId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Salon'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Salons
+    put:
+      operationId: SalonOperations_update
+      summary: Update salon
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.SalonId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Salon'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Salons
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.UpdateSalonRequest'
+    delete:
+      operationId: SalonOperations_delete
+      summary: Delete salon
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.SalonId'
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Salons
+  /salons/{salonId}/available-slots:
+    get:
+      operationId: AvailabilityOperations_getAvailableSlots
+      summary: Get available slots
+      parameters:
+        - name: salonId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.SalonId'
+        - name: staffId
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Models.StaffId'
+          explode: false
+        - name: serviceId
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.ServiceId'
+          explode: false
+        - name: date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          explode: false
+        - name: duration
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Models.AvailableSlot'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Reservations
+  /salons/{salonId}/available-slots/check:
+    post:
+      operationId: AvailabilityOperations_checkAvailability
+      summary: Check availability
+      parameters:
+        - name: salonId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.SalonId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isAvailable:
+                    type: boolean
+                  conflicts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Models.ReservationId'
+                required:
+                  - isAvailable
+      tags:
+        - Reservations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                staffId:
+                  $ref: '#/components/schemas/Models.StaffId'
+                serviceId:
+                  $ref: '#/components/schemas/Models.ServiceId'
+                startTime:
+                  type: string
+                  format: date-time
+              required:
+                - staffId
+                - serviceId
+                - startTime
+  /salons/{salonId}/reviews:
+    get:
+      operationId: SalonReviewOperations_getSalonReviews
+      summary: Get salon reviews
+      parameters:
+        - name: salonId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.SalonId'
+        - name: sortBy
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - recent
+              - rating
+              - helpful
+          explode: false
+        - $ref: '#/components/parameters/Models.PaginationParams.limit'
+        - $ref: '#/components/parameters/Models.PaginationParams.offset'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - total
+                  - limit
+                  - offset
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Models.Review'
+                  total:
+                    type: integer
+                    format: int32
+                  limit:
+                    type: integer
+                    format: int32
+                  offset:
+                    type: integer
+                    format: int32
+      tags:
+        - Reviews
+  /salons/{salonId}/reviews/summary:
+    get:
+      operationId: SalonReviewOperations_getSummary
+      summary: Get salon reviews summary
+      parameters:
+        - name: salonId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.SalonId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ReviewSummary'
+      tags:
+        - Reviews
+  /salons/{salonId}/services:
+    get:
+      operationId: ServiceOperations_list
+      summary: List salon services
+      parameters:
+        - name: salonId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.SalonId'
+        - name: category
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Models.ServiceCategory'
+          explode: false
+        - $ref: '#/components/parameters/Models.PaginationParams.limit'
+        - $ref: '#/components/parameters/Models.PaginationParams.offset'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - total
+                  - limit
+                  - offset
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Models.Service'
+                  total:
+                    type: integer
+                    format: int32
+                  limit:
+                    type: integer
+                    format: int32
+                  offset:
+                    type: integer
+                    format: int32
+      tags:
+        - Services
+    post:
+      operationId: ServiceOperations_create
+      summary: Create service
+      parameters:
+        - name: salonId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.SalonId'
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          headers:
+            location:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Service'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Services
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.CreateServiceRequest'
+  /salons/{salonId}/services/bulk:
+    patch:
+      operationId: ServiceOperations_bulkUpdate
+      summary: Bulk update services
+      parameters:
+        - name: salonId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.SalonId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  updated:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Models.ServiceId'
+                  failed:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        serviceId:
+                          $ref: '#/components/schemas/Models.ServiceId'
+                        error:
+                          type: string
+                      required:
+                        - serviceId
+                        - error
+                required:
+                  - updated
+                  - failed
+      tags:
+        - Services
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                serviceIds:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Models.ServiceId'
+                updates:
+                  $ref: '#/components/schemas/Models.UpdateServiceRequest'
+  /salons/{salonId}/services/{id}:
+    get:
+      operationId: ServiceOperations_get
+      summary: Get service
+      parameters:
+        - name: salonId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.SalonId'
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.ServiceId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Service'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Services
+    put:
+      operationId: ServiceOperations_update
+      summary: Update service
+      parameters:
+        - name: salonId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.SalonId'
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.ServiceId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Service'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Services
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.UpdateServiceRequest'
+    delete:
+      operationId: ServiceOperations_delete
+      summary: Delete service
+      parameters:
+        - name: salonId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.SalonId'
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.ServiceId'
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Services
+  /salons/{salonId}/staff:
+    get:
+      operationId: StaffOperations_list
+      summary: List staff members
+      parameters:
+        - name: salonId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.SalonId'
+        - $ref: '#/components/parameters/Models.PaginationParams.limit'
+        - $ref: '#/components/parameters/Models.PaginationParams.offset'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - total
+                  - limit
+                  - offset
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Models.Staff'
+                  total:
+                    type: integer
+                    format: int32
+                  limit:
+                    type: integer
+                    format: int32
+                  offset:
+                    type: integer
+                    format: int32
+      tags:
+        - Staff
+    post:
+      operationId: StaffOperations_create
+      summary: Create staff member
+      parameters:
+        - name: salonId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.SalonId'
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          headers:
+            location:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Staff'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Staff
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.CreateStaffRequest'
+  /salons/{salonId}/staff/{id}:
+    get:
+      operationId: StaffOperations_get
+      summary: Get staff member
+      parameters:
+        - name: salonId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.SalonId'
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.StaffId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Staff'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Staff
+    put:
+      operationId: StaffOperations_update
+      summary: Update staff member
+      parameters:
+        - name: salonId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.SalonId'
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.StaffId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Staff'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Staff
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.UpdateStaffRequest'
+    delete:
+      operationId: StaffOperations_delete
+      summary: Delete staff member
+      parameters:
+        - name: salonId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.SalonId'
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.StaffId'
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Staff
+  /salons/{salonId}/staff/{id}/availability:
+    get:
+      operationId: StaffOperations_getAvailability
+      summary: Get staff availability
+      parameters:
+        - name: salonId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.SalonId'
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.StaffId'
+        - name: date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Models.StaffAvailability'
+      tags:
+        - Staff
+    put:
+      operationId: StaffOperations_updateAvailability
+      summary: Update staff availability
+      parameters:
+        - name: salonId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.SalonId'
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.StaffId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Models.StaffAvailability'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Staff
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Models.StaffAvailability'
+  /service-categories:
+    get:
+      operationId: ServiceCategoryOperations_listCategories
+      summary: List service categories
+      parameters:
+        - $ref: '#/components/parameters/Models.PaginationParams.limit'
+        - $ref: '#/components/parameters/Models.PaginationParams.offset'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - total
+                  - limit
+                  - offset
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Models.ServiceCategoryModel'
+                  total:
+                    type: integer
+                    format: int32
+                  limit:
+                    type: integer
+                    format: int32
+                  offset:
+                    type: integer
+                    format: int32
+      tags:
+        - Services
+    post:
+      operationId: ServiceCategoryOperations_createCategory
+      summary: Create service category
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ServiceCategoryModel'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Services
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                parentId:
+                  $ref: '#/components/schemas/Models.CategoryId'
+                displayOrder:
+                  type: integer
+                  format: int32
+              required:
+                - name
+                - description
+                - displayOrder
+  /service-categories/{id}:
+    put:
+      operationId: ServiceCategoryOperations_updateCategory
+      summary: Update service category
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.CategoryId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ServiceCategoryModel'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Services
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                parentId:
+                  $ref: '#/components/schemas/Models.CategoryId'
+                displayOrder:
+                  type: integer
+                  format: int32
+                isActive:
+                  type: boolean
+    delete:
+      operationId: ServiceCategoryOperations_deleteCategory
+      summary: Delete service category
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.CategoryId'
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Services
+  /staff/search:
+    get:
+      operationId: GlobalStaffOperations_searchStaff
+      summary: Search staff across all salons
+      parameters:
+        - name: specialty
+          in: query
+          required: false
+          schema:
+            type: string
+          explode: false
+        - name: city
+          in: query
+          required: false
+          schema:
+            type: string
+          explode: false
+        - $ref: '#/components/parameters/Models.PaginationParams.limit'
+        - $ref: '#/components/parameters/Models.PaginationParams.offset'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - total
+                  - limit
+                  - offset
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Models.Staff'
+                  total:
+                    type: integer
+                    format: int32
+                  limit:
+                    type: integer
+                    format: int32
+                  offset:
+                    type: integer
+                    format: int32
+      tags:
+        - Staff
+  /staff/{staffId}/reviews:
+    get:
+      operationId: StaffReviewOperations_getStaffReviews
+      summary: Get staff reviews
+      parameters:
+        - name: staffId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.StaffId'
+        - $ref: '#/components/parameters/Models.PaginationParams.limit'
+        - $ref: '#/components/parameters/Models.PaginationParams.offset'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - total
+                  - limit
+                  - offset
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Models.Review'
+                  total:
+                    type: integer
+                    format: int32
+                  limit:
+                    type: integer
+                    format: int32
+                  offset:
+                    type: integer
+                    format: int32
+      tags:
+        - Reviews
+  /staff/{staffId}/reviews/summary:
+    get:
+      operationId: StaffReviewOperations_getStaffSummary
+      summary: Get staff reviews summary
+      parameters:
+        - name: staffId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Models.StaffId'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ReviewSummary'
+      tags:
+        - Reviews
+components:
+  parameters:
+    Models.PaginationParams.limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int32
+        default: 20
+      explode: false
+    Models.PaginationParams.offset:
+      name: offset
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int32
+        default: 0
+      explode: false
+  schemas:
+    Models.Address:
+      type: object
+      required:
+        - street
+        - city
+        - state
+        - postalCode
+        - country
+      properties:
+        street:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        postalCode:
+          type: string
+        country:
+          type: string
+          default: Japan
+    Models.AuditInfo:
+      type: object
+      required:
+        - createdAt
+        - updatedAt
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+        updatedAt:
+          type: string
+          format: date-time
+        updatedBy:
+          type: string
+    Models.AvailableSlot:
+      type: object
+      required:
+        - staffId
+        - startTime
+        - endTime
+      properties:
+        staffId:
+          $ref: '#/components/schemas/Models.StaffId'
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+    Models.Booking:
+      type: object
+      required:
+        - id
+        - salonId
+        - customerId
+        - reservationIds
+        - status
+        - totalAmount
+        - finalAmount
+        - paymentStatus
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          $ref: '#/components/schemas/Models.BookingId'
+        salonId:
+          $ref: '#/components/schemas/Models.SalonId'
+        customerId:
+          $ref: '#/components/schemas/Models.CustomerId'
+        reservationIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/Models.ReservationId'
+        status:
+          $ref: '#/components/schemas/Models.BookingStatus'
+        totalAmount:
+          type: integer
+          format: int32
+        discountAmount:
+          type: integer
+          format: int32
+        finalAmount:
+          type: integer
+          format: int32
+        paymentMethod:
+          type: string
+        paymentStatus:
+          type: string
+        notes:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+        updatedAt:
+          type: string
+          format: date-time
+        updatedBy:
+          type: string
+    Models.BookingDetail:
+      type: object
+      required:
+        - reservations
+        - customerName
+        - salonName
+      properties:
+        reservations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Models.ReservationDetail'
+        customerName:
+          type: string
+        salonName:
+          type: string
+      allOf:
+        - $ref: '#/components/schemas/Models.Booking'
+    Models.BookingId:
+      type: string
+    Models.BookingStatus:
+      type: string
+      enum:
+        - draft
+        - pending
+        - confirmed
+        - in_progress
+        - completed
+        - cancelled
+    Models.CategoryId:
+      type: string
+    Models.ContactInfo:
+      type: object
+      required:
+        - email
+        - phoneNumber
+      properties:
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        alternativePhone:
+          type: string
+    Models.CreateBookingRequest:
+      type: object
+      required:
+        - salonId
+        - customerId
+        - reservationIds
+      properties:
+        salonId:
+          $ref: '#/components/schemas/Models.SalonId'
+        customerId:
+          $ref: '#/components/schemas/Models.CustomerId'
+        reservationIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/Models.ReservationId'
+        discountAmount:
+          type: integer
+          format: int32
+        paymentMethod:
+          type: string
+        notes:
+          type: string
+    Models.CreateCustomerRequest:
+      type: object
+      required:
+        - name
+        - contactInfo
+      properties:
+        name:
+          type: string
+        contactInfo:
+          $ref: '#/components/schemas/Models.ContactInfo'
+        preferences:
+          type: string
+        notes:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        birthDate:
+          type: string
+          format: date
+      description: Customer creation request with required and optional fields
+    Models.CreateReservationRequest:
+      type: object
+      required:
+        - salonId
+        - customerId
+        - staffId
+        - serviceId
+        - startTime
+      properties:
+        salonId:
+          $ref: '#/components/schemas/Models.SalonId'
+        customerId:
+          $ref: '#/components/schemas/Models.CustomerId'
+        staffId:
+          $ref: '#/components/schemas/Models.StaffId'
+        serviceId:
+          $ref: '#/components/schemas/Models.ServiceId'
+        startTime:
+          type: string
+          format: date-time
+        notes:
+          type: string
+    Models.CreateReviewRequest:
+      type: object
+      required:
+        - salonId
+        - customerId
+        - reservationId
+        - rating
+      properties:
+        salonId:
+          $ref: '#/components/schemas/Models.SalonId'
+        customerId:
+          $ref: '#/components/schemas/Models.CustomerId'
+        reservationId:
+          $ref: '#/components/schemas/Models.ReservationId'
+        staffId:
+          $ref: '#/components/schemas/Models.StaffId'
+        rating:
+          type: integer
+          format: int32
+        comment:
+          type: string
+        serviceRating:
+          type: integer
+          format: int32
+        staffRating:
+          type: integer
+          format: int32
+        atmosphereRating:
+          type: integer
+          format: int32
+        images:
+          type: array
+          items:
+            type: string
+    Models.CreateSalonRequest:
+      type: object
+      required:
+        - name
+        - description
+        - address
+        - contactInfo
+        - openingHours
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        address:
+          $ref: '#/components/schemas/Models.Address'
+        contactInfo:
+          $ref: '#/components/schemas/Models.ContactInfo'
+        openingHours:
+          type: array
+          items:
+            $ref: '#/components/schemas/Models.OpeningHours'
+        imageUrls:
+          type: array
+          items:
+            type: string
+        features:
+          type: array
+          items:
+            type: string
+      description: Salon creation request with required and optional fields
+    Models.CreateServiceRequest:
+      type: object
+      required:
+        - salonId
+        - name
+        - description
+        - duration
+        - price
+        - category
+      properties:
+        salonId:
+          $ref: '#/components/schemas/Models.SalonId'
+        name:
+          type: string
+        description:
+          type: string
+        duration:
+          type: integer
+          format: int32
+        price:
+          type: integer
+          format: int32
+        category:
+          $ref: '#/components/schemas/Models.ServiceCategory'
+        categoryId:
+          $ref: '#/components/schemas/Models.CategoryId'
+        imageUrl:
+          type: string
+        requiredStaffLevel:
+          type: integer
+          format: int32
+    Models.CreateStaffRequest:
+      type: object
+      required:
+        - salonId
+        - name
+        - contactInfo
+        - specialties
+      properties:
+        salonId:
+          $ref: '#/components/schemas/Models.SalonId'
+        name:
+          type: string
+        contactInfo:
+          $ref: '#/components/schemas/Models.ContactInfo'
+        specialties:
+          type: array
+          items:
+            type: string
+        imageUrl:
+          type: string
+        bio:
+          type: string
+        yearsOfExperience:
+          type: integer
+          format: int32
+        certifications:
+          type: array
+          items:
+            type: string
+    Models.Customer:
+      type: object
+      required:
+        - id
+        - name
+        - contactInfo
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          $ref: '#/components/schemas/Models.CustomerId'
+        name:
+          type: string
+        contactInfo:
+          $ref: '#/components/schemas/Models.ContactInfo'
+        preferences:
+          type: string
+        notes:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        loyaltyPoints:
+          type: integer
+          format: int32
+        membershipLevel:
+          type: string
+        birthDate:
+          type: string
+          format: date
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+        updatedAt:
+          type: string
+          format: date-time
+        updatedBy:
+          type: string
+    Models.CustomerId:
+      type: string
+    Models.CustomerProfile:
+      type: object
+      required:
+        - visitCount
+        - totalSpent
+      properties:
+        visitCount:
+          type: integer
+          format: int32
+        lastVisitDate:
+          type: string
+          format: date-time
+        favoriteStaffIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/Models.StaffId'
+        favoriteServiceIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/Models.ServiceId'
+        totalSpent:
+          type: integer
+          format: int32
+      allOf:
+        - $ref: '#/components/schemas/Models.Customer'
+    Models.DayOfWeek:
+      type: string
+      enum:
+        - monday
+        - tuesday
+        - wednesday
+        - thursday
+        - friday
+        - saturday
+        - sunday
+    Models.Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
+          additionalProperties: {}
+    Models.GetCustomerBookingsRequest:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Models.BookingStatus'
+      description: Customer bookings filter parameters
+    Models.GetCustomerReservationsRequest:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Models.ReservationStatus'
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+      description: Customer reservations filter parameters
+    Models.OpeningHours:
+      type: object
+      required:
+        - dayOfWeek
+        - openTime
+        - closeTime
+        - isHoliday
+      properties:
+        dayOfWeek:
+          $ref: '#/components/schemas/Models.DayOfWeek'
+        openTime:
+          type: string
+        closeTime:
+          type: string
+        isHoliday:
+          type: boolean
+    Models.Reservation:
+      type: object
+      required:
+        - id
+        - salonId
+        - customerId
+        - staffId
+        - serviceId
+        - startTime
+        - endTime
+        - status
+        - totalAmount
+        - isPaid
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          $ref: '#/components/schemas/Models.ReservationId'
+        salonId:
+          $ref: '#/components/schemas/Models.SalonId'
+        customerId:
+          $ref: '#/components/schemas/Models.CustomerId'
+        staffId:
+          $ref: '#/components/schemas/Models.StaffId'
+        serviceId:
+          $ref: '#/components/schemas/Models.ServiceId'
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        status:
+          $ref: '#/components/schemas/Models.ReservationStatus'
+        notes:
+          type: string
+        totalAmount:
+          type: integer
+          format: int32
+        depositAmount:
+          type: integer
+          format: int32
+        isPaid:
+          type: boolean
+        cancellationReason:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+        updatedAt:
+          type: string
+          format: date-time
+        updatedBy:
+          type: string
+    Models.ReservationDetail:
+      type: object
+      required:
+        - customerName
+        - staffName
+        - serviceName
+        - serviceCategory
+        - serviceDuration
+      properties:
+        customerName:
+          type: string
+        staffName:
+          type: string
+        serviceName:
+          type: string
+        serviceCategory:
+          $ref: '#/components/schemas/Models.ServiceCategory'
+        serviceDuration:
+          type: integer
+          format: int32
+      allOf:
+        - $ref: '#/components/schemas/Models.Reservation'
+    Models.ReservationId:
+      type: string
+    Models.ReservationStatus:
+      type: string
+      enum:
+        - pending
+        - confirmed
+        - cancelled
+        - completed
+        - no_show
+    Models.Review:
+      type: object
+      required:
+        - id
+        - salonId
+        - customerId
+        - reservationId
+        - rating
+        - isVerified
+        - helpfulCount
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          $ref: '#/components/schemas/Models.ReviewId'
+        salonId:
+          $ref: '#/components/schemas/Models.SalonId'
+        customerId:
+          $ref: '#/components/schemas/Models.CustomerId'
+        reservationId:
+          $ref: '#/components/schemas/Models.ReservationId'
+        staffId:
+          $ref: '#/components/schemas/Models.StaffId'
+        rating:
+          type: integer
+          format: int32
+        comment:
+          type: string
+        serviceRating:
+          type: integer
+          format: int32
+        staffRating:
+          type: integer
+          format: int32
+        atmosphereRating:
+          type: integer
+          format: int32
+        images:
+          type: array
+          items:
+            type: string
+        isVerified:
+          type: boolean
+        helpfulCount:
+          type: integer
+          format: int32
+          default: 0
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+        updatedAt:
+          type: string
+          format: date-time
+        updatedBy:
+          type: string
+    Models.ReviewId:
+      type: string
+    Models.ReviewSummary:
+      type: object
+      required:
+        - averageRating
+        - totalReviews
+        - ratingDistribution
+      properties:
+        averageRating:
+          type: number
+          format: float
+        totalReviews:
+          type: integer
+          format: int32
+        ratingDistribution:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int32
+    Models.Salon:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - address
+        - contactInfo
+        - openingHours
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          $ref: '#/components/schemas/Models.SalonId'
+        name:
+          type: string
+        description:
+          type: string
+        address:
+          $ref: '#/components/schemas/Models.Address'
+        contactInfo:
+          $ref: '#/components/schemas/Models.ContactInfo'
+        openingHours:
+          type: array
+          items:
+            $ref: '#/components/schemas/Models.OpeningHours'
+        imageUrls:
+          type: array
+          items:
+            type: string
+        features:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+        updatedAt:
+          type: string
+          format: date-time
+        updatedBy:
+          type: string
+    Models.SalonId:
+      type: string
+    Models.SalonSummary:
+      type: object
+      required:
+        - id
+        - name
+        - address
+      properties:
+        id:
+          $ref: '#/components/schemas/Models.SalonId'
+        name:
+          type: string
+        address:
+          $ref: '#/components/schemas/Models.Address'
+        rating:
+          type: number
+          format: float
+        reviewCount:
+          type: integer
+          format: int32
+    Models.SearchCustomerRequest:
+      type: object
+      properties:
+        search:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+      description: Customer search parameters - all fields are optional
+    Models.SearchSalonRequest:
+      type: object
+      properties:
+        keyword:
+          type: string
+        city:
+          type: string
+        category:
+          $ref: '#/components/schemas/Models.ServiceCategory'
+      description: Salon search parameters - all fields are optional
+    Models.Service:
+      type: object
+      required:
+        - id
+        - salonId
+        - name
+        - description
+        - duration
+        - price
+        - category
+        - isActive
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          $ref: '#/components/schemas/Models.ServiceId'
+        salonId:
+          $ref: '#/components/schemas/Models.SalonId'
+        name:
+          type: string
+        description:
+          type: string
+        duration:
+          type: integer
+          format: int32
+        price:
+          type: integer
+          format: int32
+        category:
+          $ref: '#/components/schemas/Models.ServiceCategory'
+        categoryId:
+          $ref: '#/components/schemas/Models.CategoryId'
+        imageUrl:
+          type: string
+        requiredStaffLevel:
+          type: integer
+          format: int32
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+        updatedAt:
+          type: string
+          format: date-time
+        updatedBy:
+          type: string
+    Models.ServiceCategory:
+      type: string
+      enum:
+        - cut
+        - color
+        - perm
+        - treatment
+        - spa
+        - other
+    Models.ServiceCategoryModel:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - displayOrder
+        - isActive
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          $ref: '#/components/schemas/Models.CategoryId'
+        name:
+          type: string
+        description:
+          type: string
+        parentId:
+          $ref: '#/components/schemas/Models.CategoryId'
+        displayOrder:
+          type: integer
+          format: int32
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+        updatedAt:
+          type: string
+          format: date-time
+        updatedBy:
+          type: string
+    Models.ServiceId:
+      type: string
+    Models.Staff:
+      type: object
+      required:
+        - id
+        - salonId
+        - name
+        - contactInfo
+        - specialties
+        - isActive
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          $ref: '#/components/schemas/Models.StaffId'
+        salonId:
+          $ref: '#/components/schemas/Models.SalonId'
+        name:
+          type: string
+        contactInfo:
+          $ref: '#/components/schemas/Models.ContactInfo'
+        specialties:
+          type: array
+          items:
+            type: string
+        imageUrl:
+          type: string
+        bio:
+          type: string
+        yearsOfExperience:
+          type: integer
+          format: int32
+        certifications:
+          type: array
+          items:
+            type: string
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+        updatedAt:
+          type: string
+          format: date-time
+        updatedBy:
+          type: string
+    Models.StaffAvailability:
+      type: object
+      required:
+        - staffId
+        - dayOfWeek
+        - startTime
+        - endTime
+      properties:
+        staffId:
+          $ref: '#/components/schemas/Models.StaffId'
+        dayOfWeek:
+          $ref: '#/components/schemas/Models.DayOfWeek'
+        startTime:
+          type: string
+        endTime:
+          type: string
+        breakStart:
+          type: string
+        breakEnd:
+          type: string
+    Models.StaffId:
+      type: string
+    Models.UpdateBookingRequest:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Models.BookingStatus'
+        paymentMethod:
+          type: string
+        paymentStatus:
+          type: string
+        notes:
+          type: string
+      description: Booking update request with optional fields for partial updates
+    Models.UpdateBookingRequestWithReset:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Models.BookingStatus'
+        paymentMethod:
+          type: string
+          nullable: true
+        paymentStatus:
+          type: string
+        notes:
+          type: string
+          nullable: true
+      description: Booking update request with reset capability
+    Models.UpdateCustomerRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        contactInfo:
+          $ref: '#/components/schemas/Models.ContactInfo'
+        preferences:
+          type: string
+        notes:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        birthDate:
+          type: string
+          format: date
+      description: Customer update request with optional fields for partial updates
+    Models.UpdateCustomerRequestWithReset:
+      type: object
+      properties:
+        name:
+          type: string
+        contactInfo:
+          $ref: '#/components/schemas/Models.ContactInfo'
+        preferences:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: string
+          nullable: true
+        birthDate:
+          type: string
+          format: date
+          nullable: true
+      description: Customer update request with reset capability
+    Models.UpdateReservationRequest:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Models.ReservationStatus'
+        notes:
+          type: string
+        startTime:
+          type: string
+          format: date-time
+        staffId:
+          $ref: '#/components/schemas/Models.StaffId'
+      description: Reservation update request with optional fields for partial updates
+    Models.UpdateReservationRequestWithReset:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Models.ReservationStatus'
+        notes:
+          type: string
+          nullable: true
+        startTime:
+          type: string
+          format: date-time
+        staffId:
+          $ref: '#/components/schemas/Models.StaffId'
+      description: Reservation update request with reset capability
+    Models.UpdateReviewRequest:
+      type: object
+      properties:
+        rating:
+          type: integer
+          format: int32
+        comment:
+          type: string
+        serviceRating:
+          type: integer
+          format: int32
+        staffRating:
+          type: integer
+          format: int32
+        atmosphereRating:
+          type: integer
+          format: int32
+        images:
+          type: array
+          items:
+            type: string
+      description: Review update request with optional fields for partial updates
+    Models.UpdateReviewRequestWithReset:
+      type: object
+      properties:
+        rating:
+          type: integer
+          format: int32
+        comment:
+          type: string
+          nullable: true
+        serviceRating:
+          type: integer
+          format: int32
+          nullable: true
+        staffRating:
+          type: integer
+          format: int32
+          nullable: true
+        atmosphereRating:
+          type: integer
+          format: int32
+          nullable: true
+        images:
+          type: array
+          items:
+            type: string
+          nullable: true
+      description: Review update request with reset capability
+    Models.UpdateSalonRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        address:
+          $ref: '#/components/schemas/Models.Address'
+        contactInfo:
+          $ref: '#/components/schemas/Models.ContactInfo'
+        openingHours:
+          type: array
+          items:
+            $ref: '#/components/schemas/Models.OpeningHours'
+        imageUrls:
+          type: array
+          items:
+            type: string
+        features:
+          type: array
+          items:
+            type: string
+      description: Salon update request with optional fields for partial updates
+    Models.UpdateSalonRequestWithReset:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        address:
+          $ref: '#/components/schemas/Models.Address'
+        contactInfo:
+          $ref: '#/components/schemas/Models.ContactInfo'
+        openingHours:
+          type: array
+          items:
+            $ref: '#/components/schemas/Models.OpeningHours'
+        imageUrls:
+          type: array
+          items:
+            type: string
+          nullable: true
+        features:
+          type: array
+          items:
+            type: string
+          nullable: true
+      description: Salon update request with reset capability
+    Models.UpdateServiceRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        duration:
+          type: integer
+          format: int32
+        price:
+          type: integer
+          format: int32
+        category:
+          $ref: '#/components/schemas/Models.ServiceCategory'
+        categoryId:
+          $ref: '#/components/schemas/Models.CategoryId'
+        imageUrl:
+          type: string
+        requiredStaffLevel:
+          type: integer
+          format: int32
+        isActive:
+          type: boolean
+      description: Service update request with optional fields for partial updates
+    Models.UpdateServiceRequestWithReset:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        duration:
+          type: integer
+          format: int32
+        price:
+          type: integer
+          format: int32
+        category:
+          $ref: '#/components/schemas/Models.ServiceCategory'
+        categoryId:
+          type: string
+          allOf:
+            - $ref: '#/components/schemas/Models.CategoryId'
+          nullable: true
+        imageUrl:
+          type: string
+          nullable: true
+        requiredStaffLevel:
+          type: integer
+          format: int32
+          nullable: true
+        isActive:
+          type: boolean
+      description: Service update request with reset capability
+    Models.UpdateStaffRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        contactInfo:
+          $ref: '#/components/schemas/Models.ContactInfo'
+        specialties:
+          type: array
+          items:
+            type: string
+        imageUrl:
+          type: string
+        bio:
+          type: string
+        yearsOfExperience:
+          type: integer
+          format: int32
+        certifications:
+          type: array
+          items:
+            type: string
+        isActive:
+          type: boolean
+      description: Staff update request with optional fields for partial updates
+    Models.UpdateStaffRequestWithReset:
+      type: object
+      properties:
+        name:
+          type: string
+        contactInfo:
+          $ref: '#/components/schemas/Models.ContactInfo'
+        specialties:
+          type: array
+          items:
+            type: string
+        imageUrl:
+          type: string
+          nullable: true
+        bio:
+          type: string
+          nullable: true
+        yearsOfExperience:
+          type: integer
+          format: int32
+          nullable: true
+        certifications:
+          type: array
+          items:
+            type: string
+          nullable: true
+        isActive:
+          type: boolean
+      description: Staff update request with reset capability
+servers:
+  - url: https://api.beauty-salon.com
+    description: Beauty Salon API
+    variables: {}

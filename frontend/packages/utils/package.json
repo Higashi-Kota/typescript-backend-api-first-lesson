@@ -1,0 +1,112 @@
+{
+  "dependencies": {
+    "@date-fns/tz": "^1.2.0",
+    "date-fns": "^4.1.0",
+    "mrmime": "^2.0.1",
+    "nanoid": "^5.1.5",
+    "neverthrow": "^8.2.0",
+    "query-string": "^9.2.2",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "ts-pattern": "^5.7.1",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@beauty-salon-shared/config": "workspace:*",
+    "@biomejs/biome": "^1.9.4",
+    "@rslib/core": "^0.10.5",
+    "@types/node": "^24.0.13",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react-swc": "^3.10.2",
+    "@vitest/coverage-v8": "^3.2.4",
+    "@vitest/ui": "^3.2.4",
+    "jsdom": "^26.1.0",
+    "knip": "^5.61.3",
+    "taze": "^19.1.0",
+    "tsup": "^8.5.0",
+    "type-fest": "^4.41.0",
+    "typescript": "^5.8.3",
+    "utility-types": "^3.11.0",
+    "vite": "^7.0.4",
+    "vite-plugin-dts": "^4.5.4",
+    "vitest": "^3.2.4"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./booleanUtil": {
+      "import": "./dist/booleanUtil/index.js",
+      "types": "./dist/booleanUtil/index.d.ts"
+    },
+    "./dateUtil": {
+      "import": "./dist/dateUtil/index.js",
+      "types": "./dist/dateUtil/index.d.ts"
+    },
+    "./fileUtil": {
+      "import": "./dist/fileUtil/index.js",
+      "types": "./dist/fileUtil/index.d.ts"
+    },
+    "./formatUtil": {
+      "import": "./dist/formatUtil/index.js",
+      "types": "./dist/formatUtil/index.d.ts"
+    },
+    "./mimeUtil": {
+      "import": "./dist/mimeUtil/index.js",
+      "types": "./dist/mimeUtil/index.d.ts"
+    },
+    "./queryParamUtil": {
+      "import": "./dist/queryParamUtil/index.js",
+      "types": "./dist/queryParamUtil/index.d.ts"
+    },
+    "./randUtil": {
+      "import": "./dist/randUtil/index.js",
+      "types": "./dist/randUtil/index.d.ts"
+    },
+    "./transformUtil": {
+      "import": "./dist/transformUtil/index.js",
+      "types": "./dist/transformUtil/index.d.ts"
+    },
+    "./typeUtil": {
+      "import": "./dist/typeUtil/index.js",
+      "types": "./dist/typeUtil/index.d.ts"
+    },
+    "./validationUtil": {
+      "import": "./dist/validationUtil/index.js",
+      "types": "./dist/validationUtil/index.d.ts"
+    }
+  },
+  "files": ["dist"],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "name": "@beauty-salon-frontend/utils",
+  "peerDependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "sideEffects": false,
+  "private": true,
+  "scripts": {
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "clean": "rm -rf dist node_modules *.tsbuildinfo",
+    "build:dev": "NODE_ENV=development rslib build",
+    "build:test": "NODE_ENV=test rslib build",
+    "build:stg": "NODE_ENV=staging rslib build",
+    "build:prod": "NODE_ENV=production rslib build",
+    "build:watch": "NODE_ENV=development rslib build --watch",
+    "package:check": "taze",
+    "knip": "knip --include dependencies,optionalPeerDependencies,unlisted,binaries,unresolved",
+    "typecheck": "tsc --build",
+    "format": "biome format --write .",
+    "format:fix": "biome check . --fix --unsafe",
+    "dev": "NODE_ENV=development rslib build --watch",
+    "dev:tsc": "tsc --build --watch"
+  },
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "version": "0.0.0"
+}

@@ -1,0 +1,19 @@
+{
+  "name": "@beauty-salon/specs",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "compile": "tsp compile .",
+    "watch": "tsp compile . --watch",
+    "format": "tsp format **/*.tsp",
+    "generate:backend": "tsp compile . && tsx ../scripts/generate-backend-types.ts"
+  },
+  "devDependencies": {
+    "@typespec/compiler": "^1.1.0",
+    "@typespec/http": "^1.1.0",
+    "@typespec/openapi3": "^1.1.0",
+    "@typespec/rest": "^0.71.0",
+    "yaml": "^2.3.4"
+  }
+}

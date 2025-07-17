@@ -1,0 +1,9 @@
+packages:
+  - "backend/packages/*"
+  - "backend/packages/features/*"
+  - "backend/apps/*"
+  - "frontend/packages/*"
+  - "frontend/packages/features/*"
+  - "frontend/apps/*"
+  - "shared-config"
+  - "specs"

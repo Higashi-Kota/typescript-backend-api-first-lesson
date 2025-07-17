@@ -1,0 +1,10 @@
+{
+  "extends": ["@beauty-salon-shared/config/biome"],
+  "linter": {
+    "rules": {
+      "complexity": {
+        "noBannedTypes": "off"
+      }
+    }
+  }
+}

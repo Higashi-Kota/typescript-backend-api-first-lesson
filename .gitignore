@@ -1,0 +1,54 @@
+tsconfig.tsbuildinfo
+tsconfig.tsbuildinfo*
+vite.config.ts.timestamp*
+tsup.config.bundled*
+
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+*.tsbuildinfo
+.turbo
+
+# Shared config should not have dist
+shared-config/**/dist/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+coverage/
+.nyc_output/
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Generated files
+*.gen.ts
+*.gen.js
+
+# Docker
+.docker/
+
+# Temporary files
+tmp/
+temp/

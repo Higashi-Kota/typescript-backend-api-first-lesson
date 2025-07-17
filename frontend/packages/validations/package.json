@@ -1,0 +1,97 @@
+{
+  "dependencies": {
+    "@beauty-salon-frontend/types": "workspace:*",
+    "@beauty-salon-frontend/utils": "workspace:*",
+    "@beauty-salon-frontend/message": "workspace:*",
+    "neverthrow": "^8.2.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@beauty-salon-shared/config": "workspace:*",
+    "@biomejs/biome": "^1.9.4",
+    "@rslib/core": "^0.10.5",
+    "@types/node": "^24.0.13",
+    "@vitejs/plugin-react-swc": "^3.10.2",
+    "knip": "^5.61.3",
+    "taze": "^19.1.0",
+    "tsup": "^8.5.0",
+    "type-fest": "^4.41.0",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.4",
+    "vite-plugin-dts": "^4.5.4",
+    "@vitest/coverage-v8": "^3.2.4",
+    "@vitest/ui": "^3.2.4",
+    "vitest": "^3.2.4"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./validateBirthday": {
+      "import": "./dist/validateBirthday/index.js",
+      "types": "./dist/validateBirthday/index.d.ts"
+    },
+    "./validateEmail": {
+      "import": "./dist/validateEmail/index.js",
+      "types": "./dist/validateEmail/index.d.ts"
+    },
+    "./validateEndDate": {
+      "import": "./dist/validateEndDate/index.js",
+      "types": "./dist/validateEndDate/index.d.ts"
+    },
+    "./validateFullWidthKatakana": {
+      "import": "./dist/validateFullWidthKatakana/index.js",
+      "types": "./dist/validateFullWidthKatakana/index.d.ts"
+    },
+    "./validateHalfWidthKatakana": {
+      "import": "./dist/validateHalfWidthKatakana/index.js",
+      "types": "./dist/validateHalfWidthKatakana/index.d.ts"
+    },
+    "./validateMaxLength": {
+      "import": "./dist/validateMaxLength/index.js",
+      "types": "./dist/validateMaxLength/index.d.ts"
+    },
+    "./validatePassword": {
+      "import": "./dist/validatePassword/index.js",
+      "types": "./dist/validatePassword/index.d.ts"
+    },
+    "./validateMinLength": {
+      "import": "./dist/validateMinLength/index.js",
+      "types": "./dist/validateMinLength/index.d.ts"
+    },
+    "./validateStartDate": {
+      "import": "./dist/validateStartDate/index.js",
+      "types": "./dist/validateStartDate/index.d.ts"
+    },
+    "./validateURL": {
+      "import": "./dist/validateURL/index.js",
+      "types": "./dist/validateURL/index.d.ts"
+    }
+  },
+  "files": ["dist"],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "name": "@beauty-salon-frontend/validations",
+  "sideEffects": false,
+  "private": true,
+  "scripts": {
+    "clean": "rm -rf dist node_modules *.tsbuildinfo",
+    "build:dev": "NODE_ENV=development rslib build",
+    "build:test": "NODE_ENV=test rslib build",
+    "build:stg": "NODE_ENV=staging rslib build",
+    "build:prod": "NODE_ENV=production rslib build",
+    "build:watch": "NODE_ENV=development rslib build --watch",
+    "package:check": "taze",
+    "knip": "knip --include dependencies,optionalPeerDependencies,unlisted,binaries,unresolved",
+    "typecheck": "tsc --build",
+    "format": "biome format --write .",
+    "format:fix": "biome check . --fix --unsafe",
+    "dev": "NODE_ENV=development rslib build --watch",
+    "dev:tsc": "tsc --build --watch",
+    "test": "vitest"
+  },
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "version": "0.0.0"
+}

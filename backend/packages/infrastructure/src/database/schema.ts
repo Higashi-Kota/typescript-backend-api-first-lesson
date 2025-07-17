@@ -1,0 +1,271 @@
+// TypeSpec-compliant database schema
+import {
+  boolean,
+  integer,
+  jsonb,
+  pgEnum,
+  pgTable,
+  text,
+  time,
+  timestamp,
+  uuid,
+} from 'drizzle-orm/pg-core'
+
+// Enums according to TypeSpec
+export const dayOfWeekEnum = pgEnum('day_of_week', [
+  'monday',
+  'tuesday',
+  'wednesday',
+  'thursday',
+  'friday',
+  'saturday',
+  'sunday',
+])
+
+export const serviceCategoryEnum = pgEnum('service_category', [
+  'cut',
+  'color',
+  'perm',
+  'treatment',
+  'spa',
+  'other',
+])
+
+export const reservationStatusEnum = pgEnum('reservation_status', [
+  'pending',
+  'confirmed',
+  'cancelled',
+  'completed',
+  'no_show',
+])
+
+export const bookingStatusEnum = pgEnum('booking_status', [
+  'draft',
+  'confirmed',
+  'cancelled',
+  'completed',
+  'no_show',
+])
+
+// Salons table with TypeSpec structure
+export const salons = pgTable('salons', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: text('name').notNull(),
+  description: text('description').notNull(),
+  address: jsonb('address').notNull().$type<{
+    street: string
+    city: string
+    state: string
+    postalCode: string
+    country: string
+  }>(),
+  email: text('email').notNull().unique(),
+  phoneNumber: text('phone_number').notNull(),
+  alternativePhone: text('alternative_phone'),
+  imageUrls: jsonb('image_urls').$type<string[]>(),
+  features: jsonb('features').$type<string[]>(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  createdBy: text('created_by'),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  updatedBy: text('updated_by'),
+})
+
+// Opening hours
+export const openingHours = pgTable('opening_hours', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  salonId: uuid('salon_id')
+    .notNull()
+    .references(() => salons.id, { onDelete: 'cascade' }),
+  dayOfWeek: dayOfWeekEnum('day_of_week').notNull(),
+  openTime: time('open_time').notNull(),
+  closeTime: time('close_time').notNull(),
+  isHoliday: boolean('is_holiday').notNull().default(false),
+})
+
+// Staff table
+export const staff = pgTable('staff', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  salonId: uuid('salon_id')
+    .notNull()
+    .references(() => salons.id, { onDelete: 'cascade' }),
+  name: text('name').notNull(),
+  email: text('email').notNull(),
+  phoneNumber: text('phone_number').notNull(),
+  alternativePhone: text('alternative_phone'),
+  specialties: jsonb('specialties').notNull().default([]).$type<string[]>(),
+  bio: text('bio'),
+  imageUrl: text('image_url'),
+  yearsOfExperience: integer('years_of_experience'),
+  certifications: jsonb('certifications').$type<string[]>(),
+  isActive: boolean('is_active').notNull().default(true),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  createdBy: text('created_by'),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  updatedBy: text('updated_by'),
+})
+
+// Staff working hours
+export const staffWorkingHours = pgTable('staff_working_hours', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  staffId: uuid('staff_id')
+    .notNull()
+    .references(() => staff.id, { onDelete: 'cascade' }),
+  dayOfWeek: dayOfWeekEnum('day_of_week').notNull(),
+  startTime: time('start_time').notNull(),
+  endTime: time('end_time').notNull(),
+  breakStart: time('break_start'),
+  breakEnd: time('break_end'),
+})
+
+// Service categories
+export const serviceCategories = pgTable(
+  'service_categories',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    name: text('name').notNull(),
+    description: text('description').notNull(),
+    parentId: uuid('parent_id'),
+    displayOrder: integer('display_order').notNull(),
+    isActive: boolean('is_active').notNull().default(true),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    createdBy: text('created_by'),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+    updatedBy: text('updated_by'),
+  },
+  (table) => ({
+    parentReference: {
+      columns: [table.parentId],
+      foreignColumns: [table.id],
+    },
+  })
+)
+
+// Services
+export const services = pgTable('services', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  salonId: uuid('salon_id')
+    .notNull()
+    .references(() => salons.id, { onDelete: 'cascade' }),
+  name: text('name').notNull(),
+  description: text('description').notNull(),
+  duration: integer('duration').notNull(), // minutes
+  price: integer('price').notNull(), // cents
+  category: serviceCategoryEnum('category').notNull(),
+  categoryId: uuid('category_id').references(() => serviceCategories.id),
+  imageUrl: text('image_url'),
+  requiredStaffLevel: integer('required_staff_level'),
+  isActive: boolean('is_active').notNull().default(true),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  createdBy: text('created_by'),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  updatedBy: text('updated_by'),
+})
+
+// Customers
+export const customers = pgTable('customers', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: text('name').notNull(),
+  email: text('email').notNull().unique(),
+  phoneNumber: text('phone_number').notNull(),
+  alternativePhone: text('alternative_phone'),
+  preferences: text('preferences'),
+  notes: text('notes'),
+  tags: jsonb('tags').$type<string[]>(),
+  loyaltyPoints: integer('loyalty_points').notNull().default(0),
+  membershipLevel: text('membership_level'),
+  birthDate: text('birth_date'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  createdBy: text('created_by'),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  updatedBy: text('updated_by'),
+})
+
+// Reservations (individual service appointments)
+export const reservations = pgTable('reservations', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  salonId: uuid('salon_id')
+    .notNull()
+    .references(() => salons.id),
+  customerId: uuid('customer_id')
+    .notNull()
+    .references(() => customers.id),
+  staffId: uuid('staff_id')
+    .notNull()
+    .references(() => staff.id),
+  serviceId: uuid('service_id')
+    .notNull()
+    .references(() => services.id),
+  startTime: timestamp('start_time').notNull(),
+  endTime: timestamp('end_time').notNull(),
+  status: reservationStatusEnum('status').notNull().default('pending'),
+  notes: text('notes'),
+  totalAmount: integer('total_amount').notNull(), // cents
+  depositAmount: integer('deposit_amount'),
+  isPaid: boolean('is_paid').notNull().default(false),
+  cancellationReason: text('cancellation_reason'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  createdBy: text('created_by'),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  updatedBy: text('updated_by'),
+})
+
+// Bookings (payment unit for multiple reservations)
+export const bookings = pgTable('bookings', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  salonId: uuid('salon_id')
+    .notNull()
+    .references(() => salons.id),
+  customerId: uuid('customer_id')
+    .notNull()
+    .references(() => customers.id),
+  status: bookingStatusEnum('status').notNull().default('draft'),
+  totalAmount: integer('total_amount').notNull(), // cents
+  discountAmount: integer('discount_amount').default(0),
+  finalAmount: integer('final_amount').notNull(),
+  paymentMethod: text('payment_method'),
+  paymentStatus: text('payment_status').notNull().default('pending'),
+  notes: text('notes'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  createdBy: text('created_by'),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  updatedBy: text('updated_by'),
+})
+
+// Junction table for booking-reservation relationship
+export const bookingReservations = pgTable('booking_reservations', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  bookingId: uuid('booking_id')
+    .notNull()
+    .references(() => bookings.id, { onDelete: 'cascade' }),
+  reservationId: uuid('reservation_id')
+    .notNull()
+    .references(() => reservations.id, { onDelete: 'restrict' }),
+})
+
+// Reviews (tied to individual reservations)
+export const reviews = pgTable('reviews', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  salonId: uuid('salon_id')
+    .notNull()
+    .references(() => salons.id),
+  customerId: uuid('customer_id')
+    .notNull()
+    .references(() => customers.id),
+  reservationId: uuid('reservation_id')
+    .notNull()
+    .references(() => reservations.id)
+    .unique(),
+  staffId: uuid('staff_id').references(() => staff.id),
+  rating: integer('rating').notNull(),
+  comment: text('comment'),
+  serviceRating: integer('service_rating'),
+  staffRating: integer('staff_rating'),
+  atmosphereRating: integer('atmosphere_rating'),
+  images: jsonb('images').$type<string[]>(),
+  isVerified: boolean('is_verified').notNull().default(false),
+  helpfulCount: integer('helpful_count').notNull().default(0),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  createdBy: text('created_by'),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  updatedBy: text('updated_by'),
+})

@@ -1,0 +1,14 @@
+{
+  "extends": "@beauty-salon-shared/config/frontend.json",
+  "compilerOptions": {
+    "composite": true,
+    "tsBuildInfoFile": "./tsconfig.node.tsbuildinfo",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "noEmit": false,
+    "declaration": true
+  },
+  "include": ["vite.config.ts"]
+}

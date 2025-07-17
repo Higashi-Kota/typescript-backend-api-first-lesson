@@ -1,0 +1,40 @@
+{
+  "$schema": "https://unpkg.com/knip@latest/schema.json",
+  "workspaces": {
+    "backend/packages/*": {
+      "entry": ["src/index.ts"],
+      "project": ["src/**/*.ts"]
+    },
+    "backend/apps/*": {
+      "entry": ["src/index.ts", "src/migrate.ts", "src/seed.ts"],
+      "project": ["src/**/*.ts"]
+    },
+    "frontend/packages/*": {
+      "entry": ["src/index.ts", "src/index.tsx"],
+      "project": ["src/**/*.ts", "src/**/*.tsx"]
+    },
+    "frontend/apps/*": {
+      "entry": ["src/main.tsx", "app/layout.tsx"],
+      "project": ["src/**/*.ts", "src/**/*.tsx", "app/**/*.ts", "app/**/*.tsx"]
+    }
+  },
+  "ignore": [
+    "**/*.config.js",
+    "**/*.config.ts",
+    "**/dist/**",
+    "**/build/**",
+    "**/.next/**",
+    "**/vite-env.d.ts",
+    "**/*.d.ts"
+  ],
+  "ignoreDependencies": [
+    "husky",
+    "lint-staged",
+    "@changesets/cli",
+    "@biomejs/biome",
+    "typescript",
+    "tsx"
+  ],
+  "ignoreExportsUsedInFile": true,
+  "ignoreWorkspaces": ["specs"]
+}

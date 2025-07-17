@@ -1,0 +1,22 @@
+# これは CODEOWNERS ファイルのサンプルです。
+# プロジェクトに合わせて適切に設定してください。
+
+# デフォルトのコードオーナー
+* @your-github-username
+
+# バックエンド関連
+/backend/ @backend-team
+/specs/ @backend-team
+
+# フロントエンド関連
+/frontend/ @frontend-team
+
+# インフラ・設定関連
+/docker-compose.yml @devops-team
+/Dockerfile @devops-team
+/.github/ @devops-team
+/Makefile @devops-team
+
+# ドキュメント
+/docs/ @docs-team
+*.md @docs-team
