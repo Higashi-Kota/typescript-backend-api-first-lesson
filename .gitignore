@@ -1,7 +1,6 @@
 tsconfig.tsbuildinfo
 tsconfig.tsbuildinfo*
 vite.config.ts.timestamp*
-tsup.config.bundled*
 
 # Dependencies
 node_modules/

@@ -5,7 +5,6 @@
     "@rslib/core": "^0.10.5",
     "@types/node": "^24.0.13",
     "taze": "^19.1.0",
-    "tsup": "^8.5.0",
     "typescript": "^5.8.3",
     "vite": "^7.0.4",
     "vite-plugin-dts": "^4.5.4"

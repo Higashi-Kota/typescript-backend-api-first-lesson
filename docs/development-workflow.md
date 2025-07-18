@@ -39,8 +39,9 @@ make backend-start
 # - frontend/packages/api-client/src/generated/ に新しいクライアントが生成される
 # - コンポーネントやストアを更新
 
-# 6. フロントエンドを起動
-make frontend-dev
+# 6. フロントエンドをビルド・起動
+make frontend-build  # 必須：初回または依存関係の変更時
+make frontend-dev    # 開発サーバーを起動
 ```
 
 ### 注意点
@@ -79,9 +80,15 @@ make backend-start
 cd frontend/apps/portal-app
 pnpm add react-hook-form
 
-# 2. ルートに戻って使用
+# 2. ルートに戻る
 cd ../../..
-make frontend-dev
+
+# 3. 依存関係を再インストール
+pnpm install
+
+# 4. フロントエンドをビルド・起動
+make frontend-build  # 必須：新しい依存関係を含めてビルド
+make frontend-dev    # 開発サーバーを起動
 ```
 
 ### 注意点
@@ -89,6 +96,7 @@ make frontend-dev
 - パッケージ間の依存関係の循環を避ける
 - 型定義（@types/*）も忘れずに追加
 - グローバルな依存関係はルートのpackage.jsonに追加
+- `make frontend-build`はpnpmのワークスペース機能により依存関係を自動解決
 
 ## 新しいエンドポイントを追加する場合
 
@@ -231,4 +239,32 @@ make typecheck
 # lockfileを再生成
 rm pnpm-lock.yaml
 pnpm install
+```
+
+### フロントエンドのビルドエラー
+
+```bash
+# フロントエンドパッケージの依存関係を確認
+cd frontend
+pnpm ls --depth=0
+
+# ビルドキャッシュをクリア
+pnpm --filter './frontend/**' run clean
+
+# 依存関係順にビルド
+make frontend-build
+```
+
+### フロントエンド開発サーバーが起動しない場合
+
+```bash
+# node_modulesを削除して再インストール
+rm -rf node_modules frontend/**/node_modules
+pnpm install
+
+# フロントエンドを再ビルド
+make frontend-build
+
+# 開発サーバーを起動
+make frontend-dev
 ```

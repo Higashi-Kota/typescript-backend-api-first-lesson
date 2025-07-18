@@ -1,7 +1,7 @@
 .PHONY: help install build test lint format typecheck clean clean-all fresh \
         docker-up docker-down docker-logs docker-clean \
         db-migrate db-seed db-reset \
-        backend-build backend-start frontend-dev
+        backend-build backend-start frontend-build frontend-dev
 
 # Default target
 help:
@@ -16,7 +16,8 @@ help:
 	@echo "  make backend-start  - Start backend from built dist"
 	@echo ""
 	@echo "Frontend Development:"
-	@echo "  make frontend-dev   - Start frontend dev server"
+	@echo "  make frontend-build - Build frontend (required before dev)"
+	@echo "  make frontend-dev   - Start frontend dev server with watch mode"
 	@echo ""
 	@echo "Build & Test:"
 	@echo "  make build         - Build all packages"
@@ -48,8 +49,16 @@ install:
 	pnpm install
 
 # Frontend Development
+frontend-build:
+	@echo "Cleaning previous frontend builds..."
+	pnpm --filter './frontend/**' run clean
+	@echo "Building frontend packages with dependency resolution..."
+	@echo "Using pnpm workspace topology to build in correct order..."
+	pnpm --filter './frontend/**' run build:dev
+	@echo "Frontend build complete!"
+
 frontend-dev:
-	@echo "Starting frontend development server..."
+	@echo "Starting frontend development server with watch mode..."
 	pnpm --filter './frontend/apps/*' run dev
 
 # Backend build and run

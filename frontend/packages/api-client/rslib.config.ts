@@ -17,7 +17,6 @@ export default defineConfig({
     externals: [
       'react',
       '@tanstack/react-query',
-      'hono',
       '@beauty-salon-frontend/types',
     ],
   },

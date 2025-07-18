@@ -17,13 +17,12 @@
   },
   "scripts": {
     "dev": "tsc --watch",
-    "build": "tsc",
-    "build:dev": "NODE_ENV=development tsc",
-    "build:test": "NODE_ENV=test tsc",
-    "build:stg": "NODE_ENV=staging tsc",
-    "build:prod": "NODE_ENV=production tsc",
-    "build:tsup": "tsup",
-    "build:rslib": "rslib build",
+    "build": "tsc && cp -r src/styles dist/",
+    "build:dev": "NODE_ENV=development tsc && cp -r src/styles dist/",
+    "build:test": "NODE_ENV=test tsc && cp -r src/styles dist/",
+    "build:stg": "NODE_ENV=staging tsc && cp -r src/styles dist/",
+    "build:prod": "NODE_ENV=production tsc && cp -r src/styles dist/",
+    "build:rslib": "tsc && cp -r src/styles dist/",
     "clean": "rm -rf dist *.tsbuildinfo",
     "typecheck": "tsc --noEmit",
     "test": "vitest",
@@ -44,8 +43,7 @@
     "@types/react-dom": "^19.1.6",
     "storybook": "^8.6.14",
     "@vitejs/plugin-react-swc": "^3.10.2",
-    "@rslib/core": "^0.10.5",
-    "tsup": "^8.5.0"
+    "@rslib/core": "^0.10.5"
   },
   "peerDependencies": {
     "react": "^18.0.0",

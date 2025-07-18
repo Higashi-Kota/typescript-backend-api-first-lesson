@@ -64,7 +64,6 @@
     "knip": "^5.61.3",
     "taze": "^19.1.0",
     "testcontainers": "^11.2.1",
-    "tsup": "^8.5.0",
     "typescript": "^5.8.3",
     "vite": "^7.0.4",
     "vite-plugin-dts": "^4.5.4",
