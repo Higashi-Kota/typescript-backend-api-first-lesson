@@ -11,7 +11,7 @@ export default defineConfig({
       format: 'esm',
       syntax: 'esnext',
       dts: true,
-      bundle: false,
+      bundle: true,
       output: {
         minify: isProduction,
         sourceMap: isDevelopment || isTest || isStaging,
@@ -23,12 +23,6 @@ export default defineConfig({
       index: './src/index.ts',
     },
     tsconfigPath: './tsconfig.json',
-    transformImport: [
-      {
-        libraryName: 'react',
-        customName: 'React',
-      },
-    ],
   },
   output: {
     externals: ['react', 'react-dom', 'react/jsx-runtime'],
@@ -49,6 +43,7 @@ export default defineConfig({
         transform: {
           react: {
             runtime: 'automatic',
+            importSource: 'react',
           },
         },
       },
