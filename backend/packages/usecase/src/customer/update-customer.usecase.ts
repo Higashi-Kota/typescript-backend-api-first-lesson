@@ -6,8 +6,11 @@ import type {
   RepositoryError,
   Result,
   UpdateCustomerInput,
-} from '@backend/domain'
-import { err, updateCustomer as updateCustomerEntity } from '@backend/domain'
+} from '@beauty-salon-backend/domain'
+import {
+  err,
+  updateCustomer as updateCustomerEntity,
+} from '@beauty-salon-backend/domain'
 import type { components } from '@beauty-salon-backend/types/api'
 
 // TypeSpecで定義された型

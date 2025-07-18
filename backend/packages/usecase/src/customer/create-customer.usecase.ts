@@ -10,12 +10,12 @@ import type {
   CustomerRepository,
   RepositoryError,
   Result,
-} from '@backend/domain'
+} from '@beauty-salon-backend/domain'
 import {
   createCustomer as createCustomerEntity,
   createCustomerIdSafe,
   err,
-} from '@backend/domain'
+} from '@beauty-salon-backend/domain'
 import type { components } from '@beauty-salon-backend/types/api'
 import { match } from 'ts-pattern'
 import { v4 as uuidv4 } from 'uuid'

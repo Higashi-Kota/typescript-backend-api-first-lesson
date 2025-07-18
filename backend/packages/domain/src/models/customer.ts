@@ -4,9 +4,19 @@
  */
 
 import { match } from 'ts-pattern'
-import type { CustomerId } from '../shared/brand.js'
 import type { Result } from '../shared/result.js'
 import { err, ok } from '../shared/result.js'
+import type { Brand } from '../shared/brand.js'
+import { createBrand, createBrandSafe } from '../shared/brand.js'
+
+// Customer固有のID型
+export type CustomerId = Brand<string, 'CustomerId'>
+
+// CustomerID作成関数
+export const createCustomerId = (value: string) =>
+  createBrand(value, 'CustomerId')
+export const createCustomerIdSafe = (value: string) =>
+  createBrandSafe(value, 'CustomerId')
 
 // 連絡先情報
 export type ContactInfo = {

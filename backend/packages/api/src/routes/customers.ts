@@ -7,7 +7,6 @@ import { Router } from 'express'
 import { match } from 'ts-pattern'
 import { z } from 'zod'
 
-import { type CustomerRepository, createCustomerIdSafe } from '@backend/domain'
 import {
   createCustomerErrorResponse,
   createCustomerUseCase,
@@ -22,6 +21,10 @@ import {
   mapUpdateCustomerRequest,
   updateCustomerUseCase,
 } from '@backend/usecase'
+import {
+  type CustomerRepository,
+  createCustomerIdSafe,
+} from '@beauty-salon-backend/domain'
 
 // バリデーションスキーマ
 const customerIdSchema = z.string().uuid()

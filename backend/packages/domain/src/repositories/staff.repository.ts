@@ -11,7 +11,7 @@ import type {
   StaffSearchCriteria,
   UpdateStaffRequest,
 } from '../models/staff.js'
-import type { SalonId } from '../shared/brand.js'
+import type { SalonId } from '../models/salon.js'
 import type { RepositoryError } from '../shared/errors.js'
 import type { PaginatedResult, PaginationParams } from '../shared/pagination.js'
 import type { Result } from '../shared/result.js'

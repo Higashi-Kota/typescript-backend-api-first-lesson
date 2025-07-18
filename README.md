@@ -201,32 +201,79 @@ router.post('/', async (req, res) => {
 
 ### 必要な環境
 
-- Node.js 20+
+- Node.js 24+
 - PostgreSQL 15+
-- pnpm 8+
+- pnpm 10+
 - Docker & Docker Compose
 
-### インストール
+### 初回セットアップ
 
 ```bash
 # 1. 依存関係のインストール
-pnpm install
+make install
 
 # 2. 環境変数の設定
 cp .env.example .env
 
-# 3. Docker環境の起動
-docker-compose up -d
+# 3. 必要なサービスの起動（PostgreSQL, MailHog, MinIO）
+make docker-up
 
-# 4. 型の生成
-pnpm run generate
-
-# 5. データベースのマイグレーション（詳細は下記参照）
-pnpm run db:migrate
-
-# 6. 開発サーバーの起動
-pnpm dev
+# 4. データベースのセットアップ
+make db-migrate
+make db-seed  # サンプルデータの投入（任意）
 ```
+
+### バックエンド開発
+
+バックエンドは複数のパッケージが相互依存しているため、ホットリロードではなく「ビルド＆再起動」方式を推奨します。
+
+```bash
+# 1. バックエンドをビルド
+make backend-build
+
+# 2. ビルドされたサーバーを起動
+make backend-start
+
+# 3. コードを変更したら、Ctrl+Cでサーバーを停止して1に戻る
+```
+
+### フロントエンド開発
+
+```bash
+# フロントエンド開発サーバーの起動
+make frontend-dev
+```
+
+### 便利なコマンド
+
+```bash
+# 型チェック
+make typecheck
+
+# リント
+make lint
+
+# フォーマット
+make format
+
+# テスト
+make test
+
+# 完全クリーンアップ（問題発生時）
+make fresh
+```
+
+### 開発ワークフロー
+
+実際の開発シナリオごとの詳細な手順については、以下のドキュメントを参照してください：
+
+📖 **[開発ワークフローガイド](./docs/development-workflow.md)**
+
+- TypeSpec API定義を変更する場合の手順
+- 新しい依存関係を追加する場合の手順
+- 新しいエンドポイントを追加する場合の手順
+- データベーススキーマを変更する場合の手順
+- バグ修正を行う場合の手順
 
 ## 🧪 テスト
 

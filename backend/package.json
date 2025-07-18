@@ -6,6 +6,9 @@
   "scripts": {
     "dev": "pnpm -r --parallel run dev",
     "build": "pnpm -r run build",
+    "build:packages": "pnpm --filter './packages/**' run build",
+    "build:server": "pnpm --filter '@beauty-salon-backend/server' run build",
+    "start:prod": "pnpm --filter '@beauty-salon-backend/server' run start",
     "test": "pnpm -r run test",
     "format": "biome format --write .",
     "format:fix": "biome check . --fix --unsafe",

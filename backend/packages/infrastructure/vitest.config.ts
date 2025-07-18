@@ -22,7 +22,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
-      '@backend/domain': path.resolve(__dirname, '../domain/src'),
+      '@beauty-salon-backend/domain': path.resolve(__dirname, '../domain/src'),
       '@beauty-salon-backend/types': path.resolve(__dirname, '../types/src'),
       '@beauty-salon-backend/config': path.resolve(__dirname, '../config/src'),
     },

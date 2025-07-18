@@ -23,7 +23,7 @@
   "sideEffects": false,
   "private": true,
   "scripts": {
-    "clean": "rm -rf dist node_modules *.tsbuildinfo",
+    "clean": "rm -rf dist *.tsbuildinfo",
     "build:dev": "tsc --build && vite build --mode dev",
     "build:test": "tsc --build && vite build --mode test",
     "build:stg": "tsc --build && vite build --mode staging",

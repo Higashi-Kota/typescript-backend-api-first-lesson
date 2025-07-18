@@ -23,8 +23,8 @@ import type {
   SalonId,
   StaffId,
   UpdateReviewRequest,
-} from '@backend/domain'
-import { createReviewId, err, ok } from '@backend/domain'
+} from '@beauty-salon-backend/domain'
+import { createReviewId, err, ok } from '@beauty-salon-backend/domain'
 
 import {
   customers,

@@ -8,9 +8,9 @@ import type {
   CreateCustomerInput,
   Customer,
   CustomerError,
+  CustomerId,
   UpdateCustomerInput,
 } from '../models/customer.js'
-import type { CustomerId } from '../shared/brand.js'
 import type { RepositoryError } from '../shared/errors.js'
 import type { PaginatedResult, PaginationParams } from '../shared/pagination.js'
 import type { Result } from '../shared/result.js'

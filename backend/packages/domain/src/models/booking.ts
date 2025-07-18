@@ -3,18 +3,22 @@
  * CLAUDEガイドラインに準拠したSum型によるモデリング
  */
 
-import type {
-  BookingId,
-  CustomerId,
-  ReservationId,
-  SalonId,
-} from '../shared/brand.js'
 import type { Result } from '../shared/result.js'
 import { err, ok } from '../shared/result.js'
+import type { Brand } from '../shared/brand.js'
+import { createBrand, createBrandSafe } from '../shared/brand.js'
+import type { CustomerId } from './customer.js'
+import type { SalonId } from './salon.js'
+import type { ReservationId } from './reservation.js'
 
-// Booking ID (UUID形式のBrand型) - brand.tsから再エクスポート
-export type { BookingId } from '../shared/brand.js'
-export { createBookingId, createBookingIdSafe } from '../shared/brand.js'
+// Booking固有のID型
+export type BookingId = Brand<string, 'BookingId'>
+
+// BookingID作成関数
+export const createBookingId = (value: string) =>
+  createBrand(value, 'BookingId')
+export const createBookingIdSafe = (value: string) =>
+  createBrandSafe(value, 'BookingId')
 
 // 監査情報（Salonと共通）
 import type { AuditInfo } from './salon.js'

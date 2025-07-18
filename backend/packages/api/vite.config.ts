@@ -25,14 +25,7 @@ export default defineConfig({
       fileName: '[name]',
     },
     rollupOptions: {
-      external: [
-        /^@beauty-salon\//,
-        '@hono/swagger-ui',
-        '@hono/zod-openapi',
-        '@hono/zod-validator',
-        'hono',
-        'zod',
-      ],
+      external: [/^@beauty-salon\//, 'zod'],
       output: {
         preserveModules: true,
         preserveModulesRoot: 'src',

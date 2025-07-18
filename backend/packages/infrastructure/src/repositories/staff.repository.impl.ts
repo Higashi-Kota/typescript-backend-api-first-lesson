@@ -19,8 +19,8 @@ import type {
   StaffRepository,
   StaffSearchCriteria,
   UpdateStaffRequest,
-} from '@backend/domain'
-import { createStaffId, err, ok } from '@backend/domain'
+} from '@beauty-salon-backend/domain'
+import { createStaffId, err, ok } from '@beauty-salon-backend/domain'
 
 import { staff, staffWorkingHours } from '../database/schema'
 

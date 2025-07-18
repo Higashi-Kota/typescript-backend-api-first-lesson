@@ -1,17 +1,22 @@
-.PHONY: help install dev dev-backend dev-frontend build test lint format typecheck clean \
-        docker-up docker-down docker-build docker-logs docker-clean \
-        db-migrate db-seed db-reset api-spec \
-        prod-build prod-run
+.PHONY: help install build test lint format typecheck clean clean-all fresh \
+        docker-up docker-down docker-logs docker-clean \
+        db-migrate db-seed db-reset \
+        backend-build backend-start frontend-dev
 
 # Default target
 help:
 	@echo "Beauty Salon Reservation App - Available commands:"
 	@echo ""
-	@echo "Development:"
+	@echo "Quick Start:"
 	@echo "  make install        - Install all dependencies"
-	@echo "  make dev           - Start all development servers"
-	@echo "  make dev-backend   - Start backend development server only"
-	@echo "  make dev-frontend  - Start frontend development server only"
+	@echo "  make docker-up      - Start required services (DB, Mail, S3)"
+	@echo ""
+	@echo "Backend Development:"
+	@echo "  make backend-build  - Build backend (recommended for development)"
+	@echo "  make backend-start  - Start backend from built dist"
+	@echo ""
+	@echo "Frontend Development:"
+	@echo "  make frontend-dev   - Start frontend dev server"
 	@echo ""
 	@echo "Build & Test:"
 	@echo "  make build         - Build all packages"
@@ -19,6 +24,11 @@ help:
 	@echo "  make lint          - Run linter"
 	@echo "  make format        - Format code"
 	@echo "  make typecheck     - Run type checking"
+	@echo ""
+	@echo "Cleanup:"
+	@echo "  make clean         - Clean build artifacts"
+	@echo "  make clean-all     - Clean everything including node_modules"
+	@echo "  make fresh         - Clean everything and reinstall"
 	@echo ""
 	@echo "Docker:"
 	@echo "  make docker-up     - Start all services with Docker Compose"
@@ -32,31 +42,36 @@ help:
 	@echo "  make db-seed       - Seed database with sample data"
 	@echo "  make db-reset      - Reset database (drop, create, migrate, seed)"
 	@echo ""
-	@echo "API:"
-	@echo "  make api-spec      - Generate API specification from TypeSpec"
-	@echo ""
-	@echo "Production:"
-	@echo "  make prod-build    - Build for production"
-	@echo "  make prod-run      - Run production build"
 
-# Development
+# Installation
 install:
 	pnpm install
 
-dev:
+# Frontend Development
+frontend-dev:
+	@echo "Starting frontend development server..."
+	pnpm --filter './frontend/apps/*' run dev
+
+# Backend build and run
+backend-build:
+	@echo "Cleaning previous builds..."
+	pnpm --filter './backend/**' run clean
+	@echo "Building backend packages sequentially..."
+	pnpm build:backend:packages
+	@echo "Waiting for build to stabilize..."
+	@sleep 2
+	@echo "Building backend server..."
+	pnpm build:backend:server
+	@echo "Backend build complete!"
+
+backend-start:
 	docker-compose up -d postgres mailhog minio minio-init
 	@echo "Waiting for services to be ready..."
 	@sleep 5
-	pnpm dev
-
-dev-backend:
-	docker-compose up -d postgres mailhog minio minio-init
-	@echo "Waiting for services to be ready..."
-	@sleep 5
-	pnpm dev:backend
-
-dev-frontend:
-	pnpm dev:frontend
+	@echo "Checking database connection..."
+	@docker-compose exec -T postgres pg_isready -U postgres || echo "Database might not be ready yet"
+	@echo "Starting backend server with debug output..."
+	NODE_ENV=production DEBUG=* pnpm start:backend:prod
 
 # Build & Test
 build:
@@ -76,7 +91,12 @@ typecheck:
 
 clean:
 	pnpm clean
-	rm -rf node_modules
+
+clean-all:
+	pnpm clean:all
+
+fresh:
+	pnpm fresh
 
 # Docker
 docker-up:
@@ -111,17 +131,6 @@ db-reset:
 	$(MAKE) db-migrate
 	@echo "Database reset complete!"
 
-# API
-api-spec:
-	pnpm --filter @beauty-salon/specs run compile
-
-# Production
-prod-build:
-	NODE_ENV=production pnpm build
-
-prod-run:
-	docker build --target production -t beauty-salon:prod .
-	docker run -p 3000:3000 --env-file .env.production beauty-salon:prod
 
 # Utility targets
 .env:

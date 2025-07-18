@@ -19,7 +19,7 @@
     "lint:check": "biome check ."
   },
   "dependencies": {
-    "@backend/domain": "workspace:*",
+    "@beauty-salon-backend/domain": "workspace:*",
     "@beauty-salon-backend/types": "workspace:*",
     "ts-pattern": "^5.5.0",
     "uuid": "^11.0.6"
@@ -27,6 +27,6 @@
   "devDependencies": {
     "@types/node": "^22.12.1",
     "@types/uuid": "^10.0.0",
-    "vitest": "^2.1.8"
+    "vitest": "^3.2.4"
   }
 }

@@ -4,17 +4,20 @@
  */
 
 import { randomUUID } from 'node:crypto'
-import type { NextFunction, Request, Response } from 'express'
+import type { RequestHandler } from 'express'
 
-export const requestId = () => {
-  return (
-    req: Request & { id?: string },
-    res: Response,
-    next: NextFunction
-  ): void => {
-    const id = (req.headers['x-request-id'] as string) || randomUUID()
-    req.id = id
-    res.setHeader('X-Request-ID', id)
-    next()
+// Expressの拡張型定義
+declare global {
+  namespace Express {
+    interface Request {
+      id?: string
+    }
   }
+}
+
+export const requestId: RequestHandler = (req, res, next) => {
+  const id = (req.headers['x-request-id'] as string) || randomUUID()
+  req.id = id
+  res.setHeader('X-Request-ID', id)
+  next()
 }

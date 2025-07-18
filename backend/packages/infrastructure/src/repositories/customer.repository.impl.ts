@@ -12,7 +12,7 @@ import type {
   CustomerSearchCriteria,
   PaginatedResult,
   PaginationParams,
-} from '@backend/domain'
+} from '@beauty-salon-backend/domain'
 import {
   type CustomerId,
   type RepositoryError,
@@ -20,7 +20,7 @@ import {
   createCustomerId,
   err,
   ok,
-} from '@backend/domain'
+} from '@beauty-salon-backend/domain'
 
 import { customers } from '../database/schema'
 

@@ -29,7 +29,7 @@
   "sideEffects": false,
   "private": true,
   "scripts": {
-    "clean": "rm -rf dist node_modules *.tsbuildinfo",
+    "clean": "rm -rf dist *.tsbuildinfo",
     "build:dev": "NODE_ENV=development rslib build",
     "build:test": "NODE_ENV=test rslib build",
     "build:stg": "NODE_ENV=staging rslib build",

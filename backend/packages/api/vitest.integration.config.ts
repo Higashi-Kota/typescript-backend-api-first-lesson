@@ -17,7 +17,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@backend/domain':
+      '@beauty-salon-backend/domain':
         '/home/aine/higashi-wrksp/typescript-backend-api-first-lesson/backend/packages/domain/src',
       '@backend/usecase':
         '/home/aine/higashi-wrksp/typescript-backend-api-first-lesson/backend/packages/usecase/src',

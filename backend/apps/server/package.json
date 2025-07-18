@@ -19,8 +19,7 @@
   "dependencies": {
     "@beauty-salon-backend/api": "workspace:*",
     "@beauty-salon-backend/config": "workspace:*",
-    "@beauty-salon-backend/infrastructure": "workspace:*",
-    "@hono/node-server": "^1.16.0"
+    "@beauty-salon-backend/infrastructure": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^24.0.13",

@@ -8,8 +8,8 @@ import type {
   CustomerRepository,
   RepositoryError,
   Result,
-} from '@backend/domain'
-import { deleteCustomer as deleteCustomerEntity } from '@backend/domain'
+} from '@beauty-salon-backend/domain'
+import { deleteCustomer as deleteCustomerEntity } from '@beauty-salon-backend/domain'
 
 // UseCase エラー型
 export type DeleteCustomerUseCaseError =

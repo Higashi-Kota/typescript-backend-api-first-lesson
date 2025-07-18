@@ -12,7 +12,7 @@ import type {
   PaginationParams,
   RepositoryError,
   Result,
-} from '@backend/domain'
+} from '@beauty-salon-backend/domain'
 import type { components } from '@beauty-salon-backend/types/api'
 import { mapCustomerToResponse } from './create-customer.usecase.js'
 

@@ -3,7 +3,7 @@
  * CLAUDEガイドラインに準拠したAPI層の実装
  */
 
-import type { CustomerRepository } from '@backend/domain'
+import type { CustomerRepository } from '@beauty-salon-backend/domain'
 import { DrizzleCustomerRepository } from '@beauty-salon-backend/infrastructure'
 import compression from 'compression'
 import cors from 'cors'

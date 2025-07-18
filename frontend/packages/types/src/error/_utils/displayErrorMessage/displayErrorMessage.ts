@@ -1,6 +1,6 @@
 import {
-  isApplicationError,
   type ApplicationErrorData,
+  isApplicationError,
 } from '../../_types/applicationError'
 
 import { isNullOrUndefined } from '@beauty-salon-frontend/utils/typeUtil'

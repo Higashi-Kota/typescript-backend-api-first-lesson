@@ -11,7 +11,9 @@ import type {
   CreateBookingRequest,
   UpdateBookingRequest,
 } from '../models/booking.js'
-import type { CustomerId, ReservationId, SalonId } from '../shared/brand.js'
+import type { CustomerId } from '../models/customer.js'
+import type { ReservationId } from '../models/reservation.js'
+import type { SalonId } from '../models/salon.js'
 import type { RepositoryError } from '../shared/errors.js'
 import type { PaginatedResult, PaginationParams } from '../shared/pagination.js'
 import type { Result } from '../shared/result.js'

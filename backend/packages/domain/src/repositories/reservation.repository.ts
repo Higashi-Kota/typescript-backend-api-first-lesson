@@ -12,7 +12,9 @@ import type {
   ReservationSearchCriteria,
   UpdateReservationRequest,
 } from '../models/reservation.js'
-import type { CustomerId, SalonId, StaffId } from '../shared/brand.js'
+import type { CustomerId } from '../models/customer.js'
+import type { SalonId } from '../models/salon.js'
+import type { StaffId } from '../models/staff.js'
 import type { RepositoryError } from '../shared/errors.js'
 import type { PaginatedResult, PaginationParams } from '../shared/pagination.js'
 import type { Result } from '../shared/result.js'

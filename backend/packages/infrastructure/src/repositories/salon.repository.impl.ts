@@ -17,8 +17,8 @@ import type {
   SalonRepository,
   SalonSearchCriteria,
   UpdateSalonRequest,
-} from '@backend/domain'
-import { createSalonId, err, ok } from '@backend/domain'
+} from '@beauty-salon-backend/domain'
+import { createSalonId, err, ok } from '@beauty-salon-backend/domain'
 
 import { openingHours as openingHoursTable, salons } from '../database/schema'
 

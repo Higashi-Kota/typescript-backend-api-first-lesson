@@ -21,8 +21,13 @@ import type {
   ServiceRepository,
   ServiceSearchCriteria,
   UpdateServiceRequest,
-} from '@backend/domain'
-import { createCategoryId, createServiceId, err, ok } from '@backend/domain'
+} from '@beauty-salon-backend/domain'
+import {
+  createCategoryId,
+  createServiceId,
+  err,
+  ok,
+} from '@beauty-salon-backend/domain'
 
 import { serviceCategories, services } from '../database/schema'
 

@@ -3,18 +3,27 @@
  * CLAUDEガイドラインに準拠したSum型によるモデリング
  */
 
-import type { CategoryId, SalonId, ServiceId } from '../shared/brand.js'
 import type { Result } from '../shared/result.js'
 import { err, ok } from '../shared/result.js'
+import type { Brand } from '../shared/brand.js'
+import { createBrand, createBrandSafe } from '../shared/brand.js'
+import type { SalonId } from './salon.js'
 
-// Service ID (UUID形式のBrand型) - brand.tsから再エクスポート
-export type { ServiceId, CategoryId } from '../shared/brand.js'
-export {
-  createServiceId,
-  createServiceIdSafe,
-  createCategoryId,
-  createCategoryIdSafe,
-} from '../shared/brand.js'
+// Service固有のID型
+export type ServiceId = Brand<string, 'ServiceId'>
+export type CategoryId = Brand<string, 'CategoryId'>
+
+// ServiceID作成関数
+export const createServiceId = (value: string) =>
+  createBrand(value, 'ServiceId')
+export const createServiceIdSafe = (value: string) =>
+  createBrandSafe(value, 'ServiceId')
+
+// CategoryID作成関数
+export const createCategoryId = (value: string) =>
+  createBrand(value, 'CategoryId')
+export const createCategoryIdSafe = (value: string) =>
+  createBrandSafe(value, 'CategoryId')
 
 // 監査情報（Salonと共通）
 import type { AuditInfo } from './salon.js'

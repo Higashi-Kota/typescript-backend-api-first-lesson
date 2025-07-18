@@ -3,13 +3,19 @@
  * CLAUDEガイドラインに準拠したSum型によるモデリング
  */
 
-import type { SalonId } from '../shared/brand.js'
 import type { Result } from '../shared/result.js'
 import { err, ok } from '../shared/result.js'
+import type { Brand } from '../shared/brand.js'
+import { createBrand, createBrandSafe } from '../shared/brand.js'
 
-// Salon ID (UUID形式のBrand型) - brand.tsから再エクスポート
-export type { SalonId } from '../shared/brand.js'
-export { createSalonId, createSalonIdSafe } from '../shared/brand.js'
+// Salon固有のID型
+export type SalonId = Brand<string, 'SalonId'>
+
+// SalonID作成関数
+export const createSalonId = (value: string) =>
+  createBrand(value, 'SalonId')
+export const createSalonIdSafe = (value: string) =>
+  createBrandSafe(value, 'SalonId')
 
 // 住所
 export type Address = {

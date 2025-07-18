@@ -23,8 +23,8 @@ import type {
   ServiceId,
   StaffId,
   UpdateReservationRequest,
-} from '@backend/domain'
-import { createReservationId, err, ok } from '@backend/domain'
+} from '@beauty-salon-backend/domain'
+import { createReservationId, err, ok } from '@beauty-salon-backend/domain'
 
 import { customers, reservations, services, staff } from '../database/schema'
 

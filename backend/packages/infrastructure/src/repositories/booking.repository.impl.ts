@@ -23,8 +23,8 @@ import type {
   Result,
   SalonId,
   UpdateBookingRequest,
-} from '@backend/domain'
-import { createBookingId, err, isOk, ok } from '@backend/domain'
+} from '@beauty-salon-backend/domain'
+import { createBookingId, err, isOk, ok } from '@beauty-salon-backend/domain'
 
 import {
   bookingReservations,
