@@ -3,14 +3,14 @@
  * CLAUDEガイドラインに準拠したSum型によるモデリング
  */
 
-import type { Result } from '../shared/result.js'
-import { err, ok } from '../shared/result.js'
 import type { Brand } from '../shared/brand.js'
 import { createBrand, createBrandSafe } from '../shared/brand.js'
+import type { Result } from '../shared/result.js'
+import { err, ok } from '../shared/result.js'
 import type { CustomerId } from './customer.js'
 import type { SalonId } from './salon.js'
-import type { StaffId } from './staff.js'
 import type { ServiceId } from './service.js'
+import type { StaffId } from './staff.js'
 
 // Reservation固有のID型
 export type ReservationId = Brand<string, 'ReservationId'>

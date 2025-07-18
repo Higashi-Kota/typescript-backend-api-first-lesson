@@ -151,5 +151,3 @@ export const mapCustomerProfileToResponse = (
     favoriteServiceIds: profile.favoriteServiceIds || [],
   }
 }
-
-// Re-export mapCustomerToResponse (already imported above)

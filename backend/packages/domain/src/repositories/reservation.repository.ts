@@ -3,6 +3,7 @@
  * CLAUDEガイドラインに準拠した例外フリーなリポジトリインターフェース
  */
 
+import type { CustomerId } from '../models/customer.js'
 import type {
   AvailableSlot,
   CreateReservationRequest,
@@ -12,7 +13,6 @@ import type {
   ReservationSearchCriteria,
   UpdateReservationRequest,
 } from '../models/reservation.js'
-import type { CustomerId } from '../models/customer.js'
 import type { SalonId } from '../models/salon.js'
 import type { StaffId } from '../models/staff.js'
 import type { RepositoryError } from '../shared/errors.js'

@@ -173,7 +173,7 @@ expect(auditLog).toBeDefined();
 ### Sum型とts-patternを活用したテストシナリオ
 
 ```typescript
-// tests/features/task/task.integration.test.ts
+// backend/packages/api/src/__tests__/task.integration.test.ts
 import { match } from 'ts-pattern';
 
 describe('Task API', () => {
@@ -349,7 +349,7 @@ export class TestEnvironment {
 #### テストでの使用例
 
 ```typescript
-// tests/features/reservation/reservation.integration.test.ts
+// backend/packages/api/src/__tests__/reservation.integration.test.ts
 import { TestEnvironment } from '../../setup/testcontainers';
 import { PrismaClient } from '@prisma/client';
 import { createApp } from '../../../src/app';
@@ -668,7 +668,7 @@ export class TestEnvironmentWithIsolation {
 #### 実際の使用例
 
 ```typescript
-// tests/features/reservation/reservation.isolation.test.ts
+// backend/packages/usecase/src/reservation/__tests__/reservation.isolation.test.ts
 import { TestEnvironmentWithIsolation } from '../../setup/test-environment';
 
 describe('Reservation API with Schema Isolation', () => {

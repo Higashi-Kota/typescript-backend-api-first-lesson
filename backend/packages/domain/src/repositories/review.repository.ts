@@ -3,6 +3,8 @@
  * CLAUDEガイドラインに準拠した例外フリーなリポジトリインターフェース
  */
 
+import type { CustomerId } from '../models/customer.js'
+import type { ReservationId } from '../models/reservation.js'
 import type {
   CreateReviewRequest,
   Review,
@@ -12,8 +14,6 @@ import type {
   ReviewSummary,
   UpdateReviewRequest,
 } from '../models/review.js'
-import type { CustomerId } from '../models/customer.js'
-import type { ReservationId } from '../models/reservation.js'
 import type { SalonId } from '../models/salon.js'
 import type { StaffId } from '../models/staff.js'
 import type { RepositoryError } from '../shared/errors.js'

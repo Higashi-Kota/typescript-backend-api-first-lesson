@@ -4,10 +4,10 @@
  */
 
 import { match } from 'ts-pattern'
-import type { Result } from '../shared/result.js'
-import { err, ok } from '../shared/result.js'
 import type { Brand } from '../shared/brand.js'
 import { createBrand, createBrandSafe } from '../shared/brand.js'
+import type { Result } from '../shared/result.js'
+import { err, ok } from '../shared/result.js'
 
 // Customer固有のID型
 export type CustomerId = Brand<string, 'CustomerId'>

@@ -3,6 +3,7 @@
  * CLAUDEガイドラインに準拠した例外フリーなリポジトリインターフェース
  */
 
+import type { SalonId } from '../models/salon.js'
 import type {
   CategoryId,
   CreateServiceRequest,
@@ -13,7 +14,6 @@ import type {
   ServiceSearchCriteria,
   UpdateServiceRequest,
 } from '../models/service.js'
-import type { SalonId } from '../models/salon.js'
 import type { RepositoryError } from '../shared/errors.js'
 import type { PaginatedResult, PaginationParams } from '../shared/pagination.js'
 import type { Result } from '../shared/result.js'

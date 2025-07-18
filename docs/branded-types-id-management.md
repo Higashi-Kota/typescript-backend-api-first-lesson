@@ -128,7 +128,7 @@ function confirmReservation(
 ### 3. リポジトリパターンでの使用
 
 ```typescript
-// features/reservation/repository/types.ts
+// backend/packages/domain/src/reservation/repository.ts
 export interface ReservationRepository {
   findById(id: ReservationId): Promise<Reservation | null>
   findByCustomer(customerId: CustomerId): Promise<Reservation[]>
@@ -164,7 +164,7 @@ export class PrismaReservationRepository implements ReservationRepository {
 ### 4. APIハンドラーでの使用
 
 ```typescript
-// features/reservation/handlers/getReservation.ts
+// backend/packages/api/src/routes/reservations.ts
 import { Request, Response } from 'express'
 import { ReservationIdSchema } from '@/types/branded'
 
@@ -211,7 +211,7 @@ export async function getReservationHandler(
 ### 5. テストでの使用
 
 ```typescript
-// tests/features/reservation/reservation.test.ts
+// backend/packages/usecase/src/reservation/__tests__/reservation.test.ts
 import { createUserId, createSalonId, createStaffId } from '@/types/branded'
 
 describe('Reservation Service', () => {

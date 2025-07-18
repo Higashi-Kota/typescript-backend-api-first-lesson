@@ -169,17 +169,18 @@ const firstItem = items[0]!; // 確実に存在する場合のみ
 ## 型定義の配置
 
 ```
-src/
+backend/packages/
 ├── domain/
-│   └── types/        # ドメイン固有の型
-├── shared/
-│   └── types/        # 共有型定義
-│       ├── api.ts    # API関連の型
-│       ├── result.ts # Result型
-│       └── common.ts # 共通ユーティリティ型
-└── features/
-    └── {feature}/
-        └── types.ts  # 機能固有の型
+│   └── src/          # ドメイン固有の型
+├── types/
+│   └── src/          # 共有型定義
+│       ├── generated/    # 自動生成された型
+│       ├── branded.ts    # Brand型
+│       └── index.ts      # 型のエクスポート
+└── usecase/
+    └── src/
+        └── {entity}/
+            └── types.ts  # エンティティ固有の型
 ```
 
 ## 型安全性のベストプラクティス

@@ -54,18 +54,6 @@ TypeScriptの型システムを最大限活用し、実行時エラーをコン�
 
 **[→ 詳細を読む](./docs/uniform-implementation-guide.md)**
 
-## 🧩 実装ガイドライン
-
-アーキテクチャ原則と実装指針を定義します。
-
-### 主要内容
-- 機能ベースのディレクトリ構成
-- ドメイン設計の原則（Sum型によるモデリング）
-- データベース設計規則
-- APIセキュリティとルーティング
-- CI/Lint要件
-
-**[→ 詳細を読む](./docs/implementation-guidelines.md)**
 
 ## 🧪 テスト要件
 
@@ -123,9 +111,13 @@ TypeScriptバックエンド開発における包括的なアーキテクチャ�
 - レイヤードアーキテクチャ（Domain/UseCase/Infrastructure/API）
 - TypeSpec/OpenAPIからの型定義自動生成とRemapping
 - DB ↔ Repository ↔ UseCase ↔ API ↔ Frontend の命名規則
+- 依存性逆転の原則（DIP）による疎結合設計
 - testcontainersによる統合テスト
-- 循環依存の完全排除と疎結合設計
+- 循環依存の完全排除
 - Result型による例外フリーなエラーハンドリング
+- データベース設計規則とマイグレーション
+- APIセキュリティとルーティング規則
+- 機能追加の原則と優先順位付け
 
 **[→ 詳細を読む](./docs/backend-architecture-guidelines.md)**
 

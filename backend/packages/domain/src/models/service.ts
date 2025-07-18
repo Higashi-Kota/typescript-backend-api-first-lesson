@@ -3,10 +3,10 @@
  * CLAUDEガイドラインに準拠したSum型によるモデリング
  */
 
-import type { Result } from '../shared/result.js'
-import { err, ok } from '../shared/result.js'
 import type { Brand } from '../shared/brand.js'
 import { createBrand, createBrandSafe } from '../shared/brand.js'
+import type { Result } from '../shared/result.js'
+import { err, ok } from '../shared/result.js'
 import type { SalonId } from './salon.js'
 
 // Service固有のID型
