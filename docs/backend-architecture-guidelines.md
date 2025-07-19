@@ -533,7 +533,7 @@ export const createTestDependencies = (): Dependencies => ({
 export const createReservationRouter = (deps: Dependencies) => {
   const router = express.Router()
 
-  router.post('/reservations', async (req, res) => {
+  router.post('/api/v1/reservations', async (req, res) => {
     const parseResult = CreateReservationRequestSchema.safeParse(req.body)
     
     if (!parseResult.success) {
@@ -564,7 +564,7 @@ export const createReservationRouter = (deps: Dependencies) => {
 
 // アプリケーションの起動
 const deps = createProductionDependencies(db)
-app.use('/api', createReservationRouter(deps))
+app.use('/', createReservationRouter(deps))
 ```
 
 ### DIPのメリット
@@ -985,11 +985,11 @@ migrations/
 
 ```typescript
 // ❌ 避けるべき例
-router.get('/system/info', getSystemInfo); // 誰でもアクセス可能
+router.get('/api/v1/system/info', getSystemInfo); // 誰でもアクセス可能
 
 // ✅ 推奨される例
 router.get(
-  '/admin/system/info',
+  '/api/v1/admin/system/info',
   requirePermission({ type: 'role', role: 'admin' }),
   getSystemInfo
 );
@@ -997,27 +997,27 @@ router.get(
 
 ### APIルーティングの統一規則
 
-**`/api/` プレフィックスは使用しません。**
+**すべてのAPIパスには `/api/v1` プレフィックスを使用します。**
 
-各APIは機能に応じた適切なプレフィックスを使用：
+各APIは`/api/v1`プレフィックスの後に機能に応じた適切なパスを使用：
 
 ```typescript
 // ルーティング設定
 const routes = {
-  '/admin/*': adminRouter,      // 管理者専用機能
-  '/auth/*': authRouter,        // 認証関連
-  '/tasks/*': taskRouter,       // タスク管理
-  '/teams/*': teamRouter,       // チーム管理
-  '/payments/*': paymentRouter, // 決済関連（ユーザー向け）
-  '/organizations/*': orgRouter // 組織管理
+  '/api/v1/admin/*': adminRouter,      // 管理者専用機能
+  '/api/v1/auth/*': authRouter,        // 認証関連
+  '/api/v1/tasks/*': taskRouter,       // タスク管理
+  '/api/v1/teams/*': teamRouter,       // チーム管理
+  '/api/v1/payments/*': paymentRouter, // 決済関連（ユーザー向け）
+  '/api/v1/organizations/*': orgRouter // 組織管理
 };
 ```
 
 パスパラメータは `:param` 形式を使用（Express.jsの仕様）：
 
 ```typescript
-router.get('/tasks/:taskId', getTaskHandler);
-router.put('/tasks/:taskId/members/:userId', addTaskMemberHandler);
+router.get('/api/v1/tasks/:taskId', getTaskHandler);
+router.put('/api/v1/tasks/:taskId/members/:userId', addTaskMemberHandler);
 ```
 
 ### 認証・認可の設定
@@ -1027,14 +1027,14 @@ router.put('/tasks/:taskId/members/:userId', addTaskMemberHandler);
 export const authConfig = {
   // 認証不要のパス（公開エンドポイント）
   skipAuthPaths: [
-    '/auth/login',
-    '/auth/register',
-    '/health'
+    '/api/v1/auth/login',
+    '/api/v1/auth/register',
+    '/api/v1/health'
   ],
   
-  // 管理者権限が必要なパス（/admin で統一）
+  // 管理者権限が必要なパス（/api/v1/admin で統一）
   adminOnlyPaths: [
-    '/admin/*'
+    '/api/v1/admin/*'
   ],
   
   // その他のパスはユーザー認証が必要

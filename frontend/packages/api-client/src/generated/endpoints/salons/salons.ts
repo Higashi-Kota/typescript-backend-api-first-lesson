@@ -71,8 +71,8 @@ export const getSalonOperationsListUrl = (
   const stringifiedParams = normalizedParams.toString()
 
   return stringifiedParams.length > 0
-    ? `/salons?${stringifiedParams}`
-    : `/salons`
+    ? `/api/v1/salons?${stringifiedParams}`
+    : `/api/v1/salons`
 }
 
 export const salonOperationsList = async (
@@ -91,7 +91,7 @@ export const salonOperationsList = async (
 export const getSalonOperationsListQueryKey = (
   params?: SalonOperationsListParams
 ) => {
-  return [`/salons`, ...(params ? [params] : [])] as const
+  return [`/api/v1/salons`, ...(params ? [params] : [])] as const
 }
 
 export const getSalonOperationsListQueryOptions = <
@@ -262,7 +262,7 @@ export type salonOperationsCreateResponse =
   }
 
 export const getSalonOperationsCreateUrl = () => {
-  return `/salons`
+  return `/api/v1/salons`
 }
 
 export const salonOperationsCreate = async (
@@ -381,8 +381,8 @@ export const getSalonOperationsSearchUrl = (
   const stringifiedParams = normalizedParams.toString()
 
   return stringifiedParams.length > 0
-    ? `/salons/search?${stringifiedParams}`
-    : `/salons/search`
+    ? `/api/v1/salons/search?${stringifiedParams}`
+    : `/api/v1/salons/search`
 }
 
 export const salonOperationsSearch = async (
@@ -401,7 +401,7 @@ export const salonOperationsSearch = async (
 export const getSalonOperationsSearchQueryKey = (
   params?: SalonOperationsSearchParams
 ) => {
-  return [`/salons/search`, ...(params ? [params] : [])] as const
+  return [`/api/v1/salons/search`, ...(params ? [params] : [])] as const
 }
 
 export const getSalonOperationsSearchQueryOptions = <
@@ -572,7 +572,7 @@ export type salonOperationsGetResponse = salonOperationsGetResponseComposite & {
 }
 
 export const getSalonOperationsGetUrl = (id: ModelsSalonId) => {
-  return `/salons/${id}`
+  return `/api/v1/salons/${id}`
 }
 
 export const salonOperationsGet = async (
@@ -589,7 +589,7 @@ export const salonOperationsGet = async (
 }
 
 export const getSalonOperationsGetQueryKey = (id: ModelsSalonId) => {
-  return [`/salons/${id}`] as const
+  return [`/api/v1/salons/${id}`] as const
 }
 
 export const getSalonOperationsGetQueryOptions = <
@@ -764,7 +764,7 @@ export type salonOperationsUpdateResponse =
   }
 
 export const getSalonOperationsUpdateUrl = (id: ModelsSalonId) => {
-  return `/salons/${id}`
+  return `/api/v1/salons/${id}`
 }
 
 export const salonOperationsUpdate = async (
@@ -877,7 +877,7 @@ export type salonOperationsDeleteResponse =
   }
 
 export const getSalonOperationsDeleteUrl = (id: ModelsSalonId) => {
-  return `/salons/${id}`
+  return `/api/v1/salons/${id}`
 }
 
 export const salonOperationsDelete = async (

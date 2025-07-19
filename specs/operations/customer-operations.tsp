@@ -12,7 +12,7 @@ using TypeSpec.OpenAPI;
 using BeautySalon.Models;
 
 namespace BeautySalon.Operations {
-  @route("/customers")
+  @route("/api/v1/customers")
   @tag("Customers")
   namespace CustomerOperations {
     @summary("List customers")

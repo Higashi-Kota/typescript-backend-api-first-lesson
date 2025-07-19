@@ -10,7 +10,7 @@ using TypeSpec.OpenAPI;
 using BeautySalon.Models;
 
 namespace BeautySalon.Operations {
-  @route("/reviews")
+  @route("/api/v1/reviews")
   @tag("Reviews")
   namespace ReviewOperations {
     @summary("List reviews")
@@ -109,7 +109,7 @@ namespace BeautySalon.Operations {
     };
   }
 
-  @route("/salons/{salonId}/reviews")
+  @route("/api/v1/salons/{salonId}/reviews")
   @tag("Reviews")
   namespace SalonReviewOperations {
     @summary("Get salon reviews summary")
@@ -132,7 +132,7 @@ namespace BeautySalon.Operations {
     };
   }
 
-  @route("/staff/{staffId}/reviews")
+  @route("/api/v1/staff/{staffId}/reviews")
   @tag("Reviews")
   namespace StaffReviewOperations {
     @summary("Get staff reviews summary")

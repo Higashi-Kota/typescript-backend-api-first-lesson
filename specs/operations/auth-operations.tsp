@@ -8,7 +8,7 @@ using TypeSpec.Rest;
 using BeautySalon.Models;
 
 namespace BeautySalon.Operations {
-  @route("/auth")
+  @route("/api/v1/auth")
   @tag("Authentication")
   namespace AuthOperations {
     @doc("Register a new user account")
@@ -345,7 +345,7 @@ namespace BeautySalon.Operations {
     };
   }
 
-  @route("/admin/auth")
+  @route("/api/v1/admin/auth")
   @tag("Admin - Authentication")
   namespace AdminAuthOperations {
     @doc("Unlock a locked user account")

@@ -10,7 +10,7 @@ using TypeSpec.OpenAPI;
 using BeautySalon.Models;
 
 namespace BeautySalon.Operations {
-  @route("/reservations")
+  @route("/api/v1/reservations")
   @tag("Reservations")
   namespace ReservationOperations {
     @summary("List reservations")
@@ -129,7 +129,7 @@ namespace BeautySalon.Operations {
     };
   }
 
-  @route("/salons/{salonId}/available-slots")
+  @route("/api/v1/salons/{salonId}/available-slots")
   @tag("Reservations")
   namespace AvailabilityOperations {
     @summary("Get available slots")

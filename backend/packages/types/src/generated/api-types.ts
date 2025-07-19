@@ -12,7 +12,7 @@ export type Brand<T, B> = T & { [brand]: B };
  */
 
 export interface paths {
-    "/admin/auth/trusted-ip/{userId}": {
+    "/api/v1/admin/auth/trusted-ip/{userId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -30,7 +30,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/admin/auth/unlock/{userId}": {
+    "/api/v1/admin/auth/unlock/{userId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -47,7 +47,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/attachments": {
+    "/api/v1/attachments": {
         parameters: {
             query?: never;
             header?: never;
@@ -64,7 +64,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/attachments/share-links/{shareLinkId}": {
+    "/api/v1/attachments/share-links/{shareLinkId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -81,7 +81,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/attachments/upload": {
+    "/api/v1/attachments/upload": {
         parameters: {
             query?: never;
             header?: never;
@@ -99,7 +99,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/attachments/upload-url": {
+    "/api/v1/attachments/upload-url": {
         parameters: {
             query?: never;
             header?: never;
@@ -117,7 +117,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/attachments/{attachmentId}": {
+    "/api/v1/attachments/{attachmentId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -135,7 +135,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/attachments/{attachmentId}/download-url": {
+    "/api/v1/attachments/{attachmentId}/download-url": {
         parameters: {
             query?: never;
             header?: never;
@@ -152,7 +152,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/attachments/{attachmentId}/share-links": {
+    "/api/v1/attachments/{attachmentId}/share-links": {
         parameters: {
             query?: never;
             header?: never;
@@ -170,7 +170,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/auth/2fa/backup-codes": {
+    "/api/v1/auth/2fa/backup-codes": {
         parameters: {
             query?: never;
             header?: never;
@@ -187,7 +187,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/auth/2fa/disable": {
+    "/api/v1/auth/2fa/disable": {
         parameters: {
             query?: never;
             header?: never;
@@ -204,7 +204,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/auth/2fa/enable": {
+    "/api/v1/auth/2fa/enable": {
         parameters: {
             query?: never;
             header?: never;
@@ -221,7 +221,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/auth/2fa/qr-code": {
+    "/api/v1/auth/2fa/qr-code": {
         parameters: {
             query?: never;
             header?: never;
@@ -238,7 +238,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/auth/2fa/verify": {
+    "/api/v1/auth/2fa/verify": {
         parameters: {
             query?: never;
             header?: never;
@@ -255,7 +255,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/auth/change-password": {
+    "/api/v1/auth/change-password": {
         parameters: {
             query?: never;
             header?: never;
@@ -272,7 +272,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/auth/forgot-password": {
+    "/api/v1/auth/forgot-password": {
         parameters: {
             query?: never;
             header?: never;
@@ -289,7 +289,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/auth/login": {
+    "/api/v1/auth/login": {
         parameters: {
             query?: never;
             header?: never;
@@ -306,7 +306,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/auth/logout": {
+    "/api/v1/auth/logout": {
         parameters: {
             query?: never;
             header?: never;
@@ -323,7 +323,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/auth/logout-all": {
+    "/api/v1/auth/logout-all": {
         parameters: {
             query?: never;
             header?: never;
@@ -340,7 +340,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/auth/me": {
+    "/api/v1/auth/me": {
         parameters: {
             query?: never;
             header?: never;
@@ -357,7 +357,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/auth/refresh": {
+    "/api/v1/auth/refresh": {
         parameters: {
             query?: never;
             header?: never;
@@ -374,7 +374,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/auth/register": {
+    "/api/v1/auth/register": {
         parameters: {
             query?: never;
             header?: never;
@@ -391,7 +391,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/auth/reset-password": {
+    "/api/v1/auth/reset-password": {
         parameters: {
             query?: never;
             header?: never;
@@ -408,7 +408,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/auth/reset-password/verify": {
+    "/api/v1/auth/reset-password/verify": {
         parameters: {
             query?: never;
             header?: never;
@@ -425,7 +425,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/auth/sessions": {
+    "/api/v1/auth/sessions": {
         parameters: {
             query?: never;
             header?: never;
@@ -442,7 +442,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/auth/sessions/{sessionId}": {
+    "/api/v1/auth/sessions/{sessionId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -459,7 +459,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/auth/verify-email/confirm": {
+    "/api/v1/auth/verify-email/confirm": {
         parameters: {
             query?: never;
             header?: never;
@@ -476,7 +476,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/auth/verify-email/send": {
+    "/api/v1/auth/verify-email/send": {
         parameters: {
             query?: never;
             header?: never;
@@ -493,7 +493,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/bookings": {
+    "/api/v1/bookings": {
         parameters: {
             query?: never;
             header?: never;
@@ -511,7 +511,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/bookings/{id}": {
+    "/api/v1/bookings/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -530,7 +530,7 @@ export interface paths {
         patch: operations["BookingOperations_update"];
         trace?: never;
     };
-    "/bookings/{id}/cancel": {
+    "/api/v1/bookings/{id}/cancel": {
         parameters: {
             query?: never;
             header?: never;
@@ -547,7 +547,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/bookings/{id}/confirm": {
+    "/api/v1/bookings/{id}/confirm": {
         parameters: {
             query?: never;
             header?: never;
@@ -564,7 +564,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/bookings/{id}/payment": {
+    "/api/v1/bookings/{id}/payment": {
         parameters: {
             query?: never;
             header?: never;
@@ -581,7 +581,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/bookings/{id}/reservations": {
+    "/api/v1/bookings/{id}/reservations": {
         parameters: {
             query?: never;
             header?: never;
@@ -598,7 +598,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/bookings/{id}/reservations/{reservationId}": {
+    "/api/v1/bookings/{id}/reservations/{reservationId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -615,7 +615,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/customers": {
+    "/api/v1/customers": {
         parameters: {
             query?: never;
             header?: never;
@@ -633,7 +633,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/customers/merge": {
+    "/api/v1/customers/merge": {
         parameters: {
             query?: never;
             header?: never;
@@ -650,7 +650,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/customers/{id}": {
+    "/api/v1/customers/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -669,7 +669,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/customers/{id}/bookings": {
+    "/api/v1/customers/{id}/bookings": {
         parameters: {
             query?: never;
             header?: never;
@@ -686,7 +686,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/customers/{id}/profile": {
+    "/api/v1/customers/{id}/profile": {
         parameters: {
             query?: never;
             header?: never;
@@ -703,7 +703,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/customers/{id}/reservations": {
+    "/api/v1/customers/{id}/reservations": {
         parameters: {
             query?: never;
             header?: never;
@@ -720,7 +720,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/reservations": {
+    "/api/v1/reservations": {
         parameters: {
             query?: never;
             header?: never;
@@ -738,7 +738,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/reservations/{id}": {
+    "/api/v1/reservations/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -756,7 +756,7 @@ export interface paths {
         patch: operations["ReservationOperations_update"];
         trace?: never;
     };
-    "/reservations/{id}/cancel": {
+    "/api/v1/reservations/{id}/cancel": {
         parameters: {
             query?: never;
             header?: never;
@@ -773,7 +773,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/reservations/{id}/complete": {
+    "/api/v1/reservations/{id}/complete": {
         parameters: {
             query?: never;
             header?: never;
@@ -790,7 +790,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/reservations/{id}/reschedule": {
+    "/api/v1/reservations/{id}/reschedule": {
         parameters: {
             query?: never;
             header?: never;
@@ -807,7 +807,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/reviews": {
+    "/api/v1/reviews": {
         parameters: {
             query?: never;
             header?: never;
@@ -825,7 +825,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/reviews/{id}": {
+    "/api/v1/reviews/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -844,7 +844,7 @@ export interface paths {
         patch: operations["ReviewOperations_update"];
         trace?: never;
     };
-    "/reviews/{id}/helpful": {
+    "/api/v1/reviews/{id}/helpful": {
         parameters: {
             query?: never;
             header?: never;
@@ -861,7 +861,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/reviews/{id}/report": {
+    "/api/v1/reviews/{id}/report": {
         parameters: {
             query?: never;
             header?: never;
@@ -878,7 +878,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/salons": {
+    "/api/v1/salons": {
         parameters: {
             query?: never;
             header?: never;
@@ -896,7 +896,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/salons/search": {
+    "/api/v1/salons/search": {
         parameters: {
             query?: never;
             header?: never;
@@ -913,7 +913,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/salons/{id}": {
+    "/api/v1/salons/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -932,7 +932,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/salons/{salonId}/available-slots": {
+    "/api/v1/salons/{salonId}/available-slots": {
         parameters: {
             query?: never;
             header?: never;
@@ -949,7 +949,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/salons/{salonId}/available-slots/check": {
+    "/api/v1/salons/{salonId}/available-slots/check": {
         parameters: {
             query?: never;
             header?: never;
@@ -966,7 +966,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/salons/{salonId}/reviews": {
+    "/api/v1/salons/{salonId}/reviews": {
         parameters: {
             query?: never;
             header?: never;
@@ -983,7 +983,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/salons/{salonId}/reviews/summary": {
+    "/api/v1/salons/{salonId}/reviews/summary": {
         parameters: {
             query?: never;
             header?: never;
@@ -1000,7 +1000,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/salons/{salonId}/services": {
+    "/api/v1/salons/{salonId}/services": {
         parameters: {
             query?: never;
             header?: never;
@@ -1018,7 +1018,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/salons/{salonId}/services/bulk": {
+    "/api/v1/salons/{salonId}/services/bulk": {
         parameters: {
             query?: never;
             header?: never;
@@ -1035,7 +1035,7 @@ export interface paths {
         patch: operations["ServiceOperations_bulkUpdate"];
         trace?: never;
     };
-    "/salons/{salonId}/services/{id}": {
+    "/api/v1/salons/{salonId}/services/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -1054,7 +1054,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/salons/{salonId}/staff": {
+    "/api/v1/salons/{salonId}/staff": {
         parameters: {
             query?: never;
             header?: never;
@@ -1072,7 +1072,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/salons/{salonId}/staff/{id}": {
+    "/api/v1/salons/{salonId}/staff/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -1091,7 +1091,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/salons/{salonId}/staff/{id}/availability": {
+    "/api/v1/salons/{salonId}/staff/{id}/availability": {
         parameters: {
             query?: never;
             header?: never;
@@ -1109,7 +1109,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/service-categories": {
+    "/api/v1/service-categories": {
         parameters: {
             query?: never;
             header?: never;
@@ -1127,7 +1127,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/service-categories/{id}": {
+    "/api/v1/service-categories/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -1145,7 +1145,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/share/{shareToken}": {
+    "/api/v1/share/{shareToken}": {
         parameters: {
             query?: never;
             header?: never;
@@ -1162,7 +1162,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/share/{shareToken}/download": {
+    "/api/v1/share/{shareToken}/download": {
         parameters: {
             query?: never;
             header?: never;
@@ -1179,7 +1179,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/staff/search": {
+    "/api/v1/staff/search": {
         parameters: {
             query?: never;
             header?: never;
@@ -1196,7 +1196,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/staff/{staffId}/reviews": {
+    "/api/v1/staff/{staffId}/reviews": {
         parameters: {
             query?: never;
             header?: never;
@@ -1213,7 +1213,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/staff/{staffId}/reviews/summary": {
+    "/api/v1/staff/{staffId}/reviews/summary": {
         parameters: {
             query?: never;
             header?: never;
@@ -5756,10 +5756,10 @@ export type GetOperation<Path extends keyof paths, Method extends keyof paths[Pa
   paths[Path][Method];
 
 // Specific operation types
-export type CustomerListOperation = GetOperation<'/customers', 'get'>;
-export type CustomerCreateOperation = GetOperation<'/customers', 'post'>;
-export type CustomerGetOperation = GetOperation<'/customers/{id}', 'get'>;
-export type CustomerUpdateOperation = GetOperation<'/customers/{id}', 'put'>;
+export type CustomerListOperation = GetOperation<'/api/v1/customers', 'get'>;
+export type CustomerCreateOperation = GetOperation<'/api/v1/customers', 'post'>;
+export type CustomerGetOperation = GetOperation<'/api/v1/customers/{id}', 'get'>;
+export type CustomerUpdateOperation = GetOperation<'/api/v1/customers/{id}', 'put'>;
 
 // Extract types from operations
 export type CustomerListQuery = ExtractQuery<CustomerListOperation>;

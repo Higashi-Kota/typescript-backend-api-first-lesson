@@ -66,7 +66,7 @@ export interface StorageService {
 #### Step 1: クライアントがアップロードURLを要求
 
 ```typescript
-// POST /api/attachments/upload-url
+// POST /api/v1/attachments/upload-url
 {
   "filename": "document.pdf",
   "contentType": "application/pdf",
@@ -115,7 +115,7 @@ async function handleUploadUrlRequest(req: Request, res: Response) {
 
 ```javascript
 // Frontend
-const response = await fetch('/api/attachments/upload-url', {
+const response = await fetch('/api/v1/attachments/upload-url', {
   method: 'POST',
   body: JSON.stringify({ filename, contentType, size }),
 })

@@ -16,7 +16,7 @@ tags:
   - name: Attachments
   - name: Share
 paths:
-  /admin/auth/trusted-ip/{userId}:
+  /api/v1/admin/auth/trusted-ip/{userId}:
     post:
       operationId: AdminAuthOperations_addTrustedIp
       description: Add trusted IP address for a user
@@ -122,7 +122,7 @@ paths:
                 $ref: '#/components/schemas/Models.Error'
       tags:
         - Admin - Authentication
-  /admin/auth/unlock/{userId}:
+  /api/v1/admin/auth/unlock/{userId}:
     post:
       operationId: AdminAuthOperations_unlockAccount
       description: Unlock a locked user account
@@ -170,7 +170,7 @@ paths:
                 $ref: '#/components/schemas/Models.Error'
       tags:
         - Admin - Authentication
-  /attachments:
+  /api/v1/attachments:
     get:
       operationId: AttachmentOperations_list
       description: 添付ファイルの一覧取得
@@ -208,7 +208,7 @@ paths:
                   - $ref: '#/components/schemas/Models.Error'
       tags:
         - Attachments
-  /attachments/share-links/{shareLinkId}:
+  /api/v1/attachments/share-links/{shareLinkId}:
     delete:
       operationId: AttachmentOperations_deleteShareLink
       description: 共有リンクの削除
@@ -232,7 +232,7 @@ paths:
           description: 'There is no content to send for this request, but the headers may be useful. '
       tags:
         - Attachments
-  /attachments/upload:
+  /api/v1/attachments/upload:
     post:
       operationId: AttachmentOperations_uploadFile
       description: |-
@@ -256,7 +256,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Models.UploadAttachmentRequest'
-  /attachments/upload-url:
+  /api/v1/attachments/upload-url:
     post:
       operationId: AttachmentOperations_getUploadUrl
       description: |-
@@ -282,7 +282,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Models.GetUploadUrlRequest'
-  /attachments/{attachmentId}:
+  /api/v1/attachments/{attachmentId}:
     get:
       operationId: AttachmentOperations_get
       description: 添付ファイル情報の取得
@@ -328,7 +328,7 @@ paths:
           description: 'There is no content to send for this request, but the headers may be useful. '
       tags:
         - Attachments
-  /attachments/{attachmentId}/download-url:
+  /api/v1/attachments/{attachmentId}/download-url:
     get:
       operationId: AttachmentOperations_getDownloadUrl
       description: 署名付きダウンロードURLの取得
@@ -358,7 +358,7 @@ paths:
                   - $ref: '#/components/schemas/Models.Error'
       tags:
         - Attachments
-  /attachments/{attachmentId}/share-links:
+  /api/v1/attachments/{attachmentId}/share-links:
     post:
       operationId: AttachmentOperations_createShareLink
       description: 共有リンクの作成
@@ -412,7 +412,7 @@ paths:
                   - $ref: '#/components/schemas/Models.Error'
       tags:
         - Attachments
-  /auth/2fa/backup-codes:
+  /api/v1/auth/2fa/backup-codes:
     post:
       operationId: AuthOperations_generateBackupCodes
       description: Generate new backup codes for 2FA
@@ -458,7 +458,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Models.TwoFactorVerifyRequest'
-  /auth/2fa/disable:
+  /api/v1/auth/2fa/disable:
     post:
       operationId: AuthOperations_disableTwoFactor
       description: Disable two-factor authentication
@@ -498,7 +498,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Models.TwoFactorDisableRequest'
-  /auth/2fa/enable:
+  /api/v1/auth/2fa/enable:
     post:
       operationId: AuthOperations_enableTwoFactor
       description: Enable two-factor authentication
@@ -537,7 +537,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Models.TwoFactorEnableRequest'
-  /auth/2fa/qr-code:
+  /api/v1/auth/2fa/qr-code:
     get:
       operationId: AuthOperations_getTwoFactorQRCode
       description: Get QR code for 2FA setup
@@ -568,7 +568,7 @@ paths:
                 $ref: '#/components/schemas/Models.Error'
       tags:
         - Authentication
-  /auth/2fa/verify:
+  /api/v1/auth/2fa/verify:
     post:
       operationId: AuthOperations_verifyTwoFactor
       description: Verify two-factor authentication code
@@ -607,7 +607,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Models.TwoFactorVerifyRequest'
-  /auth/change-password:
+  /api/v1/auth/change-password:
     post:
       operationId: AuthOperations_changePassword
       description: Change password
@@ -647,7 +647,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Models.PasswordChangeRequest'
-  /auth/forgot-password:
+  /api/v1/auth/forgot-password:
     post:
       operationId: AuthOperations_forgotPassword
       description: Request password reset
@@ -679,7 +679,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Models.PasswordResetRequest'
-  /auth/login:
+  /api/v1/auth/login:
     post:
       operationId: AuthOperations_login
       description: Login with email and password
@@ -723,7 +723,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Models.LoginRequest'
-  /auth/logout:
+  /api/v1/auth/logout:
     post:
       operationId: AuthOperations_logout
       description: Logout and invalidate session
@@ -748,7 +748,7 @@ paths:
                 $ref: '#/components/schemas/Models.Error'
       tags:
         - Authentication
-  /auth/logout-all:
+  /api/v1/auth/logout-all:
     post:
       operationId: AuthOperations_logoutAll
       description: Logout from all sessions
@@ -773,7 +773,7 @@ paths:
                 $ref: '#/components/schemas/Models.Error'
       tags:
         - Authentication
-  /auth/me:
+  /api/v1/auth/me:
     get:
       operationId: AuthOperations_getCurrentUser
       description: Get current user information
@@ -798,7 +798,7 @@ paths:
                 $ref: '#/components/schemas/Models.Error'
       tags:
         - Authentication
-  /auth/refresh:
+  /api/v1/auth/refresh:
     post:
       operationId: AuthOperations_refreshToken
       description: Refresh access token
@@ -824,7 +824,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Models.TokenRefreshRequest'
-  /auth/register:
+  /api/v1/auth/register:
     post:
       operationId: AuthOperations_register
       description: Register a new user account
@@ -856,7 +856,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Models.RegisterRequest'
-  /auth/reset-password:
+  /api/v1/auth/reset-password:
     post:
       operationId: AuthOperations_resetPassword
       description: Reset password with token
@@ -885,7 +885,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Models.PasswordResetConfirmRequest'
-  /auth/reset-password/verify:
+  /api/v1/auth/reset-password/verify:
     get:
       operationId: AuthOperations_verifyResetToken
       description: Verify password reset token
@@ -911,7 +911,7 @@ paths:
                 $ref: '#/components/schemas/Models.Error'
       tags:
         - Authentication
-  /auth/sessions:
+  /api/v1/auth/sessions:
     get:
       operationId: AuthOperations_getSessions
       description: Get active sessions
@@ -936,7 +936,7 @@ paths:
                 $ref: '#/components/schemas/Models.Error'
       tags:
         - Authentication
-  /auth/sessions/{sessionId}:
+  /api/v1/auth/sessions/{sessionId}:
     delete:
       operationId: AuthOperations_revokeSession
       description: Revoke a specific session
@@ -972,7 +972,7 @@ paths:
                 $ref: '#/components/schemas/Models.Error'
       tags:
         - Authentication
-  /auth/verify-email/confirm:
+  /api/v1/auth/verify-email/confirm:
     post:
       operationId: AuthOperations_confirmEmailVerification
       description: Confirm email verification
@@ -998,7 +998,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Models.EmailVerificationRequest'
-  /auth/verify-email/send:
+  /api/v1/auth/verify-email/send:
     post:
       operationId: AuthOperations_sendEmailVerification
       description: Send email verification
@@ -1035,7 +1035,7 @@ paths:
                 $ref: '#/components/schemas/Models.Error'
       tags:
         - Authentication
-  /bookings:
+  /api/v1/bookings:
     get:
       operationId: BookingOperations_list
       summary: List bookings
@@ -1138,7 +1138,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Models.CreateBookingRequest'
-  /bookings/{id}:
+  /api/v1/bookings/{id}:
     get:
       operationId: BookingOperations_get
       summary: Get booking
@@ -1225,7 +1225,7 @@ paths:
                 $ref: '#/components/schemas/Models.Error'
       tags:
         - Bookings
-  /bookings/{id}/cancel:
+  /api/v1/bookings/{id}/cancel:
     post:
       operationId: BookingOperations_cancel
       summary: Cancel booking
@@ -1267,7 +1267,7 @@ paths:
                   type: string
                 cancelReservations:
                   type: boolean
-  /bookings/{id}/confirm:
+  /api/v1/bookings/{id}/confirm:
     post:
       operationId: BookingOperations_confirm
       summary: Confirm booking
@@ -1298,7 +1298,7 @@ paths:
                 $ref: '#/components/schemas/Models.Error'
       tags:
         - Bookings
-  /bookings/{id}/payment:
+  /api/v1/bookings/{id}/payment:
     post:
       operationId: BookingOperations_processPayment
       summary: Process payment
@@ -1354,7 +1354,7 @@ paths:
               required:
                 - paymentMethod
                 - amount
-  /bookings/{id}/reservations:
+  /api/v1/bookings/{id}/reservations:
     post:
       operationId: BookingOperations_addReservation
       summary: Add reservation to booking
@@ -1396,7 +1396,7 @@ paths:
                   $ref: '#/components/schemas/Models.ReservationId'
               required:
                 - reservationId
-  /bookings/{id}/reservations/{reservationId}:
+  /api/v1/bookings/{id}/reservations/{reservationId}:
     delete:
       operationId: BookingOperations_removeReservation
       summary: Remove reservation from booking
@@ -1426,7 +1426,7 @@ paths:
                 $ref: '#/components/schemas/Models.Error'
       tags:
         - Bookings
-  /customers:
+  /api/v1/customers:
     get:
       operationId: CustomerOperations_list
       summary: List customers
@@ -1511,7 +1511,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Models.CreateCustomerRequest'
-  /customers/merge:
+  /api/v1/customers/merge:
     post:
       operationId: CustomerOperations_merge
       summary: Merge customer records
@@ -1551,7 +1551,7 @@ paths:
               required:
                 - primaryCustomerId
                 - secondaryCustomerId
-  /customers/{id}:
+  /api/v1/customers/{id}:
     get:
       operationId: CustomerOperations_get
       summary: Get customer
@@ -1632,7 +1632,7 @@ paths:
                 $ref: '#/components/schemas/Models.Error'
       tags:
         - Customers
-  /customers/{id}/bookings:
+  /api/v1/customers/{id}/bookings:
     get:
       operationId: CustomerOperations_getBookings
       summary: Get customer bookings
@@ -1678,7 +1678,7 @@ paths:
                     format: int32
       tags:
         - Customers
-  /customers/{id}/profile:
+  /api/v1/customers/{id}/profile:
     get:
       operationId: CustomerOperations_getProfile
       summary: Get customer profile
@@ -1703,7 +1703,7 @@ paths:
                 $ref: '#/components/schemas/Models.Error'
       tags:
         - Customers
-  /customers/{id}/reservations:
+  /api/v1/customers/{id}/reservations:
     get:
       operationId: CustomerOperations_getReservations
       summary: Get customer reservations
@@ -1763,7 +1763,7 @@ paths:
                     format: int32
       tags:
         - Customers
-  /reservations:
+  /api/v1/reservations:
     get:
       operationId: ReservationOperations_list
       summary: List reservations
@@ -1872,7 +1872,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Models.CreateReservationRequest'
-  /reservations/{id}:
+  /api/v1/reservations/{id}:
     get:
       operationId: ReservationOperations_get
       summary: Get reservation
@@ -1939,7 +1939,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Models.UpdateReservationRequest'
-  /reservations/{id}/cancel:
+  /api/v1/reservations/{id}/cancel:
     post:
       operationId: ReservationOperations_cancel
       summary: Cancel reservation
@@ -1979,7 +1979,7 @@ paths:
               properties:
                 reason:
                   type: string
-  /reservations/{id}/complete:
+  /api/v1/reservations/{id}/complete:
     post:
       operationId: ReservationOperations_complete
       summary: Complete reservation
@@ -2010,7 +2010,7 @@ paths:
                 $ref: '#/components/schemas/Models.Error'
       tags:
         - Reservations
-  /reservations/{id}/reschedule:
+  /api/v1/reservations/{id}/reschedule:
     post:
       operationId: ReservationOperations_reschedule
       summary: Reschedule reservation
@@ -2055,7 +2055,7 @@ paths:
                   $ref: '#/components/schemas/Models.StaffId'
               required:
                 - newStartTime
-  /reviews:
+  /api/v1/reviews:
     get:
       operationId: ReviewOperations_list
       summary: List reviews
@@ -2157,7 +2157,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Models.CreateReviewRequest'
-  /reviews/{id}:
+  /api/v1/reviews/{id}:
     get:
       operationId: ReviewOperations_get
       summary: Get review
@@ -2244,7 +2244,7 @@ paths:
                 $ref: '#/components/schemas/Models.Error'
       tags:
         - Reviews
-  /reviews/{id}/helpful:
+  /api/v1/reviews/{id}/helpful:
     post:
       operationId: ReviewOperations_markHelpful
       summary: Mark review as helpful
@@ -2275,7 +2275,7 @@ paths:
                 $ref: '#/components/schemas/Models.Error'
       tags:
         - Reviews
-  /reviews/{id}/report:
+  /api/v1/reviews/{id}/report:
     post:
       operationId: ReviewOperations_report
       summary: Report review
@@ -2318,7 +2318,7 @@ paths:
                   type: string
               required:
                 - reason
-  /salons:
+  /api/v1/salons:
     get:
       operationId: SalonOperations_list
       summary: List all salons
@@ -2383,7 +2383,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Models.CreateSalonRequest'
-  /salons/search:
+  /api/v1/salons/search:
     get:
       operationId: SalonOperations_search
       summary: Search salons
@@ -2436,7 +2436,7 @@ paths:
                     format: int32
       tags:
         - Salons
-  /salons/{id}:
+  /api/v1/salons/{id}:
     get:
       operationId: SalonOperations_get
       summary: Get salon by ID
@@ -2517,7 +2517,7 @@ paths:
                 $ref: '#/components/schemas/Models.Error'
       tags:
         - Salons
-  /salons/{salonId}/available-slots:
+  /api/v1/salons/{salonId}/available-slots:
     get:
       operationId: AvailabilityOperations_getAvailableSlots
       summary: Get available slots
@@ -2570,7 +2570,7 @@ paths:
                 $ref: '#/components/schemas/Models.Error'
       tags:
         - Reservations
-  /salons/{salonId}/available-slots/check:
+  /api/v1/salons/{salonId}/available-slots/check:
     post:
       operationId: AvailabilityOperations_checkAvailability
       summary: Check availability
@@ -2616,7 +2616,7 @@ paths:
                 - staffId
                 - serviceId
                 - startTime
-  /salons/{salonId}/reviews:
+  /api/v1/salons/{salonId}/reviews:
     get:
       operationId: SalonReviewOperations_getSalonReviews
       summary: Get salon reviews
@@ -2666,7 +2666,7 @@ paths:
                     format: int32
       tags:
         - Reviews
-  /salons/{salonId}/reviews/summary:
+  /api/v1/salons/{salonId}/reviews/summary:
     get:
       operationId: SalonReviewOperations_getSummary
       summary: Get salon reviews summary
@@ -2685,7 +2685,7 @@ paths:
                 $ref: '#/components/schemas/Models.ReviewSummary'
       tags:
         - Reviews
-  /salons/{salonId}/services:
+  /api/v1/salons/{salonId}/services:
     get:
       operationId: ServiceOperations_list
       summary: List salon services
@@ -2766,7 +2766,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Models.CreateServiceRequest'
-  /salons/{salonId}/services/bulk:
+  /api/v1/salons/{salonId}/services/bulk:
     patch:
       operationId: ServiceOperations_bulkUpdate
       summary: Bulk update services
@@ -2818,7 +2818,7 @@ paths:
                     $ref: '#/components/schemas/Models.ServiceId'
                 updates:
                   $ref: '#/components/schemas/Models.UpdateServiceRequest'
-  /salons/{salonId}/services/{id}:
+  /api/v1/salons/{salonId}/services/{id}:
     get:
       operationId: ServiceOperations_get
       summary: Get service
@@ -2914,7 +2914,7 @@ paths:
                 $ref: '#/components/schemas/Models.Error'
       tags:
         - Services
-  /salons/{salonId}/staff:
+  /api/v1/salons/{salonId}/staff:
     get:
       operationId: StaffOperations_list
       summary: List staff members
@@ -2989,7 +2989,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Models.CreateStaffRequest'
-  /salons/{salonId}/staff/{id}:
+  /api/v1/salons/{salonId}/staff/{id}:
     get:
       operationId: StaffOperations_get
       summary: Get staff member
@@ -3085,7 +3085,7 @@ paths:
                 $ref: '#/components/schemas/Models.Error'
       tags:
         - Staff
-  /salons/{salonId}/staff/{id}/availability:
+  /api/v1/salons/{salonId}/staff/{id}/availability:
     get:
       operationId: StaffOperations_getAvailability
       summary: Get staff availability
@@ -3157,7 +3157,7 @@ paths:
               type: array
               items:
                 $ref: '#/components/schemas/Models.StaffAvailability'
-  /service-categories:
+  /api/v1/service-categories:
     get:
       operationId: ServiceCategoryOperations_listCategories
       summary: List service categories
@@ -3231,7 +3231,7 @@ paths:
                 - name
                 - description
                 - displayOrder
-  /service-categories/{id}:
+  /api/v1/service-categories/{id}:
     put:
       operationId: ServiceCategoryOperations_updateCategory
       summary: Update service category
@@ -3300,7 +3300,7 @@ paths:
                 $ref: '#/components/schemas/Models.Error'
       tags:
         - Services
-  /share/{shareToken}:
+  /api/v1/share/{shareToken}:
     get:
       operationId: ShareOperations_getSharedFile
       description: 共有リンクからファイル情報を取得
@@ -3329,7 +3329,7 @@ paths:
                   - $ref: '#/components/schemas/Models.Error'
       tags:
         - Share
-  /share/{shareToken}/download:
+  /api/v1/share/{shareToken}/download:
     get:
       operationId: ShareOperations_downloadSharedFile
       description: 共有リンクからダウンロードURLを取得
@@ -3358,7 +3358,7 @@ paths:
                   - $ref: '#/components/schemas/Models.Error'
       tags:
         - Share
-  /staff/search:
+  /api/v1/staff/search:
     get:
       operationId: GlobalStaffOperations_searchStaff
       summary: Search staff across all salons
@@ -3405,7 +3405,7 @@ paths:
                     format: int32
       tags:
         - Staff
-  /staff/{staffId}/reviews:
+  /api/v1/staff/{staffId}/reviews:
     get:
       operationId: StaffReviewOperations_getStaffReviews
       summary: Get staff reviews
@@ -3445,7 +3445,7 @@ paths:
                     format: int32
       tags:
         - Reviews
-  /staff/{staffId}/reviews/summary:
+  /api/v1/staff/{staffId}/reviews/summary:
     get:
       operationId: StaffReviewOperations_getStaffSummary
       summary: Get staff reviews summary

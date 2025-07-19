@@ -89,10 +89,10 @@ export type GetOperation<Path extends keyof paths, Method extends keyof paths[Pa
   paths[Path][Method];
 
 // Specific operation types
-export type CustomerListOperation = GetOperation<'/customers', 'get'>;
-export type CustomerCreateOperation = GetOperation<'/customers', 'post'>;
-export type CustomerGetOperation = GetOperation<'/customers/{id}', 'get'>;
-export type CustomerUpdateOperation = GetOperation<'/customers/{id}', 'put'>;
+export type CustomerListOperation = GetOperation<'/api/v1/customers', 'get'>;
+export type CustomerCreateOperation = GetOperation<'/api/v1/customers', 'post'>;
+export type CustomerGetOperation = GetOperation<'/api/v1/customers/{id}', 'get'>;
+export type CustomerUpdateOperation = GetOperation<'/api/v1/customers/{id}', 'put'>;
 
 // Extract types from operations
 export type CustomerListQuery = ExtractQuery<CustomerListOperation>;

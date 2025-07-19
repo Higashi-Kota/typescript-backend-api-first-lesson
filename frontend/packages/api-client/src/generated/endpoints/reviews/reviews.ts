@@ -79,8 +79,8 @@ export const getReviewOperationsListUrl = (
   const stringifiedParams = normalizedParams.toString()
 
   return stringifiedParams.length > 0
-    ? `/reviews?${stringifiedParams}`
-    : `/reviews`
+    ? `/api/v1/reviews?${stringifiedParams}`
+    : `/api/v1/reviews`
 }
 
 export const reviewOperationsList = async (
@@ -99,7 +99,7 @@ export const reviewOperationsList = async (
 export const getReviewOperationsListQueryKey = (
   params?: ReviewOperationsListParams
 ) => {
-  return [`/reviews`, ...(params ? [params] : [])] as const
+  return [`/api/v1/reviews`, ...(params ? [params] : [])] as const
 }
 
 export const getReviewOperationsListQueryOptions = <
@@ -271,7 +271,7 @@ export type reviewOperationsCreateResponse =
   }
 
 export const getReviewOperationsCreateUrl = () => {
-  return `/reviews`
+  return `/api/v1/reviews`
 }
 
 export const reviewOperationsCreate = async (
@@ -383,7 +383,7 @@ export type reviewOperationsGetResponse =
   }
 
 export const getReviewOperationsGetUrl = (id: ModelsReviewId) => {
-  return `/reviews/${id}`
+  return `/api/v1/reviews/${id}`
 }
 
 export const reviewOperationsGet = async (
@@ -400,7 +400,7 @@ export const reviewOperationsGet = async (
 }
 
 export const getReviewOperationsGetQueryKey = (id: ModelsReviewId) => {
-  return [`/reviews/${id}`] as const
+  return [`/api/v1/reviews/${id}`] as const
 }
 
 export const getReviewOperationsGetQueryOptions = <
@@ -575,7 +575,7 @@ export type reviewOperationsUpdateResponse =
   }
 
 export const getReviewOperationsUpdateUrl = (id: ModelsReviewId) => {
-  return `/reviews/${id}`
+  return `/api/v1/reviews/${id}`
 }
 
 export const reviewOperationsUpdate = async (
@@ -688,7 +688,7 @@ export type reviewOperationsDeleteResponse =
   }
 
 export const getReviewOperationsDeleteUrl = (id: ModelsReviewId) => {
-  return `/reviews/${id}`
+  return `/api/v1/reviews/${id}`
 }
 
 export const reviewOperationsDelete = async (
@@ -798,7 +798,7 @@ export type reviewOperationsMarkHelpfulResponse =
   }
 
 export const getReviewOperationsMarkHelpfulUrl = (id: ModelsReviewId) => {
-  return `/reviews/${id}/helpful`
+  return `/api/v1/reviews/${id}/helpful`
 }
 
 export const reviewOperationsMarkHelpful = async (
@@ -908,7 +908,7 @@ export type reviewOperationsReportResponse =
   }
 
 export const getReviewOperationsReportUrl = (id: ModelsReviewId) => {
-  return `/reviews/${id}/report`
+  return `/api/v1/reviews/${id}/report`
 }
 
 export const reviewOperationsReport = async (
@@ -1029,8 +1029,8 @@ export const getSalonReviewOperationsGetSalonReviewsUrl = (
   const stringifiedParams = normalizedParams.toString()
 
   return stringifiedParams.length > 0
-    ? `/salons/${salonId}/reviews?${stringifiedParams}`
-    : `/salons/${salonId}/reviews`
+    ? `/api/v1/salons/${salonId}/reviews?${stringifiedParams}`
+    : `/api/v1/salons/${salonId}/reviews`
 }
 
 export const salonReviewOperationsGetSalonReviews = async (
@@ -1051,7 +1051,10 @@ export const getSalonReviewOperationsGetSalonReviewsQueryKey = (
   salonId: ModelsSalonId,
   params?: SalonReviewOperationsGetSalonReviewsParams
 ) => {
-  return [`/salons/${salonId}/reviews`, ...(params ? [params] : [])] as const
+  return [
+    `/api/v1/salons/${salonId}/reviews`,
+    ...(params ? [params] : []),
+  ] as const
 }
 
 export const getSalonReviewOperationsGetSalonReviewsQueryOptions = <
@@ -1237,7 +1240,7 @@ export type salonReviewOperationsGetSummaryResponse =
 export const getSalonReviewOperationsGetSummaryUrl = (
   salonId: ModelsSalonId
 ) => {
-  return `/salons/${salonId}/reviews/summary`
+  return `/api/v1/salons/${salonId}/reviews/summary`
 }
 
 export const salonReviewOperationsGetSummary = async (
@@ -1256,7 +1259,7 @@ export const salonReviewOperationsGetSummary = async (
 export const getSalonReviewOperationsGetSummaryQueryKey = (
   salonId: ModelsSalonId
 ) => {
-  return [`/salons/${salonId}/reviews/summary`] as const
+  return [`/api/v1/salons/${salonId}/reviews/summary`] as const
 }
 
 export const getSalonReviewOperationsGetSummaryQueryOptions = <
@@ -1445,8 +1448,8 @@ export const getStaffReviewOperationsGetStaffReviewsUrl = (
   const stringifiedParams = normalizedParams.toString()
 
   return stringifiedParams.length > 0
-    ? `/staff/${staffId}/reviews?${stringifiedParams}`
-    : `/staff/${staffId}/reviews`
+    ? `/api/v1/staff/${staffId}/reviews?${stringifiedParams}`
+    : `/api/v1/staff/${staffId}/reviews`
 }
 
 export const staffReviewOperationsGetStaffReviews = async (
@@ -1467,7 +1470,10 @@ export const getStaffReviewOperationsGetStaffReviewsQueryKey = (
   staffId: ModelsStaffId,
   params?: StaffReviewOperationsGetStaffReviewsParams
 ) => {
-  return [`/staff/${staffId}/reviews`, ...(params ? [params] : [])] as const
+  return [
+    `/api/v1/staff/${staffId}/reviews`,
+    ...(params ? [params] : []),
+  ] as const
 }
 
 export const getStaffReviewOperationsGetStaffReviewsQueryOptions = <
@@ -1653,7 +1659,7 @@ export type staffReviewOperationsGetStaffSummaryResponse =
 export const getStaffReviewOperationsGetStaffSummaryUrl = (
   staffId: ModelsStaffId
 ) => {
-  return `/staff/${staffId}/reviews/summary`
+  return `/api/v1/staff/${staffId}/reviews/summary`
 }
 
 export const staffReviewOperationsGetStaffSummary = async (
@@ -1672,7 +1678,7 @@ export const staffReviewOperationsGetStaffSummary = async (
 export const getStaffReviewOperationsGetStaffSummaryQueryKey = (
   staffId: ModelsStaffId
 ) => {
-  return [`/staff/${staffId}/reviews/summary`] as const
+  return [`/api/v1/staff/${staffId}/reviews/summary`] as const
 }
 
 export const getStaffReviewOperationsGetStaffSummaryQueryOptions = <

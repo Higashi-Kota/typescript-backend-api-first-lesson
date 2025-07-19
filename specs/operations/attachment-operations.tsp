@@ -9,7 +9,7 @@ namespace BeautySalon.Operations;
 /**
  * ファイルアップロード関連のAPI操作
  */
-@route("/attachments")
+@route("/api/v1/attachments")
 @tag("Attachments")
 interface AttachmentOperations {
   /**
@@ -118,7 +118,7 @@ interface AttachmentOperations {
 /**
  * 共有リンクアクセス用のAPI（認証不要）
  */
-@route("/share")
+@route("/api/v1/share")
 @tag("Share")
 interface ShareOperations {
   /**

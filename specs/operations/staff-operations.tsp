@@ -10,7 +10,7 @@ using TypeSpec.OpenAPI;
 using BeautySalon.Models;
 
 namespace BeautySalon.Operations {
-  @route("/salons/{salonId}/staff")
+  @route("/api/v1/salons/{salonId}/staff")
   @tag("Staff")
   namespace StaffOperations {
     @summary("List staff members")
@@ -95,7 +95,7 @@ namespace BeautySalon.Operations {
     };
   }
 
-  @route("/staff")
+  @route("/api/v1/staff")
   @tag("Staff")
   namespace GlobalStaffOperations {
     @summary("Search staff across all salons")

@@ -75,8 +75,8 @@ export const getStaffOperationsListUrl = (
   const stringifiedParams = normalizedParams.toString()
 
   return stringifiedParams.length > 0
-    ? `/salons/${salonId}/staff?${stringifiedParams}`
-    : `/salons/${salonId}/staff`
+    ? `/api/v1/salons/${salonId}/staff?${stringifiedParams}`
+    : `/api/v1/salons/${salonId}/staff`
 }
 
 export const staffOperationsList = async (
@@ -97,7 +97,10 @@ export const getStaffOperationsListQueryKey = (
   salonId: ModelsSalonId,
   params?: StaffOperationsListParams
 ) => {
-  return [`/salons/${salonId}/staff`, ...(params ? [params] : [])] as const
+  return [
+    `/api/v1/salons/${salonId}/staff`,
+    ...(params ? [params] : []),
+  ] as const
 }
 
 export const getStaffOperationsListQueryOptions = <
@@ -283,7 +286,7 @@ export type staffOperationsCreateResponse =
   }
 
 export const getStaffOperationsCreateUrl = (salonId: ModelsSalonId) => {
-  return `/salons/${salonId}/staff`
+  return `/api/v1/salons/${salonId}/staff`
 }
 
 export const staffOperationsCreate = async (
@@ -398,7 +401,7 @@ export const getStaffOperationsGetUrl = (
   salonId: ModelsSalonId,
   id: ModelsStaffId
 ) => {
-  return `/salons/${salonId}/staff/${id}`
+  return `/api/v1/salons/${salonId}/staff/${id}`
 }
 
 export const staffOperationsGet = async (
@@ -419,7 +422,7 @@ export const getStaffOperationsGetQueryKey = (
   salonId: ModelsSalonId,
   id: ModelsStaffId
 ) => {
-  return [`/salons/${salonId}/staff/${id}`] as const
+  return [`/api/v1/salons/${salonId}/staff/${id}`] as const
 }
 
 export const getStaffOperationsGetQueryOptions = <
@@ -604,7 +607,7 @@ export const getStaffOperationsUpdateUrl = (
   salonId: ModelsSalonId,
   id: ModelsStaffId
 ) => {
-  return `/salons/${salonId}/staff/${id}`
+  return `/api/v1/salons/${salonId}/staff/${id}`
 }
 
 export const staffOperationsUpdate = async (
@@ -733,7 +736,7 @@ export const getStaffOperationsDeleteUrl = (
   salonId: ModelsSalonId,
   id: ModelsStaffId
 ) => {
-  return `/salons/${salonId}/staff/${id}`
+  return `/api/v1/salons/${salonId}/staff/${id}`
 }
 
 export const staffOperationsDelete = async (
@@ -853,8 +856,8 @@ export const getStaffOperationsGetAvailabilityUrl = (
   const stringifiedParams = normalizedParams.toString()
 
   return stringifiedParams.length > 0
-    ? `/salons/${salonId}/staff/${id}/availability?${stringifiedParams}`
-    : `/salons/${salonId}/staff/${id}/availability`
+    ? `/api/v1/salons/${salonId}/staff/${id}/availability?${stringifiedParams}`
+    : `/api/v1/salons/${salonId}/staff/${id}/availability`
 }
 
 export const staffOperationsGetAvailability = async (
@@ -878,7 +881,7 @@ export const getStaffOperationsGetAvailabilityQueryKey = (
   params: StaffOperationsGetAvailabilityParams
 ) => {
   return [
-    `/salons/${salonId}/staff/${id}/availability`,
+    `/api/v1/salons/${salonId}/staff/${id}/availability`,
     ...(params ? [params] : []),
   ] as const
 }
@@ -1079,7 +1082,7 @@ export const getStaffOperationsUpdateAvailabilityUrl = (
   salonId: ModelsSalonId,
   id: ModelsStaffId
 ) => {
-  return `/salons/${salonId}/staff/${id}/availability`
+  return `/api/v1/salons/${salonId}/staff/${id}/availability`
 }
 
 export const staffOperationsUpdateAvailability = async (
@@ -1222,8 +1225,8 @@ export const getGlobalStaffOperationsSearchStaffUrl = (
   const stringifiedParams = normalizedParams.toString()
 
   return stringifiedParams.length > 0
-    ? `/staff/search?${stringifiedParams}`
-    : `/staff/search`
+    ? `/api/v1/staff/search?${stringifiedParams}`
+    : `/api/v1/staff/search`
 }
 
 export const globalStaffOperationsSearchStaff = async (
@@ -1242,7 +1245,7 @@ export const globalStaffOperationsSearchStaff = async (
 export const getGlobalStaffOperationsSearchStaffQueryKey = (
   params?: GlobalStaffOperationsSearchStaffParams
 ) => {
-  return [`/staff/search`, ...(params ? [params] : [])] as const
+  return [`/api/v1/staff/search`, ...(params ? [params] : [])] as const
 }
 
 export const getGlobalStaffOperationsSearchStaffQueryOptions = <

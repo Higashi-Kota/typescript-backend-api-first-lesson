@@ -79,8 +79,8 @@ export const getServiceOperationsListUrl = (
   const stringifiedParams = normalizedParams.toString()
 
   return stringifiedParams.length > 0
-    ? `/salons/${salonId}/services?${stringifiedParams}`
-    : `/salons/${salonId}/services`
+    ? `/api/v1/salons/${salonId}/services?${stringifiedParams}`
+    : `/api/v1/salons/${salonId}/services`
 }
 
 export const serviceOperationsList = async (
@@ -101,7 +101,10 @@ export const getServiceOperationsListQueryKey = (
   salonId: ModelsSalonId,
   params?: ServiceOperationsListParams
 ) => {
-  return [`/salons/${salonId}/services`, ...(params ? [params] : [])] as const
+  return [
+    `/api/v1/salons/${salonId}/services`,
+    ...(params ? [params] : []),
+  ] as const
 }
 
 export const getServiceOperationsListQueryOptions = <
@@ -287,7 +290,7 @@ export type serviceOperationsCreateResponse =
   }
 
 export const getServiceOperationsCreateUrl = (salonId: ModelsSalonId) => {
-  return `/salons/${salonId}/services`
+  return `/api/v1/salons/${salonId}/services`
 }
 
 export const serviceOperationsCreate = async (
@@ -394,7 +397,7 @@ export type serviceOperationsBulkUpdateResponse =
   }
 
 export const getServiceOperationsBulkUpdateUrl = (salonId: ModelsSalonId) => {
-  return `/salons/${salonId}/services/bulk`
+  return `/api/v1/salons/${salonId}/services/bulk`
 }
 
 export const serviceOperationsBulkUpdate = async (
@@ -511,7 +514,7 @@ export const getServiceOperationsGetUrl = (
   salonId: ModelsSalonId,
   id: ModelsServiceId
 ) => {
-  return `/salons/${salonId}/services/${id}`
+  return `/api/v1/salons/${salonId}/services/${id}`
 }
 
 export const serviceOperationsGet = async (
@@ -532,7 +535,7 @@ export const getServiceOperationsGetQueryKey = (
   salonId: ModelsSalonId,
   id: ModelsServiceId
 ) => {
-  return [`/salons/${salonId}/services/${id}`] as const
+  return [`/api/v1/salons/${salonId}/services/${id}`] as const
 }
 
 export const getServiceOperationsGetQueryOptions = <
@@ -717,7 +720,7 @@ export const getServiceOperationsUpdateUrl = (
   salonId: ModelsSalonId,
   id: ModelsServiceId
 ) => {
-  return `/salons/${salonId}/services/${id}`
+  return `/api/v1/salons/${salonId}/services/${id}`
 }
 
 export const serviceOperationsUpdate = async (
@@ -854,7 +857,7 @@ export const getServiceOperationsDeleteUrl = (
   salonId: ModelsSalonId,
   id: ModelsServiceId
 ) => {
-  return `/salons/${salonId}/services/${id}`
+  return `/api/v1/salons/${salonId}/services/${id}`
 }
 
 export const serviceOperationsDelete = async (
@@ -972,8 +975,8 @@ export const getServiceCategoryOperationsListCategoriesUrl = (
   const stringifiedParams = normalizedParams.toString()
 
   return stringifiedParams.length > 0
-    ? `/service-categories?${stringifiedParams}`
-    : `/service-categories`
+    ? `/api/v1/service-categories?${stringifiedParams}`
+    : `/api/v1/service-categories`
 }
 
 export const serviceCategoryOperationsListCategories = async (
@@ -992,7 +995,7 @@ export const serviceCategoryOperationsListCategories = async (
 export const getServiceCategoryOperationsListCategoriesQueryKey = (
   params?: ServiceCategoryOperationsListCategoriesParams
 ) => {
-  return [`/service-categories`, ...(params ? [params] : [])] as const
+  return [`/api/v1/service-categories`, ...(params ? [params] : [])] as const
 }
 
 export const getServiceCategoryOperationsListCategoriesQueryOptions = <
@@ -1171,7 +1174,7 @@ export type serviceCategoryOperationsCreateCategoryResponse =
   }
 
 export const getServiceCategoryOperationsCreateCategoryUrl = () => {
-  return `/service-categories`
+  return `/api/v1/service-categories`
 }
 
 export const serviceCategoryOperationsCreateCategory = async (
@@ -1287,7 +1290,7 @@ export type serviceCategoryOperationsUpdateCategoryResponse =
 export const getServiceCategoryOperationsUpdateCategoryUrl = (
   id: ModelsCategoryId
 ) => {
-  return `/service-categories/${id}`
+  return `/api/v1/service-categories/${id}`
 }
 
 export const serviceCategoryOperationsUpdateCategory = async (
@@ -1407,7 +1410,7 @@ export type serviceCategoryOperationsDeleteCategoryResponse =
 export const getServiceCategoryOperationsDeleteCategoryUrl = (
   id: ModelsCategoryId
 ) => {
-  return `/service-categories/${id}`
+  return `/api/v1/service-categories/${id}`
 }
 
 export const serviceCategoryOperationsDeleteCategory = async (

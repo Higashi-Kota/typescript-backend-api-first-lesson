@@ -75,8 +75,8 @@ export const getCustomerOperationsListUrl = (
   const stringifiedParams = normalizedParams.toString()
 
   return stringifiedParams.length > 0
-    ? `/customers?${stringifiedParams}`
-    : `/customers`
+    ? `/api/v1/customers?${stringifiedParams}`
+    : `/api/v1/customers`
 }
 
 export const customerOperationsList = async (
@@ -95,7 +95,7 @@ export const customerOperationsList = async (
 export const getCustomerOperationsListQueryKey = (
   params?: CustomerOperationsListParams
 ) => {
-  return [`/customers`, ...(params ? [params] : [])] as const
+  return [`/api/v1/customers`, ...(params ? [params] : [])] as const
 }
 
 export const getCustomerOperationsListQueryOptions = <
@@ -267,7 +267,7 @@ export type customerOperationsCreateResponse =
   }
 
 export const getCustomerOperationsCreateUrl = () => {
-  return `/customers`
+  return `/api/v1/customers`
 }
 
 export const customerOperationsCreate = async (
@@ -379,7 +379,7 @@ export type customerOperationsMergeResponse =
   }
 
 export const getCustomerOperationsMergeUrl = () => {
-  return `/customers/merge`
+  return `/api/v1/customers/merge`
 }
 
 export const customerOperationsMerge = async (
@@ -491,7 +491,7 @@ export type customerOperationsGetResponse =
   }
 
 export const getCustomerOperationsGetUrl = (id: ModelsCustomerId) => {
-  return `/customers/${id}`
+  return `/api/v1/customers/${id}`
 }
 
 export const customerOperationsGet = async (
@@ -508,7 +508,7 @@ export const customerOperationsGet = async (
 }
 
 export const getCustomerOperationsGetQueryKey = (id: ModelsCustomerId) => {
-  return [`/customers/${id}`] as const
+  return [`/api/v1/customers/${id}`] as const
 }
 
 export const getCustomerOperationsGetQueryOptions = <
@@ -684,7 +684,7 @@ export type customerOperationsUpdateResponse =
   }
 
 export const getCustomerOperationsUpdateUrl = (id: ModelsCustomerId) => {
-  return `/customers/${id}`
+  return `/api/v1/customers/${id}`
 }
 
 export const customerOperationsUpdate = async (
@@ -797,7 +797,7 @@ export type customerOperationsDeleteResponse =
   }
 
 export const getCustomerOperationsDeleteUrl = (id: ModelsCustomerId) => {
-  return `/customers/${id}`
+  return `/api/v1/customers/${id}`
 }
 
 export const customerOperationsDelete = async (
@@ -915,8 +915,8 @@ export const getCustomerOperationsGetBookingsUrl = (
   const stringifiedParams = normalizedParams.toString()
 
   return stringifiedParams.length > 0
-    ? `/customers/${id}/bookings?${stringifiedParams}`
-    : `/customers/${id}/bookings`
+    ? `/api/v1/customers/${id}/bookings?${stringifiedParams}`
+    : `/api/v1/customers/${id}/bookings`
 }
 
 export const customerOperationsGetBookings = async (
@@ -937,7 +937,10 @@ export const getCustomerOperationsGetBookingsQueryKey = (
   id: ModelsCustomerId,
   params?: CustomerOperationsGetBookingsParams
 ) => {
-  return [`/customers/${id}/bookings`, ...(params ? [params] : [])] as const
+  return [
+    `/api/v1/customers/${id}/bookings`,
+    ...(params ? [params] : []),
+  ] as const
 }
 
 export const getCustomerOperationsGetBookingsQueryOptions = <
@@ -1124,7 +1127,7 @@ export type customerOperationsGetProfileResponse =
   }
 
 export const getCustomerOperationsGetProfileUrl = (id: ModelsCustomerId) => {
-  return `/customers/${id}/profile`
+  return `/api/v1/customers/${id}/profile`
 }
 
 export const customerOperationsGetProfile = async (
@@ -1143,7 +1146,7 @@ export const customerOperationsGetProfile = async (
 export const getCustomerOperationsGetProfileQueryKey = (
   id: ModelsCustomerId
 ) => {
-  return [`/customers/${id}/profile`] as const
+  return [`/api/v1/customers/${id}/profile`] as const
 }
 
 export const getCustomerOperationsGetProfileQueryOptions = <
@@ -1328,8 +1331,8 @@ export const getCustomerOperationsGetReservationsUrl = (
   const stringifiedParams = normalizedParams.toString()
 
   return stringifiedParams.length > 0
-    ? `/customers/${id}/reservations?${stringifiedParams}`
-    : `/customers/${id}/reservations`
+    ? `/api/v1/customers/${id}/reservations?${stringifiedParams}`
+    : `/api/v1/customers/${id}/reservations`
 }
 
 export const customerOperationsGetReservations = async (
@@ -1350,7 +1353,10 @@ export const getCustomerOperationsGetReservationsQueryKey = (
   id: ModelsCustomerId,
   params?: CustomerOperationsGetReservationsParams
 ) => {
-  return [`/customers/${id}/reservations`, ...(params ? [params] : [])] as const
+  return [
+    `/api/v1/customers/${id}/reservations`,
+    ...(params ? [params] : []),
+  ] as const
 }
 
 export const getCustomerOperationsGetReservationsQueryOptions = <

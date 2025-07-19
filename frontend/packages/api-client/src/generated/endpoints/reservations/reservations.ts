@@ -77,8 +77,8 @@ export const getReservationOperationsListUrl = (
   const stringifiedParams = normalizedParams.toString()
 
   return stringifiedParams.length > 0
-    ? `/reservations?${stringifiedParams}`
-    : `/reservations`
+    ? `/api/v1/reservations?${stringifiedParams}`
+    : `/api/v1/reservations`
 }
 
 export const reservationOperationsList = async (
@@ -97,7 +97,7 @@ export const reservationOperationsList = async (
 export const getReservationOperationsListQueryKey = (
   params?: ReservationOperationsListParams
 ) => {
-  return [`/reservations`, ...(params ? [params] : [])] as const
+  return [`/api/v1/reservations`, ...(params ? [params] : [])] as const
 }
 
 export const getReservationOperationsListQueryOptions = <
@@ -269,7 +269,7 @@ export type reservationOperationsCreateResponse =
   }
 
 export const getReservationOperationsCreateUrl = () => {
-  return `/reservations`
+  return `/api/v1/reservations`
 }
 
 export const reservationOperationsCreate = async (
@@ -382,7 +382,7 @@ export type reservationOperationsGetResponse =
   }
 
 export const getReservationOperationsGetUrl = (id: ModelsReservationId) => {
-  return `/reservations/${id}`
+  return `/api/v1/reservations/${id}`
 }
 
 export const reservationOperationsGet = async (
@@ -401,7 +401,7 @@ export const reservationOperationsGet = async (
 export const getReservationOperationsGetQueryKey = (
   id: ModelsReservationId
 ) => {
-  return [`/reservations/${id}`] as const
+  return [`/api/v1/reservations/${id}`] as const
 }
 
 export const getReservationOperationsGetQueryOptions = <
@@ -578,7 +578,7 @@ export type reservationOperationsUpdateResponse =
   }
 
 export const getReservationOperationsUpdateUrl = (id: ModelsReservationId) => {
-  return `/reservations/${id}`
+  return `/api/v1/reservations/${id}`
 }
 
 export const reservationOperationsUpdate = async (
@@ -692,7 +692,7 @@ export type reservationOperationsCancelResponse =
   }
 
 export const getReservationOperationsCancelUrl = (id: ModelsReservationId) => {
-  return `/reservations/${id}/cancel`
+  return `/api/v1/reservations/${id}/cancel`
 }
 
 export const reservationOperationsCancel = async (
@@ -808,7 +808,7 @@ export type reservationOperationsCompleteResponse =
 export const getReservationOperationsCompleteUrl = (
   id: ModelsReservationId
 ) => {
-  return `/reservations/${id}/complete`
+  return `/api/v1/reservations/${id}/complete`
 }
 
 export const reservationOperationsComplete = async (
@@ -921,7 +921,7 @@ export type reservationOperationsRescheduleResponse =
 export const getReservationOperationsRescheduleUrl = (
   id: ModelsReservationId
 ) => {
-  return `/reservations/${id}/reschedule`
+  return `/api/v1/reservations/${id}/reschedule`
 }
 
 export const reservationOperationsReschedule = async (
@@ -1050,8 +1050,8 @@ export const getAvailabilityOperationsGetAvailableSlotsUrl = (
   const stringifiedParams = normalizedParams.toString()
 
   return stringifiedParams.length > 0
-    ? `/salons/${salonId}/available-slots?${stringifiedParams}`
-    : `/salons/${salonId}/available-slots`
+    ? `/api/v1/salons/${salonId}/available-slots?${stringifiedParams}`
+    : `/api/v1/salons/${salonId}/available-slots`
 }
 
 export const availabilityOperationsGetAvailableSlots = async (
@@ -1073,7 +1073,7 @@ export const getAvailabilityOperationsGetAvailableSlotsQueryKey = (
   params: AvailabilityOperationsGetAvailableSlotsParams
 ) => {
   return [
-    `/salons/${salonId}/available-slots`,
+    `/api/v1/salons/${salonId}/available-slots`,
     ...(params ? [params] : []),
   ] as const
 }
@@ -1261,7 +1261,7 @@ export type availabilityOperationsCheckAvailabilityResponse =
 export const getAvailabilityOperationsCheckAvailabilityUrl = (
   salonId: ModelsSalonId
 ) => {
-  return `/salons/${salonId}/available-slots/check`
+  return `/api/v1/salons/${salonId}/available-slots/check`
 }
 
 export const availabilityOperationsCheckAvailability = async (

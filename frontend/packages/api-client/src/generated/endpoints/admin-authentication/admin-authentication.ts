@@ -51,7 +51,7 @@ export type adminAuthOperationsAddTrustedIpResponse =
   }
 
 export const getAdminAuthOperationsAddTrustedIpUrl = (userId: string) => {
-  return `/admin/auth/trusted-ip/${userId}`
+  return `/api/v1/admin/auth/trusted-ip/${userId}`
 }
 
 export const adminAuthOperationsAddTrustedIp = async (
@@ -177,8 +177,8 @@ export const getAdminAuthOperationsRemoveTrustedIpUrl = (
   const stringifiedParams = normalizedParams.toString()
 
   return stringifiedParams.length > 0
-    ? `/admin/auth/trusted-ip/${userId}?${stringifiedParams}`
-    : `/admin/auth/trusted-ip/${userId}`
+    ? `/api/v1/admin/auth/trusted-ip/${userId}?${stringifiedParams}`
+    : `/api/v1/admin/auth/trusted-ip/${userId}`
 }
 
 export const adminAuthOperationsRemoveTrustedIp = async (
@@ -287,7 +287,7 @@ export type adminAuthOperationsUnlockAccountResponse =
   }
 
 export const getAdminAuthOperationsUnlockAccountUrl = (userId: string) => {
-  return `/admin/auth/unlock/${userId}`
+  return `/api/v1/admin/auth/unlock/${userId}`
 }
 
 export const adminAuthOperationsUnlockAccount = async (

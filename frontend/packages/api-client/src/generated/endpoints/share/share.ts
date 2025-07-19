@@ -64,8 +64,8 @@ export const getShareOperationsGetSharedFileUrl = (
   const stringifiedParams = normalizedParams.toString()
 
   return stringifiedParams.length > 0
-    ? `/share/${shareToken}?${stringifiedParams}`
-    : `/share/${shareToken}`
+    ? `/api/v1/share/${shareToken}?${stringifiedParams}`
+    : `/api/v1/share/${shareToken}`
 }
 
 export const shareOperationsGetSharedFile = async (
@@ -86,7 +86,7 @@ export const getShareOperationsGetSharedFileQueryKey = (
   shareToken: string,
   params?: ShareOperationsGetSharedFileParams
 ) => {
-  return [`/share/${shareToken}`, ...(params ? [params] : [])] as const
+  return [`/api/v1/share/${shareToken}`, ...(params ? [params] : [])] as const
 }
 
 export const getShareOperationsGetSharedFileQueryOptions = <
@@ -281,8 +281,8 @@ export const getShareOperationsDownloadSharedFileUrl = (
   const stringifiedParams = normalizedParams.toString()
 
   return stringifiedParams.length > 0
-    ? `/share/${shareToken}/download?${stringifiedParams}`
-    : `/share/${shareToken}/download`
+    ? `/api/v1/share/${shareToken}/download?${stringifiedParams}`
+    : `/api/v1/share/${shareToken}/download`
 }
 
 export const shareOperationsDownloadSharedFile = async (
@@ -303,7 +303,10 @@ export const getShareOperationsDownloadSharedFileQueryKey = (
   shareToken: string,
   params?: ShareOperationsDownloadSharedFileParams
 ) => {
-  return [`/share/${shareToken}/download`, ...(params ? [params] : [])] as const
+  return [
+    `/api/v1/share/${shareToken}/download`,
+    ...(params ? [params] : []),
+  ] as const
 }
 
 export const getShareOperationsDownloadSharedFileQueryOptions = <

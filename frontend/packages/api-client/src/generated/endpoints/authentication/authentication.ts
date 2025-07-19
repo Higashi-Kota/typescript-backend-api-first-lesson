@@ -85,7 +85,7 @@ export type authOperationsGenerateBackupCodesResponse =
   }
 
 export const getAuthOperationsGenerateBackupCodesUrl = () => {
-  return `/auth/2fa/backup-codes`
+  return `/api/v1/auth/2fa/backup-codes`
 }
 
 export const authOperationsGenerateBackupCodes = async (
@@ -204,7 +204,7 @@ export type authOperationsDisableTwoFactorResponse =
   }
 
 export const getAuthOperationsDisableTwoFactorUrl = () => {
-  return `/auth/2fa/disable`
+  return `/api/v1/auth/2fa/disable`
 }
 
 export const authOperationsDisableTwoFactor = async (
@@ -323,7 +323,7 @@ export type authOperationsEnableTwoFactorResponse =
   }
 
 export const getAuthOperationsEnableTwoFactorUrl = () => {
-  return `/auth/2fa/enable`
+  return `/api/v1/auth/2fa/enable`
 }
 
 export const authOperationsEnableTwoFactor = async (
@@ -436,7 +436,7 @@ export type authOperationsGetTwoFactorQRCodeResponse =
   }
 
 export const getAuthOperationsGetTwoFactorQRCodeUrl = () => {
-  return `/auth/2fa/qr-code`
+  return `/api/v1/auth/2fa/qr-code`
 }
 
 export const authOperationsGetTwoFactorQRCode = async (
@@ -452,7 +452,7 @@ export const authOperationsGetTwoFactorQRCode = async (
 }
 
 export const getAuthOperationsGetTwoFactorQRCodeQueryKey = () => {
-  return [`/auth/2fa/qr-code`] as const
+  return [`/api/v1/auth/2fa/qr-code`] as const
 }
 
 export const getAuthOperationsGetTwoFactorQRCodeQueryOptions = <
@@ -620,7 +620,7 @@ export type authOperationsVerifyTwoFactorResponse =
   }
 
 export const getAuthOperationsVerifyTwoFactorUrl = () => {
-  return `/auth/2fa/verify`
+  return `/api/v1/auth/2fa/verify`
 }
 
 export const authOperationsVerifyTwoFactor = async (
@@ -739,7 +739,7 @@ export type authOperationsChangePasswordResponse =
   }
 
 export const getAuthOperationsChangePasswordUrl = () => {
-  return `/auth/change-password`
+  return `/api/v1/auth/change-password`
 }
 
 export const authOperationsChangePassword = async (
@@ -852,7 +852,7 @@ export type authOperationsForgotPasswordResponse =
   }
 
 export const getAuthOperationsForgotPasswordUrl = () => {
-  return `/auth/forgot-password`
+  return `/api/v1/auth/forgot-password`
 }
 
 export const authOperationsForgotPassword = async (
@@ -963,7 +963,7 @@ export type authOperationsLoginResponse =
   }
 
 export const getAuthOperationsLoginUrl = () => {
-  return `/auth/login`
+  return `/api/v1/auth/login`
 }
 
 export const authOperationsLogin = async (
@@ -1072,7 +1072,7 @@ export type authOperationsLogoutResponse =
   }
 
 export const getAuthOperationsLogoutUrl = () => {
-  return `/auth/logout`
+  return `/api/v1/auth/logout`
 }
 
 export const authOperationsLogout = async (
@@ -1176,7 +1176,7 @@ export type authOperationsLogoutAllResponse =
   }
 
 export const getAuthOperationsLogoutAllUrl = () => {
-  return `/auth/logout-all`
+  return `/api/v1/auth/logout-all`
 }
 
 export const authOperationsLogoutAll = async (
@@ -1280,7 +1280,7 @@ export type authOperationsGetCurrentUserResponse =
   }
 
 export const getAuthOperationsGetCurrentUserUrl = () => {
-  return `/auth/me`
+  return `/api/v1/auth/me`
 }
 
 export const authOperationsGetCurrentUser = async (
@@ -1296,7 +1296,7 @@ export const authOperationsGetCurrentUser = async (
 }
 
 export const getAuthOperationsGetCurrentUserQueryKey = () => {
-  return [`/auth/me`] as const
+  return [`/api/v1/auth/me`] as const
 }
 
 export const getAuthOperationsGetCurrentUserQueryOptions = <
@@ -1458,7 +1458,7 @@ export type authOperationsRefreshTokenResponse =
   }
 
 export const getAuthOperationsRefreshTokenUrl = () => {
-  return `/auth/refresh`
+  return `/api/v1/auth/refresh`
 }
 
 export const authOperationsRefreshToken = async (
@@ -1567,7 +1567,7 @@ export type authOperationsRegisterResponse =
   }
 
 export const getAuthOperationsRegisterUrl = () => {
-  return `/auth/register`
+  return `/api/v1/auth/register`
 }
 
 export const authOperationsRegister = async (
@@ -1676,7 +1676,7 @@ export type authOperationsResetPasswordResponse =
   }
 
 export const getAuthOperationsResetPasswordUrl = () => {
-  return `/auth/reset-password`
+  return `/api/v1/auth/reset-password`
 }
 
 export const authOperationsResetPassword = async (
@@ -1800,8 +1800,8 @@ export const getAuthOperationsVerifyResetTokenUrl = (
   const stringifiedParams = normalizedParams.toString()
 
   return stringifiedParams.length > 0
-    ? `/auth/reset-password/verify?${stringifiedParams}`
-    : `/auth/reset-password/verify`
+    ? `/api/v1/auth/reset-password/verify?${stringifiedParams}`
+    : `/api/v1/auth/reset-password/verify`
 }
 
 export const authOperationsVerifyResetToken = async (
@@ -1820,7 +1820,10 @@ export const authOperationsVerifyResetToken = async (
 export const getAuthOperationsVerifyResetTokenQueryKey = (
   params: AuthOperationsVerifyResetTokenParams
 ) => {
-  return [`/auth/reset-password/verify`, ...(params ? [params] : [])] as const
+  return [
+    `/api/v1/auth/reset-password/verify`,
+    ...(params ? [params] : []),
+  ] as const
 }
 
 export const getAuthOperationsVerifyResetTokenQueryOptions = <
@@ -1992,7 +1995,7 @@ export type authOperationsGetSessionsResponse =
   }
 
 export const getAuthOperationsGetSessionsUrl = () => {
-  return `/auth/sessions`
+  return `/api/v1/auth/sessions`
 }
 
 export const authOperationsGetSessions = async (
@@ -2008,7 +2011,7 @@ export const authOperationsGetSessions = async (
 }
 
 export const getAuthOperationsGetSessionsQueryKey = () => {
-  return [`/auth/sessions`] as const
+  return [`/api/v1/auth/sessions`] as const
 }
 
 export const getAuthOperationsGetSessionsQueryOptions = <
@@ -2169,7 +2172,7 @@ export type authOperationsRevokeSessionResponse =
   }
 
 export const getAuthOperationsRevokeSessionUrl = (sessionId: string) => {
-  return `/auth/sessions/${sessionId}`
+  return `/api/v1/auth/sessions/${sessionId}`
 }
 
 export const authOperationsRevokeSession = async (
@@ -2276,7 +2279,7 @@ export type authOperationsConfirmEmailVerificationResponse =
   }
 
 export const getAuthOperationsConfirmEmailVerificationUrl = () => {
-  return `/auth/verify-email/confirm`
+  return `/api/v1/auth/verify-email/confirm`
 }
 
 export const authOperationsConfirmEmailVerification = async (
@@ -2387,7 +2390,7 @@ export type authOperationsSendEmailVerificationResponse =
   }
 
 export const getAuthOperationsSendEmailVerificationUrl = () => {
-  return `/auth/verify-email/send`
+  return `/api/v1/auth/verify-email/send`
 }
 
 export const authOperationsSendEmailVerification = async (

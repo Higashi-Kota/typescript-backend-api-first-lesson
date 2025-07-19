@@ -75,8 +75,8 @@ export const getBookingOperationsListUrl = (
   const stringifiedParams = normalizedParams.toString()
 
   return stringifiedParams.length > 0
-    ? `/bookings?${stringifiedParams}`
-    : `/bookings`
+    ? `/api/v1/bookings?${stringifiedParams}`
+    : `/api/v1/bookings`
 }
 
 export const bookingOperationsList = async (
@@ -95,7 +95,7 @@ export const bookingOperationsList = async (
 export const getBookingOperationsListQueryKey = (
   params?: BookingOperationsListParams
 ) => {
-  return [`/bookings`, ...(params ? [params] : [])] as const
+  return [`/api/v1/bookings`, ...(params ? [params] : [])] as const
 }
 
 export const getBookingOperationsListQueryOptions = <
@@ -267,7 +267,7 @@ export type bookingOperationsCreateResponse =
   }
 
 export const getBookingOperationsCreateUrl = () => {
-  return `/bookings`
+  return `/api/v1/bookings`
 }
 
 export const bookingOperationsCreate = async (
@@ -379,7 +379,7 @@ export type bookingOperationsGetResponse =
   }
 
 export const getBookingOperationsGetUrl = (id: ModelsBookingId) => {
-  return `/bookings/${id}`
+  return `/api/v1/bookings/${id}`
 }
 
 export const bookingOperationsGet = async (
@@ -396,7 +396,7 @@ export const bookingOperationsGet = async (
 }
 
 export const getBookingOperationsGetQueryKey = (id: ModelsBookingId) => {
-  return [`/bookings/${id}`] as const
+  return [`/api/v1/bookings/${id}`] as const
 }
 
 export const getBookingOperationsGetQueryOptions = <
@@ -571,7 +571,7 @@ export type bookingOperationsUpdateResponse =
   }
 
 export const getBookingOperationsUpdateUrl = (id: ModelsBookingId) => {
-  return `/bookings/${id}`
+  return `/api/v1/bookings/${id}`
 }
 
 export const bookingOperationsUpdate = async (
@@ -684,7 +684,7 @@ export type bookingOperationsDeleteResponse =
   }
 
 export const getBookingOperationsDeleteUrl = (id: ModelsBookingId) => {
-  return `/bookings/${id}`
+  return `/api/v1/bookings/${id}`
 }
 
 export const bookingOperationsDelete = async (
@@ -794,7 +794,7 @@ export type bookingOperationsCancelResponse =
   }
 
 export const getBookingOperationsCancelUrl = (id: ModelsBookingId) => {
-  return `/bookings/${id}/cancel`
+  return `/api/v1/bookings/${id}/cancel`
 }
 
 export const bookingOperationsCancel = async (
@@ -907,7 +907,7 @@ export type bookingOperationsConfirmResponse =
   }
 
 export const getBookingOperationsConfirmUrl = (id: ModelsBookingId) => {
-  return `/bookings/${id}/confirm`
+  return `/api/v1/bookings/${id}/confirm`
 }
 
 export const bookingOperationsConfirm = async (
@@ -1017,7 +1017,7 @@ export type bookingOperationsProcessPaymentResponse =
   }
 
 export const getBookingOperationsProcessPaymentUrl = (id: ModelsBookingId) => {
-  return `/bookings/${id}/payment`
+  return `/api/v1/bookings/${id}/payment`
 }
 
 export const bookingOperationsProcessPayment = async (
@@ -1132,7 +1132,7 @@ export type bookingOperationsAddReservationResponse =
   }
 
 export const getBookingOperationsAddReservationUrl = (id: ModelsBookingId) => {
-  return `/bookings/${id}/reservations`
+  return `/api/v1/bookings/${id}/reservations`
 }
 
 export const bookingOperationsAddReservation = async (
@@ -1250,7 +1250,7 @@ export const getBookingOperationsRemoveReservationUrl = (
   id: ModelsBookingId,
   reservationId: ModelsReservationId
 ) => {
-  return `/bookings/${id}/reservations/${reservationId}`
+  return `/api/v1/bookings/${id}/reservations/${reservationId}`
 }
 
 export const bookingOperationsRemoveReservation = async (

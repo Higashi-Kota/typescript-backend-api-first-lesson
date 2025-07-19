@@ -755,8 +755,8 @@ PGPASSWORD=postgres psql -h localhost -U postgres -d beauty_salon -c "\dt"
   - [x] プロバイダー切り替え（Development/MailHog/Mailgun）
 - [x] ロギングとモニタリング
   - [x] 構造化ログの実装（Sum型ベース）
-  - [ ] エラートラッキング（Sentry等）（据え置きで一旦スキップ）
-  - [ ] メトリクス収集（Prometheus等）（据え置きで一旦スキップ）
+  - [ ] エラートラッキング（Sentry等）
+  - [ ] メトリクス収集（Prometheus等）
 
 ### テスト（据え置きで一旦スキップ）
 - [ ] 統合テスト（testcontainers）

@@ -76,8 +76,8 @@ export const getAttachmentOperationsListUrl = (
   const stringifiedParams = normalizedParams.toString()
 
   return stringifiedParams.length > 0
-    ? `/attachments?${stringifiedParams}`
-    : `/attachments`
+    ? `/api/v1/attachments?${stringifiedParams}`
+    : `/api/v1/attachments`
 }
 
 export const attachmentOperationsList = async (
@@ -96,7 +96,7 @@ export const attachmentOperationsList = async (
 export const getAttachmentOperationsListQueryKey = (
   params?: AttachmentOperationsListParams
 ) => {
-  return [`/attachments`, ...(params ? [params] : [])] as const
+  return [`/api/v1/attachments`, ...(params ? [params] : [])] as const
 }
 
 export const getAttachmentOperationsListQueryOptions = <
@@ -267,7 +267,7 @@ export type attachmentOperationsDeleteShareLinkResponse =
 export const getAttachmentOperationsDeleteShareLinkUrl = (
   shareLinkId: string
 ) => {
-  return `/attachments/share-links/${shareLinkId}`
+  return `/api/v1/attachments/share-links/${shareLinkId}`
 }
 
 export const attachmentOperationsDeleteShareLink = async (
@@ -370,7 +370,7 @@ export type attachmentOperationsUploadFileResponse =
   }
 
 export const getAttachmentOperationsUploadFileUrl = () => {
-  return `/attachments/upload`
+  return `/api/v1/attachments/upload`
 }
 
 export const attachmentOperationsUploadFile = async (
@@ -476,7 +476,7 @@ export type attachmentOperationsGetUploadUrlResponse =
   }
 
 export const getAttachmentOperationsGetUploadUrlUrl = () => {
-  return `/attachments/upload-url`
+  return `/api/v1/attachments/upload-url`
 }
 
 export const attachmentOperationsGetUploadUrl = async (
@@ -581,7 +581,7 @@ export type attachmentOperationsGetResponse =
   }
 
 export const getAttachmentOperationsGetUrl = (attachmentId: string) => {
-  return `/attachments/${attachmentId}`
+  return `/api/v1/attachments/${attachmentId}`
 }
 
 export const attachmentOperationsGet = async (
@@ -598,7 +598,7 @@ export const attachmentOperationsGet = async (
 }
 
 export const getAttachmentOperationsGetQueryKey = (attachmentId: string) => {
-  return [`/attachments/${attachmentId}`] as const
+  return [`/api/v1/attachments/${attachmentId}`] as const
 }
 
 export const getAttachmentOperationsGetQueryOptions = <
@@ -775,7 +775,7 @@ export type attachmentOperationsDeleteResponse =
   }
 
 export const getAttachmentOperationsDeleteUrl = (attachmentId: string) => {
-  return `/attachments/${attachmentId}`
+  return `/api/v1/attachments/${attachmentId}`
 }
 
 export const attachmentOperationsDelete = async (
@@ -890,8 +890,8 @@ export const getAttachmentOperationsGetDownloadUrlUrl = (
   const stringifiedParams = normalizedParams.toString()
 
   return stringifiedParams.length > 0
-    ? `/attachments/${attachmentId}/download-url?${stringifiedParams}`
-    : `/attachments/${attachmentId}/download-url`
+    ? `/api/v1/attachments/${attachmentId}/download-url?${stringifiedParams}`
+    : `/api/v1/attachments/${attachmentId}/download-url`
 }
 
 export const attachmentOperationsGetDownloadUrl = async (
@@ -913,7 +913,7 @@ export const getAttachmentOperationsGetDownloadUrlQueryKey = (
   params?: AttachmentOperationsGetDownloadUrlParams
 ) => {
   return [
-    `/attachments/${attachmentId}/download-url`,
+    `/api/v1/attachments/${attachmentId}/download-url`,
     ...(params ? [params] : []),
   ] as const
 }
@@ -1098,7 +1098,7 @@ export type attachmentOperationsCreateShareLinkResponse =
 export const getAttachmentOperationsCreateShareLinkUrl = (
   attachmentId: string
 ) => {
-  return `/attachments/${attachmentId}/share-links`
+  return `/api/v1/attachments/${attachmentId}/share-links`
 }
 
 export const attachmentOperationsCreateShareLink = async (
@@ -1210,7 +1210,7 @@ export type attachmentOperationsListShareLinksResponse =
 export const getAttachmentOperationsListShareLinksUrl = (
   attachmentId: string
 ) => {
-  return `/attachments/${attachmentId}/share-links`
+  return `/api/v1/attachments/${attachmentId}/share-links`
 }
 
 export const attachmentOperationsListShareLinks = async (
@@ -1229,7 +1229,7 @@ export const attachmentOperationsListShareLinks = async (
 export const getAttachmentOperationsListShareLinksQueryKey = (
   attachmentId: string
 ) => {
-  return [`/attachments/${attachmentId}/share-links`] as const
+  return [`/api/v1/attachments/${attachmentId}/share-links`] as const
 }
 
 export const getAttachmentOperationsListShareLinksQueryOptions = <
