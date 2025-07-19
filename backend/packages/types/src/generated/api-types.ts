@@ -47,6 +47,129 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/attachments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description 添付ファイルの一覧取得 */
+        get: operations["AttachmentOperations_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/attachments/share-links/{shareLinkId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** @description 共有リンクの削除 */
+        delete: operations["AttachmentOperations_deleteShareLink"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/attachments/upload": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description ファイルの直接アップロード
+         *     JSONでファイル情報をアップロード */
+        post: operations["AttachmentOperations_uploadFile"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/attachments/upload-url": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description 署名付きアップロードURLの取得
+         *     クライアントが直接ストレージにアップロードするためのURL */
+        post: operations["AttachmentOperations_getUploadUrl"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/attachments/{attachmentId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description 添付ファイル情報の取得 */
+        get: operations["AttachmentOperations_get"];
+        put?: never;
+        post?: never;
+        /** @description 添付ファイルの削除 */
+        delete: operations["AttachmentOperations_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/attachments/{attachmentId}/download-url": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description 署名付きダウンロードURLの取得 */
+        get: operations["AttachmentOperations_getDownloadUrl"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/attachments/{attachmentId}/share-links": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description 共有リンクの一覧取得 */
+        get: operations["AttachmentOperations_listShareLinks"];
+        put?: never;
+        /** @description 共有リンクの作成 */
+        post: operations["AttachmentOperations_createShareLink"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/auth/2fa/backup-codes": {
         parameters: {
             query?: never;
@@ -1022,6 +1145,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/share/{shareToken}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description 共有リンクからファイル情報を取得 */
+        get: operations["ShareOperations_getSharedFile"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/share/{shareToken}/download": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description 共有リンクからダウンロードURLを取得 */
+        get: operations["ShareOperations_downloadSharedFile"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/staff/search": {
         parameters: {
             query?: never;
@@ -1077,6 +1234,11 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** @description 共有リンクアクセスリクエスト */
+        "Models.AccessShareLinkRequest": {
+            /** @description パスワード（パスワード保護されている場合） */
+            password?: string;
+        };
         "Models.Address": {
             street: string;
             city: string;
@@ -1084,6 +1246,46 @@ export interface components {
             postalCode: string;
             /** @default Japan */
             country: string;
+        };
+        /** @description 添付ファイル情報 */
+        "Models.Attachment": {
+            /** @description 添付ファイルID (UUID) */
+            id: string;
+            /** @description ストレージキー */
+            key: string;
+            /** @description オリジナルファイル名 */
+            filename: string;
+            /** @description Content-Type */
+            contentType: string;
+            /**
+             * Format: int32
+             * @description ファイルサイズ（バイト）
+             */
+            size: number;
+            /** @description ファイルタイプ */
+            fileType: components["schemas"]["Models.FileType"];
+            /** @description アップロードしたユーザーID */
+            uploadedBy: string;
+            /** @description 関連するサロンID（オプション） */
+            salonId?: string;
+            /** @description メタデータ */
+            metadata?: {
+                [key: string]: unknown;
+            };
+            /** @description タグ */
+            tags?: {
+                [key: string]: string;
+            };
+            /**
+             * Format: date-time
+             * @description アップロード日時
+             */
+            uploadedAt: string;
+            /**
+             * Format: date-time
+             * @description 更新日時
+             */
+            updatedAt: string;
         };
         "Models.AuditInfo": {
             /** Format: date-time */
@@ -1209,6 +1411,23 @@ export interface components {
             /** Format: int32 */
             requiredStaffLevel?: number;
         };
+        /** @description 共有リンク作成リクエスト */
+        "Models.CreateShareLinkRequest": {
+            /**
+             * Format: date-time
+             * @description 有効期限（オプション）
+             */
+            expiresAt?: string;
+            /**
+             * Format: int32
+             * @description 最大ダウンロード数（オプション）
+             */
+            maxDownloads?: number;
+            /** @description パスワード（オプション） */
+            password?: string;
+            /** @description 許可されたメールアドレス（オプション） */
+            allowedEmails?: string[];
+        };
         "Models.CreateStaffRequest": {
             salonId: components["schemas"]["Models.SalonId"];
             name: string;
@@ -1252,6 +1471,16 @@ export interface components {
         } & components["schemas"]["Models.Customer"];
         /** @enum {string} */
         "Models.DayOfWeek": "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday";
+        /** @description 署名付きダウンロードURL取得レスポンス */
+        "Models.DownloadUrlResponse": {
+            /** @description 署名付きダウンロードURL */
+            downloadUrl: string;
+            /**
+             * Format: date-time
+             * @description URL有効期限
+             */
+            expiresAt: string;
+        };
         /** @description Email verification request */
         "Models.EmailVerificationRequest": {
             /** @description Email verification token */
@@ -1264,6 +1493,11 @@ export interface components {
                 [key: string]: unknown;
             };
         };
+        /**
+         * @description ファイルタイプ
+         * @enum {string}
+         */
+        "Models.FileType": "image" | "document" | "other";
         /** @description Customer bookings filter parameters */
         "Models.GetCustomerBookingsRequest": {
             status?: components["schemas"]["Models.BookingStatus"];
@@ -1275,6 +1509,20 @@ export interface components {
             from?: string;
             /** Format: date-time */
             to?: string;
+        };
+        /** @description 署名付きアップロードURL取得リクエスト */
+        "Models.GetUploadUrlRequest": {
+            /** @description ファイル名 */
+            filename: string;
+            /** @description Content-Type */
+            contentType: string;
+            /**
+             * Format: int32
+             * @description ファイルサイズ（バイト）
+             */
+            size: number;
+            /** @description サロンID（オプション） */
+            salonId?: string;
         };
         /** @description Login request */
         "Models.LoginRequest": {
@@ -1314,6 +1562,31 @@ export interface components {
             openTime: string;
             closeTime: string;
             isHoliday: boolean;
+        };
+        /** @description ページネーション付き添付ファイル一覧 */
+        "Models.PaginatedAttachments": {
+            /** @description 添付ファイル一覧 */
+            items: components["schemas"]["Models.Attachment"][];
+            /**
+             * Format: int32
+             * @description 合計件数
+             */
+            total: number;
+            /**
+             * Format: int32
+             * @description 現在のページ
+             */
+            page: number;
+            /**
+             * Format: int32
+             * @description ページあたりの件数
+             */
+            limit: number;
+            /**
+             * Format: int32
+             * @description 総ページ数
+             */
+            totalPages: number;
         };
         /** @description Password change request */
         "Models.PasswordChangeRequest": {
@@ -1543,6 +1816,41 @@ export interface components {
              */
             total: number;
         };
+        /** @description 共有リンク */
+        "Models.ShareLink": {
+            /** @description 共有リンクID */
+            id: string;
+            /** @description 共有トークン */
+            token: string;
+            /** @description 添付ファイルID */
+            attachmentId: string;
+            /**
+             * Format: date-time
+             * @description 有効期限（オプション）
+             */
+            expiresAt?: string;
+            /**
+             * Format: int32
+             * @description 最大ダウンロード数（オプション）
+             */
+            maxDownloads?: number;
+            /**
+             * Format: int32
+             * @description 現在のダウンロード数
+             */
+            downloadCount: number;
+            /** @description パスワード保護 */
+            hasPassword: boolean;
+            /** @description 許可されたメールアドレス（オプション） */
+            allowedEmails?: string[];
+            /** @description 作成者ID */
+            createdBy: string;
+            /**
+             * Format: date-time
+             * @description 作成日時
+             */
+            createdAt: string;
+        };
         "Models.Staff": {
             id: components["schemas"]["Models.StaffId"];
             salonId: components["schemas"]["Models.SalonId"];
@@ -1756,6 +2064,34 @@ export interface components {
             yearsOfExperience?: number | null;
             certifications?: string[] | null;
             isActive?: boolean;
+        };
+        /** @description ファイルアップロードリクエスト（マルチパート） */
+        "Models.UploadAttachmentRequest": {
+            /**
+             * Format: byte
+             * @description ファイル本体
+             */
+            file: string;
+            /** @description ファイル名 */
+            filename: string;
+            /** @description Content-Type */
+            contentType: string;
+            /** @description サロンID（オプション） */
+            salonId?: string;
+            /** @description タグ（オプション） */
+            tags?: string;
+        };
+        /** @description 署名付きアップロードURLレスポンス */
+        "Models.UploadUrlResponse": {
+            /** @description 署名付きアップロードURL */
+            uploadUrl: string;
+            /** @description ストレージキー */
+            key: string;
+            /**
+             * Format: date-time
+             * @description URL有効期限
+             */
+            expiresAt: string;
         };
         /** @description User authentication information */
         "Models.User": {
@@ -2030,6 +2366,230 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+        };
+    };
+    AttachmentOperations_list: {
+        parameters: {
+            query?: {
+                salonId?: string;
+                page?: number;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.PaginatedAttachments"] | components["schemas"]["Models.Error"];
+                };
+            };
+        };
+    };
+    AttachmentOperations_deleteShareLink: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                shareLinkId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"] | components["schemas"]["Models.Error"] | components["schemas"]["Models.Error"];
+                };
+            };
+            /** @description There is no content to send for this request, but the headers may be useful.  */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AttachmentOperations_uploadFile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Models.UploadAttachmentRequest"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Attachment"] | components["schemas"]["Models.Error"];
+                };
+            };
+        };
+    };
+    AttachmentOperations_getUploadUrl: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Models.GetUploadUrlRequest"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.UploadUrlResponse"] | components["schemas"]["Models.Error"] | components["schemas"]["Models.Error"] | components["schemas"]["Models.Error"];
+                };
+            };
+        };
+    };
+    AttachmentOperations_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attachmentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Attachment"] | components["schemas"]["Models.Error"] | components["schemas"]["Models.Error"] | components["schemas"]["Models.Error"];
+                };
+            };
+        };
+    };
+    AttachmentOperations_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attachmentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"] | components["schemas"]["Models.Error"] | components["schemas"]["Models.Error"];
+                };
+            };
+            /** @description There is no content to send for this request, but the headers may be useful.  */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AttachmentOperations_getDownloadUrl: {
+        parameters: {
+            query?: {
+                inline?: boolean;
+            };
+            header?: never;
+            path: {
+                attachmentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.DownloadUrlResponse"] | components["schemas"]["Models.Error"] | components["schemas"]["Models.Error"] | components["schemas"]["Models.Error"];
+                };
+            };
+        };
+    };
+    AttachmentOperations_listShareLinks: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attachmentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.ShareLink"][] | components["schemas"]["Models.Error"] | components["schemas"]["Models.Error"] | components["schemas"]["Models.Error"];
+                };
+            };
+        };
+    };
+    AttachmentOperations_createShareLink: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attachmentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Models.CreateShareLinkRequest"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.ShareLink"] | components["schemas"]["Models.Error"] | components["schemas"]["Models.Error"] | components["schemas"]["Models.Error"] | components["schemas"]["Models.Error"];
                 };
             };
         };
@@ -5008,6 +5568,54 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+        };
+    };
+    ShareOperations_getSharedFile: {
+        parameters: {
+            query?: {
+                password?: string;
+            };
+            header?: never;
+            path: {
+                shareToken: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Attachment"] | components["schemas"]["Models.Error"] | components["schemas"]["Models.Error"] | components["schemas"]["Models.Error"];
+                };
+            };
+        };
+    };
+    ShareOperations_downloadSharedFile: {
+        parameters: {
+            query?: {
+                password?: string;
+            };
+            header?: never;
+            path: {
+                shareToken: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.DownloadUrlResponse"] | components["schemas"]["Models.Error"] | components["schemas"]["Models.Error"] | components["schemas"]["Models.Error"];
                 };
             };
         };

@@ -38,9 +38,17 @@ import {
   enforceSecureCookies,
   httpsRedirect,
 } from './middleware/https-redirect.js'
+import {
+  errorLoggingMiddleware,
+  loggingMiddleware,
+} from './middleware/logging.js'
 import { generalRateLimiter } from './middleware/rate-limit.js'
 import { requestId } from './middleware/request-id'
 import { xssProtectionWithExclusions } from './middleware/xss-protection.js'
+import {
+  createAttachmentRouter,
+  createShareRouter,
+} from './routes/attachments.js'
 import { createAccountLockRoutes } from './routes/auth-account-lock.js'
 import { createEmailVerificationRoutes } from './routes/auth-email-verification.js'
 import { createIpRestrictionRoutes } from './routes/auth-ip-restriction.js'
@@ -53,10 +61,8 @@ import { createCustomerRoutes } from './routes/customers.js'
 import { createReservationRoutes } from './routes/reservations.js'
 import { createReviewRoutes } from './routes/reviews.js'
 import { createSalonRoutes } from './routes/salons.js'
-import {
-  MockEmailService,
-  createEmailServiceWrappers,
-} from './services/email.service.js'
+import { createProductionEmailService } from './services/email-adapter.service.js'
+import { createEmailServiceWrappers } from './services/email.service.js'
 import { JwtService } from './services/jwt.service.js'
 
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
@@ -195,6 +201,9 @@ export const createApp = (deps: AppDependencies): Express => {
   // グローバルレートリミット（すべてのAPIエンドポイントに適用）
   app.use('/api/', generalRateLimiter)
 
+  // Structured logging middleware
+  app.use(loggingMiddleware)
+
   if (logger) {
     app.use(pinoHttp({ logger }))
   }
@@ -241,7 +250,7 @@ export const createApp = (deps: AppDependencies): Express => {
   })
 
   // Email service setup
-  const emailService = new MockEmailService()
+  const emailService = createProductionEmailService()
   const baseUrl = process.env.BASE_URL || 'http://localhost:3000'
   const emailServiceWrappers = createEmailServiceWrappers(emailService, baseUrl)
 
@@ -380,6 +389,10 @@ export const createApp = (deps: AppDependencies): Express => {
   )
   app.use('/api/v1/customers', createCustomerRoutes({ customerRepository }))
   app.use('/api/v1/salons', createSalonRoutes({ salonRepository, authConfig }))
+
+  // Attachment routes
+  app.use('/api/v1/attachments', createAttachmentRouter({ authConfig }))
+  app.use('/api/v1/share', createShareRouter())
   app.use(
     '/api/v1/reservations',
     createReservationRoutes({ reservationRepository, authConfig })
@@ -389,11 +402,27 @@ export const createApp = (deps: AppDependencies): Express => {
     createReviewRoutes({ reviewRepository, reservationRepository, authConfig })
   )
 
+  // エラーロギング（エラーハンドラーの前に設定）
+  app.use(errorLoggingMiddleware)
+
   // エラーハンドリング（最後に設定）
   app.use(errorHandler)
 
   return app
 }
+
+// Export structured logging utilities
+export {
+  createStructuredLogger,
+  StructuredLogger,
+} from './utils/structured-logger.js'
+export type {
+  LogEvent,
+  SecurityEvent,
+  DatabaseOperation,
+  EmailEvent,
+  StorageEvent,
+} from './utils/structured-logger.js'
 
 // 開発用のスタンドアロンサーバー
 if (import.meta.url === `file://${process.argv[1]}`) {

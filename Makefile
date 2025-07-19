@@ -102,8 +102,8 @@ backend-start:
 	@sleep 5
 	@echo "Checking database connection..."
 	@docker-compose exec -T postgres pg_isready -U postgres || echo "Database might not be ready yet"
-	@echo "Starting backend server with debug output..."
-	NODE_ENV=production DEBUG=* pnpm start:backend:prod
+	@echo "Starting backend server in development mode..."
+	NODE_ENV=development pnpm start:backend:prod
 
 # Build & Test
 build:

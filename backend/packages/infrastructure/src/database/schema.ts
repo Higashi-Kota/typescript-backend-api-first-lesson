@@ -332,3 +332,69 @@ export const sessions = pgTable('sessions', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   lastActivityAt: timestamp('last_activity_at').notNull().defaultNow(),
 })
+
+// File upload related tables
+export const fileTypeEnum = pgEnum('file_type', ['image', 'document', 'other'])
+
+export const attachments = pgTable('attachments', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  key: text('key').notNull().unique(), // S3/Storage key
+  filename: text('filename').notNull(),
+  contentType: text('content_type').notNull(),
+  size: integer('size').notNull(), // in bytes
+  fileType: fileTypeEnum('file_type').notNull(),
+  uploadedBy: uuid('uploaded_by')
+    .notNull()
+    .references(() => users.id, { onDelete: 'restrict' }),
+  salonId: uuid('salon_id').references(() => salons.id, {
+    onDelete: 'cascade',
+  }),
+  metadata: jsonb('metadata').$type<Record<string, unknown>>(),
+  tags: jsonb('tags').$type<Record<string, string>>(),
+  createdAt: timestamp('created_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+})
+
+export const shareLinks = pgTable('share_links', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  token: text('token').notNull().unique(),
+  attachmentId: uuid('attachment_id')
+    .notNull()
+    .references(() => attachments.id, { onDelete: 'cascade' }),
+  expiresAt: timestamp('expires_at', { withTimezone: true }),
+  maxDownloads: integer('max_downloads'),
+  downloadCount: integer('download_count').notNull().default(0),
+  passwordHash: text('password_hash'),
+  allowedEmails: jsonb('allowed_emails').$type<string[]>(),
+  createdBy: uuid('created_by')
+    .notNull()
+    .references(() => users.id, { onDelete: 'restrict' }),
+  createdAt: timestamp('created_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+})
+
+export const downloadLogs = pgTable('download_logs', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  attachmentId: uuid('attachment_id')
+    .notNull()
+    .references(() => attachments.id, { onDelete: 'cascade' }),
+  shareLinkId: uuid('share_link_id').references(() => shareLinks.id, {
+    onDelete: 'cascade',
+  }),
+  downloadedBy: uuid('downloaded_by').references(() => users.id, {
+    onDelete: 'set null',
+  }),
+  ipAddress: text('ip_address'),
+  userAgent: text('user_agent'),
+  downloadedAt: timestamp('downloaded_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+})

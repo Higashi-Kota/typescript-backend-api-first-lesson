@@ -12,6 +12,7 @@ import "./models/customer.tsp";
 import "./models/reservation.tsp";
 import "./models/booking.tsp";
 import "./models/review.tsp";
+import "./models/attachment.tsp";
 
 // Import all operations
 import "./operations/auth-operations.tsp";
@@ -22,6 +23,7 @@ import "./operations/customer-operations.tsp";
 import "./operations/reservation-operations.tsp";
 import "./operations/booking-operations.tsp";
 import "./operations/review-operations.tsp";
+import "./operations/attachment-operations.tsp";
 
 using TypeSpec.Http;
 using TypeSpec.Rest;

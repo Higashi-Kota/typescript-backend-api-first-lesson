@@ -297,3 +297,27 @@ export type {
   UserRepository,
   SessionRepository,
 } from './repositories/user.repository.js'
+
+// Service exports
+export * from './services/index.js'
+
+// Branded types exports
+export {
+  AttachmentId,
+  ShareLinkId,
+  ShareToken,
+} from './shared/branded-types.js'
+
+// Attachment Repository インターフェース
+export type {
+  AttachmentStatus,
+  AttachmentData,
+  CreateAttachmentInput,
+  UpdateAttachmentInput,
+  ShareLinkData,
+  CreateShareLinkInput,
+  DownloadLogData,
+  CreateDownloadLogInput,
+  AttachmentSearchCriteria,
+  AttachmentRepository,
+} from './repositories/attachment.repository.js'

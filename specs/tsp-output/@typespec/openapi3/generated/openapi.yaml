@@ -13,6 +13,8 @@ tags:
   - name: Reservations
   - name: Bookings
   - name: Reviews
+  - name: Attachments
+  - name: Share
 paths:
   /admin/auth/trusted-ip/{userId}:
     post:
@@ -168,6 +170,248 @@ paths:
                 $ref: '#/components/schemas/Models.Error'
       tags:
         - Admin - Authentication
+  /attachments:
+    get:
+      operationId: AttachmentOperations_list
+      description: 添付ファイルの一覧取得
+      parameters:
+        - name: salonId
+          in: query
+          required: false
+          schema:
+            type: string
+          explode: false
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 1
+          explode: false
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 20
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/Models.PaginatedAttachments'
+                  - $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Attachments
+  /attachments/share-links/{shareLinkId}:
+    delete:
+      operationId: AttachmentOperations_deleteShareLink
+      description: 共有リンクの削除
+      parameters:
+        - name: shareLinkId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/Models.Error'
+                  - $ref: '#/components/schemas/Models.Error'
+                  - $ref: '#/components/schemas/Models.Error'
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+      tags:
+        - Attachments
+  /attachments/upload:
+    post:
+      operationId: AttachmentOperations_uploadFile
+      description: |-
+        ファイルの直接アップロード
+        JSONでファイル情報をアップロード
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/Models.Attachment'
+                  - $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Attachments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.UploadAttachmentRequest'
+  /attachments/upload-url:
+    post:
+      operationId: AttachmentOperations_getUploadUrl
+      description: |-
+        署名付きアップロードURLの取得
+        クライアントが直接ストレージにアップロードするためのURL
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/Models.UploadUrlResponse'
+                  - $ref: '#/components/schemas/Models.Error'
+                  - $ref: '#/components/schemas/Models.Error'
+                  - $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Attachments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.GetUploadUrlRequest'
+  /attachments/{attachmentId}:
+    get:
+      operationId: AttachmentOperations_get
+      description: 添付ファイル情報の取得
+      parameters:
+        - name: attachmentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/Models.Attachment'
+                  - $ref: '#/components/schemas/Models.Error'
+                  - $ref: '#/components/schemas/Models.Error'
+                  - $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Attachments
+    delete:
+      operationId: AttachmentOperations_delete
+      description: 添付ファイルの削除
+      parameters:
+        - name: attachmentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/Models.Error'
+                  - $ref: '#/components/schemas/Models.Error'
+                  - $ref: '#/components/schemas/Models.Error'
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+      tags:
+        - Attachments
+  /attachments/{attachmentId}/download-url:
+    get:
+      operationId: AttachmentOperations_getDownloadUrl
+      description: 署名付きダウンロードURLの取得
+      parameters:
+        - name: attachmentId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: inline
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/Models.DownloadUrlResponse'
+                  - $ref: '#/components/schemas/Models.Error'
+                  - $ref: '#/components/schemas/Models.Error'
+                  - $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Attachments
+  /attachments/{attachmentId}/share-links:
+    post:
+      operationId: AttachmentOperations_createShareLink
+      description: 共有リンクの作成
+      parameters:
+        - name: attachmentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/Models.ShareLink'
+                  - $ref: '#/components/schemas/Models.Error'
+                  - $ref: '#/components/schemas/Models.Error'
+                  - $ref: '#/components/schemas/Models.Error'
+                  - $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Attachments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.CreateShareLinkRequest'
+    get:
+      operationId: AttachmentOperations_listShareLinks
+      description: 共有リンクの一覧取得
+      parameters:
+        - name: attachmentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/Models.ShareLink'
+                  - $ref: '#/components/schemas/Models.Error'
+                  - $ref: '#/components/schemas/Models.Error'
+                  - $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Attachments
   /auth/2fa/backup-codes:
     post:
       operationId: AuthOperations_generateBackupCodes
@@ -3056,6 +3300,64 @@ paths:
                 $ref: '#/components/schemas/Models.Error'
       tags:
         - Services
+  /share/{shareToken}:
+    get:
+      operationId: ShareOperations_getSharedFile
+      description: 共有リンクからファイル情報を取得
+      parameters:
+        - name: shareToken
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          required: false
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/Models.Attachment'
+                  - $ref: '#/components/schemas/Models.Error'
+                  - $ref: '#/components/schemas/Models.Error'
+                  - $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Share
+  /share/{shareToken}/download:
+    get:
+      operationId: ShareOperations_downloadSharedFile
+      description: 共有リンクからダウンロードURLを取得
+      parameters:
+        - name: shareToken
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          required: false
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/Models.DownloadUrlResponse'
+                  - $ref: '#/components/schemas/Models.Error'
+                  - $ref: '#/components/schemas/Models.Error'
+                  - $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Share
   /staff/search:
     get:
       operationId: GlobalStaffOperations_searchStaff
@@ -3183,6 +3485,13 @@ components:
         default: 0
       explode: false
   schemas:
+    Models.AccessShareLinkRequest:
+      type: object
+      properties:
+        password:
+          type: string
+          description: パスワード（パスワード保護されている場合）
+      description: 共有リンクアクセスリクエスト
     Models.Address:
       type: object
       required:
@@ -3203,6 +3512,63 @@ components:
         country:
           type: string
           default: Japan
+    Models.Attachment:
+      type: object
+      required:
+        - id
+        - key
+        - filename
+        - contentType
+        - size
+        - fileType
+        - uploadedBy
+        - uploadedAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          description: 添付ファイルID (UUID)
+        key:
+          type: string
+          description: ストレージキー
+        filename:
+          type: string
+          description: オリジナルファイル名
+        contentType:
+          type: string
+          description: Content-Type
+        size:
+          type: integer
+          format: int32
+          description: ファイルサイズ（バイト）
+        fileType:
+          allOf:
+            - $ref: '#/components/schemas/Models.FileType'
+          description: ファイルタイプ
+        uploadedBy:
+          type: string
+          description: アップロードしたユーザーID
+        salonId:
+          type: string
+          description: 関連するサロンID（オプション）
+        metadata:
+          type: object
+          additionalProperties: {}
+          description: メタデータ
+        tags:
+          type: object
+          additionalProperties:
+            type: string
+          description: タグ
+        uploadedAt:
+          type: string
+          format: date-time
+          description: アップロード日時
+        updatedAt:
+          type: string
+          format: date-time
+          description: 更新日時
+      description: 添付ファイル情報
     Models.AuditInfo:
       type: object
       required:
@@ -3497,6 +3863,26 @@ components:
         requiredStaffLevel:
           type: integer
           format: int32
+    Models.CreateShareLinkRequest:
+      type: object
+      properties:
+        expiresAt:
+          type: string
+          format: date-time
+          description: 有効期限（オプション）
+        maxDownloads:
+          type: integer
+          format: int32
+          description: 最大ダウンロード数（オプション）
+        password:
+          type: string
+          description: パスワード（オプション）
+        allowedEmails:
+          type: array
+          items:
+            type: string
+          description: 許可されたメールアドレス（オプション）
+      description: 共有リンク作成リクエスト
     Models.CreateStaffRequest:
       type: object
       required:
@@ -3604,6 +3990,20 @@ components:
         - friday
         - saturday
         - sunday
+    Models.DownloadUrlResponse:
+      type: object
+      required:
+        - downloadUrl
+        - expiresAt
+      properties:
+        downloadUrl:
+          type: string
+          description: 署名付きダウンロードURL
+        expiresAt:
+          type: string
+          format: date-time
+          description: URL有効期限
+      description: 署名付きダウンロードURL取得レスポンス
     Models.EmailVerificationRequest:
       type: object
       required:
@@ -3626,6 +4026,13 @@ components:
         details:
           type: object
           additionalProperties: {}
+    Models.FileType:
+      type: string
+      enum:
+        - image
+        - document
+        - other
+      description: ファイルタイプ
     Models.GetCustomerBookingsRequest:
       type: object
       properties:
@@ -3644,6 +4051,27 @@ components:
           type: string
           format: date-time
       description: Customer reservations filter parameters
+    Models.GetUploadUrlRequest:
+      type: object
+      required:
+        - filename
+        - contentType
+        - size
+      properties:
+        filename:
+          type: string
+          description: ファイル名
+        contentType:
+          type: string
+          description: Content-Type
+        size:
+          type: integer
+          format: int32
+          description: ファイルサイズ（バイト）
+        salonId:
+          type: string
+          description: サロンID（オプション）
+      description: 署名付きアップロードURL取得リクエスト
     Models.LoginRequest:
       type: object
       required:
@@ -3708,6 +4136,37 @@ components:
           type: string
         isHoliday:
           type: boolean
+    Models.PaginatedAttachments:
+      type: object
+      required:
+        - items
+        - total
+        - page
+        - limit
+        - totalPages
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Models.Attachment'
+          description: 添付ファイル一覧
+        total:
+          type: integer
+          format: int32
+          description: 合計件数
+        page:
+          type: integer
+          format: int32
+          description: 現在のページ
+        limit:
+          type: integer
+          format: int32
+          description: ページあたりの件数
+        totalPages:
+          type: integer
+          format: int32
+          description: 総ページ数
+      description: ページネーション付き添付ファイル一覧
     Models.PasswordChangeRequest:
       type: object
       required:
@@ -4170,6 +4629,54 @@ components:
           format: int32
           description: Total number of sessions
       description: Session list response
+    Models.ShareLink:
+      type: object
+      required:
+        - id
+        - token
+        - attachmentId
+        - downloadCount
+        - hasPassword
+        - createdBy
+        - createdAt
+      properties:
+        id:
+          type: string
+          description: 共有リンクID
+        token:
+          type: string
+          description: 共有トークン
+        attachmentId:
+          type: string
+          description: 添付ファイルID
+        expiresAt:
+          type: string
+          format: date-time
+          description: 有効期限（オプション）
+        maxDownloads:
+          type: integer
+          format: int32
+          description: 最大ダウンロード数（オプション）
+        downloadCount:
+          type: integer
+          format: int32
+          description: 現在のダウンロード数
+        hasPassword:
+          type: boolean
+          description: パスワード保護
+        allowedEmails:
+          type: array
+          items:
+            type: string
+          description: 許可されたメールアドレス（オプション）
+        createdBy:
+          type: string
+          description: 作成者ID
+        createdAt:
+          type: string
+          format: date-time
+          description: 作成日時
+      description: 共有リンク
     Models.Staff:
       type: object
       required:
@@ -4608,6 +5115,48 @@ components:
         isActive:
           type: boolean
       description: Staff update request with reset capability
+    Models.UploadAttachmentRequest:
+      type: object
+      required:
+        - file
+        - filename
+        - contentType
+      properties:
+        file:
+          type: string
+          format: byte
+          description: ファイル本体
+        filename:
+          type: string
+          description: ファイル名
+        contentType:
+          type: string
+          description: Content-Type
+        salonId:
+          type: string
+          description: サロンID（オプション）
+        tags:
+          type: string
+          description: タグ（オプション）
+      description: ファイルアップロードリクエスト（マルチパート）
+    Models.UploadUrlResponse:
+      type: object
+      required:
+        - uploadUrl
+        - key
+        - expiresAt
+      properties:
+        uploadUrl:
+          type: string
+          description: 署名付きアップロードURL
+        key:
+          type: string
+          description: ストレージキー
+        expiresAt:
+          type: string
+          format: date-time
+          description: URL有効期限
+      description: 署名付きアップロードURLレスポンス
     Models.User:
       type: object
       required:

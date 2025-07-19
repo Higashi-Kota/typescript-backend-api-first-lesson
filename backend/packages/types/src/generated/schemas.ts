@@ -28,6 +28,9 @@ export const CustomerIdSchema = z.string().refine(
 export const DayOfWeekSchema = z.enum(['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']);
 export type DayOfWeek = z.infer<typeof DayOfWeekSchema>;
 
+export const FileTypeSchema = z.enum(['image', 'document', 'other']);
+export type FileType = z.infer<typeof FileTypeSchema>;
+
 export const ReservationIdSchema = z.string().refine(
   (val): val is Brand<string, 'ReservationId'> => isValidUuid(val),
   { message: 'Invalid ReservationId format' }
