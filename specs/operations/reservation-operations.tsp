@@ -53,23 +53,27 @@ namespace BeautySalon.Operations {
     };
 
     @summary("Update reservation")
-    @patch(#{implicitOptionality: true})
+    @patch(#{ implicitOptionality: true })
     op update(
       @path id: ReservationId,
       @body updates: UpdateReservationRequest,
-    ): {
-      @statusCode statusCode: 200;
-      @body reservation: Reservation;
-    } | {
-      @statusCode statusCode: 404;
-      @body error: Error;
-    } | {
-      @statusCode statusCode: 400;
-      @body error: Error;
-    } | {
-      @statusCode statusCode: 409;
-      @body error: Error;
-    };
+    ):
+      | {
+          @statusCode statusCode: 200;
+          @body reservation: Reservation;
+        }
+      | {
+          @statusCode statusCode: 404;
+          @body error: Error;
+        }
+      | {
+          @statusCode statusCode: 400;
+          @body error: Error;
+        }
+      | {
+          @statusCode statusCode: 409;
+          @body error: Error;
+        };
 
     @summary("Cancel reservation")
     @route("/{id}/cancel")

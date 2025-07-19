@@ -52,7 +52,7 @@ namespace BeautySalon.Operations {
     };
 
     @summary("Update booking")
-    @patch(#{implicitOptionality: true})
+    @patch(#{ implicitOptionality: true })
     op update(@path id: BookingId, @body updates: UpdateBookingRequest): {
       @statusCode statusCode: 200;
       @body booking: Booking;

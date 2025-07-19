@@ -23,10 +23,12 @@ namespace BeautySalon.Models {
   model CreateCustomerRequest {
     // Required fields
     name: string;
+
     contactInfo: ContactInfo;
-    
+
     // Optional fields
     preferences?: string;
+
     notes?: string;
     tags?: string[];
     birthDate?: plainDate;

@@ -28,22 +28,27 @@ namespace BeautySalon.Operations {
     @doc("Login with email and password")
     @post
     @route("/login")
-    op login(@body request: LoginRequest): {
-      @statusCode statusCode: 200;
-      @body response: LoginResponse;
-    } | {
-      @statusCode statusCode: 401;
-      @body error: Error;
-    } | {
-      @statusCode statusCode: 423;
-      @body error: Error;
-    } | {
-      @statusCode statusCode: 403;
-      @body error: Error;
-    } | {
-      @statusCode statusCode: 400;
-      @body error: Error;
-    };
+    op login(@body request: LoginRequest):
+      | {
+          @statusCode statusCode: 200;
+          @body response: LoginResponse;
+        }
+      | {
+          @statusCode statusCode: 401;
+          @body error: Error;
+        }
+      | {
+          @statusCode statusCode: 423;
+          @body error: Error;
+        }
+      | {
+          @statusCode statusCode: 403;
+          @body error: Error;
+        }
+      | {
+          @statusCode statusCode: 400;
+          @body error: Error;
+        };
 
     @doc("Refresh access token")
     @post
@@ -106,36 +111,44 @@ namespace BeautySalon.Operations {
     @doc("Reset password with token")
     @post
     @route("/reset-password")
-    op resetPassword(@body request: PasswordResetConfirmRequest): {
-      @statusCode statusCode: 200;
-      @body response: AuthSuccessResponse;
-    } | {
-      @statusCode statusCode: 400;
-      @body error: Error;
-    } | {
-      @statusCode statusCode: 400;
-      @body error: Error;
-    } | {
-      @statusCode statusCode: 400;
-      @body error: Error;
-    };
+    op resetPassword(@body request: PasswordResetConfirmRequest):
+      | {
+          @statusCode statusCode: 200;
+          @body response: AuthSuccessResponse;
+        }
+      | {
+          @statusCode statusCode: 400;
+          @body error: Error;
+        }
+      | {
+          @statusCode statusCode: 400;
+          @body error: Error;
+        }
+      | {
+          @statusCode statusCode: 400;
+          @body error: Error;
+        };
 
     @doc("Send email verification")
     @post
     @route("/verify-email/send")
-    op sendEmailVerification(@header("Authorization") authorization: string): {
-      @statusCode statusCode: 200;
-      @body response: AuthSuccessResponse;
-    } | {
-      @statusCode statusCode: 401;
-      @body error: Error;
-    } | {
-      @statusCode statusCode: 400;
-      @body error: Error;
-    } | {
-      @statusCode statusCode: 429;
-      @body error: Error;
-    };
+    op sendEmailVerification(@header("Authorization") authorization: string):
+      | {
+          @statusCode statusCode: 200;
+          @body response: AuthSuccessResponse;
+        }
+      | {
+          @statusCode statusCode: 401;
+          @body error: Error;
+        }
+      | {
+          @statusCode statusCode: 400;
+          @body error: Error;
+        }
+      | {
+          @statusCode statusCode: 429;
+          @body error: Error;
+        };
 
     @doc("Confirm email verification")
     @post
@@ -153,43 +166,52 @@ namespace BeautySalon.Operations {
     @route("/change-password")
     op changePassword(
       @header("Authorization") authorization: string,
-      @body request: PasswordChangeRequest
-    ): {
-      @statusCode statusCode: 200;
-      @body response: AuthSuccessResponse;
-    } | {
-      @statusCode statusCode: 401;
-      @body error: Error;
-    } | {
-      @statusCode statusCode: 400;
-      @body error: Error;
-    } | {
-      @statusCode statusCode: 400;
-      @body error: Error;
-    } | {
-      @statusCode statusCode: 400;
-      @body error: Error;
-    };
+      @body request: PasswordChangeRequest,
+    ):
+      | {
+          @statusCode statusCode: 200;
+          @body response: AuthSuccessResponse;
+        }
+      | {
+          @statusCode statusCode: 401;
+          @body error: Error;
+        }
+      | {
+          @statusCode statusCode: 400;
+          @body error: Error;
+        }
+      | {
+          @statusCode statusCode: 400;
+          @body error: Error;
+        }
+      | {
+          @statusCode statusCode: 400;
+          @body error: Error;
+        };
 
     @doc("Enable two-factor authentication")
     @post
     @route("/2fa/enable")
     op enableTwoFactor(
       @header("Authorization") authorization: string,
-      @body request: TwoFactorEnableRequest
-    ): {
-      @statusCode statusCode: 200;
-      @body response: TwoFactorSetupResponse;
-    } | {
-      @statusCode statusCode: 401;
-      @body error: Error;
-    } | {
-      @statusCode statusCode: 400;
-      @body error: Error;
-    } | {
-      @statusCode statusCode: 400;
-      @body error: Error;
-    };
+      @body request: TwoFactorEnableRequest,
+    ):
+      | {
+          @statusCode statusCode: 200;
+          @body response: TwoFactorSetupResponse;
+        }
+      | {
+          @statusCode statusCode: 401;
+          @body error: Error;
+        }
+      | {
+          @statusCode statusCode: 400;
+          @body error: Error;
+        }
+      | {
+          @statusCode statusCode: 400;
+          @body error: Error;
+        };
 
     @doc("Get QR code for 2FA setup")
     @get
@@ -210,65 +232,78 @@ namespace BeautySalon.Operations {
     @route("/2fa/verify")
     op verifyTwoFactor(
       @header("Authorization") authorization: string,
-      @body request: TwoFactorVerifyRequest
-    ): {
-      @statusCode statusCode: 200;
-      @body response: AuthSuccessResponse;
-    } | {
-      @statusCode statusCode: 401;
-      @body error: Error;
-    } | {
-      @statusCode statusCode: 400;
-      @body error: Error;
-    } | {
-      @statusCode statusCode: 400;
-      @body error: Error;
-    };
+      @body request: TwoFactorVerifyRequest,
+    ):
+      | {
+          @statusCode statusCode: 200;
+          @body response: AuthSuccessResponse;
+        }
+      | {
+          @statusCode statusCode: 401;
+          @body error: Error;
+        }
+      | {
+          @statusCode statusCode: 400;
+          @body error: Error;
+        }
+      | {
+          @statusCode statusCode: 400;
+          @body error: Error;
+        };
 
     @doc("Disable two-factor authentication")
     @post
     @route("/2fa/disable")
     op disableTwoFactor(
       @header("Authorization") authorization: string,
-      @body request: TwoFactorDisableRequest
-    ): {
-      @statusCode statusCode: 200;
-      @body response: AuthSuccessResponse;
-    } | {
-      @statusCode statusCode: 401;
-      @body error: Error;
-    } | {
-      @statusCode statusCode: 400;
-      @body error: Error;
-    } | {
-      @statusCode statusCode: 400;
-      @body error: Error;
-    } | {
-      @statusCode statusCode: 400;
-      @body error: Error;
-    };
+      @body request: TwoFactorDisableRequest,
+    ):
+      | {
+          @statusCode statusCode: 200;
+          @body response: AuthSuccessResponse;
+        }
+      | {
+          @statusCode statusCode: 401;
+          @body error: Error;
+        }
+      | {
+          @statusCode statusCode: 400;
+          @body error: Error;
+        }
+      | {
+          @statusCode statusCode: 400;
+          @body error: Error;
+        }
+      | {
+          @statusCode statusCode: 400;
+          @body error: Error;
+        };
 
     @doc("Generate new backup codes for 2FA")
     @post
     @route("/2fa/backup-codes")
     op generateBackupCodes(
       @header("Authorization") authorization: string,
-      @body request: TwoFactorVerifyRequest
-    ): {
-      @statusCode statusCode: 200;
-      @body response: {
-        backupCodes: string[];
-      };
-    } | {
-      @statusCode statusCode: 401;
-      @body error: Error;
-    } | {
-      @statusCode statusCode: 400;
-      @body error: Error;
-    } | {
-      @statusCode statusCode: 400;
-      @body error: Error;
-    };
+      @body request: TwoFactorVerifyRequest,
+    ):
+      | {
+          @statusCode statusCode: 200;
+          @body response: {
+            backupCodes: string[];
+          };
+        }
+      | {
+          @statusCode statusCode: 401;
+          @body error: Error;
+        }
+      | {
+          @statusCode statusCode: 400;
+          @body error: Error;
+        }
+      | {
+          @statusCode statusCode: 400;
+          @body error: Error;
+        };
 
     @doc("Get active sessions")
     @get
@@ -286,7 +321,7 @@ namespace BeautySalon.Operations {
     @route("/sessions/{sessionId}")
     op revokeSession(
       @header("Authorization") authorization: string,
-      @path sessionId: string
+      @path sessionId: string,
     ): {
       @statusCode statusCode: 200;
       @body response: AuthSuccessResponse;
@@ -318,23 +353,28 @@ namespace BeautySalon.Operations {
     @route("/unlock/{userId}")
     op unlockAccount(
       @header("Authorization") authorization: string,
-      @path userId: string
-    ): {
-      @statusCode statusCode: 200;
-      @body response: AuthSuccessResponse;
-    } | {
-      @statusCode statusCode: 401;
-      @body error: Error;
-    } | {
-      @statusCode statusCode: 403;
-      @body error: Error;
-    } | {
-      @statusCode statusCode: 404;
-      @body error: Error;
-    } | {
-      @statusCode statusCode: 400;
-      @body error: Error;
-    };
+      @path userId: string,
+    ):
+      | {
+          @statusCode statusCode: 200;
+          @body response: AuthSuccessResponse;
+        }
+      | {
+          @statusCode statusCode: 401;
+          @body error: Error;
+        }
+      | {
+          @statusCode statusCode: 403;
+          @body error: Error;
+        }
+      | {
+          @statusCode statusCode: 404;
+          @body error: Error;
+        }
+      | {
+          @statusCode statusCode: 400;
+          @body error: Error;
+        };
 
     @doc("Add trusted IP address for a user")
     @post
@@ -344,23 +384,28 @@ namespace BeautySalon.Operations {
       @path userId: string,
       @body request: {
         ipAddress: string;
-      }
-    ): {
-      @statusCode statusCode: 200;
-      @body response: AuthSuccessResponse;
-    } | {
-      @statusCode statusCode: 401;
-      @body error: Error;
-    } | {
-      @statusCode statusCode: 403;
-      @body error: Error;
-    } | {
-      @statusCode statusCode: 404;
-      @body error: Error;
-    } | {
-      @statusCode statusCode: 400;
-      @body error: Error;
-    };
+      },
+    ):
+      | {
+          @statusCode statusCode: 200;
+          @body response: AuthSuccessResponse;
+        }
+      | {
+          @statusCode statusCode: 401;
+          @body error: Error;
+        }
+      | {
+          @statusCode statusCode: 403;
+          @body error: Error;
+        }
+      | {
+          @statusCode statusCode: 404;
+          @body error: Error;
+        }
+      | {
+          @statusCode statusCode: 400;
+          @body error: Error;
+        };
 
     @doc("Remove trusted IP address for a user")
     @delete
@@ -368,19 +413,23 @@ namespace BeautySalon.Operations {
     op removeTrustedIp(
       @header("Authorization") authorization: string,
       @path userId: string,
-      @query ipAddress: string
-    ): {
-      @statusCode statusCode: 200;
-      @body response: AuthSuccessResponse;
-    } | {
-      @statusCode statusCode: 401;
-      @body error: Error;
-    } | {
-      @statusCode statusCode: 403;
-      @body error: Error;
-    } | {
-      @statusCode statusCode: 404;
-      @body error: Error;
-    };
+      @query ipAddress: string,
+    ):
+      | {
+          @statusCode statusCode: 200;
+          @body response: AuthSuccessResponse;
+        }
+      | {
+          @statusCode statusCode: 401;
+          @body error: Error;
+        }
+      | {
+          @statusCode statusCode: 403;
+          @body error: Error;
+        }
+      | {
+          @statusCode statusCode: 404;
+          @body error: Error;
+        };
   }
 }

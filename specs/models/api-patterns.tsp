@@ -13,7 +13,7 @@ namespace BeautySalon.Models {
   }
 
   /**
-   * 作成API用の入力型定義のテンプレート  
+   * 作成API用の入力型定義のテンプレート
    * フィールドはnullable（キーは必須、値はnull許可）
    */
   @doc("Base template for create API input")

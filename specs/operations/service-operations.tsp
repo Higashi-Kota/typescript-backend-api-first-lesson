@@ -73,7 +73,7 @@ namespace BeautySalon.Operations {
 
     @summary("Bulk update services")
     @route("/bulk")
-    @patch(#{implicitOptionality: true})
+    @patch(#{ implicitOptionality: true })
     op bulkUpdate(
       @path salonId: SalonId,
       @body updates: {

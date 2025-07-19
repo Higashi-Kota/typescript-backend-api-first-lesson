@@ -22,13 +22,15 @@ namespace BeautySalon.Models {
   model CreateSalonRequest {
     // Required fields
     name: string;
+
     description: string;
     address: Address;
     contactInfo: ContactInfo;
     openingHours: OpeningHours[];
-    
+
     // Optional fields
     imageUrls?: string[];
+
     features?: string[];
   }
 

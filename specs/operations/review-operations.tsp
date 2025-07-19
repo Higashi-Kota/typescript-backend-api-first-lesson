@@ -52,7 +52,7 @@ namespace BeautySalon.Operations {
     };
 
     @summary("Update review")
-    @patch(#{implicitOptionality: true})
+    @patch(#{ implicitOptionality: true })
     op update(@path id: ReviewId, @body updates: UpdateReviewRequest): {
       @statusCode statusCode: 200;
       @body review: Review;
@@ -145,10 +145,7 @@ namespace BeautySalon.Operations {
 
     @summary("Get staff reviews")
     @get
-    op getStaffReviews(
-      @path staffId: StaffId,
-      ...PaginationParams,
-    ): {
+    op getStaffReviews(@path staffId: StaffId, ...PaginationParams): {
       @statusCode statusCode: 200;
       @body response: PaginationResponse<Review>;
     };

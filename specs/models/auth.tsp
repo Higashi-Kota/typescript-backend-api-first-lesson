@@ -10,10 +10,10 @@ namespace BeautySalon.Models {
   enum UserRole {
     @doc("Customer role - can book services")
     customer: "customer",
-    
+
     @doc("Staff role - can manage their schedule and bookings")
     staff: "staff",
-    
+
     @doc("Admin role - full system access")
     admin: "admin",
   }
@@ -22,16 +22,16 @@ namespace BeautySalon.Models {
   enum UserAccountStatus {
     @doc("Active account")
     active: "active",
-    
+
     @doc("Email not verified")
     unverified: "unverified",
-    
+
     @doc("Account locked due to failed login attempts")
     locked: "locked",
-    
+
     @doc("Account suspended by admin")
     suspended: "suspended",
-    
+
     @doc("Account deleted")
     deleted: "deleted",
   }
@@ -40,10 +40,10 @@ namespace BeautySalon.Models {
   enum TwoFactorStatus {
     @doc("2FA not enabled")
     disabled: "disabled",
-    
+
     @doc("2FA setup in progress")
     pending: "pending",
-    
+
     @doc("2FA enabled and active")
     enabled: "enabled",
   }
