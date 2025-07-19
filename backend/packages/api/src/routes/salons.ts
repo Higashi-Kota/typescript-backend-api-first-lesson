@@ -10,6 +10,7 @@ import { z } from 'zod'
 import { authenticate, authorize } from '../middleware/auth.middleware.js'
 import type { AuthConfig } from '../middleware/auth.middleware.js'
 
+import type { SalonRepository } from '@beauty-salon-backend/domain'
 import {
   createDeleteSalonErrorResponse,
   createSalonErrorResponse,
@@ -30,8 +31,7 @@ import {
   reactivateSalonUseCase,
   suspendSalonUseCase,
   updateSalonUseCase,
-} from '@backend/usecase'
-import type { SalonRepository } from '@beauty-salon-backend/domain'
+} from '@beauty-salon-backend/usecase'
 
 // バリデーションスキーマ
 const salonIdSchema = z.string().uuid()

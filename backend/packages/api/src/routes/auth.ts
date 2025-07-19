@@ -4,6 +4,7 @@
  * CLAUDEガイドラインに準拠
  */
 
+import type { UserId } from '@beauty-salon-backend/domain'
 import bcrypt from 'bcrypt'
 import { Router } from 'express'
 import { z } from 'zod'
@@ -71,7 +72,7 @@ export type AuthRouteDeps = {
   userRepository: {
     findByEmail: (email: string) => Promise<User | null>
     create: (user: Omit<User, 'id' | 'createdAt'>) => Promise<User>
-    findById: (id: string) => Promise<User | null>
+    findById: (id: UserId) => Promise<User | null>
   }
   authConfig: {
     jwtSecret: string
@@ -235,7 +236,7 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
       const tokenResult = await jwtService.refreshTokens(
         refreshToken,
         async (userId) => {
-          const user = await userRepository.findById(userId)
+          const user = await userRepository.findById(userId as UserId)
           if (!user) return null
           return {
             userId: user.id,
@@ -286,7 +287,7 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
         })
       }
 
-      const user = await userRepository.findById(req.user.id)
+      const user = await userRepository.findById(req.user.id as UserId)
       if (!user) {
         return res.status(404).json({
           code: 'USER_NOT_FOUND',

@@ -618,57 +618,63 @@ PGPASSWORD=postgres psql -h localhost -U postgres -d beauty_salon -c "\dt"
 - [型安全性の原則](./docs/type-safety-principles.md) - TypeScriptの厳格な設定
 - [テスト要件](./docs/testing-requirements.md) - テスト実装のガイドライン
 
-## 🚀 実装予定
+## ✅ 実装済み
 
-### 🔴 緊急：認証・認可の追加実装（最優先）
+### 認証・認可機能（OWASP準拠）
 
-#### 必須の認証機能（OWASP準拠）
-- [ ] パスワードリセット機能
-  - [ ] パスワードリセット申請API（POST /auth/forgot-password）
-  - [ ] リセットトークン検証API（GET /auth/reset-password/verify）
-  - [ ] パスワード変更API（POST /auth/reset-password）
-  - [ ] リセットトークンの有効期限（15分）
-  - [ ] ワンタイムトークン（使用後無効化）
-- [ ] メールアドレス検証
-  - [ ] メール検証送信API（POST /auth/verify-email/send）
-  - [ ] メール検証確認API（POST /auth/verify-email/confirm）
-  - [ ] 未検証ユーザーのアクセス制限
-- [ ] 二要素認証（2FA）
-  - [ ] 2FA有効化API（POST /auth/2fa/enable）
-  - [ ] QRコード生成API（GET /auth/2fa/qr-code）
-  - [ ] 2FA無効化API（POST /auth/2fa/disable）
-  - [ ] TOTPコード検証API（POST /auth/2fa/verify）
-  - [ ] バックアップコード生成API（POST /auth/2fa/backup-codes）
-- [ ] アカウントロック機能
-  - [ ] ログイン試行回数の記録
-  - [ ] アカウントロック（5回失敗後）
-  - [ ] アカウントロック解除API（管理者用）
-  - [ ] 一時ロック通知メール
-- [ ] パスワード変更機能
-  - [ ] パスワード変更API（POST /auth/change-password）
-  - [ ] 現在のパスワード確認必須
-  - [ ] パスワード履歴チェック（過去3回分）
-  - [ ] パスワード変更通知メール
+#### 必須の認証機能
+- [x] パスワードリセット機能
+  - [x] パスワードリセット申請API（POST /auth/forgot-password）
+  - [x] リセットトークン検証API（GET /auth/reset-password/verify）
+  - [x] パスワード変更API（POST /auth/reset-password）
+  - [x] リセットトークンの有効期限（15分）
+  - [x] ワンタイムトークン（使用後無効化）
+- [x] メールアドレス検証
+  - [x] メール検証送信API（POST /auth/verify-email/send）
+  - [x] メール検証確認API（POST /auth/verify-email/confirm）
+  - [x] 未検証ユーザーのアクセス制限
+- [x] 二要素認証（2FA）
+  - [x] 2FA有効化API（POST /auth/2fa/enable）
+  - [x] QRコード生成API（GET /auth/2fa/qr-code）
+  - [x] 2FA無効化API（POST /auth/2fa/disable）
+  - [x] TOTPコード検証API（POST /auth/2fa/verify）
+  - [x] バックアップコード生成API（POST /auth/2fa/backup-codes）
+- [x] アカウントロック機能
+  - [x] ログイン試行回数の記録
+  - [x] アカウントロック（5回失敗後）
+  - [x] アカウントロック解除API（管理者用）
+  - [x] 一時ロック通知メール
+- [x] パスワード変更機能
+  - [x] パスワード変更API（POST /auth/change-password）
+  - [x] 現在のパスワード確認必須
+  - [x] パスワード履歴チェック（過去3回分）
+  - [x] パスワード変更通知メール
 
 #### セキュリティ強化
-- [ ] パスワードポリシー
-  - [ ] 最小12文字以上
-  - [ ] 大文字・小文字・数字・特殊文字を含む
-  - [ ] 一般的な弱いパスワードのブラックリスト
-  - [ ] ユーザー情報（名前、メール）を含まない
-- [ ] セッション管理
-  - [ ] アクティブセッション一覧API（GET /auth/sessions）
-  - [ ] 特定セッション無効化API（DELETE /auth/sessions/:id）
-  - [ ] 全セッション無効化API（POST /auth/logout-all）
-  - [ ] セッションタイムアウト（30分）
-  - [ ] Remember Me機能（オプション）
-- [ ] IPアドレス制限
-  - [ ] 信頼できるIPアドレスのホワイトリスト（管理者用）
-  - [ ] 不審なIPからのアクセス検知
-  - [ ] 地理的位置による制限（オプション）
+- [x] パスワードポリシー
+  - [x] 最小12文字以上
+  - [x] 大文字・小文字・数字・特殊文字を含む
+  - [x] 一般的な弱いパスワードのブラックリスト
+  - [x] ユーザー情報（名前、メール）を含まない
+- [x] セッション管理
+  - [x] アクティブセッション一覧API（GET /auth/sessions）
+  - [x] 特定セッション無効化API（DELETE /auth/sessions/:id）
+  - [x] 全セッション無効化API（POST /auth/logout-all）
+  - [x] セッションタイムアウト（30分）
+  - [x] Remember Me機能（オプション）
+- [x] IPアドレス制限
+  - [x] 信頼できるIPアドレスのホワイトリスト（管理者用）
+  - [x] 不審なIPからのアクセス検知
+  - [x] 地理的位置による制限（オプション）
+
+## 🚧 実装予定
+
+### make ci-checkの作成（据え置きで一旦スキップ）
+
+TBD
 
 ### セキュリティレビュー（高優先度）
-- [ ] OWASPセキュリティ要件の完全性チェック
+- [ ] OWASPセキュリティ要件の完全性チェック（据え置きで一旦スキップ）
   - [ ] ブルートフォース攻撃対策の実装確認
   - [ ] SQLインジェクション対策の検証
   - [ ] XSS対策の実装状況確認
@@ -684,7 +690,7 @@ PGPASSWORD=postgres psql -h localhost -U postgres -d beauty_salon -c "\dt"
   - [ ] 不必要な再エクスポートの除去
   - [ ] 循環依存の検証
   - [ ] レイヤー間の依存方向の確認
-- [ ] パフォーマンス最適化
+- [ ] パフォーマンス最適化（据え置きで一旦スキップ）
   - [ ] N+1問題の確認と対策
   - [ ] データベースインデックスの最適化
   - [ ] APIレスポンスタイムの計測と改善
@@ -716,8 +722,8 @@ PGPASSWORD=postgres psql -h localhost -U postgres -d beauty_salon -c "\dt"
   - [ ] キャンセル通知メール
 - [ ] ロギングとモニタリング
   - [ ] 構造化ログの実装
-  - [ ] エラートラッキング（Sentry等）
-  - [ ] メトリクス収集（Prometheus等）
+  - [ ] エラートラッキング（Sentry等）（据え置きで一旦スキップ）
+  - [ ] メトリクス収集（Prometheus等）（据え置きで一旦スキップ）
 
 ### API機能拡張
 - [ ] APIレートリミット

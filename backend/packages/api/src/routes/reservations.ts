@@ -10,6 +10,10 @@ import { z } from 'zod'
 import { authenticate, authorize } from '../middleware/auth.middleware.js'
 import type { AuthConfig } from '../middleware/auth.middleware.js'
 
+import type {
+  ReservationRepository,
+  ReservationStatus,
+} from '@beauty-salon-backend/domain'
 import {
   cancelReservationUseCase,
   completeReservationUseCase,
@@ -38,11 +42,7 @@ import {
   mapUpdateReservationRequest,
   markAsNoShowUseCase,
   updateReservationUseCase,
-} from '@backend/usecase'
-import type {
-  ReservationRepository,
-  ReservationStatus,
-} from '@beauty-salon-backend/domain'
+} from '@beauty-salon-backend/usecase'
 
 // バリデーションスキーマ
 const reservationIdSchema = z.string().uuid()

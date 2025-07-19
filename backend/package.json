@@ -18,6 +18,12 @@
     "clean": "pnpm -r run clean"
   },
   "devDependencies": {
-    "@beauty-salon-shared/config": "workspace:*"
+    "@beauty-salon-shared/config": "workspace:*",
+    "@types/qrcode": "^1.5.5",
+    "@types/speakeasy": "^2.0.10"
+  },
+  "dependencies": {
+    "qrcode": "^1.5.4",
+    "speakeasy": "^2.0.0"
   }
 }

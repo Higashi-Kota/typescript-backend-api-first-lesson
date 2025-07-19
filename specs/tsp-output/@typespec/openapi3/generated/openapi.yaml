@@ -4,6 +4,8 @@ info:
   description: Comprehensive API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, and reviews.
   version: 0.0.0
 tags:
+  - name: Authentication
+  - name: Admin - Authentication
   - name: Salons
   - name: Staff
   - name: Services
@@ -12,6 +14,783 @@ tags:
   - name: Bookings
   - name: Reviews
 paths:
+  /admin/auth/trusted-ip/{userId}:
+    post:
+      operationId: AdminAuthOperations_addTrustedIp
+      description: Add trusted IP address for a user
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.AuthSuccessResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '403':
+          description: Access is forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Admin - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ipAddress:
+                  type: string
+              required:
+                - ipAddress
+    delete:
+      operationId: AdminAuthOperations_removeTrustedIp
+      description: Remove trusted IP address for a user
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: ipAddress
+          in: query
+          required: true
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.AuthSuccessResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '403':
+          description: Access is forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Admin - Authentication
+  /admin/auth/unlock/{userId}:
+    post:
+      operationId: AdminAuthOperations_unlockAccount
+      description: Unlock a locked user account
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.AuthSuccessResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '403':
+          description: Access is forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Admin - Authentication
+  /auth/2fa/backup-codes:
+    post:
+      operationId: AuthOperations_generateBackupCodes
+      description: Generate new backup codes for 2FA
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  backupCodes:
+                    type: array
+                    items:
+                      type: string
+                required:
+                  - backupCodes
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/Models.Error'
+                  - $ref: '#/components/schemas/Models.Error'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.TwoFactorVerifyRequest'
+  /auth/2fa/disable:
+    post:
+      operationId: AuthOperations_disableTwoFactor
+      description: Disable two-factor authentication
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.AuthSuccessResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/Models.Error'
+                  - $ref: '#/components/schemas/Models.Error'
+                  - $ref: '#/components/schemas/Models.Error'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.TwoFactorDisableRequest'
+  /auth/2fa/enable:
+    post:
+      operationId: AuthOperations_enableTwoFactor
+      description: Enable two-factor authentication
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.TwoFactorSetupResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/Models.Error'
+                  - $ref: '#/components/schemas/Models.Error'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.TwoFactorEnableRequest'
+  /auth/2fa/qr-code:
+    get:
+      operationId: AuthOperations_getTwoFactorQRCode
+      description: Get QR code for 2FA setup
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.TwoFactorSetupResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Authentication
+  /auth/2fa/verify:
+    post:
+      operationId: AuthOperations_verifyTwoFactor
+      description: Verify two-factor authentication code
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.AuthSuccessResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/Models.Error'
+                  - $ref: '#/components/schemas/Models.Error'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.TwoFactorVerifyRequest'
+  /auth/change-password:
+    post:
+      operationId: AuthOperations_changePassword
+      description: Change password
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.AuthSuccessResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/Models.Error'
+                  - $ref: '#/components/schemas/Models.Error'
+                  - $ref: '#/components/schemas/Models.Error'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.PasswordChangeRequest'
+  /auth/forgot-password:
+    post:
+      operationId: AuthOperations_forgotPassword
+      description: Request password reset
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.AuthSuccessResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '429':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.PasswordResetRequest'
+  /auth/login:
+    post:
+      operationId: AuthOperations_login
+      description: Login with email and password
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.LoginResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '403':
+          description: Access is forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '423':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.LoginRequest'
+  /auth/logout:
+    post:
+      operationId: AuthOperations_logout
+      description: Logout and invalidate session
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.AuthSuccessResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Authentication
+  /auth/logout-all:
+    post:
+      operationId: AuthOperations_logoutAll
+      description: Logout from all sessions
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.AuthSuccessResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Authentication
+  /auth/me:
+    get:
+      operationId: AuthOperations_getCurrentUser
+      description: Get current user information
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.User'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Authentication
+  /auth/refresh:
+    post:
+      operationId: AuthOperations_refreshToken
+      description: Refresh access token
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.LoginResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.TokenRefreshRequest'
+  /auth/register:
+    post:
+      operationId: AuthOperations_register
+      description: Register a new user account
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.User'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.RegisterRequest'
+  /auth/reset-password:
+    post:
+      operationId: AuthOperations_resetPassword
+      description: Reset password with token
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.AuthSuccessResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/Models.Error'
+                  - $ref: '#/components/schemas/Models.Error'
+                  - $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.PasswordResetConfirmRequest'
+  /auth/reset-password/verify:
+    get:
+      operationId: AuthOperations_verifyResetToken
+      description: Verify password reset token
+      parameters:
+        - name: token
+          in: query
+          required: true
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.AuthSuccessResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Authentication
+  /auth/sessions:
+    get:
+      operationId: AuthOperations_getSessions
+      description: Get active sessions
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.SessionListResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Authentication
+  /auth/sessions/{sessionId}:
+    delete:
+      operationId: AuthOperations_revokeSession
+      description: Revoke a specific session
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.AuthSuccessResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Authentication
+  /auth/verify-email/confirm:
+    post:
+      operationId: AuthOperations_confirmEmailVerification
+      description: Confirm email verification
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.AuthSuccessResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.EmailVerificationRequest'
+  /auth/verify-email/send:
+    post:
+      operationId: AuthOperations_sendEmailVerification
+      description: Send email verification
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.AuthSuccessResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+        '429':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Error'
+      tags:
+        - Authentication
   /bookings:
     get:
       operationId: BookingOperations_list
@@ -2440,6 +3219,15 @@ components:
           format: date-time
         updatedBy:
           type: string
+    Models.AuthSuccessResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: Success message
+      description: Generic auth success response
     Models.AvailableSlot:
       type: object
       required:
@@ -2816,6 +3604,15 @@ components:
         - friday
         - saturday
         - sunday
+    Models.EmailVerificationRequest:
+      type: object
+      required:
+        - token
+      properties:
+        token:
+          type: string
+          description: Email verification token
+      description: Email verification request
     Models.Error:
       type: object
       required:
@@ -2847,6 +3644,54 @@ components:
           type: string
           format: date-time
       description: Customer reservations filter parameters
+    Models.LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          description: User's email address
+        password:
+          type: string
+          description: User's password
+        rememberMe:
+          type: boolean
+          description: Remember me flag for extended session
+          default: false
+        twoFactorCode:
+          type: string
+          description: Two-factor authentication code (if 2FA is enabled)
+      description: Login request
+    Models.LoginResponse:
+      type: object
+      required:
+        - accessToken
+        - refreshToken
+        - tokenType
+        - expiresIn
+        - user
+      properties:
+        accessToken:
+          type: string
+          description: Access token for API requests
+        refreshToken:
+          type: string
+          description: Refresh token for obtaining new access tokens
+        tokenType:
+          type: string
+          description: Token type (always 'Bearer')
+          default: Bearer
+        expiresIn:
+          type: integer
+          format: int32
+          description: Access token expiry in seconds
+        user:
+          allOf:
+            - $ref: '#/components/schemas/Models.User'
+          description: Logged in user information
+      description: Login response
     Models.OpeningHours:
       type: object
       required:
@@ -2863,6 +3708,63 @@ components:
           type: string
         isHoliday:
           type: boolean
+    Models.PasswordChangeRequest:
+      type: object
+      required:
+        - currentPassword
+        - newPassword
+      properties:
+        currentPassword:
+          type: string
+          description: Current password for verification
+        newPassword:
+          type: string
+          description: New password
+      description: Password change request
+    Models.PasswordResetConfirmRequest:
+      type: object
+      required:
+        - token
+        - newPassword
+      properties:
+        token:
+          type: string
+          description: Password reset token from email
+        newPassword:
+          type: string
+          description: New password
+      description: Password reset confirmation
+    Models.PasswordResetRequest:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          description: Email address of the account
+      description: Password reset request
+    Models.RegisterRequest:
+      type: object
+      required:
+        - email
+        - password
+        - name
+      properties:
+        email:
+          type: string
+          description: User's email address
+        password:
+          type: string
+          description: User's password (must meet security requirements)
+        name:
+          type: string
+          description: User's display name
+        role:
+          allOf:
+            - $ref: '#/components/schemas/Models.UserRole'
+          description: User's role (defaults to customer)
+          default: customer
+      description: Registration request
     Models.Reservation:
       type: object
       required:
@@ -3207,6 +4109,67 @@ components:
           type: string
     Models.ServiceId:
       type: string
+    Models.Session:
+      type: object
+      required:
+        - id
+        - userId
+        - refreshToken
+        - ipAddress
+        - userAgent
+        - expiresAt
+        - rememberMe
+        - createdAt
+        - lastActivityAt
+      properties:
+        id:
+          type: string
+          description: Unique session identifier
+        userId:
+          type: string
+          description: User ID associated with this session
+        refreshToken:
+          type: string
+          description: Refresh token for this session
+        ipAddress:
+          type: string
+          description: IP address from which the session was created
+        userAgent:
+          type: string
+          description: User agent string
+        expiresAt:
+          type: string
+          format: date-time
+          description: Session expiry time
+        rememberMe:
+          type: boolean
+          description: Remember me flag
+          default: false
+        createdAt:
+          type: string
+          format: date-time
+          description: Session creation timestamp
+        lastActivityAt:
+          type: string
+          format: date-time
+          description: Last activity timestamp
+      description: Session information
+    Models.SessionListResponse:
+      type: object
+      required:
+        - sessions
+        - total
+      properties:
+        sessions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Models.Session'
+          description: Active sessions
+        total:
+          type: integer
+          format: int32
+          description: Total number of sessions
+      description: Session list response
     Models.Staff:
       type: object
       required:
@@ -3276,6 +4239,72 @@ components:
           type: string
     Models.StaffId:
       type: string
+    Models.TokenRefreshRequest:
+      type: object
+      required:
+        - refreshToken
+      properties:
+        refreshToken:
+          type: string
+          description: Refresh token
+      description: Token refresh request
+    Models.TwoFactorDisableRequest:
+      type: object
+      required:
+        - password
+        - code
+      properties:
+        password:
+          type: string
+          description: Current password for verification
+        code:
+          type: string
+          description: Current TOTP code for verification
+      description: Two-factor authentication disable request
+    Models.TwoFactorEnableRequest:
+      type: object
+      required:
+        - password
+      properties:
+        password:
+          type: string
+          description: Current password for verification
+      description: Two-factor authentication enable request
+    Models.TwoFactorSetupResponse:
+      type: object
+      required:
+        - qrCodeUrl
+        - secret
+        - backupCodes
+      properties:
+        qrCodeUrl:
+          type: string
+          description: QR code URL for authenticator app
+        secret:
+          type: string
+          description: Manual entry secret
+        backupCodes:
+          type: array
+          items:
+            type: string
+          description: Backup codes for recovery
+      description: Two-factor authentication setup response
+    Models.TwoFactorStatus:
+      type: string
+      enum:
+        - disabled
+        - pending
+        - enabled
+      description: Two-factor authentication status
+    Models.TwoFactorVerifyRequest:
+      type: object
+      required:
+        - code
+      properties:
+        code:
+          type: string
+          description: TOTP code from authenticator app
+      description: Two-factor authentication verify request
     Models.UpdateBookingRequest:
       type: object
       properties:
@@ -3579,6 +4608,127 @@ components:
         isActive:
           type: boolean
       description: Staff update request with reset capability
+    Models.User:
+      type: object
+      required:
+        - id
+        - email
+        - name
+        - role
+        - status
+        - emailVerified
+        - twoFactorStatus
+        - failedLoginAttempts
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the user
+        email:
+          type: string
+          description: User's email address (unique)
+        name:
+          type: string
+          description: User's display name
+        role:
+          allOf:
+            - $ref: '#/components/schemas/Models.UserRole'
+          description: User's role in the system
+        status:
+          allOf:
+            - $ref: '#/components/schemas/Models.UserAccountStatus'
+          description: Account status
+        emailVerified:
+          type: boolean
+          description: Email verification status
+        emailVerificationToken:
+          type: string
+          description: Email verification token (internal use)
+        emailVerificationTokenExpiry:
+          type: string
+          format: date-time
+          description: Email verification token expiry
+        twoFactorStatus:
+          allOf:
+            - $ref: '#/components/schemas/Models.TwoFactorStatus'
+          description: Two-factor authentication status
+        twoFactorSecret:
+          type: string
+          description: Two-factor authentication secret (encrypted)
+        backupCodes:
+          type: array
+          items:
+            type: string
+          description: Backup codes for 2FA recovery
+        failedLoginAttempts:
+          type: integer
+          format: int32
+          description: Number of failed login attempts
+          default: 0
+        lockedAt:
+          type: string
+          format: date-time
+          description: Time when the account was locked
+        passwordResetToken:
+          type: string
+          description: Password reset token (internal use)
+        passwordResetTokenExpiry:
+          type: string
+          format: date-time
+          description: Password reset token expiry
+        lastPasswordChangeAt:
+          type: string
+          format: date-time
+          description: Last password change timestamp
+        passwordHistory:
+          type: array
+          items:
+            type: string
+          description: Previous password hashes for history check
+        trustedIpAddresses:
+          type: array
+          items:
+            type: string
+          description: Trusted IP addresses for this user
+        customerId:
+          type: string
+          description: Reference to customer profile if user is a customer
+        staffId:
+          type: string
+          description: Reference to staff profile if user is staff
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the user was created
+        updatedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the user was last updated
+        lastLoginAt:
+          type: string
+          format: date-time
+          description: Last login timestamp
+        lastLoginIp:
+          type: string
+          description: Last login IP address
+      description: User authentication information
+    Models.UserAccountStatus:
+      type: string
+      enum:
+        - active
+        - unverified
+        - locked
+        - suspended
+        - deleted
+      description: User account status
+    Models.UserRole:
+      type: string
+      enum:
+        - customer
+        - staff
+        - admin
+      description: User roles in the system
 servers:
   - url: https://api.beauty-salon.com
     description: Beauty Salon API

@@ -14,6 +14,10 @@ import {
 } from '../middleware/auth.middleware.js'
 import type { AuthConfig } from '../middleware/auth.middleware.js'
 
+import type {
+  ReservationRepository,
+  ReviewRepository,
+} from '@beauty-salon-backend/domain'
 import {
   createDeleteReviewErrorResponse,
   createReviewErrorResponse,
@@ -45,11 +49,7 @@ import {
   mapUpdateReviewRequest,
   publishReviewUseCase,
   updateReviewUseCase,
-} from '@backend/usecase'
-import type {
-  ReservationRepository,
-  ReviewRepository,
-} from '@beauty-salon-backend/domain'
+} from '@beauty-salon-backend/usecase'
 
 // バリデーションスキーマ
 const reviewIdSchema = z.string().uuid()

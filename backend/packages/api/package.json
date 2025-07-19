@@ -33,7 +33,7 @@
     "package:check": "taze -r"
   },
   "dependencies": {
-    "@backend/usecase": "workspace:*",
+    "@beauty-salon-backend/usecase": "workspace:*",
     "@beauty-salon-backend/domain": "workspace:*",
     "@beauty-salon-backend/infrastructure": "workspace:*",
     "@beauty-salon-backend/types": "workspace:*",

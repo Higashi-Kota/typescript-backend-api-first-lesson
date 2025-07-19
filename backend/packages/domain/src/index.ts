@@ -264,3 +264,36 @@ export {
 
 // Review Repository インターフェース
 export type { ReviewRepository } from './repositories/review.repository.js'
+
+// User ドメインモデル
+export {
+  type UserId,
+  type SessionId,
+  type UserRole,
+  type UserAccountStatus,
+  type TwoFactorStatus,
+  type PasswordResetStatus,
+  type UserData,
+  type User,
+  type Session,
+  type UserError,
+  validatePassword,
+  validateEmail as validateUserEmail,
+  isPasswordReused,
+  isAccountLocked,
+  isEmailVerified,
+  isTwoFactorEnabled,
+  getAccountLockDuration,
+  getPasswordResetTokenExpiry,
+  getEmailVerificationTokenExpiry,
+  generateBackupCodes,
+} from './models/user.js'
+
+// User Repository インターフェース
+export type {
+  UserRepositoryError,
+  SessionRepositoryError,
+  UserSearchCriteria,
+  UserRepository,
+  SessionRepository,
+} from './repositories/user.repository.js'

@@ -4,6 +4,7 @@ import "@typespec/openapi3";
 
 // Import all models
 import "./models/common.tsp";
+import "./models/auth.tsp";
 import "./models/salon.tsp";
 import "./models/staff.tsp";
 import "./models/service.tsp";
@@ -13,6 +14,7 @@ import "./models/booking.tsp";
 import "./models/review.tsp";
 
 // Import all operations
+import "./operations/auth-operations.tsp";
 import "./operations/salon-operations.tsp";
 import "./operations/staff-operations.tsp";
 import "./operations/service-operations.tsp";

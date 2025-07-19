@@ -8,6 +8,10 @@ import { match } from 'ts-pattern'
 import { z } from 'zod'
 
 import {
+  type CustomerRepository,
+  createCustomerIdSafe,
+} from '@beauty-salon-backend/domain'
+import {
   createCustomerErrorResponse,
   createCustomerUseCase,
   deleteCustomerUseCase,
@@ -20,11 +24,7 @@ import {
   mapCustomerToResponse,
   mapUpdateCustomerRequest,
   updateCustomerUseCase,
-} from '@backend/usecase'
-import {
-  type CustomerRepository,
-  createCustomerIdSafe,
-} from '@beauty-salon-backend/domain'
+} from '@beauty-salon-backend/usecase'
 
 // バリデーションスキーマ
 const customerIdSchema = z.string().uuid()

@@ -15,6 +15,13 @@
       "when": 1752762772097,
       "tag": "0001_material_ironclad",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1752891691452,
+      "tag": "0002_neat_paibok",
+      "breakpoints": true
     }
   ]
 }

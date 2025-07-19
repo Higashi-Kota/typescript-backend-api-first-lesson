@@ -47,6 +47,23 @@ export const bookingStatusEnum = pgEnum('booking_status', [
   'no_show',
 ])
 
+// User authentication enums
+export const userRoleEnum = pgEnum('user_role', ['customer', 'staff', 'admin'])
+
+export const userAccountStatusEnum = pgEnum('user_account_status', [
+  'active',
+  'unverified',
+  'locked',
+  'suspended',
+  'deleted',
+])
+
+export const twoFactorStatusEnum = pgEnum('two_factor_status', [
+  'disabled',
+  'pending',
+  'enabled',
+])
+
 // Salons table with TypeSpec structure
 export const salons = pgTable('salons', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -268,4 +285,50 @@ export const reviews = pgTable('reviews', {
   createdBy: text('created_by'),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
   updatedBy: text('updated_by'),
+})
+
+// Users table for authentication
+export const users = pgTable('users', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  email: text('email').notNull().unique(),
+  name: text('name').notNull(),
+  passwordHash: text('password_hash').notNull(),
+  role: userRoleEnum('role').notNull().default('customer'),
+  status: userAccountStatusEnum('status').notNull().default('unverified'),
+  emailVerified: boolean('email_verified').notNull().default(false),
+  emailVerificationToken: text('email_verification_token'),
+  emailVerificationTokenExpiry: timestamp('email_verification_token_expiry'),
+  twoFactorStatus: twoFactorStatusEnum('two_factor_status')
+    .notNull()
+    .default('disabled'),
+  twoFactorSecret: text('two_factor_secret'),
+  backupCodes: jsonb('backup_codes').$type<string[]>(),
+  failedLoginAttempts: integer('failed_login_attempts').notNull().default(0),
+  lockedAt: timestamp('locked_at'),
+  passwordResetToken: text('password_reset_token'),
+  passwordResetTokenExpiry: timestamp('password_reset_token_expiry'),
+  lastPasswordChangeAt: timestamp('last_password_change_at'),
+  passwordHistory: jsonb('password_history').$type<string[]>(),
+  trustedIpAddresses: jsonb('trusted_ip_addresses').$type<string[]>(),
+  customerId: uuid('customer_id').references(() => customers.id),
+  staffId: uuid('staff_id').references(() => staff.id),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  lastLoginAt: timestamp('last_login_at'),
+  lastLoginIp: text('last_login_ip'),
+})
+
+// Sessions table for session management
+export const sessions = pgTable('sessions', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  refreshToken: text('refresh_token').notNull().unique(),
+  ipAddress: text('ip_address').notNull(),
+  userAgent: text('user_agent').notNull(),
+  expiresAt: timestamp('expires_at').notNull(),
+  rememberMe: boolean('remember_me').notNull().default(false),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  lastActivityAt: timestamp('last_activity_at').notNull().defaultNow(),
 })

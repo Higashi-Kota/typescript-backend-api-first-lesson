@@ -59,3 +59,12 @@ export const StaffIdSchema = z.string().refine(
   { message: 'Invalid StaffId format' }
 );
 
+export const TwoFactorStatusSchema = z.enum(['disabled', 'pending', 'enabled']);
+export type TwoFactorStatus = z.infer<typeof TwoFactorStatusSchema>;
+
+export const UserAccountStatusSchema = z.enum(['active', 'unverified', 'locked', 'suspended', 'deleted']);
+export type UserAccountStatus = z.infer<typeof UserAccountStatusSchema>;
+
+export const UserRoleSchema = z.enum(['customer', 'staff', 'admin']);
+export type UserRole = z.infer<typeof UserRoleSchema>;
+

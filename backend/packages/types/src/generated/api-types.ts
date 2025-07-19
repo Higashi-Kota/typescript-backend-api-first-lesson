@@ -12,6 +12,364 @@ export type Brand<T, B> = T & { [brand]: B };
  */
 
 export interface paths {
+    "/admin/auth/trusted-ip/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Add trusted IP address for a user */
+        post: operations["AdminAuthOperations_addTrustedIp"];
+        /** @description Remove trusted IP address for a user */
+        delete: operations["AdminAuthOperations_removeTrustedIp"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/auth/unlock/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Unlock a locked user account */
+        post: operations["AdminAuthOperations_unlockAccount"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/2fa/backup-codes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Generate new backup codes for 2FA */
+        post: operations["AuthOperations_generateBackupCodes"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/2fa/disable": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Disable two-factor authentication */
+        post: operations["AuthOperations_disableTwoFactor"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/2fa/enable": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Enable two-factor authentication */
+        post: operations["AuthOperations_enableTwoFactor"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/2fa/qr-code": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Get QR code for 2FA setup */
+        get: operations["AuthOperations_getTwoFactorQRCode"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/2fa/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Verify two-factor authentication code */
+        post: operations["AuthOperations_verifyTwoFactor"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/change-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Change password */
+        post: operations["AuthOperations_changePassword"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/forgot-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Request password reset */
+        post: operations["AuthOperations_forgotPassword"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Login with email and password */
+        post: operations["AuthOperations_login"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Logout and invalidate session */
+        post: operations["AuthOperations_logout"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/logout-all": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Logout from all sessions */
+        post: operations["AuthOperations_logoutAll"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Get current user information */
+        get: operations["AuthOperations_getCurrentUser"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Refresh access token */
+        post: operations["AuthOperations_refreshToken"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/register": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Register a new user account */
+        post: operations["AuthOperations_register"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/reset-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Reset password with token */
+        post: operations["AuthOperations_resetPassword"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/reset-password/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Verify password reset token */
+        get: operations["AuthOperations_verifyResetToken"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/sessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Get active sessions */
+        get: operations["AuthOperations_getSessions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/sessions/{sessionId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** @description Revoke a specific session */
+        delete: operations["AuthOperations_revokeSession"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/verify-email/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Confirm email verification */
+        post: operations["AuthOperations_confirmEmailVerification"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/verify-email/send": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Send email verification */
+        post: operations["AuthOperations_sendEmailVerification"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/bookings": {
         parameters: {
             query?: never;
@@ -735,6 +1093,11 @@ export interface components {
             updatedAt: string;
             updatedBy?: string;
         };
+        /** @description Generic auth success response */
+        "Models.AuthSuccessResponse": {
+            /** @description Success message */
+            message: string;
+        };
         "Models.AvailableSlot": {
             staffId: components["schemas"]["Models.StaffId"];
             /** Format: date-time */
@@ -889,6 +1252,11 @@ export interface components {
         } & components["schemas"]["Models.Customer"];
         /** @enum {string} */
         "Models.DayOfWeek": "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday";
+        /** @description Email verification request */
+        "Models.EmailVerificationRequest": {
+            /** @description Email verification token */
+            token: string;
+        };
         "Models.Error": {
             code: string;
             message: string;
@@ -908,11 +1276,77 @@ export interface components {
             /** Format: date-time */
             to?: string;
         };
+        /** @description Login request */
+        "Models.LoginRequest": {
+            /** @description User's email address */
+            email: string;
+            /** @description User's password */
+            password: string;
+            /**
+             * @description Remember me flag for extended session
+             * @default false
+             */
+            rememberMe: boolean;
+            /** @description Two-factor authentication code (if 2FA is enabled) */
+            twoFactorCode?: string;
+        };
+        /** @description Login response */
+        "Models.LoginResponse": {
+            /** @description Access token for API requests */
+            accessToken: string;
+            /** @description Refresh token for obtaining new access tokens */
+            refreshToken: string;
+            /**
+             * @description Token type (always 'Bearer')
+             * @default Bearer
+             */
+            tokenType: string;
+            /**
+             * Format: int32
+             * @description Access token expiry in seconds
+             */
+            expiresIn: number;
+            /** @description Logged in user information */
+            user: components["schemas"]["Models.User"];
+        };
         "Models.OpeningHours": {
             dayOfWeek: components["schemas"]["Models.DayOfWeek"];
             openTime: string;
             closeTime: string;
             isHoliday: boolean;
+        };
+        /** @description Password change request */
+        "Models.PasswordChangeRequest": {
+            /** @description Current password for verification */
+            currentPassword: string;
+            /** @description New password */
+            newPassword: string;
+        };
+        /** @description Password reset confirmation */
+        "Models.PasswordResetConfirmRequest": {
+            /** @description Password reset token from email */
+            token: string;
+            /** @description New password */
+            newPassword: string;
+        };
+        /** @description Password reset request */
+        "Models.PasswordResetRequest": {
+            /** @description Email address of the account */
+            email: string;
+        };
+        /** @description Registration request */
+        "Models.RegisterRequest": {
+            /** @description User's email address */
+            email: string;
+            /** @description User's password (must meet security requirements) */
+            password: string;
+            /** @description User's display name */
+            name: string;
+            /**
+             * @description User's role (defaults to customer)
+             * @default customer
+             */
+            role: components["schemas"]["Models.UserRole"];
         };
         "Models.Reservation": {
             id: components["schemas"]["Models.ReservationId"];
@@ -1066,6 +1500,49 @@ export interface components {
             updatedBy?: string;
         };
         "Models.ServiceId": string;
+        /** @description Session information */
+        "Models.Session": {
+            /** @description Unique session identifier */
+            id: string;
+            /** @description User ID associated with this session */
+            userId: string;
+            /** @description Refresh token for this session */
+            refreshToken: string;
+            /** @description IP address from which the session was created */
+            ipAddress: string;
+            /** @description User agent string */
+            userAgent: string;
+            /**
+             * Format: date-time
+             * @description Session expiry time
+             */
+            expiresAt: string;
+            /**
+             * @description Remember me flag
+             * @default false
+             */
+            rememberMe: boolean;
+            /**
+             * Format: date-time
+             * @description Session creation timestamp
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @description Last activity timestamp
+             */
+            lastActivityAt: string;
+        };
+        /** @description Session list response */
+        "Models.SessionListResponse": {
+            /** @description Active sessions */
+            sessions: components["schemas"]["Models.Session"][];
+            /**
+             * Format: int32
+             * @description Total number of sessions
+             */
+            total: number;
+        };
         "Models.Staff": {
             id: components["schemas"]["Models.StaffId"];
             salonId: components["schemas"]["Models.SalonId"];
@@ -1094,6 +1571,42 @@ export interface components {
             breakEnd?: string;
         };
         "Models.StaffId": string;
+        /** @description Token refresh request */
+        "Models.TokenRefreshRequest": {
+            /** @description Refresh token */
+            refreshToken: string;
+        };
+        /** @description Two-factor authentication disable request */
+        "Models.TwoFactorDisableRequest": {
+            /** @description Current password for verification */
+            password: string;
+            /** @description Current TOTP code for verification */
+            code: string;
+        };
+        /** @description Two-factor authentication enable request */
+        "Models.TwoFactorEnableRequest": {
+            /** @description Current password for verification */
+            password: string;
+        };
+        /** @description Two-factor authentication setup response */
+        "Models.TwoFactorSetupResponse": {
+            /** @description QR code URL for authenticator app */
+            qrCodeUrl: string;
+            /** @description Manual entry secret */
+            secret: string;
+            /** @description Backup codes for recovery */
+            backupCodes: string[];
+        };
+        /**
+         * @description Two-factor authentication status
+         * @enum {string}
+         */
+        "Models.TwoFactorStatus": "disabled" | "pending" | "enabled";
+        /** @description Two-factor authentication verify request */
+        "Models.TwoFactorVerifyRequest": {
+            /** @description TOTP code from authenticator app */
+            code: string;
+        };
         /** @description Booking update request with optional fields for partial updates */
         "Models.UpdateBookingRequest": {
             status?: components["schemas"]["Models.BookingStatus"];
@@ -1244,6 +1757,92 @@ export interface components {
             certifications?: string[] | null;
             isActive?: boolean;
         };
+        /** @description User authentication information */
+        "Models.User": {
+            /** @description Unique identifier for the user */
+            id: string;
+            /** @description User's email address (unique) */
+            email: string;
+            /** @description User's display name */
+            name: string;
+            /** @description User's role in the system */
+            role: components["schemas"]["Models.UserRole"];
+            /** @description Account status */
+            status: components["schemas"]["Models.UserAccountStatus"];
+            /** @description Email verification status */
+            emailVerified: boolean;
+            /** @description Email verification token (internal use) */
+            emailVerificationToken?: string;
+            /**
+             * Format: date-time
+             * @description Email verification token expiry
+             */
+            emailVerificationTokenExpiry?: string;
+            /** @description Two-factor authentication status */
+            twoFactorStatus: components["schemas"]["Models.TwoFactorStatus"];
+            /** @description Two-factor authentication secret (encrypted) */
+            twoFactorSecret?: string;
+            /** @description Backup codes for 2FA recovery */
+            backupCodes?: string[];
+            /**
+             * Format: int32
+             * @description Number of failed login attempts
+             * @default 0
+             */
+            failedLoginAttempts: number;
+            /**
+             * Format: date-time
+             * @description Time when the account was locked
+             */
+            lockedAt?: string;
+            /** @description Password reset token (internal use) */
+            passwordResetToken?: string;
+            /**
+             * Format: date-time
+             * @description Password reset token expiry
+             */
+            passwordResetTokenExpiry?: string;
+            /**
+             * Format: date-time
+             * @description Last password change timestamp
+             */
+            lastPasswordChangeAt?: string;
+            /** @description Previous password hashes for history check */
+            passwordHistory?: string[];
+            /** @description Trusted IP addresses for this user */
+            trustedIpAddresses?: string[];
+            /** @description Reference to customer profile if user is a customer */
+            customerId?: string;
+            /** @description Reference to staff profile if user is staff */
+            staffId?: string;
+            /**
+             * Format: date-time
+             * @description Timestamp when the user was created
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @description Timestamp when the user was last updated
+             */
+            updatedAt: string;
+            /**
+             * Format: date-time
+             * @description Last login timestamp
+             */
+            lastLoginAt?: string;
+            /** @description Last login IP address */
+            lastLoginIp?: string;
+        };
+        /**
+         * @description User account status
+         * @enum {string}
+         */
+        "Models.UserAccountStatus": "active" | "unverified" | "locked" | "suspended" | "deleted";
+        /**
+         * @description User roles in the system
+         * @enum {string}
+         */
+        "Models.UserRole": "customer" | "staff" | "admin";
     };
     responses: never;
     parameters: {
@@ -1256,6 +1855,936 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    AdminAuthOperations_addTrustedIp: {
+        parameters: {
+            query?: never;
+            header: {
+                Authorization: string;
+            };
+            path: {
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    ipAddress: string;
+                };
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.AuthSuccessResponse"];
+                };
+            };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+            /** @description Access is forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+            /** @description The server cannot find the requested resource. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+        };
+    };
+    AdminAuthOperations_removeTrustedIp: {
+        parameters: {
+            query: {
+                ipAddress: string;
+            };
+            header: {
+                Authorization: string;
+            };
+            path: {
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.AuthSuccessResponse"];
+                };
+            };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+            /** @description Access is forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+            /** @description The server cannot find the requested resource. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+        };
+    };
+    AdminAuthOperations_unlockAccount: {
+        parameters: {
+            query?: never;
+            header: {
+                Authorization: string;
+            };
+            path: {
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.AuthSuccessResponse"];
+                };
+            };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+            /** @description Access is forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+            /** @description The server cannot find the requested resource. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+        };
+    };
+    AuthOperations_generateBackupCodes: {
+        parameters: {
+            query?: never;
+            header: {
+                Authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Models.TwoFactorVerifyRequest"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        backupCodes: string[];
+                    };
+                };
+            };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"] | components["schemas"]["Models.Error"];
+                };
+            };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+        };
+    };
+    AuthOperations_disableTwoFactor: {
+        parameters: {
+            query?: never;
+            header: {
+                Authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Models.TwoFactorDisableRequest"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.AuthSuccessResponse"];
+                };
+            };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"] | components["schemas"]["Models.Error"] | components["schemas"]["Models.Error"];
+                };
+            };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+        };
+    };
+    AuthOperations_enableTwoFactor: {
+        parameters: {
+            query?: never;
+            header: {
+                Authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Models.TwoFactorEnableRequest"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.TwoFactorSetupResponse"];
+                };
+            };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"] | components["schemas"]["Models.Error"];
+                };
+            };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+        };
+    };
+    AuthOperations_getTwoFactorQRCode: {
+        parameters: {
+            query?: never;
+            header: {
+                Authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.TwoFactorSetupResponse"];
+                };
+            };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+        };
+    };
+    AuthOperations_verifyTwoFactor: {
+        parameters: {
+            query?: never;
+            header: {
+                Authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Models.TwoFactorVerifyRequest"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.AuthSuccessResponse"];
+                };
+            };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"] | components["schemas"]["Models.Error"];
+                };
+            };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+        };
+    };
+    AuthOperations_changePassword: {
+        parameters: {
+            query?: never;
+            header: {
+                Authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Models.PasswordChangeRequest"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.AuthSuccessResponse"];
+                };
+            };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"] | components["schemas"]["Models.Error"] | components["schemas"]["Models.Error"];
+                };
+            };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+        };
+    };
+    AuthOperations_forgotPassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Models.PasswordResetRequest"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.AuthSuccessResponse"];
+                };
+            };
+            /** @description The server cannot find the requested resource. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+            /** @description Client error */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+        };
+    };
+    AuthOperations_login: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Models.LoginRequest"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.LoginResponse"];
+                };
+            };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+            /** @description Access is forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+            /** @description Client error */
+            423: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+        };
+    };
+    AuthOperations_logout: {
+        parameters: {
+            query?: never;
+            header: {
+                Authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.AuthSuccessResponse"];
+                };
+            };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+        };
+    };
+    AuthOperations_logoutAll: {
+        parameters: {
+            query?: never;
+            header: {
+                Authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.AuthSuccessResponse"];
+                };
+            };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+        };
+    };
+    AuthOperations_getCurrentUser: {
+        parameters: {
+            query?: never;
+            header: {
+                Authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.User"];
+                };
+            };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+        };
+    };
+    AuthOperations_refreshToken: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Models.TokenRefreshRequest"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.LoginResponse"];
+                };
+            };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+        };
+    };
+    AuthOperations_register: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Models.RegisterRequest"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded and a new resource has been created as a result. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.User"];
+                };
+            };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+            /** @description The request conflicts with the current state of the server. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+        };
+    };
+    AuthOperations_resetPassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Models.PasswordResetConfirmRequest"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.AuthSuccessResponse"];
+                };
+            };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"] | components["schemas"]["Models.Error"] | components["schemas"]["Models.Error"];
+                };
+            };
+        };
+    };
+    AuthOperations_verifyResetToken: {
+        parameters: {
+            query: {
+                token: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.AuthSuccessResponse"];
+                };
+            };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+        };
+    };
+    AuthOperations_getSessions: {
+        parameters: {
+            query?: never;
+            header: {
+                Authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.SessionListResponse"];
+                };
+            };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+        };
+    };
+    AuthOperations_revokeSession: {
+        parameters: {
+            query?: never;
+            header: {
+                Authorization: string;
+            };
+            path: {
+                sessionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.AuthSuccessResponse"];
+                };
+            };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+            /** @description The server cannot find the requested resource. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+        };
+    };
+    AuthOperations_confirmEmailVerification: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Models.EmailVerificationRequest"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.AuthSuccessResponse"];
+                };
+            };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+        };
+    };
+    AuthOperations_sendEmailVerification: {
+        parameters: {
+            query?: never;
+            header: {
+                Authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.AuthSuccessResponse"];
+                };
+            };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+            /** @description Access is unauthorized. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+            /** @description Client error */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Models.Error"];
+                };
+            };
+        };
+    };
     BookingOperations_list: {
         parameters: {
             query?: {

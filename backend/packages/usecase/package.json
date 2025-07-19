@@ -1,5 +1,5 @@
 {
-  "name": "@backend/usecase",
+  "name": "@beauty-salon-backend/usecase",
   "version": "1.0.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -21,10 +21,12 @@
   "dependencies": {
     "@beauty-salon-backend/domain": "workspace:*",
     "@beauty-salon-backend/types": "workspace:*",
+    "bcrypt": "^6.0.0",
     "ts-pattern": "^5.5.0",
     "uuid": "^11.0.6"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/node": "^22.12.1",
     "@types/uuid": "^10.0.0",
     "vitest": "^3.2.4"
