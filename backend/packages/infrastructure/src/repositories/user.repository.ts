@@ -12,10 +12,11 @@ import type {
   UserSearchCriteria,
 } from '@beauty-salon-backend/domain'
 import { err, ok } from '@beauty-salon-backend/domain'
-import { and, desc, eq, like } from 'drizzle-orm'
+import { and, desc, eq } from 'drizzle-orm'
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
 import { v4 as uuidv4 } from 'uuid'
 import { users } from '../database/schema'
+import { safeLike } from './security-patches'
 
 export class DrizzleUserRepository implements UserRepository {
   constructor(private db: PostgresJsDatabase) {}
@@ -232,7 +233,7 @@ export class DrizzleUserRepository implements UserRepository {
       const conditions = []
 
       if (criteria.email) {
-        conditions.push(like(users.email, `%${criteria.email}%`))
+        conditions.push(safeLike(users.email, criteria.email))
       }
 
       if (criteria.role) {

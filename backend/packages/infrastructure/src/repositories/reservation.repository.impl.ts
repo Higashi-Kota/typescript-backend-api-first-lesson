@@ -5,6 +5,7 @@
 
 import { and, between, desc, eq, gte, lte, or, sql } from 'drizzle-orm'
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
+import { safeNotEqual } from './security-patches'
 
 import type {
   AvailableSlot,
@@ -729,7 +730,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       ]
 
       if (excludeReservationId) {
-        conditions.push(sql`${reservations.id} != ${excludeReservationId}`)
+        conditions.push(safeNotEqual(reservations.id, excludeReservationId))
       }
 
       const result = await this.db

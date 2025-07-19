@@ -3,8 +3,10 @@
  * Drizzle ORMを使用したリポジトリの実装
  */
 
-import { and, desc, eq, inArray, like, or, sql } from 'drizzle-orm'
+import { and, desc, eq, inArray, or, sql } from 'drizzle-orm'
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
+import { getEncryptionService } from '../services/encryption.service.js'
+import { safeJsonbContains, safeLike } from './security-patches'
 
 import type {
   Customer,
@@ -29,12 +31,40 @@ type DbCustomer = typeof customers.$inferSelect
 type DbNewCustomer = typeof customers.$inferInsert
 
 export class DrizzleCustomerRepository implements CustomerRepository {
-  constructor(private db: PostgresJsDatabase) {}
+  private encryptionService?: ReturnType<typeof getEncryptionService>
+  private encryptedFields: (keyof DbCustomer)[] = ['phoneNumber']
+
+  constructor(private db: PostgresJsDatabase) {
+    try {
+      this.encryptionService = getEncryptionService()
+    } catch {
+      // 暗号化サービスが初期化されていない場合は、暗号化なしで動作
+      console.warn(
+        'Encryption service not initialized. Operating without encryption.'
+      )
+    }
+  }
 
   // DBモデルからドメインモデルへの変換
-  private mapDbToDomain(dbCustomer: DbCustomer): Customer | null {
+  private async mapDbToDomain(
+    dbCustomer: DbCustomer
+  ): Promise<Customer | null> {
     const id = createCustomerId(dbCustomer.id)
     if (!id) return null
+
+    // 暗号化されたフィールドを復号化
+    let decryptedCustomer = dbCustomer
+    if (this.encryptionService) {
+      try {
+        decryptedCustomer = await this.encryptionService.decryptFields(
+          dbCustomer,
+          this.encryptedFields
+        )
+      } catch (error) {
+        console.error('Failed to decrypt customer data:', error)
+        // 復号化に失敗した場合は元のデータを使用
+      }
+    }
 
     // 削除済みフラグやステータスがDBに存在しない場合は、すべてactiveとして扱う
     // 実際のプロジェクトでは、DBスキーマに status, deletedAt, suspendedAt などのカラムを追加
@@ -42,28 +72,30 @@ export class DrizzleCustomerRepository implements CustomerRepository {
       type: 'active',
       data: {
         id,
-        name: dbCustomer.name,
+        name: decryptedCustomer.name,
         contactInfo: {
-          email: dbCustomer.email,
-          phoneNumber: dbCustomer.phoneNumber,
+          email: decryptedCustomer.email,
+          phoneNumber: decryptedCustomer.phoneNumber,
         },
-        preferences: dbCustomer.preferences,
-        notes: dbCustomer.notes,
-        tags: dbCustomer.tags || [],
-        birthDate: dbCustomer.birthDate ? new Date(dbCustomer.birthDate) : null,
-        loyaltyPoints: dbCustomer.loyaltyPoints || 0,
-        membershipLevel: (dbCustomer.membershipLevel ||
+        preferences: decryptedCustomer.preferences,
+        notes: decryptedCustomer.notes,
+        tags: decryptedCustomer.tags || [],
+        birthDate: decryptedCustomer.birthDate
+          ? new Date(decryptedCustomer.birthDate)
+          : null,
+        loyaltyPoints: decryptedCustomer.loyaltyPoints || 0,
+        membershipLevel: (decryptedCustomer.membershipLevel ||
           'regular') as Customer['data']['membershipLevel'],
-        createdAt: dbCustomer.createdAt,
-        updatedAt: dbCustomer.updatedAt,
+        createdAt: decryptedCustomer.createdAt,
+        updatedAt: decryptedCustomer.updatedAt,
       },
     }
   }
 
   // ドメインモデルからDBモデルへの変換
-  private mapDomainToDb(customer: Customer): DbNewCustomer {
+  private async mapDomainToDb(customer: Customer): Promise<DbNewCustomer> {
     const data = customer.data
-    return {
+    const dbCustomer: DbNewCustomer = {
       id: data.id,
       name: data.name,
       email: data.contactInfo.email,
@@ -77,6 +109,16 @@ export class DrizzleCustomerRepository implements CustomerRepository {
       birthDate: data.birthDate?.toISOString().split('T')[0] || null,
       updatedAt: data.updatedAt,
     }
+
+    // 暗号化が必要なフィールドを暗号化
+    if (this.encryptionService) {
+      return await this.encryptionService.encryptFields(
+        dbCustomer,
+        this.encryptedFields
+      )
+    }
+
+    return dbCustomer
   }
 
   async findById(id: CustomerId): Promise<Result<Customer, RepositoryError>> {
@@ -103,7 +145,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
           id,
         })
       }
-      const customer = this.mapDbToDomain(firstRow)
+      const customer = await this.mapDbToDomain(firstRow)
       if (!customer) {
         return err({
           type: 'databaseError',
@@ -139,7 +181,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
       if (!firstRow) {
         return ok(null)
       }
-      const customer = this.mapDbToDomain(firstRow)
+      const customer = await this.mapDbToDomain(firstRow)
       if (!customer) {
         return err({
           type: 'databaseError',
@@ -159,7 +201,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
 
   async save(customer: Customer): Promise<Result<Customer, RepositoryError>> {
     try {
-      const dbCustomer = this.mapDomainToDb(customer)
+      const dbCustomer = await this.mapDomainToDb(customer)
 
       // Upsert operation
       const result = await this.db
@@ -190,7 +232,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
           message: 'Failed to return saved customer',
         })
       }
-      const savedCustomer = this.mapDbToDomain(firstRow)
+      const savedCustomer = await this.mapDbToDomain(firstRow)
       if (!savedCustomer) {
         return err({
           type: 'databaseError',
@@ -260,18 +302,16 @@ export class DrizzleCustomerRepository implements CustomerRepository {
       if (criteria.search) {
         conditions.push(
           or(
-            like(customers.name, `%${criteria.search}%`),
-            like(customers.email, `%${criteria.search}%`),
-            like(customers.phoneNumber, `%${criteria.search}%`)
+            safeLike(customers.name, criteria.search),
+            safeLike(customers.email, criteria.search),
+            safeLike(customers.phoneNumber, criteria.search)
           )
         )
       }
 
       if (criteria.tags && criteria.tags.length > 0) {
         // タグの検索（JSONBカラムのため特殊な処理）
-        conditions.push(
-          sql`${customers.tags} @> ${JSON.stringify(criteria.tags)}::jsonb`
-        )
+        conditions.push(safeJsonbContains(customers.tags, criteria.tags))
       }
 
       if (criteria.membershipLevel) {
@@ -302,12 +342,15 @@ export class DrizzleCustomerRepository implements CustomerRepository {
         .limit(pagination.limit)
         .offset(pagination.offset)
 
-      const mappedCustomers = results
-        .map((r) => this.mapDbToDomain(r))
-        .filter((c): c is Customer => c !== null)
+      const mappedCustomers = await Promise.all(
+        results.map((r) => this.mapDbToDomain(r))
+      )
+      const filteredCustomers = mappedCustomers.filter(
+        (c): c is Customer => c !== null
+      )
 
       return ok({
-        data: mappedCustomers,
+        data: filteredCustomers,
         total,
         limit: pagination.limit,
         offset: pagination.offset,
@@ -340,11 +383,14 @@ export class DrizzleCustomerRepository implements CustomerRepository {
         .from(customers)
         .where(inArray(customers.id, ids))
 
-      const mappedCustomers = results
-        .map((r) => this.mapDbToDomain(r))
-        .filter((c): c is Customer => c !== null)
+      const mappedCustomers = await Promise.all(
+        results.map((r) => this.mapDbToDomain(r))
+      )
+      const filteredCustomers = mappedCustomers.filter(
+        (c): c is Customer => c !== null
+      )
 
-      return ok(mappedCustomers)
+      return ok(filteredCustomers)
     } catch (error) {
       return err({
         type: 'databaseError',

@@ -3,8 +3,9 @@
  * Drizzle ORMを使用したリポジトリの実装
  */
 
-import { and, between, desc, eq, like, or, sql } from 'drizzle-orm'
+import { and, between, desc, eq, gte, lte, or, sql } from 'drizzle-orm'
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
+import { safeLike } from './security-patches.js'
 
 import type {
   CategoryId,
@@ -396,8 +397,8 @@ export class DrizzleServiceRepository implements ServiceRepository {
       if (criteria.keyword) {
         conditions.push(
           or(
-            like(services.name, `%${criteria.keyword}%`),
-            like(services.description, `%${criteria.keyword}%`)
+            safeLike(services.name, criteria.keyword),
+            safeLike(services.description, criteria.keyword)
           ) ?? sql`1=1`
         )
       }
@@ -418,9 +419,9 @@ export class DrizzleServiceRepository implements ServiceRepository {
           between(services.price, criteria.minPrice, criteria.maxPrice)
         )
       } else if (criteria.minPrice !== undefined) {
-        conditions.push(sql`${services.price} >= ${criteria.minPrice}`)
+        conditions.push(gte(services.price, criteria.minPrice))
       } else if (criteria.maxPrice !== undefined) {
-        conditions.push(sql`${services.price} <= ${criteria.maxPrice}`)
+        conditions.push(lte(services.price, criteria.maxPrice))
       }
 
       // 所要時間範囲で絞り込み
@@ -432,9 +433,9 @@ export class DrizzleServiceRepository implements ServiceRepository {
           between(services.duration, criteria.minDuration, criteria.maxDuration)
         )
       } else if (criteria.minDuration !== undefined) {
-        conditions.push(sql`${services.duration} >= ${criteria.minDuration}`)
+        conditions.push(gte(services.duration, criteria.minDuration))
       } else if (criteria.maxDuration !== undefined) {
-        conditions.push(sql`${services.duration} <= ${criteria.maxDuration}`)
+        conditions.push(lte(services.duration, criteria.maxDuration))
       }
 
       const whereClause = conditions.length > 0 ? and(...conditions) : undefined

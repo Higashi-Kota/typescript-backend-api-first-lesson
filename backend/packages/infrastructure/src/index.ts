@@ -11,3 +11,6 @@ export * from './repositories/booking.repository.impl'
 export * from './repositories/review.repository.impl'
 export * from './repositories/user.repository'
 export * from './repositories/session.repository'
+
+// Services
+export * from './services/encryption.service.js'

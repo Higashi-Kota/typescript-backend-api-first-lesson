@@ -3,8 +3,9 @@
  * Drizzle ORMを使用したリポジトリの実装
  */
 
-import { and, desc, eq, like, or, sql } from 'drizzle-orm'
+import { and, desc, eq, or, sql } from 'drizzle-orm'
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
+import { safeArrayOverlap, safeLike } from './security-patches'
 
 import type {
   CreateStaffRequest,
@@ -366,15 +367,17 @@ export class DrizzleStaffRepository implements StaffRepository {
       if (criteria.keyword) {
         conditions.push(
           or(
-            like(staff.name, `%${criteria.keyword}%`),
-            like(staff.bio, `%${criteria.keyword}%`)
+            safeLike(staff.name, criteria.keyword),
+            safeLike(staff.bio, criteria.keyword)
           ) ?? sql`1=1`
         )
       }
 
       // 専門分野で絞り込み
       if (criteria.specialties && criteria.specialties.length > 0) {
-        conditions.push(sql`${staff.specialties} && ${criteria.specialties}`)
+        conditions.push(
+          safeArrayOverlap(staff.specialties, criteria.specialties)
+        )
       }
 
       const whereClause = conditions.length > 0 ? and(...conditions) : undefined

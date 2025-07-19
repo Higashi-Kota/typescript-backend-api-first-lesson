@@ -12,6 +12,11 @@ import { authenticate } from '../middleware/auth.middleware.js'
 import type { UserRole } from '../middleware/auth.middleware.js'
 import { authRateLimiter } from '../middleware/rate-limit.js'
 import type { JwtService } from '../services/jwt.service.js'
+import {
+  checkPasswordStrength,
+  commonSchemas,
+  formatValidationErrors,
+} from '../utils/validation-helpers.js'
 
 // 認証関連の型定義
 export type LoginRequest = {
@@ -51,15 +56,15 @@ export type User = {
 
 // バリデーションスキーマ
 const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
+  email: commonSchemas.email,
+  password: z.string().min(1), // ログイン時は最小長のみチェック
 })
 
 const registerSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
-  name: z.string().min(1).max(100),
-  phoneNumber: z.string().regex(/^[+]?[\d-]+$/),
+  email: commonSchemas.email,
+  password: commonSchemas.password,
+  name: commonSchemas.name,
+  phoneNumber: commonSchemas.phoneNumber,
   role: z.enum(['customer', 'staff', 'admin']).optional(),
 })
 
@@ -92,10 +97,7 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
       // リクエストボディのバリデーション
       const parseResult = loginSchema.safeParse(req.body)
       if (!parseResult.success) {
-        return res.status(400).json({
-          code: 'INVALID_REQUEST',
-          message: 'Invalid login credentials',
-        })
+        return res.status(400).json(formatValidationErrors(parseResult.error))
       }
 
       const { email, password } = parseResult.data
@@ -157,14 +159,20 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
       // リクエストボディのバリデーション
       const parseResult = registerSchema.safeParse(req.body)
       if (!parseResult.success) {
-        return res.status(400).json({
-          code: 'INVALID_REQUEST',
-          message: 'Invalid registration data',
-          errors: parseResult.error.errors,
-        })
+        return res.status(400).json(formatValidationErrors(parseResult.error))
       }
 
       const { email, password, name, role = 'customer' } = parseResult.data
+
+      // パスワード強度チェック
+      const passwordStrength = checkPasswordStrength(password)
+      if (passwordStrength.score < 5) {
+        return res.status(400).json({
+          code: 'WEAK_PASSWORD',
+          message: 'Password is too weak',
+          details: passwordStrength.feedback,
+        })
+      }
 
       // 既存ユーザーのチェック
       const existingUser = await userRepository.findByEmail(email)

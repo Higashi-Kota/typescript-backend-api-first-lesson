@@ -3,8 +3,9 @@
  * Drizzle ORMを使用したリポジトリの実装
  */
 
-import { and, desc, eq, like, or, sql } from 'drizzle-orm'
+import { and, desc, eq, or, sql } from 'drizzle-orm'
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
+import { safeJsonbAccess, safeLike } from './security-patches'
 
 import type {
   CreateSalonRequest,
@@ -308,15 +309,15 @@ export class DrizzleSalonRepository implements SalonRepository {
       if (criteria.keyword) {
         conditions.push(
           or(
-            like(salons.name, `%${criteria.keyword}%`),
-            like(salons.description, `%${criteria.keyword}%`)
+            safeLike(salons.name, criteria.keyword),
+            safeLike(salons.description, criteria.keyword)
           ) ?? sql`1=1`
         )
       }
 
       // 都市で絞り込み
       if (criteria.city) {
-        conditions.push(sql`${salons.address}->>'city' = ${criteria.city}`)
+        conditions.push(safeJsonbAccess(salons.address, 'city', criteria.city))
       }
 
       const whereClause = conditions.length > 0 ? and(...conditions) : undefined
