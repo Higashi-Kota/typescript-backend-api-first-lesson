@@ -1,16 +1,13 @@
-export * from './database/index.js'
-export * from './database/schema.js'
+// Database connection
+export { getDb } from './database/index.js'
 
-// Repositories
-export * from './repositories/customer.repository.impl'
-export * from './repositories/salon.repository.impl'
-export * from './repositories/staff.repository.impl'
-export * from './repositories/service.repository.impl'
-export * from './repositories/reservation.repository.impl'
-export * from './repositories/booking.repository.impl'
-export * from './repositories/review.repository.impl'
-export * from './repositories/user.repository'
-export * from './repositories/session.repository'
+// Repository implementations
+export { DrizzleCustomerRepository } from './repositories/customer.repository.impl'
+export { DrizzleSalonRepository } from './repositories/salon.repository.impl'
+export { DrizzleReservationRepository } from './repositories/reservation.repository.impl'
+export { DrizzleReviewRepository } from './repositories/review.repository.impl'
+export { DrizzleUserRepository } from './repositories/user.repository'
+export { DrizzleSessionRepository } from './repositories/session.repository'
 
 // Services
-export * from './services/encryption.service.js'
+export { initializeEncryptionService } from './services/encryption.service.js'
