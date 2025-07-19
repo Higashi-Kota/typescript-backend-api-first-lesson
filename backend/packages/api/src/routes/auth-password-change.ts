@@ -13,6 +13,7 @@ import { match } from 'ts-pattern'
 import { z } from 'zod'
 import { authenticate } from '../middleware/auth.middleware.js'
 import type { AuthConfig } from '../middleware/auth.middleware.js'
+import { authRateLimiter } from '../middleware/rate-limit.js'
 
 // バリデーションスキーマ
 const passwordChangeSchema = z.object({
@@ -38,6 +39,7 @@ export const createPasswordChangeRoutes = (
    */
   router.post(
     '/change-password',
+    authRateLimiter,
     authenticate(authConfig),
     async (req, res, next) => {
       try {

@@ -15,6 +15,7 @@ import { Router } from 'express'
 import { match } from 'ts-pattern'
 import type { AuthConfig } from '../middleware/auth.middleware.js'
 import { authenticate } from '../middleware/auth.middleware.js'
+import { authRateLimiter } from '../middleware/rate-limit.js'
 
 export type TwoFactorRouteDeps = {
   userRepository: UserRepository
@@ -51,6 +52,7 @@ export const createTwoFactorRoutes = (deps: TwoFactorRouteDeps): Router => {
   // Enable 2FA - Step 1: Generate secret and QR code
   router.post(
     '/2fa/enable',
+    authRateLimiter,
     authenticate(deps.authConfig),
     async (req, res) => {
       const password = req.body.password as string
@@ -139,6 +141,7 @@ export const createTwoFactorRoutes = (deps: TwoFactorRouteDeps): Router => {
   // Get QR code for existing pending 2FA setup
   router.get(
     '/2fa/qr-code',
+    authRateLimiter,
     authenticate(deps.authConfig),
     async (req, res) => {
       const userResult = await deps.userRepository.findById(
@@ -184,6 +187,7 @@ export const createTwoFactorRoutes = (deps: TwoFactorRouteDeps): Router => {
   // Verify 2FA - Step 2: Verify TOTP code and enable 2FA
   router.post(
     '/2fa/verify',
+    authRateLimiter,
     authenticate(deps.authConfig),
     async (req, res) => {
       const code = req.body.code as string
@@ -260,6 +264,7 @@ export const createTwoFactorRoutes = (deps: TwoFactorRouteDeps): Router => {
   // Disable 2FA
   router.post(
     '/2fa/disable',
+    authRateLimiter,
     authenticate(deps.authConfig),
     async (req, res) => {
       const { password, code } = req.body as { password: string; code: string }
@@ -344,6 +349,7 @@ export const createTwoFactorRoutes = (deps: TwoFactorRouteDeps): Router => {
   // Regenerate backup codes
   router.post(
     '/2fa/backup-codes',
+    authRateLimiter,
     authenticate(deps.authConfig),
     async (req, res) => {
       const code = req.body.code as string

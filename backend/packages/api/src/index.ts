@@ -28,6 +28,7 @@ import type { StringValue } from 'ms'
 import { pinoHttp } from 'pino-http'
 import type { AuthConfig, UserRole } from './middleware/auth.middleware.js'
 import { errorHandler } from './middleware/error-handler'
+import { generalRateLimiter } from './middleware/rate-limit.js'
 import { requestId } from './middleware/request-id'
 import { createAccountLockRoutes } from './routes/auth-account-lock.js'
 import { createEmailVerificationRoutes } from './routes/auth-email-verification.js'
@@ -75,6 +76,9 @@ export const createApp = (deps: AppDependencies): Express => {
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
   app.use(requestId)
+
+  // グローバルレートリミット（すべてのAPIエンドポイントに適用）
+  app.use('/api/', generalRateLimiter)
 
   if (logger) {
     app.use(pinoHttp({ logger }))

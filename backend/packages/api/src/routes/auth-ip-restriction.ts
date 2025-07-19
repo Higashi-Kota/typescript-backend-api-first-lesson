@@ -11,6 +11,7 @@ import { Router } from 'express'
 import { match } from 'ts-pattern'
 import type { AuthConfig } from '../middleware/auth.middleware.js'
 import { authenticate, authorize } from '../middleware/auth.middleware.js'
+import { adminRateLimiter } from '../middleware/rate-limit.js'
 
 export type IpRestrictionRouteDeps = {
   userRepository: UserRepository
@@ -27,6 +28,7 @@ export const createIpRestrictionRoutes = (
   // Add trusted IP address (admin only)
   router.post(
     '/trusted-ip/:userId',
+    adminRateLimiter,
     authenticate(deps.authConfig),
     authorize('admin'),
     async (req, res) => {
@@ -126,6 +128,7 @@ export const createIpRestrictionRoutes = (
   // Remove trusted IP address (admin only)
   router.delete(
     '/trusted-ip/:userId',
+    adminRateLimiter,
     authenticate(deps.authConfig),
     authorize('admin'),
     async (req, res) => {
@@ -208,6 +211,7 @@ export const createIpRestrictionRoutes = (
   // Get trusted IPs for a user (admin only)
   router.get(
     '/trusted-ip/:userId',
+    adminRateLimiter,
     authenticate(deps.authConfig),
     authorize('admin'),
     async (req, res) => {
@@ -246,6 +250,7 @@ export const createIpRestrictionRoutes = (
   // Middleware to check IP restrictions on protected routes
   router.use(
     '/check-ip',
+    adminRateLimiter,
     authenticate(deps.authConfig),
     async (req, res, next) => {
       // Get client IP address

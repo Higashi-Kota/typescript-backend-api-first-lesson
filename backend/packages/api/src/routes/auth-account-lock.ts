@@ -7,6 +7,7 @@ import { Router } from 'express'
 import { match } from 'ts-pattern'
 import type { AuthConfig } from '../middleware/auth.middleware.js'
 import { authenticate, authorize } from '../middleware/auth.middleware.js'
+import { adminRateLimiter } from '../middleware/rate-limit.js'
 
 export type AccountLockRouteDeps = {
   userRepository: UserRepository
@@ -23,6 +24,7 @@ export const createAccountLockRoutes = (deps: AccountLockRouteDeps): Router => {
   // Admin endpoint to unlock a user account
   router.post(
     '/unlock/:userId',
+    adminRateLimiter,
     authenticate(deps.authConfig),
     authorize('admin'),
     async (req, res) => {
@@ -89,6 +91,7 @@ export const createAccountLockRoutes = (deps: AccountLockRouteDeps): Router => {
   // Get lock status for a user (admin only)
   router.get(
     '/lock-status/:userId',
+    adminRateLimiter,
     authenticate(deps.authConfig),
     authorize('admin'),
     async (req, res) => {

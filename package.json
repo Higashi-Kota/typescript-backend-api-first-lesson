@@ -24,6 +24,7 @@
     "lint": "pnpm -r run lint",
     "format": "pnpm -r run format",
     "format:fix": "pnpm -r run format:fix",
+    "format:check": "pnpm -r run format",
     "typecheck": "pnpm -r run typecheck",
     "clean": "pnpm -r run clean",
     "clean:all": "pnpm -r run clean && rm -rf node_modules **/node_modules",

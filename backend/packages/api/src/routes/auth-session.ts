@@ -23,6 +23,7 @@ import { Router } from 'express'
 import { match } from 'ts-pattern'
 import type { AuthConfig } from '../middleware/auth.middleware.js'
 import { authenticate } from '../middleware/auth.middleware.js'
+import { generalRateLimiter } from '../middleware/rate-limit.js'
 import type { JwtService } from '../services/jwt.service.js'
 
 export type SessionRouteDeps = {
@@ -36,45 +37,51 @@ export const createSessionRoutes = (deps: SessionRouteDeps): Router => {
   const router = Router()
 
   // Logout current session
-  router.post('/logout', authenticate(deps.authConfig), async (_req, res) => {
-    // For now, we'll use a placeholder session ID
-    // In a real implementation, this would come from the JWT payload
-    const sessionId = 'current-session' as SessionId
+  router.post(
+    '/logout',
+    generalRateLimiter,
+    authenticate(deps.authConfig),
+    async (_req, res) => {
+      // For now, we'll use a placeholder session ID
+      // In a real implementation, this would come from the JWT payload
+      const sessionId = 'current-session' as SessionId
 
-    const logoutDeps: LogoutDeps = {
-      sessionRepository: deps.sessionRepository,
+      const logoutDeps: LogoutDeps = {
+        sessionRepository: deps.sessionRepository,
+      }
+
+      const result = await logout({ sessionId }, logoutDeps)
+
+      match(result)
+        .with({ type: 'ok' }, () => {
+          res.json({
+            message: 'Logged out successfully',
+          })
+        })
+        .with({ type: 'err', error: { type: 'sessionNotFound' } }, () => {
+          res.status(404).json({
+            error: {
+              type: 'NOT_FOUND',
+              message: 'Session not found',
+            },
+          })
+        })
+        .with({ type: 'err', error: { type: 'databaseError' } }, () => {
+          res.status(500).json({
+            error: {
+              type: 'INTERNAL_SERVER_ERROR',
+              message: 'Internal server error',
+            },
+          })
+        })
+        .exhaustive()
     }
-
-    const result = await logout({ sessionId }, logoutDeps)
-
-    match(result)
-      .with({ type: 'ok' }, () => {
-        res.json({
-          message: 'Logged out successfully',
-        })
-      })
-      .with({ type: 'err', error: { type: 'sessionNotFound' } }, () => {
-        res.status(404).json({
-          error: {
-            type: 'NOT_FOUND',
-            message: 'Session not found',
-          },
-        })
-      })
-      .with({ type: 'err', error: { type: 'databaseError' } }, () => {
-        res.status(500).json({
-          error: {
-            type: 'INTERNAL_SERVER_ERROR',
-            message: 'Internal server error',
-          },
-        })
-      })
-      .exhaustive()
-  })
+  )
 
   // Logout all sessions
   router.post(
     '/logout-all',
+    generalRateLimiter,
     authenticate(deps.authConfig),
     async (req, res) => {
       const logoutAllDeps: LogoutAllDeps = {
@@ -106,7 +113,7 @@ export const createSessionRoutes = (deps: SessionRouteDeps): Router => {
   )
 
   // Refresh token
-  router.post('/refresh', async (req, res) => {
+  router.post('/refresh', generalRateLimiter, async (req, res) => {
     const { refreshToken: token } = req.body as { refreshToken: string }
 
     if (!token) {
@@ -196,38 +203,44 @@ export const createSessionRoutes = (deps: SessionRouteDeps): Router => {
   })
 
   // Get active sessions
-  router.get('/sessions', authenticate(deps.authConfig), async (req, res) => {
-    const getSessionsDeps: GetSessionsDeps = {
-      sessionRepository: deps.sessionRepository,
-      currentSessionId: 'current-session', // Placeholder
+  router.get(
+    '/sessions',
+    generalRateLimiter,
+    authenticate(deps.authConfig),
+    async (req, res) => {
+      const getSessionsDeps: GetSessionsDeps = {
+        sessionRepository: deps.sessionRepository,
+        currentSessionId: 'current-session', // Placeholder
+      }
+
+      const result = await getSessions(
+        { userId: req.user?.id as UserId },
+        getSessionsDeps
+      )
+
+      match(result)
+        .with({ type: 'ok' }, ({ value }) => {
+          res.json({
+            sessions: value.sessions,
+            total: value.total,
+          })
+        })
+        .with({ type: 'err', error: { type: 'databaseError' } }, () => {
+          res.status(500).json({
+            error: {
+              type: 'INTERNAL_SERVER_ERROR',
+              message: 'Internal server error',
+            },
+          })
+        })
+        .exhaustive()
     }
-
-    const result = await getSessions(
-      { userId: req.user?.id as UserId },
-      getSessionsDeps
-    )
-
-    match(result)
-      .with({ type: 'ok' }, ({ value }) => {
-        res.json({
-          sessions: value.sessions,
-          total: value.total,
-        })
-      })
-      .with({ type: 'err', error: { type: 'databaseError' } }, () => {
-        res.status(500).json({
-          error: {
-            type: 'INTERNAL_SERVER_ERROR',
-            message: 'Internal server error',
-          },
-        })
-      })
-      .exhaustive()
-  })
+  )
 
   // Revoke specific session
   router.delete(
     '/sessions/:sessionId',
+    generalRateLimiter,
     authenticate(deps.authConfig),
     async (req, res) => {
       const sessionId = req.params.sessionId as SessionId

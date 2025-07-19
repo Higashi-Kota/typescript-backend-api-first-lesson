@@ -10,6 +10,7 @@ import { Router } from 'express'
 import { z } from 'zod'
 import { authenticate } from '../middleware/auth.middleware.js'
 import type { UserRole } from '../middleware/auth.middleware.js'
+import { authRateLimiter } from '../middleware/rate-limit.js'
 import type { JwtService } from '../services/jwt.service.js'
 
 // 認証関連の型定義
@@ -86,7 +87,7 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
   /**
    * POST /auth/login - ログイン
    */
-  router.post('/login', async (req, res, next) => {
+  router.post('/login', authRateLimiter, async (req, res, next) => {
     try {
       // リクエストボディのバリデーション
       const parseResult = loginSchema.safeParse(req.body)
@@ -151,7 +152,7 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
   /**
    * POST /auth/register - ユーザー登録
    */
-  router.post('/register', async (req, res, next) => {
+  router.post('/register', authRateLimiter, async (req, res, next) => {
     try {
       // リクエストボディのバリデーション
       const parseResult = registerSchema.safeParse(req.body)

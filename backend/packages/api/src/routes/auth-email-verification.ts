@@ -14,6 +14,7 @@ import { match } from 'ts-pattern'
 import { z } from 'zod'
 import { authenticate } from '../middleware/auth.middleware.js'
 import type { AuthConfig } from '../middleware/auth.middleware.js'
+import { authRateLimiter } from '../middleware/rate-limit.js'
 
 // バリデーションスキーマ
 const emailVerificationRequestSchema = z.object({
@@ -38,6 +39,7 @@ export const createEmailVerificationRoutes = (
    */
   router.post(
     '/verify-email/send',
+    authRateLimiter,
     authenticate(authConfig),
     async (req, res, next) => {
       try {
@@ -115,69 +117,76 @@ export const createEmailVerificationRoutes = (
   /**
    * POST /auth/verify-email/confirm - メール検証確認
    */
-  router.post('/verify-email/confirm', async (req, res, next) => {
-    try {
-      // リクエストボディのバリデーション
-      const parseResult = emailVerificationRequestSchema.safeParse(req.body)
-      if (!parseResult.success) {
-        const error: components['schemas']['Models.Error'] = {
-          code: 'VALIDATION_ERROR',
-          message: 'Invalid request data',
-          details: parseResult.error.flatten(),
+  router.post(
+    '/verify-email/confirm',
+    authRateLimiter,
+    async (req, res, next) => {
+      try {
+        // リクエストボディのバリデーション
+        const parseResult = emailVerificationRequestSchema.safeParse(req.body)
+        if (!parseResult.success) {
+          const error: components['schemas']['Models.Error'] = {
+            code: 'VALIDATION_ERROR',
+            message: 'Invalid request data',
+            details: parseResult.error.flatten(),
+          }
+          return res.status(400).json(error)
         }
-        return res.status(400).json(error)
-      }
 
-      const { token } = parseResult.data
+        const { token } = parseResult.data
 
-      // メール検証確認処理
-      const result = await confirmEmailVerificationUseCase(
-        { token },
-        { userRepository }
-      )
+        // メール検証確認処理
+        const result = await confirmEmailVerificationUseCase(
+          { token },
+          { userRepository }
+        )
 
-      // パターンマッチングでレスポンス
-      return match(result)
-        .with({ type: 'ok' }, () => {
-          const response: components['schemas']['Models.AuthSuccessResponse'] =
-            {
-              message: 'Email has been verified successfully',
+        // パターンマッチングでレスポンス
+        return match(result)
+          .with({ type: 'ok' }, () => {
+            const response: components['schemas']['Models.AuthSuccessResponse'] =
+              {
+                message: 'Email has been verified successfully',
+              }
+            res.status(200).json(response)
+          })
+          .with({ type: 'err', error: { type: 'invalidToken' } }, () => {
+            const error: components['schemas']['Models.Error'] = {
+              code: 'INVALID_TOKEN',
+              message: 'Invalid or expired verification token',
             }
-          res.status(200).json(response)
-        })
-        .with({ type: 'err', error: { type: 'invalidToken' } }, () => {
-          const error: components['schemas']['Models.Error'] = {
-            code: 'INVALID_TOKEN',
-            message: 'Invalid or expired verification token',
-          }
-          res.status(400).json(error)
-        })
-        .with({ type: 'err', error: { type: 'tokenExpired' } }, () => {
-          const error: components['schemas']['Models.Error'] = {
-            code: 'INVALID_TOKEN',
-            message: 'Invalid or expired verification token',
-          }
-          res.status(400).json(error)
-        })
-        .with({ type: 'err', error: { type: 'emailAlreadyVerified' } }, () => {
-          const error: components['schemas']['Models.Error'] = {
-            code: 'EMAIL_ALREADY_VERIFIED',
-            message: 'Email is already verified',
-          }
-          res.status(400).json(error)
-        })
-        .with({ type: 'err' }, () => {
-          const error: components['schemas']['Models.Error'] = {
-            code: 'INTERNAL_ERROR',
-            message: 'An error occurred while verifying email',
-          }
-          res.status(500).json(error)
-        })
-        .exhaustive()
-    } catch (error) {
-      next(error)
+            res.status(400).json(error)
+          })
+          .with({ type: 'err', error: { type: 'tokenExpired' } }, () => {
+            const error: components['schemas']['Models.Error'] = {
+              code: 'INVALID_TOKEN',
+              message: 'Invalid or expired verification token',
+            }
+            res.status(400).json(error)
+          })
+          .with(
+            { type: 'err', error: { type: 'emailAlreadyVerified' } },
+            () => {
+              const error: components['schemas']['Models.Error'] = {
+                code: 'EMAIL_ALREADY_VERIFIED',
+                message: 'Email is already verified',
+              }
+              res.status(400).json(error)
+            }
+          )
+          .with({ type: 'err' }, () => {
+            const error: components['schemas']['Models.Error'] = {
+              code: 'INTERNAL_ERROR',
+              message: 'An error occurred while verifying email',
+            }
+            res.status(500).json(error)
+          })
+          .exhaustive()
+      } catch (error) {
+        next(error)
+      }
     }
-  })
+  )
 
   return router
 }

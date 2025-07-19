@@ -7,7 +7,7 @@
         frontend-preview-test frontend-preview-stg frontend-preview-prod \
         backend-start-test backend-start-stg backend-start-prod \
         preview-test preview-stg preview-prod \
-        frontend-analyze
+        frontend-analyze ci-check
 
 # Default target
 help:
@@ -31,6 +31,7 @@ help:
 	@echo "  make lint          - Run linter"
 	@echo "  make format        - Format code"
 	@echo "  make typecheck     - Run type checking"
+	@echo "  make ci-check      - Run all CI checks locally"
 	@echo ""
 	@echo "Cleanup:"
 	@echo "  make clean         - Clean build artifacts"
@@ -64,9 +65,13 @@ install:
 
 # Frontend Development
 frontend-build:
-	@echo "Cleaning previous frontend builds..."
+	@echo "Step 1/4: Generating API specifications and types..."
+	pnpm generate
+	@echo "Step 2/4: Formatting generated files..."
+	pnpm format:fix
+	@echo "Step 3/4: Cleaning previous frontend builds..."
 	pnpm --filter './frontend/**' run clean
-	@echo "Building frontend packages with dependency resolution..."
+	@echo "Step 4/4: Building frontend packages with dependency resolution..."
 	@echo "Using pnpm workspace topology to build in correct order..."
 	pnpm --filter './frontend/**' run build:dev
 	@echo "Frontend build complete!"
@@ -77,13 +82,17 @@ frontend-dev:
 
 # Backend build and run
 backend-build:
-	@echo "Cleaning previous builds..."
+	@echo "Step 1/6: Generating API specifications and types..."
+	pnpm generate
+	@echo "Step 2/6: Formatting generated files..."
+	pnpm format:fix
+	@echo "Step 3/6: Cleaning previous builds..."
 	pnpm --filter './backend/**' run clean
-	@echo "Building backend packages sequentially..."
+	@echo "Step 4/6: Building backend packages sequentially..."
 	pnpm build:backend:packages
-	@echo "Waiting for build to stabilize..."
+	@echo "Step 5/6: Waiting for build to stabilize..."
 	@sleep 2
-	@echo "Building backend server..."
+	@echo "Step 6/6: Building backend server..."
 	pnpm build:backend:server
 	@echo "Backend build complete!"
 
@@ -163,18 +172,30 @@ db-reset:
 
 # Frontend build targets for different environments
 frontend-build-test:
+	@echo "Generating API specifications and types..."
+	pnpm generate
+	@echo "Formatting generated files..."
+	pnpm format:fix
 	@echo "Building frontend for TEST environment..."
 	pnpm --filter './frontend/**' run clean
 	pnpm --filter './frontend/**' run build:test
 	@echo "Frontend TEST build complete!"
 
 frontend-build-stg:
+	@echo "Generating API specifications and types..."
+	pnpm generate
+	@echo "Formatting generated files..."
+	pnpm format:fix
 	@echo "Building frontend for STAGING environment..."
 	pnpm --filter './frontend/**' run clean
 	pnpm --filter './frontend/**' run build:stg
 	@echo "Frontend STAGING build complete!"
 
 frontend-build-prod:
+	@echo "Generating API specifications and types..."
+	pnpm generate
+	@echo "Formatting generated files..."
+	pnpm format:fix
 	@echo "Building frontend for PRODUCTION environment..."
 	pnpm --filter './frontend/**' run clean
 	pnpm --filter './frontend/**' run build:prod
@@ -182,6 +203,10 @@ frontend-build-prod:
 
 # Backend build targets for different environments
 backend-build-test:
+	@echo "Generating API specifications and types..."
+	pnpm generate
+	@echo "Formatting generated files..."
+	pnpm format:fix
 	@echo "Building backend for TEST environment..."
 	pnpm --filter './backend/**' run clean
 	NODE_ENV=test pnpm build:backend:packages
@@ -190,6 +215,10 @@ backend-build-test:
 	@echo "Backend TEST build complete!"
 
 backend-build-stg:
+	@echo "Generating API specifications and types..."
+	pnpm generate
+	@echo "Formatting generated files..."
+	pnpm format:fix
 	@echo "Building backend for STAGING environment..."
 	pnpm --filter './backend/**' run clean
 	NODE_ENV=staging pnpm build:backend:packages
@@ -198,6 +227,10 @@ backend-build-stg:
 	@echo "Backend STAGING build complete!"
 
 backend-build-prod:
+	@echo "Generating API specifications and types..."
+	pnpm generate
+	@echo "Formatting generated files..."
+	pnpm format:fix
 	@echo "Building backend for PRODUCTION environment..."
 	pnpm --filter './backend/**' run clean
 	NODE_ENV=production pnpm build:backend:packages
@@ -294,3 +327,41 @@ preview-prod: backend-start-prod frontend-preview-prod
 frontend-analyze:
 	@echo "Analyzing frontend bundle sizes..."
 	pnpm --filter './frontend/apps/*' run build:analyze
+
+# CI Check - Runs all checks that CI would run
+ci-check:
+	@echo "======================================"
+	@echo "Running CI checks locally..."
+	@echo "======================================"
+	@echo ""
+	@echo "Step 1/7: Code formatting check..."
+	@pnpm format:check || (echo "❌ Formatting check failed. Run 'make format:fix' to fix." && exit 1)
+	@echo "✅ Formatting check passed"
+	@echo ""
+	@echo "Step 2/7: Linting..."
+	@pnpm lint || (echo "❌ Linting failed. Run 'make lint' to see errors." && exit 1)
+	@echo "✅ Linting passed"
+	@echo ""
+	@echo "Step 3/7: Type checking..."
+	@pnpm typecheck || (echo "❌ Type checking failed." && exit 1)
+	@echo "✅ Type checking passed"
+	@echo ""
+	@echo "Step 4/7: API specification generation..."
+	@pnpm generate:spec || (echo "❌ TypeSpec compilation failed." && exit 1)
+	@echo "✅ API specification generated successfully"
+	@echo ""
+	@echo "Step 5/7: API client generation..."
+	@pnpm generate:api || (echo "❌ API client generation failed." && exit 1)
+	@echo "✅ API client generated successfully"
+	@echo ""
+	@echo "Step 6/7: Security audit..."
+	@pnpm audit --audit-level=high || (echo "❌ Security vulnerabilities found." && exit 1)
+	@echo "✅ No high severity vulnerabilities found"
+	@echo ""
+	@echo "Step 7/7: Building all packages..."
+	@$(MAKE) build || (echo "❌ Build failed." && exit 1)
+	@echo "✅ Build completed successfully"
+	@echo ""
+	@echo "======================================"
+	@echo "✅ All CI checks passed!"
+	@echo "======================================"
