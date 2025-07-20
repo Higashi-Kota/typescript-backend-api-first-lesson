@@ -49,7 +49,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:16
+        image: postgres:15-alpine
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -61,6 +61,7 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
+      
 
     steps:
       - name: Checkout
@@ -83,13 +84,19 @@ jobs:
       - name: Copy test environment variables
         run: cp .env.test.example .env.test
 
-      - name: Run unit tests
-        run: pnpm test
+      - name: Setup test database extensions
+        run: |
+          PGPASSWORD=postgres psql -h localhost -U postgres -d beauty_salon_test -c "CREATE EXTENSION IF NOT EXISTS pgcrypto;"
+          PGPASSWORD=postgres psql -h localhost -U postgres -d beauty_salon_test -c "CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";"
 
-      - name: Run integration tests
-        run: pnpm test:integration
+      - name: Run backend tests
+        run: |
+          cd backend
+          pnpm test run
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/beauty_salon_test
+          CI: true
+          NODE_ENV: test
 
   build:
     name: Build

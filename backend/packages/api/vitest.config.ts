@@ -5,6 +5,22 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
+    env: {
+      NODE_ENV: 'development',
+    },
+    // Timeout settings for integration tests
+    testTimeout: 60000, // 60 seconds for individual tests
+    hookTimeout: 120000, // 120 seconds for hooks (beforeAll, afterAll)
+    // Disable parallel execution for integration tests to avoid port conflicts
+    pool: 'forks',
+    poolOptions: {
+      forks: {
+        singleFork: true,
+      },
+    },
+    // Global setup/teardown
+    globalSetup: './src/__tests__/setup/global-setup.ts',
+    globalTeardown: './src/__tests__/setup/global-teardown.ts',
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],

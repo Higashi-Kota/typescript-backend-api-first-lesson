@@ -27,6 +27,14 @@ export function escapeLikePattern(pattern: string): string {
  * @returns 安全なSQLフラグメント
  */
 export function safeLike(column: AnyColumn, pattern: string): SQL {
+  // パターンに%が含まれている場合は、ユーザーが意図的にワイルドカードを使っているとみなす
+  if (pattern.includes('%') || pattern.includes('_')) {
+    // 危険な文字（バックスラッシュ）のみエスケープ
+    const safePattern = pattern.replace(/\\/g, '\\\\')
+    return sql`${column} LIKE ${safePattern}`
+  }
+
+  // %や_が含まれていない場合は、前後に%を追加して部分一致検索
   const escapedPattern = escapeLikePattern(pattern)
   return sql`${column} LIKE ${`%${escapedPattern}%`}`
 }

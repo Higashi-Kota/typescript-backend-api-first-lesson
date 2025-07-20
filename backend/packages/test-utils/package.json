@@ -1,0 +1,36 @@
+{
+  "name": "@beauty-salon-backend/test-utils",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check --write .",
+    "lint:check": "biome check ."
+  },
+  "dependencies": {
+    "@beauty-salon-backend/domain": "workspace:*",
+    "@testcontainers/postgresql": "^10.20.3",
+    "testcontainers": "^10.20.3",
+    "drizzle-orm": "^0.44.2",
+    "postgres": "^3.4.7",
+    "ts-pattern": "^5.5.0",
+    "uuid": "^11.0.6"
+  },
+  "devDependencies": {
+    "@types/node": "^22.12.1",
+    "@types/uuid": "^10.0.0",
+    "vitest": "^3.2.4"
+  }
+}

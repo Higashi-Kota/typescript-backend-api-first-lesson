@@ -10,6 +10,7 @@
     "build:server": "pnpm --filter '@beauty-salon-backend/server' run build",
     "start:prod": "pnpm --filter '@beauty-salon-backend/server' run start",
     "test": "pnpm -r run test",
+    "test:ci": "vitest run --config vitest.config.ci.ts",
     "format": "biome format --write .",
     "format:fix": "biome check . --fix --unsafe",
     "lint": "biome lint .",

@@ -63,6 +63,7 @@
   },
   "devDependencies": {
     "@beauty-salon-shared/config": "workspace:*",
+    "@beauty-salon-backend/test-utils": "workspace:*",
     "@biomejs/biome": "^1.9.4",
     "@rslib/core": "^0.10.5",
     "@testcontainers/postgresql": "^11.2.1",

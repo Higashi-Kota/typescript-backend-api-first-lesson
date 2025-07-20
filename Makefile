@@ -7,7 +7,7 @@
         frontend-preview-test frontend-preview-stg frontend-preview-prod \
         backend-start-test backend-start-stg backend-start-prod \
         preview-test preview-stg preview-prod \
-        frontend-analyze ci-check
+        frontend-analyze ci-check test-backend test-backend-ci
 
 # Default target
 help:
@@ -111,6 +111,16 @@ build:
 
 test:
 	pnpm test
+
+# Backend test for local development (with testcontainers)
+test-backend:
+	@echo "Running backend tests with testcontainers..."
+	pnpm --filter "@beauty-salon-backend/domain" --filter "@beauty-salon-backend/infrastructure" --filter "@beauty-salon-backend/api" test
+
+# Backend test for CI environment (optimized for speed)
+test-backend-ci:
+	@echo "Running backend tests in CI mode..."
+	CI=true NODE_ENV=test pnpm --filter "@beauty-salon-backend/domain" --filter "@beauty-salon-backend/infrastructure" --filter "@beauty-salon-backend/api" test
 
 lint:
 	pnpm lint
@@ -335,33 +345,37 @@ ci-check:
 	@echo "Running CI checks locally..."
 	@echo "======================================"
 	@echo ""
-	@echo "Step 1/7: Code formatting check..."
+	@echo "Step 1/8: Code formatting check..."
 	@pnpm format:check || (echo "❌ Formatting check failed. Run 'make format:fix' to fix." && exit 1)
 	@echo "✅ Formatting check passed"
 	@echo ""
-	@echo "Step 2/7: Linting..."
+	@echo "Step 2/8: Linting..."
 	@pnpm lint || (echo "❌ Linting failed. Run 'make lint' to see errors." && exit 1)
 	@echo "✅ Linting passed"
 	@echo ""
-	@echo "Step 3/7: Type checking..."
+	@echo "Step 3/8: Type checking..."
 	@pnpm typecheck || (echo "❌ Type checking failed." && exit 1)
 	@echo "✅ Type checking passed"
 	@echo ""
-	@echo "Step 4/7: API specification generation..."
+	@echo "Step 4/8: API specification generation..."
 	@pnpm generate:spec || (echo "❌ TypeSpec compilation failed." && exit 1)
 	@echo "✅ API specification generated successfully"
 	@echo ""
-	@echo "Step 5/7: API client generation..."
+	@echo "Step 5/8: API client generation..."
 	@pnpm generate:api || (echo "❌ API client generation failed." && exit 1)
 	@echo "✅ API client generated successfully"
 	@echo ""
-	@echo "Step 6/7: Security audit..."
+	@echo "Step 6/8: Security audit..."
 	@pnpm audit --audit-level=high || (echo "❌ Security vulnerabilities found." && exit 1)
 	@echo "✅ No high severity vulnerabilities found"
 	@echo ""
-	@echo "Step 7/7: Building all packages..."
+	@echo "Step 7/8: Building all packages..."
 	@$(MAKE) build || (echo "❌ Build failed." && exit 1)
 	@echo "✅ Build completed successfully"
+	@echo ""
+	@echo "Step 8/8: Running backend tests..."
+	@$(MAKE) test-backend-ci || (echo "❌ Backend tests failed." && exit 1)
+	@echo "✅ Backend tests passed"
 	@echo ""
 	@echo "======================================"
 	@echo "✅ All CI checks passed!"
