@@ -32,6 +32,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build all packages
+        run: pnpm build
+
       - name: Run Biome lint
         run: pnpm lint
 
@@ -80,6 +83,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Build packages for tests
+        run: pnpm build
 
       - name: Copy test environment variables
         run: cp .env.test.example .env.test
