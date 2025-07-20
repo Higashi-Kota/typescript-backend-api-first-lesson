@@ -122,6 +122,11 @@ test-backend-ci:
 	@echo "Running backend tests in CI mode..."
 	CI=true NODE_ENV=test pnpm --filter "@beauty-salon-backend/domain" --filter "@beauty-salon-backend/infrastructure" --filter "@beauty-salon-backend/api" test
 
+# Frontend test
+test-frontend:
+	@echo "Running frontend tests..."
+	pnpm test:frontend
+
 lint:
 	pnpm lint
 
@@ -345,37 +350,41 @@ ci-check:
 	@echo "Running CI checks locally..."
 	@echo "======================================"
 	@echo ""
-	@echo "Step 1/8: Code formatting check..."
+	@echo "Step 1/9: Code formatting check..."
 	@pnpm format:check || (echo "❌ Formatting check failed. Run 'make format:fix' to fix." && exit 1)
 	@echo "✅ Formatting check passed"
 	@echo ""
-	@echo "Step 2/8: Linting..."
+	@echo "Step 2/9: Linting..."
 	@pnpm lint || (echo "❌ Linting failed. Run 'make lint' to see errors." && exit 1)
 	@echo "✅ Linting passed"
 	@echo ""
-	@echo "Step 3/8: Type checking..."
+	@echo "Step 3/9: Type checking..."
 	@pnpm typecheck || (echo "❌ Type checking failed." && exit 1)
 	@echo "✅ Type checking passed"
 	@echo ""
-	@echo "Step 4/8: API specification generation..."
+	@echo "Step 4/9: API specification generation..."
 	@pnpm generate:spec || (echo "❌ TypeSpec compilation failed." && exit 1)
 	@echo "✅ API specification generated successfully"
 	@echo ""
-	@echo "Step 5/8: API client generation..."
+	@echo "Step 5/9: API client generation..."
 	@pnpm generate:api || (echo "❌ API client generation failed." && exit 1)
 	@echo "✅ API client generated successfully"
 	@echo ""
-	@echo "Step 6/8: Security audit..."
+	@echo "Step 6/9: Security audit..."
 	@pnpm audit --audit-level=high || (echo "❌ Security vulnerabilities found." && exit 1)
 	@echo "✅ No high severity vulnerabilities found"
 	@echo ""
-	@echo "Step 7/8: Building all packages..."
+	@echo "Step 7/9: Building all packages..."
 	@$(MAKE) build || (echo "❌ Build failed." && exit 1)
 	@echo "✅ Build completed successfully"
 	@echo ""
-	@echo "Step 8/8: Running backend tests..."
+	@echo "Step 8/9: Running backend tests..."
 	@$(MAKE) test-backend-ci || (echo "❌ Backend tests failed." && exit 1)
 	@echo "✅ Backend tests passed"
+	@echo ""
+	@echo "Step 9/9: Running frontend tests..."
+	@$(MAKE) test-frontend || (echo "❌ Frontend tests failed." && exit 1)
+	@echo "✅ Frontend tests passed"
 	@echo ""
 	@echo "======================================"
 	@echo "✅ All CI checks passed!"
