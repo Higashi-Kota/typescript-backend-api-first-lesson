@@ -42,6 +42,7 @@ import {
   errorLoggingMiddleware,
   loggingMiddleware,
 } from './middleware/logging.js'
+import { metricsHandler, metricsMiddleware } from './middleware/metrics.js'
 import { generalRateLimiter } from './middleware/rate-limit.js'
 import { requestId } from './middleware/request-id'
 import { xssProtectionWithExclusions } from './middleware/xss-protection.js'
@@ -58,6 +59,7 @@ import { createSessionRoutes } from './routes/auth-session.js'
 import { createTwoFactorRoutes } from './routes/auth-two-factor.js'
 import { createAuthRoutes } from './routes/auth.js'
 import { createCustomerRoutes } from './routes/customers.js'
+import { healthRouter } from './routes/health.js'
 import { createReservationRoutes } from './routes/reservations.js'
 import { createReviewRoutes } from './routes/reviews.js'
 import { createSalonRoutes } from './routes/salons.js'
@@ -85,6 +87,14 @@ export const createApp = (deps: AppDependencies): Express => {
     jwtAccessTokenExpiresIn,
     jwtRefreshTokenExpiresIn,
   } = deps
+
+  // Sentryの初期化
+  const { createSentryService } = require('./services/sentry.service.js')
+  const sentryService = createSentryService()
+  const sentryInit = sentryService.init()
+  if (sentryInit.type === 'err') {
+    console.warn('Failed to initialize Sentry:', sentryInit.error.message)
+  }
 
   // 暗号化サービスの初期化（機密情報の保護）
   const encryptionKey =
@@ -208,10 +218,14 @@ export const createApp = (deps: AppDependencies): Express => {
     app.use(pinoHttp({ logger }))
   }
 
+  // Metrics middleware
+  app.use(metricsMiddleware)
+
   // ヘルスチェック
-  app.get('/health', (_req, res) => {
-    res.json({ status: 'ok', timestamp: new Date().toISOString() })
-  })
+  app.use('/health', healthRouter)
+
+  // Prometheusメトリクスエンドポイント
+  app.get('/metrics', metricsHandler)
 
   // CSRFトークン取得エンドポイント
   app.get('/api/v1/csrf-token', csrfTokenHandler)

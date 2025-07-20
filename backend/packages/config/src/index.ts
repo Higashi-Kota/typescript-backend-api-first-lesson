@@ -141,6 +141,7 @@ export const env = createEnv({
     R2_SECRET_ACCESS_KEY: z.string().optional(),
 
     // Storage Common
+    STORAGE_ENDPOINT: z.string().url().optional(),
     STORAGE_MAX_FILE_SIZE: z.coerce
       .number()
       .int()
@@ -179,6 +180,12 @@ export const env = createEnv({
     S3_SECRET_ACCESS_KEY: z.string().optional(),
     S3_BUCKET: z.string().optional(),
     S3_REGION: z.string().default('us-east-1'),
+
+    // Sentry Error Monitoring
+    SENTRY_DSN: z.string().url().optional(),
+    SENTRY_ENVIRONMENT: z.string().optional(),
+    SENTRY_RELEASE: z.string().optional(),
+    SENTRY_TRACES_SAMPLE_RATE: z.coerce.number().min(0).max(1).optional(),
   },
   runtimeEnv: process.env,
   emptyStringAsUndefined: true,

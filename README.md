@@ -215,13 +215,25 @@ make install
 # 2. 環境変数の設定
 cp .env.example .env
 
-# 3. 必要なサービスの起動（PostgreSQL, MailHog, MinIO）
+# 3. 必要なサービスの起動（PostgreSQL, MailHog, MinIO, Prometheus, Grafana）
 make docker-up
 
 # 4. データベースのセットアップ
 make db-migrate
 make db-seed  # サンプルデータの投入（任意）
 ```
+
+### サービスへのアクセス
+
+開発環境では以下のサービスが利用可能です：
+
+- **バックエンドAPI**: http://localhost:4010
+- **フロントエンド**: http://localhost:3001
+- **MailHog** (メール確認): http://localhost:8025
+- **MinIO** (オブジェクトストレージ): http://localhost:9001
+- **Prometheus** (メトリクス監視): http://localhost:9090
+- **Grafana** (ダッシュボード): http://localhost:3100 (初期認証: admin/admin)
+- **PostgreSQL Exporter** (DBメトリクス): http://localhost:9187/metrics
 
 ### バックエンド開発
 
@@ -755,10 +767,19 @@ PGPASSWORD=postgres psql -h localhost -U postgres -d beauty_salon -c "\dt"
   - [x] プロバイダー切り替え（Development/MailHog/Mailgun）
 - [x] ロギングとモニタリング
   - [x] 構造化ログの実装（Sum型ベース）
-  - [ ] エラートラッキング（Sentry等）
-  - [ ] メトリクス収集（Prometheus等）
+  - [x] エラートラッキング（Sentry）
+    - [x] Sentryインテグレーションサービス（Sum型によるエラー分類）
+    - [x] エラーコンテキスト自動収集（セキュリティ配慮）
+    - [x] エラーハンドラーミドルウェアとの統合
+    - [x] 構造化ログとの相関ID連携
+  - [x] メトリクス収集（Prometheus）
+    - [x] Prometheusクライアント実装（Sum型によるメトリクス定義）
+    - [x] APIメトリクスミドルウェア（リクエスト数、レスポンスタイム、エラー率）
+    - [x] ビジネスメトリクスサービス（予約数、売上、顧客満足度等）
+    - [x] ヘルスチェックエンドポイント（/health、/health/ready）
+    - [x] PrometheusとGrafanaのDocker統合
 
-### テスト（据え置きで一旦スキップ）
+### テスト
 - [ ] 統合テスト（testcontainers）
   - [ ] リポジトリ層の統合テスト
   - [ ] APIエンドポイントのE2Eテスト

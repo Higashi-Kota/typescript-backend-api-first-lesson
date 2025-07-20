@@ -5,7 +5,15 @@
 
 import type { Logger } from 'pino'
 import { P, match } from 'ts-pattern'
+import { v4 as uuidv4 } from 'uuid'
+import {
+  type SentryErrorEvent,
+  createSentryService,
+} from '../services/sentry.service.js'
 import { logger as pinoLogger } from './logger.js'
+
+// Sentryサービスのシングルトンインスタンス
+const sentryService = createSentryService()
 
 // ログイベントをSum型で表現
 export type LogEvent =
@@ -18,6 +26,17 @@ export type LogEvent =
     }
   | { type: 'response'; statusCode: number; duration: number; path: string }
   | { type: 'error'; error: Error; context?: Record<string, unknown> }
+  | {
+      type: 'unhandledError'
+      error: Error
+      request?: {
+        method: string
+        path: string
+        query?: unknown
+        body?: unknown
+      }
+      user?: { id: string; email: string }
+    }
   | { type: 'business'; action: string; details: Record<string, unknown> }
   | { type: 'security'; event: SecurityEvent }
   | { type: 'database'; operation: DatabaseOperation }
@@ -101,6 +120,7 @@ export function getLogLevel(event: LogEvent): string {
     )
     .with({ type: 'response' }, () => 'info')
     .with({ type: 'error' }, () => 'error')
+    .with({ type: 'unhandledError' }, () => 'error')
     .with({ type: 'business' }, () => 'info')
     .with({ type: 'security', event: { kind: 'authFailure' } }, () => 'warn')
     .with(
@@ -146,6 +166,11 @@ export function formatLogMessage(event: LogEvent): string {
         `Response ${statusCode} - ${path} - ${duration}ms`
     )
     .with({ type: 'error' }, ({ error }) => `Error: ${error.message}`)
+    .with(
+      { type: 'unhandledError' },
+      ({ error, request }) =>
+        `Unhandled error${request ? ` at ${request.method} ${request.path}` : ''}: ${error.message}`
+    )
     .with({ type: 'business' }, ({ action }) => `Business action: ${action}`)
     .with(
       { type: 'security', event: { kind: 'authFailure' } },
@@ -267,6 +292,15 @@ export function getLogContext(event: LogEvent): Record<string, unknown> {
       },
       ...e.context,
     }))
+    .with({ type: 'unhandledError' }, (e) => ({
+      error: {
+        name: e.error.name,
+        message: e.error.message,
+        stack: e.error.stack,
+      },
+      ...(e.request && { request: e.request }),
+      ...(e.user && { user: e.user }),
+    }))
     .with({ type: 'business' }, (e) => ({
       action: e.action,
       ...e.details,
@@ -289,15 +323,32 @@ export function getLogContext(event: LogEvent): Record<string, unknown> {
 // 構造化ログクラス
 export class StructuredLogger {
   private logger: Logger
+  private correlationId: string | undefined
+  private readonly module: string
 
   constructor(moduleName: string) {
+    this.module = moduleName
     this.logger = pinoLogger.child({ module: moduleName })
+  }
+
+  // 相関IDの設定（リクエスト単位でトレース）
+  setCorrelationId(id: string): void {
+    this.correlationId = id
+  }
+
+  // 新しい相関IDを生成
+  generateCorrelationId(): string {
+    this.correlationId = uuidv4()
+    return this.correlationId
   }
 
   log(event: LogEvent): void {
     const level = getLogLevel(event)
     const message = formatLogMessage(event)
-    const context = getLogContext(event)
+    const context = {
+      ...getLogContext(event),
+      ...(this.correlationId && { correlationId: this.correlationId }),
+    }
 
     // Use the appropriate logging method based on level
     switch (level) {
@@ -306,6 +357,8 @@ export class StructuredLogger {
         break
       case 'error':
         this.logger.error(context, message)
+        // Sentryへのエラー送信
+        this.sendErrorToSentry(event)
         break
       case 'warn':
         this.logger.warn(context, message)
@@ -335,6 +388,65 @@ export class StructuredLogger {
 
   logError(error: Error, context?: Record<string, unknown>): void {
     this.log({ type: 'error', error, context })
+  }
+
+  // unhandledErrorの場合の特別なログメソッド
+  logUnhandledError(
+    error: Error,
+    request?: { method: string; path: string; query?: unknown; body?: unknown },
+    user?: { id: string; email: string }
+  ): void {
+    this.log({ type: 'unhandledError', error, request, user })
+  }
+
+  // Sentryへのエラー送信
+  private sendErrorToSentry(event: LogEvent): void {
+    if (event.type !== 'error' && event.type !== 'unhandledError') return
+
+    const sentryContext = {
+      tags: {
+        module: this.module,
+        ...(this.correlationId && { correlationId: this.correlationId }),
+      },
+      extra: {
+        ...(event.type === 'error' ? event.context : {}),
+        ...(event.type === 'unhandledError' && event.request
+          ? {
+              request: {
+                method: event.request.method,
+                path: event.request.path,
+                query: event.request.query,
+                body: event.request.body,
+              },
+            }
+          : {}),
+      },
+      ...(event.type === 'unhandledError' && event.user
+        ? {
+            user: {
+              id: event.user.id,
+              email: event.user.email,
+            },
+          }
+        : {}),
+    }
+
+    const sentryEvent: SentryErrorEvent =
+      event.type === 'unhandledError' && event.request
+        ? {
+            type: 'apiError',
+            error: event.error,
+            endpoint: event.request.path,
+            method: event.request.method,
+            statusCode: 500,
+          }
+        : {
+            type: 'businessLogicError',
+            error: event.error,
+            context: event.type === 'error' ? event.context || {} : {},
+          }
+
+    sentryService.captureError(sentryEvent, sentryContext)
   }
 
   logBusiness(action: string, details: Record<string, unknown>): void {
