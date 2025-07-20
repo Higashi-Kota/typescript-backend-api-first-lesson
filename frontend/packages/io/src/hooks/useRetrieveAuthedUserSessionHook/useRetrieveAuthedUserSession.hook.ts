@@ -1,4 +1,4 @@
-import type { ApplicationErrorData } from '@beauty-salon-frontend/types/error'
+import type { ApplicationErrorData } from '@beauty-salon-frontend/types'
 import type {
   InputRetrieveAuthedUserSession,
   ResponseAuthedUserSessionData,

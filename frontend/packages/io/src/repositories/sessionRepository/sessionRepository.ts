@@ -1,4 +1,4 @@
-import type { ApplicationErrorData } from '@beauty-salon-frontend/types/error'
+import type { ApplicationErrorData } from '@beauty-salon-frontend/types'
 import { ResultAsync } from 'neverthrow'
 import type { SessionFactory } from '../../factory'
 import type {
