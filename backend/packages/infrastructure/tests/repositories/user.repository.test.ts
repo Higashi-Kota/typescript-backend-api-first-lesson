@@ -18,7 +18,7 @@ import {
   expect,
   it,
 } from 'vitest'
-import { DrizzleUserRepository } from '../user.repository.js'
+import { DrizzleUserRepository } from '../../src/repositories/user.repository.js'
 
 describe('UserRepository Integration Tests', () => {
   let testEnv: TestEnvironment

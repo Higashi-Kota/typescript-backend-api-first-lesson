@@ -16,8 +16,8 @@ export default defineConfig({
       },
     },
     // Global setup/teardown
-    globalSetup: './src/__tests__/setup/global-setup.ts',
-    globalTeardown: './src/__tests__/setup/global-teardown.ts',
+    globalSetup: './tests/setup/global-setup.ts',
+    globalTeardown: './tests/setup/global-teardown.ts',
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
