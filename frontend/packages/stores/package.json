@@ -29,6 +29,7 @@
   "private": true,
   "scripts": {
     "clean": "rm -rf dist *.tsbuildinfo",
+    "build": "NODE_ENV=production rslib build",
     "build:dev": "NODE_ENV=development rslib build",
     "build:test": "NODE_ENV=test rslib build",
     "build:stg": "NODE_ENV=staging rslib build",

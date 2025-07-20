@@ -22,12 +22,16 @@
     "@beauty-salon-backend/domain": "workspace:*",
     "@beauty-salon-backend/types": "workspace:*",
     "bcrypt": "^6.0.0",
+    "qrcode": "^1.5.4",
+    "speakeasy": "^2.0.0",
     "ts-pattern": "^5.5.0",
     "uuid": "^11.0.6"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^22.12.1",
+    "@types/qrcode": "^1.5.5",
+    "@types/speakeasy": "^2.0.10",
     "@types/uuid": "^10.0.0",
     "vitest": "^3.2.4"
   }

@@ -23,6 +23,7 @@
   "private": true,
   "scripts": {
     "clean": "rm -rf dist *.tsbuildinfo",
+    "build": "tsc --build && vite build --mode production",
     "build:dev": "tsc --build && vite build --mode dev",
     "build:test": "tsc --build && vite build --mode test",
     "build:stg": "tsc --build && vite build --mode staging",
