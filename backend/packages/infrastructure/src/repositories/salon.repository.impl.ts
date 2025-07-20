@@ -42,12 +42,14 @@ export class DrizzleSalonRepository implements SalonRepository {
       .from(openingHoursTable)
       .where(eq(openingHoursTable.salonId, dbSalon.id))
 
-    const openingHours = dbOpeningHours.map((hours) => ({
-      dayOfWeek: hours.dayOfWeek,
-      openTime: hours.openTime,
-      closeTime: hours.closeTime,
-      isHoliday: hours.isHoliday,
-    }))
+    const openingHours = dbOpeningHours.map(
+      (hours: (typeof dbOpeningHours)[0]) => ({
+        dayOfWeek: hours.dayOfWeek,
+        openTime: hours.openTime,
+        closeTime: hours.closeTime,
+        isHoliday: hours.isHoliday,
+      })
+    )
 
     // 現在のスキーマにはdeletedAt/suspendedAtがないため、すべてactiveとして扱う
     // TODO: deletedAt, suspendedAtカラムを追加する際に実装
@@ -140,7 +142,7 @@ export class DrizzleSalonRepository implements SalonRepository {
 
         // 営業時間を作成
         const openingHoursData: DbNewOpeningHours[] = data.openingHours.map(
-          (hours) => ({
+          (hours: (typeof data.openingHours)[0]) => ({
             salonId: insertedSalon.id,
             dayOfWeek: hours.dayOfWeek,
             openTime: hours.openTime,
@@ -228,7 +230,7 @@ export class DrizzleSalonRepository implements SalonRepository {
 
           // 新しい営業時間を挿入
           const openingHoursData: DbNewOpeningHours[] = data.openingHours.map(
-            (hours) => ({
+            (hours: (typeof data.openingHours)[0]) => ({
               salonId: data.id,
               dayOfWeek: hours.dayOfWeek,
               openTime: hours.openTime,

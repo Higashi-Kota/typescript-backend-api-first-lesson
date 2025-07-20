@@ -260,7 +260,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       // Reservationを関連付け
       if (data.reservationIds && data.reservationIds.length > 0) {
         await this.db.insert(bookingReservations).values(
-          data.reservationIds.map((reservationId) => ({
+          data.reservationIds.map((reservationId: string) => ({
             bookingId: insertedBooking.id,
             reservationId,
           }))

@@ -5,9 +5,7 @@
     "@rslib/core": "^0.10.5",
     "@types/node": "^24.0.13",
     "taze": "^19.1.0",
-    "typescript": "^5.8.3",
-    "vite": "^7.0.4",
-    "vite-plugin-dts": "^4.5.4"
+    "typescript": "^5.8.3"
   },
   "exports": {
     ".": {
@@ -23,18 +21,18 @@
   "private": true,
   "scripts": {
     "clean": "rm -rf dist *.tsbuildinfo",
-    "build": "tsc --build && vite build --mode production",
-    "build:dev": "tsc --build && vite build --mode dev",
-    "build:test": "tsc --build && vite build --mode test",
-    "build:stg": "tsc --build && vite build --mode staging",
-    "build:prod": "tsc --build && vite build --mode production",
-    "build:watch": "tsc --build --watch & vite build --watch --mode dev",
+    "build": "NODE_ENV=production rslib build",
+    "build:dev": "NODE_ENV=development rslib build",
+    "build:test": "NODE_ENV=test rslib build",
+    "build:stg": "NODE_ENV=staging rslib build",
+    "build:prod": "NODE_ENV=production rslib build",
+    "build:watch": "NODE_ENV=development rslib build --watch",
     "package:check": "taze",
     "knip": "knip --include dependencies,optionalPeerDependencies,unlisted,binaries,unresolved",
     "typecheck": "tsc --build",
     "format": "biome format --write .",
     "format:fix": "biome check . --fix --unsafe",
-    "dev": "vite build --watch",
+    "dev": "NODE_ENV=development rslib build --watch",
     "dev:tsc": "tsc --build --watch"
   },
   "type": "module",

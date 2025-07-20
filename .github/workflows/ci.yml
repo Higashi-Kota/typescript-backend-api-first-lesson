@@ -33,7 +33,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build all packages
-        run: pnpm build
+        run: pnpm run --recursive --workspace-concurrency=1 build
 
       - name: Run Biome lint
         run: pnpm lint
@@ -83,7 +83,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build packages for tests
-        run: pnpm build
+        run: pnpm run --recursive --workspace-concurrency=1 build
 
       - name: Copy test environment variables
         run: cp .env.test.example .env.test
@@ -136,7 +136,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build for ${{ matrix.environment }}
-        run: pnpm build:${{ matrix.environment }}
+        run: pnpm run --recursive --workspace-concurrency=1 build:${{ matrix.environment }}
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4

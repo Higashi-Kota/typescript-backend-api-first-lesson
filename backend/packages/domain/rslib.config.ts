@@ -21,34 +21,17 @@ export default defineConfig({
       output: {
         minify: isProduction,
         sourceMap: isDevelopment || isTest || isStaging,
-        target: 'web',
-        externals: [],
-        dataUriLimit: 4096,
-        assetPrefix: './',
+        target: 'node',
+        externals: [/^@beauty-salon\//, 'ts-pattern', 'uuid', 'zod'],
       },
     },
   ],
 
-  source: {
-    assetsInclude: [
-      '**/*.png',
-      '**/*.jpg',
-      '**/*.jpeg',
-      '**/*.gif',
-      '**/*.svg',
-      '**/*.webp',
-    ],
-  },
-
   output: {
     distPath: {
       root: 'dist',
-      image: 'images',
     },
     cleanDistPath: 'auto',
-    filename: {
-      image: '[name][ext]',
-    },
   },
 
   plugins: [
@@ -56,7 +39,7 @@ export default defineConfig({
       name: 'build-success',
       setup(api) {
         api.onAfterBuild(() => {
-          console.log('✅ @beauty-salon-frontend/assets built successfully!')
+          console.log('✅ @beauty-salon-backend/domain built successfully!')
         })
       },
     },
