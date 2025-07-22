@@ -4,6 +4,7 @@
  * CLAUDEガイドラインに準拠した実装
  */
 
+import { randomBytes } from 'node:crypto'
 import type { Result } from '@beauty-salon-backend/domain'
 import { err, ok } from '@beauty-salon-backend/domain'
 import jwt from 'jsonwebtoken'
@@ -82,6 +83,7 @@ export const generateRefreshToken = (
     const payload = {
       sub: userId,
       type: 'refresh',
+      jti: randomBytes(16).toString('hex'), // Add unique identifier
     }
 
     const token = jwt.sign(payload, secret, {

@@ -1,0 +1,18 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {},
+  "enums": {},
+  "schemas": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  },
+  "id": "remove-sessions-trigger",
+  "prevId": "fix-sessions-table",
+  "sequences": {},
+  "policies": {},
+  "views": {},
+  "roles": {}
+}

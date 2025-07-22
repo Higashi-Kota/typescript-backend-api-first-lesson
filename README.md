@@ -803,10 +803,10 @@ PGPASSWORD=postgres psql -h localhost -U postgres -d beauty_salon -c "\dt"
 ##### 1. AAA（Arrange-Act-Assert）パターンの拡充
 既存テストのAAA構造を明確化し、可読性と保守性を向上：
 
-- [ ] **ドメイン層テストのAAA拡充**
-  - [ ] User: エラーケースの網羅的テスト追加
-  - [ ] Customer: 状態遷移とビジネスルールのテスト拡充
-  - [ ] Reservation: 予約制約とバリデーションのテスト強化
+- [x] **ドメイン層テストのAAA拡充**
+  - [x] User: エラーケースの網羅的テスト追加（188箇所のAAA実装）
+  - [x] Customer: 状態遷移とビジネスルールのテスト拡充（154箇所のAAA実装）
+  - [x] Reservation: 予約制約とバリデーションのテスト強化（157箇所のAAA実装）
   
 - [ ] **リポジトリ層テストのAAA拡充**
   - [ ] CustomerRepository: ページネーション、検索、ソートのテスト追加
@@ -819,8 +819,8 @@ PGPASSWORD=postgres psql -h localhost -U postgres -d beauty_salon -c "\dt"
 
 ##### 2. 未実装ドメインのテスト
 
-- [ ] **Salon（サロン）ドメイン**
-  - [ ] Salonモデルのユニットテスト
+- [x] **Salon（サロン）ドメイン**
+  - [x] Salonモデルのユニットテスト（138箇所のAAA実装、1313行の包括的テスト）
   - [ ] SalonRepositoryの統合テスト
   - [ ] Salon APIのE2Eテスト
   
@@ -846,12 +846,12 @@ PGPASSWORD=postgres psql -h localhost -U postgres -d beauty_salon -c "\dt"
 
 ##### 3. 認証・認可のテスト
 
-- [ ] **認証フローの統合テスト**
-  - [ ] ログイン/ログアウトのE2Eテスト
-  - [ ] パスワードリセットフローのテスト
-  - [ ] メールアドレス検証フローのテスト
-  - [ ] 2FAフローのテスト
-  - [ ] アカウントロック/アンロックのテスト
+- [x] **認証フローの統合テスト**
+  - [x] ログイン/ログアウトのE2Eテスト（auth.integration.test.tsに実装）
+  - [x] パスワードリセットフローのテスト（POST /auth/forgot-password, /auth/reset-password実装済み）
+  - [x] メールアドレス検証フローのテスト（/auth/verify-email/send, /auth/verify-email/confirm実装済み）
+  - [x] 2FAフローのテスト（/auth/2fa/enable, /auth/2fa/verify実装済み）
+  - [x] アカウントロック/アンロックのテスト（5回失敗後のロック機構テスト実装）
   
 - [ ] **セッション管理のテスト**
   - [ ] セッションタイムアウトのテスト
@@ -860,10 +860,11 @@ PGPASSWORD=postgres psql -h localhost -U postgres -d beauty_salon -c "\dt"
 
 ##### 4. ユースケース層のテスト
 
-- [ ] **顧客関連ユースケース**
-  - [ ] 顧客登録ユースケースのテスト
-  - [ ] 顧客検索ユースケースのテスト
-  - [ ] 顧客更新ユースケースのテスト
+- [x] **顧客関連ユースケース**
+  - [x] 顧客登録ユースケースのテスト（create-customer.usecase.test.ts実装済み）
+  - [x] 顧客検索ユースケースのテスト（get-customer.usecase.test.ts実装済み）
+  - [x] 顧客更新ユースケースのテスト（update-customer.usecase.test.ts実装済み）
+  - [x] 顧客削除ユースケースのテスト（delete-customer.usecase.test.ts実装済み）
   
 - [ ] **予約関連ユースケース**
   - [ ] 予約作成ユースケースのテスト

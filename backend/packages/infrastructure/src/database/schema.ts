@@ -1,6 +1,8 @@
 // TypeSpec-compliant database schema
 import {
   boolean,
+  index,
+  inet,
   integer,
   jsonb,
   pgEnum,
@@ -8,7 +10,9 @@ import {
   text,
   time,
   timestamp,
+  uniqueIndex,
   uuid,
+  varchar,
 } from 'drizzle-orm/pg-core'
 
 // Enums according to TypeSpec
@@ -398,3 +402,210 @@ export const downloadLogs = pgTable('download_logs', {
     .notNull()
     .defaultNow(),
 })
+
+// Authentication related tables
+
+/**
+ * Password Reset Tokens Table
+ * パスワードリセット用トークン
+ */
+export const passwordResetTokens = pgTable(
+  'password_reset_tokens',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
+    token: varchar('token', { length: 255 }).notNull().unique(),
+    expiresAt: timestamp('expires_at').notNull(),
+    usedAt: timestamp('used_at'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  },
+  (table) => ({
+    userIdIdx: index('idx_password_reset_tokens_user_id').on(table.userId),
+    tokenIdx: index('idx_password_reset_tokens_token').on(table.token),
+    expiresAtIdx: index('idx_password_reset_tokens_expires_at').on(
+      table.expiresAt
+    ),
+  })
+)
+
+/**
+ * Email Verification Tokens Table
+ * メール確認用トークン
+ */
+export const emailVerificationTokens = pgTable(
+  'email_verification_tokens',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
+    token: varchar('token', { length: 255 }).notNull().unique(),
+    email: varchar('email', { length: 255 }).notNull(),
+    expiresAt: timestamp('expires_at').notNull(),
+    verifiedAt: timestamp('verified_at'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  },
+  (table) => ({
+    userIdIdx: index('idx_email_verification_tokens_user_id').on(table.userId),
+    tokenIdx: index('idx_email_verification_tokens_token').on(table.token),
+    expiresAtIdx: index('idx_email_verification_tokens_expires_at').on(
+      table.expiresAt
+    ),
+  })
+)
+
+/**
+ * User Sessions Table
+ * ユーザーセッション管理
+ */
+export const userSessions = pgTable(
+  'user_sessions',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
+    sessionToken: varchar('session_token', { length: 255 }).notNull().unique(),
+    refreshToken: varchar('refresh_token', { length: 255 }).unique(),
+    deviceInfo: jsonb('device_info'),
+    ipAddress: inet('ip_address'),
+    location: jsonb('location'),
+    lastActivityAt: timestamp('last_activity_at').defaultNow().notNull(),
+    expiresAt: timestamp('expires_at').notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  },
+  (table) => ({
+    userIdIdx: index('idx_user_sessions_user_id').on(table.userId),
+    sessionTokenIdx: index('idx_user_sessions_session_token').on(
+      table.sessionToken
+    ),
+    refreshTokenIdx: index('idx_user_sessions_refresh_token').on(
+      table.refreshToken
+    ),
+    expiresAtIdx: index('idx_user_sessions_expires_at').on(table.expiresAt),
+  })
+)
+
+/**
+ * Two-Factor Authentication Secrets Table
+ * 2要素認証シークレット
+ */
+export const user2FASecrets = pgTable(
+  'user_2fa_secrets',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull()
+      .unique(),
+    secret: varchar('secret', { length: 255 }).notNull(),
+    backupCodes: text('backup_codes').array(),
+    enabled: boolean('enabled').notNull().default(false),
+    enabledAt: timestamp('enabled_at'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  },
+  (table) => ({
+    userIdIdx: index('idx_user_2fa_secrets_user_id').on(table.userId),
+  })
+)
+
+/**
+ * Failed Login Attempts Table
+ * ログイン失敗記録
+ */
+export const failedLoginAttempts = pgTable(
+  'failed_login_attempts',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    email: varchar('email', { length: 255 }).notNull(),
+    ipAddress: inet('ip_address'),
+    attemptCount: integer('attempt_count').notNull().default(1),
+    lastAttemptAt: timestamp('last_attempt_at').defaultNow().notNull(),
+    lockedUntil: timestamp('locked_until'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  },
+  (table) => ({
+    emailIdx: index('idx_failed_login_attempts_email').on(table.email),
+    ipAddressIdx: index('idx_failed_login_attempts_ip_address').on(
+      table.ipAddress
+    ),
+    lockedUntilIdx: index('idx_failed_login_attempts_locked_until').on(
+      table.lockedUntil
+    ),
+  })
+)
+
+/**
+ * Authentication Audit Logs Table
+ * 認証監査ログ
+ */
+export const authAuditLogs = pgTable(
+  'auth_audit_logs',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('user_id').references(() => users.id, {
+      onDelete: 'set null',
+    }),
+    eventType: varchar('event_type', { length: 50 }).notNull(),
+    eventData: jsonb('event_data'),
+    ipAddress: inet('ip_address'),
+    userAgent: text('user_agent'),
+    success: boolean('success').notNull(),
+    errorMessage: text('error_message'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+  },
+  (table) => ({
+    userIdIdx: index('idx_auth_audit_logs_user_id').on(table.userId),
+    eventTypeIdx: index('idx_auth_audit_logs_event_type').on(table.eventType),
+    createdAtIdx: index('idx_auth_audit_logs_created_at').on(table.createdAt),
+  })
+)
+
+/**
+ * Trusted IP Addresses Table
+ * 信頼されたIPアドレス
+ */
+export const trustedIpAddresses = pgTable(
+  'trusted_ip_addresses',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
+    ipAddress: inet('ip_address').notNull(),
+    description: varchar('description', { length: 255 }),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  },
+  (table) => ({
+    userIdIdx: index('idx_trusted_ip_addresses_user_id').on(table.userId),
+    userIpUnique: uniqueIndex('idx_trusted_ip_addresses_user_id_ip_address').on(
+      table.userId,
+      table.ipAddress
+    ),
+  })
+)
+
+// Type exports for authentication tables
+export type PasswordResetToken = typeof passwordResetTokens.$inferSelect
+export type NewPasswordResetToken = typeof passwordResetTokens.$inferInsert
+export type EmailVerificationToken = typeof emailVerificationTokens.$inferSelect
+export type NewEmailVerificationToken =
+  typeof emailVerificationTokens.$inferInsert
+export type UserSession = typeof userSessions.$inferSelect
+export type NewUserSession = typeof userSessions.$inferInsert
+export type User2FASecret = typeof user2FASecrets.$inferSelect
+export type NewUser2FASecret = typeof user2FASecrets.$inferInsert
+export type FailedLoginAttempt = typeof failedLoginAttempts.$inferSelect
+export type NewFailedLoginAttempt = typeof failedLoginAttempts.$inferInsert
+export type AuthAuditLog = typeof authAuditLogs.$inferSelect
+export type NewAuthAuditLog = typeof authAuditLogs.$inferInsert
+export type TrustedIpAddress = typeof trustedIpAddresses.$inferSelect
+export type NewTrustedIpAddress = typeof trustedIpAddresses.$inferInsert

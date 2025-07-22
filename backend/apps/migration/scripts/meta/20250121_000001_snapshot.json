@@ -1,0 +1,18 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {},
+  "enums": {},
+  "schemas": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  },
+  "id": "auth-tables",
+  "prevId": "0002",
+  "sequences": {},
+  "policies": {},
+  "views": {},
+  "roles": {}
+}

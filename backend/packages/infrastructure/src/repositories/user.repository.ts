@@ -174,6 +174,13 @@ export class DrizzleUserRepository implements UserRepository {
       const savedUser = this.mapToUser(inserted)
       return ok(savedUser)
     } catch (error) {
+      console.error('User save error:', error)
+      if (error instanceof Error && error.message.includes('Failed query')) {
+        return err({
+          type: 'databaseError',
+          message: error.message,
+        })
+      }
       return err({
         type: 'databaseError',
         message:

@@ -6,10 +6,11 @@
 import { addDays, addHours, addMonths, subDays, subHours } from 'date-fns'
 import { match } from 'ts-pattern'
 import { describe, expect, it } from 'vitest'
-import { createCustomerId } from '../customer.js'
+import { type CustomerId, createCustomerId } from '../customer.js'
 import {
   type Reservation,
   type ReservationError,
+  type ReservationId,
   type ReservationStatus,
   calculateRefundAmount,
   canBeCancelled,
@@ -26,9 +27,50 @@ import {
   validateDepositAmount,
   validateTimeRange,
 } from '../reservation.js'
-import { createSalonId } from '../salon.js'
-import { createServiceId } from '../service.js'
-import { createStaffId } from '../staff.js'
+import { type SalonId, createSalonId } from '../salon.js'
+import { type ServiceId, createServiceId } from '../service.js'
+import { type StaffId, createStaffId } from '../staff.js'
+
+// Helper functions to create IDs with null check
+const createTestReservationId = (uuid: string): ReservationId => {
+  const id = createReservationId(uuid)
+  if (!id) {
+    throw new Error(`Failed to create ReservationId from UUID: ${uuid}`)
+  }
+  return id
+}
+
+const createTestSalonId = (uuid: string): SalonId => {
+  const id = createSalonId(uuid)
+  if (!id) {
+    throw new Error(`Failed to create SalonId from UUID: ${uuid}`)
+  }
+  return id
+}
+
+const createTestCustomerId = (uuid: string): CustomerId => {
+  const id = createCustomerId(uuid)
+  if (!id) {
+    throw new Error(`Failed to create CustomerId from UUID: ${uuid}`)
+  }
+  return id
+}
+
+const createTestStaffId = (uuid: string): StaffId => {
+  const id = createStaffId(uuid)
+  if (!id) {
+    throw new Error(`Failed to create StaffId from UUID: ${uuid}`)
+  }
+  return id
+}
+
+const createTestServiceId = (uuid: string): ServiceId => {
+  const id = createServiceId(uuid)
+  if (!id) {
+    throw new Error(`Failed to create ServiceId from UUID: ${uuid}`)
+  }
+  return id
+}
 
 describe('Reservation ID作成関数', () => {
   describe('createReservationId', () => {
@@ -40,8 +82,11 @@ describe('Reservation ID作成関数', () => {
       const reservationId = createReservationId(validUuid)
 
       // Assert
-      expect(reservationId).toBe(validUuid)
-      expect(typeof reservationId).toBe('string')
+      expect(reservationId).not.toBeNull()
+      if (reservationId) {
+        expect(reservationId).toBe(validUuid)
+        expect(typeof reservationId).toBe('string')
+      }
     })
   })
 
@@ -440,11 +485,11 @@ describe('バリデーション関数', () => {
 // テスト用ヘルパー関数
 const createTestReservation = (type: ReservationStatus): Reservation => {
   const baseData = {
-    id: createReservationId('550e8400-e29b-41d4-a716-446655440000'),
-    salonId: createSalonId('660e8400-e29b-41d4-a716-446655440001'),
-    customerId: createCustomerId('770e8400-e29b-41d4-a716-446655440002'),
-    staffId: createStaffId('880e8400-e29b-41d4-a716-446655440003'),
-    serviceId: createServiceId('990e8400-e29b-41d4-a716-446655440004'),
+    id: createTestReservationId('550e8400-e29b-41d4-a716-446655440000'),
+    salonId: createTestSalonId('660e8400-e29b-41d4-a716-446655440001'),
+    customerId: createTestCustomerId('770e8400-e29b-41d4-a716-446655440002'),
+    staffId: createTestStaffId('880e8400-e29b-41d4-a716-446655440003'),
+    serviceId: createTestServiceId('990e8400-e29b-41d4-a716-446655440004'),
     startTime: addDays(new Date(), 1),
     endTime: addDays(new Date(), 1),
     totalAmount: 5000,
@@ -664,11 +709,15 @@ describe('ビジネスロジック関数', () => {
       const reservation: Reservation = {
         type: 'pending',
         data: {
-          id: createReservationId('550e8400-e29b-41d4-a716-446655440000'),
-          salonId: createSalonId('660e8400-e29b-41d4-a716-446655440001'),
-          customerId: createCustomerId('770e8400-e29b-41d4-a716-446655440002'),
-          staffId: createStaffId('880e8400-e29b-41d4-a716-446655440003'),
-          serviceId: createServiceId('990e8400-e29b-41d4-a716-446655440004'),
+          id: createTestReservationId('550e8400-e29b-41d4-a716-446655440000'),
+          salonId: createTestSalonId('660e8400-e29b-41d4-a716-446655440001'),
+          customerId: createTestCustomerId(
+            '770e8400-e29b-41d4-a716-446655440002'
+          ),
+          staffId: createTestStaffId('880e8400-e29b-41d4-a716-446655440003'),
+          serviceId: createTestServiceId(
+            '990e8400-e29b-41d4-a716-446655440004'
+          ),
           startTime: addHours(new Date(), 2),
           endTime: addHours(new Date(), 3),
           totalAmount: 5000,
@@ -690,11 +739,15 @@ describe('ビジネスロジック関数', () => {
       const reservation: Reservation = {
         type: 'confirmed',
         data: {
-          id: createReservationId('550e8400-e29b-41d4-a716-446655440000'),
-          salonId: createSalonId('660e8400-e29b-41d4-a716-446655440001'),
-          customerId: createCustomerId('770e8400-e29b-41d4-a716-446655440002'),
-          staffId: createStaffId('880e8400-e29b-41d4-a716-446655440003'),
-          serviceId: createServiceId('990e8400-e29b-41d4-a716-446655440004'),
+          id: createTestReservationId('550e8400-e29b-41d4-a716-446655440000'),
+          salonId: createTestSalonId('660e8400-e29b-41d4-a716-446655440001'),
+          customerId: createTestCustomerId(
+            '770e8400-e29b-41d4-a716-446655440002'
+          ),
+          staffId: createTestStaffId('880e8400-e29b-41d4-a716-446655440003'),
+          serviceId: createTestServiceId(
+            '990e8400-e29b-41d4-a716-446655440004'
+          ),
           startTime: addHours(new Date(), 2),
           endTime: addHours(new Date(), 3),
           totalAmount: 5000,
@@ -718,11 +771,15 @@ describe('ビジネスロジック関数', () => {
       const reservation: Reservation = {
         type: 'pending',
         data: {
-          id: createReservationId('550e8400-e29b-41d4-a716-446655440000'),
-          salonId: createSalonId('660e8400-e29b-41d4-a716-446655440001'),
-          customerId: createCustomerId('770e8400-e29b-41d4-a716-446655440002'),
-          staffId: createStaffId('880e8400-e29b-41d4-a716-446655440003'),
-          serviceId: createServiceId('990e8400-e29b-41d4-a716-446655440004'),
+          id: createTestReservationId('550e8400-e29b-41d4-a716-446655440000'),
+          salonId: createTestSalonId('660e8400-e29b-41d4-a716-446655440001'),
+          customerId: createTestCustomerId(
+            '770e8400-e29b-41d4-a716-446655440002'
+          ),
+          staffId: createTestStaffId('880e8400-e29b-41d4-a716-446655440003'),
+          serviceId: createTestServiceId(
+            '990e8400-e29b-41d4-a716-446655440004'
+          ),
           startTime: addHours(new Date(), 0.5), // 30分後
           endTime: addHours(new Date(), 1.5),
           totalAmount: 5000,
@@ -744,11 +801,15 @@ describe('ビジネスロジック関数', () => {
       const reservation: Reservation = {
         type: 'cancelled',
         data: {
-          id: createReservationId('550e8400-e29b-41d4-a716-446655440000'),
-          salonId: createSalonId('660e8400-e29b-41d4-a716-446655440001'),
-          customerId: createCustomerId('770e8400-e29b-41d4-a716-446655440002'),
-          staffId: createStaffId('880e8400-e29b-41d4-a716-446655440003'),
-          serviceId: createServiceId('990e8400-e29b-41d4-a716-446655440004'),
+          id: createTestReservationId('550e8400-e29b-41d4-a716-446655440000'),
+          salonId: createTestSalonId('660e8400-e29b-41d4-a716-446655440001'),
+          customerId: createTestCustomerId(
+            '770e8400-e29b-41d4-a716-446655440002'
+          ),
+          staffId: createTestStaffId('880e8400-e29b-41d4-a716-446655440003'),
+          serviceId: createTestServiceId(
+            '990e8400-e29b-41d4-a716-446655440004'
+          ),
           startTime: addHours(new Date(), 2),
           endTime: addHours(new Date(), 3),
           totalAmount: 5000,
@@ -773,11 +834,15 @@ describe('ビジネスロジック関数', () => {
       const reservation: Reservation = {
         type: 'completed',
         data: {
-          id: createReservationId('550e8400-e29b-41d4-a716-446655440000'),
-          salonId: createSalonId('660e8400-e29b-41d4-a716-446655440001'),
-          customerId: createCustomerId('770e8400-e29b-41d4-a716-446655440002'),
-          staffId: createStaffId('880e8400-e29b-41d4-a716-446655440003'),
-          serviceId: createServiceId('990e8400-e29b-41d4-a716-446655440004'),
+          id: createTestReservationId('550e8400-e29b-41d4-a716-446655440000'),
+          salonId: createTestSalonId('660e8400-e29b-41d4-a716-446655440001'),
+          customerId: createTestCustomerId(
+            '770e8400-e29b-41d4-a716-446655440002'
+          ),
+          staffId: createTestStaffId('880e8400-e29b-41d4-a716-446655440003'),
+          serviceId: createTestServiceId(
+            '990e8400-e29b-41d4-a716-446655440004'
+          ),
           startTime: subHours(new Date(), 2),
           endTime: subHours(new Date(), 1),
           totalAmount: 5000,
@@ -801,11 +866,15 @@ describe('ビジネスロジック関数', () => {
       const reservation: Reservation = {
         type: 'no_show',
         data: {
-          id: createReservationId('550e8400-e29b-41d4-a716-446655440000'),
-          salonId: createSalonId('660e8400-e29b-41d4-a716-446655440001'),
-          customerId: createCustomerId('770e8400-e29b-41d4-a716-446655440002'),
-          staffId: createStaffId('880e8400-e29b-41d4-a716-446655440003'),
-          serviceId: createServiceId('990e8400-e29b-41d4-a716-446655440004'),
+          id: createTestReservationId('550e8400-e29b-41d4-a716-446655440000'),
+          salonId: createTestSalonId('660e8400-e29b-41d4-a716-446655440001'),
+          customerId: createTestCustomerId(
+            '770e8400-e29b-41d4-a716-446655440002'
+          ),
+          staffId: createTestStaffId('880e8400-e29b-41d4-a716-446655440003'),
+          serviceId: createTestServiceId(
+            '990e8400-e29b-41d4-a716-446655440004'
+          ),
           startTime: subHours(new Date(), 2),
           endTime: subHours(new Date(), 1),
           totalAmount: 5000,
@@ -830,11 +899,15 @@ describe('ビジネスロジック関数', () => {
       const reservation: Reservation = {
         type: 'pending',
         data: {
-          id: createReservationId('550e8400-e29b-41d4-a716-446655440000'),
-          salonId: createSalonId('660e8400-e29b-41d4-a716-446655440001'),
-          customerId: createCustomerId('770e8400-e29b-41d4-a716-446655440002'),
-          staffId: createStaffId('880e8400-e29b-41d4-a716-446655440003'),
-          serviceId: createServiceId('990e8400-e29b-41d4-a716-446655440004'),
+          id: createTestReservationId('550e8400-e29b-41d4-a716-446655440000'),
+          salonId: createTestSalonId('660e8400-e29b-41d4-a716-446655440001'),
+          customerId: createTestCustomerId(
+            '770e8400-e29b-41d4-a716-446655440002'
+          ),
+          staffId: createTestStaffId('880e8400-e29b-41d4-a716-446655440003'),
+          serviceId: createTestServiceId(
+            '990e8400-e29b-41d4-a716-446655440004'
+          ),
           startTime: exactlyOneHourLater,
           endTime: addHours(exactlyOneHourLater, 1),
           totalAmount: 5000,
@@ -858,11 +931,15 @@ describe('ビジネスロジック関数', () => {
       const reservation: Reservation = {
         type: 'pending',
         data: {
-          id: createReservationId('550e8400-e29b-41d4-a716-446655440000'),
-          salonId: createSalonId('660e8400-e29b-41d4-a716-446655440001'),
-          customerId: createCustomerId('770e8400-e29b-41d4-a716-446655440002'),
-          staffId: createStaffId('880e8400-e29b-41d4-a716-446655440003'),
-          serviceId: createServiceId('990e8400-e29b-41d4-a716-446655440004'),
+          id: createTestReservationId('550e8400-e29b-41d4-a716-446655440000'),
+          salonId: createTestSalonId('660e8400-e29b-41d4-a716-446655440001'),
+          customerId: createTestCustomerId(
+            '770e8400-e29b-41d4-a716-446655440002'
+          ),
+          staffId: createTestStaffId('880e8400-e29b-41d4-a716-446655440003'),
+          serviceId: createTestServiceId(
+            '990e8400-e29b-41d4-a716-446655440004'
+          ),
           startTime: addDays(new Date(), 1),
           endTime: addDays(new Date(), 1),
           totalAmount: 5000,
@@ -884,11 +961,15 @@ describe('ビジネスロジック関数', () => {
       const reservation: Reservation = {
         type: 'confirmed',
         data: {
-          id: createReservationId('550e8400-e29b-41d4-a716-446655440000'),
-          salonId: createSalonId('660e8400-e29b-41d4-a716-446655440001'),
-          customerId: createCustomerId('770e8400-e29b-41d4-a716-446655440002'),
-          staffId: createStaffId('880e8400-e29b-41d4-a716-446655440003'),
-          serviceId: createServiceId('990e8400-e29b-41d4-a716-446655440004'),
+          id: createTestReservationId('550e8400-e29b-41d4-a716-446655440000'),
+          salonId: createTestSalonId('660e8400-e29b-41d4-a716-446655440001'),
+          customerId: createTestCustomerId(
+            '770e8400-e29b-41d4-a716-446655440002'
+          ),
+          staffId: createTestStaffId('880e8400-e29b-41d4-a716-446655440003'),
+          serviceId: createTestServiceId(
+            '990e8400-e29b-41d4-a716-446655440004'
+          ),
           startTime: addDays(new Date(), 1),
           endTime: addDays(new Date(), 1),
           totalAmount: 5000,
@@ -912,11 +993,15 @@ describe('ビジネスロジック関数', () => {
       const reservation: Reservation = {
         type: 'cancelled',
         data: {
-          id: createReservationId('550e8400-e29b-41d4-a716-446655440000'),
-          salonId: createSalonId('660e8400-e29b-41d4-a716-446655440001'),
-          customerId: createCustomerId('770e8400-e29b-41d4-a716-446655440002'),
-          staffId: createStaffId('880e8400-e29b-41d4-a716-446655440003'),
-          serviceId: createServiceId('990e8400-e29b-41d4-a716-446655440004'),
+          id: createTestReservationId('550e8400-e29b-41d4-a716-446655440000'),
+          salonId: createTestSalonId('660e8400-e29b-41d4-a716-446655440001'),
+          customerId: createTestCustomerId(
+            '770e8400-e29b-41d4-a716-446655440002'
+          ),
+          staffId: createTestStaffId('880e8400-e29b-41d4-a716-446655440003'),
+          serviceId: createTestServiceId(
+            '990e8400-e29b-41d4-a716-446655440004'
+          ),
           startTime: addDays(new Date(), 1),
           endTime: addDays(new Date(), 1),
           totalAmount: 5000,
@@ -941,11 +1026,15 @@ describe('ビジネスロジック関数', () => {
       const reservation: Reservation = {
         type: 'completed',
         data: {
-          id: createReservationId('550e8400-e29b-41d4-a716-446655440000'),
-          salonId: createSalonId('660e8400-e29b-41d4-a716-446655440001'),
-          customerId: createCustomerId('770e8400-e29b-41d4-a716-446655440002'),
-          staffId: createStaffId('880e8400-e29b-41d4-a716-446655440003'),
-          serviceId: createServiceId('990e8400-e29b-41d4-a716-446655440004'),
+          id: createTestReservationId('550e8400-e29b-41d4-a716-446655440000'),
+          salonId: createTestSalonId('660e8400-e29b-41d4-a716-446655440001'),
+          customerId: createTestCustomerId(
+            '770e8400-e29b-41d4-a716-446655440002'
+          ),
+          staffId: createTestStaffId('880e8400-e29b-41d4-a716-446655440003'),
+          serviceId: createTestServiceId(
+            '990e8400-e29b-41d4-a716-446655440004'
+          ),
           startTime: subHours(new Date(), 2),
           endTime: subHours(new Date(), 1),
           totalAmount: 5000,
@@ -969,11 +1058,15 @@ describe('ビジネスロジック関数', () => {
       const reservation: Reservation = {
         type: 'no_show',
         data: {
-          id: createReservationId('550e8400-e29b-41d4-a716-446655440000'),
-          salonId: createSalonId('660e8400-e29b-41d4-a716-446655440001'),
-          customerId: createCustomerId('770e8400-e29b-41d4-a716-446655440002'),
-          staffId: createStaffId('880e8400-e29b-41d4-a716-446655440003'),
-          serviceId: createServiceId('990e8400-e29b-41d4-a716-446655440004'),
+          id: createTestReservationId('550e8400-e29b-41d4-a716-446655440000'),
+          salonId: createTestSalonId('660e8400-e29b-41d4-a716-446655440001'),
+          customerId: createTestCustomerId(
+            '770e8400-e29b-41d4-a716-446655440002'
+          ),
+          staffId: createTestStaffId('880e8400-e29b-41d4-a716-446655440003'),
+          serviceId: createTestServiceId(
+            '990e8400-e29b-41d4-a716-446655440004'
+          ),
           startTime: subHours(new Date(), 2),
           endTime: subHours(new Date(), 1),
           totalAmount: 5000,
@@ -1040,11 +1133,15 @@ describe('ビジネスロジック関数', () => {
       const reservation: Reservation = {
         type: 'cancelled',
         data: {
-          id: createReservationId('550e8400-e29b-41d4-a716-446655440000'),
-          salonId: createSalonId('660e8400-e29b-41d4-a716-446655440001'),
-          customerId: createCustomerId('770e8400-e29b-41d4-a716-446655440002'),
-          staffId: createStaffId('880e8400-e29b-41d4-a716-446655440003'),
-          serviceId: createServiceId('990e8400-e29b-41d4-a716-446655440004'),
+          id: createTestReservationId('550e8400-e29b-41d4-a716-446655440000'),
+          salonId: createTestSalonId('660e8400-e29b-41d4-a716-446655440001'),
+          customerId: createTestCustomerId(
+            '770e8400-e29b-41d4-a716-446655440002'
+          ),
+          staffId: createTestStaffId('880e8400-e29b-41d4-a716-446655440003'),
+          serviceId: createTestServiceId(
+            '990e8400-e29b-41d4-a716-446655440004'
+          ),
           startTime,
           endTime: addHours(startTime, 2),
           totalAmount: 10000,
@@ -1074,11 +1171,15 @@ describe('ビジネスロジック関数', () => {
       const reservation: Reservation = {
         type: 'cancelled',
         data: {
-          id: createReservationId('550e8400-e29b-41d4-a716-446655440000'),
-          salonId: createSalonId('660e8400-e29b-41d4-a716-446655440001'),
-          customerId: createCustomerId('770e8400-e29b-41d4-a716-446655440002'),
-          staffId: createStaffId('880e8400-e29b-41d4-a716-446655440003'),
-          serviceId: createServiceId('990e8400-e29b-41d4-a716-446655440004'),
+          id: createTestReservationId('550e8400-e29b-41d4-a716-446655440000'),
+          salonId: createTestSalonId('660e8400-e29b-41d4-a716-446655440001'),
+          customerId: createTestCustomerId(
+            '770e8400-e29b-41d4-a716-446655440002'
+          ),
+          staffId: createTestStaffId('880e8400-e29b-41d4-a716-446655440003'),
+          serviceId: createTestServiceId(
+            '990e8400-e29b-41d4-a716-446655440004'
+          ),
           startTime,
           endTime: addHours(startTime, 2),
           totalAmount: 10000,
@@ -1108,11 +1209,15 @@ describe('ビジネスロジック関数', () => {
       const reservation: Reservation = {
         type: 'cancelled',
         data: {
-          id: createReservationId('550e8400-e29b-41d4-a716-446655440000'),
-          salonId: createSalonId('660e8400-e29b-41d4-a716-446655440001'),
-          customerId: createCustomerId('770e8400-e29b-41d4-a716-446655440002'),
-          staffId: createStaffId('880e8400-e29b-41d4-a716-446655440003'),
-          serviceId: createServiceId('990e8400-e29b-41d4-a716-446655440004'),
+          id: createTestReservationId('550e8400-e29b-41d4-a716-446655440000'),
+          salonId: createTestSalonId('660e8400-e29b-41d4-a716-446655440001'),
+          customerId: createTestCustomerId(
+            '770e8400-e29b-41d4-a716-446655440002'
+          ),
+          staffId: createTestStaffId('880e8400-e29b-41d4-a716-446655440003'),
+          serviceId: createTestServiceId(
+            '990e8400-e29b-41d4-a716-446655440004'
+          ),
           startTime,
           endTime: addHours(startTime, 2),
           totalAmount: 10000,
@@ -1141,11 +1246,15 @@ describe('ビジネスロジック関数', () => {
       const reservation: Reservation = {
         type: 'cancelled',
         data: {
-          id: createReservationId('550e8400-e29b-41d4-a716-446655440000'),
-          salonId: createSalonId('660e8400-e29b-41d4-a716-446655440001'),
-          customerId: createCustomerId('770e8400-e29b-41d4-a716-446655440002'),
-          staffId: createStaffId('880e8400-e29b-41d4-a716-446655440003'),
-          serviceId: createServiceId('990e8400-e29b-41d4-a716-446655440004'),
+          id: createTestReservationId('550e8400-e29b-41d4-a716-446655440000'),
+          salonId: createTestSalonId('660e8400-e29b-41d4-a716-446655440001'),
+          customerId: createTestCustomerId(
+            '770e8400-e29b-41d4-a716-446655440002'
+          ),
+          staffId: createTestStaffId('880e8400-e29b-41d4-a716-446655440003'),
+          serviceId: createTestServiceId(
+            '990e8400-e29b-41d4-a716-446655440004'
+          ),
           startTime,
           endTime: addHours(startTime, 2),
           totalAmount: 10000,
@@ -1175,11 +1284,15 @@ describe('ビジネスロジック関数', () => {
       const reservation: Reservation = {
         type: 'cancelled',
         data: {
-          id: createReservationId('550e8400-e29b-41d4-a716-446655440000'),
-          salonId: createSalonId('660e8400-e29b-41d4-a716-446655440001'),
-          customerId: createCustomerId('770e8400-e29b-41d4-a716-446655440002'),
-          staffId: createStaffId('880e8400-e29b-41d4-a716-446655440003'),
-          serviceId: createServiceId('990e8400-e29b-41d4-a716-446655440004'),
+          id: createTestReservationId('550e8400-e29b-41d4-a716-446655440000'),
+          salonId: createTestSalonId('660e8400-e29b-41d4-a716-446655440001'),
+          customerId: createTestCustomerId(
+            '770e8400-e29b-41d4-a716-446655440002'
+          ),
+          staffId: createTestStaffId('880e8400-e29b-41d4-a716-446655440003'),
+          serviceId: createTestServiceId(
+            '990e8400-e29b-41d4-a716-446655440004'
+          ),
           startTime,
           endTime: addHours(startTime, 2),
           totalAmount: 5000,
@@ -1209,11 +1322,15 @@ describe('ビジネスロジック関数', () => {
       const reservation: Reservation = {
         type: 'cancelled',
         data: {
-          id: createReservationId('550e8400-e29b-41d4-a716-446655440000'),
-          salonId: createSalonId('660e8400-e29b-41d4-a716-446655440001'),
-          customerId: createCustomerId('770e8400-e29b-41d4-a716-446655440002'),
-          staffId: createStaffId('880e8400-e29b-41d4-a716-446655440003'),
-          serviceId: createServiceId('990e8400-e29b-41d4-a716-446655440004'),
+          id: createTestReservationId('550e8400-e29b-41d4-a716-446655440000'),
+          salonId: createTestSalonId('660e8400-e29b-41d4-a716-446655440001'),
+          customerId: createTestCustomerId(
+            '770e8400-e29b-41d4-a716-446655440002'
+          ),
+          staffId: createTestStaffId('880e8400-e29b-41d4-a716-446655440003'),
+          serviceId: createTestServiceId(
+            '990e8400-e29b-41d4-a716-446655440004'
+          ),
           startTime,
           endTime: addHours(startTime, 2),
           totalAmount: 10000,
@@ -1243,11 +1360,15 @@ describe('Sum型のパターンマッチング網羅性', () => {
       {
         type: 'pending',
         data: {
-          id: createReservationId('550e8400-e29b-41d4-a716-446655440001'),
-          salonId: createSalonId('660e8400-e29b-41d4-a716-446655440001'),
-          customerId: createCustomerId('770e8400-e29b-41d4-a716-446655440001'),
-          staffId: createStaffId('880e8400-e29b-41d4-a716-446655440001'),
-          serviceId: createServiceId('990e8400-e29b-41d4-a716-446655440001'),
+          id: createTestReservationId('550e8400-e29b-41d4-a716-446655440001'),
+          salonId: createTestSalonId('660e8400-e29b-41d4-a716-446655440001'),
+          customerId: createTestCustomerId(
+            '770e8400-e29b-41d4-a716-446655440001'
+          ),
+          staffId: createTestStaffId('880e8400-e29b-41d4-a716-446655440001'),
+          serviceId: createTestServiceId(
+            '990e8400-e29b-41d4-a716-446655440001'
+          ),
           startTime: addDays(new Date(), 1),
           endTime: addDays(new Date(), 1),
           totalAmount: 5000,
@@ -1259,11 +1380,15 @@ describe('Sum型のパターンマッチング網羅性', () => {
       {
         type: 'confirmed',
         data: {
-          id: createReservationId('550e8400-e29b-41d4-a716-446655440002'),
-          salonId: createSalonId('660e8400-e29b-41d4-a716-446655440002'),
-          customerId: createCustomerId('770e8400-e29b-41d4-a716-446655440002'),
-          staffId: createStaffId('880e8400-e29b-41d4-a716-446655440002'),
-          serviceId: createServiceId('990e8400-e29b-41d4-a716-446655440002'),
+          id: createTestReservationId('550e8400-e29b-41d4-a716-446655440002'),
+          salonId: createTestSalonId('660e8400-e29b-41d4-a716-446655440002'),
+          customerId: createTestCustomerId(
+            '770e8400-e29b-41d4-a716-446655440002'
+          ),
+          staffId: createTestStaffId('880e8400-e29b-41d4-a716-446655440002'),
+          serviceId: createTestServiceId(
+            '990e8400-e29b-41d4-a716-446655440002'
+          ),
           startTime: addDays(new Date(), 2),
           endTime: addDays(new Date(), 2),
           totalAmount: 7000,
@@ -1277,11 +1402,15 @@ describe('Sum型のパターンマッチング網羅性', () => {
       {
         type: 'cancelled',
         data: {
-          id: createReservationId('550e8400-e29b-41d4-a716-446655440003'),
-          salonId: createSalonId('660e8400-e29b-41d4-a716-446655440003'),
-          customerId: createCustomerId('770e8400-e29b-41d4-a716-446655440003'),
-          staffId: createStaffId('880e8400-e29b-41d4-a716-446655440003'),
-          serviceId: createServiceId('990e8400-e29b-41d4-a716-446655440003'),
+          id: createTestReservationId('550e8400-e29b-41d4-a716-446655440003'),
+          salonId: createTestSalonId('660e8400-e29b-41d4-a716-446655440003'),
+          customerId: createTestCustomerId(
+            '770e8400-e29b-41d4-a716-446655440003'
+          ),
+          staffId: createTestStaffId('880e8400-e29b-41d4-a716-446655440003'),
+          serviceId: createTestServiceId(
+            '990e8400-e29b-41d4-a716-446655440003'
+          ),
           startTime: addDays(new Date(), 3),
           endTime: addDays(new Date(), 3),
           totalAmount: 10000,
@@ -1296,11 +1425,15 @@ describe('Sum型のパターンマッチング網羅性', () => {
       {
         type: 'completed',
         data: {
-          id: createReservationId('550e8400-e29b-41d4-a716-446655440004'),
-          salonId: createSalonId('660e8400-e29b-41d4-a716-446655440004'),
-          customerId: createCustomerId('770e8400-e29b-41d4-a716-446655440004'),
-          staffId: createStaffId('880e8400-e29b-41d4-a716-446655440004'),
-          serviceId: createServiceId('990e8400-e29b-41d4-a716-446655440004'),
+          id: createTestReservationId('550e8400-e29b-41d4-a716-446655440004'),
+          salonId: createTestSalonId('660e8400-e29b-41d4-a716-446655440004'),
+          customerId: createTestCustomerId(
+            '770e8400-e29b-41d4-a716-446655440004'
+          ),
+          staffId: createTestStaffId('880e8400-e29b-41d4-a716-446655440004'),
+          serviceId: createTestServiceId(
+            '990e8400-e29b-41d4-a716-446655440004'
+          ),
           startTime: subDays(new Date(), 1),
           endTime: subDays(new Date(), 1),
           totalAmount: 8000,
@@ -1314,11 +1447,15 @@ describe('Sum型のパターンマッチング網羅性', () => {
       {
         type: 'no_show',
         data: {
-          id: createReservationId('550e8400-e29b-41d4-a716-446655440005'),
-          salonId: createSalonId('660e8400-e29b-41d4-a716-446655440005'),
-          customerId: createCustomerId('770e8400-e29b-41d4-a716-446655440005'),
-          staffId: createStaffId('880e8400-e29b-41d4-a716-446655440005'),
-          serviceId: createServiceId('990e8400-e29b-41d4-a716-446655440005'),
+          id: createTestReservationId('550e8400-e29b-41d4-a716-446655440005'),
+          salonId: createTestSalonId('660e8400-e29b-41d4-a716-446655440005'),
+          customerId: createTestCustomerId(
+            '770e8400-e29b-41d4-a716-446655440005'
+          ),
+          staffId: createTestStaffId('880e8400-e29b-41d4-a716-446655440005'),
+          serviceId: createTestServiceId(
+            '990e8400-e29b-41d4-a716-446655440005'
+          ),
           startTime: subDays(new Date(), 1),
           endTime: subDays(new Date(), 1),
           totalAmount: 6000,
@@ -1461,11 +1598,15 @@ describe('実データによる動的な検証', () => {
       const reservation: Reservation = {
         type: 'cancelled',
         data: {
-          id: createReservationId('550e8400-e29b-41d4-a716-446655440000'),
-          salonId: createSalonId('660e8400-e29b-41d4-a716-446655440001'),
-          customerId: createCustomerId('770e8400-e29b-41d4-a716-446655440002'),
-          staffId: createStaffId('880e8400-e29b-41d4-a716-446655440003'),
-          serviceId: createServiceId('990e8400-e29b-41d4-a716-446655440004'),
+          id: createTestReservationId('550e8400-e29b-41d4-a716-446655440000'),
+          salonId: createTestSalonId('660e8400-e29b-41d4-a716-446655440001'),
+          customerId: createTestCustomerId(
+            '770e8400-e29b-41d4-a716-446655440002'
+          ),
+          staffId: createTestStaffId('880e8400-e29b-41d4-a716-446655440003'),
+          serviceId: createTestServiceId(
+            '990e8400-e29b-41d4-a716-446655440004'
+          ),
           startTime,
           endTime: addHours(startTime, 2),
           totalAmount: 10000,

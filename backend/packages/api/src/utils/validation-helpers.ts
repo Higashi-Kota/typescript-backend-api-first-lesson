@@ -161,19 +161,28 @@ export function escapeSqlWildcards(input: string): string {
  * ファイル名のサニタイゼーション
  */
 export function sanitizeFilename(filename: string): string {
+  // 拡張子を保存
+  const lastDotIndex = filename.lastIndexOf('.')
+  const extension = lastDotIndex > 0 ? filename.slice(lastDotIndex) : ''
+  const nameWithoutExtension =
+    lastDotIndex > 0 ? filename.slice(0, lastDotIndex) : filename
+
   // 危険な文字を除去
-  let sanitized = filename.replace(/[<>:"/\\|?*]/g, '')
+  let sanitized = nameWithoutExtension.replace(/[<>:"/\\|?*]/g, '')
 
   // 制御文字を除去（0x00-0x1F）
   for (let i = 0; i < 32; i++) {
     sanitized = sanitized.replace(new RegExp(String.fromCharCode(i), 'g'), '')
   }
 
-  return sanitized
+  sanitized = sanitized
     .replace(/\.{2,}/g, '.')
     .replace(/^\.+|\.+$/g, '')
     .trim()
-    .slice(0, 255) // 最大長を制限
+
+  // 拡張子を再追加（必要に応じて長さ制限）
+  const fullName = sanitized + extension
+  return fullName.slice(0, 255) // 最大長を制限
 }
 
 /**

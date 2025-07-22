@@ -135,6 +135,7 @@ export class DrizzleSessionRepository implements SessionRepository {
       const updatedRows = await this.db
         .update(sessions)
         .set({
+          refreshToken: dbSession.refreshToken,
           lastActivityAt: dbSession.lastActivityAt,
           expiresAt: dbSession.expiresAt,
         })

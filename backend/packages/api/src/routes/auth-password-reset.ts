@@ -1,270 +1,314 @@
 /**
- * Password Reset API Routes
- * パスワードリセット関連のAPIエンドポイント
+ * Password Reset Routes
+ * パスワードリセット機能の実装
  * CLAUDEガイドラインに準拠
  */
 
 import type {
+  EmailService,
   SessionRepository,
+  UserId,
   UserRepository,
 } from '@beauty-salon-backend/domain'
-import type { components } from '@beauty-salon-backend/types/api'
-import type { RequestPasswordResetDeps } from '@beauty-salon-backend/usecase'
-import type { ResetPasswordDeps } from '@beauty-salon-backend/usecase'
-import { requestPasswordResetUseCase } from '@beauty-salon-backend/usecase'
-import { verifyResetTokenUseCase } from '@beauty-salon-backend/usecase'
-import { resetPasswordUseCase } from '@beauty-salon-backend/usecase'
+import {
+  passwordChangedTemplate,
+  passwordResetTemplate,
+} from '@beauty-salon-backend/infrastructure'
+import type {
+  AuthAuditRepository,
+  PasswordResetTokenRepository,
+} from '@beauty-salon-backend/infrastructure'
+import bcrypt from 'bcrypt'
 import { Router } from 'express'
-import { match } from 'ts-pattern'
 import { z } from 'zod'
-import { passwordResetRateLimiter } from '../middleware/rate-limit.js'
+import { authRateLimiter } from '../middleware/rate-limit.js'
+import {
+  checkPasswordStrength,
+  commonSchemas,
+  formatValidationErrors,
+} from '../utils/validation-helpers.js'
 
-// バリデーションスキーマ
-const passwordResetRequestSchema = z.object({
-  email: z.string().email(),
-})
-
-const passwordResetConfirmSchema = z.object({
-  token: z.string().min(1),
-  newPassword: z.string().min(12).max(128),
-})
-
-const verifyTokenSchema = z.object({
-  token: z.string().min(1),
-})
-
-// 依存関係の注入用の型
-export type PasswordResetRouteDeps = {
+export interface PasswordResetRouteDeps {
   userRepository: UserRepository
   sessionRepository: SessionRepository
-  sendPasswordResetEmail: RequestPasswordResetDeps['sendPasswordResetEmail']
-  sendPasswordChangedEmail: ResetPasswordDeps['sendPasswordChangedEmail']
+  passwordResetTokenRepository: PasswordResetTokenRepository
+  authAuditRepository: AuthAuditRepository
+  emailService: EmailService
+  baseUrl: string
+  resetTokenExpiryHours?: number
 }
 
 export const createPasswordResetRoutes = (
   deps: PasswordResetRouteDeps
 ): Router => {
   const router = Router()
-  const { userRepository, sendPasswordResetEmail, sendPasswordChangedEmail } =
-    deps
+  const {
+    userRepository,
+    sessionRepository,
+    passwordResetTokenRepository,
+    authAuditRepository,
+    emailService,
+    baseUrl,
+    resetTokenExpiryHours = 1,
+  } = deps
 
   /**
-   * POST /auth/forgot-password - パスワードリセット申請
+   * POST /auth/forgot-password - パスワードリセット要求
    */
-  router.post(
-    '/forgot-password',
-    passwordResetRateLimiter,
-    async (req, res, next) => {
-      try {
-        // リクエストボディのバリデーション
-        const parseResult = passwordResetRequestSchema.safeParse(req.body)
-        if (!parseResult.success) {
-          const error: components['schemas']['Models.Error'] = {
-            code: 'VALIDATION_ERROR',
-            message: 'Invalid request data',
-            details: parseResult.error.flatten(),
-          }
-          return res.status(400).json(error)
-        }
+  router.post('/forgot-password', authRateLimiter, async (req, res, next) => {
+    try {
+      const schema = z.object({
+        email: commonSchemas.email,
+      })
 
-        const { email } = parseResult.data
+      const parseResult = schema.safeParse(req.body)
+      if (!parseResult.success) {
+        return res.status(400).json(formatValidationErrors(parseResult.error))
+      }
 
-        // パスワードリセット申請処理
-        const result = await requestPasswordResetUseCase(
-          { email },
-          { userRepository, sendPasswordResetEmail }
+      const { email } = parseResult.data
+      const ipAddress = req.ip
+      const userAgent = req.get('user-agent')
+
+      // ユーザーの存在確認
+      const userResult = await userRepository.findByEmail(email)
+
+      if (userResult.type === 'ok' && userResult.value) {
+        const user = userResult.value
+
+        // リセットトークンを生成
+        const tokenResult = await passwordResetTokenRepository.create(
+          user.data.id,
+          resetTokenExpiryHours
         )
 
-        // パターンマッチングでレスポンス
-        return match(result)
-          .with({ type: 'ok' }, () => {
-            const response: components['schemas']['Models.AuthSuccessResponse'] =
-              {
-                message:
-                  'If an account exists with this email, a password reset link has been sent',
-              }
-            res.status(200).json(response)
-          })
-          .with({ type: 'err', error: { type: 'tooManyRequests' } }, () => {
-            const error: components['schemas']['Models.Error'] = {
-              code: 'TOO_MANY_REQUESTS',
-              message:
-                'Too many password reset requests. Please try again later',
-            }
-            res.status(429).json(error)
-          })
-          .with(
-            { type: 'err', error: { type: 'emailServiceError' } },
-            ({ error }) => {
-              const errorResponse: components['schemas']['Models.Error'] = {
-                code: 'EMAIL_SERVICE_ERROR',
-                message: error.message,
-              }
-              res.status(500).json(errorResponse)
-            }
-          )
-          .with({ type: 'err' }, () => {
-            // 他のエラーでも同じレスポンスを返す（セキュリティのため）
-            const response: components['schemas']['Models.AuthSuccessResponse'] =
-              {
-                message:
-                  'If an account exists with this email, a password reset link has been sent',
-              }
-            res.status(200).json(response)
-          })
-          .exhaustive()
-      } catch (error) {
-        next(error)
-      }
-    }
-  )
+        if (tokenResult.type === 'ok') {
+          const token = tokenResult.value
+          const resetUrl = `${baseUrl}/auth/reset-password?token=${token.token}`
 
-  /**
-   * GET /auth/reset-password/verify - パスワードリセットトークン検証
-   */
-  router.get(
-    '/reset-password/verify',
-    passwordResetRateLimiter,
-    async (req, res, next) => {
-      try {
-        // クエリパラメータのバリデーション
-        const parseResult = verifyTokenSchema.safeParse(req.query)
-        if (!parseResult.success) {
-          const error: components['schemas']['Models.Error'] = {
-            code: 'VALIDATION_ERROR',
-            message: 'Invalid request data',
-            details: parseResult.error.flatten(),
-          }
-          return res.status(400).json(error)
+          // メール送信
+          const emailTemplate = passwordResetTemplate({
+            name: user.data.name,
+            resetUrl,
+            expiresIn: `${resetTokenExpiryHours}時間`,
+          })
+
+          await emailService.send({
+            to: [{ email: user.data.email }],
+            content: {
+              subject: emailTemplate.subject,
+              text: emailTemplate.text,
+              html: emailTemplate.html,
+            },
+            tags: { type: 'password-reset' },
+          })
+
+          // 監査ログ記録
+          await authAuditRepository.log({
+            userId: user.data.id,
+            eventType: 'password_reset_requested',
+            eventData: { email },
+            ipAddress,
+            userAgent,
+            success: true,
+          })
         }
-
-        const { token } = parseResult.data
-
-        // トークン検証処理
-        const result = await verifyResetTokenUseCase(
-          { token },
-          { userRepository }
-        )
-
-        // パターンマッチングでレスポンス
-        return match(result)
-          .with({ type: 'ok' }, () => {
-            const response: components['schemas']['Models.AuthSuccessResponse'] =
-              {
-                message: 'Token is valid',
-              }
-            res.status(200).json(response)
-          })
-          .with({ type: 'err', error: { type: 'invalidToken' } }, () => {
-            const error: components['schemas']['Models.Error'] = {
-              code: 'INVALID_TOKEN',
-              message: 'Invalid or expired reset token',
-            }
-            res.status(400).json(error)
-          })
-          .with({ type: 'err', error: { type: 'tokenExpired' } }, () => {
-            const error: components['schemas']['Models.Error'] = {
-              code: 'INVALID_TOKEN',
-              message: 'Invalid or expired reset token',
-            }
-            res.status(400).json(error)
-          })
-          .with({ type: 'err' }, () => {
-            const error: components['schemas']['Models.Error'] = {
-              code: 'INVALID_TOKEN',
-              message: 'Invalid or expired reset token',
-            }
-            res.status(400).json(error)
-          })
-          .exhaustive()
-      } catch (error) {
-        next(error)
+      } else {
+        // ユーザーが存在しない場合も監査ログに記録
+        await authAuditRepository.log({
+          eventType: 'password_reset_requested',
+          eventData: { email },
+          ipAddress,
+          userAgent,
+          success: false,
+          errorMessage: 'User not found',
+        })
       }
+
+      // セキュリティのため、常に同じレスポンスを返す
+      res.json({
+        message: 'If the email exists, a password reset link has been sent',
+      })
+    } catch (error) {
+      next(error)
     }
-  )
+  })
 
   /**
    * POST /auth/reset-password - パスワードリセット実行
    */
-  router.post(
-    '/reset-password',
-    passwordResetRateLimiter,
-    async (req, res, next) => {
-      try {
-        // リクエストボディのバリデーション
-        const parseResult = passwordResetConfirmSchema.safeParse(req.body)
-        if (!parseResult.success) {
-          const error: components['schemas']['Models.Error'] = {
-            code: 'VALIDATION_ERROR',
-            message: 'Invalid request data',
-            details: parseResult.error.flatten(),
-          }
-          return res.status(400).json(error)
-        }
+  router.post('/reset-password', async (req, res, next) => {
+    try {
+      const schema = z.object({
+        token: z.string(),
+        newPassword: commonSchemas.password,
+      })
 
-        const { token, newPassword } = parseResult.data
-
-        // パスワードリセット処理
-        const result = await resetPasswordUseCase(
-          { token, newPassword },
-          { userRepository, sendPasswordChangedEmail }
-        )
-
-        // パターンマッチングでレスポンス
-        return match(result)
-          .with({ type: 'ok' }, () => {
-            const response: components['schemas']['Models.AuthSuccessResponse'] =
-              {
-                message: 'Password has been reset successfully',
-              }
-            res.status(200).json(response)
-          })
-          .with({ type: 'err', error: { type: 'invalidToken' } }, () => {
-            const error: components['schemas']['Models.Error'] = {
-              code: 'INVALID_TOKEN',
-              message: 'Invalid or expired reset token',
-            }
-            res.status(400).json(error)
-          })
-          .with({ type: 'err', error: { type: 'tokenExpired' } }, () => {
-            const error: components['schemas']['Models.Error'] = {
-              code: 'INVALID_TOKEN',
-              message: 'Invalid or expired reset token',
-            }
-            res.status(400).json(error)
-          })
-          .with(
-            { type: 'err', error: { type: 'weakPassword' } },
-            ({ error }) => {
-              const errorResponse: components['schemas']['Models.Error'] = {
-                code: 'WEAK_PASSWORD',
-                message: 'Password does not meet security requirements',
-                details: { reason: error.reason },
-              }
-              res.status(400).json(errorResponse)
-            }
-          )
-          .with({ type: 'err', error: { type: 'passwordReused' } }, () => {
-            const error: components['schemas']['Models.Error'] = {
-              code: 'PASSWORD_REUSED',
-              message:
-                'Password has been used recently. Please choose a different password',
-            }
-            res.status(400).json(error)
-          })
-          .with({ type: 'err' }, () => {
-            const error: components['schemas']['Models.Error'] = {
-              code: 'INTERNAL_ERROR',
-              message: 'An error occurred while resetting password',
-            }
-            res.status(500).json(error)
-          })
-          .exhaustive()
-      } catch (error) {
-        next(error)
+      const parseResult = schema.safeParse(req.body)
+      if (!parseResult.success) {
+        return res.status(400).json(formatValidationErrors(parseResult.error))
       }
+
+      const { token, newPassword } = parseResult.data
+      const ipAddress = req.ip
+      const userAgent = req.get('user-agent')
+
+      // トークンの検証
+      const tokenResult = await passwordResetTokenRepository.findByToken(token)
+      if (tokenResult.type === 'err' || !tokenResult.value) {
+        await authAuditRepository.log({
+          eventType: 'password_reset_completed',
+          eventData: { token: `${token.substring(0, 8)}...` },
+          ipAddress,
+          userAgent,
+          success: false,
+          errorMessage: 'Invalid or expired token',
+        })
+
+        return res.status(400).json({
+          code: 'INVALID_TOKEN',
+          message: 'Invalid or expired password reset token',
+        })
+      }
+
+      const resetToken = tokenResult.value
+
+      // パスワード強度チェック
+      const passwordStrength = checkPasswordStrength(newPassword)
+      if (passwordStrength.score < 5) {
+        return res.status(400).json({
+          code: 'WEAK_PASSWORD',
+          message: 'Password is too weak',
+          details: passwordStrength.feedback,
+        })
+      }
+
+      // ユーザー取得
+      const userResult = await userRepository.findById(
+        resetToken.userId as UserId
+      )
+      if (userResult.type === 'err' || !userResult.value) {
+        return res.status(400).json({
+          code: 'USER_NOT_FOUND',
+          message: 'User not found',
+        })
+      }
+
+      const user = userResult.value
+
+      // パスワード履歴チェック（同じパスワードの再利用防止）
+      const passwordHistory = user.data.passwordHistory || []
+      for (const oldHash of passwordHistory) {
+        if (await bcrypt.compare(newPassword, oldHash)) {
+          return res.status(400).json({
+            code: 'PASSWORD_REUSED',
+            message:
+              'Password has been used recently. Please choose a different password.',
+          })
+        }
+      }
+
+      // 新しいパスワードのハッシュ化
+      const passwordHash = await bcrypt.hash(newPassword, 10)
+
+      // パスワード履歴の更新（最新5つを保持）
+      const updatedPasswordHistory = [
+        passwordHash,
+        ...passwordHistory.slice(0, 4),
+      ]
+
+      // ユーザー情報の更新
+      const updatedUser = {
+        ...user,
+        data: {
+          ...user.data,
+          passwordHash,
+          passwordHistory: updatedPasswordHistory,
+          passwordResetStatus: { type: 'none' as const },
+        },
+      }
+
+      const updateResult = await userRepository.save(updatedUser)
+      if (updateResult.type === 'err') {
+        return res.status(500).json({
+          code: 'UPDATE_FAILED',
+          message: 'Failed to update password',
+        })
+      }
+
+      // トークンを使用済みとしてマーク
+      await passwordResetTokenRepository.markAsUsed(token)
+
+      // 全セッションを無効化（セキュリティのため）
+      await sessionRepository.deleteByUserId(user.data.id)
+
+      // パスワード変更通知メールを送信
+      const emailTemplate = passwordChangedTemplate({
+        name: user.data.name,
+        changedAt: new Date(),
+        ipAddress,
+      })
+
+      await emailService.send({
+        to: [{ email: user.data.email }],
+        content: {
+          subject: emailTemplate.subject,
+          text: emailTemplate.text,
+          html: emailTemplate.html,
+        },
+        tags: { type: 'password-changed' },
+      })
+
+      // 監査ログ記録
+      await authAuditRepository.log({
+        userId: user.data.id,
+        eventType: 'password_reset_completed',
+        ipAddress,
+        userAgent,
+        success: true,
+      })
+
+      res.json({
+        message: 'Password has been reset successfully',
+      })
+    } catch (error) {
+      next(error)
     }
-  )
+  })
+
+  /**
+   * GET /auth/reset-password/validate - パスワードリセットトークンの検証
+   */
+  router.get('/reset-password/validate', async (req, res, next) => {
+    try {
+      const schema = z.object({
+        token: z.string(),
+      })
+
+      const parseResult = schema.safeParse(req.query)
+      if (!parseResult.success) {
+        return res.status(400).json(formatValidationErrors(parseResult.error))
+      }
+
+      const { token } = parseResult.data
+
+      // トークンの検証
+      const tokenResult = await passwordResetTokenRepository.findByToken(token)
+      if (tokenResult.type === 'err' || !tokenResult.value) {
+        return res.status(400).json({
+          code: 'INVALID_TOKEN',
+          message: 'Invalid or expired password reset token',
+        })
+      }
+
+      res.json({
+        valid: true,
+        expiresAt: tokenResult.value.expiresAt,
+      })
+    } catch (error) {
+      next(error)
+    }
+  })
 
   return router
 }

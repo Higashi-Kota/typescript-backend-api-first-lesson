@@ -6,21 +6,42 @@
       "idx": 0,
       "version": "7",
       "when": 1752762770000,
-      "tag": "0000_drop_existing_types",
+      "tag": "20250117_000001_drop_existing_types",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "7",
       "when": 1752762772097,
-      "tag": "0001_material_ironclad",
+      "tag": "20250117_000002_material_ironclad",
       "breakpoints": true
     },
     {
       "idx": 2,
       "version": "7",
       "when": 1752891691452,
-      "tag": "0002_neat_paibok",
+      "tag": "20250117_000003_neat_paibok",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1753140000000,
+      "tag": "20250121_000001_auth_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1753141000000,
+      "tag": "20250121_000002_fix_sessions_table",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1753210000000,
+      "tag": "20250122_000001_remove_sessions_trigger",
       "breakpoints": true
     }
   ]

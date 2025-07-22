@@ -9,6 +9,7 @@ import {
   type CreateCustomerInput,
   type Customer,
   type CustomerError,
+  type CustomerId,
   type MembershipLevel,
   type UpdateCustomerInput,
   addLoyaltyPoints,
@@ -27,6 +28,15 @@ import {
   validatePhoneNumber,
 } from '../customer.js'
 
+// Helper function to create CustomerId with null check
+const createTestCustomerId = (uuid: string): CustomerId => {
+  const id = createCustomerId(uuid)
+  if (!id) {
+    throw new Error(`Failed to create CustomerId from UUID: ${uuid}`)
+  }
+  return id
+}
+
 describe('Customer ID作成関数', () => {
   describe('createCustomerId', () => {
     it('should create a valid CustomerId', () => {
@@ -37,8 +47,11 @@ describe('Customer ID作成関数', () => {
       const customerId = createCustomerId(validUuid)
 
       // Assert
-      expect(customerId).toBe(validUuid)
-      expect(typeof customerId).toBe('string')
+      expect(customerId).not.toBeNull()
+      if (customerId) {
+        expect(customerId).toBe(validUuid)
+        expect(typeof customerId).toBe('string')
+      }
     })
   })
 
@@ -121,7 +134,7 @@ describe('Customer ID作成関数', () => {
   })
 })
 
-describe('バリデーション関数', () => {
+describe('バリデーション関数 - AAA Pattern Tests', () => {
   describe('validateEmail', () => {
     it('should accept valid email addresses', () => {
       // Arrange
@@ -132,6 +145,9 @@ describe('バリデーション関数', () => {
         'user123@example.co.jp',
         'a@example.com',
         'user@subdomain.example.com',
+        'very.long.email.address@subdomain.example.com',
+        'user-name@example-domain.com',
+        '123456@example.com',
       ]
 
       // Act & Assert
@@ -358,7 +374,7 @@ describe('ドメインロジック', () => {
   describe('createCustomer', () => {
     it('should create active customer with valid input', () => {
       // Arrange
-      const customerId = createCustomerId(
+      const customerId = createTestCustomerId(
         '550e8400-e29b-41d4-a716-446655440000'
       )
       const input: CreateCustomerInput = {
@@ -382,28 +398,30 @@ describe('ドメインロジック', () => {
       if (result.type === 'ok') {
         const customer = result.value
         expect(customer.type).toBe('active')
-        expect(customer.data.id).toBe(customerId)
-        expect(customer.data.name).toBe('山田太郎')
-        expect(customer.data.contactInfo).toEqual({
-          email: 'yamada@example.com',
-          phoneNumber: '090-1234-5678',
-        })
-        expect(customer.data.preferences).toBe('午前中の予約を希望')
-        expect(customer.data.notes).toBe('VIP顧客')
-        expect(customer.data.tags).toEqual(['VIP', '常連'])
-        expect(customer.data.birthDate).toEqual(new Date('1990-01-01'))
-        expect(customer.data.loyaltyPoints).toBe(0)
-        expect(customer.data.membershipLevel).toBe('regular')
-        expect(customer.data.createdAt.getTime()).toBeGreaterThanOrEqual(
-          beforeCreate.getTime()
-        )
-        expect(customer.data.updatedAt).toEqual(customer.data.createdAt)
+        if (customer.type === 'active') {
+          expect(customer.data.id).toBe(customerId)
+          expect(customer.data.name).toBe('山田太郎')
+          expect(customer.data.contactInfo).toEqual({
+            email: 'yamada@example.com',
+            phoneNumber: '090-1234-5678',
+          })
+          expect(customer.data.preferences).toBe('午前中の予約を希望')
+          expect(customer.data.notes).toBe('VIP顧客')
+          expect(customer.data.tags).toEqual(['VIP', '常連'])
+          expect(customer.data.birthDate).toEqual(new Date('1990-01-01'))
+          expect(customer.data.loyaltyPoints).toBe(0)
+          expect(customer.data.membershipLevel).toBe('regular')
+          expect(customer.data.createdAt.getTime()).toBeGreaterThanOrEqual(
+            beforeCreate.getTime()
+          )
+          expect(customer.data.updatedAt).toEqual(customer.data.createdAt)
+        }
       }
     })
 
     it('should create customer with minimal input', () => {
       // Arrange
-      const customerId = createCustomerId(
+      const customerId = createTestCustomerId(
         '550e8400-e29b-41d4-a716-446655440000'
       )
       const input: CreateCustomerInput = {
@@ -421,16 +439,18 @@ describe('ドメインロジック', () => {
       expect(result.type).toBe('ok')
       if (result.type === 'ok') {
         const customer = result.value
-        expect(customer.data.preferences).toBeNull()
-        expect(customer.data.notes).toBeNull()
-        expect(customer.data.tags).toEqual([])
-        expect(customer.data.birthDate).toBeNull()
+        if (customer.type === 'active') {
+          expect(customer.data.preferences).toBeNull()
+          expect(customer.data.notes).toBeNull()
+          expect(customer.data.tags).toEqual([])
+          expect(customer.data.birthDate).toBeNull()
+        }
       }
     })
 
     it('should return error for invalid name', () => {
       // Arrange
-      const customerId = createCustomerId(
+      const customerId = createTestCustomerId(
         '550e8400-e29b-41d4-a716-446655440000'
       )
       const input: CreateCustomerInput = {
@@ -453,7 +473,7 @@ describe('ドメインロジック', () => {
 
     it('should return error for invalid email', () => {
       // Arrange
-      const customerId = createCustomerId(
+      const customerId = createTestCustomerId(
         '550e8400-e29b-41d4-a716-446655440000'
       )
       const input: CreateCustomerInput = {
@@ -476,7 +496,7 @@ describe('ドメインロジック', () => {
 
     it('should return error for invalid phone number', () => {
       // Arrange
-      const customerId = createCustomerId(
+      const customerId = createTestCustomerId(
         '550e8400-e29b-41d4-a716-446655440000'
       )
       const input: CreateCustomerInput = {
@@ -502,7 +522,7 @@ describe('ドメインロジック', () => {
     const createActiveCustomer = (): Customer => ({
       type: 'active',
       data: {
-        id: createCustomerId('550e8400-e29b-41d4-a716-446655440000'),
+        id: createTestCustomerId('550e8400-e29b-41d4-a716-446655440000'),
         name: '山田太郎',
         contactInfo: {
           email: 'yamada@example.com',
@@ -535,11 +555,13 @@ describe('ドメインロジック', () => {
       if (result.type === 'ok') {
         const updated = result.value
         expect(updated.type).toBe('active')
-        expect(updated.data.name).toBe('山田次郎')
-        expect(updated.data.contactInfo).toEqual(customer.data.contactInfo)
-        expect(updated.data.updatedAt.getTime()).toBeGreaterThanOrEqual(
-          beforeUpdate.getTime()
-        )
+        if (updated.type === 'active') {
+          expect(updated.data.name).toBe('山田次郎')
+          expect(updated.data.contactInfo).toEqual(customer.data.contactInfo)
+          expect(updated.data.updatedAt.getTime()).toBeGreaterThanOrEqual(
+            beforeUpdate.getTime()
+          )
+        }
       }
     })
 
@@ -549,6 +571,7 @@ describe('ドメインロジック', () => {
       const input: UpdateCustomerInput = {
         contactInfo: {
           email: 'newemail@example.com',
+          phoneNumber: customer.data.contactInfo.phoneNumber,
         },
       }
 
@@ -559,8 +582,10 @@ describe('ドメインロジック', () => {
       expect(result.type).toBe('ok')
       if (result.type === 'ok') {
         const updated = result.value
-        expect(updated.data.contactInfo.email).toBe('newemail@example.com')
-        expect(updated.data.contactInfo.phoneNumber).toBe('090-1234-5678')
+        if (updated.type === 'active') {
+          expect(updated.data.contactInfo.email).toBe('newemail@example.com')
+          expect(updated.data.contactInfo.phoneNumber).toBe('090-1234-5678')
+        }
       }
     })
 
@@ -580,9 +605,11 @@ describe('ドメインロジック', () => {
       expect(result.type).toBe('ok')
       if (result.type === 'ok') {
         const updated = result.value
-        expect(updated.data.preferences).toBeNull()
-        expect(updated.data.notes).toBeNull()
-        expect(updated.data.birthDate).toBeNull()
+        if (updated.type === 'active') {
+          expect(updated.data.preferences).toBeNull()
+          expect(updated.data.notes).toBeNull()
+          expect(updated.data.birthDate).toBeNull()
+        }
       }
     })
 
@@ -617,6 +644,7 @@ describe('ドメインロジック', () => {
       const input: UpdateCustomerInput = {
         contactInfo: {
           email: 'invalid@',
+          phoneNumber: customer.data.contactInfo.phoneNumber,
         },
       }
 
@@ -635,6 +663,7 @@ describe('ドメインロジック', () => {
       const customer = createActiveCustomer()
       const input: UpdateCustomerInput = {
         contactInfo: {
+          email: customer.data.contactInfo.email,
           phoneNumber: '123',
         },
       }
@@ -680,7 +709,7 @@ describe('ドメインロジック', () => {
       const activeCustomer: Customer = {
         type: 'active',
         data: {
-          id: createCustomerId('550e8400-e29b-41d4-a716-446655440000'),
+          id: createTestCustomerId('550e8400-e29b-41d4-a716-446655440000'),
           name: '山田太郎',
           contactInfo: {
             email: 'yamada@example.com',
@@ -722,7 +751,7 @@ describe('ドメインロジック', () => {
       const suspendedCustomer: Customer = {
         type: 'suspended',
         data: {
-          id: createCustomerId('550e8400-e29b-41d4-a716-446655440000'),
+          id: createTestCustomerId('550e8400-e29b-41d4-a716-446655440000'),
           name: '山田太郎',
           contactInfo: {
             email: 'yamada@example.com',
@@ -756,7 +785,7 @@ describe('ドメインロジック', () => {
       const deletedCustomer: Customer = {
         type: 'deleted',
         data: {
-          id: createCustomerId('550e8400-e29b-41d4-a716-446655440000'),
+          id: createTestCustomerId('550e8400-e29b-41d4-a716-446655440000'),
           name: '山田太郎',
           contactInfo: {
             email: 'yamada@example.com',
@@ -791,7 +820,7 @@ describe('ドメインロジック', () => {
       const suspendedCustomer: Customer = {
         type: 'suspended',
         data: {
-          id: createCustomerId('550e8400-e29b-41d4-a716-446655440000'),
+          id: createTestCustomerId('550e8400-e29b-41d4-a716-446655440000'),
           name: '山田太郎',
           contactInfo: {
             email: 'yamada@example.com',
@@ -834,7 +863,7 @@ describe('ドメインロジック', () => {
       const activeCustomer: Customer = {
         type: 'active',
         data: {
-          id: createCustomerId('550e8400-e29b-41d4-a716-446655440000'),
+          id: createTestCustomerId('550e8400-e29b-41d4-a716-446655440000'),
           name: '山田太郎',
           contactInfo: {
             email: 'yamada@example.com',
@@ -866,7 +895,7 @@ describe('ドメインロジック', () => {
       const deletedCustomer: Customer = {
         type: 'deleted',
         data: {
-          id: createCustomerId('550e8400-e29b-41d4-a716-446655440000'),
+          id: createTestCustomerId('550e8400-e29b-41d4-a716-446655440000'),
           name: '山田太郎',
           contactInfo: {
             email: 'yamada@example.com',
@@ -901,7 +930,7 @@ describe('ドメインロジック', () => {
       const activeCustomer: Customer = {
         type: 'active',
         data: {
-          id: createCustomerId('550e8400-e29b-41d4-a716-446655440000'),
+          id: createTestCustomerId('550e8400-e29b-41d4-a716-446655440000'),
           name: '山田太郎',
           contactInfo: {
             email: 'yamada@example.com',
@@ -941,7 +970,7 @@ describe('ドメインロジック', () => {
       const suspendedCustomer: Customer = {
         type: 'suspended',
         data: {
-          id: createCustomerId('550e8400-e29b-41d4-a716-446655440000'),
+          id: createTestCustomerId('550e8400-e29b-41d4-a716-446655440000'),
           name: '山田太郎',
           contactInfo: {
             email: 'yamada@example.com',
@@ -983,7 +1012,7 @@ describe('ドメインロジック', () => {
       const deletedCustomer: Customer = {
         type: 'deleted',
         data: {
-          id: createCustomerId('550e8400-e29b-41d4-a716-446655440000'),
+          id: createTestCustomerId('550e8400-e29b-41d4-a716-446655440000'),
           name: '山田太郎',
           contactInfo: {
             email: 'yamada@example.com',
@@ -1018,7 +1047,7 @@ describe('ドメインロジック', () => {
       const activeCustomer: Customer = {
         type: 'active',
         data: {
-          id: createCustomerId('550e8400-e29b-41d4-a716-446655440000'),
+          id: createTestCustomerId('550e8400-e29b-41d4-a716-446655440000'),
           name: '山田太郎',
           contactInfo: {
             email: 'yamada@example.com',
@@ -1072,7 +1101,7 @@ describe('ドメインロジック', () => {
         const customer: Customer = {
           type: 'active',
           data: {
-            id: createCustomerId('550e8400-e29b-41d4-a716-446655440000'),
+            id: createTestCustomerId('550e8400-e29b-41d4-a716-446655440000'),
             name: '山田太郎',
             contactInfo: {
               email: 'yamada@example.com',
@@ -1094,11 +1123,12 @@ describe('ドメインロジック', () => {
 
         // Assert
         expect(result.type).toBe('ok')
-        if (result.type === 'ok' && result.value.type === 'active') {
-          expect(result.value.data.loyaltyPoints).toBe(
-            initialPoints + addPoints
-          )
-          expect(result.value.data.membershipLevel).toBe(expectedLevel)
+        if (result.type === 'ok') {
+          const updated = result.value
+          if (updated.type === 'active') {
+            expect(updated.data.loyaltyPoints).toBe(initialPoints + addPoints)
+            expect(updated.data.membershipLevel).toBe(expectedLevel)
+          }
         }
       }
     })
@@ -1108,7 +1138,7 @@ describe('ドメインロジック', () => {
       const suspendedCustomer: Customer = {
         type: 'suspended',
         data: {
-          id: createCustomerId('550e8400-e29b-41d4-a716-446655440000'),
+          id: createTestCustomerId('550e8400-e29b-41d4-a716-446655440000'),
           name: '山田太郎',
           contactInfo: {
             email: 'yamada@example.com',
@@ -1145,7 +1175,7 @@ describe('ドメインロジック', () => {
       const deletedCustomer: Customer = {
         type: 'deleted',
         data: {
-          id: createCustomerId('550e8400-e29b-41d4-a716-446655440000'),
+          id: createTestCustomerId('550e8400-e29b-41d4-a716-446655440000'),
           name: '山田太郎',
           contactInfo: {
             email: 'yamada@example.com',
@@ -1181,7 +1211,7 @@ describe('ドメインロジック', () => {
       const activeCustomer: Customer = {
         type: 'active',
         data: {
-          id: createCustomerId('550e8400-e29b-41d4-a716-446655440000'),
+          id: createTestCustomerId('550e8400-e29b-41d4-a716-446655440000'),
           name: '山田太郎',
           contactInfo: {
             email: 'yamada@example.com',
@@ -1203,9 +1233,12 @@ describe('ドメインロジック', () => {
 
       // Assert
       expect(result.type).toBe('ok')
-      if (result.type === 'ok' && result.value.type === 'active') {
-        expect(result.value.data.loyaltyPoints).toBe(4000)
-        expect(result.value.data.membershipLevel).toBe('silver')
+      if (result.type === 'ok') {
+        const updated = result.value
+        if (updated.type === 'active') {
+          expect(updated.data.loyaltyPoints).toBe(4000)
+          expect(updated.data.membershipLevel).toBe('silver')
+        }
       }
     })
   })
@@ -1252,7 +1285,7 @@ describe('ドメインロジック', () => {
       const activeCustomer: Customer = {
         type: 'active',
         data: {
-          id: createCustomerId('550e8400-e29b-41d4-a716-446655440000'),
+          id: createTestCustomerId('550e8400-e29b-41d4-a716-446655440000'),
           name: '山田太郎',
           contactInfo: {
             email: 'yamada@example.com',
@@ -1281,7 +1314,7 @@ describe('ドメインロジック', () => {
       const suspendedCustomer: Customer = {
         type: 'suspended',
         data: {
-          id: createCustomerId('550e8400-e29b-41d4-a716-446655440000'),
+          id: createTestCustomerId('550e8400-e29b-41d4-a716-446655440000'),
           name: '山田太郎',
           contactInfo: {
             email: 'yamada@example.com',
@@ -1312,7 +1345,7 @@ describe('ドメインロジック', () => {
       const deletedCustomer: Customer = {
         type: 'deleted',
         data: {
-          id: createCustomerId('550e8400-e29b-41d4-a716-446655440000'),
+          id: createTestCustomerId('550e8400-e29b-41d4-a716-446655440000'),
           name: '山田太郎',
           contactInfo: {
             email: 'yamada@example.com',
@@ -1344,7 +1377,7 @@ describe('ドメインロジック', () => {
       const activeCustomer: Customer = {
         type: 'active',
         data: {
-          id: createCustomerId('550e8400-e29b-41d4-a716-446655440000'),
+          id: createTestCustomerId('550e8400-e29b-41d4-a716-446655440000'),
           name: '山田太郎',
           contactInfo: {
             email: 'yamada@example.com',
@@ -1373,7 +1406,7 @@ describe('ドメインロジック', () => {
       const suspendedCustomer: Customer = {
         type: 'suspended',
         data: {
-          id: createCustomerId('550e8400-e29b-41d4-a716-446655440000'),
+          id: createTestCustomerId('550e8400-e29b-41d4-a716-446655440000'),
           name: '山田太郎',
           contactInfo: {
             email: 'yamada@example.com',
@@ -1404,7 +1437,7 @@ describe('ドメインロジック', () => {
       const deletedCustomer: Customer = {
         type: 'deleted',
         data: {
-          id: createCustomerId('550e8400-e29b-41d4-a716-446655440000'),
+          id: createTestCustomerId('550e8400-e29b-41d4-a716-446655440000'),
           name: '山田太郎',
           contactInfo: {
             email: 'yamada@example.com',
@@ -1438,7 +1471,7 @@ describe('Sum型のパターンマッチング網羅性', () => {
       {
         type: 'active',
         data: {
-          id: createCustomerId('550e8400-e29b-41d4-a716-446655440001'),
+          id: createTestCustomerId('550e8400-e29b-41d4-a716-446655440001'),
           name: 'アクティブ顧客',
           contactInfo: {
             email: 'active@example.com',
@@ -1457,7 +1490,7 @@ describe('Sum型のパターンマッチング網羅性', () => {
       {
         type: 'suspended',
         data: {
-          id: createCustomerId('550e8400-e29b-41d4-a716-446655440002'),
+          id: createTestCustomerId('550e8400-e29b-41d4-a716-446655440002'),
           name: '停止中顧客',
           contactInfo: {
             email: 'suspended@example.com',
@@ -1478,7 +1511,7 @@ describe('Sum型のパターンマッチング網羅性', () => {
       {
         type: 'deleted',
         data: {
-          id: createCustomerId('550e8400-e29b-41d4-a716-446655440003'),
+          id: createTestCustomerId('550e8400-e29b-41d4-a716-446655440003'),
           name: '削除済み顧客',
           contactInfo: {
             email: 'deleted@example.com',
@@ -1546,11 +1579,11 @@ describe('Sum型のパターンマッチング網羅性', () => {
       { type: 'duplicateEmail', email: 'duplicate@example.com' },
       {
         type: 'customerNotFound',
-        id: createCustomerId('550e8400-e29b-41d4-a716-446655440000'),
+        id: createTestCustomerId('550e8400-e29b-41d4-a716-446655440000'),
       },
       {
         type: 'customerSuspended',
-        id: createCustomerId('550e8400-e29b-41d4-a716-446655440000'),
+        id: createTestCustomerId('550e8400-e29b-41d4-a716-446655440000'),
       },
       { type: 'invalidName', name: '' },
     ]

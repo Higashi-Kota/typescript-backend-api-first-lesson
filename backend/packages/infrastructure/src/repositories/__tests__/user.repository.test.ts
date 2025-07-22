@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import type { UserId } from '@beauty-salon-backend/domain'
 import {
-  TestDatabaseSetup,
+  SchemaIsolation,
   TestEnvironment,
   UserBuilder,
 } from '@beauty-salon-backend/test-utils'
@@ -18,14 +18,14 @@ import {
   expect,
   it,
 } from 'vitest'
-import { DrizzleUserRepository } from '../../src/repositories/user.repository.js'
+import { DrizzleUserRepository } from '../user.repository.js'
 
 describe('UserRepository Integration Tests', () => {
   let testEnv: TestEnvironment
   let db: PostgresJsDatabase
-  let dbSetup: TestDatabaseSetup
   let repository: DrizzleUserRepository
   let client: postgres.Sql
+  let schemaIsolation: SchemaIsolation
 
   beforeAll(async () => {
     // Start test containers
@@ -35,11 +35,13 @@ describe('UserRepository Integration Tests', () => {
     // Create database client and setup
     client = postgres(connectionString)
     db = drizzle(client)
-    dbSetup = new TestDatabaseSetup(db)
 
     // Create extensions once
     await db.execute(sql`CREATE EXTENSION IF NOT EXISTS "pgcrypto"`)
     await db.execute(sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`)
+
+    // Initialize schema isolation
+    schemaIsolation = new SchemaIsolation(db)
   }, 30000) // 30秒のタイムアウト
 
   afterAll(async () => {
@@ -53,14 +55,15 @@ describe('UserRepository Integration Tests', () => {
 
   beforeEach(async () => {
     // Setup database with enums and tables
-    await dbSetup.setupDatabase()
+    await schemaIsolation.cleanupPublicSchema()
+    await schemaIsolation.applyMigrations('public')
 
     repository = new DrizzleUserRepository(db)
   })
 
   afterEach(async () => {
     // Clean up database
-    await dbSetup.cleanupDatabase()
+    await schemaIsolation.cleanupPublicSchema()
   })
 
   describe('save', () => {

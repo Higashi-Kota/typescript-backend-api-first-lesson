@@ -1,113 +1,165 @@
 /**
- * Email Verification API Routes
- * メールアドレス検証関連のAPIエンドポイント
+ * Email Verification Routes
+ * メール検証機能の実装
  * CLAUDEガイドラインに準拠
  */
 
-import type { UserId, UserRepository } from '@beauty-salon-backend/domain'
-import type { components } from '@beauty-salon-backend/types/api'
-import type { SendEmailVerificationDeps } from '@beauty-salon-backend/usecase'
-import { sendEmailVerificationUseCase } from '@beauty-salon-backend/usecase'
-import { confirmEmailVerificationUseCase } from '@beauty-salon-backend/usecase'
+import type {
+  EmailService,
+  UserId,
+  UserRepository,
+} from '@beauty-salon-backend/domain'
+import { emailVerificationTemplate } from '@beauty-salon-backend/infrastructure'
+import type {
+  AuthAuditRepository,
+  EmailVerificationTokenRepository,
+} from '@beauty-salon-backend/infrastructure'
 import { Router } from 'express'
-import { match } from 'ts-pattern'
 import { z } from 'zod'
 import { authenticate } from '../middleware/auth.middleware.js'
 import type { AuthConfig } from '../middleware/auth.middleware.js'
 import { authRateLimiter } from '../middleware/rate-limit.js'
+import {
+  commonSchemas,
+  formatValidationErrors,
+} from '../utils/validation-helpers.js'
 
-// バリデーションスキーマ
-const emailVerificationRequestSchema = z.object({
-  token: z.string().min(1),
-})
-
-// 依存関係の注入用の型
-export type EmailVerificationRouteDeps = {
+export interface EmailVerificationRouteDeps {
   userRepository: UserRepository
-  sendEmailVerification: SendEmailVerificationDeps['sendEmailVerification']
+  emailVerificationTokenRepository: EmailVerificationTokenRepository
+  authAuditRepository: AuthAuditRepository
+  emailService: EmailService
   authConfig: AuthConfig
+  baseUrl: string
+  verificationTokenExpiryDays?: number
 }
 
 export const createEmailVerificationRoutes = (
   deps: EmailVerificationRouteDeps
 ): Router => {
   const router = Router()
-  const { userRepository, sendEmailVerification, authConfig } = deps
+  const {
+    userRepository,
+    emailVerificationTokenRepository,
+    authAuditRepository,
+    emailService,
+    authConfig,
+    baseUrl,
+    verificationTokenExpiryDays = 7,
+  } = deps
 
   /**
-   * POST /auth/verify-email/send - メール検証リンク送信
+   * POST /auth/verify-email/send - メール確認リンク送信
    */
   router.post(
     '/verify-email/send',
-    authRateLimiter,
     authenticate(authConfig),
+    authRateLimiter,
     async (req, res, next) => {
       try {
         if (!req.user) {
-          const error: components['schemas']['Models.Error'] = {
+          return res.status(401).json({
             code: 'UNAUTHORIZED',
             message: 'Authentication required',
-          }
-          return res.status(401).json(error)
+          })
         }
 
-        // メール検証送信処理
-        const result = await sendEmailVerificationUseCase(
-          { userId: req.user.id as UserId },
-          { userRepository, sendEmailVerification }
+        const ipAddress = req.ip
+        const userAgent = req.get('user-agent')
+
+        // ユーザー情報を取得
+        const userResult = await userRepository.findById(req.user.id as UserId)
+        if (userResult.type === 'err' || !userResult.value) {
+          return res.status(404).json({
+            code: 'USER_NOT_FOUND',
+            message: 'User not found',
+          })
+        }
+
+        const user = userResult.value
+
+        // 既に検証済みかチェック
+        if (user.data.emailVerified) {
+          await authAuditRepository.log({
+            userId: user.data.id,
+            eventType: 'email_verification_sent',
+            eventData: { alreadyVerified: true },
+            ipAddress,
+            userAgent,
+            success: false,
+            errorMessage: 'Email already verified',
+          })
+
+          return res.status(400).json({
+            code: 'ALREADY_VERIFIED',
+            message: 'Email address is already verified',
+          })
+        }
+
+        // 検証トークンを生成
+        const tokenResult = await emailVerificationTokenRepository.create(
+          user.data.id,
+          user.data.email,
+          verificationTokenExpiryDays
         )
 
-        // パターンマッチングでレスポンス
-        return match(result)
-          .with({ type: 'ok' }, () => {
-            const response: components['schemas']['Models.AuthSuccessResponse'] =
-              {
-                message: 'Verification email has been sent',
-              }
-            res.status(200).json(response)
+        if (tokenResult.type === 'err') {
+          return res.status(500).json({
+            code: 'TOKEN_GENERATION_FAILED',
+            message: 'Failed to generate verification token',
           })
-          .with({ type: 'err', error: { type: 'userNotFound' } }, () => {
-            const error: components['schemas']['Models.Error'] = {
-              code: 'USER_NOT_FOUND',
-              message: 'User not found',
-            }
-            res.status(404).json(error)
+        }
+
+        const token = tokenResult.value
+        const verifyUrl = `${baseUrl}/auth/verify-email?token=${token.token}`
+
+        // メール送信
+        const emailTemplate = emailVerificationTemplate({
+          name: user.data.name,
+          verifyUrl,
+          expiresIn: `${verificationTokenExpiryDays}日間`,
+        })
+
+        const sendResult = await emailService.send({
+          to: [{ email: user.data.email }],
+          content: {
+            subject: emailTemplate.subject,
+            text: emailTemplate.text,
+            html: emailTemplate.html,
+          },
+          tags: { type: 'email-verification' },
+        })
+
+        if (sendResult.type === 'err') {
+          await authAuditRepository.log({
+            userId: user.data.id,
+            eventType: 'email_verification_sent',
+            eventData: { email: user.data.email },
+            ipAddress,
+            userAgent,
+            success: false,
+            errorMessage: 'Failed to send email',
           })
-          .with(
-            { type: 'err', error: { type: 'emailAlreadyVerified' } },
-            () => {
-              const error: components['schemas']['Models.Error'] = {
-                code: 'EMAIL_ALREADY_VERIFIED',
-                message: 'Email is already verified',
-              }
-              res.status(400).json(error)
-            }
-          )
-          .with({ type: 'err', error: { type: 'tooManyRequests' } }, () => {
-            const error: components['schemas']['Models.Error'] = {
-              code: 'TOO_MANY_REQUESTS',
-              message: 'Too many verification requests. Please try again later',
-            }
-            res.status(429).json(error)
+
+          return res.status(500).json({
+            code: 'EMAIL_SEND_FAILED',
+            message: 'Failed to send verification email',
           })
-          .with(
-            { type: 'err', error: { type: 'emailServiceError' } },
-            ({ error }) => {
-              const errorResponse: components['schemas']['Models.Error'] = {
-                code: 'EMAIL_SERVICE_ERROR',
-                message: error.message,
-              }
-              res.status(500).json(errorResponse)
-            }
-          )
-          .with({ type: 'err' }, () => {
-            const error: components['schemas']['Models.Error'] = {
-              code: 'INTERNAL_ERROR',
-              message: 'An error occurred while sending verification email',
-            }
-            res.status(500).json(error)
-          })
-          .exhaustive()
+        }
+
+        // 監査ログ記録
+        await authAuditRepository.log({
+          userId: user.data.id,
+          eventType: 'email_verification_sent',
+          eventData: { email: user.data.email },
+          ipAddress,
+          userAgent,
+          success: true,
+        })
+
+        res.json({
+          message: 'Verification email sent',
+        })
       } catch (error) {
         next(error)
       }
@@ -115,73 +167,248 @@ export const createEmailVerificationRoutes = (
   )
 
   /**
-   * POST /auth/verify-email/confirm - メール検証確認
+   * POST /auth/verify-email/confirm - メール確認実行
+   */
+  router.post('/verify-email/confirm', async (req, res, next) => {
+    try {
+      const schema = z.object({
+        token: z.string(),
+      })
+
+      const parseResult = schema.safeParse(req.body)
+      if (!parseResult.success) {
+        return res.status(400).json(formatValidationErrors(parseResult.error))
+      }
+
+      const { token } = parseResult.data
+      const ipAddress = req.ip
+      const userAgent = req.get('user-agent')
+
+      // トークンの検証
+      const tokenResult =
+        await emailVerificationTokenRepository.findByToken(token)
+      if (tokenResult.type === 'err' || !tokenResult.value) {
+        await authAuditRepository.log({
+          eventType: 'email_verified',
+          eventData: { token: `${token.substring(0, 8)}...` },
+          ipAddress,
+          userAgent,
+          success: false,
+          errorMessage: 'Invalid or expired token',
+        })
+
+        return res.status(400).json({
+          code: 'INVALID_TOKEN',
+          message: 'Invalid or expired verification token',
+        })
+      }
+
+      const verificationToken = tokenResult.value
+
+      // ユーザー取得
+      const userResult = await userRepository.findById(
+        verificationToken.userId as UserId
+      )
+      if (userResult.type === 'err' || !userResult.value) {
+        return res.status(404).json({
+          code: 'USER_NOT_FOUND',
+          message: 'User not found',
+        })
+      }
+
+      const user = userResult.value
+
+      // 既に検証済みかチェック
+      if (user.data.emailVerified) {
+        await authAuditRepository.log({
+          userId: user.data.id,
+          eventType: 'email_verified',
+          eventData: { alreadyVerified: true },
+          ipAddress,
+          userAgent,
+          success: false,
+          errorMessage: 'Email already verified',
+        })
+
+        return res.status(400).json({
+          code: 'ALREADY_VERIFIED',
+          message: 'Email address is already verified',
+        })
+      }
+
+      // メールアドレスが一致するかチェック
+      if (user.data.email !== verificationToken.email) {
+        await authAuditRepository.log({
+          userId: user.data.id,
+          eventType: 'email_verified',
+          eventData: {
+            expectedEmail: verificationToken.email,
+            actualEmail: user.data.email,
+          },
+          ipAddress,
+          userAgent,
+          success: false,
+          errorMessage: 'Email mismatch',
+        })
+
+        return res.status(400).json({
+          code: 'EMAIL_MISMATCH',
+          message: 'Email address does not match',
+        })
+      }
+
+      // ユーザー情報の更新
+      const updatedUser = {
+        ...user,
+        status:
+          user.status.type === 'unverified'
+            ? { type: 'active' as const }
+            : user.status,
+        data: {
+          ...user.data,
+          emailVerified: true,
+        },
+      }
+
+      const updateResult = await userRepository.save(updatedUser)
+      if (updateResult.type === 'err') {
+        return res.status(500).json({
+          code: 'UPDATE_FAILED',
+          message: 'Failed to update user',
+        })
+      }
+
+      // トークンを検証済みとしてマーク
+      await emailVerificationTokenRepository.markAsVerified(token)
+
+      // 監査ログ記録
+      await authAuditRepository.log({
+        userId: user.data.id,
+        eventType: 'email_verified',
+        eventData: { email: user.data.email },
+        ipAddress,
+        userAgent,
+        success: true,
+      })
+
+      res.json({
+        message: 'Email verified successfully',
+      })
+    } catch (error) {
+      next(error)
+    }
+  })
+
+  /**
+   * GET /auth/verify-email/status - メール検証状態の確認
+   */
+  router.get(
+    '/verify-email/status',
+    authenticate(authConfig),
+    async (req, res, next) => {
+      try {
+        if (!req.user) {
+          return res.status(401).json({
+            code: 'UNAUTHORIZED',
+            message: 'Authentication required',
+          })
+        }
+
+        // ユーザー情報を取得
+        const userResult = await userRepository.findById(req.user.id as UserId)
+        if (userResult.type === 'err' || !userResult.value) {
+          return res.status(404).json({
+            code: 'USER_NOT_FOUND',
+            message: 'User not found',
+          })
+        }
+
+        const user = userResult.value
+
+        res.json({
+          emailVerified: user.data.emailVerified,
+          email: user.data.email,
+        })
+      } catch (error) {
+        next(error)
+      }
+    }
+  )
+
+  /**
+   * POST /auth/verify-email/resend - メール確認リンク再送信
    */
   router.post(
-    '/verify-email/confirm',
+    '/verify-email/resend',
     authRateLimiter,
     async (req, res, next) => {
       try {
-        // リクエストボディのバリデーション
-        const parseResult = emailVerificationRequestSchema.safeParse(req.body)
+        const schema = z.object({
+          email: commonSchemas.email,
+        })
+
+        const parseResult = schema.safeParse(req.body)
         if (!parseResult.success) {
-          const error: components['schemas']['Models.Error'] = {
-            code: 'VALIDATION_ERROR',
-            message: 'Invalid request data',
-            details: parseResult.error.flatten(),
-          }
-          return res.status(400).json(error)
+          return res.status(400).json(formatValidationErrors(parseResult.error))
         }
 
-        const { token } = parseResult.data
+        const { email } = parseResult.data
+        const ipAddress = req.ip
+        const userAgent = req.get('user-agent')
 
-        // メール検証確認処理
-        const result = await confirmEmailVerificationUseCase(
-          { token },
-          { userRepository }
-        )
+        // ユーザーの存在確認（セキュリティのため、存在しなくても同じレスポンスを返す）
+        const userResult = await userRepository.findByEmail(email)
 
-        // パターンマッチングでレスポンス
-        return match(result)
-          .with({ type: 'ok' }, () => {
-            const response: components['schemas']['Models.AuthSuccessResponse'] =
-              {
-                message: 'Email has been verified successfully',
-              }
-            res.status(200).json(response)
-          })
-          .with({ type: 'err', error: { type: 'invalidToken' } }, () => {
-            const error: components['schemas']['Models.Error'] = {
-              code: 'INVALID_TOKEN',
-              message: 'Invalid or expired verification token',
+        if (userResult.type === 'ok' && userResult.value) {
+          const user = userResult.value
+
+          if (!user.data.emailVerified) {
+            // 新しい検証トークンを生成
+            const tokenResult = await emailVerificationTokenRepository.create(
+              user.data.id,
+              user.data.email,
+              verificationTokenExpiryDays
+            )
+
+            if (tokenResult.type === 'ok') {
+              const token = tokenResult.value
+              const verifyUrl = `${baseUrl}/auth/verify-email?token=${token.token}`
+
+              // メール送信
+              const emailTemplate = emailVerificationTemplate({
+                name: user.data.name,
+                verifyUrl,
+                expiresIn: `${verificationTokenExpiryDays}日間`,
+              })
+
+              await emailService.send({
+                to: [{ email: user.data.email }],
+                content: {
+                  subject: emailTemplate.subject,
+                  text: emailTemplate.text,
+                  html: emailTemplate.html,
+                },
+                tags: { type: 'email-verification-resend' },
+              })
+
+              // 監査ログ記録
+              await authAuditRepository.log({
+                userId: user.data.id,
+                eventType: 'email_verification_sent',
+                eventData: { email, resend: true },
+                ipAddress,
+                userAgent,
+                success: true,
+              })
             }
-            res.status(400).json(error)
-          })
-          .with({ type: 'err', error: { type: 'tokenExpired' } }, () => {
-            const error: components['schemas']['Models.Error'] = {
-              code: 'INVALID_TOKEN',
-              message: 'Invalid or expired verification token',
-            }
-            res.status(400).json(error)
-          })
-          .with(
-            { type: 'err', error: { type: 'emailAlreadyVerified' } },
-            () => {
-              const error: components['schemas']['Models.Error'] = {
-                code: 'EMAIL_ALREADY_VERIFIED',
-                message: 'Email is already verified',
-              }
-              res.status(400).json(error)
-            }
-          )
-          .with({ type: 'err' }, () => {
-            const error: components['schemas']['Models.Error'] = {
-              code: 'INTERNAL_ERROR',
-              message: 'An error occurred while verifying email',
-            }
-            res.status(500).json(error)
-          })
-          .exhaustive()
+          }
+        }
+
+        // セキュリティのため、常に同じレスポンスを返す
+        res.json({
+          message:
+            'If the email exists and is not verified, a verification link has been sent',
+        })
       } catch (error) {
         next(error)
       }

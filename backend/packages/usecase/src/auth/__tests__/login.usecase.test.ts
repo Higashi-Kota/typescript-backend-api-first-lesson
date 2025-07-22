@@ -209,9 +209,11 @@ describe('Login Use Case', () => {
       if (result.type === 'err') {
         expect(result.error.type).toBe('accountLocked')
         if (result.error.type === 'accountLocked') {
-          expect(result.error.until).toEqual(
-            new Date(lockedUser.status.lockedAt.getTime() + 30 * 60 * 1000)
-          )
+          if (lockedUser.status.type === 'locked') {
+            expect(result.error.until).toEqual(
+              new Date(lockedUser.status.lockedAt.getTime() + 30 * 60 * 1000)
+            )
+          }
         }
       }
     })
@@ -468,7 +470,7 @@ describe('Login Use Case', () => {
       const request = createLoginRequest()
 
       vi.mocked(mockDeps.userRepository.findByEmail).mockResolvedValue(
-        err({ type: 'databaseError', error: new Error('DB connection failed') })
+        err({ type: 'databaseError', message: 'DB connection failed' })
       )
 
       const result = await login(request, mockDeps)
@@ -489,7 +491,7 @@ describe('Login Use Case', () => {
       )
       vi.mocked(mockDeps.verifyPassword).mockResolvedValue(true)
       vi.mocked(mockDeps.sessionRepository.save).mockResolvedValue(
-        err({ type: 'databaseError', error: new Error('Session save failed') })
+        err({ type: 'databaseError', message: 'Session save failed' })
       )
 
       const result = await login(request, mockDeps)

@@ -1,22 +1,29 @@
 /**
  * CSRF Protection Middleware
- * CSRF攻撃対策のためのミドルウェア
+ * Sum型とts-patternを使用した型安全なCSRF対策の実装
  */
 
 import { randomBytes } from 'node:crypto'
 import type { NextFunction, Request, Response } from 'express'
+import { match } from 'ts-pattern'
 
-// Express Sessionの型拡張
+/**
+ * CSRFトークン検証結果
+ */
+type TokenValidationResult =
+  | { type: 'valid' }
+  | { type: 'invalid'; reason: string }
+  | { type: 'missing' }
+  | { type: 'error'; message: string }
+
+/**
+ * セッションの型拡張
+ */
 declare module 'express-session' {
   interface SessionData {
     _csrf?: string
   }
 }
-
-/**
- * CSRFトークンのヘッダー名
- */
-const CSRF_HEADER_NAME = 'X-CSRF-Token'
 
 /**
  * CSRFトークンを生成
@@ -26,7 +33,7 @@ export function generateCsrfToken(): string {
 }
 
 /**
- * CSRFトークンをセッションに保存
+ * セッションにCSRFトークンを保存
  */
 export function saveCsrfTokenToSession(req: Request, token: string): void {
   if (req.session) {
@@ -38,37 +45,28 @@ export function saveCsrfTokenToSession(req: Request, token: string): void {
  * セッションからCSRFトークンを取得
  */
 export function getCsrfTokenFromSession(req: Request): string | undefined {
-  if (req.session) {
-    return req.session._csrf
-  }
-  return undefined
+  return req.session?._csrf
 }
 
 /**
  * リクエストからCSRFトークンを取得
  */
 export function getCsrfTokenFromRequest(req: Request): string | undefined {
-  // ヘッダーから取得
-  const headerToken = req.headers[CSRF_HEADER_NAME.toLowerCase()] as string
-  if (headerToken) {
-    return headerToken
-  }
+  // 優先順位: Header > Body > Query
+  const headerToken = req.headers['x-csrf-token'] as string | undefined
+  if (headerToken) return headerToken
 
-  // ボディから取得
-  if (req.body?._csrf) {
-    return req.body._csrf
-  }
+  const bodyToken = req.body?._csrf as string | undefined
+  if (bodyToken) return bodyToken
 
-  // クエリパラメータから取得
-  if (req.query?._csrf) {
-    return req.query._csrf as string
-  }
+  const queryToken = req.query?._csrf as string | undefined
+  if (queryToken) return queryToken
 
   return undefined
 }
 
 /**
- * CSRF保護が必要なメソッドかチェック
+ * HTTPメソッドが保護対象かチェック
  */
 export function isMethodRequiresProtection(method: string): boolean {
   const protectedMethods = ['POST', 'PUT', 'DELETE', 'PATCH']
@@ -76,93 +74,157 @@ export function isMethodRequiresProtection(method: string): boolean {
 }
 
 /**
- * CSRF保護から除外するパスかチェック
+ * パスが除外対象かチェック
  */
 export function isPathExcluded(path: string, excludePaths: string[]): boolean {
   return excludePaths.some((excludePath) => {
     if (excludePath.endsWith('*')) {
-      return path.startsWith(excludePath.slice(0, -1))
+      const prefix = excludePath.slice(0, -1)
+      return path.startsWith(prefix)
     }
     return path === excludePath
   })
 }
 
 /**
- * CSRF保護ミドルウェアのオプション
+ * CSRFトークンを検証
+ */
+function validateCsrfToken(
+  sessionToken: string | undefined,
+  requestToken: string | undefined
+): TokenValidationResult {
+  if (!sessionToken) {
+    return { type: 'error', message: 'No CSRF token in session' }
+  }
+
+  if (!requestToken) {
+    return { type: 'missing' }
+  }
+
+  if (sessionToken !== requestToken) {
+    return { type: 'invalid', reason: 'Token mismatch' }
+  }
+
+  return { type: 'valid' }
+}
+
+/**
+ * CSRF保護設定
  */
 export interface CsrfProtectionOptions {
+  /** 除外するパス */
   excludePaths?: string[]
-  cookie?: boolean
+  /** セッションが必須かどうか */
   sessionRequired?: boolean
+  /** エラー時のレスポンスカスタマイズ */
+  onError?: (error: string, req: Request, res: Response) => void
 }
 
 /**
  * CSRF保護ミドルウェア
  */
-export function csrfProtection(options: CsrfProtectionOptions = {}) {
-  const {
-    excludePaths = [
-      '/api/v1/auth/login',
-      '/api/v1/auth/register',
-      '/api/v1/auth/refresh',
-    ],
-    sessionRequired = true,
-  } = options
+export function csrfProtection(
+  options: CsrfProtectionOptions = {}
+): (req: Request, res: Response, next: NextFunction) => void {
+  const { excludePaths = [], sessionRequired = true, onError } = options
 
-  return (req: Request, res: Response, next: NextFunction) => {
-    // 除外パスの場合はスキップ
-    if (isPathExcluded(req.path, excludePaths)) {
-      return next()
+  return (req: Request, res: Response, next: NextFunction): void => {
+    // セッションチェック
+    if (sessionRequired && !req.session) {
+      const errorResponse = {
+        code: 'SESSION_REQUIRED',
+        message: 'Session is required for CSRF protection',
+      }
+
+      if (onError) {
+        onError(errorResponse.message, req, res)
+      } else {
+        res.status(403).json(errorResponse)
+      }
+      return
     }
 
-    // GET, HEAD, OPTIONSリクエストの場合はトークンを生成して次へ
+    // 除外パスのチェック
+    if (excludePaths.length > 0 && isPathExcluded(req.path, excludePaths)) {
+      next()
+      return
+    }
+
+    // 安全なメソッドの処理
     if (!isMethodRequiresProtection(req.method)) {
-      // セッションがある場合はトークンを生成
-      if (req.session || !sessionRequired) {
+      // GETリクエストなどでトークンを生成・設定
+      if (req.session) {
         let token = getCsrfTokenFromSession(req)
         if (!token) {
           token = generateCsrfToken()
           saveCsrfTokenToSession(req, token)
         }
+
         // レスポンスヘッダーにトークンを設定
-        res.setHeader(CSRF_HEADER_NAME, token)
+        res.setHeader('X-CSRF-Token', token)
       }
-      return next()
+
+      next()
+      return
     }
 
-    // セッションが必要な場合はチェック
-    if (sessionRequired && !req.session) {
-      return res.status(403).json({
-        code: 'SESSION_REQUIRED',
-        message: 'Session is required for CSRF protection',
-      })
-    }
-
-    // セッショントークンとリクエストトークンを比較
+    // 保護対象メソッドの検証
     const sessionToken = getCsrfTokenFromSession(req)
     const requestToken = getCsrfTokenFromRequest(req)
+    const validationResult = validateCsrfToken(sessionToken, requestToken)
 
-    if (!sessionToken || !requestToken || sessionToken !== requestToken) {
-      return res.status(403).json({
-        code: 'INVALID_CSRF_TOKEN',
-        message: 'Invalid or missing CSRF token',
+    match(validationResult)
+      .with({ type: 'valid' }, () => next())
+      .with({ type: 'missing' }, () => {
+        const errorResponse = {
+          code: 'INVALID_CSRF_TOKEN',
+          message: 'Invalid or missing CSRF token',
+        }
+
+        if (onError) {
+          onError(errorResponse.message, req, res)
+        } else {
+          res.status(403).json(errorResponse)
+        }
       })
-    }
+      .with({ type: 'invalid' }, (_r) => {
+        const errorResponse = {
+          code: 'INVALID_CSRF_TOKEN',
+          message: 'Invalid or missing CSRF token',
+        }
 
-    // トークンが一致した場合は次へ
-    next()
+        if (onError) {
+          onError(errorResponse.message, req, res)
+        } else {
+          res.status(403).json(errorResponse)
+        }
+      })
+      .with({ type: 'error' }, (r) => {
+        const errorResponse = {
+          code: 'CSRF_ERROR',
+          message: r.message,
+        }
+
+        if (onError) {
+          onError(r.message, req, res)
+        } else {
+          res.status(403).json(errorResponse)
+        }
+      })
+      .exhaustive()
   }
 }
 
 /**
- * CSRFトークンを取得するエンドポイントハンドラー
+ * CSRFトークンを取得するハンドラー
  */
-export function csrfTokenHandler(req: Request, res: Response) {
+export function csrfTokenHandler(req: Request, res: Response): void {
   if (!req.session) {
-    return res.status(400).json({
+    res.status(400).json({
       code: 'SESSION_REQUIRED',
       message: 'Session is required to generate CSRF token',
     })
+    return
   }
 
   let token = getCsrfTokenFromSession(req)
@@ -171,7 +233,5 @@ export function csrfTokenHandler(req: Request, res: Response) {
     saveCsrfTokenToSession(req, token)
   }
 
-  res.json({
-    csrfToken: token,
-  })
+  res.json({ csrfToken: token })
 }

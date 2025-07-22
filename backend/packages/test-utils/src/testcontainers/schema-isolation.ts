@@ -1,4 +1,5 @@
-import { randomUUID } from 'node:crypto'
+import { readFileSync, readdirSync } from 'node:fs'
+import { join } from 'node:path'
 import { sql } from 'drizzle-orm'
 
 export interface TestContext {
@@ -7,50 +8,195 @@ export interface TestContext {
 }
 
 export class SchemaIsolation {
-  private readonly schemaPrefix = 'test_'
-
   // biome-ignore lint/suspicious/noExplicitAny: Database type comes from external package
   constructor(private readonly db: any) {} // Using any to avoid circular dependency
 
   async createIsolatedSchema(): Promise<string> {
-    const schemaName = `${this.schemaPrefix}${randomUUID().replace(/-/g, '_')}`
+    // For now, always use public schema with proper cleanup
+    // This is simpler and more reliable than schema-based isolation with Drizzle
+    await this.cleanupPublicSchema()
+    await this.applyMigrations('public')
+    return 'public'
+  }
 
-    // Create new schema
-    await this.db.execute(
-      sql`CREATE SCHEMA IF NOT EXISTS ${sql.identifier(schemaName)}`
-    )
+  async cleanupPublicSchema(): Promise<void> {
+    // Drop all tables using CASCADE to handle foreign keys
+    try {
+      // Get all tables in public schema
+      const tables = await this.db.execute(sql`
+        SELECT table_name 
+        FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_type = 'BASE TABLE'
+      `)
 
-    // Set search path to the new schema, including public for extensions
-    await this.db.execute(
-      sql`SET search_path TO ${sql.identifier(schemaName)}, public`
-    )
+      // Drop each table with CASCADE
+      for (const table of tables) {
+        try {
+          await this.db.execute(
+            sql`DROP TABLE IF EXISTS ${sql.identifier(table.table_name)} CASCADE`
+          )
+        } catch (_e) {
+          // Ignore errors for individual tables
+        }
+      }
+    } catch (_e) {
+      // If we can't get tables, try dropping known tables
+      const knownTables = [
+        'download_logs',
+        'share_links',
+        'attachments',
+        'trusted_ip_addresses',
+        'auth_audit_logs',
+        'failed_login_attempts',
+        'user_2fa_secrets',
+        'user_sessions',
+        'email_verification_tokens',
+        'password_reset_tokens',
+        'reviews',
+        'booking_reservations',
+        'bookings',
+        'reservations',
+        'services',
+        'service_categories',
+        'staff_working_hours',
+        'staff',
+        'opening_hours',
+        'sessions',
+        'users',
+        'customers',
+        'salons',
+      ]
 
-    // Apply migrations to the new schema
-    await this.applyMigrations(schemaName)
+      for (const table of knownTables) {
+        try {
+          await this.db.execute(
+            sql`DROP TABLE IF EXISTS ${sql.identifier(table)} CASCADE`
+          )
+        } catch (_e) {
+          // Ignore errors
+        }
+      }
+    }
 
-    return schemaName
+    // Drop all types
+    try {
+      const types = await this.db.execute(sql`
+        SELECT typname 
+        FROM pg_type 
+        WHERE typnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public')
+        AND typtype = 'e'
+      `)
+
+      for (const type of types) {
+        try {
+          await this.db.execute(
+            sql`DROP TYPE IF EXISTS ${sql.identifier(type.typname)} CASCADE`
+          )
+        } catch (_e) {
+          // Ignore errors
+        }
+      }
+    } catch (_e) {
+      // If we can't get types, try dropping known types
+      const knownTypes = [
+        'file_type',
+        'two_factor_status',
+        'user_account_status',
+        'user_role',
+        'booking_status',
+        'reservation_status',
+        'service_category',
+        'day_of_week',
+      ]
+
+      for (const type of knownTypes) {
+        try {
+          await this.db.execute(
+            sql`DROP TYPE IF EXISTS ${sql.identifier(type)} CASCADE`
+          )
+        } catch (_e) {
+          // Ignore errors
+        }
+      }
+    }
   }
 
   async dropSchema(schemaName: string): Promise<void> {
-    // Drop schema and all its contents
-    await this.db.execute(
-      sql`DROP SCHEMA IF EXISTS ${sql.identifier(schemaName)} CASCADE`
-    )
+    // If using public schema, just clean it up
+    if (schemaName === 'public') {
+      await this.cleanupPublicSchema()
+    } else {
+      // Drop schema and all its contents
+      await this.db.execute(
+        sql`DROP SCHEMA IF EXISTS ${sql.identifier(schemaName)} CASCADE`
+      )
+    }
   }
 
-  async applyMigrations(schemaName: string): Promise<void> {
-    // Set the schema for migrations
-    await this.db.execute(
-      sql`SET search_path TO ${sql.identifier(schemaName)}, public`
-    )
+  async applyMigrations(_schemaName: string): Promise<void> {
+    try {
+      // Execute SQL files directly since Drizzle migrate isn't working correctly
+      const migrationsFolder =
+        '/home/aine/higashi-wrksp/typescript-backend-api-first-lesson/backend/apps/migration/scripts'
 
-    // Import and use TestDatabaseSetup to create tables
-    const { TestDatabaseSetup } = await import('./database-setup.js')
-    const dbSetup = new TestDatabaseSetup(this.db)
+      console.log('Running migrations by executing SQL files directly')
 
-    // Create enums and tables in the isolated schema
-    await dbSetup.createEnums()
-    await dbSetup.createUsersTable()
+      // Get all SQL files in order
+      const files = readdirSync(migrationsFolder)
+        .filter((f) => f.endsWith('.sql'))
+        .sort()
+
+      console.log(`Found migration files: ${files.join(', ')}`)
+
+      // Execute each migration file
+      for (const file of files) {
+        console.log(`Executing migration: ${file}`)
+        const sqlContent = readFileSync(join(migrationsFolder, file), 'utf-8')
+
+        // Split by statement separator and execute each
+        const statements = sqlContent.split('--> statement-breakpoint')
+
+        for (const statement of statements) {
+          if (statement.trim()) {
+            try {
+              await this.db.execute(sql.raw(statement))
+            } catch (error) {
+              // Ignore errors about existing types
+              if (
+                error instanceof Error &&
+                error.message?.includes('already exists')
+              ) {
+                console.log(`Skipping: ${error.message}`)
+                continue
+              }
+              console.error(
+                `Error executing statement: ${error instanceof Error ? error.message : String(error)}`
+              )
+              throw error
+            }
+          }
+        }
+      }
+
+      console.log('All migrations executed successfully')
+
+      // Verify tables were created
+      const tables = await this.db.execute(sql`
+        SELECT table_name 
+        FROM information_schema.tables 
+        WHERE table_schema = 'public'
+        AND table_name IN ('users', 'sessions', 'auth_audit_logs', 'failed_login_attempts')
+        ORDER BY table_name
+      `)
+      console.log(
+        'Tables created:',
+        tables.map((t: { table_name: string }) => t.table_name).join(', ')
+      )
+    } catch (error) {
+      console.error('Migration error:', error)
+      throw error
+    }
   }
 }
 

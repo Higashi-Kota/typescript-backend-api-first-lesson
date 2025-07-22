@@ -20,10 +20,15 @@
   },
   "devDependencies": {
     "@beauty-salon-shared/config": "workspace:*",
+    "@types/crypto-js": "^4.2.2",
     "@types/qrcode": "^1.5.5",
-    "@types/speakeasy": "^2.0.10"
+    "@types/speakeasy": "^2.0.10",
+    "dotenv": "^16.6.1"
   },
   "dependencies": {
+    "crypto-js": "^4.2.0",
+    "mailgun.js": "^10.4.0",
+    "otplib": "^12.0.1",
     "qrcode": "^1.5.4",
     "speakeasy": "^2.0.0"
   }
