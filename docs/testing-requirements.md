@@ -75,99 +75,351 @@ describe('calculateTaskPriority', () => {
 - エラーハンドリングの検証
 - **Testcontainersを使用した実際のデータベース環境でのテスト**
 
-### AAA（Arrange-Act-Assert）パターン
+### AAA（Arrange-Act-Assert）パターン + 仕様化テスト統合
 
-各テストを以下の3つのフェーズで構成：
-
-```typescript
-it('should handle example feature', async () => {
-  // Arrange（準備）: テストの前提条件を設定
-  const app = await setupTestApp();
-  const user = await createAndAuthenticateUser(app);
-  const initialData = createTestData();
-  
-  // Act（実行）: テスト対象の操作を実行
-  const response = await request(app)
-    .post('/api/endpoint')
-    .set('Authorization', `Bearer ${user.token}`)
-    .send(initialData);
-  
-  // Assert（検証）: 期待される結果を確認
-  expect(response.status).toBe(200);
-  await verifyDatabaseState(db, expectedState);
-  await verifySideEffects(app);
-});
-```
-
-### テスト設計の必須要素
-
-#### 1. Arrange（準備）フェーズ
-
-- 実際のデータを作成（モックやハードコードされた値を避ける）
-- 必要な前提条件をすべて満たす
-- テスト環境の初期状態を明確に定義
+各テストを仕様として記述し、実行可能なドキュメントとして機能させる拡張AAAパターン：
 
 ```typescript
-// ✅ 良い例: 実際のデータを動的に作成
-const user = await createTestUser({
-  email: `test-${randomUUID()}@example.com`,
-  role: 'member'
-});
-
-const task = await createTestTask({
-  title: 'Test Task',
-  assigneeId: user.id,
-  dueDate: addDays(new Date(), 7)
-});
-
-// ❌ 悪い例: ハードコードされた値
-const userId = 'user-123'; // 固定ID
-const taskId = 'task-456'; // 固定ID
-```
-
-#### 2. Act（実行）フェーズ
-
-- 実際のユーザー操作を再現
-- 1つのテストにつき1つの主要なアクションに焦点を当てる
-- APIエンドポイントへの実際のHTTPリクエストを実行
-
-```typescript
-const response = await request(app)
-  .put(`/tasks/${task.id}`)
-  .set('Authorization', `Bearer ${user.token}`)
-  .send({
-    status: 'completed'
+// 統合テストが仕様書となる記述方式
+describe('予約API仕様', () => {
+  /**
+   * @api POST /reservations
+   * @summary 新規予約を作成
+   * @description 顧客が新しい予約を作成します
+   */
+  it('Given: 空きスロットがある、When: 有効なデータで予約作成、Then: 201で予約が作成される', async () => {
+    // Arrange（準備）: 仕様の前提条件を明示
+    // - ビジネスルール: 営業時間は10:00-20:00、30分単位
+    const businessRules = {
+      openTime: '10:00',
+      closeTime: '20:00', 
+      slotDuration: 30
+    };
+    
+    const staff = await given.aStaffMember()
+      .withAvailableSlot('2024-02-01T10:00:00Z')
+      .exists();
+    
+    const service = await given.aService()
+      .withDuration(60)
+      .withPrice(5000)
+      .exists();
+    
+    const { token } = await given.anAuthenticatedCustomer();
+    
+    // Act（実行）: API仕様の定義
+    const requestBody = {
+      staffId: staff.id,
+      serviceId: service.id,
+      scheduledFor: '2024-02-01T10:00:00Z'
+    };
+    
+    const response = await request(app)
+      .post('/reservations')
+      .set('Authorization', `Bearer ${token}`)
+      .send(requestBody);
+    
+    // Assert（検証）: 期待される振る舞いを仕様として記述
+    // レスポンス仕様
+    expect(response.status).toBe(201);
+    expect(response.body).toMatchObject({
+      type: 'success',
+      data: {
+        id: expect.stringMatching(/^[0-9a-f-]{36}$/),
+        status: 'pending',
+        totalAmount: 5000
+      }
+    });
+    
+    // ビジネスルールの検証
+    const savedReservation = await db.reservation.findUnique({
+      where: { id: response.body.data.id }
+    });
+    expect(savedReservation?.scheduledFor).toEqual(new Date('2024-02-01T10:00:00Z'));
+    expect(savedReservation?.endTime).toEqual(new Date('2024-02-01T11:00:00Z'));
+    
+    // 副作用の仕様
+    await expect(db.staffSchedule.findFirst({
+      where: { 
+        staffId: staff.id,
+        date: '2024-02-01',
+        slot: '10:00'
+      }
+    })).resolves.toMatchObject({
+      status: 'booked'
+    });
   });
+});
 ```
 
-#### 3. Assert（検証）フェーズ
+### 統合AAAパターンの要素
 
-- レスポンスのステータスコードと本文を検証
-- データベースの状態変更を確認
-- 副作用（ログ、通知、関連データの更新）を検証
-- エラーケースではエラーメッセージの内容も確認
+#### 1. Arrange（準備）フェーズ - 仕様の前提条件
+
+##### 1.1 ビジネスルールの明示化
+- 営業時間、予約単位、制約条件などを定数として定義
+- テストコード内でビジネスルールを明文化
+- 実装とテストで同じルールを参照
+
+##### 1.2 テストデータの構築
+- Given-When-Thenスタイルでの記述
+- ビルダーパターンによる流暢なデータ作成
+- 実際のDBに保存される実データを使用
+
+##### 1.3 前提条件の検証
+- テスト実行前の状態確認
+- 必要なマスターデータの存在確認
+- 環境依存の設定値の検証
+
+#### 2. Act（実行）フェーズ - API仕様の定義
+
+##### 2.1 エンドポイント仕様
+- HTTPメソッドとパスの明示
+- Content-Type、Authorizationヘッダーの指定
+- リクエストボディの完全な例示
+
+##### 2.2 認証・認可の仕様
+- 必要な認証トークンの形式
+- ロールベースアクセス制御の要件
+- APIキーやセッション管理の方法
+
+##### 2.3 リクエストパラメータ仕様
+- 必須/任意パラメータの区別
+- データ型とフォーマット（UUID、ISO8601等）
+- バリデーションルールの明示
+
+#### 3. Assert（検証）フェーズ - 期待される振る舞い
+
+##### 3.1 HTTPレスポンス仕様
+- ステータスコード（200、201、400、409等）
+- レスポンスヘッダー（Content-Type、Cache-Control等）
+- レスポンスタイムの期待値
+
+##### 3.2 レスポンスボディ仕様
+- 成功時のデータ構造と型
+- エラー時のエラーコードとメッセージ形式
+- ページネーション情報の構造
+
+##### 3.3 データベース状態の仕様
+- 作成/更新されるレコードの検証
+- リレーションの整合性確認
+- トランザクション境界の確認
+
+##### 3.4 副作用の仕様
+- 関連テーブルへの影響
+- 通知やイベントの発火
+- 監査ログの記録
+- キャッシュの更新
+
+### 統合テスト実装の完全例
 
 ```typescript
-// レスポンスの検証
-expect(response.status).toBe(200);
-expect(response.body.type).toBe('success');
-expect(response.body.data.status).toBe('completed');
+// backend/packages/api/src/__tests__/reservation-specification.test.ts
+import { TestEnvironment } from '../setup/testcontainers';
+import { given, when, then } from '../helpers/bdd-helpers';
 
-// データベースの状態を確認
-const updatedTask = await db.task.findUnique({
-  where: { id: task.id }
-});
-expect(updatedTask?.status).toBe('completed');
-expect(updatedTask?.completedAt).toBeDefined();
+/**
+ * 予約システムAPI仕様書
+ * このテストファイルが予約APIの正式な仕様書として機能します
+ */
+describe('予約システムAPI仕様', () => {
+  let testEnv: TestEnvironment;
+  let app: Application;
+  
+  beforeAll(async () => {
+    testEnv = await TestEnvironment.getInstance();
+    app = await createApp(testEnv.getConnectionString());
+  });
 
-// 副作用の検証（例：監査ログ）
-const auditLog = await db.auditLog.findFirst({
-  where: {
-    entityId: task.id,
-    action: 'UPDATE'
-  }
+  describe('POST /reservations - 新規予約作成', () => {
+    /**
+     * 仕様1: 正常な予約作成
+     * ビジネスルール: 
+     * - 営業時間: 10:00-20:00
+     * - 予約単位: 30分
+     * - 最終受付: 19:00
+     */
+    it('Given: 利用可能なスタッフとサービス、When: 有効なデータで予約作成、Then: 201で予約が作成される', async () => {
+      // Arrange: ビジネスルールと前提条件を仕様として記述
+      const BUSINESS_HOURS = { open: '10:00', close: '20:00' };
+      const SLOT_DURATION = 30; // minutes
+      
+      const staff = await given.aStaffMember()
+        .withName('山田太郎')
+        .withSchedule('2024-02-01', ['10:00', '10:30', '11:00']) // 利用可能スロット
+        .exists();
+      
+      const service = await given.aService()
+        .withName('カット')
+        .withDuration(60) // 2スロット必要
+        .withPrice(5000)
+        .exists();
+      
+      const customer = await given.anAuthenticatedCustomer()
+        .withName('鈴木花子')
+        .exists();
+      
+      // Act: API呼び出し（これが仕様のリクエスト例となる）
+      const requestPayload = {
+        staffId: staff.id,
+        serviceId: service.id,
+        scheduledFor: '2024-02-01T10:00:00Z'
+      };
+      
+      const response = await request(app)
+        .post('/reservations')
+        .set('Authorization', `Bearer ${customer.token}`)
+        .send(requestPayload);
+      
+      // Assert: 期待される振る舞いの仕様
+      // 1. HTTPレスポンス仕様
+      expect(response.status).toBe(201);
+      expect(response.headers['content-type']).toMatch(/json/);
+      
+      // 2. レスポンスボディ仕様
+      expect(response.body).toMatchObject({
+        type: 'success',
+        data: {
+          id: expect.stringMatching(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/),
+          status: 'pending',
+          customerId: customer.id,
+          staffId: staff.id,
+          serviceId: service.id,
+          scheduledFor: '2024-02-01T10:00:00.000Z',
+          endTime: '2024-02-01T11:00:00.000Z', // 60分後
+          totalAmount: 5000,
+          createdAt: expect.any(String)
+        }
+      });
+      
+      // 3. データベース状態の仕様
+      const savedReservation = await testEnv.prisma.reservation.findUnique({
+        where: { id: response.body.data.id }
+      });
+      expect(savedReservation).toBeTruthy();
+      expect(savedReservation?.status).toBe('PENDING');
+      
+      // 4. 副作用の仕様（スタッフスケジュールの更新）
+      const blockedSlots = await testEnv.prisma.staffSchedule.findMany({
+        where: {
+          staffId: staff.id,
+          date: '2024-02-01',
+          status: 'BOOKED'
+        }
+      });
+      expect(blockedSlots).toHaveLength(2); // 10:00と10:30の2スロット
+      expect(blockedSlots.map(s => s.time)).toEqual(['10:00', '10:30']);
+    });
+
+    /**
+     * 仕様2: バリデーションエラー
+     */
+    it('Given: 必須フィールドが不足、When: 不完全なデータで予約作成、Then: 400エラー', async () => {
+      const customer = await given.anAuthenticatedCustomer().exists();
+      
+      // 必須フィールドのテストケース
+      const requiredFields = [
+        { field: 'staffId', value: undefined },
+        { field: 'serviceId', value: undefined },
+        { field: 'scheduledFor', value: undefined }
+      ];
+      
+      for (const testCase of requiredFields) {
+        const payload = {
+          staffId: 'valid-staff-id',
+          serviceId: 'valid-service-id',
+          scheduledFor: '2024-02-01T10:00:00Z',
+          [testCase.field]: testCase.value
+        };
+        
+        const response = await request(app)
+          .post('/reservations')
+          .set('Authorization', `Bearer ${customer.token}`)
+          .send(payload);
+        
+        expect(response.status).toBe(400);
+        expect(response.body).toMatchObject({
+          type: 'validationError',
+          errors: expect.arrayContaining([
+            expect.objectContaining({
+              field: testCase.field,
+              code: 'required',
+              message: expect.any(String)
+            })
+          ])
+        });
+      }
+    });
+
+    /**
+     * 仕様3: ビジネスルール違反
+     */
+    it('Given: 営業時間外の予約時間、When: 予約作成、Then: 400エラー', async () => {
+      const customer = await given.anAuthenticatedCustomer().exists();
+      
+      const invalidTimes = [
+        { time: '2024-02-01T09:30:00Z', reason: '営業開始前' },
+        { time: '2024-02-01T20:00:00Z', reason: '営業終了後' },
+        { time: '2024-02-01T10:15:00Z', reason: '30分単位でない' }
+      ];
+      
+      for (const testCase of invalidTimes) {
+        const response = await request(app)
+          .post('/reservations')
+          .set('Authorization', `Bearer ${customer.token}`)
+          .send({
+            staffId: 'valid-staff-id',
+            serviceId: 'valid-service-id',
+            scheduledFor: testCase.time
+          });
+        
+        expect(response.status).toBe(400);
+        expect(response.body.errors[0]).toMatchObject({
+          field: 'scheduledFor',
+          code: 'invalid_time',
+          message: expect.stringContaining(testCase.reason)
+        });
+      }
+    });
+
+    /**
+     * 仕様4: リソース競合
+     */
+    it('Given: すでに予約済みの時間帯、When: 同じ時間に予約作成、Then: 409エラー', async () => {
+      const timeSlot = '2024-02-01T14:00:00Z';
+      
+      // 既存の予約を作成
+      const existingReservation = await given.aReservation()
+        .at(timeSlot)
+        .withStaff('staff-1')
+        .exists();
+      
+      const customer = await given.anAuthenticatedCustomer().exists();
+      
+      const response = await request(app)
+        .post('/reservations')
+        .set('Authorization', `Bearer ${customer.token}`)
+        .send({
+          staffId: 'staff-1',
+          serviceId: 'service-1', 
+          scheduledFor: timeSlot
+        });
+      
+      expect(response.status).toBe(409);
+      expect(response.body).toMatchObject({
+        type: 'error',
+        error: {
+          code: 'STAFF_ALREADY_BOOKED',
+          message: '指定された時間帯はすでに予約済みです',
+          details: {
+            staffId: 'staff-1',
+            requestedTime: timeSlot
+          }
+        }
+      });
+    });
+  });
 });
-expect(auditLog).toBeDefined();
 ```
 
 ### Sum型とts-patternを活用したテストシナリオ
