@@ -1,5 +1,6 @@
 import { readFileSync, readdirSync } from 'node:fs'
-import { join } from 'node:path'
+import { join, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { sql } from 'drizzle-orm'
 
 export interface TestContext {
@@ -137,13 +138,48 @@ export class SchemaIsolation {
   async applyMigrations(_schemaName: string): Promise<void> {
     try {
       // Execute SQL files directly since Drizzle migrate isn't working correctly
-      const migrationsFolder =
-        '/home/aine/higashi-wrksp/typescript-backend-api-first-lesson/backend/apps/migration/scripts'
+      // Use relative path from this file to find migrations
+      const currentDir = fileURLToPath(new URL('.', import.meta.url))
+      const migrationsFolder = resolve(
+        currentDir,
+        '../../../apps/migration/scripts'
+      )
 
       console.log('Running migrations by executing SQL files directly')
+      console.log(`Looking for migrations in: ${migrationsFolder}`)
+
+      // Check if migrations folder exists, if not try alternative paths
+      let actualMigrationsFolder = migrationsFolder
+      const pathsToTry = [
+        migrationsFolder,
+        // For CI environment (GitHub Actions)
+        resolve(currentDir, '../../../../backend/apps/migration/scripts'),
+        // For different project structures
+        resolve(process.cwd(), 'backend/apps/migration/scripts'),
+        resolve(process.cwd(), 'apps/migration/scripts'),
+      ]
+
+      let found = false
+      for (const path of pathsToTry) {
+        try {
+          readdirSync(path)
+          actualMigrationsFolder = path
+          found = true
+          console.log(`Found migrations at: ${path}`)
+          break
+        } catch (_e) {
+          console.log(`Path not found: ${path}`)
+        }
+      }
+
+      if (!found) {
+        throw new Error(
+          `Migration folder not found. Tried:\n${pathsToTry.map((p, i) => `${i + 1}. ${p}`).join('\n')}`
+        )
+      }
 
       // Get all SQL files in order
-      const files = readdirSync(migrationsFolder)
+      const files = readdirSync(actualMigrationsFolder)
         .filter((f) => f.endsWith('.sql'))
         .sort()
 
@@ -152,7 +188,10 @@ export class SchemaIsolation {
       // Execute each migration file
       for (const file of files) {
         console.log(`Executing migration: ${file}`)
-        const sqlContent = readFileSync(join(migrationsFolder, file), 'utf-8')
+        const sqlContent = readFileSync(
+          join(actualMigrationsFolder, file),
+          'utf-8'
+        )
 
         // Split by statement separator and execute each
         const statements = sqlContent.split('--> statement-breakpoint')
