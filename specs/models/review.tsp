@@ -10,13 +10,13 @@ namespace BeautySalon.Models {
     salonId: SalonId;
     customerId: CustomerId;
     reservationId: ReservationId;
-    staffId?: StaffId;
+    staffId: StaffId | null;
     rating: int32;
-    comment?: string;
-    serviceRating?: int32;
-    staffRating?: int32;
-    atmosphereRating?: int32;
-    images?: string[];
+    comment: string | null;
+    serviceRating: int32 | null;
+    staffRating: int32 | null;
+    atmosphereRating: int32 | null;
+    images: string[] | null;
     isVerified: boolean;
     helpfulCount: int32 = 0;
     ...AuditInfo;
@@ -26,13 +26,13 @@ namespace BeautySalon.Models {
     salonId: SalonId;
     customerId: CustomerId;
     reservationId: ReservationId;
-    staffId?: StaffId;
+    staffId: StaffId | null;
     rating: int32;
-    comment?: string;
-    serviceRating?: int32;
-    staffRating?: int32;
-    atmosphereRating?: int32;
-    images?: string[];
+    comment: string | null;
+    serviceRating: int32 | null;
+    staffRating: int32 | null;
+    atmosphereRating: int32 | null;
+    images: string[] | null;
   }
 
   @doc("Review update request with optional fields for partial updates")

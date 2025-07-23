@@ -40,13 +40,13 @@ model Attachment {
   uploadedBy: string;
 
   /** 関連するサロンID（オプション） */
-  salonId?: string;
+  salonId: string | null;
 
   /** メタデータ */
-  metadata?: Record<unknown>;
+  metadata: Record<unknown> | null;
 
   /** タグ */
-  tags?: Record<string>;
+  tags: Record<string> | null;
 
   /** アップロード日時 */
   uploadedAt: utcDateTime;
@@ -69,10 +69,10 @@ model UploadAttachmentRequest {
   contentType: string;
 
   /** サロンID（オプション） */
-  salonId?: string;
+  salonId: string | null;
 
   /** タグ（オプション） */
-  tags?: string; // JSON string
+  tags: string | null; // JSON string
 }
 
 /**
@@ -89,7 +89,7 @@ model GetUploadUrlRequest {
   size: int32;
 
   /** サロンID（オプション） */
-  salonId?: string;
+  salonId: string | null;
 }
 
 /**
@@ -131,10 +131,10 @@ model ShareLink {
   attachmentId: string;
 
   /** 有効期限（オプション） */
-  expiresAt?: utcDateTime;
+  expiresAt: utcDateTime | null;
 
   /** 最大ダウンロード数（オプション） */
-  maxDownloads?: int32;
+  maxDownloads: int32 | null;
 
   /** 現在のダウンロード数 */
   downloadCount: int32;
@@ -143,7 +143,7 @@ model ShareLink {
   hasPassword: boolean;
 
   /** 許可されたメールアドレス（オプション） */
-  allowedEmails?: string[];
+  allowedEmails: string[] | null;
 
   /** 作成者ID */
   createdBy: string;
@@ -157,16 +157,16 @@ model ShareLink {
  */
 model CreateShareLinkRequest {
   /** 有効期限（オプション） */
-  expiresAt?: utcDateTime;
+  expiresAt: utcDateTime | null;
 
   /** 最大ダウンロード数（オプション） */
-  maxDownloads?: int32;
+  maxDownloads: int32 | null;
 
   /** パスワード（オプション） */
-  password?: string;
+  password: string | null;
 
   /** 許可されたメールアドレス（オプション） */
-  allowedEmails?: string[];
+  allowedEmails: string[] | null;
 }
 
 /**

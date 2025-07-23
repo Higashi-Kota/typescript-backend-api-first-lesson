@@ -4,8 +4,8 @@
  */
 
 import type { Customer } from '@beauty-salon-backend/domain'
-import type { CustomerProfile } from '@beauty-salon-backend/usecase'
 import type { components } from '@beauty-salon-backend/types/api'
+import type { CustomerProfile } from '@beauty-salon-backend/usecase'
 import { match } from 'ts-pattern'
 
 /**
@@ -19,27 +19,32 @@ export function toCustomerResponse(
       { type: 'active' },
       { type: 'suspended' },
       { type: 'deleted' },
-      ({ data }) => ({
-        id: data.id,
-        name: data.name,
-        contactInfo: {
-          email: data.contactInfo.email,
-          phoneNumber: data.contactInfo.phoneNumber,
-          alternativePhone: undefined,
-        },
-        preferences: data.preferences || undefined,
-        notes: data.notes || undefined,
-        tags: data.tags,
-        loyaltyPoints: data.loyaltyPoints,
-        membershipLevel: data.membershipLevel,
-        birthDate: data.birthDate
-          ? data.birthDate.toISOString().split('T')[0]
-          : undefined,
-        createdAt: data.createdAt.toISOString(),
-        createdBy: undefined,
-        updatedAt: data.updatedAt.toISOString(),
-        updatedBy: undefined,
-      })
+      ({ data }): components['schemas']['Models.Customer'] => {
+        let birthDateStr: string | null = null
+        if (data.birthDate != null) {
+          const parts = data.birthDate.toISOString().split('T')
+          birthDateStr = parts[0] ?? null
+        }
+        return {
+          id: data.id,
+          name: data.name,
+          contactInfo: {
+            email: data.contactInfo.email,
+            phoneNumber: data.contactInfo.phoneNumber,
+            alternativePhone: null,
+          },
+          preferences: data.preferences ?? null,
+          notes: data.notes ?? null,
+          tags: data.tags ?? null,
+          loyaltyPoints: data.loyaltyPoints,
+          membershipLevel: data.membershipLevel,
+          birthDate: birthDateStr,
+          createdAt: data.createdAt.toISOString(),
+          createdBy: null,
+          updatedAt: data.updatedAt.toISOString(),
+          updatedBy: null,
+        }
+      }
     )
     .exhaustive()
 }
@@ -56,9 +61,9 @@ export function toCustomerProfileResponse(
   return {
     ...customerData,
     visitCount: profile.visitCount,
-    lastVisitDate: profile.lastVisitDate?.toISOString(),
-    favoriteStaffIds: profile.favoriteStaffIds,
-    favoriteServiceIds: profile.favoriteServiceIds,
+    lastVisitDate: profile.lastVisitDate?.toISOString() ?? null,
+    favoriteStaffIds: profile.favoriteStaffIds ?? null,
+    favoriteServiceIds: profile.favoriteServiceIds ?? null,
     totalSpent: profile.totalSpent,
   }
 }

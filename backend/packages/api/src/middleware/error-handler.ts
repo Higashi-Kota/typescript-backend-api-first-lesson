@@ -118,7 +118,7 @@ export const errorHandler = (
               error: e,
               userId: user.id,
               resource:
-                (e.details as { resource?: string })?.resource || 'unknown',
+                (e.details as { resource?: string })?.resource ?? 'unknown',
             }
           : null
     )

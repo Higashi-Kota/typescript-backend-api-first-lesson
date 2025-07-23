@@ -789,7 +789,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Models.User'
+                $ref: '#/components/schemas/Models.UserResponse'
         '401':
           description: Access is unauthorized.
           content:
@@ -835,7 +835,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Models.User'
+                $ref: '#/components/schemas/Models.UserResponse'
         '400':
           description: The server could not understand the request due to invalid syntax.
           content:
@@ -3522,6 +3522,9 @@ components:
         - size
         - fileType
         - uploadedBy
+        - salonId
+        - metadata
+        - tags
         - uploadedAt
         - updatedAt
       properties:
@@ -3550,15 +3553,18 @@ components:
           description: アップロードしたユーザーID
         salonId:
           type: string
+          nullable: true
           description: 関連するサロンID（オプション）
         metadata:
           type: object
           additionalProperties: {}
+          nullable: true
           description: メタデータ
         tags:
           type: object
           additionalProperties:
             type: string
+          nullable: true
           description: タグ
         uploadedAt:
           type: string
@@ -3573,18 +3579,22 @@ components:
       type: object
       required:
         - createdAt
+        - createdBy
         - updatedAt
+        - updatedBy
       properties:
         createdAt:
           type: string
           format: date-time
         createdBy:
           type: string
+          nullable: true
         updatedAt:
           type: string
           format: date-time
         updatedBy:
           type: string
+          nullable: true
     Models.AuthSuccessResponse:
       type: object
       required:
@@ -3618,10 +3628,15 @@ components:
         - reservationIds
         - status
         - totalAmount
+        - discountAmount
         - finalAmount
+        - paymentMethod
         - paymentStatus
+        - notes
         - createdAt
+        - createdBy
         - updatedAt
+        - updatedBy
       properties:
         id:
           $ref: '#/components/schemas/Models.BookingId'
@@ -3641,25 +3656,30 @@ components:
         discountAmount:
           type: integer
           format: int32
+          nullable: true
         finalAmount:
           type: integer
           format: int32
         paymentMethod:
           type: string
+          nullable: true
         paymentStatus:
           type: string
         notes:
           type: string
+          nullable: true
         createdAt:
           type: string
           format: date-time
         createdBy:
           type: string
+          nullable: true
         updatedAt:
           type: string
           format: date-time
         updatedBy:
           type: string
+          nullable: true
     Models.BookingDetail:
       type: object
       required:
@@ -3695,6 +3715,7 @@ components:
       required:
         - email
         - phoneNumber
+        - alternativePhone
       properties:
         email:
           type: string
@@ -3702,12 +3723,16 @@ components:
           type: string
         alternativePhone:
           type: string
+          nullable: true
     Models.CreateBookingRequest:
       type: object
       required:
         - salonId
         - customerId
         - reservationIds
+        - discountAmount
+        - paymentMethod
+        - notes
       properties:
         salonId:
           $ref: '#/components/schemas/Models.SalonId'
@@ -3720,15 +3745,22 @@ components:
         discountAmount:
           type: integer
           format: int32
+          nullable: true
         paymentMethod:
           type: string
+          nullable: true
         notes:
           type: string
+          nullable: true
     Models.CreateCustomerRequest:
       type: object
       required:
         - name
         - contactInfo
+        - preferences
+        - notes
+        - tags
+        - birthDate
       properties:
         name:
           type: string
@@ -3736,16 +3768,20 @@ components:
           $ref: '#/components/schemas/Models.ContactInfo'
         preferences:
           type: string
+          nullable: true
         notes:
           type: string
+          nullable: true
         tags:
           type: array
           items:
             type: string
+          nullable: true
         birthDate:
           type: string
           format: date
-      description: Customer creation request with required and optional fields
+          nullable: true
+      description: Customer creation request with required keys and nullable values
     Models.CreateReservationRequest:
       type: object
       required:
@@ -3754,6 +3790,7 @@ components:
         - staffId
         - serviceId
         - startTime
+        - notes
       properties:
         salonId:
           $ref: '#/components/schemas/Models.SalonId'
@@ -3768,13 +3805,20 @@ components:
           format: date-time
         notes:
           type: string
+          nullable: true
     Models.CreateReviewRequest:
       type: object
       required:
         - salonId
         - customerId
         - reservationId
+        - staffId
         - rating
+        - comment
+        - serviceRating
+        - staffRating
+        - atmosphereRating
+        - images
       properties:
         salonId:
           $ref: '#/components/schemas/Models.SalonId'
@@ -3783,25 +3827,33 @@ components:
         reservationId:
           $ref: '#/components/schemas/Models.ReservationId'
         staffId:
-          $ref: '#/components/schemas/Models.StaffId'
+          type: string
+          allOf:
+            - $ref: '#/components/schemas/Models.StaffId'
+          nullable: true
         rating:
           type: integer
           format: int32
         comment:
           type: string
+          nullable: true
         serviceRating:
           type: integer
           format: int32
+          nullable: true
         staffRating:
           type: integer
           format: int32
+          nullable: true
         atmosphereRating:
           type: integer
           format: int32
+          nullable: true
         images:
           type: array
           items:
             type: string
+          nullable: true
     Models.CreateSalonRequest:
       type: object
       required:
@@ -3810,6 +3862,8 @@ components:
         - address
         - contactInfo
         - openingHours
+        - imageUrls
+        - features
       properties:
         name:
           type: string
@@ -3827,11 +3881,13 @@ components:
           type: array
           items:
             type: string
+          nullable: true
         features:
           type: array
           items:
             type: string
-      description: Salon creation request with required and optional fields
+          nullable: true
+      description: Salon creation request with required keys and nullable values
     Models.CreateServiceRequest:
       type: object
       required:
@@ -3841,6 +3897,9 @@ components:
         - duration
         - price
         - category
+        - categoryId
+        - imageUrl
+        - requiredStaffLevel
       properties:
         salonId:
           $ref: '#/components/schemas/Models.SalonId'
@@ -3857,30 +3916,44 @@ components:
         category:
           $ref: '#/components/schemas/Models.ServiceCategory'
         categoryId:
-          $ref: '#/components/schemas/Models.CategoryId'
+          type: string
+          allOf:
+            - $ref: '#/components/schemas/Models.CategoryId'
+          nullable: true
         imageUrl:
           type: string
+          nullable: true
         requiredStaffLevel:
           type: integer
           format: int32
+          nullable: true
     Models.CreateShareLinkRequest:
       type: object
+      required:
+        - expiresAt
+        - maxDownloads
+        - password
+        - allowedEmails
       properties:
         expiresAt:
           type: string
           format: date-time
+          nullable: true
           description: 有効期限（オプション）
         maxDownloads:
           type: integer
           format: int32
+          nullable: true
           description: 最大ダウンロード数（オプション）
         password:
           type: string
+          nullable: true
           description: パスワード（オプション）
         allowedEmails:
           type: array
           items:
             type: string
+          nullable: true
           description: 許可されたメールアドレス（オプション）
       description: 共有リンク作成リクエスト
     Models.CreateStaffRequest:
@@ -3890,6 +3963,10 @@ components:
         - name
         - contactInfo
         - specialties
+        - imageUrl
+        - bio
+        - yearsOfExperience
+        - certifications
       properties:
         salonId:
           $ref: '#/components/schemas/Models.SalonId'
@@ -3903,23 +3980,35 @@ components:
             type: string
         imageUrl:
           type: string
+          nullable: true
         bio:
           type: string
+          nullable: true
         yearsOfExperience:
           type: integer
           format: int32
+          nullable: true
         certifications:
           type: array
           items:
             type: string
+          nullable: true
     Models.Customer:
       type: object
       required:
         - id
         - name
         - contactInfo
+        - preferences
+        - notes
+        - tags
+        - loyaltyPoints
+        - membershipLevel
+        - birthDate
         - createdAt
+        - createdBy
         - updatedAt
+        - updatedBy
       properties:
         id:
           $ref: '#/components/schemas/Models.CustomerId'
@@ -3929,36 +4018,47 @@ components:
           $ref: '#/components/schemas/Models.ContactInfo'
         preferences:
           type: string
+          nullable: true
         notes:
           type: string
+          nullable: true
         tags:
           type: array
           items:
             type: string
+          nullable: true
         loyaltyPoints:
           type: integer
           format: int32
+          nullable: true
         membershipLevel:
           type: string
+          nullable: true
         birthDate:
           type: string
           format: date
+          nullable: true
         createdAt:
           type: string
           format: date-time
         createdBy:
           type: string
+          nullable: true
         updatedAt:
           type: string
           format: date-time
         updatedBy:
           type: string
+          nullable: true
     Models.CustomerId:
       type: string
     Models.CustomerProfile:
       type: object
       required:
         - visitCount
+        - lastVisitDate
+        - favoriteStaffIds
+        - favoriteServiceIds
         - totalSpent
       properties:
         visitCount:
@@ -3967,14 +4067,17 @@ components:
         lastVisitDate:
           type: string
           format: date-time
+          nullable: true
         favoriteStaffIds:
           type: array
           items:
             $ref: '#/components/schemas/Models.StaffId'
+          nullable: true
         favoriteServiceIds:
           type: array
           items:
             $ref: '#/components/schemas/Models.ServiceId'
+          nullable: true
         totalSpent:
           type: integer
           format: int32
@@ -4018,6 +4121,7 @@ components:
       required:
         - code
         - message
+        - details
       properties:
         code:
           type: string
@@ -4026,6 +4130,7 @@ components:
         details:
           type: object
           additionalProperties: {}
+          nullable: true
     Models.FileType:
       type: string
       enum:
@@ -4057,6 +4162,7 @@ components:
         - filename
         - contentType
         - size
+        - salonId
       properties:
         filename:
           type: string
@@ -4070,6 +4176,7 @@ components:
           description: ファイルサイズ（バイト）
         salonId:
           type: string
+          nullable: true
           description: サロンID（オプション）
       description: 署名付きアップロードURL取得リクエスト
     Models.LoginRequest:
@@ -4235,10 +4342,15 @@ components:
         - startTime
         - endTime
         - status
+        - notes
         - totalAmount
+        - depositAmount
         - isPaid
+        - cancellationReason
         - createdAt
+        - createdBy
         - updatedAt
+        - updatedBy
       properties:
         id:
           $ref: '#/components/schemas/Models.ReservationId'
@@ -4260,26 +4372,31 @@ components:
           $ref: '#/components/schemas/Models.ReservationStatus'
         notes:
           type: string
+          nullable: true
         totalAmount:
           type: integer
           format: int32
         depositAmount:
           type: integer
           format: int32
+          nullable: true
         isPaid:
           type: boolean
         cancellationReason:
           type: string
+          nullable: true
         createdAt:
           type: string
           format: date-time
         createdBy:
           type: string
+          nullable: true
         updatedAt:
           type: string
           format: date-time
         updatedBy:
           type: string
+          nullable: true
     Models.ReservationDetail:
       type: object
       required:
@@ -4319,11 +4436,19 @@ components:
         - salonId
         - customerId
         - reservationId
+        - staffId
         - rating
+        - comment
+        - serviceRating
+        - staffRating
+        - atmosphereRating
+        - images
         - isVerified
         - helpfulCount
         - createdAt
+        - createdBy
         - updatedAt
+        - updatedBy
       properties:
         id:
           $ref: '#/components/schemas/Models.ReviewId'
@@ -4334,25 +4459,33 @@ components:
         reservationId:
           $ref: '#/components/schemas/Models.ReservationId'
         staffId:
-          $ref: '#/components/schemas/Models.StaffId'
+          type: string
+          allOf:
+            - $ref: '#/components/schemas/Models.StaffId'
+          nullable: true
         rating:
           type: integer
           format: int32
         comment:
           type: string
+          nullable: true
         serviceRating:
           type: integer
           format: int32
+          nullable: true
         staffRating:
           type: integer
           format: int32
+          nullable: true
         atmosphereRating:
           type: integer
           format: int32
+          nullable: true
         images:
           type: array
           items:
             type: string
+          nullable: true
         isVerified:
           type: boolean
         helpfulCount:
@@ -4364,11 +4497,13 @@ components:
           format: date-time
         createdBy:
           type: string
+          nullable: true
         updatedAt:
           type: string
           format: date-time
         updatedBy:
           type: string
+          nullable: true
     Models.ReviewId:
       type: string
     Models.ReviewSummary:
@@ -4398,8 +4533,12 @@ components:
         - address
         - contactInfo
         - openingHours
+        - imageUrls
+        - features
         - createdAt
+        - createdBy
         - updatedAt
+        - updatedBy
       properties:
         id:
           $ref: '#/components/schemas/Models.SalonId'
@@ -4419,20 +4558,24 @@ components:
           type: array
           items:
             type: string
+          nullable: true
         features:
           type: array
           items:
             type: string
+          nullable: true
         createdAt:
           type: string
           format: date-time
         createdBy:
           type: string
+          nullable: true
         updatedAt:
           type: string
           format: date-time
         updatedBy:
           type: string
+          nullable: true
     Models.SalonId:
       type: string
     Models.SalonSummary:
@@ -4441,6 +4584,8 @@ components:
         - id
         - name
         - address
+        - rating
+        - reviewCount
       properties:
         id:
           $ref: '#/components/schemas/Models.SalonId'
@@ -4451,9 +4596,11 @@ components:
         rating:
           type: number
           format: float
+          nullable: true
         reviewCount:
           type: integer
           format: int32
+          nullable: true
     Models.SearchCustomerRequest:
       type: object
       properties:
@@ -4484,9 +4631,14 @@ components:
         - duration
         - price
         - category
+        - categoryId
+        - imageUrl
+        - requiredStaffLevel
         - isActive
         - createdAt
+        - createdBy
         - updatedAt
+        - updatedBy
       properties:
         id:
           $ref: '#/components/schemas/Models.ServiceId'
@@ -4505,12 +4657,17 @@ components:
         category:
           $ref: '#/components/schemas/Models.ServiceCategory'
         categoryId:
-          $ref: '#/components/schemas/Models.CategoryId'
+          type: string
+          allOf:
+            - $ref: '#/components/schemas/Models.CategoryId'
+          nullable: true
         imageUrl:
           type: string
+          nullable: true
         requiredStaffLevel:
           type: integer
           format: int32
+          nullable: true
         isActive:
           type: boolean
         createdAt:
@@ -4518,11 +4675,13 @@ components:
           format: date-time
         createdBy:
           type: string
+          nullable: true
         updatedAt:
           type: string
           format: date-time
         updatedBy:
           type: string
+          nullable: true
     Models.ServiceCategory:
       type: string
       enum:
@@ -4538,10 +4697,13 @@ components:
         - id
         - name
         - description
+        - parentId
         - displayOrder
         - isActive
         - createdAt
+        - createdBy
         - updatedAt
+        - updatedBy
       properties:
         id:
           $ref: '#/components/schemas/Models.CategoryId'
@@ -4550,7 +4712,10 @@ components:
         description:
           type: string
         parentId:
-          $ref: '#/components/schemas/Models.CategoryId'
+          type: string
+          allOf:
+            - $ref: '#/components/schemas/Models.CategoryId'
+          nullable: true
         displayOrder:
           type: integer
           format: int32
@@ -4561,11 +4726,13 @@ components:
           format: date-time
         createdBy:
           type: string
+          nullable: true
         updatedAt:
           type: string
           format: date-time
         updatedBy:
           type: string
+          nullable: true
     Models.ServiceId:
       type: string
     Models.Session:
@@ -4635,8 +4802,11 @@ components:
         - id
         - token
         - attachmentId
+        - expiresAt
+        - maxDownloads
         - downloadCount
         - hasPassword
+        - allowedEmails
         - createdBy
         - createdAt
       properties:
@@ -4652,10 +4822,12 @@ components:
         expiresAt:
           type: string
           format: date-time
+          nullable: true
           description: 有効期限（オプション）
         maxDownloads:
           type: integer
           format: int32
+          nullable: true
           description: 最大ダウンロード数（オプション）
         downloadCount:
           type: integer
@@ -4668,6 +4840,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
           description: 許可されたメールアドレス（オプション）
         createdBy:
           type: string
@@ -4685,9 +4858,15 @@ components:
         - name
         - contactInfo
         - specialties
+        - imageUrl
+        - bio
+        - yearsOfExperience
+        - certifications
         - isActive
         - createdAt
+        - createdBy
         - updatedAt
+        - updatedBy
       properties:
         id:
           $ref: '#/components/schemas/Models.StaffId'
@@ -4703,15 +4882,19 @@ components:
             type: string
         imageUrl:
           type: string
+          nullable: true
         bio:
           type: string
+          nullable: true
         yearsOfExperience:
           type: integer
           format: int32
+          nullable: true
         certifications:
           type: array
           items:
             type: string
+          nullable: true
         isActive:
           type: boolean
         createdAt:
@@ -4719,11 +4902,13 @@ components:
           format: date-time
         createdBy:
           type: string
+          nullable: true
         updatedAt:
           type: string
           format: date-time
         updatedBy:
           type: string
+          nullable: true
     Models.StaffAvailability:
       type: object
       required:
@@ -4731,6 +4916,8 @@ components:
         - dayOfWeek
         - startTime
         - endTime
+        - breakStart
+        - breakEnd
       properties:
         staffId:
           $ref: '#/components/schemas/Models.StaffId'
@@ -4742,8 +4929,10 @@ components:
           type: string
         breakStart:
           type: string
+          nullable: true
         breakEnd:
           type: string
+          nullable: true
     Models.StaffId:
       type: string
     Models.TokenRefreshRequest:
@@ -5121,6 +5310,8 @@ components:
         - file
         - filename
         - contentType
+        - salonId
+        - tags
       properties:
         file:
           type: string
@@ -5134,9 +5325,11 @@ components:
           description: Content-Type
         salonId:
           type: string
+          nullable: true
           description: サロンID（オプション）
         tags:
           type: string
+          nullable: true
           description: タグ（オプション）
       description: ファイルアップロードリクエスト（マルチパート）
     Models.UploadUrlResponse:
@@ -5271,6 +5464,138 @@ components:
         - suspended
         - deleted
       description: User account status
+    Models.UserResponse:
+      type: object
+      required:
+        - id
+        - email
+        - name
+        - role
+        - status
+        - emailVerified
+        - emailVerificationToken
+        - emailVerificationTokenExpiry
+        - twoFactorStatus
+        - twoFactorSecret
+        - backupCodes
+        - failedLoginAttempts
+        - lockedAt
+        - passwordResetToken
+        - passwordResetTokenExpiry
+        - lastPasswordChangeAt
+        - passwordHistory
+        - trustedIpAddresses
+        - customerId
+        - staffId
+        - createdAt
+        - updatedAt
+        - lastLoginAt
+        - lastLoginIp
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the user
+        email:
+          type: string
+          description: User's email address (unique)
+        name:
+          type: string
+          description: User's display name
+        role:
+          allOf:
+            - $ref: '#/components/schemas/Models.UserRole'
+          description: User's role in the system
+        status:
+          allOf:
+            - $ref: '#/components/schemas/Models.UserAccountStatus'
+          description: Account status
+        emailVerified:
+          type: boolean
+          description: Email verification status
+        emailVerificationToken:
+          type: string
+          nullable: true
+          description: Email verification token (internal use)
+        emailVerificationTokenExpiry:
+          type: string
+          format: date-time
+          nullable: true
+          description: Email verification token expiry
+        twoFactorStatus:
+          allOf:
+            - $ref: '#/components/schemas/Models.TwoFactorStatus'
+          description: Two-factor authentication status
+        twoFactorSecret:
+          type: string
+          nullable: true
+          description: Two-factor authentication secret (encrypted)
+        backupCodes:
+          type: array
+          items:
+            type: string
+          nullable: true
+          description: Backup codes for 2FA recovery
+        failedLoginAttempts:
+          type: integer
+          format: int32
+          description: Number of failed login attempts
+        lockedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: Time when the account was locked
+        passwordResetToken:
+          type: string
+          nullable: true
+          description: Password reset token (internal use)
+        passwordResetTokenExpiry:
+          type: string
+          format: date-time
+          nullable: true
+          description: Password reset token expiry
+        lastPasswordChangeAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: Last password change timestamp
+        passwordHistory:
+          type: array
+          items:
+            type: string
+          nullable: true
+          description: Previous password hashes for history check
+        trustedIpAddresses:
+          type: array
+          items:
+            type: string
+          nullable: true
+          description: Trusted IP addresses for this user
+        customerId:
+          type: string
+          nullable: true
+          description: Reference to customer profile if user is a customer
+        staffId:
+          type: string
+          nullable: true
+          description: Reference to staff profile if user is staff
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the user was created
+        updatedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the user was last updated
+        lastLoginAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: Last login timestamp
+        lastLoginIp:
+          type: string
+          nullable: true
+          description: Last login IP address
+      description: User response model - all keys required, values nullable where appropriate
     Models.UserRole:
       type: string
       enum:

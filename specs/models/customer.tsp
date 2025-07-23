@@ -10,28 +10,28 @@ namespace BeautySalon.Models {
     id: CustomerId;
     name: string;
     contactInfo: ContactInfo;
-    preferences?: string;
-    notes?: string;
-    tags?: string[];
-    loyaltyPoints?: int32;
-    membershipLevel?: string;
-    birthDate?: plainDate;
+    preferences: string | null;
+    notes: string | null;
+    tags: string[] | null;
+    loyaltyPoints: int32 | null;
+    membershipLevel: string | null;
+    birthDate: plainDate | null;
     ...AuditInfo;
   }
 
-  @doc("Customer creation request with required and optional fields")
+  @doc("Customer creation request with required keys and nullable values")
   model CreateCustomerRequest {
     // Required fields
     name: string;
 
     contactInfo: ContactInfo;
 
-    // Optional fields
-    preferences?: string;
+    // Required keys with nullable values
+    preferences: string | null;
 
-    notes?: string;
-    tags?: string[];
-    birthDate?: plainDate;
+    notes: string | null;
+    tags: string[] | null;
+    birthDate: plainDate | null;
   }
 
   @doc("Customer update request with optional fields for partial updates")
@@ -56,9 +56,9 @@ namespace BeautySalon.Models {
 
   model CustomerProfile extends Customer {
     visitCount: int32;
-    lastVisitDate?: utcDateTime;
-    favoriteStaffIds?: StaffId[];
-    favoriteServiceIds?: ServiceId[];
+    lastVisitDate: utcDateTime | null;
+    favoriteStaffIds: StaffId[] | null;
+    favoriteServiceIds: ServiceId[] | null;
     totalSpent: int32;
   }
 

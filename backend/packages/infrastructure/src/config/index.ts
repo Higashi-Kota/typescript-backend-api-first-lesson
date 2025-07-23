@@ -8,18 +8,45 @@ dotenvConfig({ path: path.resolve(process.cwd(), '../../../.env') })
 // Validate and export configuration
 export const config: EnvConfig = validateEnv(process.env)
 
+// Type definitions for configuration groups
+interface ServerConfig {
+  readonly port: number
+  readonly logLevel: string
+  readonly nodeEnv: string
+}
+
+interface DatabaseConfig {
+  readonly url: string
+  readonly poolMin: number
+  readonly poolMax: number
+}
+
+interface JwtConfig {
+  readonly secret: string
+  readonly expiresIn: string
+  readonly accessTokenExpiryMinutes: number
+  readonly refreshTokenExpiryDays: number
+  readonly issuer: string
+  readonly audience: string
+}
+
+interface CorsConfig {
+  readonly origin: string
+  readonly allowedOrigins: readonly string[]
+}
+
 // Export specific configuration groups for convenience
 export const serverConfig = {
   port: config.PORT,
   logLevel: config.LOG_LEVEL,
   nodeEnv: config.NODE_ENV,
-} as const
+} as const satisfies ServerConfig
 
 export const databaseConfig = {
   url: config.DATABASE_URL,
   poolMin: config.DATABASE_POOL_MIN,
   poolMax: config.DATABASE_POOL_MAX,
-} as const
+} as const satisfies DatabaseConfig
 
 export const jwtConfig = {
   secret: config.JWT_SECRET,
@@ -28,14 +55,14 @@ export const jwtConfig = {
   refreshTokenExpiryDays: config.JWT_REFRESH_TOKEN_EXPIRY_DAYS,
   issuer: config.JWT_ISSUER,
   audience: config.JWT_AUDIENCE,
-} as const
+} as const satisfies JwtConfig
 
 export const corsConfig = {
   origin: config.CORS_ORIGIN,
-  allowedOrigins: config.CORS_ALLOWED_ORIGINS?.split(',') || [
+  allowedOrigins: config.CORS_ALLOWED_ORIGINS?.split(',') ?? [
     config.CORS_ORIGIN,
   ],
-} as const
+} as const satisfies CorsConfig
 
 export const emailConfig = {
   provider: config.EMAIL_PROVIDER,

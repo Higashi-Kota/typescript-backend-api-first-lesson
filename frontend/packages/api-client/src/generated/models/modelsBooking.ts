@@ -18,13 +18,18 @@ export interface ModelsBooking {
   reservationIds: ModelsReservationId[]
   status: ModelsBookingStatus
   totalAmount: number
-  discountAmount?: number
+  /** @nullable */
+  discountAmount: number | null
   finalAmount: number
-  paymentMethod?: string
+  /** @nullable */
+  paymentMethod: string | null
   paymentStatus: string
-  notes?: string
+  /** @nullable */
+  notes: string | null
   createdAt: string
-  createdBy?: string
+  /** @nullable */
+  createdBy: string | null
   updatedAt: string
-  updatedBy?: string
+  /** @nullable */
+  updatedBy: string | null
 }

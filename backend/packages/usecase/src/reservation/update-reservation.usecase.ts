@@ -77,17 +77,17 @@ export const updateReservationUseCase = async (
   }
 
   // 3. 時間変更の場合のバリデーションとスロットチェック
-  const startTime = input.startTime || existingResult.value.data.startTime
-  const endTime = input.endTime || existingResult.value.data.endTime
+  const startTime = input.startTime ?? existingResult.value.data.startTime
+  const endTime = input.endTime ?? existingResult.value.data.endTime
 
-  if (input.startTime || input.endTime) {
+  if (input.startTime !== undefined || input.endTime !== undefined) {
     const timeRangeResult = validateTimeRange(startTime, endTime)
     if (timeRangeResult.type === 'err') {
       return timeRangeResult
     }
 
     // スタッフが変更される場合、または時間が変更される場合はスロットチェック
-    const staffId = input.staffId || existingResult.value.data.staffId
+    const staffId = input.staffId ?? existingResult.value.data.staffId
 
     const conflictResult =
       await deps.reservationRepository.checkTimeSlotConflict(

@@ -11,7 +11,7 @@ export const getFileName = (file: File | string): string => {
   if (typeof file === 'string') {
     // Handle both forward and backward slashes
     const parts = file.split(/[/\\]/)
-    return parts[parts.length - 1] || ''
+    return parts[parts.length - 1] ?? ''
   }
 
   return ''

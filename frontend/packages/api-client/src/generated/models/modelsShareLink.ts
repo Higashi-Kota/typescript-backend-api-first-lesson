@@ -16,16 +16,25 @@ export interface ModelsShareLink {
   token: string
   /** 添付ファイルID */
   attachmentId: string
-  /** 有効期限（オプション） */
-  expiresAt?: string
-  /** 最大ダウンロード数（オプション） */
-  maxDownloads?: number
+  /**
+   * 有効期限（オプション）
+   * @nullable
+   */
+  expiresAt: string | null
+  /**
+   * 最大ダウンロード数（オプション）
+   * @nullable
+   */
+  maxDownloads: number | null
   /** 現在のダウンロード数 */
   downloadCount: number
   /** パスワード保護 */
   hasPassword: boolean
-  /** 許可されたメールアドレス（オプション） */
-  allowedEmails?: string[]
+  /**
+   * 許可されたメールアドレス（オプション）
+   * @nullable
+   */
+  allowedEmails: string[] | null
   /** 作成者ID */
   createdBy: string
   /** 作成日時 */

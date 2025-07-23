@@ -1,9 +1,14 @@
 packages:
-  - "backend/packages/*"
-  - "backend/packages/features/*"
-  - "backend/apps/*"
-  - "frontend/packages/*"
-  - "frontend/packages/features/*"
-  - "frontend/apps/*"
-  - "shared-config"
-  - "specs"
+  - backend/packages/*
+  - backend/packages/features/*
+  - backend/apps/*
+  - frontend/packages/*
+  - frontend/packages/features/*
+  - frontend/apps/*
+  - shared-config
+  - specs
+
+overrides:
+  axios@=1.10.0: '>=1.11.0'
+  cookie@<0.7.0: '>=0.7.0'
+  esbuild@<=0.24.2: '>=0.25.0'

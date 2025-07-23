@@ -85,7 +85,7 @@ export class DrizzlePasswordResetTokenRepository
         )
         .limit(1)
 
-      return ok(found || null)
+      return ok(found ?? null)
     } catch (error) {
       console.error('Failed to find password reset token:', error)
       return err(new Error('Failed to find password reset token'))

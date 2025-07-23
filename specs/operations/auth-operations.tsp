@@ -16,7 +16,7 @@ namespace BeautySalon.Operations {
     @route("/register")
     op register(@body request: RegisterRequest): {
       @statusCode statusCode: 201;
-      @body response: User;
+      @body response: UserResponse;
     } | {
       @statusCode statusCode: 409;
       @body error: Error;
@@ -77,7 +77,7 @@ namespace BeautySalon.Operations {
     @route("/me")
     op getCurrentUser(@header("Authorization") authorization: string): {
       @statusCode statusCode: 200;
-      @body response: User;
+      @body response: UserResponse;
     } | {
       @statusCode statusCode: 401;
       @body error: Error;

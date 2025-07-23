@@ -11,10 +11,10 @@ namespace BeautySalon.Models {
     name: string;
     contactInfo: ContactInfo;
     specialties: string[];
-    imageUrl?: string;
-    bio?: string;
-    yearsOfExperience?: int32;
-    certifications?: string[];
+    imageUrl: string | null;
+    bio: string | null;
+    yearsOfExperience: int32 | null;
+    certifications: string[] | null;
     isActive: boolean;
     ...AuditInfo;
   }
@@ -24,10 +24,10 @@ namespace BeautySalon.Models {
     name: string;
     contactInfo: ContactInfo;
     specialties: string[];
-    imageUrl?: string;
-    bio?: string;
-    yearsOfExperience?: int32;
-    certifications?: string[];
+    imageUrl: string | null;
+    bio: string | null;
+    yearsOfExperience: int32 | null;
+    certifications: string[] | null;
   }
 
   @doc("Staff update request with optional fields for partial updates")
@@ -59,7 +59,7 @@ namespace BeautySalon.Models {
     dayOfWeek: DayOfWeek;
     startTime: string;
     endTime: string;
-    breakStart?: string;
-    breakEnd?: string;
+    breakStart: string | null;
+    breakEnd: string | null;
   }
 }

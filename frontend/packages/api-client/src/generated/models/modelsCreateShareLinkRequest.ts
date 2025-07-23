@@ -10,12 +10,24 @@
  * 共有リンク作成リクエスト
  */
 export interface ModelsCreateShareLinkRequest {
-  /** 有効期限（オプション） */
-  expiresAt?: string
-  /** 最大ダウンロード数（オプション） */
-  maxDownloads?: number
-  /** パスワード（オプション） */
-  password?: string
-  /** 許可されたメールアドレス（オプション） */
-  allowedEmails?: string[]
+  /**
+   * 有効期限（オプション）
+   * @nullable
+   */
+  expiresAt: string | null
+  /**
+   * 最大ダウンロード数（オプション）
+   * @nullable
+   */
+  maxDownloads: number | null
+  /**
+   * パスワード（オプション）
+   * @nullable
+   */
+  password: string | null
+  /**
+   * 許可されたメールアドレス（オプション）
+   * @nullable
+   */
+  allowedEmails: string[] | null
 }

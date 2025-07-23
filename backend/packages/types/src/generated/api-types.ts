@@ -1267,15 +1267,15 @@ export interface components {
             /** @description アップロードしたユーザーID */
             uploadedBy: string;
             /** @description 関連するサロンID（オプション） */
-            salonId?: string;
+            salonId: string | null;
             /** @description メタデータ */
-            metadata?: {
+            metadata: {
                 [key: string]: unknown;
-            };
+            } | null;
             /** @description タグ */
-            tags?: {
+            tags: {
                 [key: string]: string;
-            };
+            } | null;
             /**
              * Format: date-time
              * @description アップロード日時
@@ -1290,10 +1290,10 @@ export interface components {
         "Models.AuditInfo": {
             /** Format: date-time */
             createdAt: string;
-            createdBy?: string;
+            createdBy: string | null;
             /** Format: date-time */
             updatedAt: string;
-            updatedBy?: string;
+            updatedBy: string | null;
         };
         /** @description Generic auth success response */
         "Models.AuthSuccessResponse": {
@@ -1316,18 +1316,18 @@ export interface components {
             /** Format: int32 */
             totalAmount: number;
             /** Format: int32 */
-            discountAmount?: number;
+            discountAmount: number | null;
             /** Format: int32 */
             finalAmount: number;
-            paymentMethod?: string;
+            paymentMethod: string | null;
             paymentStatus: string;
-            notes?: string;
+            notes: string | null;
             /** Format: date-time */
             createdAt: string;
-            createdBy?: string;
+            createdBy: string | null;
             /** Format: date-time */
             updatedAt: string;
-            updatedBy?: string;
+            updatedBy: string | null;
         };
         "Models.BookingDetail": {
             reservations: components["schemas"]["Models.ReservationDetail"][];
@@ -1341,26 +1341,26 @@ export interface components {
         "Models.ContactInfo": {
             email: string;
             phoneNumber: string;
-            alternativePhone?: string;
+            alternativePhone: string | null;
         };
         "Models.CreateBookingRequest": {
             salonId: components["schemas"]["Models.SalonId"];
             customerId: components["schemas"]["Models.CustomerId"];
             reservationIds: components["schemas"]["Models.ReservationId"][];
             /** Format: int32 */
-            discountAmount?: number;
-            paymentMethod?: string;
-            notes?: string;
+            discountAmount: number | null;
+            paymentMethod: string | null;
+            notes: string | null;
         };
-        /** @description Customer creation request with required and optional fields */
+        /** @description Customer creation request with required keys and nullable values */
         "Models.CreateCustomerRequest": {
             name: string;
             contactInfo: components["schemas"]["Models.ContactInfo"];
-            preferences?: string;
-            notes?: string;
-            tags?: string[];
+            preferences: string | null;
+            notes: string | null;
+            tags: string[] | null;
             /** Format: date */
-            birthDate?: string;
+            birthDate: string | null;
         };
         "Models.CreateReservationRequest": {
             salonId: components["schemas"]["Models.SalonId"];
@@ -1369,33 +1369,33 @@ export interface components {
             serviceId: components["schemas"]["Models.ServiceId"];
             /** Format: date-time */
             startTime: string;
-            notes?: string;
+            notes: string | null;
         };
         "Models.CreateReviewRequest": {
             salonId: components["schemas"]["Models.SalonId"];
             customerId: components["schemas"]["Models.CustomerId"];
             reservationId: components["schemas"]["Models.ReservationId"];
-            staffId?: components["schemas"]["Models.StaffId"];
+            staffId: (string & components["schemas"]["Models.StaffId"]) | null;
             /** Format: int32 */
             rating: number;
-            comment?: string;
+            comment: string | null;
             /** Format: int32 */
-            serviceRating?: number;
+            serviceRating: number | null;
             /** Format: int32 */
-            staffRating?: number;
+            staffRating: number | null;
             /** Format: int32 */
-            atmosphereRating?: number;
-            images?: string[];
+            atmosphereRating: number | null;
+            images: string[] | null;
         };
-        /** @description Salon creation request with required and optional fields */
+        /** @description Salon creation request with required keys and nullable values */
         "Models.CreateSalonRequest": {
             name: string;
             description: string;
             address: components["schemas"]["Models.Address"];
             contactInfo: components["schemas"]["Models.ContactInfo"];
             openingHours: components["schemas"]["Models.OpeningHours"][];
-            imageUrls?: string[];
-            features?: string[];
+            imageUrls: string[] | null;
+            features: string[] | null;
         };
         "Models.CreateServiceRequest": {
             salonId: components["schemas"]["Models.SalonId"];
@@ -1406,10 +1406,10 @@ export interface components {
             /** Format: int32 */
             price: number;
             category: components["schemas"]["Models.ServiceCategory"];
-            categoryId?: components["schemas"]["Models.CategoryId"];
-            imageUrl?: string;
+            categoryId: (string & components["schemas"]["Models.CategoryId"]) | null;
+            imageUrl: string | null;
             /** Format: int32 */
-            requiredStaffLevel?: number;
+            requiredStaffLevel: number | null;
         };
         /** @description 共有リンク作成リクエスト */
         "Models.CreateShareLinkRequest": {
@@ -1417,55 +1417,55 @@ export interface components {
              * Format: date-time
              * @description 有効期限（オプション）
              */
-            expiresAt?: string;
+            expiresAt: string | null;
             /**
              * Format: int32
              * @description 最大ダウンロード数（オプション）
              */
-            maxDownloads?: number;
+            maxDownloads: number | null;
             /** @description パスワード（オプション） */
-            password?: string;
+            password: string | null;
             /** @description 許可されたメールアドレス（オプション） */
-            allowedEmails?: string[];
+            allowedEmails: string[] | null;
         };
         "Models.CreateStaffRequest": {
             salonId: components["schemas"]["Models.SalonId"];
             name: string;
             contactInfo: components["schemas"]["Models.ContactInfo"];
             specialties: string[];
-            imageUrl?: string;
-            bio?: string;
+            imageUrl: string | null;
+            bio: string | null;
             /** Format: int32 */
-            yearsOfExperience?: number;
-            certifications?: string[];
+            yearsOfExperience: number | null;
+            certifications: string[] | null;
         };
         "Models.Customer": {
             id: components["schemas"]["Models.CustomerId"];
             name: string;
             contactInfo: components["schemas"]["Models.ContactInfo"];
-            preferences?: string;
-            notes?: string;
-            tags?: string[];
+            preferences: string | null;
+            notes: string | null;
+            tags: string[] | null;
             /** Format: int32 */
-            loyaltyPoints?: number;
-            membershipLevel?: string;
+            loyaltyPoints: number | null;
+            membershipLevel: string | null;
             /** Format: date */
-            birthDate?: string;
+            birthDate: string | null;
             /** Format: date-time */
             createdAt: string;
-            createdBy?: string;
+            createdBy: string | null;
             /** Format: date-time */
             updatedAt: string;
-            updatedBy?: string;
+            updatedBy: string | null;
         };
         "Models.CustomerId": string;
         "Models.CustomerProfile": {
             /** Format: int32 */
             visitCount: number;
             /** Format: date-time */
-            lastVisitDate?: string;
-            favoriteStaffIds?: components["schemas"]["Models.StaffId"][];
-            favoriteServiceIds?: components["schemas"]["Models.ServiceId"][];
+            lastVisitDate: string | null;
+            favoriteStaffIds: components["schemas"]["Models.StaffId"][] | null;
+            favoriteServiceIds: components["schemas"]["Models.ServiceId"][] | null;
             /** Format: int32 */
             totalSpent: number;
         } & components["schemas"]["Models.Customer"];
@@ -1489,9 +1489,9 @@ export interface components {
         "Models.Error": {
             code: string;
             message: string;
-            details?: {
+            details: {
                 [key: string]: unknown;
-            };
+            } | null;
         };
         /**
          * @description ファイルタイプ
@@ -1522,7 +1522,7 @@ export interface components {
              */
             size: number;
             /** @description サロンID（オプション） */
-            salonId?: string;
+            salonId: string | null;
         };
         /** @description Login request */
         "Models.LoginRequest": {
@@ -1632,19 +1632,19 @@ export interface components {
             /** Format: date-time */
             endTime: string;
             status: components["schemas"]["Models.ReservationStatus"];
-            notes?: string;
+            notes: string | null;
             /** Format: int32 */
             totalAmount: number;
             /** Format: int32 */
-            depositAmount?: number;
+            depositAmount: number | null;
             isPaid: boolean;
-            cancellationReason?: string;
+            cancellationReason: string | null;
             /** Format: date-time */
             createdAt: string;
-            createdBy?: string;
+            createdBy: string | null;
             /** Format: date-time */
             updatedAt: string;
-            updatedBy?: string;
+            updatedBy: string | null;
         };
         "Models.ReservationDetail": {
             customerName: string;
@@ -1662,17 +1662,17 @@ export interface components {
             salonId: components["schemas"]["Models.SalonId"];
             customerId: components["schemas"]["Models.CustomerId"];
             reservationId: components["schemas"]["Models.ReservationId"];
-            staffId?: components["schemas"]["Models.StaffId"];
+            staffId: (string & components["schemas"]["Models.StaffId"]) | null;
             /** Format: int32 */
             rating: number;
-            comment?: string;
+            comment: string | null;
             /** Format: int32 */
-            serviceRating?: number;
+            serviceRating: number | null;
             /** Format: int32 */
-            staffRating?: number;
+            staffRating: number | null;
             /** Format: int32 */
-            atmosphereRating?: number;
-            images?: string[];
+            atmosphereRating: number | null;
+            images: string[] | null;
             isVerified: boolean;
             /**
              * Format: int32
@@ -1681,10 +1681,10 @@ export interface components {
             helpfulCount: number;
             /** Format: date-time */
             createdAt: string;
-            createdBy?: string;
+            createdBy: string | null;
             /** Format: date-time */
             updatedAt: string;
-            updatedBy?: string;
+            updatedBy: string | null;
         };
         "Models.ReviewId": string;
         "Models.ReviewSummary": {
@@ -1703,14 +1703,14 @@ export interface components {
             address: components["schemas"]["Models.Address"];
             contactInfo: components["schemas"]["Models.ContactInfo"];
             openingHours: components["schemas"]["Models.OpeningHours"][];
-            imageUrls?: string[];
-            features?: string[];
+            imageUrls: string[] | null;
+            features: string[] | null;
             /** Format: date-time */
             createdAt: string;
-            createdBy?: string;
+            createdBy: string | null;
             /** Format: date-time */
             updatedAt: string;
-            updatedBy?: string;
+            updatedBy: string | null;
         };
         "Models.SalonId": string;
         "Models.SalonSummary": {
@@ -1718,9 +1718,9 @@ export interface components {
             name: string;
             address: components["schemas"]["Models.Address"];
             /** Format: float */
-            rating?: number;
+            rating: number | null;
             /** Format: int32 */
-            reviewCount?: number;
+            reviewCount: number | null;
         };
         /** @description Customer search parameters - all fields are optional */
         "Models.SearchCustomerRequest": {
@@ -1743,17 +1743,17 @@ export interface components {
             /** Format: int32 */
             price: number;
             category: components["schemas"]["Models.ServiceCategory"];
-            categoryId?: components["schemas"]["Models.CategoryId"];
-            imageUrl?: string;
+            categoryId: (string & components["schemas"]["Models.CategoryId"]) | null;
+            imageUrl: string | null;
             /** Format: int32 */
-            requiredStaffLevel?: number;
+            requiredStaffLevel: number | null;
             isActive: boolean;
             /** Format: date-time */
             createdAt: string;
-            createdBy?: string;
+            createdBy: string | null;
             /** Format: date-time */
             updatedAt: string;
-            updatedBy?: string;
+            updatedBy: string | null;
         };
         /** @enum {string} */
         "Models.ServiceCategory": "cut" | "color" | "perm" | "treatment" | "spa" | "other";
@@ -1761,16 +1761,16 @@ export interface components {
             id: components["schemas"]["Models.CategoryId"];
             name: string;
             description: string;
-            parentId?: components["schemas"]["Models.CategoryId"];
+            parentId: (string & components["schemas"]["Models.CategoryId"]) | null;
             /** Format: int32 */
             displayOrder: number;
             isActive: boolean;
             /** Format: date-time */
             createdAt: string;
-            createdBy?: string;
+            createdBy: string | null;
             /** Format: date-time */
             updatedAt: string;
-            updatedBy?: string;
+            updatedBy: string | null;
         };
         "Models.ServiceId": string;
         /** @description Session information */
@@ -1828,12 +1828,12 @@ export interface components {
              * Format: date-time
              * @description 有効期限（オプション）
              */
-            expiresAt?: string;
+            expiresAt: string | null;
             /**
              * Format: int32
              * @description 最大ダウンロード数（オプション）
              */
-            maxDownloads?: number;
+            maxDownloads: number | null;
             /**
              * Format: int32
              * @description 現在のダウンロード数
@@ -1842,7 +1842,7 @@ export interface components {
             /** @description パスワード保護 */
             hasPassword: boolean;
             /** @description 許可されたメールアドレス（オプション） */
-            allowedEmails?: string[];
+            allowedEmails: string[] | null;
             /** @description 作成者ID */
             createdBy: string;
             /**
@@ -1857,26 +1857,26 @@ export interface components {
             name: string;
             contactInfo: components["schemas"]["Models.ContactInfo"];
             specialties: string[];
-            imageUrl?: string;
-            bio?: string;
+            imageUrl: string | null;
+            bio: string | null;
             /** Format: int32 */
-            yearsOfExperience?: number;
-            certifications?: string[];
+            yearsOfExperience: number | null;
+            certifications: string[] | null;
             isActive: boolean;
             /** Format: date-time */
             createdAt: string;
-            createdBy?: string;
+            createdBy: string | null;
             /** Format: date-time */
             updatedAt: string;
-            updatedBy?: string;
+            updatedBy: string | null;
         };
         "Models.StaffAvailability": {
             staffId: components["schemas"]["Models.StaffId"];
             dayOfWeek: components["schemas"]["Models.DayOfWeek"];
             startTime: string;
             endTime: string;
-            breakStart?: string;
-            breakEnd?: string;
+            breakStart: string | null;
+            breakEnd: string | null;
         };
         "Models.StaffId": string;
         /** @description Token refresh request */
@@ -2077,9 +2077,9 @@ export interface components {
             /** @description Content-Type */
             contentType: string;
             /** @description サロンID（オプション） */
-            salonId?: string;
+            salonId: string | null;
             /** @description タグ（オプション） */
-            tags?: string;
+            tags: string | null;
         };
         /** @description 署名付きアップロードURLレスポンス */
         "Models.UploadUrlResponse": {
@@ -2174,6 +2174,81 @@ export interface components {
          * @enum {string}
          */
         "Models.UserAccountStatus": "active" | "unverified" | "locked" | "suspended" | "deleted";
+        /** @description User response model - all keys required, values nullable where appropriate */
+        "Models.UserResponse": {
+            /** @description Unique identifier for the user */
+            id: string;
+            /** @description User's email address (unique) */
+            email: string;
+            /** @description User's display name */
+            name: string;
+            /** @description User's role in the system */
+            role: components["schemas"]["Models.UserRole"];
+            /** @description Account status */
+            status: components["schemas"]["Models.UserAccountStatus"];
+            /** @description Email verification status */
+            emailVerified: boolean;
+            /** @description Email verification token (internal use) */
+            emailVerificationToken: string | null;
+            /**
+             * Format: date-time
+             * @description Email verification token expiry
+             */
+            emailVerificationTokenExpiry: string | null;
+            /** @description Two-factor authentication status */
+            twoFactorStatus: components["schemas"]["Models.TwoFactorStatus"];
+            /** @description Two-factor authentication secret (encrypted) */
+            twoFactorSecret: string | null;
+            /** @description Backup codes for 2FA recovery */
+            backupCodes: string[] | null;
+            /**
+             * Format: int32
+             * @description Number of failed login attempts
+             */
+            failedLoginAttempts: number;
+            /**
+             * Format: date-time
+             * @description Time when the account was locked
+             */
+            lockedAt: string | null;
+            /** @description Password reset token (internal use) */
+            passwordResetToken: string | null;
+            /**
+             * Format: date-time
+             * @description Password reset token expiry
+             */
+            passwordResetTokenExpiry: string | null;
+            /**
+             * Format: date-time
+             * @description Last password change timestamp
+             */
+            lastPasswordChangeAt: string | null;
+            /** @description Previous password hashes for history check */
+            passwordHistory: string[] | null;
+            /** @description Trusted IP addresses for this user */
+            trustedIpAddresses: string[] | null;
+            /** @description Reference to customer profile if user is a customer */
+            customerId: string | null;
+            /** @description Reference to staff profile if user is staff */
+            staffId: string | null;
+            /**
+             * Format: date-time
+             * @description Timestamp when the user was created
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @description Timestamp when the user was last updated
+             */
+            updatedAt: string;
+            /**
+             * Format: date-time
+             * @description Last login timestamp
+             */
+            lastLoginAt: string | null;
+            /** @description Last login IP address */
+            lastLoginIp: string | null;
+        };
         /**
          * @description User roles in the system
          * @enum {string}
@@ -3037,7 +3112,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Models.User"];
+                    "application/json": components["schemas"]["Models.UserResponse"];
                 };
             };
             /** @description Access is unauthorized. */
@@ -3103,7 +3178,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Models.User"];
+                    "application/json": components["schemas"]["Models.UserResponse"];
                 };
             };
             /** @description The server could not understand the request due to invalid syntax. */

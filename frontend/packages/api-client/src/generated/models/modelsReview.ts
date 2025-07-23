@@ -9,24 +9,31 @@ import type { ModelsReviewId } from './modelsReviewId'
 import type { ModelsSalonId } from './modelsSalonId'
 import type { ModelsCustomerId } from './modelsCustomerId'
 import type { ModelsReservationId } from './modelsReservationId'
-import type { ModelsStaffId } from './modelsStaffId'
 
 export interface ModelsReview {
   id: ModelsReviewId
   salonId: ModelsSalonId
   customerId: ModelsCustomerId
   reservationId: ModelsReservationId
-  staffId?: ModelsStaffId
+  /** @nullable */
+  staffId: string | null
   rating: number
-  comment?: string
-  serviceRating?: number
-  staffRating?: number
-  atmosphereRating?: number
-  images?: string[]
+  /** @nullable */
+  comment: string | null
+  /** @nullable */
+  serviceRating: number | null
+  /** @nullable */
+  staffRating: number | null
+  /** @nullable */
+  atmosphereRating: number | null
+  /** @nullable */
+  images: string[] | null
   isVerified: boolean
   helpfulCount: number
   createdAt: string
-  createdBy?: string
+  /** @nullable */
+  createdBy: string | null
   updatedAt: string
-  updatedBy?: string
+  /** @nullable */
+  updatedBy: string | null
 }

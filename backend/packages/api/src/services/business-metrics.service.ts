@@ -172,6 +172,38 @@ export const createBusinessMetricsService = (): BusinessMetricsService => {
   }
 }
 
+// Type definition for usage examples
+type BusinessMetricsUsageExample = {
+  readonly onReservationCreated: (reservation: {
+    salonId: string
+    serviceType: string
+    amount: number
+  }) => void
+  readonly onReservationCancelled: (
+    salonId: string,
+    reason: 'customer_request' | 'salon_request' | 'no_show' | 'system'
+  ) => void
+  readonly onServiceCompleted: (
+    salonId: string,
+    serviceType: string,
+    startTime: Date,
+    endTime: Date
+  ) => void
+  readonly updateDailyMetrics: (
+    getActiveUserCounts: () => Promise<{
+      customer: number
+      salon_owner: number
+      staff: number
+    }>,
+    getSalonSatisfactionScores: () => Promise<
+      Array<{ salonId: string; averageScore: number }>
+    >,
+    getStaffUtilizationRates: () => Promise<
+      Array<{ salonId: string; staffId: string; rate: number }>
+    >
+  ) => Promise<void>
+}
+
 // ユースケースでの使用例をエクスポート
 export const businessMetricsUsageExample = {
   // 予約作成時
@@ -255,4 +287,4 @@ export const businessMetricsUsageExample = {
       service.updateStaffUtilization(salonId, staffId, rate)
     }
   },
-}
+} as const satisfies BusinessMetricsUsageExample

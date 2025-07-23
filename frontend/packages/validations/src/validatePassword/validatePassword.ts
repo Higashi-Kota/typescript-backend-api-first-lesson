@@ -11,7 +11,7 @@ export const PasswordSchema = z
      * @see https://github.com/knicola/yup-password/blob/master/src/index.ts#L53-L63
      */
     return (
-      !isNullOrUndefined(value) && (value.match(/[a-z]/g) || []).length >= 1
+      !isNullOrUndefined(value) && (value.match(/[a-z]/g) ?? []).length >= 1
     )
   }, '少なくとも小文字1文字以上を含めてください')
   .refine((value) => {
@@ -19,7 +19,7 @@ export const PasswordSchema = z
      * @see https://github.com/knicola/yup-password/blob/master/src/index.ts#L65-L75
      */
     return (
-      !isNullOrUndefined(value) && (value.match(/[A-Z]/g) || []).length >= 1
+      !isNullOrUndefined(value) && (value.match(/[A-Z]/g) ?? []).length >= 1
     )
   }, '少なくとも大文字1文字以上を含めてください')
   .refine((value) => {
@@ -27,7 +27,7 @@ export const PasswordSchema = z
      * @see https://github.com/knicola/yup-password/blob/master/src/index.ts#L77-L87
      */
     return (
-      !isNullOrUndefined(value) && (value.match(/[0-9]/g) || []).length >= 1
+      !isNullOrUndefined(value) && (value.match(/[0-9]/g) ?? []).length >= 1
     )
   }, '少なくとも数字1文字以上を含めてください')
   .refine((value) => {
@@ -36,7 +36,7 @@ export const PasswordSchema = z
      */
     return (
       !isNullOrUndefined(value) &&
-      (value.match(/[^a-zA-Z0-9\s]/g) || []).length >= 1
+      (value.match(/[^a-zA-Z0-9\s]/g) ?? []).length >= 1
     )
   }, '少なくとも記号1文字以上を含めてください')
 

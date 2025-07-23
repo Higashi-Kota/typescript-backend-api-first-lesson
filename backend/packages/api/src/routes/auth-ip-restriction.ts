@@ -1,4 +1,5 @@
-import type { UserId, UserRepository } from '@beauty-salon-backend/domain'
+import type { UserRepository } from '@beauty-salon-backend/domain'
+import { createUserId } from '@beauty-salon-backend/domain'
 import {
   type AddTrustedIpDeps,
   type CheckIpRestrictionDeps,
@@ -56,7 +57,15 @@ export const createIpRestrictionRoutes = (
       req: TypedRequest<AddTrustedIpRequest, unknown, { userId: string }>,
       res: TypedResponse<MessageResponse | ErrorResponse>
     ) => {
-      const userId = req.params.userId as UserId
+      if (!req.params.userId) {
+        return res.status(400).json({
+          error: {
+            type: 'BAD_REQUEST',
+            message: 'User ID is required',
+          },
+        })
+      }
+      const userId = createUserId(req.params.userId)
       const { ipAddress } = req.body
 
       if (!ipAddress) {
@@ -71,14 +80,23 @@ export const createIpRestrictionRoutes = (
 
       const addTrustedIpDeps: AddTrustedIpDeps = {
         userRepository: deps.userRepository,
-        maxTrustedIps: deps.maxTrustedIps || 10,
+        maxTrustedIps: deps.maxTrustedIps ?? 10,
+      }
+
+      if (!req.user) {
+        return res.status(401).json({
+          error: {
+            type: 'UNAUTHORIZED',
+            message: 'User not authenticated',
+          },
+        })
       }
 
       const result = await addTrustedIp(
         {
           userId,
           ipAddress,
-          adminUserId: req.user?.id as UserId,
+          adminUserId: req.user.id,
         },
         addTrustedIpDeps
       )
@@ -159,7 +177,15 @@ export const createIpRestrictionRoutes = (
       req: TypedRequest<unknown, { ipAddress: string }, { userId: string }>,
       res: TypedResponse<MessageResponse | ErrorResponse>
     ) => {
-      const userId = req.params.userId as UserId
+      if (!req.params.userId) {
+        return res.status(400).json({
+          error: {
+            type: 'BAD_REQUEST',
+            message: 'User ID is required',
+          },
+        })
+      }
+      const userId = createUserId(req.params.userId)
       const ipAddress = req.query.ipAddress
 
       if (!ipAddress) {
@@ -172,6 +198,15 @@ export const createIpRestrictionRoutes = (
         return
       }
 
+      if (!req.user) {
+        return res.status(401).json({
+          error: {
+            type: 'UNAUTHORIZED',
+            message: 'User not authenticated',
+          },
+        })
+      }
+
       const removeTrustedIpDeps: RemoveTrustedIpDeps = {
         userRepository: deps.userRepository,
       }
@@ -180,7 +215,7 @@ export const createIpRestrictionRoutes = (
         {
           userId,
           ipAddress,
-          adminUserId: req.user?.id as UserId,
+          adminUserId: req.user.id,
         },
         removeTrustedIpDeps
       )
@@ -245,7 +280,15 @@ export const createIpRestrictionRoutes = (
       req: TypedRequest<unknown, unknown, { userId: string }>,
       res: TypedResponse<TrustedIpsResponse | ErrorResponse>
     ) => {
-      const userId = req.params.userId as UserId
+      if (!req.params.userId) {
+        return res.status(400).json({
+          error: {
+            type: 'BAD_REQUEST',
+            message: 'User ID is required',
+          },
+        })
+      }
+      const userId = createUserId(req.params.userId)
 
       const userResult = await deps.userRepository.findById(userId)
 
@@ -284,16 +327,25 @@ export const createIpRestrictionRoutes = (
     authenticate(deps.authConfig),
     async (req, res, next) => {
       // Get client IP address
-      const ipAddress = req.ip || req.socket.remoteAddress || ''
+      const ipAddress = req.ip ?? req.socket.remoteAddress ?? ''
+
+      if (!req.user) {
+        return res.status(401).json({
+          error: {
+            type: 'UNAUTHORIZED',
+            message: 'User not authenticated',
+          },
+        })
+      }
 
       const checkIpDeps: CheckIpRestrictionDeps = {
         userRepository: deps.userRepository,
-        ipRestrictionEnabled: deps.ipRestrictionEnabled || false,
+        ipRestrictionEnabled: deps.ipRestrictionEnabled ?? false,
       }
 
       const result = await checkIpRestriction(
         {
-          userId: req.user?.id as UserId,
+          userId: req.user.id,
           ipAddress,
         },
         checkIpDeps

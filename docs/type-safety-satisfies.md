@@ -115,6 +115,88 @@ const mockRepository = {
 
 ## 🔄 使用例
 
+### `as const satisfies` パターン
+
+`as const`と`satisfies`を組み合わせることで、リテラル型を保持しながら型チェックを行えます。
+
+```typescript
+// ✅ 推奨: リテラル型を保持しつつ型チェック
+const STATUS_CODES = {
+  OK: 200,
+  CREATED: 201,
+  NOT_FOUND: 404,
+  INTERNAL_ERROR: 500
+} as const satisfies Record<string, number>
+
+// STATUS_CODES.OK の型は 200（リテラル型）として保持される
+
+// ✅ 設定値の定義
+const DEFAULT_CONFIG = {
+  port: 3000,
+  host: 'localhost',
+  ssl: false,
+  features: {
+    auth: true,
+    logging: true,
+    metrics: false
+  }
+} as const satisfies AppConfig
+
+// DEFAULT_CONFIG.port の型は 3000（リテラル型）
+
+// ✅ ルートマップの定義
+const ROUTES = {
+  home: '/',
+  login: '/auth/login',
+  dashboard: '/dashboard',
+  api: {
+    users: '/api/users',
+    products: '/api/products'
+  }
+} as const satisfies RouteMap
+
+// ROUTES.api.users の型は '/api/users'（リテラル型）
+
+// ✅ エラーコードの定義
+const ERROR_CODES = {
+  VALIDATION_ERROR: 'VALIDATION_ERROR',
+  AUTH_FAILED: 'AUTH_FAILED',
+  NOT_FOUND: 'NOT_FOUND',
+  INTERNAL_ERROR: 'INTERNAL_ERROR'
+} as const satisfies Record<string, string>
+
+// 型として使用可能
+type ErrorCode = typeof ERROR_CODES[keyof typeof ERROR_CODES]
+```
+
+### なぜ`as const satisfies`を使うのか
+
+1. **リテラル型の保持**: `as const`により、値が具体的なリテラル型として扱われる
+2. **型チェック**: `satisfies`により、オブジェクト全体が期待する型に適合することを保証
+3. **型推論の向上**: より正確な型推論により、IDE支援が向上
+4. **実行時の安全性**: 不変のオブジェクトとして扱われるため、誤った変更を防げる
+
+```typescript
+// ❌ 避けるべき: リテラル型が失われる
+const config1 = {
+  port: 3000
+} satisfies Config
+// config1.port の型は number
+
+// ❌ 避けるべき: 型チェックがされない
+const config2 = {
+  port: 3000,
+  invalid: 'field' // エラーにならない
+} as const
+
+// ✅ 推奨: リテラル型を保持しつつ型チェック
+const config3 = {
+  port: 3000
+} as const satisfies Config
+// config3.port の型は 3000（リテラル型）
+// かつ Config 型に適合することが保証される
+```
+
 ### ブランド型での使用
 
 ```typescript

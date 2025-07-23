@@ -30,7 +30,7 @@ async function startServer() {
     console.log('Express app created')
 
     // サーバーの起動
-    const port = env.PORT || 3000
+    const port = env.PORT ?? 3000
     const server = app.listen(port, () => {
       console.log(`API server is running on http://localhost:${port}`)
       console.log(`Health check available at: http://localhost:${port}/health`)

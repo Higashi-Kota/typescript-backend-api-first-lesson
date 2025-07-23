@@ -53,6 +53,9 @@
         "noVar": "error",
         "useAsConstAssertion": "error",
         "useConst": "error"
+      },
+      "nursery": {
+        "noNestedTernary": "error"
       }
     }
   },

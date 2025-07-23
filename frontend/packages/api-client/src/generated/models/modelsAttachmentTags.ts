@@ -8,5 +8,6 @@
 
 /**
  * タグ
+ * @nullable
  */
-export type ModelsAttachmentTags = { [key: string]: string }
+export type ModelsAttachmentTags = { [key: string]: string } | null

@@ -46,7 +46,7 @@ export const getSessions = async (
   const activeSessions = sessions
     .filter((session) => session.expiresAt > now)
     .map((session) => ({
-      id: session.id as string,
+      id: session.id,
       ipAddress: session.ipAddress,
       userAgent: session.userAgent,
       createdAt: session.createdAt,

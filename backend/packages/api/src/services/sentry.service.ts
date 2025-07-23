@@ -310,7 +310,7 @@ export const createSentryService = (): SentryService => {
 
   const setUser = (user: SentryContext['user']): void => {
     if (!isInitialized) return
-    Sentry.setUser(user || null)
+    Sentry.setUser(user ?? null)
   }
 
   const addBreadcrumb = (breadcrumb: Sentry.Breadcrumb): void => {

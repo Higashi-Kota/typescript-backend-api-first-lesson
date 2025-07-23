@@ -114,6 +114,309 @@ if (first !== undefined) {
 }
 ```
 
+## Nullish Coalescing演算子の使用
+
+### 厳密な型チェックの原則
+
+TypeScriptでは、すべてのデフォルト値設定においてNullish Coalescing演算子（`??`）を使用し、論理OR演算子（`||`）によるFalsy値の横着な判定は禁止します。
+
+### 禁止パターン
+
+```typescript
+// ❌ 論理OR演算子によるFalsy値の横着な判定は禁止
+const count = data.count || 10;  // 0の場合も10になってしまう
+const name = data.name || 'Unknown';  // 空文字列の場合も'Unknown'になってしまう
+const isActive = data.isActive || true;  // falseの場合もtrueになってしまう
+const isEnabled = data.isEnabled || false;  // 横着な真偽値判定も禁止
+```
+
+### 推奨パターン
+
+```typescript
+// ✅ すべてのケースでNullish Coalescing演算子を使用
+const count = data.count ?? 10;  // 0は有効な値として扱われる
+const name = data.name ?? 'Unknown';  // 空文字列は有効な値として扱われる
+const notes = data.notes ?? null;  // undefinedをnullに変換（API型定義に合わせる）
+
+// ✅ 真偽値もnullish coalescingを使用
+const isEnabled = data.isEnabled ?? false;  // null/undefinedの場合のみfalse
+const isActive = data.isActive ?? true;  // null/undefinedの場合のみtrue
+
+// ✅ 真偽値の論理演算は明示的に行う
+const hasPermission = (user.isAdmin === true) || (user.hasAccess === true);
+const canEdit = (user.role === 'admin') || (user.role === 'editor');
+```
+
+### 数値の厳密な検証
+
+```typescript
+// ❌ 横着な数値判定
+const price = userInput || 0;  // 空文字列やfalseも0になってしまう
+
+// ✅ 厳密な数値検証
+const parsePrice = (input: unknown): number => {
+  if (typeof input === 'number' && !isNaN(input)) {
+    return input;
+  }
+  if (typeof input === 'string') {
+    const parsed = parseFloat(input);
+    if (!isNaN(parsed)) {
+      return parsed;
+    }
+  }
+  return 0;  // デフォルト値
+};
+
+// ✅ 整数の厳密な検証
+const parseInt = (input: unknown): number | null => {
+  if (typeof input === 'number' && Number.isInteger(input)) {
+    return input;
+  }
+  if (typeof input === 'string') {
+    const parsed = Number.parseInt(input, 10);
+    if (!isNaN(parsed)) {
+      return parsed;
+    }
+  }
+  return null;
+};
+```
+
+### ドメインモデルとAPI型のマッピング
+
+```typescript
+// ✅ すべてのケースでnullish coalescing演算子を使用
+export function toApiResponse(domainModel: DomainModel): ApiResponse {
+  return {
+    id: domainModel.id,
+    name: domainModel.name,
+    description: domainModel.description ?? null,  // undefined → null
+    preferences: domainModel.preferences ?? null,
+    tags: domainModel.tags ?? null,
+    notes: domainModel.notes ?? null,
+    loyaltyPoints: domainModel.loyaltyPoints ?? 0,  // undefinedの場合のみ0
+    isActive: domainModel.isActive ?? false,  // undefinedの場合のみfalse
+    isVerified: domainModel.isVerified ?? false,
+  };
+}
+```
+
+### 厳密な型チェックの原則
+
+1. **論理OR演算子（`||`）の使用は原則禁止**
+   - Falsy値による横着な判定を防ぐため
+   - 意図しない値の変換を防ぐため
+
+2. **Nullish Coalescing演算子（`??`）を常に使用**
+   - null/undefinedのみをフォールバック
+   - すべての型（文字列、数値、真偽値）で一貫して使用
+
+3. **厳密な型検証を行う**
+   - 数値は`isNaN()`や`Number.isInteger()`で検証
+   - 文字列は明示的な長さや形式チェック
+   - 真偽値は厳密等価演算子（`===`）で比較
+
+4. **論理演算は明示的に**
+   - 真偽値の論理演算では各条件を明示的に評価
+   - 横着なFalsy値判定に頼らない
+
+## 真偽値判定の厳密化
+
+### Falsy値判定の問題点
+
+JavaScriptのFalsy値（`false`, `0`, `""`, `null`, `undefined`, `NaN`）を利用した判定は、意図しない動作を引き起こす可能性があります。特に`!`演算子や`!!`による真偽値変換は避けるべきです。
+
+### 禁止パターン
+
+```typescript
+// ❌ 単独の否定演算子によるFalsy判定
+if (!value) { ... }  // value が 0, "", false の場合も true になる
+
+// ❌ ダブル否定による真偽値変換
+const isValid = !!value;  // 0, "", false も false になる
+
+// ❌ 条件式での暗黙的な真偽値判定
+if (user) { ... }  // user が存在するかの判定が曖昧
+
+// ❌ 三項演算子での暗黙的判定
+const result = data ? processData(data) : null;
+```
+
+### 推奨パターン
+
+```typescript
+// ✅ 明示的なnull/undefinedチェック
+if (value !== null && value !== undefined) { ... }
+
+// ✅ 厳密な等価性チェック
+if (value !== null) { ... }
+if (value !== undefined) { ... }
+
+// ✅ 型ガードを使用した明確な判定
+if (user !== null) {
+  // user は null ではないことが保証される
+}
+
+// ✅ オプショナルチェイニングとnullish coalescingの組み合わせ
+const name = user?.name ?? 'Anonymous';
+
+// ✅ 配列の要素存在チェック
+const firstItem = array[0];
+if (firstItem !== undefined) {
+  // firstItem の型情報が保持される
+}
+
+// ✅ 真偽値の明示的な比較
+if (isEnabled === true) { ... }
+if (hasPermission === false) { ... }
+
+// ✅ 数値の明示的なチェック
+if (count !== 0) { ... }
+if (!isNaN(value) && value > 0) { ... }
+
+// ✅ 文字列の明示的なチェック
+if (text.length > 0) { ... }
+if (text !== '') { ... }
+```
+
+### 実践的な例
+
+```typescript
+// ❌ 問題のあるパターン
+function processUser(user?: User) {
+  if (!user) {  // user が undefined の場合のみを想定しているが、他のFalsy値も含まれる
+    return null;
+  }
+  return user.name;
+}
+
+// ✅ 推奨パターン
+function processUser(user?: User) {
+  if (user === null || user === undefined) {
+    return null;
+  }
+  return user.name;
+}
+
+// さらに良いパターン（早期リターン）
+function processUser(user?: User) {
+  if (user == null) {  // null と undefined の両方をチェック
+    return null;
+  }
+  return user.name;
+}
+```
+
+## ネストした三項演算子の禁止とパターンマッチング
+
+### 三項演算子の制限
+
+複雑な条件分岐において、ネストした三項演算子は可読性を著しく損ない、バグの温床となります。このプロジェクトでは、Biomeの`noNestedTernary`ルールによりネストした三項演算子を禁止し、代わりにts-patternによるパターンマッチングを使用します。
+
+### 禁止パターン
+
+```typescript
+// ❌ ネストした三項演算子
+const status = user.isActive 
+  ? user.isVerified 
+    ? 'active' 
+    : 'pending'
+  : 'inactive';
+
+// ❌ 複雑な条件のネスト
+const price = product.type === 'premium'
+  ? user.isMember
+    ? product.price * 0.8
+    : product.price
+  : product.price * 0.9;
+
+// ❌ 真偽値変換のネスト
+const isEnabled = value === 'true'
+  ? true
+  : value === 'false'
+    ? false
+    : undefined;
+```
+
+### 推奨パターン - ts-patternによるフラットな評価
+
+```typescript
+import { match } from 'ts-pattern';
+
+// ✅ パターンマッチングによる明確な条件分岐
+const status = match({ isActive: user.isActive, isVerified: user.isVerified })
+  .with({ isActive: true, isVerified: true }, () => 'active')
+  .with({ isActive: true, isVerified: false }, () => 'pending')
+  .with({ isActive: false }, () => 'inactive')
+  .exhaustive();
+
+// ✅ 複数条件の組み合わせ
+const price = match({ type: product.type, isMember: user.isMember })
+  .with({ type: 'premium', isMember: true }, () => product.price * 0.8)
+  .with({ type: 'premium', isMember: false }, () => product.price)
+  .otherwise(() => product.price * 0.9);
+
+// ✅ 文字列から真偽値への変換
+const isEnabled = match(value)
+  .with('true', () => true)
+  .with('false', () => false)
+  .otherwise(() => undefined);
+```
+
+### より複雑な例
+
+```typescript
+// ❌ 深くネストした三項演算子
+const message = error.type === 'network'
+  ? error.retry
+    ? 'Network error. Retrying...'
+    : 'Network error. Please check your connection.'
+  : error.type === 'auth'
+    ? error.code === 401
+      ? 'Invalid credentials'
+      : 'Authentication failed'
+    : 'Unknown error';
+
+// ✅ パターンマッチングによる階層的な条件の平坦化
+const message = match(error)
+  .with({ type: 'network', retry: true }, () => 'Network error. Retrying...')
+  .with({ type: 'network', retry: false }, () => 'Network error. Please check your connection.')
+  .with({ type: 'auth', code: 401 }, () => 'Invalid credentials')
+  .with({ type: 'auth' }, () => 'Authentication failed')
+  .otherwise(() => 'Unknown error');
+
+// ✅ Sum型と組み合わせた型安全なパターンマッチング
+type ApiError = 
+  | { type: 'network'; retry: boolean; endpoint: string }
+  | { type: 'auth'; code: 401 | 403; message: string }
+  | { type: 'validation'; fields: string[] }
+  | { type: 'unknown'; details?: unknown };
+
+const handleError = (error: ApiError): string => 
+  match(error)
+    .with({ type: 'network', retry: true }, ({ endpoint }) => 
+      `Retrying connection to ${endpoint}...`)
+    .with({ type: 'network', retry: false }, ({ endpoint }) => 
+      `Failed to connect to ${endpoint}`)
+    .with({ type: 'auth', code: 401 }, () => 
+      'Please log in to continue')
+    .with({ type: 'auth', code: 403 }, () => 
+      'You do not have permission')
+    .with({ type: 'validation' }, ({ fields }) => 
+      `Invalid fields: ${fields.join(', ')}`)
+    .with({ type: 'unknown' }, () => 
+      'An unexpected error occurred')
+    .exhaustive();
+```
+
+### パターンマッチングの利点
+
+1. **可読性**: 条件と結果が明確に対応
+2. **型安全性**: TypeScriptとの完全な統合
+3. **網羅性**: `exhaustive()`による全ケースの処理保証
+4. **保守性**: 新しい条件の追加が容易
+5. **デバッグ**: 各ケースが独立してテスト可能
+
 ## 必須のBiomeルール
 
 ```json
@@ -136,6 +439,9 @@ if (first !== undefined) {
       "suspicious": {
         "noExplicitAny": "error",
         "noImplicitAnyLet": "error"
+      },
+      "nursery": {
+        "noNestedTernary": "error"
       }
     }
   }

@@ -83,7 +83,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
         birthDate: decryptedCustomer.birthDate
           ? new Date(decryptedCustomer.birthDate)
           : null,
-        loyaltyPoints: decryptedCustomer.loyaltyPoints || 0,
+        loyaltyPoints: decryptedCustomer.loyaltyPoints ?? 0,
         membershipLevel: (decryptedCustomer.membershipLevel ||
           'regular') as Customer['data']['membershipLevel'],
         createdAt: decryptedCustomer.createdAt,
@@ -106,7 +106,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
       tags: data.tags.length > 0 ? data.tags : null,
       loyaltyPoints: data.loyaltyPoints,
       membershipLevel: data.membershipLevel,
-      birthDate: data.birthDate?.toISOString().split('T')[0] || null,
+      birthDate: data.birthDate?.toISOString().split('T')[0] ?? null,
       updatedAt: data.updatedAt,
     }
 
@@ -331,7 +331,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
         .from(customers)
         .where(whereClause)
 
-      const total = countResult[0]?.count || 0
+      const total = countResult[0]?.count ?? 0
 
       // データ取得クエリ
       const results = await this.db
@@ -446,7 +446,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
         if (row.level) {
           counts[row.level] = row.count
         } else {
-          counts.regular = (counts.regular || 0) + row.count
+          counts.regular = (counts.regular ?? 0) + row.count
         }
       }
 

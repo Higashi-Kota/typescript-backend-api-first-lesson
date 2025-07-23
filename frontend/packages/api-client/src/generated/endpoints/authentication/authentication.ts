@@ -45,7 +45,7 @@ import type {
   ModelsTwoFactorEnableRequest,
   ModelsTwoFactorSetupResponse,
   ModelsTwoFactorVerifyRequest,
-  ModelsUser,
+  ModelsUserResponse,
 } from '../../models'
 
 import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher'
@@ -1261,7 +1261,7 @@ export const useAuthOperationsLogoutAll = <
  * Get current user information
  */
 export type authOperationsGetCurrentUserResponse200 = {
-  data: ModelsUser
+  data: ModelsUserResponse
   status: 200
 }
 
@@ -1548,7 +1548,7 @@ export const useAuthOperationsRefreshToken = <
  * Register a new user account
  */
 export type authOperationsRegisterResponse201 = {
-  data: ModelsUser
+  data: ModelsUserResponse
   status: 201
 }
 

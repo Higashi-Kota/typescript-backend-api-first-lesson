@@ -432,15 +432,15 @@ export class DrizzleUserRepository implements UserRepository {
         user.data.passwordResetStatus.type === 'requested'
           ? user.data.passwordResetStatus.tokenExpiry
           : null,
-      lastPasswordChangeAt: user.data.lastPasswordChangeAt || null,
+      lastPasswordChangeAt: user.data.lastPasswordChangeAt ?? null,
       passwordHistory: user.data.passwordHistory,
       trustedIpAddresses: user.data.trustedIpAddresses,
-      customerId: user.data.customerId || null,
-      staffId: user.data.staffId || null,
+      customerId: user.data.customerId ?? null,
+      staffId: user.data.staffId ?? null,
       createdAt: user.data.createdAt,
       updatedAt: user.data.updatedAt,
-      lastLoginAt: user.data.lastLoginAt || null,
-      lastLoginIp: user.data.lastLoginIp || null,
+      lastLoginAt: user.data.lastLoginAt ?? null,
+      lastLoginIp: user.data.lastLoginIp ?? null,
     }
 
     return dbUser

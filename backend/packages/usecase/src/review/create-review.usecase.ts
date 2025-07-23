@@ -232,7 +232,7 @@ export const mapReviewToResponse = (
     serviceRating: data.serviceRating,
     staffRating: data.staffRating,
     atmosphereRating: data.atmosphereRating,
-    images: data.images || [],
+    images: data.images ?? [],
     isVerified: data.isVerified,
     helpfulCount: data.helpfulCount,
     createdAt: data.createdAt.toISOString(),

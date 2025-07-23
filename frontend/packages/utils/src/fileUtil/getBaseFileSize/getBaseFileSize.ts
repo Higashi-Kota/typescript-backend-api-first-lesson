@@ -27,7 +27,7 @@ export const getBaseFileSize = (size: string | number): number => {
   }
 
   const [, value, unit = 'B'] = match
-  const numericValue = Number.parseFloat(value || '0')
+  const numericValue = Number.parseFloat(value ?? '0')
 
-  return Math.floor(numericValue * (units[unit] || 1))
+  return Math.floor(numericValue * (units[unit] ?? 1))
 }

@@ -10,5 +10,6 @@ import type { ModelsErrorDetails } from './modelsErrorDetails'
 export interface ModelsError {
   code: string
   message: string
-  details?: ModelsErrorDetails
+  /** @nullable */
+  details: ModelsErrorDetails
 }

@@ -184,8 +184,12 @@ export function formatLogMessage(event: LogEvent): string {
     )
     .with(
       { type: 'security', event: { kind: 'suspiciousActivity' } },
-      ({ event }) =>
-        `Suspicious activity: ${event.description}${event.userId ? ` - User: ${event.userId}` : ''}${event.ip ? ` from ${event.ip}` : ''}`
+      ({ event }) => {
+        const parts = [`Suspicious activity: ${event.description}`]
+        if (event.userId) parts.push(`User: ${event.userId}`)
+        if (event.ip) parts.push(`from ${event.ip}`)
+        return parts.join(' - ')
+      }
     )
     .with(
       { type: 'security', event: { kind: 'accountLocked' } },
@@ -248,11 +252,12 @@ export function formatLogMessage(event: LogEvent): string {
       ({ event }) =>
         `File uploaded: ${event.key} - Size: ${event.size} bytes - User: ${event.userId}`
     )
-    .with(
-      { type: 'storage', event: { kind: 'downloaded' } },
-      ({ event }) =>
-        `File downloaded: ${event.key}${event.userId ? ` - User: ${event.userId}` : ''}${event.shareToken ? ` - Share token: ${event.shareToken}` : ''}`
-    )
+    .with({ type: 'storage', event: { kind: 'downloaded' } }, ({ event }) => {
+      const parts = [`File downloaded: ${event.key}`]
+      if (event.userId) parts.push(`User: ${event.userId}`)
+      if (event.shareToken) parts.push(`Share token: ${event.shareToken}`)
+      return parts.join(' - ')
+    })
     .with(
       { type: 'storage', event: { kind: 'deleted' } },
       ({ event }) => `File deleted: ${event.key} - User: ${event.userId}`

@@ -51,7 +51,7 @@ namespace BeautySalon.Models {
   model Error {
     code: string;
     message: string;
-    details?: Record<unknown>;
+    details: Record<unknown> | null;
   }
 
   model PaginationParams {
@@ -84,13 +84,13 @@ namespace BeautySalon.Models {
   model ContactInfo {
     email: string;
     phoneNumber: string;
-    alternativePhone?: string;
+    alternativePhone: string | null;
   }
 
   model AuditInfo {
     createdAt: utcDateTime;
-    createdBy?: string;
+    createdBy: string | null;
     updatedAt: utcDateTime;
-    updatedBy?: string;
+    updatedBy: string | null;
   }
 }

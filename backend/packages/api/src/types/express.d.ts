@@ -5,12 +5,13 @@
 import type { Request, Response } from 'express'
 import type { ParamsDictionary } from 'express-serve-static-core'
 import type { UserRole } from '../middleware/auth.middleware.js'
+import type { UserId } from '@beauty-salon-backend/domain'
 
 declare global {
   namespace Express {
     interface Request {
       user?: {
-        id: string
+        id: UserId
         email: string
         role: UserRole
       }

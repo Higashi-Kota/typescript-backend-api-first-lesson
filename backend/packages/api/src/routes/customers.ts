@@ -3,16 +3,15 @@
  * OpenAPIで生成された型を使用したAPI実装
  */
 
+import type { components } from '@beauty-salon-backend/types/api'
 import { Router } from 'express'
 import { match } from 'ts-pattern'
 import { z } from 'zod'
-import type { components } from '@beauty-salon-backend/types/api'
 
 import {
   type CustomerRepository,
   createCustomerIdSafe,
 } from '@beauty-salon-backend/domain'
-import type { TypedRequest, TypedResponse } from '../types/express.js'
 import {
   createCustomerErrorResponse,
   createCustomerUseCase,
@@ -24,6 +23,7 @@ import {
   mapUpdateCustomerRequest,
   updateCustomerUseCase,
 } from '@beauty-salon-backend/usecase'
+import type { TypedRequest, TypedResponse } from '../types/express.js'
 import {
   normalizeCreateCustomerRequest,
   normalizeUpdateCustomerRequest,

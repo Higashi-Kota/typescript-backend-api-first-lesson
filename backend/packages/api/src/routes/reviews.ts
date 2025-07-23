@@ -15,8 +15,8 @@ import {
 import type { AuthConfig } from '../middleware/auth.middleware.js'
 import type { TypedRequest, TypedResponse } from '../types/express.js'
 import {
-  toReviewResponse,
   toReviewDetailResponse,
+  toReviewResponse,
 } from '../utils/review-mappers.js'
 
 import type {
@@ -154,10 +154,10 @@ export const createReviewRoutes = (deps: ReviewRouteDeps): Router => {
 
         // UseCase実行
         const mappedInput = mapListReviewsRequest({
-          salonId: req.query.salonId as string | undefined,
-          customerId: req.query.customerId as string | undefined,
-          staffId: req.query.staffId as string | undefined,
-          reservationId: req.query.reservationId as string | undefined,
+          salonId: req.query.salonId,
+          customerId: req.query.customerId,
+          staffId: req.query.staffId,
+          reservationId: req.query.reservationId,
           minRating: req.query.minRating
             ? Number(req.query.minRating)
             : undefined,
@@ -224,16 +224,18 @@ export const createReviewRoutes = (deps: ReviewRouteDeps): Router => {
 
         // 予約から関連情報を取得してリクエストを補完
         // TODO: 実際には予約情報からsalonIdとcustomerIdを取得する必要がある
-        const enrichedRequest = {
-          ...req.body,
-          salonId: '00000000-0000-0000-0000-000000000000', // 予約情報から取得
-          customerId: req.user?.id || '00000000-0000-0000-0000-000000000000', // 認証済みユーザーのID
-          staffId: undefined,
-          serviceRating: req.body.serviceRatings?.service,
-          staffRating: req.body.serviceRatings?.staff,
-          atmosphereRating: req.body.serviceRatings?.atmosphere,
-          images: [],
-        } as components['schemas']['Models.CreateReviewRequest']
+        const enrichedRequest: components['schemas']['Models.CreateReviewRequest'] =
+          {
+            ...req.body,
+            salonId: '00000000-0000-0000-0000-000000000000', // 予約情報から取得
+            customerId: req.user?.id ?? '00000000-0000-0000-0000-000000000000', // 認証済みユーザーのID
+            staffId: null,
+            serviceRating: req.body.serviceRatings?.service ?? null,
+            staffRating: req.body.serviceRatings?.staff ?? null,
+            atmosphereRating: req.body.serviceRatings?.atmosphere ?? null,
+            images: null,
+            comment: req.body.comment ?? null,
+          }
 
         // UseCase実行
         const mappedInput = mapCreateReviewRequest(
@@ -504,7 +506,7 @@ export const createReviewRoutes = (deps: ReviewRouteDeps): Router => {
         const mappedInput = mapDeleteReviewRequest(
           idResult.data,
           req.body.reason,
-          req.user?.id || 'system'
+          req.user?.id ?? 'system'
         )
         if (mappedInput.type === 'err') {
           return res.status(400).json({
@@ -574,7 +576,7 @@ export const createReviewRoutes = (deps: ReviewRouteDeps): Router => {
         // UseCase実行
         const mappedInput = mapPublishReviewRequest(
           idResult.data,
-          req.user?.id || 'system'
+          req.user?.id ?? 'system'
         )
         if (mappedInput.type === 'err') {
           return res.status(400).json({
@@ -653,7 +655,7 @@ export const createReviewRoutes = (deps: ReviewRouteDeps): Router => {
         const mappedInput = mapHideReviewRequest(
           idResult.data,
           req.body.reason,
-          req.user?.id || 'system'
+          req.user?.id ?? 'system'
         )
         if (mappedInput.type === 'err') {
           return res.status(400).json({

@@ -96,7 +96,7 @@ export const createEmailVerificationRoutes = (
         const userAgent = req.get('user-agent')
 
         // ユーザー情報を取得
-        const userResult = await userRepository.findById(req.user.id as UserId)
+        const userResult = await userRepository.findById(req.user.id)
         if (userResult.type === 'err' || !userResult.value) {
           return res.status(404).json({
             code: 'USER_NOT_FOUND',
@@ -354,7 +354,7 @@ export const createEmailVerificationRoutes = (
         }
 
         // ユーザー情報を取得
-        const userResult = await userRepository.findById(req.user.id as UserId)
+        const userResult = await userRepository.findById(req.user.id)
         if (userResult.type === 'err' || !userResult.value) {
           return res.status(404).json({
             code: 'USER_NOT_FOUND',

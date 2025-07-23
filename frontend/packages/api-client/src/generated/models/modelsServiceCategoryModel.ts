@@ -11,11 +11,14 @@ export interface ModelsServiceCategoryModel {
   id: ModelsCategoryId
   name: string
   description: string
-  parentId?: ModelsCategoryId
+  /** @nullable */
+  parentId: string | null
   displayOrder: number
   isActive: boolean
   createdAt: string
-  createdBy?: string
+  /** @nullable */
+  createdBy: string | null
   updatedAt: string
-  updatedBy?: string
+  /** @nullable */
+  updatedBy: string | null
 }

@@ -13,9 +13,9 @@ namespace BeautySalon.Models {
     duration: int32;
     price: int32;
     category: ServiceCategory;
-    categoryId?: CategoryId;
-    imageUrl?: string;
-    requiredStaffLevel?: int32;
+    categoryId: CategoryId | null;
+    imageUrl: string | null;
+    requiredStaffLevel: int32 | null;
     isActive: boolean;
     ...AuditInfo;
   }
@@ -27,9 +27,9 @@ namespace BeautySalon.Models {
     duration: int32;
     price: int32;
     category: ServiceCategory;
-    categoryId?: CategoryId;
-    imageUrl?: string;
-    requiredStaffLevel?: int32;
+    categoryId: CategoryId | null;
+    imageUrl: string | null;
+    requiredStaffLevel: int32 | null;
   }
 
   @doc("Service update request with optional fields for partial updates")
@@ -62,7 +62,7 @@ namespace BeautySalon.Models {
     id: CategoryId;
     name: string;
     description: string;
-    parentId?: CategoryId;
+    parentId: CategoryId | null;
     displayOrder: int32;
     isActive: boolean;
     ...AuditInfo;

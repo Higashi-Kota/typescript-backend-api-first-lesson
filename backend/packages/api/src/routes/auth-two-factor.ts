@@ -1,4 +1,4 @@
-import type { UserId, UserRepository } from '@beauty-salon-backend/domain'
+import type { UserRepository } from '@beauty-salon-backend/domain'
 import { generateBackupCodes } from '@beauty-salon-backend/domain'
 import {
   type DisableTwoFactorDeps,
@@ -55,9 +55,9 @@ export const createTwoFactorRoutes = (deps: TwoFactorRouteDeps): Router => {
     authRateLimiter,
     authenticate(deps.authConfig),
     async (req, res) => {
-      const password = req.body.password as string
+      const password = req.body.password
 
-      if (!password) {
+      if (typeof password !== 'string' || !password) {
         res.status(400).json({
           error: {
             type: 'BAD_REQUEST',
@@ -67,9 +67,18 @@ export const createTwoFactorRoutes = (deps: TwoFactorRouteDeps): Router => {
         return
       }
 
+      if (!req.user) {
+        return res.status(401).json({
+          error: {
+            type: 'UNAUTHORIZED',
+            message: 'User not authenticated',
+          },
+        })
+      }
+
       const result = await setupTwoFactor(
         {
-          userId: req.user?.id as UserId,
+          userId: req.user.id,
           password,
         },
         setupDeps
@@ -144,9 +153,13 @@ export const createTwoFactorRoutes = (deps: TwoFactorRouteDeps): Router => {
     authRateLimiter,
     authenticate(deps.authConfig),
     async (req, res) => {
-      const userResult = await deps.userRepository.findById(
-        req.user?.id as UserId
-      )
+      if (!req.user) {
+        return res.status(401).json({
+          code: 'UNAUTHORIZED',
+          message: 'User not authenticated',
+        })
+      }
+      const userResult = await deps.userRepository.findById(req.user.id)
 
       match(userResult)
         .with(
@@ -190,9 +203,9 @@ export const createTwoFactorRoutes = (deps: TwoFactorRouteDeps): Router => {
     authRateLimiter,
     authenticate(deps.authConfig),
     async (req, res) => {
-      const code = req.body.code as string
+      const code = req.body.code
 
-      if (!code) {
+      if (typeof code !== 'string' || !code) {
         res.status(400).json({
           error: {
             type: 'BAD_REQUEST',
@@ -202,9 +215,18 @@ export const createTwoFactorRoutes = (deps: TwoFactorRouteDeps): Router => {
         return
       }
 
+      if (!req.user) {
+        return res.status(401).json({
+          error: {
+            type: 'UNAUTHORIZED',
+            message: 'User not authenticated',
+          },
+        })
+      }
+
       const result = await verifyTwoFactor(
         {
-          userId: req.user?.id as UserId,
+          userId: req.user.id,
           code,
         },
         verifyDeps
@@ -279,9 +301,18 @@ export const createTwoFactorRoutes = (deps: TwoFactorRouteDeps): Router => {
         return
       }
 
+      if (!req.user) {
+        return res.status(401).json({
+          error: {
+            type: 'UNAUTHORIZED',
+            message: 'User not authenticated',
+          },
+        })
+      }
+
       const result = await disableTwoFactor(
         {
-          userId: req.user?.id as UserId,
+          userId: req.user.id,
           password,
           code,
         },
@@ -352,9 +383,9 @@ export const createTwoFactorRoutes = (deps: TwoFactorRouteDeps): Router => {
     authRateLimiter,
     authenticate(deps.authConfig),
     async (req, res) => {
-      const code = req.body.code as string
+      const code = req.body.code
 
-      if (!code) {
+      if (typeof code !== 'string' || !code) {
         res.status(400).json({
           error: {
             type: 'BAD_REQUEST',
@@ -364,9 +395,18 @@ export const createTwoFactorRoutes = (deps: TwoFactorRouteDeps): Router => {
         return
       }
 
+      if (!req.user) {
+        return res.status(401).json({
+          error: {
+            type: 'UNAUTHORIZED',
+            message: 'User not authenticated',
+          },
+        })
+      }
+
       const result = await regenerateBackupCodes(
         {
-          userId: req.user?.id as UserId,
+          userId: req.user.id,
           code,
         },
         regenerateDeps

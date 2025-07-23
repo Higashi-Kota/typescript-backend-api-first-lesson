@@ -103,7 +103,7 @@ export const createApp = (deps: AppDependencies): Express => {
 
   // 暗号化サービスの初期化（機密情報の保護）
   const encryptionKey =
-    process.env.ENCRYPTION_MASTER_KEY ||
+    process.env.ENCRYPTION_MASTER_KEY ??
     'your-32-character-encryption-key-here-change-me!'
   if (encryptionKey.length < 32) {
     console.warn(
@@ -165,7 +165,7 @@ export const createApp = (deps: AppDependencies): Express => {
   )
   app.use(
     cors({
-      origin: process.env.FRONTEND_URL || 'http://localhost:3001',
+      origin: process.env.FRONTEND_URL ?? 'http://localhost:3001',
       credentials: true, // Cookie/セッションを許可
     })
   )
@@ -177,7 +177,7 @@ export const createApp = (deps: AppDependencies): Express => {
   // セッション設定（CSRF保護に必要）
   app.use(
     session({
-      secret: process.env.SESSION_SECRET || 'your-session-secret-key',
+      secret: process.env.SESSION_SECRET ?? 'your-session-secret-key',
       resave: false,
       saveUninitialized: false,
       cookie: {
@@ -270,21 +270,21 @@ export const createApp = (deps: AppDependencies): Express => {
 
   // 認証設定
   const authConfig: AuthConfig = {
-    jwtSecret: jwtSecret || process.env.JWT_SECRET || 'your-secret-key',
-    jwtExpiresIn: jwtAccessTokenExpiresIn || '1h',
+    jwtSecret: jwtSecret ?? process.env.JWT_SECRET ?? 'your-secret-key',
+    jwtExpiresIn: jwtAccessTokenExpiresIn ?? '1h',
   }
 
   // JWTサービス
   const jwtService = new JwtService({
     accessTokenSecret: authConfig.jwtSecret,
-    refreshTokenSecret: process.env.JWT_REFRESH_SECRET || 'your-refresh-secret',
-    accessTokenExpiresIn: (jwtAccessTokenExpiresIn || '1h') as StringValue,
-    refreshTokenExpiresIn: (jwtRefreshTokenExpiresIn || '7d') as StringValue,
+    refreshTokenSecret: process.env.JWT_REFRESH_SECRET ?? 'your-refresh-secret',
+    accessTokenExpiresIn: (jwtAccessTokenExpiresIn ?? '1h') as StringValue,
+    refreshTokenExpiresIn: (jwtRefreshTokenExpiresIn ?? '7d') as StringValue,
   })
 
   // Email service setup
   const emailService = getEmailService()
-  const baseUrl = process.env.BASE_URL || 'http://localhost:3000'
+  const baseUrl = process.env.BASE_URL ?? 'http://localhost:3000'
 
   // Auth repository adapter for backward compatibility
   const authUserRepository = {
@@ -484,7 +484,7 @@ export const createApp = (deps: AppDependencies): Express => {
     createTwoFactorRoutes({
       userRepository,
       authConfig,
-      appName: process.env.APP_NAME || 'Beauty Salon',
+      appName: process.env.APP_NAME ?? 'Beauty Salon',
     })
   )
   app.use(
@@ -551,7 +551,7 @@ export type {
 
 // 開発用のスタンドアロンサーバー
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const port = process.env.PORT || 3000
+  const port = process.env.PORT ?? 3000
 
   // TODO: 実際のデータベース接続を設定
   const mockDb = {} as PostgresJsDatabase

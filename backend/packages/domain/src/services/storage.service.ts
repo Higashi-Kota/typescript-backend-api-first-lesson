@@ -123,7 +123,7 @@ export type StorageLimits = {
   allowedFileTypes: FileType[]
 }
 
-export const STORAGE_LIMITS: Record<SubscriptionTier, StorageLimits> = {
+export const STORAGE_LIMITS = {
   free: {
     maxFileSizeMB: 5,
     maxTotalStorageGB: 0.1, // 100MB
@@ -139,7 +139,7 @@ export const STORAGE_LIMITS: Record<SubscriptionTier, StorageLimits> = {
     maxTotalStorageGB: null, // unlimited
     allowedFileTypes: ['image', 'document', 'other'],
   },
-}
+} as const satisfies Record<SubscriptionTier, StorageLimits>
 
 // Helper functions
 export const getFileType = (contentType: string): FileType => {

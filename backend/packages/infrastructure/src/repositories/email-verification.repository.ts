@@ -90,7 +90,7 @@ export class DrizzleEmailVerificationTokenRepository
         )
         .limit(1)
 
-      return ok(found || null)
+      return ok(found ?? null)
     } catch (error) {
       console.error('Failed to find email verification token:', error)
       return err(new Error('Failed to find email verification token'))

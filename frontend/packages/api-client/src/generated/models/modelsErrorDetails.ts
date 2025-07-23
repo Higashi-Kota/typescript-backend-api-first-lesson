@@ -6,4 +6,7 @@
  * OpenAPI spec version: 0.0.0
  */
 
-export type ModelsErrorDetails = { [key: string]: unknown }
+/**
+ * @nullable
+ */
+export type ModelsErrorDetails = { [key: string]: unknown } | null

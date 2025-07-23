@@ -5,11 +5,12 @@
  */
 
 import type { Result } from '@beauty-salon-backend/domain'
-import { err, ok } from '@beauty-salon-backend/domain'
+import { err, ok, createUserId } from '@beauty-salon-backend/domain'
 import type { NextFunction, Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
 import { match } from 'ts-pattern'
 import { z } from 'zod'
+import { createHeaderParser } from '../utils/headers.js'
 
 // JWT ペイロードの型定義
 export type JwtPayload = {
@@ -81,7 +82,7 @@ export const verifyToken = (
 export const extractToken = (
   authHeader?: string
 ): Result<string, AuthError> => {
-  if (!authHeader) {
+  if (authHeader === undefined || authHeader === null) {
     return err({
       type: 'missingToken',
       message: 'Authorization header is missing',
@@ -96,7 +97,7 @@ export const extractToken = (
     })
   }
 
-  return ok(parts[1] as string)
+  return ok(parts[1] ?? '')
 }
 
 /**
@@ -106,7 +107,9 @@ export const extractToken = (
 export const authenticate = (config: AuthConfig) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     // トークンの抽出
-    const tokenResult = extractToken(req.headers.authorization)
+    const headerParser = createHeaderParser(req.headers)
+    const authHeader = headerParser.get('authorization')
+    const tokenResult = extractToken(authHeader)
     if (tokenResult.type === 'err') {
       return res.status(401).json({
         code: 'UNAUTHORIZED',
@@ -131,7 +134,7 @@ export const authenticate = (config: AuthConfig) => {
 
     // ユーザー情報をリクエストに付加
     req.user = {
-      id: payloadResult.value.sub,
+      id: createUserId(payloadResult.value.sub),
       email: payloadResult.value.email,
       role: payloadResult.value.role,
     }
@@ -170,7 +173,8 @@ export const authorize = (...allowedRoles: UserRole[]) => {
  */
 export const optionalAuthenticate = (config: AuthConfig) => {
   return async (req: Request, res: Response, next: NextFunction) => {
-    const authHeader = req.headers.authorization
+    const headerParser = createHeaderParser(req.headers)
+    const authHeader = headerParser.get('authorization')
 
     if (!authHeader) {
       // 認証ヘッダーがない場合は認証なしで次へ
@@ -199,7 +203,7 @@ export const optionalAuthenticate = (config: AuthConfig) => {
 
     // ユーザー情報をリクエストに付加
     req.user = {
-      id: payloadResult.value.sub,
+      id: createUserId(payloadResult.value.sub),
       email: payloadResult.value.email,
       role: payloadResult.value.role,
     }

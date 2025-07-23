@@ -16,5 +16,6 @@ export interface ModelsCreateReservationRequest {
   staffId: ModelsStaffId
   serviceId: ModelsServiceId
   startTime: string
-  notes?: string
+  /** @nullable */
+  notes: string | null
 }

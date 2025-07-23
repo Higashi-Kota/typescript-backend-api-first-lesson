@@ -7,7 +7,6 @@
  */
 import type { ModelsSalonId } from './modelsSalonId'
 import type { ModelsServiceCategory } from './modelsServiceCategory'
-import type { ModelsCategoryId } from './modelsCategoryId'
 
 export interface ModelsCreateServiceRequest {
   salonId: ModelsSalonId
@@ -16,7 +15,10 @@ export interface ModelsCreateServiceRequest {
   duration: number
   price: number
   category: ModelsServiceCategory
-  categoryId?: ModelsCategoryId
-  imageUrl?: string
-  requiredStaffLevel?: number
+  /** @nullable */
+  categoryId: string | null
+  /** @nullable */
+  imageUrl: string | null
+  /** @nullable */
+  requiredStaffLevel: number | null
 }

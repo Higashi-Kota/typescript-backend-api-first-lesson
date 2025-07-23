@@ -125,7 +125,7 @@ export class DrizzleFailedLoginRepository implements FailedLoginRepository {
         .orderBy(failedLoginAttempts.lastAttemptAt)
         .limit(1)
 
-      return ok(found || null)
+      return ok(found ?? null)
     } catch (error) {
       console.error('Failed to get recent attempts:', error)
       return err(new Error('Failed to get recent attempts'))

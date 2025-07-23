@@ -23,19 +23,23 @@ export function toSalonResponse(
         name: data.name,
         description: data.description,
         address: data.address,
-        contactInfo: data.contactInfo,
+        contactInfo: {
+          email: data.contactInfo.email,
+          phoneNumber: data.contactInfo.phoneNumber,
+          alternativePhone: data.contactInfo.alternativePhone ?? null,
+        },
         openingHours: data.openingHours.map((hours) => ({
           dayOfWeek: hours.dayOfWeek,
           openTime: hours.openTime,
           closeTime: hours.closeTime,
           isHoliday: hours.isHoliday,
         })),
-        imageUrls: data.imageUrls,
-        features: data.features,
+        imageUrls: data.imageUrls ?? null,
+        features: data.features ?? null,
         createdAt: data.createdAt.toISOString(),
-        createdBy: data.createdBy || undefined,
+        createdBy: data.createdBy ?? null,
         updatedAt: data.updatedAt.toISOString(),
-        updatedBy: data.updatedBy || undefined,
+        updatedBy: data.updatedBy ?? null,
       })
     )
     .exhaustive()
@@ -53,8 +57,8 @@ export function toSalonSummaryResponse(
     id: salon.data.id,
     name: salon.data.name,
     address: salon.data.address,
-    rating,
-    reviewCount,
+    rating: rating ?? null,
+    reviewCount: reviewCount ?? null,
   }
 }
 

@@ -12,14 +12,22 @@ export interface ModelsCustomer {
   id: ModelsCustomerId
   name: string
   contactInfo: ModelsContactInfo
-  preferences?: string
-  notes?: string
-  tags?: string[]
-  loyaltyPoints?: number
-  membershipLevel?: string
-  birthDate?: string
+  /** @nullable */
+  preferences: string | null
+  /** @nullable */
+  notes: string | null
+  /** @nullable */
+  tags: string[] | null
+  /** @nullable */
+  loyaltyPoints: number | null
+  /** @nullable */
+  membershipLevel: string | null
+  /** @nullable */
+  birthDate: string | null
   createdAt: string
-  createdBy?: string
+  /** @nullable */
+  createdBy: string | null
   updatedAt: string
-  updatedBy?: string
+  /** @nullable */
+  updatedBy: string | null
 }

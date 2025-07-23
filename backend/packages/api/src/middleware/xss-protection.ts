@@ -156,21 +156,21 @@ function sanitizeString(value: string): string {
 function sanitizeValue(value: unknown): unknown {
   return match(value)
     .when(
-      (v) => typeof v === 'string',
-      (v) => sanitizeString(v as string)
+      (v): v is string => typeof v === 'string',
+      (v) => sanitizeString(v)
     )
     .when(
-      (v) => Array.isArray(v),
-      (v) => (v as unknown[]).map(sanitizeValue)
+      (v): v is unknown[] => Array.isArray(v),
+      (v) => v.map(sanitizeValue)
     )
     .when(
-      (v) =>
+      (v): v is Record<string, unknown> =>
         v !== null &&
         typeof v === 'object' &&
         !(v instanceof Date) &&
         !(v instanceof RegExp),
       (v) => {
-        const obj = v as Record<string, unknown>
+        const obj = v
         const sanitized: Record<string, unknown> = {}
         for (const [key, val] of Object.entries(obj)) {
           // キーもサニタイズ

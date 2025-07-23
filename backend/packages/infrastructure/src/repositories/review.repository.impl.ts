@@ -58,7 +58,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       serviceRating: dbReview.serviceRating ?? undefined,
       staffRating: dbReview.staffRating ?? undefined,
       atmosphereRating: dbReview.atmosphereRating ?? undefined,
-      images: dbReview.images as string[] | undefined,
+      images: dbReview.images ?? undefined,
       isVerified: dbReview.isVerified,
       helpfulCount: dbReview.helpfulCount,
       createdAt: dbReview.createdAt,

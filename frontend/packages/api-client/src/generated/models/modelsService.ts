@@ -8,7 +8,6 @@
 import type { ModelsServiceId } from './modelsServiceId'
 import type { ModelsSalonId } from './modelsSalonId'
 import type { ModelsServiceCategory } from './modelsServiceCategory'
-import type { ModelsCategoryId } from './modelsCategoryId'
 
 export interface ModelsService {
   id: ModelsServiceId
@@ -18,12 +17,17 @@ export interface ModelsService {
   duration: number
   price: number
   category: ModelsServiceCategory
-  categoryId?: ModelsCategoryId
-  imageUrl?: string
-  requiredStaffLevel?: number
+  /** @nullable */
+  categoryId: string | null
+  /** @nullable */
+  imageUrl: string | null
+  /** @nullable */
+  requiredStaffLevel: number | null
   isActive: boolean
   createdAt: string
-  createdBy?: string
+  /** @nullable */
+  createdBy: string | null
   updatedAt: string
-  updatedBy?: string
+  /** @nullable */
+  updatedBy: string | null
 }

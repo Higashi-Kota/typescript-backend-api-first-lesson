@@ -5,6 +5,7 @@
 
 import { randomUUID } from 'node:crypto'
 import type { RequestHandler } from 'express'
+import { createHeaderParser } from '../utils/headers.js'
 
 // Expressの拡張型定義
 declare global {
@@ -16,7 +17,9 @@ declare global {
 }
 
 export const requestId: RequestHandler = (req, res, next) => {
-  const id = (req.headers['x-request-id'] as string) || randomUUID()
+  const headerParser = createHeaderParser(req.headers)
+  const id = headerParser.getWithDefault('x-request-id', randomUUID())
+
   req.id = id
   res.setHeader('X-Request-ID', id)
   next()

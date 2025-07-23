@@ -5,6 +5,7 @@
 
 import type { NextFunction, Request, Response } from 'express'
 import { createStructuredLogger } from '../utils/structured-logger.js'
+import { createHeaderParser } from '../utils/headers.js'
 
 const logger = createStructuredLogger('http')
 
@@ -25,7 +26,7 @@ export function loggingMiddleware(
 
   // リクエストログ
   const userId = req.user?.id
-  const ip = req.ip || req.socket.remoteAddress || 'unknown'
+  const ip = req.ip ?? req.socket.remoteAddress ?? 'unknown'
 
   logger.logRequest(req.method, req.path, userId, ip)
 
@@ -53,14 +54,15 @@ export function errorLoggingMiddleware(
   _res: Response,
   next: NextFunction
 ): void {
+  const headerParser = createHeaderParser(req.headers)
   const context = {
     method: req.method,
     path: req.path,
     userId: req.user?.id,
-    ip: req.ip || req.socket.remoteAddress || 'unknown',
+    ip: req.ip ?? req.socket.remoteAddress ?? 'unknown',
     headers: {
-      'user-agent': req.headers['user-agent'],
-      'content-type': req.headers['content-type'],
+      'user-agent': headerParser.get('user-agent'),
+      'content-type': headerParser.get('content-type'),
     },
   }
 

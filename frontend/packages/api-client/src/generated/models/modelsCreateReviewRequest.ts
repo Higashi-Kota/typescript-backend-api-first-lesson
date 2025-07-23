@@ -8,17 +8,22 @@
 import type { ModelsSalonId } from './modelsSalonId'
 import type { ModelsCustomerId } from './modelsCustomerId'
 import type { ModelsReservationId } from './modelsReservationId'
-import type { ModelsStaffId } from './modelsStaffId'
 
 export interface ModelsCreateReviewRequest {
   salonId: ModelsSalonId
   customerId: ModelsCustomerId
   reservationId: ModelsReservationId
-  staffId?: ModelsStaffId
+  /** @nullable */
+  staffId: string | null
   rating: number
-  comment?: string
-  serviceRating?: number
-  staffRating?: number
-  atmosphereRating?: number
-  images?: string[]
+  /** @nullable */
+  comment: string | null
+  /** @nullable */
+  serviceRating: number | null
+  /** @nullable */
+  staffRating: number | null
+  /** @nullable */
+  atmosphereRating: number | null
+  /** @nullable */
+  images: string[] | null
 }

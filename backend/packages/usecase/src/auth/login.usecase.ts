@@ -154,7 +154,7 @@ export const login = async (
     ipAddress: request.ipAddress,
     userAgent: request.userAgent,
     expiresAt: new Date(Date.now() + deps.sessionTtlMinutes * 60 * 1000),
-    rememberMe: request.rememberMe || false,
+    rememberMe: request.rememberMe ?? false,
     createdAt: new Date(),
     lastActivityAt: new Date(),
   }
@@ -166,7 +166,7 @@ export const login = async (
 
   return ok({
     userId: user.data.id,
-    sessionId: sessionResult.value.id as string,
+    sessionId: sessionResult.value.id,
     refreshToken: sessionResult.value.refreshToken,
     requiresTwoFactor: false,
   })

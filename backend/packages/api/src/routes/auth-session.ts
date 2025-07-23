@@ -1,12 +1,11 @@
 import { randomBytes } from 'node:crypto'
+import { v4 as uuidv4 } from 'uuid'
 import type {
-  SessionId,
   SessionRepository,
-  UserId,
   UserRepository,
   UserRole,
 } from '@beauty-salon-backend/domain'
-import { err, ok } from '@beauty-salon-backend/domain'
+import { err, ok, createSessionId } from '@beauty-salon-backend/domain'
 import {
   type GetSessionsDeps,
   type LogoutAllDeps,
@@ -44,7 +43,7 @@ export const createSessionRoutes = (deps: SessionRouteDeps): Router => {
     async (_req, res) => {
       // For now, we'll use a placeholder session ID
       // In a real implementation, this would come from the JWT payload
-      const sessionId = 'current-session' as SessionId
+      const sessionId = createSessionId(uuidv4())
 
       const logoutDeps: LogoutDeps = {
         sessionRepository: deps.sessionRepository,
@@ -84,14 +83,20 @@ export const createSessionRoutes = (deps: SessionRouteDeps): Router => {
     generalRateLimiter,
     authenticate(deps.authConfig),
     async (req, res) => {
+      if (!req.user) {
+        return res.status(401).json({
+          error: {
+            type: 'UNAUTHORIZED',
+            message: 'User not authenticated',
+          },
+        })
+      }
+
       const logoutAllDeps: LogoutAllDeps = {
         sessionRepository: deps.sessionRepository,
       }
 
-      const result = await logoutAll(
-        { userId: req.user?.id as UserId },
-        logoutAllDeps
-      )
+      const result = await logoutAll({ userId: req.user.id }, logoutAllDeps)
 
       match(result)
         .with({ type: 'ok' }, ({ value }) => {
@@ -208,15 +213,21 @@ export const createSessionRoutes = (deps: SessionRouteDeps): Router => {
     generalRateLimiter,
     authenticate(deps.authConfig),
     async (req, res) => {
+      if (!req.user) {
+        return res.status(401).json({
+          error: {
+            type: 'UNAUTHORIZED',
+            message: 'User not authenticated',
+          },
+        })
+      }
+
       const getSessionsDeps: GetSessionsDeps = {
         sessionRepository: deps.sessionRepository,
         currentSessionId: 'current-session', // Placeholder
       }
 
-      const result = await getSessions(
-        { userId: req.user?.id as UserId },
-        getSessionsDeps
-      )
+      const result = await getSessions({ userId: req.user.id }, getSessionsDeps)
 
       match(result)
         .with({ type: 'ok' }, ({ value }) => {
@@ -243,7 +254,25 @@ export const createSessionRoutes = (deps: SessionRouteDeps): Router => {
     generalRateLimiter,
     authenticate(deps.authConfig),
     async (req, res) => {
-      const sessionId = req.params.sessionId as SessionId
+      if (!req.user) {
+        return res.status(401).json({
+          error: {
+            type: 'UNAUTHORIZED',
+            message: 'User not authenticated',
+          },
+        })
+      }
+
+      if (!req.params.sessionId) {
+        return res.status(400).json({
+          error: {
+            type: 'BAD_REQUEST',
+            message: 'Session ID is required',
+          },
+        })
+      }
+
+      const sessionId = createSessionId(req.params.sessionId)
 
       const revokeDeps: RevokeSessionDeps = {
         sessionRepository: deps.sessionRepository,
@@ -252,7 +281,7 @@ export const createSessionRoutes = (deps: SessionRouteDeps): Router => {
       const result = await revokeSession(
         {
           sessionId,
-          userId: req.user?.id as UserId,
+          userId: req.user.id,
         },
         revokeDeps
       )

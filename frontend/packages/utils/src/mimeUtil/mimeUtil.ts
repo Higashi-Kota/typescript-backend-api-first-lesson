@@ -1,7 +1,7 @@
 import { lookup } from 'mrmime'
 
 export const getMimeType = (filename: string): string | null => {
-  return lookup(filename) || null
+  return lookup(filename) ?? null
 }
 
 export const isImageFile = (filename: string): boolean => {

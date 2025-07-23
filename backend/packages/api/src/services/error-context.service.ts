@@ -40,7 +40,7 @@ const SENSITIVE_FIELDS = [
   'ssn',
   'socialSecurityNumber',
   'social_security_number',
-]
+] as const satisfies readonly string[]
 
 const SENSITIVE_PATTERNS = [
   /^Bearer\s+.+$/i,
@@ -48,7 +48,7 @@ const SENSITIVE_PATTERNS = [
   /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g,
   /\b\d{4}[\s-]?\d{4}[\s-]?\d{4}[\s-]?\d{4}\b/g,
   /\b\d{3}-\d{2}-\d{4}\b/g,
-]
+] as const satisfies readonly RegExp[]
 
 export const createErrorContextService = (): ErrorContextService => {
   const sanitizeValue = (value: unknown): unknown => {
@@ -66,7 +66,13 @@ export const createErrorContextService = (): ErrorContextService => {
     }
 
     if (value && typeof value === 'object') {
-      return sanitizeData(value as Record<string, unknown>)
+      // Type guard confirms this is an object
+      const entries = Object.entries(value)
+      const result: Record<string, unknown> = {}
+      for (const [k, v] of entries) {
+        result[k] = v
+      }
+      return sanitizeData(result)
     }
 
     return value
@@ -98,15 +104,17 @@ export const createErrorContextService = (): ErrorContextService => {
       tags: {
         method: request.method,
         path: request.path,
-        route: request.route?.path || 'unknown',
-        ip: request.ip || 'unknown',
+        route: request.route?.path ?? 'unknown',
+        ip: request.ip ?? 'unknown',
       },
       extra: {
         url: request.originalUrl,
-        query: sanitizeData(request.query as Record<string, unknown>),
-        body: request.body ? sanitizeData(request.body) : undefined,
-        headers: sanitizeData(request.headers as Record<string, unknown>),
-        userAgent: request.get('user-agent') || 'unknown',
+        query: sanitizeData(Object.assign({}, request.query)),
+        body: request.body
+          ? sanitizeData(Object.assign({}, request.body))
+          : undefined,
+        headers: sanitizeData(Object.assign({}, request.headers)),
+        userAgent: request.get('user-agent') ?? 'unknown',
       },
     }
 

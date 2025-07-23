@@ -80,7 +80,7 @@ export const refreshToken = async (
 
   // Generate new tokens
   const newAccessToken = deps.generateAccessToken(
-    user.data.id as string,
+    user.data.id,
     user.data.email,
     user.data.role
   )

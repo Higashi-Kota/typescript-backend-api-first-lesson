@@ -14,11 +14,6 @@ import type { TypedRequest, TypedResponse } from '../types/express.js'
 import type { SalonRepository } from '@beauty-salon-backend/domain'
 import type { components } from '@beauty-salon-backend/types/api'
 import {
-  normalizeCreateSalonRequest,
-  normalizeUpdateSalonRequest,
-  toSalonResponse,
-} from '../utils/salon-mappers.js'
-import {
   createDeleteSalonErrorResponse,
   createSalonErrorResponse,
   createSalonUseCase,
@@ -38,6 +33,11 @@ import {
   suspendSalonUseCase,
   updateSalonUseCase,
 } from '@beauty-salon-backend/usecase'
+import {
+  normalizeCreateSalonRequest,
+  normalizeUpdateSalonRequest,
+  toSalonResponse,
+} from '../utils/salon-mappers.js'
 
 // リクエスト/レスポンス型定義
 type ListSalonsQuery = {
@@ -112,8 +112,8 @@ export const createSalonRoutes = (deps: SalonRouteDeps): Router => {
         // UseCase実行
         const result = await listSalonsUseCase(
           {
-            keyword: req.query.keyword as string | undefined,
-            city: req.query.city as string | undefined,
+            keyword: req.query.keyword,
+            city: req.query.city,
             isActive: req.query.isActive === 'true' ? true : undefined,
             limit: paginationResult.data.limit,
             offset: paginationResult.data.offset,
@@ -364,7 +364,7 @@ export const createSalonRoutes = (deps: SalonRouteDeps): Router => {
         // UseCase実行
         const mappedInput = mapDeleteSalonRequest(
           idResult.data,
-          req.user?.id || 'system'
+          req.user?.id ?? 'system'
         )
         if (mappedInput.type === 'err') {
           return res.status(400).json({
@@ -432,7 +432,7 @@ export const createSalonRoutes = (deps: SalonRouteDeps): Router => {
         const mappedInput = mapSuspendSalonRequest(
           idResult.data,
           req.body.reason,
-          req.user?.id || 'system'
+          req.user?.id ?? 'system'
         )
         if (mappedInput.type === 'err') {
           return res.status(400).json({
@@ -501,7 +501,7 @@ export const createSalonRoutes = (deps: SalonRouteDeps): Router => {
         // UseCase実行
         const mappedInput = mapReactivateSalonRequest(
           idResult.data,
-          req.user?.id || 'system'
+          req.user?.id ?? 'system'
         )
         if (mappedInput.type === 'err') {
           return res.status(400).json({

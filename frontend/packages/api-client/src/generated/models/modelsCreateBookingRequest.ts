@@ -13,7 +13,10 @@ export interface ModelsCreateBookingRequest {
   salonId: ModelsSalonId
   customerId: ModelsCustomerId
   reservationIds: ModelsReservationId[]
-  discountAmount?: number
-  paymentMethod?: string
-  notes?: string
+  /** @nullable */
+  discountAmount: number | null
+  /** @nullable */
+  paymentMethod: string | null
+  /** @nullable */
+  notes: string | null
 }

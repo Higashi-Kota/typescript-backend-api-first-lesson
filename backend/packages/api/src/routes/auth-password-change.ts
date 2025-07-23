@@ -4,7 +4,7 @@
  * CLAUDEガイドラインに準拠
  */
 
-import type { UserId, UserRepository } from '@beauty-salon-backend/domain'
+import type { UserRepository } from '@beauty-salon-backend/domain'
 import type { components } from '@beauty-salon-backend/types/api'
 import type { ChangePasswordDeps } from '@beauty-salon-backend/usecase'
 import { changePasswordUseCase } from '@beauty-salon-backend/usecase'
@@ -61,6 +61,7 @@ export const createPasswordChangeRoutes = (
           const error: components['schemas']['Models.Error'] = {
             code: 'UNAUTHORIZED',
             message: 'Authentication required',
+            details: null,
           }
           return res.status(401).json(error)
         }
@@ -81,7 +82,7 @@ export const createPasswordChangeRoutes = (
         // パスワード変更処理
         const result = await changePasswordUseCase(
           {
-            userId: req.user.id as UserId,
+            userId: req.user.id,
             currentPassword,
             newPassword,
           },
@@ -101,6 +102,7 @@ export const createPasswordChangeRoutes = (
             const error: components['schemas']['Models.Error'] = {
               code: 'USER_NOT_FOUND',
               message: 'User not found',
+              details: null,
             }
             res.status(404).json(error)
           })
@@ -108,6 +110,7 @@ export const createPasswordChangeRoutes = (
             const error: components['schemas']['Models.Error'] = {
               code: 'INVALID_PASSWORD',
               message: 'Current password is incorrect',
+              details: null,
             }
             res.status(400).json(error)
           })
@@ -127,6 +130,7 @@ export const createPasswordChangeRoutes = (
               code: 'PASSWORD_REUSED',
               message:
                 'Password has been used recently. Please choose a different password',
+              details: null,
             }
             res.status(400).json(error)
           })
@@ -134,6 +138,7 @@ export const createPasswordChangeRoutes = (
             const error: components['schemas']['Models.Error'] = {
               code: 'INTERNAL_ERROR',
               message: 'An error occurred while changing password',
+              details: null,
             }
             res.status(500).json(error)
           })

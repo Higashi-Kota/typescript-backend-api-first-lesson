@@ -16,8 +16,14 @@ export interface ModelsUploadAttachmentRequest {
   filename: string
   /** Content-Type */
   contentType: string
-  /** サロンID（オプション） */
-  salonId?: string
-  /** タグ（オプション） */
-  tags?: string
+  /**
+   * サロンID（オプション）
+   * @nullable
+   */
+  salonId: string | null
+  /**
+   * タグ（オプション）
+   * @nullable
+   */
+  tags: string | null
 }

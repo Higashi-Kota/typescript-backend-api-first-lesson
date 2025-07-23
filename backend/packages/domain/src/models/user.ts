@@ -1,10 +1,31 @@
 import type { Brand } from '../shared/brand.js'
+import { createBrand, createBrandSafe } from '../shared/brand.js'
 import type { Result } from '../shared/result.js'
 import { err, ok } from '../shared/result.js'
 
 // Brand types for User IDs
 export type UserId = Brand<string, 'UserId'>
 export type SessionId = Brand<string, 'SessionId'>
+
+// Factory functions for User IDs
+export const createUserId = (value: string): UserId => {
+  const result = createBrand(value, 'UserId')
+  if (!result) {
+    throw new Error(`Invalid UserId format: ${value}`)
+  }
+  return result
+}
+export const createUserIdSafe = (value: string) =>
+  createBrandSafe(value, 'UserId')
+export const createSessionId = (value: string): SessionId => {
+  const result = createBrand(value, 'SessionId')
+  if (!result) {
+    throw new Error(`Invalid SessionId format: ${value}`)
+  }
+  return result
+}
+export const createSessionIdSafe = (value: string) =>
+  createBrandSafe(value, 'SessionId')
 
 // User role type matching TypeSpec
 export type UserRole = 'customer' | 'staff' | 'admin'

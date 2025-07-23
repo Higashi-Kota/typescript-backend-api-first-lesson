@@ -4,6 +4,7 @@
  */
 
 import type { CookieOptions, NextFunction, Request, Response } from 'express'
+import { createHeaderParser } from '../utils/headers.js'
 
 /**
  * プロキシからの転送ヘッダーを信頼するかどうか
@@ -25,15 +26,17 @@ export function isSecureRequest(req: Request, trustProxy = true): boolean {
 
   // プロキシ経由の場合（AWS ALB、Cloudflare、nginx等）
   if (trustProxy) {
+    const headerParser = createHeaderParser(req.headers)
+
     // X-Forwarded-Protoヘッダーをチェック
-    const forwardedProto = req.headers['x-forwarded-proto']
+    const forwardedProto = headerParser.get('x-forwarded-proto')
     if (forwardedProto === 'https') {
       return true
     }
 
     // CloudFlareのCF-Visitor ヘッダーをチェック
-    const cfVisitor = req.headers['cf-visitor']
-    if (cfVisitor && typeof cfVisitor === 'string') {
+    const cfVisitor = headerParser.get('cf-visitor')
+    if (cfVisitor) {
       try {
         const visitor = JSON.parse(cfVisitor)
         if (visitor.scheme === 'https') {
@@ -71,7 +74,8 @@ export function httpsRedirect(options: HttpsRedirectOptions = {}) {
 
     // HTTPSでない場合はリダイレクト
     if (!isSecureRequest(req, trustProxy)) {
-      const host = req.headers.host || 'localhost'
+      const headerParser = createHeaderParser(req.headers)
+      const host = headerParser.getWithDefault('host', 'localhost')
       const httpsUrl = `https://${host}${req.originalUrl}`
       return res.redirect(redirectStatusCode, httpsUrl)
     }

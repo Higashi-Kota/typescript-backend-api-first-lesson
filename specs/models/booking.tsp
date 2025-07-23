@@ -12,11 +12,11 @@ namespace BeautySalon.Models {
     reservationIds: ReservationId[];
     status: BookingStatus;
     totalAmount: int32;
-    discountAmount?: int32;
+    discountAmount: int32 | null;
     finalAmount: int32;
-    paymentMethod?: string;
+    paymentMethod: string | null;
     paymentStatus: string;
-    notes?: string;
+    notes: string | null;
     ...AuditInfo;
   }
 
@@ -24,9 +24,9 @@ namespace BeautySalon.Models {
     salonId: SalonId;
     customerId: CustomerId;
     reservationIds: ReservationId[];
-    discountAmount?: int32;
-    paymentMethod?: string;
-    notes?: string;
+    discountAmount: int32 | null;
+    paymentMethod: string | null;
+    notes: string | null;
   }
 
   @doc("Booking update request with optional fields for partial updates")

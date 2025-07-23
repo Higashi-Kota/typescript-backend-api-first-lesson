@@ -8,5 +8,6 @@
 
 /**
  * メタデータ
+ * @nullable
  */
-export type ModelsAttachmentMetadata = { [key: string]: unknown }
+export type ModelsAttachmentMetadata = { [key: string]: unknown } | null

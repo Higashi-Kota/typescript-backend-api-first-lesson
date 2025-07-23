@@ -31,19 +31,19 @@ export function toReservationResponse(
           startTime: data.startTime.toISOString(),
           endTime: data.endTime.toISOString(),
           status: status as components['schemas']['Models.ReservationStatus'],
-          notes: data.notes,
+          notes: data.notes ?? null,
           totalAmount: data.totalAmount,
-          depositAmount: data.depositAmount,
+          depositAmount: data.depositAmount ?? null,
           isPaid: data.isPaid,
           cancellationReason:
             type === 'cancelled'
               ? (reservation as Extract<Reservation, { type: 'cancelled' }>)
                   .cancellationReason
-              : undefined,
+              : null,
           createdAt: data.createdAt.toISOString(),
-          createdBy: data.createdBy || undefined,
+          createdBy: data.createdBy ?? null,
           updatedAt: data.updatedAt.toISOString(),
-          updatedBy: data.updatedBy || undefined,
+          updatedBy: data.updatedBy ?? null,
         }
       }
     )

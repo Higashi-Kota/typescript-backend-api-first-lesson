@@ -147,8 +147,8 @@ export class UserBuilder {
   withTwoFactorEnabled(secret?: string, backupCodes?: string[]): UserBuilder {
     const twoFactorStatus: TwoFactorStatus = {
       type: 'enabled',
-      secret: secret || `test_secret_${randomUUID()}`,
-      backupCodes: backupCodes || ['CODE1', 'CODE2', 'CODE3', 'CODE4'],
+      secret: secret ?? `test_secret_${randomUUID()}`,
+      backupCodes: backupCodes ?? ['CODE1', 'CODE2', 'CODE3', 'CODE4'],
     }
 
     return match(this.state)
@@ -173,7 +173,7 @@ export class UserBuilder {
   withUnverifiedEmail(token?: string): UserBuilder {
     const status: UserAccountStatus = {
       type: 'unverified',
-      emailVerificationToken: token || `token_${randomUUID()}`,
+      emailVerificationToken: token ?? `token_${randomUUID()}`,
       tokenExpiry: new Date(Date.now() + 24 * 60 * 60 * 1000),
     }
 
@@ -200,9 +200,9 @@ export class UserBuilder {
   withLockedAccount(reason?: string, failedAttempts?: number): UserBuilder {
     const status: UserAccountStatus = {
       type: 'locked',
-      reason: reason || 'Too many failed login attempts',
+      reason: reason ?? 'Too many failed login attempts',
       lockedAt: new Date(),
-      failedAttempts: failedAttempts || 5,
+      failedAttempts: failedAttempts ?? 5,
     }
 
     return match(this.state)
@@ -223,7 +223,7 @@ export class UserBuilder {
   withPasswordResetRequested(token?: string): UserBuilder {
     const passwordResetStatus: PasswordResetStatus = {
       type: 'requested',
-      token: token || `reset_${randomUUID()}`,
+      token: token ?? `reset_${randomUUID()}`,
       tokenExpiry: new Date(Date.now() + 15 * 60 * 1000),
     }
 

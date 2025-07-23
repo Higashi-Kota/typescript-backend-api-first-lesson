@@ -8,13 +8,17 @@
 import type { ModelsContactInfo } from './modelsContactInfo'
 
 /**
- * Customer creation request with required and optional fields
+ * Customer creation request with required keys and nullable values
  */
 export interface ModelsCreateCustomerRequest {
   name: string
   contactInfo: ModelsContactInfo
-  preferences?: string
-  notes?: string
-  tags?: string[]
-  birthDate?: string
+  /** @nullable */
+  preferences: string | null
+  /** @nullable */
+  notes: string | null
+  /** @nullable */
+  tags: string[] | null
+  /** @nullable */
+  birthDate: string | null
 }

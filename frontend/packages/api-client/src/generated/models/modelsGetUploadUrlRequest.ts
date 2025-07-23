@@ -16,6 +16,9 @@ export interface ModelsGetUploadUrlRequest {
   contentType: string
   /** ファイルサイズ（バイト） */
   size: number
-  /** サロンID（オプション） */
-  salonId?: string
+  /**
+   * サロンID（オプション）
+   * @nullable
+   */
+  salonId: string | null
 }

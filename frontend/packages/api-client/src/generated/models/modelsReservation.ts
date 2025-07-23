@@ -21,13 +21,18 @@ export interface ModelsReservation {
   startTime: string
   endTime: string
   status: ModelsReservationStatus
-  notes?: string
+  /** @nullable */
+  notes: string | null
   totalAmount: number
-  depositAmount?: number
+  /** @nullable */
+  depositAmount: number | null
   isPaid: boolean
-  cancellationReason?: string
+  /** @nullable */
+  cancellationReason: string | null
   createdAt: string
-  createdBy?: string
+  /** @nullable */
+  createdBy: string | null
   updatedAt: string
-  updatedBy?: string
+  /** @nullable */
+  updatedBy: string | null
 }

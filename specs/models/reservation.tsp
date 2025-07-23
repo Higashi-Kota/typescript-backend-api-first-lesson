@@ -14,11 +14,11 @@ namespace BeautySalon.Models {
     startTime: utcDateTime;
     endTime: utcDateTime;
     status: ReservationStatus;
-    notes?: string;
+    notes: string | null;
     totalAmount: int32;
-    depositAmount?: int32;
+    depositAmount: int32 | null;
     isPaid: boolean;
-    cancellationReason?: string;
+    cancellationReason: string | null;
     ...AuditInfo;
   }
 
@@ -28,7 +28,7 @@ namespace BeautySalon.Models {
     staffId: StaffId;
     serviceId: ServiceId;
     startTime: utcDateTime;
-    notes?: string;
+    notes: string | null;
   }
 
   @doc("Reservation update request with optional fields for partial updates")

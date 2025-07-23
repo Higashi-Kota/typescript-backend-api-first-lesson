@@ -149,9 +149,21 @@ export const verifyRefreshToken = (
   secret: string
 ): Result<{ userId: string }, TokenError> => {
   try {
-    const decoded = jwt.verify(token, secret) as {
-      sub: string
-      type: string
+    const decoded = jwt.verify(token, secret)
+
+    // Type validation using type predicate
+    if (
+      typeof decoded !== 'object' ||
+      decoded === null ||
+      !('sub' in decoded) ||
+      !('type' in decoded) ||
+      typeof decoded.sub !== 'string' ||
+      typeof decoded.type !== 'string'
+    ) {
+      return err({
+        type: 'tokenGenerationFailed',
+        message: 'Invalid token format',
+      })
     }
 
     if (decoded.type !== 'refresh') {

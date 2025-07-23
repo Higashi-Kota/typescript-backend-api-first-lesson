@@ -207,7 +207,7 @@ describe('Security Integration Tests - SQL Injection, XSS, CSRF', () => {
       app.use(csrfProtection({ sessionRequired: true }))
 
       app.get('/api/token', (req, res) => {
-        const token = req.session?._csrf || 'no-token'
+        const token = req.session?._csrf ?? 'no-token'
         res.json({ csrfToken: token })
       })
 

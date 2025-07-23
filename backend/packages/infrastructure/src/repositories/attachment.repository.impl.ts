@@ -5,11 +5,6 @@
 import { and, desc, eq, gte, ilike, lte, sql } from 'drizzle-orm'
 import type { Database } from '../database/index.js'
 import { attachments, downloadLogs, shareLinks } from '../database/schema.js'
-
-// Database row types
-type AttachmentRow = typeof attachments.$inferSelect
-type ShareLinkRow = typeof shareLinks.$inferSelect
-type DownloadLogRow = typeof downloadLogs.$inferSelect
 import { randomUUID } from 'node:crypto'
 import type {
   AttachmentData,
@@ -35,6 +30,11 @@ import {
   err,
   ok,
 } from '@beauty-salon-backend/domain'
+
+// Database row types
+type AttachmentRow = typeof attachments.$inferSelect
+type ShareLinkRow = typeof shareLinks.$inferSelect
+type DownloadLogRow = typeof downloadLogs.$inferSelect
 
 export class AttachmentRepositoryImpl implements AttachmentRepository {
   constructor(private db: Database) {}
@@ -286,10 +286,10 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
           id: randomUUID(),
           attachmentId: input.attachmentId,
           token: input.token,
-          passwordHash: input.password || null, // Note: this should be hashed before storing
-          maxDownloads: input.maxDownloads || null,
+          passwordHash: input.password ?? null, // Note: this should be hashed before storing
+          maxDownloads: input.maxDownloads ?? null,
           downloadCount: 0,
-          expiresAt: input.expiresAt || null,
+          expiresAt: input.expiresAt ?? null,
           createdBy: input.createdBy,
         })
         .returning()
@@ -374,12 +374,10 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
       await this.db.insert(downloadLogs).values({
         id: randomUUID(),
         attachmentId: input.attachmentId,
-        downloadedBy: input.downloadedBy || null,
+        downloadedBy: input.downloadedBy ?? null,
         ipAddress: input.ipAddress,
-        userAgent: input.userAgent || null,
-        shareLinkId: input.shareToken
-          ? (input.shareToken as unknown as string)
-          : null, // Note: mapping shareToken to shareLinkId - needs proper conversion
+        userAgent: input.userAgent ?? null,
+        shareLinkId: input.shareToken ? input.shareToken : null, // Note: mapping shareToken to shareLinkId - needs proper conversion
         downloadedAt: new Date(),
       })
 

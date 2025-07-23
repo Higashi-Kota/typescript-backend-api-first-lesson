@@ -4,11 +4,8 @@
  * CLAUDEガイドラインに準拠
  */
 
-import type {
-  SessionId,
-  SessionRepository,
-  UserId,
-} from '@beauty-salon-backend/domain'
+import type { SessionRepository, UserId } from '@beauty-salon-backend/domain'
+import { createSessionId, createUserId } from '@beauty-salon-backend/domain'
 import bcrypt from 'bcrypt'
 import { Router } from 'express'
 import { v4 as uuidv4 } from 'uuid'
@@ -298,7 +295,7 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
                 // アカウントロックの監査ログ
                 if (authAuditRepository) {
                   await authAuditRepository.log({
-                    userId: user.id as UserId,
+                    userId: createUserId(user.id),
                     eventType: 'account_locked',
                     eventData: { email, reason: 'too_many_failed_attempts' },
                     ipAddress: req.ip,
@@ -319,7 +316,7 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
           // パスワード不正の監査ログ
           if (authAuditRepository) {
             await authAuditRepository.log({
-              userId: user.id as UserId,
+              userId: createUserId(user.id),
               eventType: 'login_failed',
               eventData: { email, reason: 'invalid_password' },
               ipAddress: req.ip,
@@ -365,10 +362,10 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
         }
 
         // セッションの作成
-        const sessionId = uuidv4() as SessionId
+        const sessionId = createSessionId(uuidv4())
         const sessionResult = await sessionRepository.save({
           id: sessionId,
-          userId: user.id as UserId,
+          userId: createUserId(user.id),
           refreshToken: tokenResult.value.refreshToken,
           ipAddress: req.ip || 'unknown',
           userAgent: req.get('user-agent') || 'unknown',
@@ -388,7 +385,7 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
         // ログイン成功の監査ログ
         if (authAuditRepository) {
           await authAuditRepository.log({
-            userId: user.id as UserId,
+            userId: createUserId(user.id),
             eventType: 'login',
             eventData: { email },
             ipAddress: req.ip,
@@ -487,10 +484,10 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
         }
 
         // セッションの作成
-        const sessionId = uuidv4() as SessionId
+        const sessionId = createSessionId(uuidv4())
         const sessionResult = await sessionRepository.save({
           id: sessionId,
-          userId: newUser.id as UserId,
+          userId: createUserId(newUser.id),
           refreshToken: tokenResult.value.refreshToken,
           ipAddress: req.ip || 'unknown',
           userAgent: req.get('user-agent') || 'unknown',
@@ -510,7 +507,7 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
         // ユーザー登録成功の監査ログ
         if (authAuditRepository) {
           await authAuditRepository.log({
-            userId: newUser.id as UserId,
+            userId: createUserId(newUser.id),
             eventType: 'user_registered',
             eventData: { email: newUser.email, role: newUser.role },
             ipAddress: req.ip,
@@ -659,7 +656,7 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
         // ログアウトの監査ログ
         if (authAuditRepository && req.user) {
           await authAuditRepository.log({
-            userId: req.user.id as UserId,
+            userId: createUserId(req.user.id),
             eventType: 'logout',
             ipAddress: req.ip,
             userAgent: req.get('user-agent'),
@@ -695,7 +692,7 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
           })
         }
 
-        const user = await userRepository.findById(req.user.id as UserId)
+        const user = await userRepository.findById(createUserId(req.user.id))
         if (!user) {
           return res.status(404).json({
             code: 'USER_NOT_FOUND',
@@ -749,7 +746,7 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
           // パスワードリセット要求の監査ログ
           if (authAuditRepository) {
             await authAuditRepository.log({
-              userId: user.id as UserId,
+              userId: createUserId(user.id),
               eventType: 'password_reset_requested',
               eventData: { email },
               ipAddress: req.ip,
@@ -888,7 +885,7 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
         }
 
         // Get user data
-        const user = await userRepository.findById(req.user.id as UserId)
+        const user = await userRepository.findById(createUserId(req.user.id))
         if (!user) {
           return res.status(404).json({
             code: 'USER_NOT_FOUND',
@@ -914,7 +911,7 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
         }
 
         // Update user with pending 2FA status
-        await userRepository.update(user.id as UserId, {
+        await userRepository.update(createUserId(user.id), {
           twoFactorStatus: {
             type: 'pending',
             secret: secretResult.value.secret,
@@ -965,7 +962,7 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
         const { code } = parseResult.data
 
         // Get user data
-        const user = await userRepository.findById(req.user.id as UserId)
+        const user = await userRepository.findById(createUserId(req.user.id))
         if (!user) {
           return res.status(404).json({
             code: 'USER_NOT_FOUND',
@@ -1019,7 +1016,7 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
             ? backupCodesResult.value.backupCodes
             : []
 
-        await userRepository.update(user.id as UserId, {
+        await userRepository.update(createUserId(user.id), {
           twoFactorStatus: {
             type: 'enabled',
             secret: secret,
@@ -1030,7 +1027,7 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
         // 2FA有効化成功の監査ログ
         if (authAuditRepository) {
           await authAuditRepository.log({
-            userId: user.id as UserId,
+            userId: createUserId(user.id),
             eventType: '2fa_enabled',
             ipAddress: req.ip,
             userAgent: req.get('user-agent'),
@@ -1078,7 +1075,7 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
         const { password } = parseResult.data
 
         // Get user data
-        const user = await userRepository.findById(req.user.id as UserId)
+        const user = await userRepository.findById(createUserId(req.user.id))
         if (!user) {
           return res.status(404).json({
             code: 'USER_NOT_FOUND',
@@ -1099,14 +1096,14 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
         }
 
         // Update user to disable 2FA
-        await userRepository.update(user.id as UserId, {
+        await userRepository.update(createUserId(user.id), {
           twoFactorStatus: { type: 'disabled' },
         })
 
         // 2FA無効化成功の監査ログ
         if (authAuditRepository) {
           await authAuditRepository.log({
-            userId: user.id as UserId,
+            userId: createUserId(user.id),
             eventType: '2fa_disabled',
             ipAddress: req.ip,
             userAgent: req.get('user-agent'),
@@ -1148,7 +1145,7 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
         const { code, userId } = parseResult.data
 
         // ユーザーの取得
-        const user = await userRepository.findById(userId as UserId)
+        const user = await userRepository.findById(createUserId(userId))
         if (!user || user.twoFactorStatus.type !== 'enabled') {
           return res.status(400).json({
             code: 'INVALID_REQUEST',
@@ -1186,7 +1183,7 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
             const updatedBackupCodes = twoFactorData.backupCodes.filter(
               (bc) => bc !== code.toUpperCase()
             )
-            await userRepository.update(user.id as UserId, {
+            await userRepository.update(createUserId(user.id), {
               twoFactorStatus: {
                 ...twoFactorData,
                 backupCodes: updatedBackupCodes,
@@ -1199,7 +1196,7 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
           // 2FA検証失敗の監査ログ
           if (authAuditRepository) {
             await authAuditRepository.log({
-              userId: user.id as UserId,
+              userId: createUserId(user.id),
               eventType: '2fa_failed',
               eventData: { email: user.email },
               ipAddress: req.ip,
@@ -1230,10 +1227,10 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
         }
 
         // セッションの作成
-        const sessionId = uuidv4() as SessionId
+        const sessionId = createSessionId(uuidv4())
         const sessionResult = await sessionRepository.save({
           id: sessionId,
-          userId: user.id as UserId,
+          userId: createUserId(user.id),
           refreshToken: tokenResult.value.refreshToken,
           ipAddress: req.ip || 'unknown',
           userAgent: req.get('user-agent') || 'unknown',
@@ -1253,7 +1250,7 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
         // 2FA検証成功の監査ログ
         if (authAuditRepository) {
           await authAuditRepository.log({
-            userId: user.id as UserId,
+            userId: createUserId(user.id),
             eventType: '2fa_verified',
             eventData: {
               email: user.email,

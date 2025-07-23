@@ -12,6 +12,7 @@ import {
   updateCustomer as updateCustomerEntity,
 } from '@beauty-salon-backend/domain'
 import type { components } from '@beauty-salon-backend/types/api'
+import { match } from 'ts-pattern'
 
 // TypeSpecで定義された型
 type UpdateCustomerRequest =
@@ -102,12 +103,10 @@ export const updateCustomerUseCase = async (
     preferences: input.updates.preferences,
     notes: input.updates.notes,
     tags: input.updates.tags,
-    birthDate:
-      input.updates.birthDate !== undefined
-        ? input.updates.birthDate
-          ? new Date(input.updates.birthDate)
-          : null
-        : undefined,
+    birthDate: match(input.updates.birthDate)
+      .with(undefined, () => undefined)
+      .with(null, () => null)
+      .otherwise((date) => new Date(date)),
   }
 
   const updateResult = updateCustomerEntity(existingResult.value, updateInput)

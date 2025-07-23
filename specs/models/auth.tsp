@@ -124,6 +124,81 @@ namespace BeautySalon.Models {
     lastLoginIp?: string;
   }
 
+  @doc("User response model - all keys required, values nullable where appropriate")
+  model UserResponse {
+    @doc("Unique identifier for the user")
+    id: string;
+
+    @doc("User's email address (unique)")
+    email: string;
+
+    @doc("User's display name")
+    name: string;
+
+    @doc("User's role in the system")
+    role: UserRole;
+
+    @doc("Account status")
+    status: UserAccountStatus;
+
+    @doc("Email verification status")
+    emailVerified: boolean;
+
+    @doc("Email verification token (internal use)")
+    emailVerificationToken: string | null;
+
+    @doc("Email verification token expiry")
+    emailVerificationTokenExpiry: utcDateTime | null;
+
+    @doc("Two-factor authentication status")
+    twoFactorStatus: TwoFactorStatus;
+
+    @doc("Two-factor authentication secret (encrypted)")
+    twoFactorSecret: string | null;
+
+    @doc("Backup codes for 2FA recovery")
+    backupCodes: string[] | null;
+
+    @doc("Number of failed login attempts")
+    failedLoginAttempts: int32;
+
+    @doc("Time when the account was locked")
+    lockedAt: utcDateTime | null;
+
+    @doc("Password reset token (internal use)")
+    passwordResetToken: string | null;
+
+    @doc("Password reset token expiry")
+    passwordResetTokenExpiry: utcDateTime | null;
+
+    @doc("Last password change timestamp")
+    lastPasswordChangeAt: utcDateTime | null;
+
+    @doc("Previous password hashes for history check")
+    passwordHistory: string[] | null;
+
+    @doc("Trusted IP addresses for this user")
+    trustedIpAddresses: string[] | null;
+
+    @doc("Reference to customer profile if user is a customer")
+    customerId: string | null;
+
+    @doc("Reference to staff profile if user is staff")
+    staffId: string | null;
+
+    @doc("Timestamp when the user was created")
+    createdAt: utcDateTime;
+
+    @doc("Timestamp when the user was last updated")
+    updatedAt: utcDateTime;
+
+    @doc("Last login timestamp")
+    lastLoginAt: utcDateTime | null;
+
+    @doc("Last login IP address")
+    lastLoginIp: string | null;
+  }
+
   @doc("Session information")
   model Session {
     @key

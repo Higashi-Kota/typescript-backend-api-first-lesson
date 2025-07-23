@@ -15,13 +15,19 @@ export interface ModelsStaff {
   name: string
   contactInfo: ModelsContactInfo
   specialties: string[]
-  imageUrl?: string
-  bio?: string
-  yearsOfExperience?: number
-  certifications?: string[]
+  /** @nullable */
+  imageUrl: string | null
+  /** @nullable */
+  bio: string | null
+  /** @nullable */
+  yearsOfExperience: number | null
+  /** @nullable */
+  certifications: string[] | null
   isActive: boolean
   createdAt: string
-  createdBy?: string
+  /** @nullable */
+  createdBy: string | null
   updatedAt: string
-  updatedBy?: string
+  /** @nullable */
+  updatedBy: string | null
 }

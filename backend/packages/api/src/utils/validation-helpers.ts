@@ -5,6 +5,30 @@
 
 import { z } from 'zod'
 
+// Type definition for common schemas
+type CommonSchemas = {
+  readonly email: z.ZodString
+  readonly password: z.ZodString
+  readonly name: z.ZodString
+  readonly phoneNumber: z.ZodString
+  readonly uuid: z.ZodString
+  readonly date: z.ZodString
+  readonly url: z.ZodString
+  readonly pagination: z.ZodObject<{
+    page: z.ZodDefault<z.ZodNumber>
+    limit: z.ZodDefault<z.ZodNumber>
+  }>
+  readonly sortOrder: z.ZodDefault<z.ZodEnum<['asc', 'desc']>>
+  readonly searchKeyword: z.ZodOptional<z.ZodString>
+  readonly positiveInt: z.ZodNumber
+  readonly money: z.ZodNumber
+  readonly boolean: z.ZodEffects<
+    z.ZodUnion<[z.ZodBoolean, z.ZodLiteral<'true'>, z.ZodLiteral<'false'>]>,
+    boolean,
+    boolean | 'true' | 'false'
+  >
+}
+
 /**
  * 共通のバリデーションスキーマ
  */
@@ -101,7 +125,7 @@ export const commonSchemas = {
   boolean: z
     .union([z.boolean(), z.literal('true'), z.literal('false')])
     .transform((val) => val === true || val === 'true'),
-}
+} as const satisfies CommonSchemas
 
 /**
  * パスワードの強度チェック

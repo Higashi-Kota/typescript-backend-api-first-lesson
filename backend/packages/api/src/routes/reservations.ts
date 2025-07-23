@@ -11,16 +11,16 @@ import { authenticate, authorize } from '../middleware/auth.middleware.js'
 import type { AuthConfig } from '../middleware/auth.middleware.js'
 import type { TypedRequest, TypedResponse } from '../types/express.js'
 import {
-  toReservationResponse,
   toReservationDetailResponse,
+  toReservationResponse,
 } from '../utils/reservation-mappers.js'
 
 import type {
   ReservationRepository,
   ReservationStatus,
 } from '@beauty-salon-backend/domain'
-import type { components } from '@beauty-salon-backend/types/api'
 import { createSalonIdSafe } from '@beauty-salon-backend/domain'
+import type { components } from '@beauty-salon-backend/types/api'
 import {
   cancelReservationUseCase,
   completeReservationUseCase,
@@ -155,27 +155,21 @@ export const createReservationRoutes = (deps: ReservationRouteDeps): Router => {
 
         // ロールに応じたフィルタリング
         const customerId =
-          req.user?.role === 'customer'
-            ? req.user.id
-            : (req.query.customerId as string | undefined)
+          req.user?.role === 'customer' ? req.user.id : req.query.customerId
 
         // UseCase実行
         const mappedInput = mapListReservationsRequest({
-          salonId: req.query.salonId as string | undefined,
+          salonId: req.query.salonId,
           customerId,
-          staffId: req.query.staffId as string | undefined,
-          serviceId: req.query.serviceId as string | undefined,
+          staffId: req.query.staffId,
+          serviceId: req.query.serviceId,
           status: req.query.status as ReservationStatus | undefined,
-          startDate: req.query.from
-            ? new Date(req.query.from as string)
-            : undefined,
-          endDate: req.query.to ? new Date(req.query.to as string) : undefined,
-          isPaid:
-            req.query.isPaid === 'true'
-              ? true
-              : req.query.isPaid === 'false'
-                ? false
-                : undefined,
+          startDate: req.query.from ? new Date(req.query.from) : undefined,
+          endDate: req.query.to ? new Date(req.query.to) : undefined,
+          isPaid: match(req.query.isPaid)
+            .with('true', () => true as const)
+            .with('false', () => false as const)
+            .otherwise(() => undefined),
           limit: paginationResult.data.limit,
           offset: paginationResult.data.offset,
         })
@@ -240,7 +234,13 @@ export const createReservationRoutes = (deps: ReservationRouteDeps): Router => {
         }
 
         // UseCase実行
-        const mappedInput = mapCreateReservationRequest(req.body, req.user?.id)
+        const mappedInput = mapCreateReservationRequest(
+          {
+            ...req.body,
+            notes: req.body.notes ?? null,
+          },
+          req.user?.id
+        )
         if (mappedInput.type === 'err') {
           return res.status(400).json({
             code: 'INVALID_ID',
@@ -501,7 +501,7 @@ export const createReservationRoutes = (deps: ReservationRouteDeps): Router => {
         const mappedInput = mapCancelReservationRequest(
           idResult.data,
           req.body.reason,
-          req.user?.id || 'system'
+          req.user?.id ?? 'system'
         )
         if (mappedInput.type === 'err') {
           return res.status(400).json({
@@ -571,7 +571,7 @@ export const createReservationRoutes = (deps: ReservationRouteDeps): Router => {
         // UseCase実行
         const mappedInput = mapConfirmReservationRequest(
           idResult.data,
-          req.user?.id || 'system'
+          req.user?.id ?? 'system'
         )
         if (mappedInput.type === 'err') {
           return res.status(400).json({
@@ -641,7 +641,7 @@ export const createReservationRoutes = (deps: ReservationRouteDeps): Router => {
         // UseCase実行
         const mappedInput = mapCompleteReservationRequest(
           idResult.data,
-          req.user?.id || 'system'
+          req.user?.id ?? 'system'
         )
         if (mappedInput.type === 'err') {
           return res.status(400).json({
@@ -711,7 +711,7 @@ export const createReservationRoutes = (deps: ReservationRouteDeps): Router => {
         // UseCase実行
         const mappedInput = mapMarkAsNoShowRequest(
           idResult.data,
-          req.user?.id || 'system'
+          req.user?.id ?? 'system'
         )
         if (mappedInput.type === 'err') {
           return res.status(400).json({

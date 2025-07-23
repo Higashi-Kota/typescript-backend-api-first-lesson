@@ -9,5 +9,6 @@
 export interface ModelsContactInfo {
   email: string
   phoneNumber: string
-  alternativePhone?: string
+  /** @nullable */
+  alternativePhone: string | null
 }

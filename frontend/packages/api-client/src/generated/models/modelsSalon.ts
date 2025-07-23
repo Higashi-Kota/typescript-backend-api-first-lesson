@@ -17,10 +17,14 @@ export interface ModelsSalon {
   address: ModelsAddress
   contactInfo: ModelsContactInfo
   openingHours: ModelsOpeningHours[]
-  imageUrls?: string[]
-  features?: string[]
+  /** @nullable */
+  imageUrls: string[] | null
+  /** @nullable */
+  features: string[] | null
   createdAt: string
-  createdBy?: string
+  /** @nullable */
+  createdBy: string | null
   updatedAt: string
-  updatedBy?: string
+  /** @nullable */
+  updatedBy: string | null
 }

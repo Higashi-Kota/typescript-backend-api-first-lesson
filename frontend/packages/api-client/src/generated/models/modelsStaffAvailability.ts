@@ -13,6 +13,8 @@ export interface ModelsStaffAvailability {
   dayOfWeek: ModelsDayOfWeek
   startTime: string
   endTime: string
-  breakStart?: string
-  breakEnd?: string
+  /** @nullable */
+  breakStart: string | null
+  /** @nullable */
+  breakEnd: string | null
 }

@@ -13,12 +13,12 @@ namespace BeautySalon.Models {
     address: Address;
     contactInfo: ContactInfo;
     openingHours: OpeningHours[];
-    imageUrls?: string[];
-    features?: string[];
+    imageUrls: string[] | null;
+    features: string[] | null;
     ...AuditInfo;
   }
 
-  @doc("Salon creation request with required and optional fields")
+  @doc("Salon creation request with required keys and nullable values")
   model CreateSalonRequest {
     // Required fields
     name: string;
@@ -28,10 +28,10 @@ namespace BeautySalon.Models {
     contactInfo: ContactInfo;
     openingHours: OpeningHours[];
 
-    // Optional fields
-    imageUrls?: string[];
+    // Required keys with nullable values
+    imageUrls: string[] | null;
 
-    features?: string[];
+    features: string[] | null;
   }
 
   @doc("Salon update request with optional fields for partial updates")
@@ -60,8 +60,8 @@ namespace BeautySalon.Models {
     id: SalonId;
     name: string;
     address: Address;
-    rating?: float32;
-    reviewCount?: int32;
+    rating: float32 | null;
+    reviewCount: int32 | null;
   }
 
   @doc("Salon search parameters - all fields are optional")

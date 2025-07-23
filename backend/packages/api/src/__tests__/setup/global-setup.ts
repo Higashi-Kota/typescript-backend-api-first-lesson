@@ -1,6 +1,6 @@
 import {
-  TestEnvironment,
   OptimizedTestSetup,
+  TestEnvironment,
 } from '@beauty-salon-backend/test-utils'
 
 export default async function globalSetup() {

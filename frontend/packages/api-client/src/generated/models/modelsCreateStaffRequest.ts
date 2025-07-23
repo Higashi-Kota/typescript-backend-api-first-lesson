@@ -13,8 +13,12 @@ export interface ModelsCreateStaffRequest {
   name: string
   contactInfo: ModelsContactInfo
   specialties: string[]
-  imageUrl?: string
-  bio?: string
-  yearsOfExperience?: number
-  certifications?: string[]
+  /** @nullable */
+  imageUrl: string | null
+  /** @nullable */
+  bio: string | null
+  /** @nullable */
+  yearsOfExperience: number | null
+  /** @nullable */
+  certifications: string[] | null
 }

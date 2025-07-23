@@ -6,6 +6,7 @@
 import { randomBytes } from 'node:crypto'
 import type { NextFunction, Request, Response } from 'express'
 import { match } from 'ts-pattern'
+import { createHeaderParser } from '../utils/headers.js'
 
 /**
  * CSRFトークン検証結果
@@ -53,14 +54,16 @@ export function getCsrfTokenFromSession(req: Request): string | undefined {
  */
 export function getCsrfTokenFromRequest(req: Request): string | undefined {
   // 優先順位: Header > Body > Query
-  const headerToken = req.headers['x-csrf-token'] as string | undefined
+  const headerParser = createHeaderParser(req.headers)
+  const headerToken = headerParser.get('x-csrf-token')
   if (headerToken) return headerToken
 
-  const bodyToken = req.body?._csrf as string | undefined
-  if (bodyToken) return bodyToken
+  // bodyとqueryの値は文字列であることを厳密にチェック
+  const bodyToken = req.body?._csrf
+  if (typeof bodyToken === 'string') return bodyToken
 
-  const queryToken = req.query?._csrf as string | undefined
-  if (queryToken) return queryToken
+  const queryToken = req.query?._csrf
+  if (typeof queryToken === 'string') return queryToken
 
   return undefined
 }
@@ -68,9 +71,10 @@ export function getCsrfTokenFromRequest(req: Request): string | undefined {
 /**
  * HTTPメソッドが保護対象かチェック
  */
+const PROTECTED_METHODS = ['POST', 'PUT', 'DELETE', 'PATCH'] as const
+
 export function isMethodRequiresProtection(method: string): boolean {
-  const protectedMethods = ['POST', 'PUT', 'DELETE', 'PATCH']
-  return protectedMethods.includes(method.toUpperCase())
+  return (PROTECTED_METHODS as readonly string[]).includes(method.toUpperCase())
 }
 
 /**
