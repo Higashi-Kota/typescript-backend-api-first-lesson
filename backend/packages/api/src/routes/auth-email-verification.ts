@@ -19,10 +19,34 @@ import { z } from 'zod'
 import { authenticate } from '../middleware/auth.middleware.js'
 import type { AuthConfig } from '../middleware/auth.middleware.js'
 import { authRateLimiter } from '../middleware/rate-limit.js'
+import type { TypedRequest, TypedResponse } from '../types/express.js'
 import {
   commonSchemas,
   formatValidationErrors,
 } from '../utils/validation-helpers.js'
+
+// リクエスト/レスポンス型定義
+type ConfirmEmailRequest = {
+  token: string
+}
+
+type ResendEmailRequest = {
+  email: string
+}
+
+type MessageResponse = {
+  message: string
+}
+
+type ErrorResponse = {
+  code: string
+  message: string
+}
+
+type VerificationStatusResponse = {
+  emailVerified: boolean
+  email: string
+}
 
 export interface EmailVerificationRouteDeps {
   userRepository: UserRepository
@@ -55,7 +79,11 @@ export const createEmailVerificationRoutes = (
     '/verify-email/send',
     authenticate(authConfig),
     authRateLimiter,
-    async (req, res, next) => {
+    async (
+      req: TypedRequest,
+      res: TypedResponse<MessageResponse | ErrorResponse>,
+      next
+    ) => {
       try {
         if (!req.user) {
           return res.status(401).json({
@@ -169,135 +197,142 @@ export const createEmailVerificationRoutes = (
   /**
    * POST /auth/verify-email/confirm - メール確認実行
    */
-  router.post('/verify-email/confirm', async (req, res, next) => {
-    try {
-      const schema = z.object({
-        token: z.string(),
-      })
-
-      const parseResult = schema.safeParse(req.body)
-      if (!parseResult.success) {
-        return res.status(400).json(formatValidationErrors(parseResult.error))
-      }
-
-      const { token } = parseResult.data
-      const ipAddress = req.ip
-      const userAgent = req.get('user-agent')
-
-      // トークンの検証
-      const tokenResult =
-        await emailVerificationTokenRepository.findByToken(token)
-      if (tokenResult.type === 'err' || !tokenResult.value) {
-        await authAuditRepository.log({
-          eventType: 'email_verified',
-          eventData: { token: `${token.substring(0, 8)}...` },
-          ipAddress,
-          userAgent,
-          success: false,
-          errorMessage: 'Invalid or expired token',
+  router.post(
+    '/verify-email/confirm',
+    async (
+      req: TypedRequest<ConfirmEmailRequest>,
+      res: TypedResponse<MessageResponse | ErrorResponse>,
+      next
+    ) => {
+      try {
+        const schema = z.object({
+          token: z.string(),
         })
 
-        return res.status(400).json({
-          code: 'INVALID_TOKEN',
-          message: 'Invalid or expired verification token',
-        })
-      }
+        const parseResult = schema.safeParse(req.body)
+        if (!parseResult.success) {
+          return res.status(400).json(formatValidationErrors(parseResult.error))
+        }
 
-      const verificationToken = tokenResult.value
+        const { token } = parseResult.data
+        const ipAddress = req.ip
+        const userAgent = req.get('user-agent')
 
-      // ユーザー取得
-      const userResult = await userRepository.findById(
-        verificationToken.userId as UserId
-      )
-      if (userResult.type === 'err' || !userResult.value) {
-        return res.status(404).json({
-          code: 'USER_NOT_FOUND',
-          message: 'User not found',
-        })
-      }
+        // トークンの検証
+        const tokenResult =
+          await emailVerificationTokenRepository.findByToken(token)
+        if (tokenResult.type === 'err' || !tokenResult.value) {
+          await authAuditRepository.log({
+            eventType: 'email_verified',
+            eventData: { token: `${token.substring(0, 8)}...` },
+            ipAddress,
+            userAgent,
+            success: false,
+            errorMessage: 'Invalid or expired token',
+          })
 
-      const user = userResult.value
+          return res.status(400).json({
+            code: 'INVALID_TOKEN',
+            message: 'Invalid or expired verification token',
+          })
+        }
 
-      // 既に検証済みかチェック
-      if (user.data.emailVerified) {
-        await authAuditRepository.log({
-          userId: user.data.id,
-          eventType: 'email_verified',
-          eventData: { alreadyVerified: true },
-          ipAddress,
-          userAgent,
-          success: false,
-          errorMessage: 'Email already verified',
-        })
+        const verificationToken = tokenResult.value
 
-        return res.status(400).json({
-          code: 'ALREADY_VERIFIED',
-          message: 'Email address is already verified',
-        })
-      }
+        // ユーザー取得
+        const userResult = await userRepository.findById(
+          verificationToken.userId as UserId
+        )
+        if (userResult.type === 'err' || !userResult.value) {
+          return res.status(404).json({
+            code: 'USER_NOT_FOUND',
+            message: 'User not found',
+          })
+        }
 
-      // メールアドレスが一致するかチェック
-      if (user.data.email !== verificationToken.email) {
-        await authAuditRepository.log({
-          userId: user.data.id,
-          eventType: 'email_verified',
-          eventData: {
-            expectedEmail: verificationToken.email,
-            actualEmail: user.data.email,
+        const user = userResult.value
+
+        // 既に検証済みかチェック
+        if (user.data.emailVerified) {
+          await authAuditRepository.log({
+            userId: user.data.id,
+            eventType: 'email_verified',
+            eventData: { alreadyVerified: true },
+            ipAddress,
+            userAgent,
+            success: false,
+            errorMessage: 'Email already verified',
+          })
+
+          return res.status(400).json({
+            code: 'ALREADY_VERIFIED',
+            message: 'Email address is already verified',
+          })
+        }
+
+        // メールアドレスが一致するかチェック
+        if (user.data.email !== verificationToken.email) {
+          await authAuditRepository.log({
+            userId: user.data.id,
+            eventType: 'email_verified',
+            eventData: {
+              expectedEmail: verificationToken.email,
+              actualEmail: user.data.email,
+            },
+            ipAddress,
+            userAgent,
+            success: false,
+            errorMessage: 'Email mismatch',
+          })
+
+          return res.status(400).json({
+            code: 'EMAIL_MISMATCH',
+            message: 'Email address does not match',
+          })
+        }
+
+        // ユーザー情報の更新
+        const updatedUser = {
+          ...user,
+          status:
+            user.status.type === 'unverified'
+              ? { type: 'active' as const }
+              : user.status,
+          data: {
+            ...user.data,
+            emailVerified: true,
           },
+        }
+
+        const updateResult = await userRepository.save(updatedUser)
+        if (updateResult.type === 'err') {
+          return res.status(500).json({
+            code: 'UPDATE_FAILED',
+            message: 'Failed to update user',
+          })
+        }
+
+        // トークンを検証済みとしてマーク
+        await emailVerificationTokenRepository.markAsVerified(token)
+
+        // 監査ログ記録
+        await authAuditRepository.log({
+          userId: user.data.id,
+          eventType: 'email_verified',
+          eventData: { email: user.data.email },
           ipAddress,
           userAgent,
-          success: false,
-          errorMessage: 'Email mismatch',
+          success: true,
         })
 
-        return res.status(400).json({
-          code: 'EMAIL_MISMATCH',
-          message: 'Email address does not match',
+        res.json({
+          message: 'Email verified successfully',
         })
+      } catch (error) {
+        next(error)
       }
-
-      // ユーザー情報の更新
-      const updatedUser = {
-        ...user,
-        status:
-          user.status.type === 'unverified'
-            ? { type: 'active' as const }
-            : user.status,
-        data: {
-          ...user.data,
-          emailVerified: true,
-        },
-      }
-
-      const updateResult = await userRepository.save(updatedUser)
-      if (updateResult.type === 'err') {
-        return res.status(500).json({
-          code: 'UPDATE_FAILED',
-          message: 'Failed to update user',
-        })
-      }
-
-      // トークンを検証済みとしてマーク
-      await emailVerificationTokenRepository.markAsVerified(token)
-
-      // 監査ログ記録
-      await authAuditRepository.log({
-        userId: user.data.id,
-        eventType: 'email_verified',
-        eventData: { email: user.data.email },
-        ipAddress,
-        userAgent,
-        success: true,
-      })
-
-      res.json({
-        message: 'Email verified successfully',
-      })
-    } catch (error) {
-      next(error)
     }
-  })
+  )
 
   /**
    * GET /auth/verify-email/status - メール検証状態の確認
@@ -305,7 +340,11 @@ export const createEmailVerificationRoutes = (
   router.get(
     '/verify-email/status',
     authenticate(authConfig),
-    async (req, res, next) => {
+    async (
+      req: TypedRequest,
+      res: TypedResponse<VerificationStatusResponse | ErrorResponse>,
+      next
+    ) => {
       try {
         if (!req.user) {
           return res.status(401).json({
@@ -341,7 +380,11 @@ export const createEmailVerificationRoutes = (
   router.post(
     '/verify-email/resend',
     authRateLimiter,
-    async (req, res, next) => {
+    async (
+      req: TypedRequest<ResendEmailRequest>,
+      res: TypedResponse<MessageResponse | ErrorResponse>,
+      next
+    ) => {
       try {
         const schema = z.object({
           email: commonSchemas.email,

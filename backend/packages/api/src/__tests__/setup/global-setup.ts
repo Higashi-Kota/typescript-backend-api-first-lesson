@@ -1,4 +1,7 @@
-import { TestEnvironment } from '@beauty-salon-backend/test-utils'
+import {
+  TestEnvironment,
+  OptimizedTestSetup,
+} from '@beauty-salon-backend/test-utils'
 
 export default async function globalSetup() {
   console.log('🚀 Starting global test setup...')
@@ -30,6 +33,9 @@ export default async function globalSetup() {
     process.env.EMAIL_PROVIDER = 'development'
     process.env.FROM_EMAIL = 'test@beauty-salon.test'
     process.env.FROM_NAME = 'Test Beauty Salon'
+
+    // Run migrations once for all tests
+    await OptimizedTestSetup.globalSetup()
 
     // Store in global for teardown
     // biome-ignore lint/suspicious/noExplicitAny: Global object type is not well-defined

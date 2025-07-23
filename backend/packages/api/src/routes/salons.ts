@@ -9,8 +9,15 @@ import { match } from 'ts-pattern'
 import { z } from 'zod'
 import { authenticate, authorize } from '../middleware/auth.middleware.js'
 import type { AuthConfig } from '../middleware/auth.middleware.js'
+import type { TypedRequest, TypedResponse } from '../types/express.js'
 
 import type { SalonRepository } from '@beauty-salon-backend/domain'
+import type { components } from '@beauty-salon-backend/types/api'
+import {
+  normalizeCreateSalonRequest,
+  normalizeUpdateSalonRequest,
+  toSalonResponse,
+} from '../utils/salon-mappers.js'
 import {
   createDeleteSalonErrorResponse,
   createSalonErrorResponse,
@@ -25,13 +32,45 @@ import {
   mapGetSalonByIdRequest,
   mapReactivateSalonRequest,
   mapSalonListToResponse,
-  mapSalonToResponse,
   mapSuspendSalonRequest,
   mapUpdateSalonRequest,
   reactivateSalonUseCase,
   suspendSalonUseCase,
   updateSalonUseCase,
 } from '@beauty-salon-backend/usecase'
+
+// リクエスト/レスポンス型定義
+type ListSalonsQuery = {
+  keyword?: string
+  city?: string
+  isActive?: string
+  limit?: string
+  offset?: string
+}
+
+// Salon作成リクエスト型はOpenAPIから生成された型を使用
+type CreateSalonRequest = components['schemas']['Models.CreateSalonRequest']
+
+type UpdateSalonRequest = components['schemas']['Models.UpdateSalonRequest']
+
+type SuspendSalonRequest = {
+  reason: string
+}
+
+// Salonレスポンス型はOpenAPIから生成された型を使用
+type SalonResponse = components['schemas']['Models.Salon']
+
+type SalonListResponse = {
+  salons: SalonResponse[]
+  total: number
+  limit: number
+  offset: number
+}
+
+type ErrorResponse = {
+  code: string
+  message: string
+}
 
 // バリデーションスキーマ
 const salonIdSchema = z.string().uuid()
@@ -53,47 +92,54 @@ export const createSalonRoutes = (deps: SalonRouteDeps): Router => {
   /**
    * GET /salons - List salons
    */
-  router.get('/', async (req, res, next) => {
-    try {
-      // クエリパラメータのパース
-      const paginationResult = paginationSchema.safeParse(req.query)
-      if (!paginationResult.success) {
-        return res.status(400).json({
-          code: 'INVALID_PAGINATION',
-          message: 'Invalid pagination parameters',
-        })
-      }
-
-      // UseCase実行
-      const result = await listSalonsUseCase(
-        {
-          keyword: req.query.keyword as string | undefined,
-          city: req.query.city as string | undefined,
-          isActive: req.query.isActive === 'true' ? true : undefined,
-          limit: paginationResult.data.limit,
-          offset: paginationResult.data.offset,
-        },
-        { salonRepository }
-      )
-
-      // レスポンス処理
-      return match(result)
-        .with({ type: 'ok' }, ({ value }) => {
-          res.json(mapSalonListToResponse(value))
-        })
-        .with({ type: 'err' }, ({ error }) => {
-          const statusCode = error.type === 'databaseError' ? 500 : 400
-          res.status(statusCode).json({
-            code: error.type.toUpperCase(),
-            message:
-              error.type === 'databaseError' ? error.message : 'Bad request',
+  router.get(
+    '/',
+    async (
+      req: TypedRequest<unknown, ListSalonsQuery>,
+      res: TypedResponse<SalonListResponse | ErrorResponse>,
+      next
+    ) => {
+      try {
+        // クエリパラメータのパース
+        const paginationResult = paginationSchema.safeParse(req.query)
+        if (!paginationResult.success) {
+          return res.status(400).json({
+            code: 'INVALID_PAGINATION',
+            message: 'Invalid pagination parameters',
           })
-        })
-        .exhaustive()
-    } catch (error) {
-      next(error)
+        }
+
+        // UseCase実行
+        const result = await listSalonsUseCase(
+          {
+            keyword: req.query.keyword as string | undefined,
+            city: req.query.city as string | undefined,
+            isActive: req.query.isActive === 'true' ? true : undefined,
+            limit: paginationResult.data.limit,
+            offset: paginationResult.data.offset,
+          },
+          { salonRepository }
+        )
+
+        // レスポンス処理
+        return match(result)
+          .with({ type: 'ok' }, ({ value }) => {
+            res.json(mapSalonListToResponse(value))
+          })
+          .with({ type: 'err' }, ({ error }) => {
+            const statusCode = error.type === 'databaseError' ? 500 : 400
+            res.status(statusCode).json({
+              code: error.type.toUpperCase(),
+              message:
+                error.type === 'databaseError' ? error.message : 'Bad request',
+            })
+          })
+          .exhaustive()
+      } catch (error) {
+        next(error)
+      }
     }
-  })
+  )
 
   /**
    * POST /salons - Create salon
@@ -103,7 +149,11 @@ export const createSalonRoutes = (deps: SalonRouteDeps): Router => {
     '/',
     authenticate(authConfig),
     authorize('admin', 'staff'),
-    async (req, res, next) => {
+    async (
+      req: TypedRequest<CreateSalonRequest>,
+      res: TypedResponse<components['schemas']['Models.Salon'] | ErrorResponse>,
+      next
+    ) => {
       try {
         // リクエストボディの基本的な検証
         if (
@@ -119,17 +169,21 @@ export const createSalonRoutes = (deps: SalonRouteDeps): Router => {
           })
         }
 
+        // リクエストボディの正規化
+        const normalizedRequest = normalizeCreateSalonRequest(req.body)
+
         // UseCase実行
-        const input = mapCreateSalonRequest(req.body, req.user?.id)
+        const input = mapCreateSalonRequest(normalizedRequest, req.user?.id)
         const result = await createSalonUseCase(input, { salonRepository })
 
         // レスポンス処理
         return match(result)
           .with({ type: 'ok' }, ({ value }) => {
+            const response = toSalonResponse(value)
             res
               .status(201)
               .header('Location', `/salons/${value.data.id}`)
-              .json(mapSalonToResponse(value))
+              .json(response)
           })
           .with({ type: 'err' }, ({ error }) => {
             const statusCode = match(error.type)
@@ -155,61 +209,13 @@ export const createSalonRoutes = (deps: SalonRouteDeps): Router => {
   /**
    * GET /salons/:id - Get salon
    */
-  router.get('/:id', async (req, res, next) => {
-    try {
-      // パスパラメータのバリデーション
-      const idResult = salonIdSchema.safeParse(req.params.id)
-      if (!idResult.success) {
-        return res.status(400).json({
-          code: 'INVALID_ID',
-          message: 'Invalid salon ID format',
-        })
-      }
-
-      // UseCase実行
-      const mappedInput = mapGetSalonByIdRequest(idResult.data)
-      if (mappedInput.type === 'err') {
-        return res.status(400).json({
-          code: 'INVALID_ID',
-          message: mappedInput.error.message,
-        })
-      }
-      const result = await getSalonByIdUseCase(mappedInput.value, {
-        salonRepository,
-      })
-
-      // レスポンス処理
-      return match(result)
-        .with({ type: 'ok' }, ({ value }) => {
-          res.json(mapSalonToResponse(value))
-        })
-        .with({ type: 'err', error: { type: 'notFound' } }, () => {
-          res.status(404).json({
-            code: 'NOT_FOUND',
-            message: 'Salon not found',
-          })
-        })
-        .with({ type: 'err' }, () => {
-          res.status(500).json({
-            code: 'INTERNAL_ERROR',
-            message: 'An error occurred',
-          })
-        })
-        .exhaustive()
-    } catch (error) {
-      next(error)
-    }
-  })
-
-  /**
-   * PUT /salons/:id - Update salon
-   * 認証必須: admin, staffのみ
-   */
-  router.put(
+  router.get(
     '/:id',
-    authenticate(authConfig),
-    authorize('admin', 'staff'),
-    async (req, res, next) => {
+    async (
+      req: TypedRequest<unknown, unknown, { id: string }>,
+      res: TypedResponse<components['schemas']['Models.Salon'] | ErrorResponse>,
+      next
+    ) => {
       try {
         // パスパラメータのバリデーション
         const idResult = salonIdSchema.safeParse(req.params.id)
@@ -221,9 +227,72 @@ export const createSalonRoutes = (deps: SalonRouteDeps): Router => {
         }
 
         // UseCase実行
+        const mappedInput = mapGetSalonByIdRequest(idResult.data)
+        if (mappedInput.type === 'err') {
+          return res.status(400).json({
+            code: 'INVALID_ID',
+            message: mappedInput.error.message,
+          })
+        }
+        const result = await getSalonByIdUseCase(mappedInput.value, {
+          salonRepository,
+        })
+
+        // レスポンス処理
+        return match(result)
+          .with({ type: 'ok' }, ({ value }) => {
+            const response = toSalonResponse(value)
+            res.json(response)
+          })
+          .with({ type: 'err', error: { type: 'notFound' } }, () => {
+            res.status(404).json({
+              code: 'NOT_FOUND',
+              message: 'Salon not found',
+            })
+          })
+          .with({ type: 'err' }, () => {
+            res.status(500).json({
+              code: 'INTERNAL_ERROR',
+              message: 'An error occurred',
+            })
+          })
+          .exhaustive()
+      } catch (error) {
+        next(error)
+      }
+    }
+  )
+
+  /**
+   * PUT /salons/:id - Update salon
+   * 認証必須: admin, staffのみ
+   */
+  router.put(
+    '/:id',
+    authenticate(authConfig),
+    authorize('admin', 'staff'),
+    async (
+      req: TypedRequest<UpdateSalonRequest, unknown, { id: string }>,
+      res: TypedResponse<components['schemas']['Models.Salon'] | ErrorResponse>,
+      next
+    ) => {
+      try {
+        // パスパラメータのバリデーション
+        const idResult = salonIdSchema.safeParse(req.params.id)
+        if (!idResult.success) {
+          return res.status(400).json({
+            code: 'INVALID_ID',
+            message: 'Invalid salon ID format',
+          })
+        }
+
+        // リクエストボディの正規化
+        const normalizedRequest = normalizeUpdateSalonRequest(req.body)
+
+        // UseCase実行
         const mappedInput = mapUpdateSalonRequest(
           idResult.data,
-          req.body,
+          normalizedRequest,
           req.user?.id
         )
         if (mappedInput.type === 'err') {
@@ -239,7 +308,8 @@ export const createSalonRoutes = (deps: SalonRouteDeps): Router => {
         // レスポンス処理
         return match(result)
           .with({ type: 'ok' }, ({ value }) => {
-            res.json(mapSalonToResponse(value))
+            const response = toSalonResponse(value)
+            res.json(response)
           })
           .with({ type: 'err', error: { type: 'notFound' } }, () => {
             res.status(404).json({
@@ -276,7 +346,11 @@ export const createSalonRoutes = (deps: SalonRouteDeps): Router => {
     '/:id',
     authenticate(authConfig),
     authorize('admin'),
-    async (req, res, next) => {
+    async (
+      req: TypedRequest<unknown, unknown, { id: string }>,
+      res: TypedResponse<{ message: string } | ErrorResponse>,
+      next
+    ) => {
       try {
         // パスパラメータのバリデーション
         const idResult = salonIdSchema.safeParse(req.params.id)
@@ -331,7 +405,11 @@ export const createSalonRoutes = (deps: SalonRouteDeps): Router => {
     '/:id/suspend',
     authenticate(authConfig),
     authorize('admin'),
-    async (req, res, next) => {
+    async (
+      req: TypedRequest<SuspendSalonRequest, unknown, { id: string }>,
+      res: TypedResponse<components['schemas']['Models.Salon'] | ErrorResponse>,
+      next
+    ) => {
       try {
         // パスパラメータのバリデーション
         const idResult = salonIdSchema.safeParse(req.params.id)
@@ -369,7 +447,8 @@ export const createSalonRoutes = (deps: SalonRouteDeps): Router => {
         // レスポンス処理
         return match(result)
           .with({ type: 'ok' }, ({ value }) => {
-            res.json(mapSalonToResponse(value))
+            const response = toSalonResponse(value)
+            res.json(response)
           })
           .with({ type: 'err', error: { type: 'notFound' } }, () => {
             res.status(404).json({
@@ -404,7 +483,11 @@ export const createSalonRoutes = (deps: SalonRouteDeps): Router => {
     '/:id/reactivate',
     authenticate(authConfig),
     authorize('admin'),
-    async (req, res, next) => {
+    async (
+      req: TypedRequest<unknown, unknown, { id: string }>,
+      res: TypedResponse<components['schemas']['Models.Salon'] | ErrorResponse>,
+      next
+    ) => {
       try {
         // パスパラメータのバリデーション
         const idResult = salonIdSchema.safeParse(req.params.id)
@@ -433,7 +516,8 @@ export const createSalonRoutes = (deps: SalonRouteDeps): Router => {
         // レスポンス処理
         return match(result)
           .with({ type: 'ok' }, ({ value }) => {
-            res.json(mapSalonToResponse(value))
+            const response = toSalonResponse(value)
+            res.json(response)
           })
           .with({ type: 'err', error: { type: 'notFound' } }, () => {
             res.status(404).json({

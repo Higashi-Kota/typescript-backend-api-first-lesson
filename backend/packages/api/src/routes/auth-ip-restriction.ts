@@ -12,6 +12,27 @@ import { match } from 'ts-pattern'
 import type { AuthConfig } from '../middleware/auth.middleware.js'
 import { authenticate, authorize } from '../middleware/auth.middleware.js'
 import { adminRateLimiter } from '../middleware/rate-limit.js'
+import type { TypedRequest, TypedResponse } from '../types/express.js'
+
+// リクエスト/レスポンス型定義
+type AddTrustedIpRequest = {
+  ipAddress: string
+}
+
+type MessageResponse = {
+  message: string
+}
+
+type ErrorResponse = {
+  error: {
+    type: string
+    message: string
+  }
+}
+
+type TrustedIpsResponse = {
+  trustedIps: string[]
+}
 
 export type IpRestrictionRouteDeps = {
   userRepository: UserRepository
@@ -31,9 +52,12 @@ export const createIpRestrictionRoutes = (
     adminRateLimiter,
     authenticate(deps.authConfig),
     authorize('admin'),
-    async (req, res) => {
+    async (
+      req: TypedRequest<AddTrustedIpRequest, unknown, { userId: string }>,
+      res: TypedResponse<MessageResponse | ErrorResponse>
+    ) => {
       const userId = req.params.userId as UserId
-      const { ipAddress } = req.body as { ipAddress: string }
+      const { ipAddress } = req.body
 
       if (!ipAddress) {
         res.status(400).json({
@@ -131,9 +155,12 @@ export const createIpRestrictionRoutes = (
     adminRateLimiter,
     authenticate(deps.authConfig),
     authorize('admin'),
-    async (req, res) => {
+    async (
+      req: TypedRequest<unknown, { ipAddress: string }, { userId: string }>,
+      res: TypedResponse<MessageResponse | ErrorResponse>
+    ) => {
       const userId = req.params.userId as UserId
-      const ipAddress = req.query.ipAddress as string
+      const ipAddress = req.query.ipAddress
 
       if (!ipAddress) {
         res.status(400).json({
@@ -214,7 +241,10 @@ export const createIpRestrictionRoutes = (
     adminRateLimiter,
     authenticate(deps.authConfig),
     authorize('admin'),
-    async (req, res) => {
+    async (
+      req: TypedRequest<unknown, unknown, { userId: string }>,
+      res: TypedResponse<TrustedIpsResponse | ErrorResponse>
+    ) => {
       const userId = req.params.userId as UserId
 
       const userResult = await deps.userRepository.findById(userId)
@@ -232,7 +262,7 @@ export const createIpRestrictionRoutes = (
           }
 
           res.json({
-            trustedIpAddresses: value.data.trustedIpAddresses,
+            trustedIps: value.data.trustedIpAddresses,
           })
         })
         .with({ type: 'err' }, () => {

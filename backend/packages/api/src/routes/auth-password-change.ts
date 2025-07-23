@@ -14,6 +14,16 @@ import { z } from 'zod'
 import { authenticate } from '../middleware/auth.middleware.js'
 import type { AuthConfig } from '../middleware/auth.middleware.js'
 import { authRateLimiter } from '../middleware/rate-limit.js'
+import type { TypedRequest, TypedResponse } from '../types/express.js'
+
+// リクエスト/レスポンス型定義
+type ChangePasswordRequest = {
+  currentPassword: string
+  newPassword: string
+}
+
+type SuccessResponse = components['schemas']['Models.AuthSuccessResponse']
+type ErrorResponse = components['schemas']['Models.Error']
 
 // バリデーションスキーマ
 const passwordChangeSchema = z.object({
@@ -41,7 +51,11 @@ export const createPasswordChangeRoutes = (
     '/change-password',
     authRateLimiter,
     authenticate(authConfig),
-    async (req, res, next) => {
+    async (
+      req: TypedRequest<ChangePasswordRequest>,
+      res: TypedResponse<SuccessResponse | ErrorResponse>,
+      next
+    ) => {
       try {
         if (!req.user) {
           const error: components['schemas']['Models.Error'] = {

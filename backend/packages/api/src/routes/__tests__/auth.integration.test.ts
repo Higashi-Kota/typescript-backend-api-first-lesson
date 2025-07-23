@@ -1563,7 +1563,7 @@ describe('Auth API Integration Tests', () => {
         expect(response.status).toBe(200)
         expect(response.body).toMatchObject({
           secret: expect.any(String),
-          qrCode: expect.any(String),
+          qrCodeUrl: expect.any(String),
           backupCodes: expect.arrayContaining([expect.any(String)]),
         })
         expect(response.body.backupCodes).toHaveLength(8)
@@ -1731,10 +1731,10 @@ describe('Auth API Integration Tests', () => {
           sessions: expect.arrayContaining([
             expect.objectContaining({
               id: expect.any(String),
-              device: expect.any(String),
-              lastActivity: expect.any(String),
+              userId: expect.any(String),
               createdAt: expect.any(String),
-              current: expect.any(Boolean),
+              lastAccessedAt: expect.any(String),
+              ipAddress: expect.any(String),
             }),
           ]),
         })
