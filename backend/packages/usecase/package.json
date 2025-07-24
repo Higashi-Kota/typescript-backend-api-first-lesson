@@ -35,6 +35,7 @@
     "uuid": "^11.0.6"
   },
   "devDependencies": {
+    "@beauty-salon-backend/test-utils": "workspace:*",
     "@rslib/core": "^0.10.5",
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^22.12.1",

@@ -563,6 +563,9 @@ importers:
         specifier: ^11.0.6
         version: 11.1.0
     devDependencies:
+      '@beauty-salon-backend/test-utils':
+        specifier: workspace:*
+        version: link:../test-utils
       '@rslib/core':
         specifier: ^0.10.5
         version: 0.10.6(@microsoft/api-extractor@7.52.8(@types/node@22.16.5))(typescript@5.8.3)
