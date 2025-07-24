@@ -100,6 +100,7 @@ jobs:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/beauty_salon_test
           CI: true
           NODE_ENV: test
+          ENCRYPTION_KEY: test-encryption-key-64-characters-for-testing-environment-123456
 
       - name: Run frontend tests
         run: |

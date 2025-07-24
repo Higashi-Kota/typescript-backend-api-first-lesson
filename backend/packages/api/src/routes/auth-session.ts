@@ -1,11 +1,10 @@
 import { randomBytes } from 'node:crypto'
-import { v4 as uuidv4 } from 'uuid'
 import type {
   SessionRepository,
   UserRepository,
   UserRole,
 } from '@beauty-salon-backend/domain'
-import { err, ok, createSessionId } from '@beauty-salon-backend/domain'
+import { createSessionId, err, ok } from '@beauty-salon-backend/domain'
 import {
   type GetSessionsDeps,
   type LogoutAllDeps,
@@ -20,6 +19,7 @@ import {
 } from '@beauty-salon-backend/usecase'
 import { Router } from 'express'
 import { match } from 'ts-pattern'
+import { v4 as uuidv4 } from 'uuid'
 import type { AuthConfig } from '../middleware/auth.middleware.js'
 import { authenticate } from '../middleware/auth.middleware.js'
 import { generalRateLimiter } from '../middleware/rate-limit.js'

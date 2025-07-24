@@ -10,14 +10,14 @@ export default defineConfig({
     {
       source: {
         entry: {
-          index: 'src/index.ts',
+          '.': 'src/**/*.ts',
         },
         tsconfigPath: './tsconfig.json',
       },
       format: 'esm',
       syntax: 'esnext',
       dts: true,
-      bundle: true,
+      bundle: false,
       output: {
         minify: isProduction,
         sourceMap: isDevelopment || isTest || isStaging,
@@ -30,6 +30,8 @@ export default defineConfig({
           'postgres',
           'ts-pattern',
           'uuid',
+          'vitest',
+          'vite',
         ],
       },
     },

@@ -33,6 +33,9 @@ yarn-error.log*
 # Testing
 coverage/
 .nyc_output/
+test-results/
+junit.xml
+*.junit.xml
 
 # IDE
 .idea/

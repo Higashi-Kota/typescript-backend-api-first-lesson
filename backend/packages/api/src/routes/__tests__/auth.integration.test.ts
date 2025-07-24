@@ -8,26 +8,15 @@ import {
   type FailedLoginRepository,
 } from '@beauty-salon-backend/infrastructure'
 import {
-  SchemaIsolation,
-  TestEnvironment,
+  type TestContext,
+  createTestContext,
 } from '@beauty-salon-backend/test-utils'
 import bcrypt from 'bcrypt'
-import { drizzle } from 'drizzle-orm/postgres-js'
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
 import express from 'express'
-import postgres from 'postgres'
 import request from 'supertest'
 import { v4 as uuidv4 } from 'uuid'
-import {
-  afterAll,
-  afterEach,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { errorHandler } from '../../middleware/error-handler.js'
 import { JwtService } from '../../services/jwt.service.js'
 import { createAuthRoutes } from '../auth.js'
@@ -70,81 +59,19 @@ vi.mock('../../services/two-factor.service.js', () => ({
 }))
 
 describe('Auth API Integration Tests', () => {
-  let testEnv: TestEnvironment
+  let testContext: TestContext
   let app: express.Application
   let db: PostgresJsDatabase
-  let schemaIsolation: SchemaIsolation
-  let schemaName: string
-  let testClient: postgres.Sql
   let deps: AuthRouteDeps
   let userRepository: DrizzleUserRepository
   let sessionRepository: DrizzleSessionRepository
   let failedLoginRepository: DrizzleFailedLoginRepository
   let authAuditRepository: DrizzleAuthAuditRepository
 
-  beforeAll(async () => {
-    // Start test containers
-    testEnv = await TestEnvironment.getInstance()
-  })
-
-  afterAll(async () => {
-    if (testClient) await testClient.end()
-  })
-
   beforeEach(async () => {
-    // Create a new connection for this test
-    const connectionString = testEnv.getPostgresConnectionString()
-    testClient = postgres(connectionString, {
-      onnotice: () => {}, // Suppress notices
-    })
-
-    // Create Drizzle instance with the test connection
-    db = drizzle(testClient)
-
-    // Create SchemaIsolation instance using our test connection
-    schemaIsolation = new SchemaIsolation(db)
-
-    // Create isolated schema using our test db connection (this also runs migrations)
-    schemaName = await schemaIsolation.createIsolatedSchema()
-    console.log('SchemaName returned:', schemaName)
-
-    // Since we're using public schema, ensure search_path is set correctly
-    if (schemaName === 'public') {
-      await testClient`SET search_path TO public`
-    } else {
-      console.warn(
-        "Expected 'public' but got '",
-        schemaName,
-        "' - setting search_path to public anyway"
-      )
-      await testClient`SET search_path TO public`
-    }
-
-    // Verify the schema is set correctly
-    const searchPathResult = await testClient`SHOW search_path`
-    console.log('Current search_path:', searchPathResult)
-
-    // Check if users table exists
-    const tableCheck = await testClient`
-      SELECT table_name 
-      FROM information_schema.tables 
-      WHERE table_schema = 'public' 
-      AND table_name = 'users'
-    `
-    console.log('Users table exists:', tableCheck)
-
-    // Check all tables in the schema
-    const allTables = await testClient`
-      SELECT table_name 
-      FROM information_schema.tables 
-      WHERE table_schema = 'public'
-      AND table_name IN ('users', 'sessions', 'auth_audit_logs', 'failed_login_attempts')
-      ORDER BY table_name
-    `
-    console.log('All tables in schema:', allTables)
-
-    // NOTE: Tables are already created by schemaIsolation.createIsolatedSchema()
-    // So we don't need to call dbSetup.setupDatabase() here
+    // 各テストで新しいトランザクションベースのコンテキストを作成
+    testContext = await createTestContext()
+    db = testContext.db
 
     // Create real repositories
     userRepository = new DrizzleUserRepository(db)
@@ -306,15 +233,8 @@ describe('Auth API Integration Tests', () => {
   })
 
   afterEach(async () => {
-    // Clean up schema after each test using the test connection
-    if (schemaName && schemaIsolation) {
-      await schemaIsolation.dropSchema(schemaName)
-    }
-
-    // Close the test connection
-    if (testClient) {
-      await testClient.end()
-    }
+    // トランザクションをロールバックしてクリーンアップ
+    await testContext.cleanup()
   })
 
   describe('POST /auth/register', () => {

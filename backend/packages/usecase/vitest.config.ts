@@ -1,14 +1,7 @@
-import path from 'node:path'
-import { defineConfig } from 'vitest/config'
+import { createSharedVitestConfig } from '@beauty-salon-backend/test-utils/config'
 
-export default defineConfig({
-  test: {
-    globals: true,
-    environment: 'node',
-  },
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
-    },
-  },
+export default createSharedVitestConfig({
+  rootDir: __dirname,
+  integrationTest: false, // 単体テスト用
+  parallel: true,
 })

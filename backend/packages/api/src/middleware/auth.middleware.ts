@@ -5,7 +5,7 @@
  */
 
 import type { Result } from '@beauty-salon-backend/domain'
-import { err, ok, createUserId } from '@beauty-salon-backend/domain'
+import { createUserId, err, ok } from '@beauty-salon-backend/domain'
 import type { NextFunction, Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
 import { match } from 'ts-pattern'

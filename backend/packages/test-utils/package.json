@@ -9,6 +9,18 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./config": {
+      "types": "./dist/config/vitest.shared.config.d.ts",
+      "import": "./dist/config/vitest.shared.config.js"
+    },
+    "./setup/shared-global-setup": {
+      "types": "./dist/setup/shared-global-setup.d.ts",
+      "import": "./dist/setup/shared-global-setup.js"
+    },
+    "./setup/vitest-setup": {
+      "types": "./dist/setup/vitest-setup.d.ts",
+      "import": "./dist/setup/vitest-setup.js"
     }
   },
   "scripts": {

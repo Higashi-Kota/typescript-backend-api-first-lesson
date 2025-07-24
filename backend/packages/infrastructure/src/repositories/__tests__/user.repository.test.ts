@@ -1,69 +1,31 @@
 import { randomUUID } from 'node:crypto'
 import type { UserId } from '@beauty-salon-backend/domain'
 import {
-  SchemaIsolation,
-  TestEnvironment,
+  type TestContext,
   UserBuilder,
+  createTestContext,
 } from '@beauty-salon-backend/test-utils'
-import { sql } from 'drizzle-orm'
-import { drizzle } from 'drizzle-orm/postgres-js'
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
-import postgres from 'postgres'
-import {
-  afterAll,
-  afterEach,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-} from 'vitest'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { DrizzleUserRepository } from '../user.repository.js'
 
 describe('UserRepository Integration Tests', () => {
-  let testEnv: TestEnvironment
+  let testContext: TestContext
   let db: PostgresJsDatabase
   let repository: DrizzleUserRepository
-  let client: postgres.Sql
-  let schemaIsolation: SchemaIsolation
-
-  beforeAll(async () => {
-    // Start test containers
-    testEnv = await TestEnvironment.getInstance()
-    const connectionString = testEnv.getPostgresConnectionString()
-
-    // Create database client and setup
-    client = postgres(connectionString)
-    db = drizzle(client)
-
-    // Create extensions once
-    await db.execute(sql`CREATE EXTENSION IF NOT EXISTS "pgcrypto"`)
-    await db.execute(sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`)
-
-    // Initialize schema isolation
-    schemaIsolation = new SchemaIsolation(db)
-  }, 30000) // 30秒のタイムアウト
-
-  afterAll(async () => {
-    if (client) {
-      await client.end()
-    }
-    if (testEnv) {
-      await testEnv.stop()
-    }
-  })
 
   beforeEach(async () => {
-    // Setup database with enums and tables
-    await schemaIsolation.cleanupPublicSchema()
-    await schemaIsolation.applyMigrations('public')
-
+    // 各テストで新しいトランザクションベースのコンテキストを作成
+    testContext = await createTestContext()
+    db = testContext.db
     repository = new DrizzleUserRepository(db)
   })
 
   afterEach(async () => {
-    // Clean up database
-    await schemaIsolation.cleanupPublicSchema()
+    // トランザクションをロールバックしてクリーンアップ
+    if (testContext?.cleanup) {
+      await testContext.cleanup()
+    }
   })
 
   describe('save', () => {

@@ -2,9 +2,6 @@
  * Attachment Repository Implementation
  */
 
-import { and, desc, eq, gte, ilike, lte, sql } from 'drizzle-orm'
-import type { Database } from '../database/index.js'
-import { attachments, downloadLogs, shareLinks } from '../database/schema.js'
 import { randomUUID } from 'node:crypto'
 import type {
   AttachmentData,
@@ -30,6 +27,9 @@ import {
   err,
   ok,
 } from '@beauty-salon-backend/domain'
+import { and, desc, eq, gte, ilike, lte, sql } from 'drizzle-orm'
+import type { Database } from '../database/index.js'
+import { attachments, downloadLogs, shareLinks } from '../database/schema.js'
 
 // Database row types
 type AttachmentRow = typeof attachments.$inferSelect
