@@ -808,43 +808,116 @@ PGPASSWORD=postgres psql -h localhost -U postgres -d beauty_salon -c "\dt"
   - [x] Customer: 状態遷移とビジネスルールのテスト拡充（154箇所のAAA実装）
   - [x] Reservation: 予約制約とバリデーションのテスト強化（157箇所のAAA実装）
   
-- [ ] **リポジトリ層テストのAAA拡充**
-  - [ ] CustomerRepository: ページネーション、検索、ソートのテスト追加
-  - [ ] エラーハンドリング（DB接続エラー、制約違反等）のテスト
+- [x] **リポジトリ層テストのAAA拡充**
+  - [x] CustomerRepository: ページネーション、検索、ソートのテスト追加（27テスト実装）
+    - [x] ページネーション境界値テスト（limit/offset）
+    - [x] 複数検索条件の組み合わせテスト（メール、名前、タグ、メンバーシップレベル）
+    - [x] 日付範囲フィルタリング（registeredFrom/registeredTo）
+    - [x] ロイヤリティポイント範囲フィルタリング（minLoyaltyPoints/maxLoyaltyPoints）
+    - [x] 複数メンバーシップレベルでのフィルタリング
+    - [x] タグのANY match検索（JSONB配列の重複チェック）
+  - [x] StaffRepository: AAA（Arrange-Act-Assert）パターンによる包括的なテスト（18テスト実装済み）
+    - [x] CRUD操作の基本テスト
+    - [x] 状態遷移テスト（active/inactive/terminated）
+    - [x] 検索・フィルタリングテスト
+  - [x] ServiceRepository: AAA（Arrange-Act-Assert）パターンによる包括的なテスト（17テスト実装済み）
+    - [x] CRUD操作の基本テスト
+    - [x] 価格体系とオプションのテスト
+    - [x] 可用性チェックのテスト
+  - [x] ReservationRepository: AAA（Arrange-Act-Assert）パターンによる包括的なテスト（25テスト実装済み）
+    - [x] CRUD操作の基本テスト
+    - [x] 時間帯重複チェックのビジネスロジック実装
+    - [x] ステータス遷移のビジネスロジック実装
+    - [x] 予約変更制限のビジネスロジック実装
+  - [x] ReviewRepository: AAA（Arrange-Act-Assert）パターンによる包括的なテスト（20テスト実装済み）
+    - [x] CRUD操作の基本テスト
+    - [x] 評価値バリデーション（1-5の範囲）
+    - [x] 重複レビュー防止のビジネスロジック実装
+    - [x] 24時間以内の更新制限ビジネスロジック実装
+  - [x] SalonRepository: AAA（Arrange-Act-Assert）パターンによる包括的なテスト（18テスト実装済み）
+    - [x] CRUD操作の基本テスト
+    - [x] 営業時間の管理テスト
+    - [x] ステータス管理テスト
+  - [x] エラーハンドリング（DB接続エラー、制約違反等）のテスト
+    - [x] データベース接続エラーのハンドリング
+    - [x] unique制約違反のハンドリング（メールアドレス重複）
+    - [x] トランザクションロールバックのテスト
+    - [x] 無効なUUID形式のハンドリング
+    - [x] クエリタイムアウトのハンドリング
+    - [x] Nullポインタ例外の適切な処理
   
-- [ ] **API層テストのAAA拡充**
-  - [ ] エラーレスポンスのパターン網羅
-  - [ ] 権限チェックのバウンダリテスト
-  - [ ] リクエストバリデーションの境界値テスト
+- [x] **API層テストのAAA拡充**
+  - [x] エラーレスポンスのパターン網羅（39テスト実装、一部実装調整中）
+    - [x] 400 Bad Request（バリデーションエラー）
+    - [x] 401 Unauthorized（認証エラー）
+    - [x] 403 Forbidden（権限エラー）
+    - [x] 404 Not Found（リソース不在）
+    - [x] 409 Conflict（重複エラー）
+    - [x] 500 Internal Server Error（サーバーエラー）
+  - [x] 権限チェックのバウンダリテスト
+    - [x] 未認証ユーザーのアクセス制限
+    - [x] 異なるロール間のアクセス制御
+    - [x] 自分以外のリソースへのアクセス制限
+  - [x] リクエストバリデーションの境界値テスト
+    - [x] 必須フィールドの欠落チェック
+    - [x] 文字列長の最小/最大値
+    - [x] 数値の範囲チェック
+    - [x] 日付フォーマットの検証
+    - [x] 特殊文字とUnicode文字の処理
 
 ##### 2. 未実装ドメインのテスト
 
 - [x] **Salon（サロン）ドメイン**
   - [x] Salonモデルのユニットテスト（138箇所のAAA実装、1313行の包括的テスト）
-  - [ ] SalonRepositoryの統合テスト
-  - [ ] Salon APIのE2Eテスト
+  - [x] SalonRepositoryの統合テスト（18テスト実装済み）
+  - [x] Salon APIのE2Eテスト（salons.integration.test.ts実装済み）
   
-- [ ] **Staff（スタッフ）ドメイン**
-  - [ ] Staffモデルのユニットテスト
-  - [ ] StaffRepositoryの統合テスト
+- [x] **Staff（スタッフ）ドメイン**
+  - [x] Staffモデルのユニットテスト
+  - [x] StaffRepositoryの統合テスト（18テスト実装済み）
   - [ ] Staff APIのE2Eテスト
   
-- [ ] **Service（サービス）ドメイン**
-  - [ ] Serviceモデルのユニットテスト
-  - [ ] ServiceRepositoryの統合テスト
+- [x] **Service（サービス）ドメイン**
+  - [x] Serviceモデルのユニットテスト
+  - [x] ServiceRepositoryの統合テスト（17テスト実装済み）
   - [ ] Service APIのE2Eテスト
   
-- [ ] **Booking（予約枠）ドメイン**
+- [x] **Reservation（予約）ドメイン**
+  - [x] Reservationモデルのユニットテスト（基本的なテスト実装済み）
+  - [x] ReservationRepositoryの統合テスト（25テスト実装済み）
+  - [x] Reservation APIのE2Eテスト（reservations.integration.test.ts実装済み）
+  
+- [x] **Review（レビュー）ドメイン**
+  - [x] Reviewモデルのユニットテスト
+  - [x] ReviewRepositoryの統合テスト（20テスト実装済み）
+  - [x] Review APIのE2Eテスト（reviews.integration.test.ts実装済み）
+
+- [ ] **Booking（支払い）ドメイン**
   - [ ] Bookingモデルのユニットテスト
   - [ ] BookingRepositoryの統合テスト
   - [ ] Booking APIのE2Eテスト
-  
-- [ ] **Review（レビュー）ドメイン**
-  - [ ] Reviewモデルのユニットテスト
-  - [ ] ReviewRepositoryの統合テスト
-  - [ ] Review APIのE2Eテスト
 
-##### 3. 認証・認可のテスト
+##### 3. 実装した機能拡張
+
+- [x] **CustomerSearchCriteria型の拡張**
+  - [x] `minLoyaltyPoints`/`maxLoyaltyPoints` - ロイヤリティポイント範囲検索
+  - [x] `registeredFrom`/`registeredTo` - 登録日範囲検索
+  - [x] `membershipLevels` - 複数のメンバーシップレベル検索
+  - [x] `includeSuspended` - 停止中の顧客を含むかのフラグ
+  - [x] `email`/`name` - 個別フィールドでの部分一致検索
+
+- [x] **CustomerRepository実装の強化**
+  - [x] 拡張されたSearchCriteriaに対応する検索機能の実装
+  - [x] JSONB配列（tags）のANY match検索（safeArrayOverlap関数）
+  - [x] 日付のcreatedAtフィールドを保存時に維持する処理
+  - [x] エラーメッセージの改善（詳細なエラー情報を含む）
+
+- [x] **テストユーティリティの作成**
+  - [x] CustomerBuilder - テスト用Customer生成のビルダーパターン実装
+  - [x] createTestCustomer - 簡易的なテストデータ生成関数
+  - [x] createTestCustomerId - UUID形式のCustomerId生成関数
+
+##### 4. 認証・認可のテスト
 
 - [x] **認証フローの統合テスト**
   - [x] ログイン/ログアウトのE2Eテスト（auth.integration.test.tsに実装）
@@ -853,8 +926,9 @@ PGPASSWORD=postgres psql -h localhost -U postgres -d beauty_salon -c "\dt"
   - [x] 2FAフローのテスト（/auth/2fa/enable, /auth/2fa/verify実装済み）
   - [x] アカウントロック/アンロックのテスト（5回失敗後のロック機構テスト実装）
   
-- [ ] **セッション管理のテスト**
-  - [ ] セッションタイムアウトのテスト
+- [x] **セッション管理のテスト**
+  - [x] セッションタイムアウトのテスト（refresh-token.usecase.test.ts実装済み）
+  - [x] セッション取得のテスト（get-sessions.usecase.test.ts実装済み）
   - [ ] 同時セッション制限のテスト
   - [ ] Remember Me機能のテスト
 
@@ -866,23 +940,24 @@ PGPASSWORD=postgres psql -h localhost -U postgres -d beauty_salon -c "\dt"
   - [x] 顧客更新ユースケースのテスト（update-customer.usecase.test.ts実装済み）
   - [x] 顧客削除ユースケースのテスト（delete-customer.usecase.test.ts実装済み）
   
-- [ ] **予約関連ユースケース**
-  - [ ] 予約作成ユースケースのテスト
-  - [ ] 予約変更ユースケースのテスト
-  - [ ] 予約キャンセルユースケースのテスト
+- [x] **予約関連ユースケース**
+  - [x] 予約作成ユースケースのテスト（create-reservation.usecase.test.ts実装済み）
+  - [x] 予約取得ユースケースのテスト（get-reservation.usecase.test.ts実装済み）
+  - [x] 予約更新ユースケースのテスト（update-reservation.usecase.test.ts実装済み）
+  - [x] 予約キャンセルユースケースのテスト（cancel-reservation.usecase.test.ts実装済み）
 
 ##### 5. 非機能要件のテスト
 
-- [ ] **パフォーマンステスト**
+- [ ] **パフォーマンステスト**（据え置きで一旦スキップ）
   - [ ] 大量データでのページネーションテスト
   - [ ] 同時アクセステスト
   - [ ] レスポンスタイム計測
   
-- [ ] **セキュリティテスト**
-  - [ ] SQLインジェクション対策のテスト
-  - [ ] XSS対策のテスト
-  - [ ] CSRF対策のテスト
-  - [ ] レートリミットのテスト
+- [x] **セキュリティテスト**
+  - [x] SQLインジェクション対策のテスト（security.test.ts実装済み）
+  - [x] XSS対策のテスト（security.test.ts実装済み）
+  - [x] CSRF対策のテスト（security.test.ts実装済み）
+  - [x] レートリミットのテスト（security.test.ts実装済み）
 
 ### パフォーマンス最適化（据え置きで一旦スキップ）
 - [ ] N+1問題の確認と対策

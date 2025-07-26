@@ -86,7 +86,10 @@ export const publishReviewUseCase = async (
   if (!canBePublished(existingResult.value)) {
     return err({
       type: 'cannotPublish',
-      message: `Cannot publish review in ${existingResult.value.type} status`,
+      message:
+        existingResult.value.type === 'published'
+          ? 'Review is already published'
+          : `Cannot publish review in ${existingResult.value.type} status`,
     })
   }
 
@@ -122,7 +125,10 @@ export const hideReviewUseCase = async (
   if (!canBeHidden(existingResult.value)) {
     return err({
       type: 'cannotHide',
-      message: `Cannot hide review in ${existingResult.value.type} status`,
+      message:
+        existingResult.value.type === 'hidden'
+          ? 'Review is already hidden'
+          : `Cannot hide review in ${existingResult.value.type} status`,
     })
   }
 
@@ -149,6 +155,12 @@ export const incrementHelpfulCountUseCase = async (
   input: IncrementHelpfulCountUseCaseInput,
   deps: IncrementHelpfulCountDeps
 ): Promise<IncrementHelpfulCountUseCaseOutput> => {
+  // レビューの存在確認
+  const existingResult = await deps.reviewRepository.findById(input.id)
+  if (existingResult.type === 'err') {
+    return existingResult
+  }
+
   return deps.reviewRepository.incrementHelpfulCount(input.id)
 }
 
@@ -237,59 +249,171 @@ export const mapIncrementHelpfulCountRequest = (
 export const createDeleteReviewErrorResponse = (
   error: DeleteReviewUseCaseError
 ): { code: string; message: string } => {
-  return match(error)
-    .with({ type: 'cannotDelete' }, (e) => ({
-      code: 'CANNOT_DELETE',
-      message: e.message,
-    }))
-    .with({ type: 'databaseError' }, (e) => ({
-      code: 'DATABASE_ERROR',
-      message: e.message,
-    }))
-    .with({ type: 'notFound' }, (e) => ({
-      code: 'NOT_FOUND',
-      message: `Entity ${e.entity} not found with id ${e.id}`,
-    }))
-    .with({ type: 'constraintViolation' }, (e) => ({
-      code: 'CONSTRAINT_VIOLATION',
-      message: e.message,
-    }))
-    .with({ type: 'connectionError' }, (e) => ({
-      code: 'CONNECTION_ERROR',
-      message: e.message,
-    }))
-    .exhaustive()
+  return (
+    match(error)
+      .with({ type: 'cannotDelete' }, (e) => ({
+        code: 'CANNOT_DELETE',
+        message: e.message,
+      }))
+      .with({ type: 'databaseError' }, (e) => ({
+        code: 'DATABASE_ERROR',
+        message: e.message,
+      }))
+      .with({ type: 'notFound' }, (e) => ({
+        code: 'NOT_FOUND',
+        message: `Entity ${e.entity} not found with id ${e.id}`,
+      }))
+      .with({ type: 'constraintViolation' }, (e) => ({
+        code: 'CONSTRAINT_VIOLATION',
+        message: e.message,
+      }))
+      .with({ type: 'connectionError' }, (e) => ({
+        code: 'CONNECTION_ERROR',
+        message: e.message,
+      }))
+      // Review specific errors
+      .with({ type: 'invalidRating' }, (e) => ({
+        code: 'INVALID_RATING',
+        message: e.message,
+      }))
+      .with({ type: 'duplicateReview' }, (e) => ({
+        code: 'DUPLICATE_REVIEW',
+        message: e.message,
+      }))
+      .with({ type: 'reviewAlreadyHidden' }, (e) => ({
+        code: 'REVIEW_ALREADY_HIDDEN',
+        message: e.message,
+      }))
+      .with({ type: 'reviewUpdateExpired' }, (e) => ({
+        code: 'REVIEW_UPDATE_EXPIRED',
+        message: e.message,
+      }))
+      .with({ type: 'reservationNotFound' }, (e) => ({
+        code: 'RESERVATION_NOT_FOUND',
+        message: e.message,
+      }))
+      // Reservation specific errors
+      .with({ type: 'invalidTimeRange' }, (e) => ({
+        code: 'INVALID_TIME_RANGE',
+        message: e.message,
+      }))
+      .with({ type: 'slotNotAvailable' }, (e) => ({
+        code: 'SLOT_NOT_AVAILABLE',
+        message: e.message,
+      }))
+      .with({ type: 'reservationNotModifiable' }, (e) => ({
+        code: 'RESERVATION_NOT_MODIFIABLE',
+        message: e.message,
+      }))
+      .with({ type: 'reservationAlreadyConfirmed' }, (e) => ({
+        code: 'RESERVATION_ALREADY_CONFIRMED',
+        message: e.message,
+      }))
+      .with({ type: 'invalidReservationStatus' }, (e) => ({
+        code: 'INVALID_RESERVATION_STATUS',
+        message: e.message,
+      }))
+      .with({ type: 'reservationAlreadyCancelled' }, (e) => ({
+        code: 'RESERVATION_ALREADY_CANCELLED',
+        message: e.message,
+      }))
+      .with({ type: 'reservationNotConfirmed' }, (e) => ({
+        code: 'RESERVATION_NOT_CONFIRMED',
+        message: e.message,
+      }))
+      .with({ type: 'reservationNotYetPassed' }, (e) => ({
+        code: 'RESERVATION_NOT_YET_PASSED',
+        message: e.message,
+      }))
+      .exhaustive()
+  )
 }
 
 export const createReviewStatusChangeErrorResponse = (
   error: PublishReviewUseCaseError | HideReviewUseCaseError
 ): { code: string; message: string } => {
-  return match(error)
-    .with({ type: 'cannotPublish' }, (e) => ({
-      code: 'CANNOT_PUBLISH',
-      message: e.message,
-    }))
-    .with({ type: 'cannotHide' }, (e) => ({
-      code: 'CANNOT_HIDE',
-      message: e.message,
-    }))
-    .with({ type: 'databaseError' }, (e) => ({
-      code: 'DATABASE_ERROR',
-      message: e.message,
-    }))
-    .with({ type: 'notFound' }, (e) => ({
-      code: 'NOT_FOUND',
-      message: `Entity ${e.entity} not found with id ${e.id}`,
-    }))
-    .with({ type: 'constraintViolation' }, (e) => ({
-      code: 'CONSTRAINT_VIOLATION',
-      message: e.message,
-    }))
-    .with({ type: 'connectionError' }, (e) => ({
-      code: 'CONNECTION_ERROR',
-      message: e.message,
-    }))
-    .exhaustive()
+  return (
+    match(error)
+      .with({ type: 'cannotPublish' }, (e) => ({
+        code: 'CANNOT_PUBLISH',
+        message: e.message,
+      }))
+      .with({ type: 'cannotHide' }, (e) => ({
+        code: 'CANNOT_HIDE',
+        message: e.message,
+      }))
+      .with({ type: 'databaseError' }, (e) => ({
+        code: 'DATABASE_ERROR',
+        message: e.message,
+      }))
+      .with({ type: 'notFound' }, (e) => ({
+        code: 'NOT_FOUND',
+        message: `Entity ${e.entity} not found with id ${e.id}`,
+      }))
+      .with({ type: 'constraintViolation' }, (e) => ({
+        code: 'CONSTRAINT_VIOLATION',
+        message: e.message,
+      }))
+      .with({ type: 'connectionError' }, (e) => ({
+        code: 'CONNECTION_ERROR',
+        message: e.message,
+      }))
+      // Review specific errors
+      .with({ type: 'invalidRating' }, (e) => ({
+        code: 'INVALID_RATING',
+        message: e.message,
+      }))
+      .with({ type: 'duplicateReview' }, (e) => ({
+        code: 'DUPLICATE_REVIEW',
+        message: e.message,
+      }))
+      .with({ type: 'reviewAlreadyHidden' }, (e) => ({
+        code: 'REVIEW_ALREADY_HIDDEN',
+        message: e.message,
+      }))
+      .with({ type: 'reviewUpdateExpired' }, (e) => ({
+        code: 'REVIEW_UPDATE_EXPIRED',
+        message: e.message,
+      }))
+      .with({ type: 'reservationNotFound' }, (e) => ({
+        code: 'RESERVATION_NOT_FOUND',
+        message: e.message,
+      }))
+      // Reservation specific errors
+      .with({ type: 'invalidTimeRange' }, (e) => ({
+        code: 'INVALID_TIME_RANGE',
+        message: e.message,
+      }))
+      .with({ type: 'slotNotAvailable' }, (e) => ({
+        code: 'SLOT_NOT_AVAILABLE',
+        message: e.message,
+      }))
+      .with({ type: 'reservationNotModifiable' }, (e) => ({
+        code: 'RESERVATION_NOT_MODIFIABLE',
+        message: e.message,
+      }))
+      .with({ type: 'reservationAlreadyConfirmed' }, (e) => ({
+        code: 'RESERVATION_ALREADY_CONFIRMED',
+        message: e.message,
+      }))
+      .with({ type: 'invalidReservationStatus' }, (e) => ({
+        code: 'INVALID_RESERVATION_STATUS',
+        message: e.message,
+      }))
+      .with({ type: 'reservationAlreadyCancelled' }, (e) => ({
+        code: 'RESERVATION_ALREADY_CANCELLED',
+        message: e.message,
+      }))
+      .with({ type: 'reservationNotConfirmed' }, (e) => ({
+        code: 'RESERVATION_NOT_CONFIRMED',
+        message: e.message,
+      }))
+      .with({ type: 'reservationNotYetPassed' }, (e) => ({
+        code: 'RESERVATION_NOT_YET_PASSED',
+        message: e.message,
+      }))
+      .exhaustive()
+  )
 }
 
 // Re-export response mapper

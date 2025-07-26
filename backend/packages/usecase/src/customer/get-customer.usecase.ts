@@ -41,8 +41,12 @@ export const getCustomerByIdUseCase = async (
 export type ListCustomersInput = {
   search?: string
   tags?: string[]
+  email?: string
   membershipLevel?: string
   isActive?: boolean
+  // 日付範囲フィルタ
+  registeredFrom?: string
+  registeredTo?: string
   limit: number
   offset: number
 }
@@ -63,8 +67,13 @@ export const listCustomersUseCase = async (
   const criteria: CustomerSearchCriteria = {
     search: input.search,
     tags: input.tags,
+    email: input.email,
     membershipLevel: input.membershipLevel,
     isActive: input.isActive,
+    registeredFrom: input.registeredFrom
+      ? new Date(input.registeredFrom)
+      : undefined,
+    registeredTo: input.registeredTo ? new Date(input.registeredTo) : undefined,
   }
 
   const pagination: PaginationParams = {

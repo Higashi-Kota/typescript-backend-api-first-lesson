@@ -18,9 +18,17 @@ import type { Result } from '../shared/result.js'
 // 検索条件
 export type CustomerSearchCriteria = {
   search?: string // 名前、メール、電話番号での検索
+  email?: string // メールアドレスでの部分一致検索
+  name?: string // 名前での部分一致検索
   tags?: string[] // タグでのフィルタリング
   membershipLevel?: string // メンバーシップレベルでのフィルタリング
+  membershipLevels?: string[] // 複数のメンバーシップレベルでのフィルタリング
   isActive?: boolean // アクティブな顧客のみ
+  minLoyaltyPoints?: number // 最小ロイヤリティポイント
+  maxLoyaltyPoints?: number // 最大ロイヤリティポイント
+  registeredFrom?: Date // 登録日の開始
+  registeredTo?: Date // 登録日の終了
+  includeSuspended?: boolean // 停止中の顧客を含むかどうか
 }
 
 // CustomerRepositoryインターフェース

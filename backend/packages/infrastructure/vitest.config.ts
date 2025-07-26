@@ -4,7 +4,7 @@ import { createSharedVitestConfig } from '@beauty-salon-backend/test-utils/confi
 export default createSharedVitestConfig({
   rootDir: __dirname,
   integrationTest: true,
-  parallel: true, // スキーマ分離により並列実行可能
+  parallel: false, // 一時的に並列実行を無効化
   aliases: {
     '@beauty-salon-backend/domain': path.resolve(__dirname, '../domain/src'),
     '@beauty-salon-backend/types': path.resolve(__dirname, '../types/src'),

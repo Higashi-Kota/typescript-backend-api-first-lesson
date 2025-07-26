@@ -70,7 +70,15 @@ export const updateReviewUseCase = async (
   if (!canBeEdited(existingResult.value)) {
     return err({
       type: 'cannotEdit',
-      message: `Cannot edit review in ${existingResult.value.type} status`,
+      message: (() => {
+        if (existingResult.value.type === 'hidden') {
+          return 'Review cannot be edited because it is hidden'
+        }
+        if (existingResult.value.type === 'deleted') {
+          return 'Review cannot be edited because it is deleted'
+        }
+        return `Review cannot be edited in ${existingResult.value.type} status`
+      })(),
     })
   }
 

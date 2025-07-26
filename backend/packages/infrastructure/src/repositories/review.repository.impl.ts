@@ -206,6 +206,68 @@ export class DrizzleReviewRepository implements ReviewRepository {
     data: CreateReviewRequest
   ): Promise<Result<Review, RepositoryError>> {
     try {
+      // 評価値の検証
+      if (data.rating < 1 || data.rating > 5) {
+        return err({
+          type: 'invalidRating',
+          message: 'Rating must be between 1 and 5',
+        })
+      }
+
+      // サブ評価値の検証
+      if (
+        data.serviceRating &&
+        (data.serviceRating < 1 || data.serviceRating > 5)
+      ) {
+        return err({
+          type: 'invalidRating',
+          message: 'Service rating must be between 1 and 5',
+        })
+      }
+      if (data.staffRating && (data.staffRating < 1 || data.staffRating > 5)) {
+        return err({
+          type: 'invalidRating',
+          message: 'Staff rating must be between 1 and 5',
+        })
+      }
+      if (
+        data.atmosphereRating &&
+        (data.atmosphereRating < 1 || data.atmosphereRating > 5)
+      ) {
+        return err({
+          type: 'invalidRating',
+          message: 'Atmosphere rating must be between 1 and 5',
+        })
+      }
+
+      // 予約の存在確認
+      const reservationCheck = await this.db
+        .select()
+        .from(reservations)
+        .where(eq(reservations.id, data.reservationId))
+        .limit(1)
+
+      if (!reservationCheck[0]) {
+        return err({
+          type: 'reservationNotFound',
+          message: 'Reservation not found',
+        })
+      }
+
+      // 重複チェック
+      const existingReview = await this.db
+        .select()
+        .from(reviews)
+        .where(eq(reviews.reservationId, data.reservationId))
+        .limit(1)
+
+      if (existingReview[0]) {
+        return err({
+          type: 'duplicateReview',
+          message: 'A review already exists for this reservation',
+        })
+      }
+
       const newReview: DbNewReview = {
         salonId: data.salonId,
         customerId: data.customerId,
@@ -246,6 +308,13 @@ export class DrizzleReviewRepository implements ReviewRepository {
 
       return ok(review)
     } catch (error) {
+      // PostgreSQLの重複エラーをキャッチ
+      if (error instanceof Error && error.message.includes('duplicate key')) {
+        return err({
+          type: 'duplicateReview',
+          message: 'A review already exists for this reservation',
+        })
+      }
       return err({
         type: 'databaseError',
         message:
@@ -271,6 +340,63 @@ export class DrizzleReviewRepository implements ReviewRepository {
           type: 'notFound',
           entity: 'Review',
           id: data.id,
+        })
+      }
+
+      // hiddenレビューは更新不可
+      // DBにステータスカラムがないため、削除されているかを別途チェック
+      const review = this.mapDbToDomain(existingRow)
+      if (!review || review.type === 'hidden') {
+        return err({
+          type: 'reviewAlreadyHidden',
+          message: 'Hidden reviews cannot be updated',
+        })
+      }
+
+      // 24時間以内のみ更新可能
+      const createdAt = new Date(existingRow.createdAt)
+      const now = new Date()
+      const hoursSinceCreation =
+        (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60)
+      if (hoursSinceCreation > 24) {
+        return err({
+          type: 'reviewUpdateExpired',
+          message: 'Reviews can only be updated within 24 hours of creation',
+        })
+      }
+
+      // 評価値の検証
+      if (data.rating !== undefined && (data.rating < 1 || data.rating > 5)) {
+        return err({
+          type: 'invalidRating',
+          message: 'Rating must be between 1 and 5',
+        })
+      }
+      if (
+        data.serviceRating !== undefined &&
+        (data.serviceRating < 1 || data.serviceRating > 5)
+      ) {
+        return err({
+          type: 'invalidRating',
+          message: 'Service rating must be between 1 and 5',
+        })
+      }
+      if (
+        data.staffRating !== undefined &&
+        (data.staffRating < 1 || data.staffRating > 5)
+      ) {
+        return err({
+          type: 'invalidRating',
+          message: 'Staff rating must be between 1 and 5',
+        })
+      }
+      if (
+        data.atmosphereRating !== undefined &&
+        (data.atmosphereRating < 1 || data.atmosphereRating > 5)
+      ) {
+        return err({
+          type: 'invalidRating',
+          message: 'Atmosphere rating must be between 1 and 5',
         })
       }
 
@@ -304,15 +430,15 @@ export class DrizzleReviewRepository implements ReviewRepository {
         })
       }
 
-      const review = this.mapDbToDomain(updatedReview)
-      if (!review) {
+      const updatedReviewDomain = this.mapDbToDomain(updatedReview)
+      if (!updatedReviewDomain) {
         return err({
           type: 'databaseError',
           message: 'Failed to map updated review',
         })
       }
 
-      return ok(review)
+      return ok(updatedReviewDomain)
     } catch (error) {
       return err({
         type: 'databaseError',
@@ -332,11 +458,66 @@ export class DrizzleReviewRepository implements ReviewRepository {
 
   async hide(
     id: ReviewId,
-    _reason: string,
+    reason: string,
     hiddenBy: string
   ): Promise<Result<Review, RepositoryError>> {
-    // DBにステータスカラムがないため、削除で対応
-    return this.delete(id, _reason, hiddenBy)
+    try {
+      // 既存のreviewを確認
+      const existing = await this.db
+        .select()
+        .from(reviews)
+        .where(eq(reviews.id, id))
+        .limit(1)
+
+      const existingRow = existing[0]
+      if (!existingRow) {
+        return err({
+          type: 'notFound',
+          entity: 'Review',
+          id,
+        })
+      }
+
+      // 既にhiddenの場合（削除済みの場合）
+      const checkDeleted = await this.db
+        .select({ count: sql<number>`count(*)` })
+        .from(reviews)
+        .where(eq(reviews.id, id))
+
+      if (Number(checkDeleted[0]?.count ?? 0) === 0) {
+        return err({
+          type: 'reviewAlreadyHidden',
+          message: 'Review is already hidden',
+        })
+      }
+
+      // 実際には削除するが、削除前のデータをhidden状態として返す
+      const review = this.mapDbToDomain(existingRow)
+      if (!review) {
+        return err({
+          type: 'databaseError',
+          message: 'Failed to map review data',
+        })
+      }
+
+      // 削除を実行
+      await this.db.delete(reviews).where(eq(reviews.id, id))
+
+      // hidden状態として返す
+      return ok({
+        type: 'hidden',
+        data: review.data,
+        hiddenAt: new Date(),
+        hiddenBy,
+        hiddenReason: reason,
+      })
+    } catch (error) {
+      return err({
+        type: 'databaseError',
+        message:
+          error instanceof Error ? error.message : 'Unknown database error',
+      })
+    }
   }
 
   async delete(
