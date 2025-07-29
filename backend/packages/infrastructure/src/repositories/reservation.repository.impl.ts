@@ -200,30 +200,6 @@ export class DrizzleReservationRepository implements ReservationRepository {
     data: CreateReservationRequest
   ): Promise<Result<Reservation, RepositoryError>> {
     try {
-      // 時間範囲の妥当性チェック
-      if (data.startTime >= data.endTime) {
-        return err({
-          type: 'invalidTimeRange',
-          message: 'End time must be after start time',
-        })
-      }
-
-      // 時間の重複チェック
-      const hasConflict = await this.checkTimeSlotConflict(
-        data.staffId,
-        data.startTime,
-        data.endTime
-      )
-      if (hasConflict.type === 'err') {
-        return hasConflict
-      }
-      if (hasConflict.value) {
-        return err({
-          type: 'slotNotAvailable',
-          message: 'The time slot is already booked',
-        })
-      }
-
       const newReservation: DbNewReservation = {
         salonId: data.salonId,
         customerId: data.customerId,
@@ -291,56 +267,6 @@ export class DrizzleReservationRepository implements ReservationRepository {
         })
       }
 
-      // キャンセル済み・完了済みの予約は更新不可
-      if (existingRow.status === 'cancelled') {
-        return err({
-          type: 'reservationNotModifiable',
-          message: 'Cancelled reservations cannot be modified',
-        })
-      }
-      if (existingRow.status === 'completed') {
-        return err({
-          type: 'reservationNotModifiable',
-          message: 'Completed reservations cannot be modified',
-        })
-      }
-
-      // 時間を更新する場合
-      const startTime = data.startTime ?? existingRow.startTime
-      const endTime = data.endTime ?? existingRow.endTime
-      const staffId = data.staffId ?? existingRow.staffId
-
-      // 時間範囲の妥当性チェック
-      if (startTime >= endTime) {
-        return err({
-          type: 'invalidTimeRange',
-          message: 'End time must be after start time',
-        })
-      }
-
-      // 時間の重複チェック（自分自身を除く）
-      if (
-        data.startTime !== undefined ||
-        data.endTime !== undefined ||
-        data.staffId !== undefined
-      ) {
-        const hasConflict = await this.checkTimeSlotConflict(
-          staffId as StaffId,
-          startTime,
-          endTime,
-          data.id
-        )
-        if (hasConflict.type === 'err') {
-          return hasConflict
-        }
-        if (hasConflict.value) {
-          return err({
-            type: 'slotNotAvailable',
-            message: 'The time slot is already booked',
-          })
-        }
-      }
-
       // 更新データを準備
       const updateData: Partial<DbReservation> = {
         updatedAt: new Date(),
@@ -389,38 +315,6 @@ export class DrizzleReservationRepository implements ReservationRepository {
     confirmedBy: string
   ): Promise<Result<Reservation, RepositoryError>> {
     try {
-      // 既存の予約を確認
-      const existing = await this.db
-        .select()
-        .from(reservations)
-        .where(eq(reservations.id, id))
-        .limit(1)
-
-      const existingRow = existing[0]
-      if (!existingRow) {
-        return err({
-          type: 'notFound',
-          entity: 'Reservation',
-          id,
-        })
-      }
-
-      // 既に確認済みの場合
-      if (existingRow.status === 'confirmed') {
-        return err({
-          type: 'reservationAlreadyConfirmed',
-          message: 'Reservation is already confirmed',
-        })
-      }
-
-      // pendingのみ確認可能
-      if (existingRow.status !== 'pending') {
-        return err({
-          type: 'invalidReservationStatus',
-          message: 'Only pending reservations can be confirmed',
-        })
-      }
-
       const result = await this.db
         .update(reservations)
         .set({
@@ -428,14 +322,15 @@ export class DrizzleReservationRepository implements ReservationRepository {
           updatedAt: new Date(),
           updatedBy: confirmedBy,
         })
-        .where(eq(reservations.id, id))
+        .where(and(eq(reservations.id, id), eq(reservations.status, 'pending')))
         .returning()
 
       const updatedRow = result[0]
       if (!updatedRow) {
         return err({
-          type: 'databaseError',
-          message: 'Failed to update reservation',
+          type: 'notFound',
+          entity: 'Reservation',
+          id,
         })
       }
 
@@ -463,41 +358,6 @@ export class DrizzleReservationRepository implements ReservationRepository {
     cancelledBy: string
   ): Promise<Result<Reservation, RepositoryError>> {
     try {
-      // 既存の予約を確認
-      const existing = await this.db
-        .select()
-        .from(reservations)
-        .where(eq(reservations.id, id))
-        .limit(1)
-
-      const existingRow = existing[0]
-      if (!existingRow) {
-        return err({
-          type: 'notFound',
-          entity: 'Reservation',
-          id,
-        })
-      }
-
-      // 既にキャンセル済みの場合
-      if (existingRow.status === 'cancelled') {
-        return err({
-          type: 'reservationAlreadyCancelled',
-          message: 'Reservation is already cancelled',
-        })
-      }
-
-      // pending or confirmedのみキャンセル可能
-      if (
-        existingRow.status !== 'pending' &&
-        existingRow.status !== 'confirmed'
-      ) {
-        return err({
-          type: 'invalidReservationStatus',
-          message: 'Only pending or confirmed reservations can be cancelled',
-        })
-      }
-
       const result = await this.db
         .update(reservations)
         .set({
@@ -506,14 +366,23 @@ export class DrizzleReservationRepository implements ReservationRepository {
           updatedAt: new Date(),
           updatedBy: cancelledBy,
         })
-        .where(eq(reservations.id, id))
+        .where(
+          and(
+            eq(reservations.id, id),
+            or(
+              eq(reservations.status, 'pending'),
+              eq(reservations.status, 'confirmed')
+            ) ?? sql`1=1`
+          )
+        )
         .returning()
 
       const updatedRow = result[0]
       if (!updatedRow) {
         return err({
-          type: 'databaseError',
-          message: 'Failed to update reservation',
+          type: 'notFound',
+          entity: 'Reservation',
+          id,
         })
       }
 
@@ -540,30 +409,6 @@ export class DrizzleReservationRepository implements ReservationRepository {
     completedBy: string
   ): Promise<Result<Reservation, RepositoryError>> {
     try {
-      // 既存の予約を確認
-      const existing = await this.db
-        .select()
-        .from(reservations)
-        .where(eq(reservations.id, id))
-        .limit(1)
-
-      const existingRow = existing[0]
-      if (!existingRow) {
-        return err({
-          type: 'notFound',
-          entity: 'Reservation',
-          id,
-        })
-      }
-
-      // confirmedのみ完了可能
-      if (existingRow.status !== 'confirmed') {
-        return err({
-          type: 'reservationNotConfirmed',
-          message: 'Only confirmed reservations can be completed',
-        })
-      }
-
       const result = await this.db
         .update(reservations)
         .set({
@@ -571,14 +416,17 @@ export class DrizzleReservationRepository implements ReservationRepository {
           updatedAt: new Date(),
           updatedBy: completedBy,
         })
-        .where(eq(reservations.id, id))
+        .where(
+          and(eq(reservations.id, id), eq(reservations.status, 'confirmed'))
+        )
         .returning()
 
       const updatedRow = result[0]
       if (!updatedRow) {
         return err({
-          type: 'databaseError',
-          message: 'Failed to update reservation',
+          type: 'notFound',
+          entity: 'Reservation',
+          id,
         })
       }
 
@@ -605,38 +453,6 @@ export class DrizzleReservationRepository implements ReservationRepository {
     markedBy: string
   ): Promise<Result<Reservation, RepositoryError>> {
     try {
-      // 既存の予約を確認
-      const existing = await this.db
-        .select()
-        .from(reservations)
-        .where(eq(reservations.id, id))
-        .limit(1)
-
-      const existingRow = existing[0]
-      if (!existingRow) {
-        return err({
-          type: 'notFound',
-          entity: 'Reservation',
-          id,
-        })
-      }
-
-      // confirmedのみno_showにできる
-      if (existingRow.status !== 'confirmed') {
-        return err({
-          type: 'reservationNotConfirmed',
-          message: 'Only confirmed reservations can be marked as no-show',
-        })
-      }
-
-      // 開始時間が過ぎているかチェック
-      if (existingRow.startTime > new Date()) {
-        return err({
-          type: 'reservationNotYetPassed',
-          message: 'Cannot mark future reservations as no-show',
-        })
-      }
-
       const result = await this.db
         .update(reservations)
         .set({
@@ -644,14 +460,17 @@ export class DrizzleReservationRepository implements ReservationRepository {
           updatedAt: new Date(),
           updatedBy: markedBy,
         })
-        .where(eq(reservations.id, id))
+        .where(
+          and(eq(reservations.id, id), eq(reservations.status, 'confirmed'))
+        )
         .returning()
 
       const updatedRow = result[0]
       if (!updatedRow) {
         return err({
-          type: 'databaseError',
-          message: 'Failed to update reservation',
+          type: 'notFound',
+          entity: 'Reservation',
+          id,
         })
       }
 

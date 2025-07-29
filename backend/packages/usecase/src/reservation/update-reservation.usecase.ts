@@ -151,15 +151,13 @@ export const mapUpdateReservationRequest = (
     staffId = staffIdResult.value
   }
 
-  const result = {
+  return ok({
     id: reservationIdResult.value,
     startTime: request.startTime ? new Date(request.startTime) : undefined,
-    endTime: request.endTime ? new Date(request.endTime) : undefined,
     staffId,
     notes: request.notes,
     updatedBy,
-  }
-  return ok(result)
+  })
 }
 
 /**

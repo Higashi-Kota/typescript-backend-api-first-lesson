@@ -85,21 +85,7 @@ export function safeArrayOverlap(column: AnyColumn, values: string[]): SQL {
     return v
   })
 
-  // PostgreSQLのJSONB配列重複チェック
-  // OR条件で各タグをチェック
-  const conditions = sanitizedValues.map(
-    (tag) => sql`${column} @> ${JSON.stringify([tag])}::jsonb`
-  )
-
-  if (conditions.length === 1) {
-    const firstCondition = conditions[0]
-    if (!firstCondition) {
-      throw new Error('No conditions found')
-    }
-    return firstCondition
-  }
-
-  return sql`(${conditions.reduce((acc, cond) => sql`${acc} OR ${cond}`)})`
+  return sql`${column} && ${sanitizedValues}`
 }
 
 /**

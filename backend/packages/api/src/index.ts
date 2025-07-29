@@ -8,7 +8,6 @@ import type {
   ReservationRepository,
   ReviewRepository,
   SalonRepository,
-  ServiceRepository,
   SessionRepository,
   UserId,
   UserRepository,
@@ -23,7 +22,6 @@ import {
   DrizzleReservationRepository,
   DrizzleReviewRepository,
   DrizzleSalonRepository,
-  DrizzleServiceRepository,
   DrizzleSessionRepository,
   DrizzleUserRepository,
   getEmailService,
@@ -250,9 +248,6 @@ export const createApp = (deps: AppDependencies): Express => {
   const reservationRepository: ReservationRepository =
     new DrizzleReservationRepository(database as PostgresJsDatabase)
   const reviewRepository: ReviewRepository = new DrizzleReviewRepository(
-    database as PostgresJsDatabase
-  )
-  const serviceRepository: ServiceRepository = new DrizzleServiceRepository(
     database as PostgresJsDatabase
   )
   const userRepository: UserRepository = new DrizzleUserRepository(
@@ -525,11 +520,7 @@ export const createApp = (deps: AppDependencies): Express => {
   app.use('/api/v1/share', createShareRouter())
   app.use(
     '/api/v1/reservations',
-    createReservationRoutes({
-      reservationRepository,
-      serviceRepository,
-      authConfig,
-    })
+    createReservationRoutes({ reservationRepository, authConfig })
   )
   app.use(
     '/api/v1/reviews',

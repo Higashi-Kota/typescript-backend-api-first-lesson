@@ -42,131 +42,13 @@ type ApiResponse<T> =
 
 // バリデーションスキーマ
 const customerIdSchema = z.string().uuid()
-
-// 顧客作成バリデーションスキーマ
-const createCustomerSchema = z.object({
-  name: z.string().min(1).max(100),
-  contactInfo: z.object({
-    email: z.string().email(),
-    phoneNumber: z
-      .string()
-      .regex(/^[0-9-+() ]+$/, 'Invalid phone number format'),
-  }),
-  preferences: z
-    .string()
-    .refine((val) => {
-      if (val === null || val === undefined) return true
-      try {
-        const parsed = JSON.parse(val)
-        if (
-          parsed.gender &&
-          !['male', 'female', 'other', 'prefer_not_to_say'].includes(
-            parsed.gender
-          )
-        ) {
-          return false
-        }
-        return true
-      } catch {
-        return false
-      }
-    }, 'Invalid preferences JSON')
-    .optional()
-    .nullable(),
-  tags: z.array(z.string()).max(10, 'Too many tags').optional(),
-})
-
-// 顧客更新バリデーションスキーマ
-const updateCustomerSchema = z.object({
-  name: z.string().min(1).max(100).optional(),
-  contactInfo: z
-    .object({
-      email: z.string().email().optional(),
-      phoneNumber: z
-        .string()
-        .regex(/^[0-9-+() ]+$/, 'Invalid phone number format')
-        .optional(),
-    })
-    .optional(),
-  preferences: z
-    .string()
-    .refine((val) => {
-      if (val === null || val === undefined) return true
-      try {
-        const parsed = JSON.parse(val)
-        if (
-          parsed.gender &&
-          !['male', 'female', 'other', 'prefer_not_to_say'].includes(
-            parsed.gender
-          )
-        ) {
-          return false
-        }
-        return true
-      } catch {
-        return false
-      }
-    }, 'Invalid preferences JSON')
-    .optional()
-    .nullable(),
-  tags: z.array(z.string()).max(10, 'Too many tags').optional(),
-})
 const paginationSchema = z.object({
-  page: z
-    .string()
-    .regex(/^[1-9][0-9]*$/, 'Invalid page number')
-    .transform(Number)
-    .optional(),
-  limit: z
-    .string()
-    .regex(/^[1-9][0-9]*$/, 'Invalid limit')
-    .transform(Number)
-    .refine((val) => val <= 100, 'Limit cannot exceed 100')
-    .optional(),
+  limit: z.coerce.number().min(1).max(100).default(20),
+  offset: z.coerce.number().min(0).default(0),
 })
 const searchCustomerSchema = z.object({
   search: z.string().optional(),
-  tags: z
-    .union([z.string(), z.array(z.string())])
-    .transform((val) => {
-      if (typeof val === 'string') {
-        return val
-          .split(',')
-          .map((tag) => tag.trim())
-          .filter(Boolean)
-      }
-      return val
-    })
-    .optional(),
-  email: z.string().email().optional(),
-  membershipLevel: z.enum(['bronze', 'silver', 'gold', 'platinum']).optional(),
-  isActive: z
-    .enum(['true', 'false'])
-    .transform((val) => val === 'true')
-    .optional(),
-  // 日付範囲フィルタ
-  registeredFrom: z
-    .string()
-    .refine((val) => {
-      try {
-        new Date(val).toISOString()
-        return true
-      } catch {
-        return false
-      }
-    }, 'Invalid date format')
-    .optional(),
-  registeredTo: z
-    .string()
-    .refine((val) => {
-      try {
-        new Date(val).toISOString()
-        return true
-      } catch {
-        return false
-      }
-    }, 'Invalid date format')
-    .optional(),
+  tags: z.array(z.string()).optional(),
 })
 
 // 依存関係の注入用の型
@@ -187,19 +69,16 @@ export const createCustomerRoutes = (deps: CustomerRouteDeps): Router => {
       req: TypedRequest<
         unknown,
         components['schemas']['Models.SearchCustomerRequest'] & {
-          page?: string
           limit?: string
+          offset?: string
         }
       >,
       res: TypedResponse<
         | {
             data: components['schemas']['Models.Customer'][]
-            pagination: {
-              page: number
-              limit: number
-              total: number
-              totalPages: number
-            }
+            total: number
+            limit: number
+            offset: number
           }
         | ApiResponse<never>
       >,
@@ -230,23 +109,13 @@ export const createCustomerRoutes = (deps: CustomerRouteDeps): Router => {
           })
         }
 
-        // ページ番号からオフセットを計算
-        const page = paginationResult.data.page ?? 1
-        const limit = paginationResult.data.limit ?? 20
-        const offset = (page - 1) * limit
-
         // UseCase実行
         const result = await listCustomersUseCase(
           {
             search: searchResult.data.search,
             tags: searchResult.data.tags,
-            email: searchResult.data.email,
-            membershipLevel: searchResult.data.membershipLevel,
-            isActive: searchResult.data.isActive,
-            registeredFrom: searchResult.data.registeredFrom,
-            registeredTo: searchResult.data.registeredTo,
-            limit,
-            offset,
+            limit: paginationResult.data.limit,
+            offset: paginationResult.data.offset,
           },
           { customerRepository }
         )
@@ -257,32 +126,20 @@ export const createCustomerRoutes = (deps: CustomerRouteDeps): Router => {
             const customers = value.data.map((customer) =>
               toCustomerResponse(customer)
             )
-            const totalPages = Math.ceil(value.total / limit)
             res.json({
               data: customers,
-              pagination: {
-                page,
-                limit,
-                total: value.total,
-                totalPages,
-              },
+              total: value.total,
+              limit: value.limit,
+              offset: value.offset,
             })
           })
           .with({ type: 'err' }, ({ error }) => {
             const statusCode = error.type === 'databaseError' ? 500 : 400
-            const errorCode =
-              error.type === 'databaseError'
-                ? 'INTERNAL_SERVER_ERROR'
-                : error.type.toUpperCase()
-            const message =
-              error.type === 'databaseError'
-                ? 'An unexpected error occurred'
-                : 'Bad request'
             res.status(statusCode).json({
               type: 'error',
               error: {
-                code: errorCode,
-                message,
+                code: error.type.toUpperCase(),
+                message: 'Bad request',
               },
             })
           })
@@ -306,15 +163,23 @@ export const createCustomerRoutes = (deps: CustomerRouteDeps): Router => {
       next
     ) => {
       try {
-        // リクエストボディのバリデーション
-        const validationResult = createCustomerSchema.safeParse(req.body)
-        if (!validationResult.success) {
+        // リクエストボディの基本的な検証
+        if (!req.body.name || !req.body.contactInfo) {
           return res.status(400).json({
             type: 'validationError',
-            errors: validationResult.error.errors.map((e) => ({
-              field: e.path.join('.'),
-              message: e.message,
-            })),
+            errors: [
+              ...(!req.body.name
+                ? [{ field: 'name', message: 'Name is required' }]
+                : []),
+              ...(!req.body.contactInfo
+                ? [
+                    {
+                      field: 'contactInfo',
+                      message: 'Contact info is required',
+                    },
+                  ]
+                : []),
+            ],
           })
         }
 
@@ -415,8 +280,8 @@ export const createCustomerRoutes = (deps: CustomerRouteDeps): Router => {
             res.status(500).json({
               type: 'error',
               error: {
-                code: 'INTERNAL_SERVER_ERROR',
-                message: 'An unexpected error occurred',
+                code: 'INTERNAL_ERROR',
+                message: 'An error occurred',
               },
             })
           })
@@ -482,8 +347,8 @@ export const createCustomerRoutes = (deps: CustomerRouteDeps): Router => {
             res.status(500).json({
               type: 'error',
               error: {
-                code: 'INTERNAL_SERVER_ERROR',
-                message: 'An unexpected error occurred',
+                code: 'INTERNAL_ERROR',
+                message: 'An error occurred',
               },
             })
           })
@@ -528,18 +393,6 @@ export const createCustomerRoutes = (deps: CustomerRouteDeps): Router => {
           })
         }
 
-        // リクエストボディのバリデーション
-        const bodyValidationResult = updateCustomerSchema.safeParse(req.body)
-        if (!bodyValidationResult.success) {
-          return res.status(400).json({
-            type: 'validationError',
-            errors: bodyValidationResult.error.errors.map((e) => ({
-              field: e.path.join('.'),
-              message: e.message,
-            })),
-          })
-        }
-
         // リクエストボディの正規化
         const normalizedRequest = normalizeUpdateCustomerRequest(req.body)
 
@@ -568,7 +421,7 @@ export const createCustomerRoutes = (deps: CustomerRouteDeps): Router => {
             })
           })
           .with({ type: 'err', error: { type: 'customerSuspended' } }, () => {
-            res.status(403).json({
+            res.status(409).json({
               type: 'error',
               error: {
                 code: 'CUSTOMER_SUSPENDED',
@@ -577,11 +430,7 @@ export const createCustomerRoutes = (deps: CustomerRouteDeps): Router => {
             })
           })
           .with({ type: 'err' }, ({ error }) => {
-            const statusCode = match(error.type)
-              .with('duplicateEmail', () => 409)
-              .with('databaseError', () => 500)
-              .otherwise(() => 400)
-            res.status(statusCode).json({
+            res.status(400).json({
               type: 'error',
               error: createCustomerErrorResponse(error),
             })
@@ -645,8 +494,8 @@ export const createCustomerRoutes = (deps: CustomerRouteDeps): Router => {
             res.status(500).json({
               type: 'error',
               error: {
-                code: 'INTERNAL_SERVER_ERROR',
-                message: 'An unexpected error occurred',
+                code: 'INTERNAL_ERROR',
+                message: 'An error occurred',
               },
             })
           })

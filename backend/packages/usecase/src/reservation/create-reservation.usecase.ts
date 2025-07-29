@@ -127,11 +127,7 @@ export const createReservationUseCase = async (
  * OpenAPIリクエストからUseCaseInputへの変換
  */
 export const mapCreateReservationRequest = (
-  request: components['schemas']['Models.CreateReservationRequest'] & {
-    endTime: string
-    totalAmount: number
-    depositAmount?: number
-  },
+  request: components['schemas']['Models.CreateReservationRequest'],
   createdBy?: string
 ): Result<
   CreateReservationUseCaseInput,

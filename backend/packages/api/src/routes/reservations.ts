@@ -18,12 +18,8 @@ import {
 import type {
   ReservationRepository,
   ReservationStatus,
-  ServiceRepository,
 } from '@beauty-salon-backend/domain'
-import {
-  createSalonIdSafe,
-  createServiceIdSafe,
-} from '@beauty-salon-backend/domain'
+import { createSalonIdSafe } from '@beauty-salon-backend/domain'
 import type { components } from '@beauty-salon-backend/types/api'
 import {
   cancelReservationUseCase,
@@ -73,6 +69,7 @@ type CreateReservationRequest = {
   staffId: string
   serviceId: string
   startTime: string
+  endTime: string
   notes?: string
 }
 
@@ -127,13 +124,12 @@ const paginationSchema = z.object({
 // 依存関係の注入用の型
 export type ReservationRouteDeps = {
   reservationRepository: ReservationRepository
-  serviceRepository: ServiceRepository
   authConfig: AuthConfig
 }
 
 export const createReservationRoutes = (deps: ReservationRouteDeps): Router => {
   const router = Router()
-  const { reservationRepository, serviceRepository, authConfig } = deps
+  const { reservationRepository, authConfig } = deps
 
   /**
    * GET /reservations - List reservations
@@ -228,7 +224,8 @@ export const createReservationRoutes = (deps: ReservationRouteDeps): Router => {
           !req.body.customerId ||
           !req.body.staffId ||
           !req.body.serviceId ||
-          !req.body.startTime
+          !req.body.startTime ||
+          !req.body.endTime
         ) {
           return res.status(400).json({
             code: 'INVALID_REQUEST',
@@ -236,46 +233,10 @@ export const createReservationRoutes = (deps: ReservationRouteDeps): Router => {
           })
         }
 
-        // ServiceIdを検証してサービス情報を取得
-        const serviceIdResult = createServiceIdSafe(req.body.serviceId)
-        if (serviceIdResult.type === 'err') {
-          return res.status(400).json({
-            code: 'INVALID_ID',
-            message: 'Invalid service ID format',
-          })
-        }
-
-        // サービス情報を取得してdurationを確認
-        const serviceResult = await serviceRepository.findById(
-          serviceIdResult.value
-        )
-        if (serviceResult.type === 'err') {
-          if (serviceResult.error.type === 'notFound') {
-            return res.status(404).json({
-              code: 'SERVICE_NOT_FOUND',
-              message: 'Service not found',
-            })
-          }
-          return res.status(500).json({
-            code: 'DATABASE_ERROR',
-            message: 'Failed to fetch service information',
-          })
-        }
-
-        // endTimeを計算（startTime + service duration）
-        const startTime = new Date(req.body.startTime)
-        const endTime = new Date(
-          startTime.getTime() + serviceResult.value.data.duration * 60 * 1000
-        )
-
         // UseCase実行
         const mappedInput = mapCreateReservationRequest(
           {
             ...req.body,
-            startTime: req.body.startTime,
-            endTime: endTime.toISOString(),
-            totalAmount: serviceResult.value.data.price,
-            depositAmount: 0,
             notes: req.body.notes ?? null,
           },
           req.user?.id
@@ -825,21 +786,12 @@ export const createReservationRoutes = (deps: ReservationRouteDeps): Router => {
           })
         }
 
-        // 日付の検証
-        const date = new Date(req.body.date)
-        if (Number.isNaN(date.getTime())) {
-          return res.status(400).json({
-            code: 'INVALID_DATE',
-            message: 'Invalid date format',
-          })
-        }
-
         // UseCase実行
         const result = await findAvailableSlotsUseCase(
           {
             salonId: salonIdResult.value,
             serviceId: req.body.serviceId,
-            date,
+            date: new Date(req.body.date),
             duration: req.body.duration
               ? Number.parseInt(req.body.duration)
               : 60,

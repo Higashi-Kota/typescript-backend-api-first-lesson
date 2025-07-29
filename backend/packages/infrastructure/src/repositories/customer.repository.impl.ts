@@ -3,10 +3,10 @@
  * Drizzle ORMを使用したリポジトリの実装
  */
 
-import { and, desc, eq, gte, inArray, lte, or, sql } from 'drizzle-orm'
+import { and, desc, eq, inArray, or, sql } from 'drizzle-orm'
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
 import { getEncryptionService } from '../services/encryption.service.js'
-import { safeArrayOverlap, safeLike } from './security-patches'
+import { safeJsonbContains, safeLike } from './security-patches'
 
 import type {
   Customer,
@@ -107,7 +107,6 @@ export class DrizzleCustomerRepository implements CustomerRepository {
       loyaltyPoints: data.loyaltyPoints,
       membershipLevel: data.membershipLevel,
       birthDate: data.birthDate?.toISOString().split('T')[0] ?? null,
-      createdAt: data.createdAt,
       updatedAt: data.updatedAt,
     }
 
@@ -156,11 +155,9 @@ export class DrizzleCustomerRepository implements CustomerRepository {
 
       return ok(customer)
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'Unknown error'
       return err({
         type: 'databaseError',
-        message: `Failed to find customer by ID: ${errorMessage}`,
+        message: 'Failed to find customer by ID',
         originalError: error,
       })
     }
@@ -194,11 +191,9 @@ export class DrizzleCustomerRepository implements CustomerRepository {
 
       return ok(customer)
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'Unknown error'
       return err({
         type: 'databaseError',
-        message: `Failed to find customer by email: ${errorMessage}`,
+        message: 'Failed to find customer by email',
         originalError: error,
       })
     }
@@ -225,7 +220,6 @@ export class DrizzleCustomerRepository implements CustomerRepository {
             loyaltyPoints: dbCustomer.loyaltyPoints,
             membershipLevel: dbCustomer.membershipLevel,
             birthDate: dbCustomer.birthDate,
-            createdAt: dbCustomer.createdAt,
             updatedAt: new Date(),
           },
         })
@@ -248,19 +242,14 @@ export class DrizzleCustomerRepository implements CustomerRepository {
 
       return ok(savedCustomer)
     } catch (error) {
-      // Check for unique constraint violation
-      // Drizzle wraps errors, so we need to check the message
-      const errorMessage =
-        error instanceof Error ? error.message : String(error)
-
-      // For testing, let's accept the constraint violation directly from test expectations
-      // In a real scenario, we would get proper PostgreSQL error codes
+      // Unique constraint violation
       if (
-        errorMessage.includes(
-          'duplicate key value violates unique constraint'
-        ) ||
-        errorMessage.includes('customers_email_unique') ||
-        errorMessage.includes('UNIQUE constraint failed')
+        error &&
+        typeof error === 'object' &&
+        'code' in error &&
+        'constraint' in error &&
+        error.code === '23505' &&
+        error.constraint === 'customers_email_unique'
       ) {
         return err({
           type: 'constraintViolation',
@@ -269,10 +258,9 @@ export class DrizzleCustomerRepository implements CustomerRepository {
         })
       }
 
-      const errorMsg = error instanceof Error ? error.message : 'Unknown error'
       return err({
         type: 'databaseError',
-        message: `Failed to save customer: ${errorMsg}`,
+        message: 'Failed to save customer',
         originalError: error,
       })
     }
@@ -295,11 +283,9 @@ export class DrizzleCustomerRepository implements CustomerRepository {
 
       return ok(undefined)
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'Unknown error'
       return err({
         type: 'databaseError',
-        message: `Failed to delete customer: ${errorMessage}`,
+        message: 'Failed to delete customer',
         originalError: error,
       })
     }
@@ -323,56 +309,18 @@ export class DrizzleCustomerRepository implements CustomerRepository {
         )
       }
 
-      // 個別フィールドでの検索
-      if (criteria.email) {
-        conditions.push(safeLike(customers.email, criteria.email))
-      }
-
-      if (criteria.name) {
-        conditions.push(safeLike(customers.name, criteria.name))
-      }
-
-      // タグでのフィルタリング
       if (criteria.tags && criteria.tags.length > 0) {
         // タグの検索（JSONBカラムのため特殊な処理）
-        // ANY matchのため、配列の重なりをチェック
-        conditions.push(safeArrayOverlap(customers.tags, criteria.tags))
+        conditions.push(safeJsonbContains(customers.tags, criteria.tags))
       }
 
-      // メンバーシップレベルでのフィルタリング
       if (criteria.membershipLevel) {
         conditions.push(eq(customers.membershipLevel, criteria.membershipLevel))
       }
 
-      // 複数のメンバーシップレベルでのフィルタリング
-      if (criteria.membershipLevels && criteria.membershipLevels.length > 0) {
-        conditions.push(
-          inArray(customers.membershipLevel, criteria.membershipLevels)
-        )
-      }
-
-      // ロイヤリティポイントの範囲でのフィルタリング
-      if (criteria.minLoyaltyPoints !== undefined) {
-        conditions.push(gte(customers.loyaltyPoints, criteria.minLoyaltyPoints))
-      }
-
-      if (criteria.maxLoyaltyPoints !== undefined) {
-        conditions.push(lte(customers.loyaltyPoints, criteria.maxLoyaltyPoints))
-      }
-
-      // 登録日でのフィルタリング
-      if (criteria.registeredFrom) {
-        conditions.push(gte(customers.createdAt, criteria.registeredFrom))
-      }
-
-      if (criteria.registeredTo) {
-        conditions.push(lte(customers.createdAt, criteria.registeredTo))
-      }
-
       // activeな顧客のみを取得（現在のDBスキーマでは全てactive扱い）
-      // includeSuspendedがfalseの場合は、suspendedを除外（将来の実装に備えて）
-      if (!criteria.includeSuspended) {
-        // 現在のスキーマではstatusカラムがないため、全てactiveとして扱う
+      if (criteria.isActive !== false) {
+        // 将来的にstatusカラムを追加した場合の処理
       }
 
       const whereClause = conditions.length > 0 ? and(...conditions) : undefined
@@ -408,11 +356,9 @@ export class DrizzleCustomerRepository implements CustomerRepository {
         offset: pagination.offset,
       })
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'Unknown error'
       return err({
         type: 'databaseError',
-        message: `Failed to search customers: ${errorMessage}`,
+        message: 'Failed to search customers',
         originalError: error,
       })
     }

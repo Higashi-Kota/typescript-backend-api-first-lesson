@@ -72,11 +72,7 @@ export function toReservationDetailResponse(
  * CreateReservationRequestをドメイン用に正規化
  */
 export function normalizeCreateReservationRequest(
-  request: components['schemas']['Models.CreateReservationRequest'] & {
-    endTime: string
-    totalAmount: number
-    depositAmount?: number
-  }
+  request: components['schemas']['Models.CreateReservationRequest']
 ): Parameters<
   typeof import('@beauty-salon-backend/usecase').mapCreateReservationRequest
 >[0] {
@@ -86,9 +82,6 @@ export function normalizeCreateReservationRequest(
     staffId: request.staffId,
     serviceId: request.serviceId,
     startTime: request.startTime,
-    endTime: request.endTime,
-    totalAmount: request.totalAmount,
-    depositAmount: request.depositAmount,
     notes: request.notes,
   }
 }
