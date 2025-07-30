@@ -46,11 +46,10 @@ export class SchemaIsolation {
 
     // Import and use TestDatabaseSetup to create tables
     const { TestDatabaseSetup } = await import('./database-setup.js')
-    const dbSetup = new TestDatabaseSetup(this.db)
+    const dbSetup = new TestDatabaseSetup(this.db, schemaName)
 
-    // Create enums and tables in the isolated schema
-    await dbSetup.createEnums()
-    await dbSetup.createUsersTable()
+    // Setup database using migration files
+    await dbSetup.setupDatabase()
   }
 }
 

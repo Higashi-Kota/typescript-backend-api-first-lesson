@@ -70,7 +70,6 @@ describe('Auth API Integration Tests', () => {
     db = drizzle(client)
 
     schemaIsolation = new SchemaIsolation(db)
-    dbSetup = new TestDatabaseSetup(db)
   })
 
   afterAll(async () => {
@@ -80,6 +79,9 @@ describe('Auth API Integration Tests', () => {
   beforeEach(async () => {
     // Create isolated schema for each test
     schemaName = await schemaIsolation.createIsolatedSchema()
+
+    // Create dbSetup with the schema name
+    dbSetup = new TestDatabaseSetup(db, schemaName)
 
     // Setup database tables
     await dbSetup.setupDatabase()

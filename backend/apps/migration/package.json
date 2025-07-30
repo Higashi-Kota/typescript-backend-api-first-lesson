@@ -3,9 +3,23 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "sideEffects": false,
+  "files": ["dist", "scripts"],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
+    "build:dev": "NODE_ENV=development rslib build",
+    "build:test": "NODE_ENV=test rslib build",
+    "build:stg": "NODE_ENV=staging rslib build",
+    "build:prod": "NODE_ENV=production rslib build",
+    "build": "NODE_ENV=production rslib build",
+    "build:watch": "NODE_ENV=development rslib build --watch",
+    "dev:tsc": "tsc --build --watch",
     "migrate": "tsx src/migrate.ts",
     "seed": "tsx src/seed.ts",
     "generate": "drizzle-kit generate",
@@ -21,14 +35,20 @@
   },
   "dependencies": {
     "@beauty-salon-backend/config": "workspace:*",
-    "@beauty-salon-backend/infrastructure": "workspace:*",
-    "@beauty-salon-backend/types": "workspace:*",
     "drizzle-orm": "^0.44.2",
     "postgres": "^3.4.7"
   },
   "devDependencies": {
+    "@beauty-salon-shared/config": "workspace:*",
+    "@biomejs/biome": "^1.9.4",
+    "@rslib/core": "^0.10.5",
     "@types/node": "^24.0.13",
     "drizzle-kit": "^0.31.4",
-    "tsx": "^4.20.3"
+    "knip": "^5.61.3",
+    "taze": "^19.1.0",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.4",
+    "vite-plugin-dts": "^4.5.4"
   }
 }

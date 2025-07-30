@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import type { UserId } from '@beauty-salon-backend/domain'
 import {
-  TestDatabaseSetup,
+  SchemaIsolation,
   TestEnvironment,
   UserBuilder,
 } from '@beauty-salon-backend/test-utils'
@@ -23,9 +23,10 @@ import { DrizzleUserRepository } from '../../src/repositories/user.repository.js
 describe('UserRepository Integration Tests', () => {
   let testEnv: TestEnvironment
   let db: PostgresJsDatabase
-  let dbSetup: TestDatabaseSetup
   let repository: DrizzleUserRepository
   let client: postgres.Sql
+  let schemaIsolation: SchemaIsolation
+  let schemaName: string
 
   beforeAll(async () => {
     // Start test containers
@@ -35,7 +36,7 @@ describe('UserRepository Integration Tests', () => {
     // Create database client and setup
     client = postgres(connectionString)
     db = drizzle(client)
-    dbSetup = new TestDatabaseSetup(db)
+    schemaIsolation = new SchemaIsolation(db)
 
     // Create extensions once
     await db.execute(sql`CREATE EXTENSION IF NOT EXISTS "pgcrypto"`)
@@ -52,15 +53,15 @@ describe('UserRepository Integration Tests', () => {
   })
 
   beforeEach(async () => {
-    // Setup database with enums and tables
-    await dbSetup.setupDatabase()
+    // Create isolated schema for each test (this also runs migrations)
+    schemaName = await schemaIsolation.createIsolatedSchema()
 
     repository = new DrizzleUserRepository(db)
   })
 
   afterEach(async () => {
-    // Clean up database
-    await dbSetup.cleanupDatabase()
+    // Drop the isolated schema
+    await schemaIsolation.dropSchema(schemaName)
   })
 
   describe('save', () => {
