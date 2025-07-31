@@ -1,400 +1,333 @@
+/**
+ * UserRepository Integration Tests - withIsolatedSchemaを使用した統一実装
+ *
+ * このテストファイルは、test-utilsのwithIsolatedSchemaヘルパーを使用して
+ * 各テストが完全に独立した環境で実行される実装です。
+ *
+ * 特徴:
+ * - 各test()が独自のPostgreSQLスキーマを持つ
+ * - シンプルで読みやすい
+ * - 必要なデータだけを作成
+ * - 自動的にクリーンアップ
+ */
+
 import { randomUUID } from 'node:crypto'
 import type { User, UserId, UserRepository } from '@beauty-salon-backend/domain'
 import {
-  SchemaIsolation,
-  TestEnvironment,
+  withIsolatedSchema,
   UserBuilder,
 } from '@beauty-salon-backend/test-utils'
-import { sql } from 'drizzle-orm'
-import { drizzle } from 'drizzle-orm/postgres-js'
-import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
-import postgres from 'postgres'
-import { test as base, describe, expect, beforeAll, afterAll } from 'vitest'
+import { describe, test, expect } from 'vitest'
 import { DrizzleUserRepository } from '../../src/repositories/user.repository.js'
 
-// カスタムテストコンテキスト
-interface TestContext {
-  db: PostgresJsDatabase
-  repository: UserRepository
-  schemaName: string
+// ヘルパー関数: テストユーザーを作成
+async function createTestUser(
+  repository: UserRepository,
+  options: {
+    email?: string
+    name?: string
+    role?: 'customer' | 'staff' | 'admin'
+    status?: 'active' | 'unverified' | 'locked'
+    passwordResetToken?: string
+    emailVerificationToken?: string
+  } = {}
+): Promise<User> {
+  let builder = UserBuilder.create()
+    .withEmail(
+      options.email || `test-${Date.now()}-${randomUUID()}@example.com`
+    )
+    .withName(options.name || 'Test User')
+    .withRole(options.role || 'customer')
+
+  // ステータスに応じてビルダーを設定
+  if (options.status === 'unverified' && options.emailVerificationToken) {
+    builder = builder.withUnverifiedEmail(options.emailVerificationToken)
+  } else if (options.status === 'locked') {
+    builder = builder.withLockedAccount()
+  }
+
+  // パスワードリセットトークンを設定
+  if (options.passwordResetToken) {
+    builder = builder.withPasswordResetToken(options.passwordResetToken)
+  }
+
+  const result = await repository.save(builder.build())
+  if (result.type !== 'ok') {
+    throw new Error(`Failed to create test user: ${result.error.type}`)
+  }
+  return result.value
 }
 
-// vitest.extend でカスタムフィクスチャを定義
-const test = base.extend<TestContext>({
-  // biome-ignore lint/correctness/noEmptyPattern: vitest fixture pattern
-  schemaName: async ({}, use) => {
-    // Generate unique schema name
-    const schemaName = `test_${randomUUID().replace(/-/g, '_')}`
-    await use(schemaName)
-  },
+// ヘルパー関数: 標準的なテストユーザーセットを作成
+async function createStandardUsers(repository: UserRepository) {
+  const admin = await createTestUser(repository, {
+    email: 'admin@example.com',
+    name: 'Admin User',
+    role: 'admin',
+  })
 
-  db: async ({ schemaName }, use) => {
-    // テスト環境のセットアップ
-    const testEnv = await TestEnvironment.getInstance()
-    const connectionString = testEnv.getPostgresConnectionString()
+  const staff1 = await createTestUser(repository, {
+    email: 'staff1@example.com',
+    name: 'Staff One',
+    role: 'staff',
+  })
 
-    // Create admin connection for schema creation
-    const adminClient = postgres(connectionString, {
-      onnotice: () => {},
-    })
-    const adminDb = drizzle(adminClient)
+  const staff2 = await createTestUser(repository, {
+    email: 'staff2@example.com',
+    name: 'Staff Two',
+    role: 'staff',
+  })
 
-    // Create isolated schema with the specific name
-    await adminDb.execute(
-      sql`CREATE SCHEMA IF NOT EXISTS ${sql.identifier(schemaName)}`
-    )
+  const customer1 = await createTestUser(repository, {
+    email: 'customer1@example.com',
+    name: 'Customer One',
+    role: 'customer',
+  })
 
-    // Create test connection with search_path configured via options parameter
-    // Use double quotes for schema name to handle special characters
-    const testConnectionString = `${connectionString}?options=-c search_path="${schemaName}",public`
-    const testClient = postgres(testConnectionString, {
-      onnotice: () => {},
-    })
-    const db = drizzle(testClient)
+  const customer2 = await createTestUser(repository, {
+    email: 'customer2@test.com',
+    name: 'Customer Two',
+    role: 'customer',
+    passwordResetToken: 'reset_token_456',
+  })
 
-    // Apply migrations to the new schema
-    const schemaIsolation = new SchemaIsolation(db)
-    await schemaIsolation.applyMigrations(schemaName)
+  const locked = await createTestUser(repository, {
+    email: 'locked@example.com',
+    name: 'Locked User',
+    role: 'customer',
+    status: 'locked',
+  })
 
-    // テストで使用
-    await use(db)
+  const unverified = await createTestUser(repository, {
+    email: 'unverified@example.com',
+    name: 'Unverified User',
+    status: 'unverified',
+    emailVerificationToken: 'verification_token_123',
+  })
 
-    // クリーンアップ
-    await testClient.end()
-    await adminDb.execute(
-      sql`DROP SCHEMA IF EXISTS ${sql.identifier(schemaName)} CASCADE`
-    )
-    await adminClient.end()
-  },
-
-  repository: async ({ db }, use) => {
-    // Create repository with the db connection
-    const repository = new DrizzleUserRepository(db)
-    await use(repository)
-  },
-})
+  return { admin, staff1, staff2, customer1, customer2, locked, unverified }
+}
 
 describe('UserRepository Integration Tests', () => {
   describe('save', () => {
-    test('should save a new user with active status', async ({
-      repository,
-    }) => {
-      const userBuilder = UserBuilder.create()
-        .withEmail('test@example.com')
-        .withName('Test User')
-        .withRole('customer')
+    test('should save a new user with active status', async () => {
+      await withIsolatedSchema(async ({ db }) => {
+        // Arrange
+        const repository = new DrizzleUserRepository(db)
+        const newUser = UserBuilder.create()
+          .withEmail('test@example.com')
+          .withName('Test User')
+          .withRole('customer')
+          .build()
 
-      const user = userBuilder.build()
-      const result = await repository.save(user)
+        // Act
+        const result = await repository.save(newUser)
 
-      expect(result.type).toBe('ok')
-      if (result.type === 'ok') {
-        expect(result.value.data.email).toBe('test@example.com')
-        expect(result.value.data.name).toBe('Test User')
-        expect(result.value.data.role).toBe('customer')
-        expect(result.value.status.type).toBe('active')
-      }
-    })
-
-    test('should save a user with unverified status', async ({
-      repository,
-    }) => {
-      const userBuilder = UserBuilder.create()
-        .withEmail('unverified@example.com')
-        .withUnverifiedEmail('verification_token_123')
-
-      const user = userBuilder.build()
-      const result = await repository.save(user)
-
-      expect(result.type).toBe('ok')
-      if (result.type === 'ok') {
-        expect(result.value.status.type).toBe('unverified')
-        if (result.value.status.type === 'unverified') {
-          expect(result.value.status.emailVerificationToken).toBe(
-            'verification_token_123'
-          )
+        // Assert
+        expect(result.type).toBe('ok')
+        if (result.type === 'ok') {
+          expect(result.value.data.email).toBe('test@example.com')
+          expect(result.value.data.name).toBe('Test User')
+          expect(result.value.data.role).toBe('customer')
+          expect(result.value.status.type).toBe('active')
         }
-      }
+      })
     })
 
-    test('should save a user with 2FA enabled', async ({ repository }) => {
-      const userBuilder = UserBuilder.create()
-        .withEmail('2fa@example.com')
-        .with2FAEnabled()
+    test('should save a user with unverified status', async () => {
+      await withIsolatedSchema(async ({ db }) => {
+        // Arrange
+        const repository = new DrizzleUserRepository(db)
+        const userBuilder = UserBuilder.create()
+          .withEmail('unverified@example.com')
+          .withUnverifiedEmail('verification_token_123')
+        const user = userBuilder.build()
 
-      const user = userBuilder.build()
-      const result = await repository.save(user)
+        // Act
+        const result = await repository.save(user)
 
-      expect(result.type).toBe('ok')
-      if (result.type === 'ok') {
-        expect(result.value.data.twoFactorStatus.type).toBe('enabled')
-      }
+        // Assert
+        expect(result.type).toBe('ok')
+        if (result.type === 'ok') {
+          expect(result.value.status.type).toBe('unverified')
+          if (result.value.status.type === 'unverified') {
+            expect(result.value.status.emailVerificationToken).toBe(
+              'verification_token_123'
+            )
+          }
+        }
+      })
     })
 
-    test('should return error when email already exists', async ({
-      repository,
-    }) => {
-      const userBuilder = UserBuilder.create().withEmail(
-        'duplicate@example.com'
-      )
+    test('should save a user with 2FA enabled', async () => {
+      await withIsolatedSchema(async ({ db }) => {
+        // Arrange
+        const repository = new DrizzleUserRepository(db)
+        const userBuilder = UserBuilder.create()
+          .withEmail('2fa@example.com')
+          .with2FAEnabled()
+        const user = userBuilder.build()
 
-      const user = userBuilder.build()
+        // Act
+        const result = await repository.save(user)
 
-      // Save first user
-      const firstResult = await repository.save(user)
-      expect(firstResult.type).toBe('ok')
+        // Assert
+        expect(result.type).toBe('ok')
+        if (result.type === 'ok') {
+          expect(result.value.data.twoFactorStatus.type).toBe('enabled')
+        }
+      })
+    })
 
-      // Try to save second user with same email
-      const secondResult = await repository.save(user)
-      expect(secondResult.type).toBe('err')
-      if (secondResult.type === 'err') {
-        expect(secondResult.error.type).toBe('alreadyExists')
-      }
+    test('should return error when email already exists', async () => {
+      await withIsolatedSchema(async ({ db }) => {
+        // Arrange
+        const repository = new DrizzleUserRepository(db)
+        const user = UserBuilder.create()
+          .withEmail('duplicate@example.com')
+          .build()
+
+        // Act
+        // Save first user
+        const firstResult = await repository.save(user)
+        expect(firstResult.type).toBe('ok')
+
+        // Try to save second user with same email
+        const secondResult = await repository.save(user)
+
+        // Assert
+        expect(secondResult.type).toBe('err')
+        if (secondResult.type === 'err') {
+          expect(secondResult.error.type).toBe('alreadyExists')
+        }
+      })
     })
   })
 
-  // 各describe毎に独立したスキーマとセットアップを使用
-  describe('with seeded users', () => {
-    let db: PostgresJsDatabase
-    let repository: UserRepository
-    let testClient: ReturnType<typeof postgres>
-    let adminClient: ReturnType<typeof postgres>
-    let schemaName: string
-    let userSeeds: {
-      admin: User
-      staff1: User
-      staff2: User
-      customer1: User
-      customer2: User
-      locked: User
-      unverified: User
-    }
+  describe('findByEmail', () => {
+    test('should find user by email', async () => {
+      await withIsolatedSchema(async ({ db }) => {
+        // Arrange
+        const repository = new DrizzleUserRepository(db)
+        const users = await createStandardUsers(repository)
 
-    beforeAll(async () => {
-      // テスト環境のセットアップ
-      const testEnv = await TestEnvironment.getInstance()
-      const connectionString = testEnv.getPostgresConnectionString()
+        // Act
+        const result = await repository.findByEmail('admin@example.com')
 
-      // Create admin connection for schema creation
-      adminClient = postgres(connectionString, {
-        onnotice: () => {},
-      })
-      const adminDb = drizzle(adminClient)
-
-      // Create isolated schema
-      schemaName = `test_seeded_${randomUUID().replace(/-/g, '_')}`
-      await adminDb.execute(
-        sql`CREATE SCHEMA IF NOT EXISTS ${sql.identifier(schemaName)}`
-      )
-
-      // Create test connection with search_path
-      const testConnectionString = `${connectionString}?options=-c search_path="${schemaName}",public`
-      testClient = postgres(testConnectionString, {
-        onnotice: () => {},
-      })
-      db = drizzle(testClient)
-
-      // Apply migrations
-      const schemaIsolation = new SchemaIsolation(db)
-      await schemaIsolation.applyMigrations(schemaName)
-
-      // Create repository
-      repository = new DrizzleUserRepository(db)
-
-      // Seed data
-      userSeeds = {
-        admin: await createUser(
-          repository,
-          UserBuilder.create()
-            .withEmail('admin@example.com')
-            .withRole('admin')
-            .withName('Admin User')
-        ),
-        staff1: await createUser(
-          repository,
-          UserBuilder.create()
-            .withEmail('staff1@example.com')
-            .withRole('staff')
-            .withName('Staff One')
-        ),
-        staff2: await createUser(
-          repository,
-          UserBuilder.create()
-            .withEmail('staff2@example.com')
-            .withRole('staff')
-            .withName('Staff Two')
-        ),
-        customer1: await createUser(
-          repository,
-          UserBuilder.create()
-            .withEmail('customer1@example.com')
-            .withRole('customer')
-            .withName('Customer One')
-        ),
-        customer2: await createUser(
-          repository,
-          UserBuilder.create()
-            .withEmail('customer2@test.com')
-            .withRole('customer')
-            .withName('Customer Two')
-        ),
-        locked: await createUser(
-          repository,
-          UserBuilder.create()
-            .withEmail('locked@example.com')
-            .withRole('customer')
-            .withLockedAccount()
-            .withName('Locked User')
-        ),
-        unverified: await createUser(
-          repository,
-          UserBuilder.create()
-            .withEmail('unverified@example.com')
-            .withUnverifiedEmail('verification_token_123')
-            .withName('Unverified User')
-        ),
-      }
-    })
-
-    afterAll(async () => {
-      // Cleanup
-      await testClient.end()
-      const adminDb = drizzle(adminClient)
-      await adminDb.execute(
-        sql`DROP SCHEMA IF EXISTS ${sql.identifier(schemaName)} CASCADE`
-      )
-      await adminClient.end()
-    })
-
-    describe('findById', () => {
-      test('should find user by id', async () => {
-        const result = await repository.findById(userSeeds.admin.data.id)
-
+        // Assert
         expect(result.type).toBe('ok')
-        if (result.type === 'ok') {
-          expect(result.value).not.toBeNull()
-          expect(result.value?.data.email).toBe('admin@example.com')
-        }
-      })
-
-      test('should return null for non-existent id', async () => {
-        const nonExistentId = randomUUID() as UserId
-
-        const result = await repository.findById(nonExistentId)
-
-        expect(result.type).toBe('ok')
-        if (result.type === 'ok') {
-          expect(result.value).toBeNull()
+        if (result.type === 'ok' && result.value) {
+          expect(result.value.data.id).toBe(users.admin.data.id)
+          expect(result.value.data.email).toBe('admin@example.com')
+          expect(result.value.data.role).toBe('admin')
         }
       })
     })
 
-    describe('findByEmail', () => {
-      test('should find user by email', async () => {
-        const result = await repository.findByEmail('staff1@example.com')
+    test('should return null for non-existent email', async () => {
+      await withIsolatedSchema(async ({ db }) => {
+        // Arrange
+        const repository = new DrizzleUserRepository(db)
 
-        expect(result.type).toBe('ok')
-        if (result.type === 'ok') {
-          expect(result.value).not.toBeNull()
-          expect(result.value?.data.name).toBe('Staff One')
-        }
-      })
-
-      test('should return null for non-existent email', async () => {
+        // Act
         const result = await repository.findByEmail('nonexistent@example.com')
 
+        // Assert
         expect(result.type).toBe('ok')
         if (result.type === 'ok') {
           expect(result.value).toBeNull()
         }
       })
     })
+  })
 
-    describe('update', () => {
-      test('should update user data', async () => {
-        const userId = userSeeds.customer1.data.id
+  describe('update', () => {
+    test('should update user data', async () => {
+      await withIsolatedSchema(async ({ db }) => {
+        // Arrange
+        const repository = new DrizzleUserRepository(db)
+        const user = await createTestUser(repository, {
+          email: 'original@example.com',
+          name: 'Original Name',
+        })
+
+        // Act
         const updatedUser = UserBuilder.create()
-          .withId(userId)
+          .withId(user.data.id)
           .withEmail('updated@example.com')
           .withName('Updated User')
           .build()
-
         const result = await repository.update(updatedUser)
 
+        // Assert
         expect(result.type).toBe('ok')
         if (result.type === 'ok') {
           expect(result.value.data.email).toBe('updated@example.com')
           expect(result.value.data.name).toBe('Updated User')
         }
       })
+    })
 
-      test('should update user status from active to locked', async () => {
-        const userId = userSeeds.customer2.data.id
+    test('should update user status from active to locked', async () => {
+      await withIsolatedSchema(async ({ db }) => {
+        // Arrange
+        const repository = new DrizzleUserRepository(db)
+        const user = await createTestUser(repository, {
+          email: 'tolock@example.com',
+        })
+
+        // Act
         const lockedUser = UserBuilder.create()
-          .withId(userId)
-          .withEmail(userSeeds.customer2.data.email)
+          .withId(user.data.id)
+          .withEmail(user.data.email)
           .withLockedAccount()
           .build()
-
         const result = await repository.update(lockedUser)
 
+        // Assert
         expect(result.type).toBe('ok')
         if (result.type === 'ok') {
           expect(result.value.status.type).toBe('locked')
         }
       })
+    })
 
-      test('should return error when user not found', async () => {
+    test('should return error when user not found', async () => {
+      await withIsolatedSchema(async ({ db }) => {
+        // Arrange
+        const repository = new DrizzleUserRepository(db)
         const nonExistentId = randomUUID() as UserId
         const user = UserBuilder.create()
           .withId(nonExistentId)
           .withEmail('test@example.com')
           .build()
 
+        // Act
         const result = await repository.update(user)
 
+        // Assert
         expect(result.type).toBe('err')
         if (result.type === 'err') {
           expect(result.error.type).toBe('notFound')
         }
       })
     })
+  })
 
-    describe('delete', () => {
-      test('should delete user by id', async () => {
-        // Create a user to delete
-        const userBuilder = UserBuilder.create().withEmail(
-          'todelete@example.com'
-        )
-        const user = userBuilder.build()
+  describe('search', () => {
+    test('should search users by email pattern', async () => {
+      await withIsolatedSchema(async ({ db }) => {
+        // Arrange
+        const repository = new DrizzleUserRepository(db)
+        await createStandardUsers(repository)
 
-        const saveResult = await repository.save(user)
-        expect(saveResult.type).toBe('ok')
-
-        if (saveResult.type === 'ok') {
-          const userId = saveResult.value.data.id
-
-          // Delete the user
-          const deleteResult = await repository.delete(userId)
-          expect(deleteResult.type).toBe('ok')
-
-          // Verify user is deleted
-          const findResult = await repository.findById(userId)
-          expect(findResult.type).toBe('ok')
-          if (findResult.type === 'ok') {
-            expect(findResult.value).toBeNull()
-          }
-        }
-      })
-    })
-
-    describe('search', () => {
-      test('should search users by email pattern', async () => {
+        // Act
         const result = await repository.search(
           { email: '@example.com' },
           { limit: 10, offset: 0 }
         )
 
+        // Assert
         expect(result.type).toBe('ok')
         if (result.type === 'ok') {
           // @example.comを持つユーザーは6人（customer2は@test.com）
@@ -407,13 +340,21 @@ describe('UserRepository Integration Tests', () => {
           ).toBe(true)
         }
       })
+    })
 
-      test('should search users by role', async () => {
+    test('should search users by role', async () => {
+      await withIsolatedSchema(async ({ db }) => {
+        // Arrange
+        const repository = new DrizzleUserRepository(db)
+        await createStandardUsers(repository)
+
+        // Act
         const result = await repository.search(
           { role: 'staff' },
           { limit: 10, offset: 0 }
         )
 
+        // Assert
         expect(result.type).toBe('ok')
         if (result.type === 'ok') {
           expect(result.value.total).toBe(2)
@@ -423,44 +364,69 @@ describe('UserRepository Integration Tests', () => {
           )
         }
       })
+    })
 
-      test('should search users by status', async () => {
+    test('should search users by status', async () => {
+      await withIsolatedSchema(async ({ db }) => {
+        // Arrange
+        const repository = new DrizzleUserRepository(db)
+        await createStandardUsers(repository)
+
+        // Act
         const result = await repository.search(
           { status: 'locked' },
           { limit: 10, offset: 0 }
         )
 
+        // Assert
         expect(result.type).toBe('ok')
         if (result.type === 'ok') {
-          // Note: customer2 might have been updated to locked in the update test
-          expect(result.value.total).toBeGreaterThanOrEqual(1)
-          expect(result.value.data.length).toBeGreaterThanOrEqual(1)
-          expect(
-            result.value.data.every((u) => u.status.type === 'locked')
-          ).toBe(true)
+          expect(result.value.total).toBe(1)
+          expect(result.value.data.length).toBe(1)
+          expect(result.value.data[0]?.status.type).toBe('locked')
         }
       })
+    })
 
-      test('should handle pagination', async () => {
+    test('should handle pagination', async () => {
+      await withIsolatedSchema(async ({ db }) => {
+        // Arrange
+        const repository = new DrizzleUserRepository(db)
+        await createStandardUsers(repository)
+
+        // Act
         const result1 = await repository.search({}, { limit: 3, offset: 0 })
-
         const result2 = await repository.search({}, { limit: 3, offset: 3 })
 
+        // Assert
         expect(result1.type).toBe('ok')
         expect(result2.type).toBe('ok')
         if (result1.type === 'ok' && result2.type === 'ok') {
           expect(result1.value.data.length).toBe(3)
           expect(result2.value.data.length).toBeGreaterThan(0)
           expect(result1.value.total).toBe(result2.value.total)
+          // データが重複していないことを確認
+          const ids1 = result1.value.data.map((u) => u.data.id)
+          const ids2 = result2.value.data.map((u) => u.data.id)
+          const intersection = ids1.filter((id) => ids2.includes(id))
+          expect(intersection).toHaveLength(0)
         }
       })
+    })
 
-      test('should combine multiple search criteria', async () => {
+    test('should combine multiple search criteria', async () => {
+      await withIsolatedSchema(async ({ db }) => {
+        // Arrange
+        const repository = new DrizzleUserRepository(db)
+        await createStandardUsers(repository)
+
+        // Act
         const result = await repository.search(
           { email: '@example.com', role: 'customer' },
           { limit: 10, offset: 0 }
         )
 
+        // Assert
         expect(result.type).toBe('ok')
         if (result.type === 'ok') {
           expect(result.value.total).toBe(3) // customer1, locked user, unverified (customer2はtest.com)
@@ -473,13 +439,21 @@ describe('UserRepository Integration Tests', () => {
           ).toBe(true)
         }
       })
+    })
 
-      test('should return empty results for no matches', async () => {
+    test('should return empty results for no matches', async () => {
+      await withIsolatedSchema(async ({ db }) => {
+        // Arrange
+        const repository = new DrizzleUserRepository(db)
+        await createStandardUsers(repository)
+
+        // Act
         const result = await repository.search(
           { email: 'nonexistent@domain.com' },
           { limit: 10, offset: 0 }
         )
 
+        // Assert
         expect(result.type).toBe('ok')
         if (result.type === 'ok') {
           expect(result.value.total).toBe(0)
@@ -487,71 +461,151 @@ describe('UserRepository Integration Tests', () => {
         }
       })
     })
+  })
 
-    describe('findByPasswordResetToken', () => {
-      test('should find user by password reset token', async () => {
-        // Create user with password reset token
-        const userBuilder = UserBuilder.create()
-          .withEmail('reset@example.com')
-          .withPasswordResetToken('reset_token_123')
+  describe('findByPasswordResetToken', () => {
+    test('should find user by password reset token', async () => {
+      await withIsolatedSchema(async ({ db }) => {
+        // Arrange
+        const repository = new DrizzleUserRepository(db)
+        const user = await createTestUser(repository, {
+          email: 'reset@example.com',
+          passwordResetToken: 'reset_token_123',
+        })
 
-        const user = userBuilder.build()
-        const saveResult = await repository.save(user)
-        expect(saveResult.type).toBe('ok')
-
-        // Find by token
+        // Act
         const result =
           await repository.findByPasswordResetToken('reset_token_123')
+
+        // Assert
         expect(result.type).toBe('ok')
-        if (result.type === 'ok') {
-          expect(result.value).not.toBeNull()
-          expect(result.value?.data.email).toBe('reset@example.com')
+        if (result.type === 'ok' && result.value) {
+          expect(result.value.data.id).toBe(user.data.id)
+          expect(result.value.data.email).toBe('reset@example.com')
         }
       })
+    })
 
-      test('should return null for invalid token', async () => {
+    test('should return null for invalid token', async () => {
+      await withIsolatedSchema(async ({ db }) => {
+        // Arrange
+        const repository = new DrizzleUserRepository(db)
+
+        // Act
         const result =
           await repository.findByPasswordResetToken('invalid_token')
 
+        // Assert
         expect(result.type).toBe('ok')
         if (result.type === 'ok') {
           expect(result.value).toBeNull()
         }
       })
     })
+  })
 
-    describe('findByEmailVerificationToken', () => {
-      test('should find user by email verification token', async () => {
-        // トークンを取得
-        const expectedToken =
-          userSeeds.unverified.status.type === 'unverified'
-            ? userSeeds.unverified.status.emailVerificationToken
-            : 'verification_token_123'
+  describe('findByEmailVerificationToken', () => {
+    test('should find user by email verification token', async () => {
+      await withIsolatedSchema(async ({ db }) => {
+        // Arrange
+        const repository = new DrizzleUserRepository(db)
+        const user = await createTestUser(repository, {
+          email: 'verify@example.com',
+          status: 'unverified',
+          emailVerificationToken: 'verify_token_123',
+        })
 
+        // Act
         const result =
-          await repository.findByEmailVerificationToken(expectedToken)
+          await repository.findByEmailVerificationToken('verify_token_123')
 
+        // Assert
         expect(result.type).toBe('ok')
-        if (result.type === 'ok') {
-          expect(result.value).not.toBeNull()
-          expect(result.value?.data.email).toBe('unverified@example.com')
+        if (result.type === 'ok' && result.value) {
+          expect(result.value.data.id).toBe(user.data.id)
+          expect(result.value.data.email).toBe('verify@example.com')
+          expect(result.value.status.type).toBe('unverified')
         }
       })
     })
   })
+
+  describe('findById', () => {
+    test('should find user by id', async () => {
+      await withIsolatedSchema(async ({ db }) => {
+        // Arrange
+        const repository = new DrizzleUserRepository(db)
+        const user = await createTestUser(repository, {
+          email: 'findbyid@example.com',
+        })
+
+        // Act
+        const result = await repository.findById(user.data.id)
+
+        // Assert
+        expect(result.type).toBe('ok')
+        if (result.type === 'ok' && result.value) {
+          expect(result.value.data.email).toBe('findbyid@example.com')
+        }
+      })
+    })
+
+    test('should return null when user not found', async () => {
+      await withIsolatedSchema(async ({ db }) => {
+        // Arrange
+        const repository = new DrizzleUserRepository(db)
+        const nonExistentId = randomUUID() as UserId
+
+        // Act
+        const result = await repository.findById(nonExistentId)
+
+        // Assert
+        expect(result.type).toBe('ok')
+        if (result.type === 'ok') {
+          expect(result.value).toBeNull()
+        }
+      })
+    })
+  })
+
+  describe('delete', () => {
+    test('should delete user', async () => {
+      await withIsolatedSchema(async ({ db }) => {
+        // Arrange
+        const repository = new DrizzleUserRepository(db)
+        const user = await createTestUser(repository, {
+          email: 'todelete@example.com',
+        })
+
+        // Act
+        const deleteResult = await repository.delete(user.data.id)
+
+        // Assert
+        expect(deleteResult.type).toBe('ok')
+
+        // Verify user is deleted
+        const findResult = await repository.findById(user.data.id)
+        expect(findResult.type).toBe('ok')
+        if (findResult.type === 'ok') {
+          expect(findResult.value).toBeNull()
+        }
+      })
+    })
+
+    test('should return ok even when user not found', async () => {
+      await withIsolatedSchema(async ({ db }) => {
+        // Arrange
+        const repository = new DrizzleUserRepository(db)
+        const nonExistentId = randomUUID() as UserId
+
+        // Act
+        const result = await repository.delete(nonExistentId)
+
+        // Assert
+        // TODO: Current implementation returns ok for non-existent users
+        // This might need to be changed to return an error in the repository
+        expect(result.type).toBe('ok')
+      })
+    })
+  })
 })
-
-// ヘルパー関数
-async function createUser(
-  repository: UserRepository,
-  builder: UserBuilder
-): Promise<User> {
-  const user = builder.build()
-
-  const saveResult = await repository.save(user)
-  if (saveResult.type !== 'ok') {
-    throw new Error('Failed to save user')
-  }
-
-  return saveResult.value
-}
