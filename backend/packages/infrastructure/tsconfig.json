@@ -7,7 +7,9 @@
     "declarationMap": true,
     "rootDir": "./src",
     "outDir": "./dist",
-    "tsBuildInfoFile": "./tsconfig.tsbuildinfo"
+    "tsBuildInfoFile": "./tsconfig.tsbuildinfo",
+    "types": ["vitest/globals", "node"],
+    "preserveConstEnums": true
   },
   "references": [
     { "path": "../domain" },
@@ -15,11 +17,5 @@
     { "path": "../config" }
   ],
   "include": ["src/**/*"],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "**/*.test.ts",
-    "**/*.spec.ts",
-    "**/__tests__/**"
-  ]
+  "exclude": ["node_modules", "dist"]
 }

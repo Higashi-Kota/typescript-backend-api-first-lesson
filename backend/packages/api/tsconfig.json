@@ -5,9 +5,10 @@
     "noEmit": false,
     "declaration": true,
     "declarationMap": true,
-    "rootDir": "./src",
+    "rootDir": ".",
     "outDir": "./dist",
-    "tsBuildInfoFile": "./tsconfig.tsbuildinfo"
+    "tsBuildInfoFile": "./tsconfig.tsbuildinfo",
+    "types": ["vitest/globals", "node"]
   },
   "references": [
     { "path": "../domain" },
@@ -17,11 +18,5 @@
     { "path": "../infrastructure" }
   ],
   "include": ["src/**/*"],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "**/*.test.ts",
-    "**/*.spec.ts",
-    "**/__tests__/**"
-  ]
+  "exclude": ["node_modules", "dist"]
 }

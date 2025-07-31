@@ -55,7 +55,7 @@ export class DrizzleSalonRepository implements SalonRepository {
     // TODO: deletedAt, suspendedAtカラムを追加する際に実装
 
     return {
-      type: 'active',
+      type: 'active' as const,
       data: {
         id,
         name: dbSalon.name,
@@ -87,7 +87,7 @@ export class DrizzleSalonRepository implements SalonRepository {
       const firstRow = result[0]
       if (!firstRow) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Salon',
           id,
         })
@@ -96,7 +96,7 @@ export class DrizzleSalonRepository implements SalonRepository {
       const salon = await this.mapDbToDomain(firstRow)
       if (!salon) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map salon data',
         })
       }
@@ -104,7 +104,7 @@ export class DrizzleSalonRepository implements SalonRepository {
       return ok(salon)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -159,7 +159,7 @@ export class DrizzleSalonRepository implements SalonRepository {
       const salon = await this.mapDbToDomain(result)
       if (!salon) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map created salon',
         })
       }
@@ -167,7 +167,7 @@ export class DrizzleSalonRepository implements SalonRepository {
       return ok(salon)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -248,7 +248,7 @@ export class DrizzleSalonRepository implements SalonRepository {
       const salon = await this.mapDbToDomain(result)
       if (!salon) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map updated salon',
         })
       }
@@ -258,13 +258,13 @@ export class DrizzleSalonRepository implements SalonRepository {
       const message = error instanceof Error ? error.message : 'Unknown error'
       if (message.includes('not found')) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Salon',
           id: data.id,
         })
       }
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message,
       })
     }
@@ -281,7 +281,7 @@ export class DrizzleSalonRepository implements SalonRepository {
 
       if (result.count === 0) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Salon',
           id,
         })
@@ -290,7 +290,7 @@ export class DrizzleSalonRepository implements SalonRepository {
       return ok(undefined)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -357,7 +357,7 @@ export class DrizzleSalonRepository implements SalonRepository {
       })
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -378,7 +378,7 @@ export class DrizzleSalonRepository implements SalonRepository {
     // 現在のスキーマではsuspendedAtカラムがないため、未実装
     // TODO: suspendedAtカラムを追加時に実装
     return err({
-      type: 'databaseError',
+      type: 'databaseError' as const,
       message: 'Suspend functionality not implemented yet',
     })
   }
@@ -390,7 +390,7 @@ export class DrizzleSalonRepository implements SalonRepository {
     // 現在のスキーマではsuspendedAtカラムがないため、未実装
     // TODO: suspendedAtカラムを追加時に実装
     return err({
-      type: 'databaseError',
+      type: 'databaseError' as const,
       message: 'Reactivate functionality not implemented yet',
     })
   }
@@ -415,7 +415,7 @@ export class DrizzleSalonRepository implements SalonRepository {
       return ok(cityCountMap)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })

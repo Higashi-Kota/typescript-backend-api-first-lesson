@@ -79,13 +79,13 @@ export class DrizzleBookingRepository implements BookingRepository {
     switch (dbBooking.status) {
       case 'draft':
         return {
-          type: 'draft',
+          type: 'draft' as const,
           data: bookingData,
         }
 
       case 'confirmed':
         return {
-          type: 'confirmed',
+          type: 'confirmed' as const,
           data: bookingData,
           confirmedAt: dbBooking.updatedAt,
           confirmedBy: dbBooking.updatedBy || 'system',
@@ -93,7 +93,7 @@ export class DrizzleBookingRepository implements BookingRepository {
 
       case 'cancelled':
         return {
-          type: 'cancelled',
+          type: 'cancelled' as const,
           data: bookingData,
           cancelledAt: dbBooking.updatedAt,
           cancelledBy: dbBooking.updatedBy || 'system',
@@ -102,7 +102,7 @@ export class DrizzleBookingRepository implements BookingRepository {
 
       case 'completed':
         return {
-          type: 'completed',
+          type: 'completed' as const,
           data: bookingData,
           completedAt: dbBooking.updatedAt,
           completedBy: dbBooking.updatedBy || 'system',
@@ -110,7 +110,7 @@ export class DrizzleBookingRepository implements BookingRepository {
 
       case 'no_show':
         return {
-          type: 'no_show',
+          type: 'no_show' as const,
           data: bookingData,
           markedNoShowAt: dbBooking.updatedAt,
           markedNoShowBy: dbBooking.updatedBy || 'system',
@@ -132,7 +132,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       const firstRow = result[0]
       if (!firstRow) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Booking',
           id,
         })
@@ -141,7 +141,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       const booking = await this.mapDbToDomain(firstRow)
       if (!booking) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map booking data',
         })
       }
@@ -149,7 +149,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       return ok(booking)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -219,7 +219,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       return ok(detail)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -252,7 +252,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       const insertedBooking = insertedBookings[0]
       if (!insertedBooking) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to insert booking',
         })
       }
@@ -270,7 +270,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       const booking = await this.mapDbToDomain(insertedBooking)
       if (!booking) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map created booking',
         })
       }
@@ -278,7 +278,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       return ok(booking)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -299,7 +299,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       const existingRow = existing[0]
       if (!existingRow) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Booking',
           id: data.id,
         })
@@ -326,7 +326,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       const updatedBooking = updatedBookings[0]
       if (!updatedBooking) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to update booking',
         })
       }
@@ -334,7 +334,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       const booking = await this.mapDbToDomain(updatedBooking)
       if (!booking) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map updated booking',
         })
       }
@@ -342,7 +342,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       return ok(booking)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -367,7 +367,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       const updatedRow = result[0]
       if (!updatedRow) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Booking',
           id,
         })
@@ -376,7 +376,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       const booking = await this.mapDbToDomain(updatedRow)
       if (!booking) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map confirmed booking',
         })
       }
@@ -384,7 +384,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       return ok(booking)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -419,7 +419,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       const updatedRow = result[0]
       if (!updatedRow) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Booking',
           id,
         })
@@ -428,7 +428,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       const booking = await this.mapDbToDomain(updatedRow)
       if (!booking) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map cancelled booking',
         })
       }
@@ -436,7 +436,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       return ok(booking)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -461,7 +461,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       const updatedRow = result[0]
       if (!updatedRow) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Booking',
           id,
         })
@@ -470,7 +470,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       const booking = await this.mapDbToDomain(updatedRow)
       if (!booking) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map completed booking',
         })
       }
@@ -478,7 +478,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       return ok(booking)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -503,7 +503,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       const updatedRow = result[0]
       if (!updatedRow) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Booking',
           id,
         })
@@ -512,7 +512,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       const booking = await this.mapDbToDomain(updatedRow)
       if (!booking) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map no-show booking',
         })
       }
@@ -520,7 +520,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       return ok(booking)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -548,7 +548,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       return this.findById(bookingId)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -580,7 +580,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       return this.findById(bookingId)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -651,7 +651,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       })
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -711,7 +711,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       })
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -750,7 +750,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       return ok(countMap)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -787,7 +787,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       return ok(sumMap)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })

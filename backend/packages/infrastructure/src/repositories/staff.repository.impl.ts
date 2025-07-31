@@ -61,7 +61,7 @@ export class DrizzleStaffRepository implements StaffRepository {
     // isActiveフラグでステータスを判定
     if (!dbStaff.isActive) {
       return {
-        type: 'inactive',
+        type: 'inactive' as const,
         data: staffData,
         inactivatedAt: dbStaff.updatedAt,
         inactivatedReason: 'Deactivated',
@@ -69,7 +69,7 @@ export class DrizzleStaffRepository implements StaffRepository {
     }
 
     return {
-      type: 'active',
+      type: 'active' as const,
       data: staffData,
     }
   }
@@ -85,7 +85,7 @@ export class DrizzleStaffRepository implements StaffRepository {
       const firstRow = result[0]
       if (!firstRow) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Staff',
           id,
         })
@@ -94,7 +94,7 @@ export class DrizzleStaffRepository implements StaffRepository {
       const staffModel = this.mapDbToDomain(firstRow)
       if (!staffModel) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map staff data',
         })
       }
@@ -102,7 +102,7 @@ export class DrizzleStaffRepository implements StaffRepository {
       return ok(staffModel)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -137,7 +137,7 @@ export class DrizzleStaffRepository implements StaffRepository {
       const insertedRow = insertedStaff[0]
       if (!insertedRow) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to insert staff',
         })
       }
@@ -145,7 +145,7 @@ export class DrizzleStaffRepository implements StaffRepository {
       const staffModel = this.mapDbToDomain(insertedRow)
       if (!staffModel) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map created staff',
         })
       }
@@ -153,7 +153,7 @@ export class DrizzleStaffRepository implements StaffRepository {
       return ok(staffModel)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -174,7 +174,7 @@ export class DrizzleStaffRepository implements StaffRepository {
       const existingRow = existing[0]
       if (!existingRow) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Staff',
           id: data.id,
         })
@@ -210,7 +210,7 @@ export class DrizzleStaffRepository implements StaffRepository {
       const updatedRow = updatedStaff[0]
       if (!updatedRow) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to update staff',
         })
       }
@@ -218,7 +218,7 @@ export class DrizzleStaffRepository implements StaffRepository {
       const staffModel = this.mapDbToDomain(updatedRow)
       if (!staffModel) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map updated staff',
         })
       }
@@ -226,7 +226,7 @@ export class DrizzleStaffRepository implements StaffRepository {
       return ok(staffModel)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -252,7 +252,7 @@ export class DrizzleStaffRepository implements StaffRepository {
       const updatedRow = result[0]
       if (!updatedRow) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Staff',
           id,
         })
@@ -261,7 +261,7 @@ export class DrizzleStaffRepository implements StaffRepository {
       const staffModel = this.mapDbToDomain(updatedRow)
       if (!staffModel) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map deactivated staff',
         })
       }
@@ -269,7 +269,7 @@ export class DrizzleStaffRepository implements StaffRepository {
       return ok(staffModel)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -294,7 +294,7 @@ export class DrizzleStaffRepository implements StaffRepository {
       const updatedRow = result[0]
       if (!updatedRow) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Staff',
           id,
         })
@@ -303,7 +303,7 @@ export class DrizzleStaffRepository implements StaffRepository {
       const staffModel = this.mapDbToDomain(updatedRow)
       if (!staffModel) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map reactivated staff',
         })
       }
@@ -311,7 +311,7 @@ export class DrizzleStaffRepository implements StaffRepository {
       return ok(staffModel)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -330,7 +330,7 @@ export class DrizzleStaffRepository implements StaffRepository {
 
       if (result.count === 0) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Staff',
           id,
         })
@@ -339,7 +339,7 @@ export class DrizzleStaffRepository implements StaffRepository {
       return ok(undefined)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -415,7 +415,7 @@ export class DrizzleStaffRepository implements StaffRepository {
       })
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -451,7 +451,7 @@ export class DrizzleStaffRepository implements StaffRepository {
       return ok(availability)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -489,7 +489,7 @@ export class DrizzleStaffRepository implements StaffRepository {
       return ok(undefined)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })

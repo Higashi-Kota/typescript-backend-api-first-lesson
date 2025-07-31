@@ -63,13 +63,13 @@ export class DrizzleReservationRepository implements ReservationRepository {
     switch (dbReservation.status) {
       case 'pending':
         return {
-          type: 'pending',
+          type: 'pending' as const,
           data: reservationData,
         }
 
       case 'confirmed':
         return {
-          type: 'confirmed',
+          type: 'confirmed' as const,
           data: reservationData,
           confirmedAt: dbReservation.updatedAt,
           confirmedBy: dbReservation.updatedBy || 'system',
@@ -77,7 +77,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
 
       case 'cancelled':
         return {
-          type: 'cancelled',
+          type: 'cancelled' as const,
           data: reservationData,
           cancelledAt: dbReservation.updatedAt,
           cancelledBy: dbReservation.updatedBy || 'system',
@@ -86,7 +86,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
 
       case 'completed':
         return {
-          type: 'completed',
+          type: 'completed' as const,
           data: reservationData,
           completedAt: dbReservation.updatedAt,
           completedBy: dbReservation.updatedBy || 'system',
@@ -118,7 +118,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       const firstRow = result[0]
       if (!firstRow) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Reservation',
           id,
         })
@@ -127,7 +127,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       const reservation = this.mapDbToDomain(firstRow)
       if (!reservation) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map reservation data',
         })
       }
@@ -135,7 +135,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       return ok(reservation)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -163,7 +163,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       const firstRow = result[0]
       if (!firstRow) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Reservation',
           id,
         })
@@ -172,7 +172,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       const reservation = this.mapDbToDomain(firstRow.reservation)
       if (!reservation) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map reservation data',
         })
       }
@@ -189,7 +189,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       return ok(detail)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -224,7 +224,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       const insertedReservation = insertedReservations[0]
       if (!insertedReservation) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to insert reservation',
         })
       }
@@ -232,7 +232,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       const reservation = this.mapDbToDomain(insertedReservation)
       if (!reservation) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map created reservation',
         })
       }
@@ -240,7 +240,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       return ok(reservation)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -261,7 +261,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       const existingRow = existing[0]
       if (!existingRow) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Reservation',
           id: data.id,
         })
@@ -287,7 +287,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       const updatedReservation = updatedReservations[0]
       if (!updatedReservation) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to update reservation',
         })
       }
@@ -295,7 +295,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       const reservation = this.mapDbToDomain(updatedReservation)
       if (!reservation) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map updated reservation',
         })
       }
@@ -303,7 +303,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       return ok(reservation)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -328,7 +328,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       const updatedRow = result[0]
       if (!updatedRow) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Reservation',
           id,
         })
@@ -337,7 +337,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       const reservation = this.mapDbToDomain(updatedRow)
       if (!reservation) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map confirmed reservation',
         })
       }
@@ -345,7 +345,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       return ok(reservation)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -380,7 +380,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       const updatedRow = result[0]
       if (!updatedRow) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Reservation',
           id,
         })
@@ -389,7 +389,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       const reservation = this.mapDbToDomain(updatedRow)
       if (!reservation) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map cancelled reservation',
         })
       }
@@ -397,7 +397,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       return ok(reservation)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -424,7 +424,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       const updatedRow = result[0]
       if (!updatedRow) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Reservation',
           id,
         })
@@ -433,7 +433,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       const reservation = this.mapDbToDomain(updatedRow)
       if (!reservation) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map completed reservation',
         })
       }
@@ -441,7 +441,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       return ok(reservation)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -468,7 +468,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       const updatedRow = result[0]
       if (!updatedRow) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Reservation',
           id,
         })
@@ -477,7 +477,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       const reservation = this.mapDbToDomain(updatedRow)
       if (!reservation) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map no-show reservation',
         })
       }
@@ -485,7 +485,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       return ok(reservation)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -511,7 +511,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       const updatedRow = result[0]
       if (!updatedRow) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Reservation',
           id,
         })
@@ -520,7 +520,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       const reservation = this.mapDbToDomain(updatedRow)
       if (!reservation) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map reservation',
         })
       }
@@ -528,7 +528,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       return ok(reservation)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -605,7 +605,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       })
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -640,7 +640,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       return ok(items)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -691,7 +691,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       return ok(slots)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -743,7 +743,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       return ok(hasConflict)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -780,7 +780,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       return ok(countMap)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })

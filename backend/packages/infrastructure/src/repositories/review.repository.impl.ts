@@ -69,7 +69,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
 
     // デフォルトはpublishedとして扱う（DBにステータスカラムがないため）
     return {
-      type: 'published',
+      type: 'published' as const,
       data: reviewData,
       publishedAt: dbReview.createdAt,
       publishedBy: dbReview.createdBy || 'system',
@@ -87,7 +87,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       const firstRow = result[0]
       if (!firstRow) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Review',
           id,
         })
@@ -96,7 +96,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       const review = this.mapDbToDomain(firstRow)
       if (!review) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map review data',
         })
       }
@@ -104,7 +104,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       return ok(review)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -136,7 +136,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       const firstRow = result[0]
       if (!firstRow) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Review',
           id,
         })
@@ -145,7 +145,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       const review = this.mapDbToDomain(firstRow.review)
       if (!review) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map review data',
         })
       }
@@ -162,7 +162,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       return ok(detail)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -187,7 +187,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       const review = this.mapDbToDomain(firstRow)
       if (!review) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map review data',
         })
       }
@@ -195,7 +195,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       return ok(review)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -231,7 +231,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       const insertedReview = insertedReviews[0]
       if (!insertedReview) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to insert review',
         })
       }
@@ -239,7 +239,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       const review = this.mapDbToDomain(insertedReview)
       if (!review) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map created review',
         })
       }
@@ -247,7 +247,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       return ok(review)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -268,7 +268,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       const existingRow = existing[0]
       if (!existingRow) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Review',
           id: data.id,
         })
@@ -299,7 +299,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       const updatedReview = updatedReviews[0]
       if (!updatedReview) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to update review',
         })
       }
@@ -307,7 +307,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       const review = this.mapDbToDomain(updatedReview)
       if (!review) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map updated review',
         })
       }
@@ -315,7 +315,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       return ok(review)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -353,7 +353,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       const deletedReview = deleteResult[0]
       if (!deletedReview) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Review',
           id,
         })
@@ -362,14 +362,14 @@ export class DrizzleReviewRepository implements ReviewRepository {
       const review = this.mapDbToDomain(deletedReview)
       if (!review) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map deleted review',
         })
       }
 
       // 削除済みとして返す
       return ok({
-        type: 'deleted',
+        type: 'deleted' as const,
         data: review.data,
         deletedAt: new Date(),
         deletedBy: _deletedBy,
@@ -377,7 +377,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       })
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -402,7 +402,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       const updatedRow = result[0]
       if (!updatedRow) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Review',
           id,
         })
@@ -411,7 +411,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       const review = this.mapDbToDomain(updatedRow)
       if (!review) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map verified review',
         })
       }
@@ -419,7 +419,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       return ok(review)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -442,7 +442,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       const updatedRow = result[0]
       if (!updatedRow) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Review',
           id,
         })
@@ -451,7 +451,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       const review = this.mapDbToDomain(updatedRow)
       if (!review) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map review',
         })
       }
@@ -459,7 +459,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       return ok(review)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -539,7 +539,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       })
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -625,7 +625,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       })
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -682,7 +682,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       })
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -712,7 +712,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       return ok(items)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -745,7 +745,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       return ok(items)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })

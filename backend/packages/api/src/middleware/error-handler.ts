@@ -195,11 +195,26 @@ export const errorHandler = (
         })
       }
     )
+    .when(
+      // Handle body-parser JSON syntax errors
+      (e): e is SyntaxError & { status?: number; body?: string } =>
+        e instanceof SyntaxError &&
+        'status' in e &&
+        (e as SyntaxError & { status?: number }).status === 400 &&
+        'body' in e,
+      (_e) => {
+        res.status(400).json({
+          code: 'INVALID_JSON',
+          message: 'Invalid JSON in request body',
+        })
+      }
+    )
     .otherwise((e) => {
+      const error = e as Error
       res.status(500).json({
         code: 'INTERNAL_SERVER_ERROR',
-        message: isDevelopment ? e.message : 'An unexpected error occurred',
-        ...(isDevelopment && e.stack ? { stack: e.stack } : {}),
+        message: isDevelopment ? error.message : 'An unexpected error occurred',
+        ...(isDevelopment && error.stack ? { stack: error.stack } : {}),
       })
     })
 }

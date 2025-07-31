@@ -70,7 +70,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
     // isActiveフラグでステータスを判定
     if (!dbService.isActive) {
       return {
-        type: 'inactive',
+        type: 'inactive' as const,
         data: serviceData,
         inactivatedAt: dbService.updatedAt,
         inactivatedReason: 'Deactivated',
@@ -78,7 +78,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
     }
 
     return {
-      type: 'active',
+      type: 'active' as const,
       data: serviceData,
     }
   }
@@ -120,7 +120,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
       const firstRow = result[0]
       if (!firstRow) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Service',
           id,
         })
@@ -129,7 +129,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
       const service = this.mapDbToDomain(firstRow)
       if (!service) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map service data',
         })
       }
@@ -137,7 +137,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
       return ok(service)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -171,7 +171,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
       const insertedService = insertedServices[0]
       if (!insertedService) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to insert service',
         })
       }
@@ -179,7 +179,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
       const service = this.mapDbToDomain(insertedService)
       if (!service) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map created service',
         })
       }
@@ -187,7 +187,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
       return ok(service)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -208,7 +208,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
       const existingRow = existing[0]
       if (!existingRow) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Service',
           id: data.id,
         })
@@ -240,7 +240,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
       const updatedService = updatedServices[0]
       if (!updatedService) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to update service',
         })
       }
@@ -248,7 +248,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
       const service = this.mapDbToDomain(updatedService)
       if (!service) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map updated service',
         })
       }
@@ -256,7 +256,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
       return ok(service)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -282,7 +282,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
       const updatedRow = result[0]
       if (!updatedRow) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Service',
           id,
         })
@@ -291,7 +291,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
       const service = this.mapDbToDomain(updatedRow)
       if (!service) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map deactivated service',
         })
       }
@@ -299,7 +299,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
       return ok(service)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -324,7 +324,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
       const updatedRow = result[0]
       if (!updatedRow) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Service',
           id,
         })
@@ -333,7 +333,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
       const service = this.mapDbToDomain(updatedRow)
       if (!service) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map reactivated service',
         })
       }
@@ -341,7 +341,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
       return ok(service)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -360,7 +360,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
 
       if (result.count === 0) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Service',
           id,
         })
@@ -369,7 +369,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
       return ok(undefined)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -473,7 +473,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
       })
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -532,7 +532,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
       return ok(items)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -552,7 +552,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
       const firstRow = result[0]
       if (!firstRow) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'ServiceCategory',
           id,
         })
@@ -561,7 +561,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
       const category = this.mapDbCategoryToDomain(firstRow)
       if (!category) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map category data',
         })
       }
@@ -569,7 +569,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
       return ok(category)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -597,7 +597,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
       return ok(categories)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })

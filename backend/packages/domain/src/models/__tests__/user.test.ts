@@ -21,9 +21,11 @@ describe('User Model', () => {
       expect(result.type).toBe('err')
       if (result.type === 'err') {
         expect(result.error.type).toBe('weakPassword')
-        expect(result.error.reason).toBe(
-          'Password must be at least 12 characters long'
-        )
+        if (result.error.type === 'weakPassword') {
+          expect(result.error.reason).toBe(
+            'Password must be at least 12 characters long'
+          )
+        }
       }
     })
 
@@ -33,9 +35,11 @@ describe('User Model', () => {
       expect(result.type).toBe('err')
       if (result.type === 'err') {
         expect(result.error.type).toBe('weakPassword')
-        expect(result.error.reason).toBe(
-          'Password must contain uppercase, lowercase, numbers, and special characters'
-        )
+        if (result.error.type === 'weakPassword') {
+          expect(result.error.reason).toBe(
+            'Password must contain uppercase, lowercase, numbers, and special characters'
+          )
+        }
       }
     })
 
@@ -45,9 +49,11 @@ describe('User Model', () => {
       expect(result.type).toBe('err')
       if (result.type === 'err') {
         expect(result.error.type).toBe('weakPassword')
-        expect(result.error.reason).toBe(
-          'Password must contain uppercase, lowercase, numbers, and special characters'
-        )
+        if (result.error.type === 'weakPassword') {
+          expect(result.error.reason).toBe(
+            'Password must contain uppercase, lowercase, numbers, and special characters'
+          )
+        }
       }
     })
 
@@ -57,9 +63,11 @@ describe('User Model', () => {
       expect(result.type).toBe('err')
       if (result.type === 'err') {
         expect(result.error.type).toBe('weakPassword')
-        expect(result.error.reason).toBe(
-          'Password must contain uppercase, lowercase, numbers, and special characters'
-        )
+        if (result.error.type === 'weakPassword') {
+          expect(result.error.reason).toBe(
+            'Password must contain uppercase, lowercase, numbers, and special characters'
+          )
+        }
       }
     })
 
@@ -69,9 +77,11 @@ describe('User Model', () => {
       expect(result.type).toBe('err')
       if (result.type === 'err') {
         expect(result.error.type).toBe('weakPassword')
-        expect(result.error.reason).toBe(
-          'Password must contain uppercase, lowercase, numbers, and special characters'
-        )
+        if (result.error.type === 'weakPassword') {
+          expect(result.error.reason).toBe(
+            'Password must contain uppercase, lowercase, numbers, and special characters'
+          )
+        }
       }
     })
 
@@ -102,7 +112,9 @@ describe('User Model', () => {
       expect(result.type).toBe('err')
       if (result.type === 'err') {
         expect(result.error.type).toBe('invalidEmail')
-        expect(result.error.email).toBe(invalidEmail)
+        if (result.error.type === 'invalidEmail') {
+          expect(result.error.email).toBe(invalidEmail)
+        }
       }
     })
 
@@ -113,7 +125,9 @@ describe('User Model', () => {
       expect(result.type).toBe('err')
       if (result.type === 'err') {
         expect(result.error.type).toBe('invalidEmail')
-        expect(result.error.email).toBe(invalidEmail)
+        if (result.error.type === 'invalidEmail') {
+          expect(result.error.email).toBe(invalidEmail)
+        }
       }
     })
 
@@ -124,7 +138,9 @@ describe('User Model', () => {
       expect(result.type).toBe('err')
       if (result.type === 'err') {
         expect(result.error.type).toBe('invalidEmail')
-        expect(result.error.email).toBe(invalidEmail)
+        if (result.error.type === 'invalidEmail') {
+          expect(result.error.email).toBe(invalidEmail)
+        }
       }
     })
 
@@ -135,7 +151,9 @@ describe('User Model', () => {
       expect(result.type).toBe('err')
       if (result.type === 'err') {
         expect(result.error.type).toBe('invalidEmail')
-        expect(result.error.email).toBe(invalidEmail)
+        if (result.error.type === 'invalidEmail') {
+          expect(result.error.email).toBe(invalidEmail)
+        }
       }
     })
 

@@ -69,7 +69,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
     // 削除済みフラグやステータスがDBに存在しない場合は、すべてactiveとして扱う
     // 実際のプロジェクトでは、DBスキーマに status, deletedAt, suspendedAt などのカラムを追加
     return {
-      type: 'active',
+      type: 'active' as const,
       data: {
         id,
         name: decryptedCustomer.name,
@@ -131,7 +131,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
 
       if (result.length === 0) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Customer',
           id,
         })
@@ -140,7 +140,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
       const firstRow = result[0]
       if (!firstRow) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Customer',
           id,
         })
@@ -148,7 +148,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
       const customer = await this.mapDbToDomain(firstRow)
       if (!customer) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map customer from database',
         })
       }
@@ -156,7 +156,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
       return ok(customer)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message: 'Failed to find customer by ID',
         originalError: error,
       })
@@ -184,7 +184,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
       const customer = await this.mapDbToDomain(firstRow)
       if (!customer) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map customer from database',
         })
       }
@@ -192,7 +192,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
       return ok(customer)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message: 'Failed to find customer by email',
         originalError: error,
       })
@@ -228,14 +228,14 @@ export class DrizzleCustomerRepository implements CustomerRepository {
       const firstRow = result[0]
       if (!firstRow) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to return saved customer',
         })
       }
       const savedCustomer = await this.mapDbToDomain(firstRow)
       if (!savedCustomer) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to map saved customer',
         })
       }
@@ -252,14 +252,14 @@ export class DrizzleCustomerRepository implements CustomerRepository {
         error.constraint === 'customers_email_unique'
       ) {
         return err({
-          type: 'constraintViolation',
+          type: 'constraintViolation' as const,
           constraint: 'unique_email',
           message: `Customer with email ${customer.data.contactInfo.email} already exists`,
         })
       }
 
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message: 'Failed to save customer',
         originalError: error,
       })
@@ -275,7 +275,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
 
       if (result.length === 0) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Customer',
           id,
         })
@@ -284,7 +284,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
       return ok(undefined)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message: 'Failed to delete customer',
         originalError: error,
       })
@@ -357,7 +357,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
       })
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message: 'Failed to search customers',
         originalError: error,
       })
@@ -393,7 +393,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
       return ok(filteredCustomers)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message: 'Failed to find customers by IDs',
         originalError: error,
       })
@@ -416,7 +416,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
       return ok(result.value.total)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message: 'Failed to count customers',
         originalError: error,
       })
@@ -453,7 +453,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
       return ok(counts)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message: 'Failed to count customers by membership level',
         originalError: error,
       })
@@ -470,7 +470,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
       })
     } catch (_error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message: 'Transaction failed',
       })
     }

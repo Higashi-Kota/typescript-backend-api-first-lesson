@@ -44,7 +44,7 @@ export class DrizzleUserRepository implements UserRepository {
       return ok(user)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -74,7 +74,7 @@ export class DrizzleUserRepository implements UserRepository {
       return ok(user)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -104,7 +104,7 @@ export class DrizzleUserRepository implements UserRepository {
       return ok(user)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -134,7 +134,7 @@ export class DrizzleUserRepository implements UserRepository {
       return ok(user)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -153,7 +153,7 @@ export class DrizzleUserRepository implements UserRepository {
 
       if (existing.length > 0) {
         return err({
-          type: 'alreadyExists',
+          type: 'alreadyExists' as const,
           email: dbUser.email,
         })
       }
@@ -166,7 +166,7 @@ export class DrizzleUserRepository implements UserRepository {
       const inserted = insertedRows[0]
       if (!inserted) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to insert user',
         })
       }
@@ -175,7 +175,7 @@ export class DrizzleUserRepository implements UserRepository {
       return ok(savedUser)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -195,7 +195,7 @@ export class DrizzleUserRepository implements UserRepository {
       const updated = updatedRows[0]
       if (!updated) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           userId: user.data.id,
         })
       }
@@ -204,7 +204,7 @@ export class DrizzleUserRepository implements UserRepository {
       return ok(updatedUser)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -218,7 +218,7 @@ export class DrizzleUserRepository implements UserRepository {
       return ok(undefined)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -284,7 +284,7 @@ export class DrizzleUserRepository implements UserRepository {
       })
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -293,78 +293,72 @@ export class DrizzleUserRepository implements UserRepository {
 
   private mapToUser(dbUser: typeof users.$inferSelect): User {
     // Map account status
-    let status: UserAccountStatus
-    switch (dbUser.status) {
-      case 'active':
-        status = { type: 'active' }
-        break
-      case 'unverified':
-        status = {
-          type: 'unverified',
-          emailVerificationToken: dbUser.emailVerificationToken || '',
-          tokenExpiry: dbUser.emailVerificationTokenExpiry || new Date(),
-        }
-        break
-      case 'locked':
-        status = {
-          type: 'locked',
-          reason: 'Too many failed login attempts',
-          lockedAt: dbUser.lockedAt || new Date(),
-          failedAttempts: dbUser.failedLoginAttempts,
-        }
-        break
-      case 'suspended':
-        status = {
-          type: 'suspended',
-          reason: 'Account suspended by administrator',
-          suspendedAt: dbUser.updatedAt,
-        }
-        break
-      case 'deleted':
-        status = {
-          type: 'deleted',
-          deletedAt: dbUser.updatedAt,
-        }
-        break
-      default:
-        status = { type: 'active' }
-    }
+    const status: UserAccountStatus = (() => {
+      switch (dbUser.status) {
+        case 'active':
+          return { type: 'active' as const }
+        case 'unverified':
+          return {
+            type: 'unverified' as const,
+            emailVerificationToken: dbUser.emailVerificationToken || '',
+            tokenExpiry: dbUser.emailVerificationTokenExpiry || new Date(),
+          }
+        case 'locked':
+          return {
+            type: 'locked' as const,
+            reason: 'Too many failed login attempts',
+            lockedAt: dbUser.lockedAt || new Date(),
+            failedAttempts: dbUser.failedLoginAttempts,
+          }
+        case 'suspended':
+          return {
+            type: 'suspended' as const,
+            reason: 'Account suspended by administrator',
+            suspendedAt: dbUser.updatedAt,
+          }
+        case 'deleted':
+          return {
+            type: 'deleted' as const,
+            deletedAt: dbUser.updatedAt,
+          }
+        default:
+          return { type: 'active' as const }
+      }
+    })()
 
     // Map 2FA status
-    let twoFactorStatus: TwoFactorStatus
-    switch (dbUser.twoFactorStatus) {
-      case 'disabled':
-        twoFactorStatus = { type: 'disabled' }
-        break
-      case 'pending':
-        twoFactorStatus = {
-          type: 'pending',
-          secret: dbUser.twoFactorSecret || '',
-          qrCodeUrl: '', // Generated dynamically when needed
-        }
-        break
-      case 'enabled':
-        twoFactorStatus = {
-          type: 'enabled',
-          secret: dbUser.twoFactorSecret || '',
-          backupCodes: dbUser.backupCodes || [],
-        }
-        break
-      default:
-        twoFactorStatus = { type: 'disabled' }
-    }
+    const twoFactorStatus: TwoFactorStatus = (() => {
+      switch (dbUser.twoFactorStatus) {
+        case 'disabled':
+          return { type: 'disabled' as const }
+        case 'pending':
+          return {
+            type: 'pending' as const,
+            secret: dbUser.twoFactorSecret || '',
+            qrCodeUrl: '', // Generated dynamically when needed
+          }
+        case 'enabled':
+          return {
+            type: 'enabled' as const,
+            secret: dbUser.twoFactorSecret || '',
+            backupCodes: dbUser.backupCodes || [],
+          }
+        default:
+          return { type: 'disabled' as const }
+      }
+    })()
 
     // Map password reset status
-    let passwordResetStatus: PasswordResetStatus
-    if (dbUser.passwordResetToken && dbUser.passwordResetTokenExpiry) {
-      passwordResetStatus = {
-        type: 'requested',
-        token: dbUser.passwordResetToken,
-        tokenExpiry: dbUser.passwordResetTokenExpiry,
+    const passwordResetStatus: PasswordResetStatus = (() => {
+      if (dbUser.passwordResetToken && dbUser.passwordResetTokenExpiry) {
+        return {
+          type: 'requested' as const,
+          token: dbUser.passwordResetToken,
+          tokenExpiry: dbUser.passwordResetTokenExpiry,
+        }
       }
-    } else {
-      passwordResetStatus = { type: 'none' }
-    }
+      return { type: 'none' as const }
+    })()
 
     return {
       status,

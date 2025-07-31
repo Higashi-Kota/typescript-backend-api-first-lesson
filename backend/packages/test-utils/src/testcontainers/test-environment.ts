@@ -86,12 +86,3 @@ export async function globalSetup() {
   // biome-ignore lint/suspicious/noExplicitAny: Global object type is not well-defined
   ;(global as any).__TEST_ENV__ = testEnv
 }
-
-// Global teardown for Vitest
-export async function globalTeardown() {
-  // biome-ignore lint/suspicious/noExplicitAny: Global object type is not well-defined
-  const testEnv = (global as any).__TEST_ENV__
-  if (testEnv) {
-    await testEnv.stop()
-  }
-}

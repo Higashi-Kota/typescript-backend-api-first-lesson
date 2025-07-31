@@ -39,7 +39,7 @@
     "dev:tsc": "tsc --build --watch",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "typecheck": "tsc --build",
+    "typecheck": "tsc --noEmit",
     "format": "biome format --write .",
     "format:fix": "biome check . --fix --unsafe",
     "lint": "biome lint .",

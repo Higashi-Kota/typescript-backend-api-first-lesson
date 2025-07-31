@@ -60,7 +60,7 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
 
       if (!attachment) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to create attachment',
           details: 'No attachment returned from insert',
         })
@@ -69,7 +69,7 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
       return ok(this.mapToAttachmentData(attachment))
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message: 'Failed to create attachment',
         details: error instanceof Error ? error.message : String(error),
       })
@@ -87,7 +87,7 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
       return ok(attachment ? this.mapToAttachmentData(attachment) : null)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message: 'Failed to find attachment by ID',
         details: error instanceof Error ? error.message : String(error),
       })
@@ -105,7 +105,7 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
       return ok(attachment ? this.mapToAttachmentData(attachment) : null)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message: 'Failed to find attachment by key',
         details: error instanceof Error ? error.message : String(error),
       })
@@ -132,7 +132,7 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
 
       if (!attachment) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           entity: 'Attachment',
           id: input.id,
         })
@@ -141,7 +141,7 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
       return ok(this.mapToAttachmentData(attachment))
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message: 'Failed to update attachment',
         details: error instanceof Error ? error.message : String(error),
       })
@@ -157,7 +157,7 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
       return ok(undefined)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message: 'Failed to soft delete attachment',
         details: error instanceof Error ? error.message : String(error),
       })
@@ -170,7 +170,7 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
       return ok(undefined)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message: 'Failed to hard delete attachment',
         details: error instanceof Error ? error.message : String(error),
       })
@@ -239,7 +239,7 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
       })
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message: 'Failed to search attachments',
         details: error instanceof Error ? error.message : String(error),
       })
@@ -269,7 +269,7 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
       return ok(Number(result?.totalSize ?? 0))
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message: 'Failed to get user storage usage',
         details: error instanceof Error ? error.message : String(error),
       })
@@ -296,7 +296,7 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
 
       if (!shareLink) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to create share link',
           details: 'No share link returned from insert',
         })
@@ -305,7 +305,7 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
       return ok(this.mapToShareLinkData(shareLink))
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message: 'Failed to create share link',
         details: error instanceof Error ? error.message : String(error),
       })
@@ -323,7 +323,7 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
       return ok(shareLink ? this.mapToShareLinkData(shareLink) : null)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message: 'Failed to find share link by token',
         details: error instanceof Error ? error.message : String(error),
       })
@@ -345,7 +345,7 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
       return ok(undefined)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message: 'Failed to increment share link download count',
         details: error instanceof Error ? error.message : String(error),
       })
@@ -360,7 +360,7 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
       return ok(undefined)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message: 'Failed to delete share link',
         details: error instanceof Error ? error.message : String(error),
       })
@@ -386,7 +386,7 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
       return ok(undefined)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message: 'Failed to create download log',
         details: error instanceof Error ? error.message : String(error),
       })
@@ -421,7 +421,7 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
       })
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message: 'Failed to get download history',
         details: error instanceof Error ? error.message : String(error),
       })
@@ -439,7 +439,7 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
       return ok(0) // Drizzle doesn't return rowCount for delete operations
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message: 'Failed to delete expired attachments',
         details: error instanceof Error ? error.message : String(error),
       })
@@ -455,7 +455,7 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
       return ok(0) // Drizzle doesn't return rowCount for delete operations
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message: 'Failed to delete expired share links',
         details: error instanceof Error ? error.message : String(error),
       })

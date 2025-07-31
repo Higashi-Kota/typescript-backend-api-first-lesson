@@ -3,7 +3,7 @@
  * SQLインジェクション対策のためのヘルパー関数
  */
 
-import { sql } from 'drizzle-orm'
+import { sql, like, ilike } from 'drizzle-orm'
 import type { SQL } from 'drizzle-orm'
 import type { AnyColumn } from 'drizzle-orm'
 
@@ -31,12 +31,12 @@ export function safeLike(column: AnyColumn, pattern: string): SQL {
   if (pattern.includes('%') || pattern.includes('_')) {
     // 危険な文字（バックスラッシュ）のみエスケープ
     const safePattern = pattern.replace(/\\/g, '\\\\')
-    return sql`${column} LIKE ${safePattern}`
+    return like(column, safePattern)
   }
 
   // %や_が含まれていない場合は、前後に%を追加して部分一致検索
   const escapedPattern = escapeLikePattern(pattern)
-  return sql`${column} LIKE ${`%${escapedPattern}%`}`
+  return like(column, `%${escapedPattern}%`)
 }
 
 /**
@@ -47,7 +47,7 @@ export function safeLike(column: AnyColumn, pattern: string): SQL {
  */
 export function safeILike(column: AnyColumn, pattern: string): SQL {
   const escapedPattern = escapeLikePattern(pattern)
-  return sql`${column} ILIKE ${`%${escapedPattern}%`}`
+  return ilike(column, `%${escapedPattern}%`)
 }
 
 /**

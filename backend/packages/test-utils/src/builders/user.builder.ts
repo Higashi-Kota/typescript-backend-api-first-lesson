@@ -11,9 +11,7 @@ import type {
 } from '@beauty-salon-backend/domain'
 import { match } from 'ts-pattern'
 
-export type TestUser = User & {
-  token?: string
-}
+export type TestUser = User
 
 export type TestDataState<T> =
   | { type: 'building'; partial: Partial<T> }
@@ -144,6 +142,10 @@ export class UserBuilder {
       .otherwise(() => this)
   }
 
+  with2FAEnabled(secret?: string, backupCodes?: string[]): UserBuilder {
+    return this.withTwoFactorEnabled(secret, backupCodes)
+  }
+
   withTwoFactorEnabled(secret?: string, backupCodes?: string[]): UserBuilder {
     const twoFactorStatus: TwoFactorStatus = {
       type: 'enabled',
@@ -220,6 +222,10 @@ export class UserBuilder {
       .otherwise(() => this)
   }
 
+  withPasswordResetToken(token?: string): UserBuilder {
+    return this.withPasswordResetRequested(token)
+  }
+
   withPasswordResetRequested(token?: string): UserBuilder {
     const passwordResetStatus: PasswordResetStatus = {
       type: 'requested',
@@ -246,33 +252,37 @@ export class UserBuilder {
       .otherwise(() => this)
   }
 
-  withToken(token: string): UserBuilder {
+  build(): User {
     return match(this.state)
-      .with(
-        { type: 'building' },
-        ({ partial }) =>
-          new UserBuilder({
-            type: 'building',
-            partial: {
-              ...partial,
-              token,
-            },
-          })
-      )
-      .otherwise(() => this)
+      .with({ type: 'building' }, ({ partial }) => {
+        if (!partial.status || !partial.data) {
+          throw new Error('User data is incomplete')
+        }
+
+        const user: User = {
+          status: partial.status,
+          data: partial.data,
+        }
+
+        return user
+      })
+      .with({ type: 'built' }, ({ data }) => data)
+      .with({ type: 'error' }, ({ error }) => {
+        throw new Error(error)
+      })
+      .exhaustive()
   }
 
-  async build(): Promise<Result<TestUser, string>> {
+  async buildAsync(): Promise<Result<User, string>> {
     return match(this.state)
       .with({ type: 'building' }, ({ partial }) => {
         if (!partial.status || !partial.data) {
           return err('User data is incomplete')
         }
 
-        const user: TestUser = {
+        const user: User = {
           status: partial.status,
           data: partial.data,
-          token: partial.token,
         }
 
         return ok(user)

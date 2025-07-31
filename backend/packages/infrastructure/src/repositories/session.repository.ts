@@ -38,7 +38,7 @@ export class DrizzleSessionRepository implements SessionRepository {
       return ok(session)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -68,7 +68,7 @@ export class DrizzleSessionRepository implements SessionRepository {
       return ok(session)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -89,7 +89,7 @@ export class DrizzleSessionRepository implements SessionRepository {
       return ok(sessionList)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -110,7 +110,7 @@ export class DrizzleSessionRepository implements SessionRepository {
       const inserted = insertedRows[0]
       if (!inserted) {
         return err({
-          type: 'databaseError',
+          type: 'databaseError' as const,
           message: 'Failed to insert session',
         })
       }
@@ -119,7 +119,7 @@ export class DrizzleSessionRepository implements SessionRepository {
       return ok(savedSession)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -144,7 +144,7 @@ export class DrizzleSessionRepository implements SessionRepository {
       const updated = updatedRows[0]
       if (!updated) {
         return err({
-          type: 'notFound',
+          type: 'notFound' as const,
           sessionId: session.id,
         })
       }
@@ -153,7 +153,7 @@ export class DrizzleSessionRepository implements SessionRepository {
       return ok(updatedSession)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -167,7 +167,7 @@ export class DrizzleSessionRepository implements SessionRepository {
       return ok(undefined)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -183,7 +183,7 @@ export class DrizzleSessionRepository implements SessionRepository {
       return ok(undefined)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -201,7 +201,7 @@ export class DrizzleSessionRepository implements SessionRepository {
       return ok(deletedCount)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
@@ -221,7 +221,7 @@ export class DrizzleSessionRepository implements SessionRepository {
       return ok(count)
     } catch (error) {
       return err({
-        type: 'databaseError',
+        type: 'databaseError' as const,
         message:
           error instanceof Error ? error.message : 'Unknown database error',
       })
