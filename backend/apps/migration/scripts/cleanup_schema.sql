@@ -3,6 +3,9 @@
 -- Description: Drop all database objects in the correct order to avoid dependency issues
 
 -- Drop all tables in reverse order of creation
+DROP TABLE IF EXISTS download_logs CASCADE;
+DROP TABLE IF EXISTS share_links CASCADE;
+DROP TABLE IF EXISTS attachments CASCADE;
 DROP TABLE IF EXISTS booking_reservations CASCADE;
 DROP TABLE IF EXISTS reviews CASCADE;
 DROP TABLE IF EXISTS bookings CASCADE;
@@ -18,6 +21,7 @@ DROP TABLE IF EXISTS customers CASCADE;
 DROP TABLE IF EXISTS salons CASCADE;
 
 -- Drop all custom types
+DROP TYPE IF EXISTS file_type CASCADE;
 DROP TYPE IF EXISTS booking_status CASCADE;
 DROP TYPE IF EXISTS day_of_week CASCADE;
 DROP TYPE IF EXISTS reservation_status CASCADE;

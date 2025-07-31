@@ -22,6 +22,7 @@ export const createCustomerIdSafe = (value: string) =>
 export type ContactInfo = {
   email: string
   phoneNumber: string
+  alternativePhone?: string
 }
 
 // 顧客の基本情報

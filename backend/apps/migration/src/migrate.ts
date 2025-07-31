@@ -1,7 +1,7 @@
 import { env } from '@beauty-salon-backend/config'
 import { drizzle } from 'drizzle-orm/postgres-js'
-import { migrate } from 'drizzle-orm/postgres-js/migrator'
 import postgres from 'postgres'
+import { ProgrammaticMigration } from './programmatic-migration.js'
 
 async function runMigrations() {
   console.log('Running database migrations...')
@@ -11,11 +11,11 @@ async function runMigrations() {
   const db = drizzle(migrationClient)
 
   try {
-    // Use absolute path to scripts folder in the migration package
-    const migrationsFolder = new URL('../scripts', import.meta.url).pathname
-    console.log('Migrations folder:', migrationsFolder)
+    const migration = new ProgrammaticMigration(db)
 
-    await migrate(db, { migrationsFolder })
+    // Run the migration with default options (public schema)
+    await migration.up()
+
     console.log('Migrations completed successfully')
     await migrationClient.end()
     process.exit(0)

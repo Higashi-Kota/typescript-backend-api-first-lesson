@@ -83,12 +83,26 @@ export class DrizzleBookingRepository implements BookingRepository {
           data: bookingData,
         }
 
+      case 'pending':
+        return {
+          type: 'pending' as const,
+          data: bookingData,
+        }
+
       case 'confirmed':
         return {
           type: 'confirmed' as const,
           data: bookingData,
           confirmedAt: dbBooking.updatedAt,
           confirmedBy: dbBooking.updatedBy || 'system',
+        }
+
+      case 'in_progress':
+        return {
+          type: 'in_progress' as const,
+          data: bookingData,
+          startedAt: dbBooking.updatedAt,
+          startedBy: dbBooking.updatedBy || 'system',
         }
 
       case 'cancelled':

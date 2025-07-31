@@ -1,8 +1,8 @@
-import { sql } from 'drizzle-orm'
-import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
 import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { sql } from 'drizzle-orm'
+import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
 
 export interface MigrationOptions {
   schemaName?: string
@@ -124,82 +124,10 @@ export class ProgrammaticMigration {
 
       // Create tables
       await this.createTables(schemaName)
-
-      // Add file upload tables if missing from initial migration
-      await this.addFileUploadTables(schemaName)
     } catch (error) {
       console.error('Migration failed:', error)
       throw error
     }
-  }
-
-  /**
-   * Add file upload related tables
-   */
-  private async addFileUploadTables(schemaName: string): Promise<void> {
-    // Ensure search path is set
-    await this.db.execute(
-      sql`SET search_path TO ${sql.identifier(schemaName)}, public`
-    )
-    const fileUploadSql = `
-      -- Create attachments table if not exists
-      CREATE TABLE IF NOT EXISTS attachments (
-        id uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-        key text NOT NULL UNIQUE,
-        filename text NOT NULL,
-        content_type text NOT NULL,
-        size integer NOT NULL,
-        file_type file_type NOT NULL,
-        uploaded_by uuid NOT NULL,
-        salon_id uuid,
-        metadata jsonb,
-        tags jsonb,
-        created_at timestamp DEFAULT now() NOT NULL,
-        updated_at timestamp DEFAULT now() NOT NULL,
-        CONSTRAINT attachments_uploaded_by_users_id_fk FOREIGN KEY (uploaded_by) REFERENCES users(id) ON DELETE restrict ON UPDATE no action,
-        CONSTRAINT attachments_salon_id_salons_id_fk FOREIGN KEY (salon_id) REFERENCES salons(id) ON DELETE cascade ON UPDATE no action
-      );
-
-      -- Create share_links table if not exists
-      CREATE TABLE IF NOT EXISTS share_links (
-        id uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-        token text NOT NULL UNIQUE,
-        attachment_id uuid NOT NULL,
-        expires_at timestamp,
-        max_downloads integer,
-        download_count integer DEFAULT 0 NOT NULL,
-        password_hash text,
-        allowed_emails jsonb,
-        created_by uuid NOT NULL,
-        created_at timestamp DEFAULT now() NOT NULL,
-        updated_at timestamp DEFAULT now() NOT NULL,
-        CONSTRAINT share_links_attachment_id_attachments_id_fk FOREIGN KEY (attachment_id) REFERENCES attachments(id) ON DELETE cascade ON UPDATE no action,
-        CONSTRAINT share_links_created_by_users_id_fk FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE restrict ON UPDATE no action
-      );
-
-      -- Create download_logs table if not exists
-      CREATE TABLE IF NOT EXISTS download_logs (
-        id uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-        attachment_id uuid NOT NULL,
-        share_link_id uuid,
-        downloaded_by uuid,
-        ip_address text,
-        user_agent text,
-        downloaded_at timestamp DEFAULT now() NOT NULL,
-        CONSTRAINT download_logs_attachment_id_attachments_id_fk FOREIGN KEY (attachment_id) REFERENCES attachments(id) ON DELETE cascade ON UPDATE no action,
-        CONSTRAINT download_logs_share_link_id_share_links_id_fk FOREIGN KEY (share_link_id) REFERENCES share_links(id) ON DELETE cascade ON UPDATE no action,
-        CONSTRAINT download_logs_downloaded_by_users_id_fk FOREIGN KEY (downloaded_by) REFERENCES users(id) ON DELETE set null ON UPDATE no action
-      );
-
-      -- Create indexes for file upload tables
-      CREATE INDEX IF NOT EXISTS idx_attachments_uploaded_by ON attachments(uploaded_by);
-      CREATE INDEX IF NOT EXISTS idx_attachments_salon_id ON attachments(salon_id);
-      CREATE INDEX IF NOT EXISTS idx_share_links_attachment_id ON share_links(attachment_id);
-      CREATE INDEX IF NOT EXISTS idx_share_links_token ON share_links(token);
-      CREATE INDEX IF NOT EXISTS idx_download_logs_attachment_id ON download_logs(attachment_id);
-    `
-
-    await this.db.execute(sql.raw(fileUploadSql))
   }
 
   /**

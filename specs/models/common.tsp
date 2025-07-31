@@ -46,6 +46,7 @@ namespace BeautySalon.Models {
     in_progress,
     completed,
     cancelled,
+    no_show,
   }
 
   model Error {

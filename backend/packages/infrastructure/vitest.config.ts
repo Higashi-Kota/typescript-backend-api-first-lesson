@@ -15,7 +15,6 @@ export default defineConfig({
         singleFork: true,
       },
     },
-    // Global setup/teardown
     globalSetup: './tests/setup/global-setup.ts',
     coverage: {
       provider: 'v8',

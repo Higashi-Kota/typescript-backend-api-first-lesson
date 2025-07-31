@@ -1,6 +1,7 @@
 // TypeSpec-compliant database schema
 import {
   boolean,
+  date,
   integer,
   jsonb,
   pgEnum,
@@ -41,9 +42,11 @@ export const reservationStatusEnum = pgEnum('reservation_status', [
 
 export const bookingStatusEnum = pgEnum('booking_status', [
   'draft',
+  'pending',
   'confirmed',
-  'cancelled',
+  'in_progress',
   'completed',
+  'cancelled',
   'no_show',
 ])
 
@@ -81,9 +84,13 @@ export const salons = pgTable('salons', {
   alternativePhone: text('alternative_phone'),
   imageUrls: jsonb('image_urls').$type<string[]>(),
   features: jsonb('features').$type<string[]>(),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
+  createdAt: timestamp('created_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   createdBy: text('created_by'),
-  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   updatedBy: text('updated_by'),
 })
 
@@ -115,9 +122,13 @@ export const staff = pgTable('staff', {
   yearsOfExperience: integer('years_of_experience'),
   certifications: jsonb('certifications').$type<string[]>(),
   isActive: boolean('is_active').notNull().default(true),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
+  createdAt: timestamp('created_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   createdBy: text('created_by'),
-  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   updatedBy: text('updated_by'),
 })
 
@@ -144,9 +155,13 @@ export const serviceCategories = pgTable(
     parentId: uuid('parent_id'),
     displayOrder: integer('display_order').notNull(),
     isActive: boolean('is_active').notNull().default(true),
-    createdAt: timestamp('created_at').notNull().defaultNow(),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
     createdBy: text('created_by'),
-    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
     updatedBy: text('updated_by'),
   },
   (table) => ({
@@ -172,9 +187,13 @@ export const services = pgTable('services', {
   imageUrl: text('image_url'),
   requiredStaffLevel: integer('required_staff_level'),
   isActive: boolean('is_active').notNull().default(true),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
+  createdAt: timestamp('created_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   createdBy: text('created_by'),
-  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   updatedBy: text('updated_by'),
 })
 
@@ -190,10 +209,14 @@ export const customers = pgTable('customers', {
   tags: jsonb('tags').$type<string[]>(),
   loyaltyPoints: integer('loyalty_points').notNull().default(0),
   membershipLevel: text('membership_level'),
-  birthDate: text('birth_date'),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
+  birthDate: date('birth_date'),
+  createdAt: timestamp('created_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   createdBy: text('created_by'),
-  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   updatedBy: text('updated_by'),
 })
 
@@ -212,17 +235,21 @@ export const reservations = pgTable('reservations', {
   serviceId: uuid('service_id')
     .notNull()
     .references(() => services.id),
-  startTime: timestamp('start_time').notNull(),
-  endTime: timestamp('end_time').notNull(),
+  startTime: timestamp('start_time', { withTimezone: true }).notNull(),
+  endTime: timestamp('end_time', { withTimezone: true }).notNull(),
   status: reservationStatusEnum('status').notNull().default('pending'),
   notes: text('notes'),
   totalAmount: integer('total_amount').notNull(), // cents
   depositAmount: integer('deposit_amount'),
   isPaid: boolean('is_paid').notNull().default(false),
   cancellationReason: text('cancellation_reason'),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
+  createdAt: timestamp('created_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   createdBy: text('created_by'),
-  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   updatedBy: text('updated_by'),
 })
 
@@ -242,9 +269,13 @@ export const bookings = pgTable('bookings', {
   paymentMethod: text('payment_method'),
   paymentStatus: text('payment_status').notNull().default('pending'),
   notes: text('notes'),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
+  createdAt: timestamp('created_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   createdBy: text('created_by'),
-  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   updatedBy: text('updated_by'),
 })
 
@@ -281,9 +312,13 @@ export const reviews = pgTable('reviews', {
   images: jsonb('images').$type<string[]>(),
   isVerified: boolean('is_verified').notNull().default(false),
   helpfulCount: integer('helpful_count').notNull().default(0),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
+  createdAt: timestamp('created_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   createdBy: text('created_by'),
-  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   updatedBy: text('updated_by'),
 })
 
@@ -297,24 +332,34 @@ export const users = pgTable('users', {
   status: userAccountStatusEnum('status').notNull().default('unverified'),
   emailVerified: boolean('email_verified').notNull().default(false),
   emailVerificationToken: text('email_verification_token'),
-  emailVerificationTokenExpiry: timestamp('email_verification_token_expiry'),
+  emailVerificationTokenExpiry: timestamp('email_verification_token_expiry', {
+    withTimezone: true,
+  }),
   twoFactorStatus: twoFactorStatusEnum('two_factor_status')
     .notNull()
     .default('disabled'),
   twoFactorSecret: text('two_factor_secret'),
   backupCodes: jsonb('backup_codes').$type<string[]>(),
   failedLoginAttempts: integer('failed_login_attempts').notNull().default(0),
-  lockedAt: timestamp('locked_at'),
+  lockedAt: timestamp('locked_at', { withTimezone: true }),
   passwordResetToken: text('password_reset_token'),
-  passwordResetTokenExpiry: timestamp('password_reset_token_expiry'),
-  lastPasswordChangeAt: timestamp('last_password_change_at'),
+  passwordResetTokenExpiry: timestamp('password_reset_token_expiry', {
+    withTimezone: true,
+  }),
+  lastPasswordChangeAt: timestamp('last_password_change_at', {
+    withTimezone: true,
+  }),
   passwordHistory: jsonb('password_history').$type<string[]>(),
   trustedIpAddresses: jsonb('trusted_ip_addresses').$type<string[]>(),
   customerId: uuid('customer_id').references(() => customers.id),
   staffId: uuid('staff_id').references(() => staff.id),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at').notNull().defaultNow(),
-  lastLoginAt: timestamp('last_login_at'),
+  createdAt: timestamp('created_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  lastLoginAt: timestamp('last_login_at', { withTimezone: true }),
   lastLoginIp: text('last_login_ip'),
 })
 
@@ -327,10 +372,14 @@ export const sessions = pgTable('sessions', {
   refreshToken: text('refresh_token').notNull().unique(),
   ipAddress: text('ip_address').notNull(),
   userAgent: text('user_agent').notNull(),
-  expiresAt: timestamp('expires_at').notNull(),
+  expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
   rememberMe: boolean('remember_me').notNull().default(false),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-  lastActivityAt: timestamp('last_activity_at').notNull().defaultNow(),
+  createdAt: timestamp('created_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  lastActivityAt: timestamp('last_activity_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
 })
 
 // File upload related tables

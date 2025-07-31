@@ -3,7 +3,7 @@
  * SQLインジェクション対策のためのヘルパー関数
  */
 
-import { sql, like, ilike } from 'drizzle-orm'
+import { ilike, like, sql } from 'drizzle-orm'
 import type { SQL } from 'drizzle-orm'
 import type { AnyColumn } from 'drizzle-orm'
 

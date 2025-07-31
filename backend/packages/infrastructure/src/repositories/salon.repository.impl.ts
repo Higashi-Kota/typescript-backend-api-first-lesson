@@ -64,6 +64,7 @@ export class DrizzleSalonRepository implements SalonRepository {
         contactInfo: {
           email: dbSalon.email,
           phoneNumber: dbSalon.phoneNumber,
+          alternativePhone: dbSalon.alternativePhone ?? undefined,
         },
         openingHours,
         imageUrls: dbSalon.imageUrls || undefined,
@@ -124,6 +125,7 @@ export class DrizzleSalonRepository implements SalonRepository {
           address: data.address,
           email: data.contactInfo.email,
           phoneNumber: data.contactInfo.phoneNumber,
+          alternativePhone: data.contactInfo.alternativePhone,
           imageUrls: data.imageUrls || [],
           features: data.features || [],
           createdBy: data.createdBy,
@@ -205,6 +207,7 @@ export class DrizzleSalonRepository implements SalonRepository {
         if (data.contactInfo !== undefined) {
           updateData.email = data.contactInfo.email
           updateData.phoneNumber = data.contactInfo.phoneNumber
+          updateData.alternativePhone = data.contactInfo.alternativePhone
         }
         if (data.imageUrls !== undefined) updateData.imageUrls = data.imageUrls
         if (data.features !== undefined) updateData.features = data.features

@@ -17,14 +17,11 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@beauty-salon-backend/domain':
-        '/home/aine/higashi-wrksp/typescript-backend-api-first-lesson/backend/packages/domain/src',
-      '@backend/usecase':
-        '/home/aine/higashi-wrksp/typescript-backend-api-first-lesson/backend/packages/usecase/src',
+      '@beauty-salon-backend/domain': '../../../backend/packages/domain/src',
+      '@backend/usecase': '../../../backend/packages/usecase/src',
       '@beauty-salon-backend/infrastructure':
-        '/home/aine/higashi-wrksp/typescript-backend-api-first-lesson/backend/packages/infrastructure/src',
-      '@beauty-salon-backend/types':
-        '/home/aine/higashi-wrksp/typescript-backend-api-first-lesson/backend/packages/types/src',
+        '../../../backend/packages/infrastructure/src',
+      '@beauty-salon-backend/types': '../../../backend/packages/types/src',
     },
   },
 })

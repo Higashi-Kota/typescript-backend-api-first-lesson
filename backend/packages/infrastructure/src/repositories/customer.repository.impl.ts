@@ -76,6 +76,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
         contactInfo: {
           email: decryptedCustomer.email,
           phoneNumber: decryptedCustomer.phoneNumber,
+          alternativePhone: decryptedCustomer.alternativePhone || undefined,
         },
         preferences: decryptedCustomer.preferences,
         notes: decryptedCustomer.notes,
@@ -100,13 +101,15 @@ export class DrizzleCustomerRepository implements CustomerRepository {
       name: data.name,
       email: data.contactInfo.email,
       phoneNumber: data.contactInfo.phoneNumber,
-      alternativePhone: null,
+      alternativePhone: data.contactInfo.alternativePhone || null,
       preferences: data.preferences,
       notes: data.notes,
       tags: data.tags.length > 0 ? data.tags : null,
       loyaltyPoints: data.loyaltyPoints,
       membershipLevel: data.membershipLevel,
-      birthDate: data.birthDate?.toISOString().split('T')[0] || null,
+      birthDate: data.birthDate
+        ? data.birthDate.toISOString().split('T')[0]
+        : null,
       updatedAt: data.updatedAt,
     }
 

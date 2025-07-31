@@ -26,9 +26,11 @@ import type { AuditInfo } from './salon.js'
 // 予約ステータス
 export type BookingStatus =
   | 'draft'
+  | 'pending'
   | 'confirmed'
-  | 'cancelled'
+  | 'in_progress'
   | 'completed'
+  | 'cancelled'
   | 'no_show'
 
 // 支払いステータス
@@ -58,10 +60,20 @@ export type Booking =
       data: BookingData
     }
   | {
+      type: 'pending'
+      data: BookingData
+    }
+  | {
       type: 'confirmed'
       data: BookingData
       confirmedAt: Date
       confirmedBy: string
+    }
+  | {
+      type: 'in_progress'
+      data: BookingData
+      startedAt: Date
+      startedBy: string
     }
   | {
       type: 'cancelled'
@@ -206,10 +218,20 @@ export const isDraftBooking = (
   booking: Booking
 ): booking is Extract<Booking, { type: 'draft' }> => booking.type === 'draft'
 
+export const isPendingBooking = (
+  booking: Booking
+): booking is Extract<Booking, { type: 'pending' }> =>
+  booking.type === 'pending'
+
 export const isConfirmedBooking = (
   booking: Booking
 ): booking is Extract<Booking, { type: 'confirmed' }> =>
   booking.type === 'confirmed'
+
+export const isInProgressBooking = (
+  booking: Booking
+): booking is Extract<Booking, { type: 'in_progress' }> =>
+  booking.type === 'in_progress'
 
 export const isCancelledBooking = (
   booking: Booking
@@ -227,15 +249,23 @@ export const isNoShowBooking = (
   booking.type === 'no_show'
 
 export const canBeCancelled = (booking: Booking): boolean => {
-  return booking.type === 'draft' || booking.type === 'confirmed'
+  return (
+    booking.type === 'draft' ||
+    booking.type === 'pending' ||
+    booking.type === 'confirmed'
+  )
 }
 
 export const canBeCompleted = (booking: Booking): boolean => {
-  return booking.type === 'confirmed'
+  return booking.type === 'in_progress'
 }
 
 export const canBeUpdated = (booking: Booking): boolean => {
-  return booking.type === 'draft'
+  return booking.type === 'draft' || booking.type === 'pending'
+}
+
+export const canStartProgress = (booking: Booking): boolean => {
+  return booking.type === 'confirmed'
 }
 
 export const getBookingStatus = (booking: Booking): BookingStatus => {

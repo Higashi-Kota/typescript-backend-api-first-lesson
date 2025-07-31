@@ -3688,6 +3688,7 @@ components:
         - in_progress
         - completed
         - cancelled
+        - no_show
     Models.CategoryId:
       type: string
     Models.ContactInfo:

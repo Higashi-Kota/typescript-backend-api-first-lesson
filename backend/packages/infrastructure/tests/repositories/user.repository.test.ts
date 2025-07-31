@@ -1,15 +1,15 @@
 import { randomUUID } from 'node:crypto'
-import type { UserId, User, UserRepository } from '@beauty-salon-backend/domain'
+import type { User, UserId, UserRepository } from '@beauty-salon-backend/domain'
 import {
-  TestEnvironment,
   SchemaIsolation,
+  TestEnvironment,
   UserBuilder,
 } from '@beauty-salon-backend/test-utils'
+import { sql } from 'drizzle-orm'
 import { drizzle } from 'drizzle-orm/postgres-js'
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
-import { sql } from 'drizzle-orm'
 import postgres from 'postgres'
-import { test as base, expect, describe } from 'vitest'
+import { test as base, describe, expect } from 'vitest'
 import { DrizzleUserRepository } from '../../src/repositories/user.repository.js'
 
 // カスタムテストコンテキスト
