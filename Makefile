@@ -7,7 +7,7 @@
         frontend-preview-test frontend-preview-stg frontend-preview-prod \
         backend-start-test backend-start-stg backend-start-prod \
         preview-test preview-stg preview-prod \
-        frontend-analyze ci-check test-backend test-backend-ci
+        frontend-analyze ci-check test-backend test-backend-ci check-deps
 
 # Default target
 help:
@@ -31,7 +31,8 @@ help:
 	@echo "  make lint          - Run linter"
 	@echo "  make format        - Format code"
 	@echo "  make typecheck     - Run type checking"
-	@echo "  make ci-check      - Run all CI checks locally"
+	@echo "  make ci-check      - Run all CI checks locally (matches GitHub Actions)"
+	@echo "  make check-deps    - Quick dependency check (catches missing deps)"
 	@echo ""
 	@echo "Cleanup:"
 	@echo "  make clean         - Clean build artifacts"
@@ -350,42 +351,60 @@ ci-check:
 	@echo "Running CI checks locally..."
 	@echo "======================================"
 	@echo ""
-	@echo "Step 1/9: Code formatting check..."
+	@echo "Step 1/10: Verifying lockfile integrity..."
+	@pnpm install --frozen-lockfile || (echo "❌ Lockfile check failed. Run 'pnpm install' to update." && exit 1)
+	@echo "✅ Lockfile integrity verified"
+	@echo ""
+	@echo "Step 2/10: Code formatting check..."
 	@pnpm format:check || (echo "❌ Formatting check failed. Run 'make format:fix' to fix." && exit 1)
 	@echo "✅ Formatting check passed"
 	@echo ""
-	@echo "Step 2/9: Linting..."
+	@echo "Step 3/10: Linting..."
 	@pnpm lint || (echo "❌ Linting failed. Run 'make lint' to see errors." && exit 1)
 	@echo "✅ Linting passed"
 	@echo ""
-	@echo "Step 3/9: API specification generation..."
+	@echo "Step 4/10: API specification generation..."
 	@pnpm generate:spec || (echo "❌ TypeSpec compilation failed." && exit 1)
 	@echo "✅ API specification generated successfully"
 	@echo ""
-	@echo "Step 4/9: API client generation..."
+	@echo "Step 5/10: API client generation..."
 	@pnpm generate:api || (echo "❌ API client generation failed." && exit 1)
 	@echo "✅ API client generated successfully"
 	@echo ""
-	@echo "Step 5/9: Building all packages..."
-	@$(MAKE) build || (echo "❌ Build failed." && exit 1)
+	@echo "Step 6/10: Building all packages (CI mode)..."
+	@pnpm run --recursive --workspace-concurrency=1 build || (echo "❌ Build failed." && exit 1)
 	@echo "✅ Build completed successfully"
 	@echo ""
-	@echo "Step 6/9: Type checking..."
+	@echo "Step 7/10: Type checking..."
 	@pnpm typecheck || (echo "❌ Type checking failed." && exit 1)
 	@echo "✅ Type checking passed"
 	@echo ""
-	@echo "Step 7/9: Security audit..."
+	@echo "Step 8/10: Security audit..."
 	@pnpm audit --audit-level=high || (echo "❌ Security vulnerabilities found." && exit 1)
 	@echo "✅ No high severity vulnerabilities found"
 	@echo ""
-	@echo "Step 8/9: Running backend tests..."
+	@echo "Step 9/10: Running backend tests..."
 	@$(MAKE) test-backend-ci || (echo "❌ Backend tests failed." && exit 1)
 	@echo "✅ Backend tests passed"
 	@echo ""
-	@echo "Step 9/9: Running frontend tests..."
+	@echo "Step 10/10: Running frontend tests..."
 	@$(MAKE) test-frontend || (echo "❌ Frontend tests failed." && exit 1)
 	@echo "✅ Frontend tests passed"
 	@echo ""
 	@echo "======================================"
 	@echo "✅ All CI checks passed!"
 	@echo "======================================"
+
+# Quick dependency check
+check-deps:
+	@echo "Checking dependency integrity..."
+	@echo ""
+	@echo "1. Verifying lockfile..."
+	@pnpm install --frozen-lockfile || (echo "❌ Lockfile out of sync" && exit 1)
+	@echo "✅ Lockfile is in sync"
+	@echo ""
+	@echo "2. Building packages sequentially (mimics CI)..."
+	@pnpm run --recursive --workspace-concurrency=1 build || (echo "❌ Build failed" && exit 1)
+	@echo "✅ All packages built successfully"
+	@echo ""
+	@echo "✅ Dependency check passed!"
