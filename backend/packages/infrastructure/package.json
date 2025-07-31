@@ -62,6 +62,7 @@
     "@aws-sdk/s3-request-presigner": "^3.709.0"
   },
   "devDependencies": {
+    "@beauty-salon-backend/migration": "workspace:*",
     "@beauty-salon-shared/config": "workspace:*",
     "@beauty-salon-backend/test-utils": "workspace:*",
     "@biomejs/biome": "^1.9.4",

@@ -421,6 +421,9 @@ importers:
         specifier: ^3.4.7
         version: 3.4.7
     devDependencies:
+      '@beauty-salon-backend/migration':
+        specifier: workspace:*
+        version: link:../../apps/migration
       '@beauty-salon-backend/test-utils':
         specifier: workspace:*
         version: link:../test-utils
@@ -472,9 +475,6 @@ importers:
       '@beauty-salon-backend/domain':
         specifier: workspace:*
         version: link:../domain
-      '@beauty-salon-backend/migration':
-        specifier: workspace:*
-        version: link:../../apps/migration
       '@testcontainers/postgresql':
         specifier: ^10.20.3
         version: 10.28.0
@@ -494,6 +494,9 @@ importers:
         specifier: ^11.0.6
         version: 11.1.0
     devDependencies:
+      '@beauty-salon-backend/migration':
+        specifier: workspace:*
+        version: link:../../apps/migration
       '@rslib/core':
         specifier: ^0.10.5
         version: 0.10.6(@microsoft/api-extractor@7.52.8(@types/node@22.16.5))(typescript@5.8.3)

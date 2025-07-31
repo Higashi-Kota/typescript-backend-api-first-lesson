@@ -28,7 +28,6 @@
   },
   "dependencies": {
     "@beauty-salon-backend/domain": "workspace:*",
-    "@beauty-salon-backend/migration": "workspace:*",
     "@testcontainers/postgresql": "^10.20.3",
     "testcontainers": "^10.20.3",
     "drizzle-orm": "^0.44.2",
@@ -37,6 +36,7 @@
     "uuid": "^11.0.6"
   },
   "devDependencies": {
+    "@beauty-salon-backend/migration": "workspace:*",
     "@rslib/core": "^0.10.5",
     "@types/node": "^22.12.1",
     "@types/uuid": "^10.0.0",

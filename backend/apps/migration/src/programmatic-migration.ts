@@ -17,6 +17,28 @@ export class ProgrammaticMigration {
   private getScriptsPath(): string {
     const currentFile = fileURLToPath(import.meta.url)
     const currentDir = dirname(currentFile)
+
+    // Try multiple possible locations for the scripts directory
+    const possiblePaths = [
+      join(currentDir, '../scripts'), // When running from dist
+      join(currentDir, 'scripts'), // When bundled
+      join(currentDir, '../../scripts'), // From nested dist directory
+      join(currentDir, '../../../apps/migration/scripts'), // From test-utils context
+      join(currentDir, '../../../apps/migration/dist/scripts'), // From test-utils context (dist)
+    ]
+
+    // Find the first existing path
+    for (const path of possiblePaths) {
+      try {
+        const sqlFile = join(path, '20250730_000001_initial_schema.sql')
+        readFileSync(sqlFile, 'utf-8')
+        return path
+      } catch {
+        // Continue to next path
+      }
+    }
+
+    // If no path found, return the default and let it fail with a descriptive error
     return join(currentDir, '../scripts')
   }
 

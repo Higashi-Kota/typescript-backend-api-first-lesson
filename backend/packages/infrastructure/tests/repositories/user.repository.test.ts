@@ -9,7 +9,7 @@ import { sql } from 'drizzle-orm'
 import { drizzle } from 'drizzle-orm/postgres-js'
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
-import { test as base, describe, expect } from 'vitest'
+import { test as base, describe, expect, beforeAll, afterAll } from 'vitest'
 import { DrizzleUserRepository } from '../../src/repositories/user.repository.js'
 
 // カスタムテストコンテキスト
@@ -153,9 +153,14 @@ describe('UserRepository Integration Tests', () => {
     })
   })
 
-  // シードデータを使用するテスト用の拡張
-  interface SeededContext {
-    userSeeds: {
+  // 各describe毎に独立したスキーマとセットアップを使用
+  describe('with seeded users', () => {
+    let db: PostgresJsDatabase
+    let repository: UserRepository
+    let testClient: ReturnType<typeof postgres>
+    let adminClient: ReturnType<typeof postgres>
+    let schemaName: string
+    let userSeeds: {
       admin: User
       staff1: User
       staff2: User
@@ -164,12 +169,40 @@ describe('UserRepository Integration Tests', () => {
       locked: User
       unverified: User
     }
-  }
 
-  const testWithSeeds = test.extend<SeededContext>({
-    userSeeds: async ({ repository }, use) => {
-      // テスト用ユーザーを作成
-      const users = {
+    beforeAll(async () => {
+      // テスト環境のセットアップ
+      const testEnv = await TestEnvironment.getInstance()
+      const connectionString = testEnv.getPostgresConnectionString()
+
+      // Create admin connection for schema creation
+      adminClient = postgres(connectionString, {
+        onnotice: () => {},
+      })
+      const adminDb = drizzle(adminClient)
+
+      // Create isolated schema
+      schemaName = `test_seeded_${randomUUID().replace(/-/g, '_')}`
+      await adminDb.execute(
+        sql`CREATE SCHEMA IF NOT EXISTS ${sql.identifier(schemaName)}`
+      )
+
+      // Create test connection with search_path
+      const testConnectionString = `${connectionString}?options=-c search_path="${schemaName}",public`
+      testClient = postgres(testConnectionString, {
+        onnotice: () => {},
+      })
+      db = drizzle(testClient)
+
+      // Apply migrations
+      const schemaIsolation = new SchemaIsolation(db)
+      await schemaIsolation.applyMigrations(schemaName)
+
+      // Create repository
+      repository = new DrizzleUserRepository(db)
+
+      // Seed data
+      userSeeds = {
         admin: await createUser(
           repository,
           UserBuilder.create()
@@ -221,27 +254,30 @@ describe('UserRepository Integration Tests', () => {
             .withName('Unverified User')
         ),
       }
+    })
 
-      await use(users)
-    },
-  })
-
-  describe('with seeded users', () => {
-    describe('findById', () => {
-      testWithSeeds(
-        'should find user by id',
-        async ({ repository, userSeeds }) => {
-          const result = await repository.findById(userSeeds.admin.data.id)
-
-          expect(result.type).toBe('ok')
-          if (result.type === 'ok') {
-            expect(result.value).not.toBeNull()
-            expect(result.value?.data.email).toBe('admin@example.com')
-          }
-        }
+    afterAll(async () => {
+      // Cleanup
+      await testClient.end()
+      const adminDb = drizzle(adminClient)
+      await adminDb.execute(
+        sql`DROP SCHEMA IF EXISTS ${sql.identifier(schemaName)} CASCADE`
       )
+      await adminClient.end()
+    })
 
-      test('should return null for non-existent id', async ({ repository }) => {
+    describe('findById', () => {
+      test('should find user by id', async () => {
+        const result = await repository.findById(userSeeds.admin.data.id)
+
+        expect(result.type).toBe('ok')
+        if (result.type === 'ok') {
+          expect(result.value).not.toBeNull()
+          expect(result.value?.data.email).toBe('admin@example.com')
+        }
+      })
+
+      test('should return null for non-existent id', async () => {
         const nonExistentId = randomUUID() as UserId
 
         const result = await repository.findById(nonExistentId)
@@ -254,22 +290,17 @@ describe('UserRepository Integration Tests', () => {
     })
 
     describe('findByEmail', () => {
-      testWithSeeds.skip(
-        'should find user by email',
-        async ({ repository }) => {
-          const result = await repository.findByEmail('staff1@example.com')
+      test('should find user by email', async () => {
+        const result = await repository.findByEmail('staff1@example.com')
 
-          expect(result.type).toBe('ok')
-          if (result.type === 'ok') {
-            expect(result.value).not.toBeNull()
-            expect(result.value?.data.name).toBe('Staff One')
-          }
+        expect(result.type).toBe('ok')
+        if (result.type === 'ok') {
+          expect(result.value).not.toBeNull()
+          expect(result.value?.data.name).toBe('Staff One')
         }
-      )
+      })
 
-      test('should return null for non-existent email', async ({
-        repository,
-      }) => {
+      test('should return null for non-existent email', async () => {
         const result = await repository.findByEmail('nonexistent@example.com')
 
         expect(result.type).toBe('ok')
@@ -280,48 +311,40 @@ describe('UserRepository Integration Tests', () => {
     })
 
     describe('update', () => {
-      testWithSeeds(
-        'should update user data',
-        async ({ repository, userSeeds }) => {
-          const userId = userSeeds.customer1.data.id
-          const updatedUser = UserBuilder.create()
-            .withId(userId)
-            .withEmail('updated@example.com')
-            .withName('Updated User')
-            .build()
+      test('should update user data', async () => {
+        const userId = userSeeds.customer1.data.id
+        const updatedUser = UserBuilder.create()
+          .withId(userId)
+          .withEmail('updated@example.com')
+          .withName('Updated User')
+          .build()
 
-          const result = await repository.update(updatedUser)
+        const result = await repository.update(updatedUser)
 
-          expect(result.type).toBe('ok')
-          if (result.type === 'ok') {
-            expect(result.value.data.email).toBe('updated@example.com')
-            expect(result.value.data.name).toBe('Updated User')
-          }
+        expect(result.type).toBe('ok')
+        if (result.type === 'ok') {
+          expect(result.value.data.email).toBe('updated@example.com')
+          expect(result.value.data.name).toBe('Updated User')
         }
-      )
+      })
 
-      testWithSeeds(
-        'should update user status from active to locked',
-        async ({ repository, userSeeds }) => {
-          const userId = userSeeds.customer2.data.id
-          const lockedUser = UserBuilder.create()
-            .withId(userId)
-            .withEmail(userSeeds.customer2.data.email)
-            .withLockedAccount()
-            .build()
+      test('should update user status from active to locked', async () => {
+        const userId = userSeeds.customer2.data.id
+        const lockedUser = UserBuilder.create()
+          .withId(userId)
+          .withEmail(userSeeds.customer2.data.email)
+          .withLockedAccount()
+          .build()
 
-          const result = await repository.update(lockedUser)
+        const result = await repository.update(lockedUser)
 
-          expect(result.type).toBe('ok')
-          if (result.type === 'ok') {
-            expect(result.value.status.type).toBe('locked')
-          }
+        expect(result.type).toBe('ok')
+        if (result.type === 'ok') {
+          expect(result.value.status.type).toBe('locked')
         }
-      )
+      })
 
-      test('should return error when user not found', async ({
-        repository,
-      }) => {
+      test('should return error when user not found', async () => {
         const nonExistentId = randomUUID() as UserId
         const user = UserBuilder.create()
           .withId(nonExistentId)
@@ -338,7 +361,7 @@ describe('UserRepository Integration Tests', () => {
     })
 
     describe('delete', () => {
-      test('should delete user by id', async ({ repository }) => {
+      test('should delete user by id', async () => {
         // Create a user to delete
         const userBuilder = UserBuilder.create().withEmail(
           'todelete@example.com'
@@ -366,64 +389,59 @@ describe('UserRepository Integration Tests', () => {
     })
 
     describe('search', () => {
-      testWithSeeds.skip(
-        'should search users by email pattern',
-        async ({ repository }) => {
-          const result = await repository.search(
-            { email: '@example.com' },
-            { limit: 10, offset: 0 }
-          )
+      test('should search users by email pattern', async () => {
+        const result = await repository.search(
+          { email: '@example.com' },
+          { limit: 10, offset: 0 }
+        )
 
-          expect(result.type).toBe('ok')
-          if (result.type === 'ok') {
-            expect(result.value.total).toBe(6) // unverified@example.comも含まれる
-            expect(result.value.data.length).toBe(6)
-            expect(
-              result.value.data.every((u) =>
-                u.data.email.includes('@example.com')
-              )
-            ).toBe(true)
-          }
+        expect(result.type).toBe('ok')
+        if (result.type === 'ok') {
+          // @example.comを持つユーザーは6人（customer2は@test.com）
+          expect(result.value.total).toBe(6)
+          expect(result.value.data.length).toBe(6)
+          expect(
+            result.value.data.every((u) =>
+              u.data.email.includes('@example.com')
+            )
+          ).toBe(true)
         }
-      )
+      })
 
-      testWithSeeds.skip(
-        'should search users by role',
-        async ({ repository }) => {
-          const result = await repository.search(
-            { role: 'staff' },
-            { limit: 10, offset: 0 }
+      test('should search users by role', async () => {
+        const result = await repository.search(
+          { role: 'staff' },
+          { limit: 10, offset: 0 }
+        )
+
+        expect(result.type).toBe('ok')
+        if (result.type === 'ok') {
+          expect(result.value.total).toBe(2)
+          expect(result.value.data.length).toBe(2)
+          expect(result.value.data.every((u) => u.data.role === 'staff')).toBe(
+            true
           )
-
-          expect(result.type).toBe('ok')
-          if (result.type === 'ok') {
-            expect(result.value.total).toBe(2)
-            expect(result.value.data.length).toBe(2)
-            expect(
-              result.value.data.every((u) => u.data.role === 'staff')
-            ).toBe(true)
-          }
         }
-      )
+      })
 
-      testWithSeeds.skip(
-        'should search users by status',
-        async ({ repository }) => {
-          const result = await repository.search(
-            { status: 'locked' },
-            { limit: 10, offset: 0 }
-          )
+      test('should search users by status', async () => {
+        const result = await repository.search(
+          { status: 'locked' },
+          { limit: 10, offset: 0 }
+        )
 
-          expect(result.type).toBe('ok')
-          if (result.type === 'ok') {
-            expect(result.value.total).toBe(1)
-            expect(result.value.data.length).toBe(1)
-            expect(result.value.data[0]?.status.type).toBe('locked')
-          }
+        expect(result.type).toBe('ok')
+        if (result.type === 'ok') {
+          // Note: customer2 might have been updated to locked in the update test
+          expect(result.value.total).toBeGreaterThanOrEqual(1)
+          expect(result.value.data.length).toBeGreaterThanOrEqual(1)
+          expect(
+            result.value.data.every((u) => u.status.type === 'locked')
+          ).toBe(true)
         }
-      )
+      })
 
-      testWithSeeds.skip('should handle pagination', async ({ repository }) => {
+      test('should handle pagination', async () => {
         const result1 = await repository.search({}, { limit: 3, offset: 0 })
 
         const result2 = await repository.search({}, { limit: 3, offset: 3 })
@@ -437,49 +455,41 @@ describe('UserRepository Integration Tests', () => {
         }
       })
 
-      testWithSeeds.skip(
-        'should combine multiple search criteria',
-        async ({ repository }) => {
-          const result = await repository.search(
-            { email: '@example.com', role: 'customer' },
-            { limit: 10, offset: 0 }
-          )
+      test('should combine multiple search criteria', async () => {
+        const result = await repository.search(
+          { email: '@example.com', role: 'customer' },
+          { limit: 10, offset: 0 }
+        )
 
-          expect(result.type).toBe('ok')
-          if (result.type === 'ok') {
-            expect(result.value.total).toBe(3) // customer1, customer2, locked user
-            expect(
-              result.value.data.every(
-                (u) =>
-                  u.data.email.includes('@example.com') &&
-                  u.data.role === 'customer'
-              )
-            ).toBe(true)
-          }
+        expect(result.type).toBe('ok')
+        if (result.type === 'ok') {
+          expect(result.value.total).toBe(3) // customer1, locked user, unverified (customer2はtest.com)
+          expect(
+            result.value.data.every(
+              (u) =>
+                u.data.email.includes('@example.com') &&
+                u.data.role === 'customer'
+            )
+          ).toBe(true)
         }
-      )
+      })
 
-      testWithSeeds.skip(
-        'should return empty results for no matches',
-        async ({ repository }) => {
-          const result = await repository.search(
-            { email: 'nonexistent@domain.com' },
-            { limit: 10, offset: 0 }
-          )
+      test('should return empty results for no matches', async () => {
+        const result = await repository.search(
+          { email: 'nonexistent@domain.com' },
+          { limit: 10, offset: 0 }
+        )
 
-          expect(result.type).toBe('ok')
-          if (result.type === 'ok') {
-            expect(result.value.total).toBe(0)
-            expect(result.value.data.length).toBe(0)
-          }
+        expect(result.type).toBe('ok')
+        if (result.type === 'ok') {
+          expect(result.value.total).toBe(0)
+          expect(result.value.data.length).toBe(0)
         }
-      )
+      })
     })
 
     describe('findByPasswordResetToken', () => {
-      test('should find user by password reset token', async ({
-        repository,
-      }) => {
+      test('should find user by password reset token', async () => {
         // Create user with password reset token
         const userBuilder = UserBuilder.create()
           .withEmail('reset@example.com')
@@ -499,7 +509,7 @@ describe('UserRepository Integration Tests', () => {
         }
       })
 
-      test('should return null for invalid token', async ({ repository }) => {
+      test('should return null for invalid token', async () => {
         const result =
           await repository.findByPasswordResetToken('invalid_token')
 
@@ -511,20 +521,22 @@ describe('UserRepository Integration Tests', () => {
     })
 
     describe('findByEmailVerificationToken', () => {
-      testWithSeeds.skip(
-        'should find user by email verification token',
-        async ({ repository }) => {
-          const result = await repository.findByEmailVerificationToken(
-            'verification_token_123'
-          )
+      test('should find user by email verification token', async () => {
+        // トークンを取得
+        const expectedToken =
+          userSeeds.unverified.status.type === 'unverified'
+            ? userSeeds.unverified.status.emailVerificationToken
+            : 'verification_token_123'
 
-          expect(result.type).toBe('ok')
-          if (result.type === 'ok') {
-            expect(result.value).not.toBeNull()
-            expect(result.value?.data.email).toBe('unverified@example.com')
-          }
+        const result =
+          await repository.findByEmailVerificationToken(expectedToken)
+
+        expect(result.type).toBe('ok')
+        if (result.type === 'ok') {
+          expect(result.value).not.toBeNull()
+          expect(result.value?.data.email).toBe('unverified@example.com')
         }
-      )
+      })
     })
   })
 })
