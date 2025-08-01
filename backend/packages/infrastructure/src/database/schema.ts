@@ -1,7 +1,8 @@
-// TypeSpec-compliant database schema
 import {
   boolean,
   date,
+  foreignKey,
+  index,
   integer,
   jsonb,
   pgEnum,
@@ -9,11 +10,18 @@ import {
   text,
   time,
   timestamp,
+  unique,
   uuid,
 } from 'drizzle-orm/pg-core'
 
-// Enums according to TypeSpec
-export const dayOfWeekEnum = pgEnum('day_of_week', [
+export const booking_status = pgEnum('booking_status', [
+  'draft',
+  'confirmed',
+  'cancelled',
+  'completed',
+  'no_show',
+])
+export const day_of_week = pgEnum('day_of_week', [
   'monday',
   'tuesday',
   'wednesday',
@@ -22,8 +30,15 @@ export const dayOfWeekEnum = pgEnum('day_of_week', [
   'saturday',
   'sunday',
 ])
-
-export const serviceCategoryEnum = pgEnum('service_category', [
+export const file_type = pgEnum('file_type', ['image', 'document', 'other'])
+export const reservation_status = pgEnum('reservation_status', [
+  'pending',
+  'confirmed',
+  'cancelled',
+  'completed',
+  'no_show',
+])
+export const service_category = pgEnum('service_category', [
   'cut',
   'color',
   'perm',
@@ -31,419 +46,602 @@ export const serviceCategoryEnum = pgEnum('service_category', [
   'spa',
   'other',
 ])
-
-export const reservationStatusEnum = pgEnum('reservation_status', [
+export const two_factor_status = pgEnum('two_factor_status', [
+  'disabled',
   'pending',
-  'confirmed',
-  'cancelled',
-  'completed',
-  'no_show',
+  'enabled',
 ])
-
-export const bookingStatusEnum = pgEnum('booking_status', [
-  'draft',
-  'pending',
-  'confirmed',
-  'in_progress',
-  'completed',
-  'cancelled',
-  'no_show',
-])
-
-// User authentication enums
-export const userRoleEnum = pgEnum('user_role', ['customer', 'staff', 'admin'])
-
-export const userAccountStatusEnum = pgEnum('user_account_status', [
+export const user_account_status = pgEnum('user_account_status', [
   'active',
   'unverified',
   'locked',
   'suspended',
   'deleted',
 ])
+export const user_role = pgEnum('user_role', ['customer', 'staff', 'admin'])
 
-export const twoFactorStatusEnum = pgEnum('two_factor_status', [
-  'disabled',
-  'pending',
-  'enabled',
-])
-
-// Salons table with TypeSpec structure
-export const salons = pgTable('salons', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  name: text('name').notNull(),
-  description: text('description').notNull(),
-  address: jsonb('address').notNull().$type<{
-    street: string
-    city: string
-    state: string
-    postalCode: string
-    country: string
-  }>(),
-  email: text('email').notNull().unique(),
-  phoneNumber: text('phone_number').notNull(),
-  alternativePhone: text('alternative_phone'),
-  imageUrls: jsonb('image_urls').$type<string[]>(),
-  features: jsonb('features').$type<string[]>(),
-  createdAt: timestamp('created_at', { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  createdBy: text('created_by'),
-  updatedAt: timestamp('updated_at', { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  updatedBy: text('updated_by'),
-})
-
-// Opening hours
-export const openingHours = pgTable('opening_hours', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  salonId: uuid('salon_id')
-    .notNull()
-    .references(() => salons.id, { onDelete: 'cascade' }),
-  dayOfWeek: dayOfWeekEnum('day_of_week').notNull(),
-  openTime: time('open_time').notNull(),
-  closeTime: time('close_time').notNull(),
-  isHoliday: boolean('is_holiday').notNull().default(false),
-})
-
-// Staff table
-export const staff = pgTable('staff', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  salonId: uuid('salon_id')
-    .notNull()
-    .references(() => salons.id, { onDelete: 'cascade' }),
-  name: text('name').notNull(),
-  email: text('email').notNull(),
-  phoneNumber: text('phone_number').notNull(),
-  alternativePhone: text('alternative_phone'),
-  specialties: jsonb('specialties').notNull().default([]).$type<string[]>(),
-  bio: text('bio'),
-  imageUrl: text('image_url'),
-  yearsOfExperience: integer('years_of_experience'),
-  certifications: jsonb('certifications').$type<string[]>(),
-  isActive: boolean('is_active').notNull().default(true),
-  createdAt: timestamp('created_at', { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  createdBy: text('created_by'),
-  updatedAt: timestamp('updated_at', { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  updatedBy: text('updated_by'),
-})
-
-// Staff working hours
-export const staffWorkingHours = pgTable('staff_working_hours', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  staffId: uuid('staff_id')
-    .notNull()
-    .references(() => staff.id, { onDelete: 'cascade' }),
-  dayOfWeek: dayOfWeekEnum('day_of_week').notNull(),
-  startTime: time('start_time').notNull(),
-  endTime: time('end_time').notNull(),
-  breakStart: time('break_start'),
-  breakEnd: time('break_end'),
-})
-
-// Service categories
-export const serviceCategories = pgTable(
-  'service_categories',
+export const users = pgTable(
+  'users',
   {
-    id: uuid('id').primaryKey().defaultRandom(),
-    name: text('name').notNull(),
-    description: text('description').notNull(),
-    parentId: uuid('parent_id'),
-    displayOrder: integer('display_order').notNull(),
-    isActive: boolean('is_active').notNull().default(true),
-    createdAt: timestamp('created_at', { withTimezone: true })
-      .notNull()
-      .defaultNow(),
-    createdBy: text('created_by'),
-    updatedAt: timestamp('updated_at', { withTimezone: true })
-      .notNull()
-      .defaultNow(),
-    updatedBy: text('updated_by'),
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    email: text().notNull(),
+    name: text().notNull(),
+    password_hash: text().notNull(),
+    role: user_role().default('customer').notNull(),
+    email_verified: boolean().default(false).notNull(),
+    email_verification_token: text(),
+    email_verification_token_expiry: timestamp({
+      withTimezone: true,
+      mode: 'string',
+    }),
+    two_factor_secret: text(),
+    backup_codes: jsonb(),
+    failed_login_attempts: integer().default(0).notNull(),
+    locked_at: timestamp({ withTimezone: true, mode: 'string' }),
+    password_reset_token: text(),
+    password_reset_token_expiry: timestamp({
+      withTimezone: true,
+      mode: 'string',
+    }),
+    last_password_change_at: timestamp({ withTimezone: true, mode: 'string' }),
+    password_history: jsonb(),
+    trusted_ip_addresses: jsonb(),
+    customer_id: uuid(),
+    staff_id: uuid(),
+    created_at: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    updated_at: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    last_login_at: timestamp({ withTimezone: true, mode: 'string' }),
+    last_login_ip: text(),
   },
-  (table) => ({
-    parentReference: {
-      columns: [table.parentId],
-      foreignColumns: [table.id],
-    },
-  })
+  (table) => [
+    index('idx_users_email').using(
+      'btree',
+      table.email.asc().nullsLast().op('text_ops')
+    ),
+    foreignKey({
+      columns: [table.customer_id],
+      foreignColumns: [customers.id],
+      name: 'users_customer_id_customers_id_fk',
+    }),
+    foreignKey({
+      columns: [table.staff_id],
+      foreignColumns: [staff.id],
+      name: 'users_staff_id_staff_id_fk',
+    }),
+    unique('users_email_unique').on(table.email),
+  ]
 )
 
-// Services
-export const services = pgTable('services', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  salonId: uuid('salon_id')
-    .notNull()
-    .references(() => salons.id, { onDelete: 'cascade' }),
-  name: text('name').notNull(),
-  description: text('description').notNull(),
-  duration: integer('duration').notNull(), // minutes
-  price: integer('price').notNull(), // cents
-  category: serviceCategoryEnum('category').notNull(),
-  categoryId: uuid('category_id').references(() => serviceCategories.id),
-  imageUrl: text('image_url'),
-  requiredStaffLevel: integer('required_staff_level'),
-  isActive: boolean('is_active').notNull().default(true),
-  createdAt: timestamp('created_at', { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  createdBy: text('created_by'),
-  updatedAt: timestamp('updated_at', { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  updatedBy: text('updated_by'),
+export const attachments = pgTable(
+  'attachments',
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    key: text().notNull(),
+    filename: text().notNull(),
+    content_type: text().notNull(),
+    size: integer().notNull(),
+    uploaded_by: uuid().notNull(),
+    salon_id: uuid(),
+    metadata: jsonb(),
+    tags: jsonb(),
+    created_at: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    updated_at: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index('idx_attachments_salon_id').using(
+      'btree',
+      table.salon_id.asc().nullsLast().op('uuid_ops')
+    ),
+    index('idx_attachments_uploaded_by').using(
+      'btree',
+      table.uploaded_by.asc().nullsLast().op('uuid_ops')
+    ),
+    foreignKey({
+      columns: [table.uploaded_by],
+      foreignColumns: [users.id],
+      name: 'attachments_uploaded_by_users_id_fk',
+    }).onDelete('restrict'),
+    foreignKey({
+      columns: [table.salon_id],
+      foreignColumns: [salons.id],
+      name: 'attachments_salon_id_salons_id_fk',
+    }).onDelete('cascade'),
+    unique('attachments_key_key').on(table.key),
+  ]
+)
+
+export const salons = pgTable(
+  'salons',
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    name: text().notNull(),
+    description: text().notNull(),
+    address: jsonb().notNull(),
+    email: text().notNull(),
+    phone_number: text().notNull(),
+    alternative_phone: text(),
+    image_urls: jsonb(),
+    features: jsonb(),
+    created_at: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    created_by: text(),
+    updated_at: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    updated_by: text(),
+  },
+  (table) => [unique('salons_email_unique').on(table.email)]
+)
+
+export const bookings = pgTable(
+  'bookings',
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    salon_id: uuid().notNull(),
+    customer_id: uuid().notNull(),
+    total_amount: integer().notNull(),
+    discount_amount: integer().default(0),
+    final_amount: integer().notNull(),
+    payment_method: text(),
+    payment_status: text().default('pending').notNull(),
+    notes: text(),
+    created_at: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    created_by: text(),
+    updated_at: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    updated_by: text(),
+  },
+  (table) => [
+    index('idx_bookings_customer_id').using(
+      'btree',
+      table.customer_id.asc().nullsLast().op('uuid_ops')
+    ),
+    index('idx_bookings_salon_id').using(
+      'btree',
+      table.salon_id.asc().nullsLast().op('uuid_ops')
+    ),
+    foreignKey({
+      columns: [table.salon_id],
+      foreignColumns: [salons.id],
+      name: 'bookings_salon_id_salons_id_fk',
+    }),
+    foreignKey({
+      columns: [table.customer_id],
+      foreignColumns: [customers.id],
+      name: 'bookings_customer_id_customers_id_fk',
+    }),
+  ]
+)
+
+export const booking_reservations = pgTable(
+  'booking_reservations',
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    booking_id: uuid().notNull(),
+    reservation_id: uuid().notNull(),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.booking_id],
+      foreignColumns: [bookings.id],
+      name: 'booking_reservations_booking_id_bookings_id_fk',
+    }).onDelete('cascade'),
+    foreignKey({
+      columns: [table.reservation_id],
+      foreignColumns: [reservations.id],
+      name: 'booking_reservations_reservation_id_reservations_id_fk',
+    }).onDelete('restrict'),
+  ]
+)
+
+export const reservations = pgTable(
+  'reservations',
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    salon_id: uuid().notNull(),
+    customer_id: uuid().notNull(),
+    staff_id: uuid().notNull(),
+    service_id: uuid().notNull(),
+    start_time: timestamp({ withTimezone: true, mode: 'string' }).notNull(),
+    end_time: timestamp({ withTimezone: true, mode: 'string' }).notNull(),
+    notes: text(),
+    total_amount: integer().notNull(),
+    deposit_amount: integer(),
+    is_paid: boolean().default(false).notNull(),
+    cancellation_reason: text(),
+    created_at: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    created_by: text(),
+    updated_at: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    updated_by: text(),
+  },
+  (table) => [
+    index('idx_reservations_customer_id').using(
+      'btree',
+      table.customer_id.asc().nullsLast().op('uuid_ops')
+    ),
+    index('idx_reservations_salon_id').using(
+      'btree',
+      table.salon_id.asc().nullsLast().op('uuid_ops')
+    ),
+    index('idx_reservations_staff_id').using(
+      'btree',
+      table.staff_id.asc().nullsLast().op('uuid_ops')
+    ),
+    index('idx_reservations_start_time').using(
+      'btree',
+      table.start_time.asc().nullsLast().op('timestamptz_ops')
+    ),
+    foreignKey({
+      columns: [table.salon_id],
+      foreignColumns: [salons.id],
+      name: 'reservations_salon_id_salons_id_fk',
+    }),
+    foreignKey({
+      columns: [table.customer_id],
+      foreignColumns: [customers.id],
+      name: 'reservations_customer_id_customers_id_fk',
+    }),
+    foreignKey({
+      columns: [table.staff_id],
+      foreignColumns: [staff.id],
+      name: 'reservations_staff_id_staff_id_fk',
+    }),
+    foreignKey({
+      columns: [table.service_id],
+      foreignColumns: [services.id],
+      name: 'reservations_service_id_services_id_fk',
+    }),
+  ]
+)
+
+export const customers = pgTable(
+  'customers',
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    name: text().notNull(),
+    email: text().notNull(),
+    phone_number: text().notNull(),
+    alternative_phone: text(),
+    preferences: text(),
+    notes: text(),
+    tags: jsonb(),
+    loyalty_points: integer().default(0).notNull(),
+    membership_level: text(),
+    birth_date: date(),
+    created_at: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    created_by: text(),
+    updated_at: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    updated_by: text(),
+  },
+  (table) => [unique('customers_email_unique').on(table.email)]
+)
+
+export const download_logs = pgTable(
+  'download_logs',
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    attachment_id: uuid().notNull(),
+    share_link_id: uuid(),
+    downloaded_by: uuid(),
+    ip_address: text(),
+    user_agent: text(),
+    downloaded_at: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index('idx_download_logs_attachment_id').using(
+      'btree',
+      table.attachment_id.asc().nullsLast().op('uuid_ops')
+    ),
+    foreignKey({
+      columns: [table.attachment_id],
+      foreignColumns: [attachments.id],
+      name: 'download_logs_attachment_id_attachments_id_fk',
+    }).onDelete('cascade'),
+    foreignKey({
+      columns: [table.share_link_id],
+      foreignColumns: [share_links.id],
+      name: 'download_logs_share_link_id_share_links_id_fk',
+    }).onDelete('cascade'),
+    foreignKey({
+      columns: [table.downloaded_by],
+      foreignColumns: [users.id],
+      name: 'download_logs_downloaded_by_users_id_fk',
+    }).onDelete('set null'),
+  ]
+)
+
+export const share_links = pgTable(
+  'share_links',
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    token: text().notNull(),
+    attachment_id: uuid().notNull(),
+    expires_at: timestamp({ withTimezone: true, mode: 'string' }),
+    max_downloads: integer(),
+    download_count: integer().default(0).notNull(),
+    password_hash: text(),
+    allowed_emails: jsonb(),
+    created_by: uuid().notNull(),
+    created_at: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    updated_at: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index('idx_share_links_attachment_id').using(
+      'btree',
+      table.attachment_id.asc().nullsLast().op('uuid_ops')
+    ),
+    index('idx_share_links_token').using(
+      'btree',
+      table.token.asc().nullsLast().op('text_ops')
+    ),
+    foreignKey({
+      columns: [table.attachment_id],
+      foreignColumns: [attachments.id],
+      name: 'share_links_attachment_id_attachments_id_fk',
+    }).onDelete('cascade'),
+    foreignKey({
+      columns: [table.created_by],
+      foreignColumns: [users.id],
+      name: 'share_links_created_by_users_id_fk',
+    }).onDelete('restrict'),
+    unique('share_links_token_key').on(table.token),
+  ]
+)
+
+export const opening_hours = pgTable(
+  'opening_hours',
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    salon_id: uuid().notNull(),
+    open_time: time().notNull(),
+    close_time: time().notNull(),
+    is_holiday: boolean().default(false).notNull(),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.salon_id],
+      foreignColumns: [salons.id],
+      name: 'opening_hours_salon_id_salons_id_fk',
+    }).onDelete('cascade'),
+  ]
+)
+
+export const staff = pgTable(
+  'staff',
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    salon_id: uuid().notNull(),
+    name: text().notNull(),
+    email: text().notNull(),
+    phone_number: text().notNull(),
+    alternative_phone: text(),
+    specialties: jsonb().default([]).notNull(),
+    bio: text(),
+    image_url: text(),
+    years_of_experience: integer(),
+    certifications: jsonb(),
+    is_active: boolean().default(true).notNull(),
+    created_at: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    created_by: text(),
+    updated_at: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    updated_by: text(),
+  },
+  (table) => [
+    index('idx_staff_salon_id').using(
+      'btree',
+      table.salon_id.asc().nullsLast().op('uuid_ops')
+    ),
+    foreignKey({
+      columns: [table.salon_id],
+      foreignColumns: [salons.id],
+      name: 'staff_salon_id_salons_id_fk',
+    }).onDelete('cascade'),
+  ]
+)
+
+export const services = pgTable(
+  'services',
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    salon_id: uuid().notNull(),
+    name: text().notNull(),
+    description: text().notNull(),
+    duration: integer().notNull(),
+    price: integer().notNull(),
+    category_id: uuid(),
+    image_url: text(),
+    required_staff_level: integer(),
+    is_active: boolean().default(true).notNull(),
+    created_at: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    created_by: text(),
+    updated_at: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    updated_by: text(),
+  },
+  (table) => [
+    index('idx_services_salon_id').using(
+      'btree',
+      table.salon_id.asc().nullsLast().op('uuid_ops')
+    ),
+    foreignKey({
+      columns: [table.salon_id],
+      foreignColumns: [salons.id],
+      name: 'services_salon_id_salons_id_fk',
+    }).onDelete('cascade'),
+    foreignKey({
+      columns: [table.category_id],
+      foreignColumns: [service_categories.id],
+      name: 'services_category_id_service_categories_id_fk',
+    }),
+  ]
+)
+
+export const reviews = pgTable(
+  'reviews',
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    salon_id: uuid().notNull(),
+    customer_id: uuid().notNull(),
+    reservation_id: uuid().notNull(),
+    staff_id: uuid(),
+    rating: integer().notNull(),
+    comment: text(),
+    service_rating: integer(),
+    staff_rating: integer(),
+    atmosphere_rating: integer(),
+    images: jsonb(),
+    is_verified: boolean().default(false).notNull(),
+    helpful_count: integer().default(0).notNull(),
+    created_at: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    created_by: text(),
+    updated_at: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    updated_by: text(),
+  },
+  (table) => [
+    index('idx_reviews_customer_id').using(
+      'btree',
+      table.customer_id.asc().nullsLast().op('uuid_ops')
+    ),
+    index('idx_reviews_rating').using(
+      'btree',
+      table.rating.asc().nullsLast().op('int4_ops')
+    ),
+    index('idx_reviews_salon_id').using(
+      'btree',
+      table.salon_id.asc().nullsLast().op('uuid_ops')
+    ),
+    foreignKey({
+      columns: [table.salon_id],
+      foreignColumns: [salons.id],
+      name: 'reviews_salon_id_salons_id_fk',
+    }),
+    foreignKey({
+      columns: [table.customer_id],
+      foreignColumns: [customers.id],
+      name: 'reviews_customer_id_customers_id_fk',
+    }),
+    foreignKey({
+      columns: [table.reservation_id],
+      foreignColumns: [reservations.id],
+      name: 'reviews_reservation_id_reservations_id_fk',
+    }),
+    foreignKey({
+      columns: [table.staff_id],
+      foreignColumns: [staff.id],
+      name: 'reviews_staff_id_staff_id_fk',
+    }),
+    unique('reviews_reservation_id_unique').on(table.reservation_id),
+  ]
+)
+
+export const service_categories = pgTable('service_categories', {
+  id: uuid().defaultRandom().primaryKey().notNull(),
+  name: text().notNull(),
+  description: text().notNull(),
+  parent_id: uuid(),
+  display_order: integer().notNull(),
+  is_active: boolean().default(true).notNull(),
+  created_at: timestamp({ withTimezone: true, mode: 'string' })
+    .defaultNow()
+    .notNull(),
+  created_by: text(),
+  updated_at: timestamp({ withTimezone: true, mode: 'string' })
+    .defaultNow()
+    .notNull(),
+  updated_by: text(),
 })
 
-// Customers
-export const customers = pgTable('customers', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  name: text('name').notNull(),
-  email: text('email').notNull().unique(),
-  phoneNumber: text('phone_number').notNull(),
-  alternativePhone: text('alternative_phone'),
-  preferences: text('preferences'),
-  notes: text('notes'),
-  tags: jsonb('tags').$type<string[]>(),
-  loyaltyPoints: integer('loyalty_points').notNull().default(0),
-  membershipLevel: text('membership_level'),
-  birthDate: date('birth_date'),
-  createdAt: timestamp('created_at', { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  createdBy: text('created_by'),
-  updatedAt: timestamp('updated_at', { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  updatedBy: text('updated_by'),
-})
+export const sessions = pgTable(
+  'sessions',
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    user_id: uuid().notNull(),
+    refresh_token: text().notNull(),
+    ip_address: text().notNull(),
+    user_agent: text().notNull(),
+    expires_at: timestamp({ withTimezone: true, mode: 'string' }).notNull(),
+    remember_me: boolean().default(false).notNull(),
+    created_at: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    last_activity_at: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index('idx_sessions_expires_at').using(
+      'btree',
+      table.expires_at.asc().nullsLast().op('timestamptz_ops')
+    ),
+    index('idx_sessions_refresh_token').using(
+      'btree',
+      table.refresh_token.asc().nullsLast().op('text_ops')
+    ),
+    index('idx_sessions_user_id').using(
+      'btree',
+      table.user_id.asc().nullsLast().op('uuid_ops')
+    ),
+    foreignKey({
+      columns: [table.user_id],
+      foreignColumns: [users.id],
+      name: 'sessions_user_id_users_id_fk',
+    }).onDelete('cascade'),
+    unique('sessions_refresh_token_unique').on(table.refresh_token),
+  ]
+)
 
-// Reservations (individual service appointments)
-export const reservations = pgTable('reservations', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  salonId: uuid('salon_id')
-    .notNull()
-    .references(() => salons.id),
-  customerId: uuid('customer_id')
-    .notNull()
-    .references(() => customers.id),
-  staffId: uuid('staff_id')
-    .notNull()
-    .references(() => staff.id),
-  serviceId: uuid('service_id')
-    .notNull()
-    .references(() => services.id),
-  startTime: timestamp('start_time', { withTimezone: true }).notNull(),
-  endTime: timestamp('end_time', { withTimezone: true }).notNull(),
-  status: reservationStatusEnum('status').notNull().default('pending'),
-  notes: text('notes'),
-  totalAmount: integer('total_amount').notNull(), // cents
-  depositAmount: integer('deposit_amount'),
-  isPaid: boolean('is_paid').notNull().default(false),
-  cancellationReason: text('cancellation_reason'),
-  createdAt: timestamp('created_at', { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  createdBy: text('created_by'),
-  updatedAt: timestamp('updated_at', { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  updatedBy: text('updated_by'),
-})
-
-// Bookings (payment unit for multiple reservations)
-export const bookings = pgTable('bookings', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  salonId: uuid('salon_id')
-    .notNull()
-    .references(() => salons.id),
-  customerId: uuid('customer_id')
-    .notNull()
-    .references(() => customers.id),
-  status: bookingStatusEnum('status').notNull().default('draft'),
-  totalAmount: integer('total_amount').notNull(), // cents
-  discountAmount: integer('discount_amount').default(0),
-  finalAmount: integer('final_amount').notNull(),
-  paymentMethod: text('payment_method'),
-  paymentStatus: text('payment_status').notNull().default('pending'),
-  notes: text('notes'),
-  createdAt: timestamp('created_at', { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  createdBy: text('created_by'),
-  updatedAt: timestamp('updated_at', { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  updatedBy: text('updated_by'),
-})
-
-// Junction table for booking-reservation relationship
-export const bookingReservations = pgTable('booking_reservations', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  bookingId: uuid('booking_id')
-    .notNull()
-    .references(() => bookings.id, { onDelete: 'cascade' }),
-  reservationId: uuid('reservation_id')
-    .notNull()
-    .references(() => reservations.id, { onDelete: 'restrict' }),
-})
-
-// Reviews (tied to individual reservations)
-export const reviews = pgTable('reviews', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  salonId: uuid('salon_id')
-    .notNull()
-    .references(() => salons.id),
-  customerId: uuid('customer_id')
-    .notNull()
-    .references(() => customers.id),
-  reservationId: uuid('reservation_id')
-    .notNull()
-    .references(() => reservations.id)
-    .unique(),
-  staffId: uuid('staff_id').references(() => staff.id),
-  rating: integer('rating').notNull(),
-  comment: text('comment'),
-  serviceRating: integer('service_rating'),
-  staffRating: integer('staff_rating'),
-  atmosphereRating: integer('atmosphere_rating'),
-  images: jsonb('images').$type<string[]>(),
-  isVerified: boolean('is_verified').notNull().default(false),
-  helpfulCount: integer('helpful_count').notNull().default(0),
-  createdAt: timestamp('created_at', { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  createdBy: text('created_by'),
-  updatedAt: timestamp('updated_at', { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  updatedBy: text('updated_by'),
-})
-
-// Users table for authentication
-export const users = pgTable('users', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  email: text('email').notNull().unique(),
-  name: text('name').notNull(),
-  passwordHash: text('password_hash').notNull(),
-  role: userRoleEnum('role').notNull().default('customer'),
-  status: userAccountStatusEnum('status').notNull().default('unverified'),
-  emailVerified: boolean('email_verified').notNull().default(false),
-  emailVerificationToken: text('email_verification_token'),
-  emailVerificationTokenExpiry: timestamp('email_verification_token_expiry', {
-    withTimezone: true,
-  }),
-  twoFactorStatus: twoFactorStatusEnum('two_factor_status')
-    .notNull()
-    .default('disabled'),
-  twoFactorSecret: text('two_factor_secret'),
-  backupCodes: jsonb('backup_codes').$type<string[]>(),
-  failedLoginAttempts: integer('failed_login_attempts').notNull().default(0),
-  lockedAt: timestamp('locked_at', { withTimezone: true }),
-  passwordResetToken: text('password_reset_token'),
-  passwordResetTokenExpiry: timestamp('password_reset_token_expiry', {
-    withTimezone: true,
-  }),
-  lastPasswordChangeAt: timestamp('last_password_change_at', {
-    withTimezone: true,
-  }),
-  passwordHistory: jsonb('password_history').$type<string[]>(),
-  trustedIpAddresses: jsonb('trusted_ip_addresses').$type<string[]>(),
-  customerId: uuid('customer_id').references(() => customers.id),
-  staffId: uuid('staff_id').references(() => staff.id),
-  createdAt: timestamp('created_at', { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  updatedAt: timestamp('updated_at', { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  lastLoginAt: timestamp('last_login_at', { withTimezone: true }),
-  lastLoginIp: text('last_login_ip'),
-})
-
-// Sessions table for session management
-export const sessions = pgTable('sessions', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  userId: uuid('user_id')
-    .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
-  refreshToken: text('refresh_token').notNull().unique(),
-  ipAddress: text('ip_address').notNull(),
-  userAgent: text('user_agent').notNull(),
-  expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
-  rememberMe: boolean('remember_me').notNull().default(false),
-  createdAt: timestamp('created_at', { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  lastActivityAt: timestamp('last_activity_at', { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-})
-
-// File upload related tables
-export const fileTypeEnum = pgEnum('file_type', ['image', 'document', 'other'])
-
-export const attachments = pgTable('attachments', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  key: text('key').notNull().unique(), // S3/Storage key
-  filename: text('filename').notNull(),
-  contentType: text('content_type').notNull(),
-  size: integer('size').notNull(), // in bytes
-  fileType: fileTypeEnum('file_type').notNull(),
-  uploadedBy: uuid('uploaded_by')
-    .notNull()
-    .references(() => users.id, { onDelete: 'restrict' }),
-  salonId: uuid('salon_id').references(() => salons.id, {
-    onDelete: 'cascade',
-  }),
-  metadata: jsonb('metadata').$type<Record<string, unknown>>(),
-  tags: jsonb('tags').$type<Record<string, string>>(),
-  createdAt: timestamp('created_at', { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  updatedAt: timestamp('updated_at', { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-})
-
-export const shareLinks = pgTable('share_links', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  token: text('token').notNull().unique(),
-  attachmentId: uuid('attachment_id')
-    .notNull()
-    .references(() => attachments.id, { onDelete: 'cascade' }),
-  expiresAt: timestamp('expires_at', { withTimezone: true }),
-  maxDownloads: integer('max_downloads'),
-  downloadCount: integer('download_count').notNull().default(0),
-  passwordHash: text('password_hash'),
-  allowedEmails: jsonb('allowed_emails').$type<string[]>(),
-  createdBy: uuid('created_by')
-    .notNull()
-    .references(() => users.id, { onDelete: 'restrict' }),
-  createdAt: timestamp('created_at', { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  updatedAt: timestamp('updated_at', { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-})
-
-export const downloadLogs = pgTable('download_logs', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  attachmentId: uuid('attachment_id')
-    .notNull()
-    .references(() => attachments.id, { onDelete: 'cascade' }),
-  shareLinkId: uuid('share_link_id').references(() => shareLinks.id, {
-    onDelete: 'cascade',
-  }),
-  downloadedBy: uuid('downloaded_by').references(() => users.id, {
-    onDelete: 'set null',
-  }),
-  ipAddress: text('ip_address'),
-  userAgent: text('user_agent'),
-  downloadedAt: timestamp('downloaded_at', { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-})
+export const staff_working_hours = pgTable(
+  'staff_working_hours',
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    staff_id: uuid().notNull(),
+    start_time: time().notNull(),
+    end_time: time().notNull(),
+    break_start: time(),
+    break_end: time(),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.staff_id],
+      foreignColumns: [staff.id],
+      name: 'staff_working_hours_staff_id_staff_id_fk',
+    }).onDelete('cascade'),
+  ]
+)

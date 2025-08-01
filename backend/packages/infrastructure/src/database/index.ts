@@ -14,4 +14,6 @@ export type Database = typeof db
 
 export const getDb = () => db
 
-export { schema }
+// Export all database schema and relations
+export * from './schema'
+export * from './relations'

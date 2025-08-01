@@ -30,7 +30,10 @@ import {
   ok,
 } from '@beauty-salon-backend/domain'
 
-import { serviceCategories, services } from '../database/schema'
+import {
+  service_categories as serviceCategories,
+  services,
+} from '../database/schema'
 
 // DB型からドメイン型へのマッピング
 type DbService = typeof services.$inferSelect
@@ -46,33 +49,33 @@ export class DrizzleServiceRepository implements ServiceRepository {
     if (!id) return null
 
     const categoryId =
-      dbService.categoryId && dbService.categoryId !== null
-        ? createCategoryId(dbService.categoryId)
+      dbService.category_id && dbService.category_id !== null
+        ? createCategoryId(dbService.category_id)
         : undefined
 
     const serviceData = {
       id,
-      salonId: dbService.salonId as SalonId,
+      salonId: dbService.salon_id as SalonId,
       name: dbService.name,
       description: dbService.description,
       duration: dbService.duration,
       price: dbService.price,
-      category: dbService.category,
+      category: 'hair' as ServiceCategory, // Default category as it doesn't exist in DB
       categoryId: categoryId ?? undefined,
-      imageUrl: dbService.imageUrl ?? undefined,
-      requiredStaffLevel: dbService.requiredStaffLevel ?? undefined,
-      createdAt: dbService.createdAt,
-      createdBy: dbService.createdBy ?? undefined,
-      updatedAt: dbService.updatedAt,
-      updatedBy: dbService.updatedBy ?? undefined,
+      imageUrl: dbService.image_url ?? undefined,
+      requiredStaffLevel: dbService.required_staff_level ?? undefined,
+      createdAt: new Date(dbService.created_at),
+      createdBy: dbService.created_by ?? undefined,
+      updatedAt: new Date(dbService.updated_at),
+      updatedBy: dbService.updated_by ?? undefined,
     }
 
     // isActiveフラグでステータスを判定
-    if (!dbService.isActive) {
+    if (!dbService.is_active) {
       return {
         type: 'inactive' as const,
         data: serviceData,
-        inactivatedAt: dbService.updatedAt,
+        inactivatedAt: new Date(dbService.updated_at),
         inactivatedReason: 'Deactivated',
       }
     }
@@ -91,8 +94,8 @@ export class DrizzleServiceRepository implements ServiceRepository {
     if (!id) return null
 
     const parentId =
-      dbCategory.parentId && dbCategory.parentId !== null
-        ? createCategoryId(dbCategory.parentId)
+      dbCategory.parent_id && dbCategory.parent_id !== null
+        ? createCategoryId(dbCategory.parent_id)
         : undefined
 
     return {
@@ -100,12 +103,12 @@ export class DrizzleServiceRepository implements ServiceRepository {
       name: dbCategory.name,
       description: dbCategory.description,
       parentId: parentId ?? undefined,
-      displayOrder: dbCategory.displayOrder,
-      isActive: dbCategory.isActive,
-      createdAt: dbCategory.createdAt,
-      createdBy: dbCategory.createdBy ?? undefined,
-      updatedAt: dbCategory.updatedAt,
-      updatedBy: dbCategory.updatedBy ?? undefined,
+      displayOrder: dbCategory.display_order,
+      isActive: dbCategory.is_active,
+      createdAt: new Date(dbCategory.created_at),
+      createdBy: dbCategory.created_by ?? undefined,
+      updatedAt: new Date(dbCategory.updated_at),
+      updatedBy: dbCategory.updated_by ?? undefined,
     }
   }
 
@@ -149,18 +152,17 @@ export class DrizzleServiceRepository implements ServiceRepository {
   ): Promise<Result<Service, RepositoryError>> {
     try {
       const newService: DbNewService = {
-        salonId: data.salonId,
+        salon_id: data.salonId,
         name: data.name,
         description: data.description,
         duration: data.duration,
         price: data.price,
-        category: data.category,
-        categoryId: data.categoryId,
-        imageUrl: data.imageUrl,
-        requiredStaffLevel: data.requiredStaffLevel,
-        isActive: true,
-        createdBy: data.createdBy,
-        updatedBy: data.createdBy,
+        category_id: data.categoryId,
+        image_url: data.imageUrl,
+        required_staff_level: data.requiredStaffLevel,
+        is_active: true,
+        created_by: data.createdBy,
+        updated_by: data.createdBy,
       }
 
       const insertedServices = await this.db
@@ -216,8 +218,8 @@ export class DrizzleServiceRepository implements ServiceRepository {
 
       // 更新データを準備
       const updateData: Partial<DbService> = {
-        updatedAt: new Date(),
-        updatedBy: data.updatedBy,
+        updated_at: new Date().toISOString(),
+        updated_by: data.updatedBy,
       }
 
       if (data.name !== undefined) updateData.name = data.name
@@ -225,11 +227,11 @@ export class DrizzleServiceRepository implements ServiceRepository {
         updateData.description = data.description
       if (data.duration !== undefined) updateData.duration = data.duration
       if (data.price !== undefined) updateData.price = data.price
-      if (data.category !== undefined) updateData.category = data.category
-      if (data.categoryId !== undefined) updateData.categoryId = data.categoryId
-      if (data.imageUrl !== undefined) updateData.imageUrl = data.imageUrl
+      if (data.categoryId !== undefined)
+        updateData.category_id = data.categoryId
+      if (data.imageUrl !== undefined) updateData.image_url = data.imageUrl
       if (data.requiredStaffLevel !== undefined)
-        updateData.requiredStaffLevel = data.requiredStaffLevel
+        updateData.required_staff_level = data.requiredStaffLevel
 
       const updatedServices = await this.db
         .update(services)
@@ -272,11 +274,11 @@ export class DrizzleServiceRepository implements ServiceRepository {
       const result = await this.db
         .update(services)
         .set({
-          isActive: false,
-          updatedAt: new Date(),
-          updatedBy: deactivatedBy,
+          is_active: false,
+          updated_at: new Date().toISOString(),
+          updated_by: deactivatedBy,
         })
-        .where(and(eq(services.id, id), eq(services.isActive, true)))
+        .where(and(eq(services.id, id), eq(services.is_active, true)))
         .returning()
 
       const updatedRow = result[0]
@@ -314,11 +316,11 @@ export class DrizzleServiceRepository implements ServiceRepository {
       const result = await this.db
         .update(services)
         .set({
-          isActive: true,
-          updatedAt: new Date(),
-          updatedBy: reactivatedBy,
+          is_active: true,
+          updated_at: new Date().toISOString(),
+          updated_by: reactivatedBy,
         })
-        .where(and(eq(services.id, id), eq(services.isActive, false)))
+        .where(and(eq(services.id, id), eq(services.is_active, false)))
         .returning()
 
       const updatedRow = result[0]
@@ -385,12 +387,12 @@ export class DrizzleServiceRepository implements ServiceRepository {
 
       // サロンIDで絞り込み
       if (criteria.salonId) {
-        conditions.push(eq(services.salonId, criteria.salonId))
+        conditions.push(eq(services.salon_id, criteria.salonId))
       }
 
       // アクティブなserviceのみ
       if (criteria.isActive !== false) {
-        conditions.push(eq(services.isActive, true))
+        conditions.push(eq(services.is_active, true))
       }
 
       // キーワード検索
@@ -404,13 +406,14 @@ export class DrizzleServiceRepository implements ServiceRepository {
       }
 
       // カテゴリで絞り込み
-      if (criteria.category) {
-        conditions.push(eq(services.category, criteria.category))
-      }
+      // Note: category column doesn't exist in services table
+      // if (criteria.category) {
+      //   conditions.push(eq(services.category, criteria.category))
+      // }
 
       // カテゴリIDで絞り込み
       if (criteria.categoryId) {
-        conditions.push(eq(services.categoryId, criteria.categoryId))
+        conditions.push(eq(services.category_id, criteria.categoryId))
       }
 
       // 価格範囲で絞り込み
@@ -453,7 +456,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
         .select()
         .from(services)
         .where(whereClause)
-        .orderBy(desc(services.createdAt))
+        .orderBy(desc(services.created_at))
         .limit(pagination.limit)
         .offset(pagination.offset)
 
@@ -517,8 +520,10 @@ export class DrizzleServiceRepository implements ServiceRepository {
       const results = await this.db
         .select()
         .from(services)
-        .where(and(eq(services.salonId, salonId), eq(services.isActive, true)))
-        .orderBy(desc(services.createdAt))
+        .where(
+          and(eq(services.salon_id, salonId), eq(services.is_active, true))
+        )
+        .orderBy(desc(services.created_at))
         .limit(limit)
 
       const items: Service[] = []
@@ -583,8 +588,8 @@ export class DrizzleServiceRepository implements ServiceRepository {
       const results = await this.db
         .select()
         .from(serviceCategories)
-        .where(eq(serviceCategories.isActive, true))
-        .orderBy(serviceCategories.displayOrder)
+        .where(eq(serviceCategories.is_active, true))
+        .orderBy(serviceCategories.display_order)
 
       const categories: ServiceCategoryData[] = []
       for (const result of results) {

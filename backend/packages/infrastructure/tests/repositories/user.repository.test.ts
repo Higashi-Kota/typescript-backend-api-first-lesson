@@ -14,10 +14,10 @@
 import { randomUUID } from 'node:crypto'
 import type { User, UserId, UserRepository } from '@beauty-salon-backend/domain'
 import {
-  withIsolatedSchema,
   UserBuilder,
+  withIsolatedSchema,
 } from '@beauty-salon-backend/test-utils'
-import { describe, test, expect } from 'vitest'
+import { describe, expect, test } from 'vitest'
 import { DrizzleUserRepository } from '../../src/repositories/user.repository.js'
 
 // ヘルパー関数: テストユーザーを作成

@@ -49,30 +49,30 @@ export class DrizzleReviewRepository implements ReviewRepository {
 
     const reviewData = {
       id,
-      salonId: dbReview.salonId as SalonId,
-      customerId: dbReview.customerId as CustomerId,
-      reservationId: dbReview.reservationId as ReservationId,
-      staffId: dbReview.staffId ? (dbReview.staffId as StaffId) : undefined,
+      salonId: dbReview.salon_id as SalonId,
+      customerId: dbReview.customer_id as CustomerId,
+      reservationId: dbReview.reservation_id as ReservationId,
+      staffId: dbReview.staff_id ? (dbReview.staff_id as StaffId) : undefined,
       rating: dbReview.rating,
       comment: dbReview.comment ?? undefined,
-      serviceRating: dbReview.serviceRating ?? undefined,
-      staffRating: dbReview.staffRating ?? undefined,
-      atmosphereRating: dbReview.atmosphereRating ?? undefined,
+      serviceRating: dbReview.service_rating ?? undefined,
+      staffRating: dbReview.staff_rating ?? undefined,
+      atmosphereRating: dbReview.atmosphere_rating ?? undefined,
       images: dbReview.images as string[] | undefined,
-      isVerified: dbReview.isVerified,
-      helpfulCount: dbReview.helpfulCount,
-      createdAt: dbReview.createdAt,
-      createdBy: dbReview.createdBy ?? undefined,
-      updatedAt: dbReview.updatedAt,
-      updatedBy: dbReview.updatedBy ?? undefined,
+      isVerified: dbReview.is_verified,
+      helpfulCount: dbReview.helpful_count,
+      createdAt: new Date(dbReview.created_at),
+      createdBy: dbReview.created_by ?? undefined,
+      updatedAt: new Date(dbReview.updated_at),
+      updatedBy: dbReview.updated_by ?? undefined,
     }
 
     // デフォルトはpublishedとして扱う（DBにステータスカラムがないため）
     return {
       type: 'published' as const,
       data: reviewData,
-      publishedAt: dbReview.createdAt,
-      publishedBy: dbReview.createdBy || 'system',
+      publishedAt: new Date(dbReview.created_at),
+      publishedBy: dbReview.created_by || 'system',
     }
   }
 
@@ -125,11 +125,11 @@ export class DrizzleReviewRepository implements ReviewRepository {
           service: services,
         })
         .from(reviews)
-        .innerJoin(customers, eq(reviews.customerId, customers.id))
-        .innerJoin(salons, eq(reviews.salonId, salons.id))
-        .leftJoin(staff, eq(reviews.staffId, staff.id))
-        .innerJoin(reservations, eq(reviews.reservationId, reservations.id))
-        .innerJoin(services, eq(reservations.serviceId, services.id))
+        .innerJoin(customers, eq(reviews.customer_id, customers.id))
+        .innerJoin(salons, eq(reviews.salon_id, salons.id))
+        .leftJoin(staff, eq(reviews.staff_id, staff.id))
+        .innerJoin(reservations, eq(reviews.reservation_id, reservations.id))
+        .innerJoin(services, eq(reservations.service_id, services.id))
         .where(eq(reviews.id, id))
         .limit(1)
 
@@ -156,7 +156,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
         salonName: firstRow.salon.name,
         staffName: firstRow.staff?.name,
         serviceName: firstRow.service.name,
-        reservationDate: firstRow.reservation.startTime,
+        reservationDate: new Date(firstRow.reservation.start_time),
       }
 
       return ok(detail)
@@ -176,7 +176,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       const result = await this.db
         .select()
         .from(reviews)
-        .where(eq(reviews.reservationId, reservationId))
+        .where(eq(reviews.reservation_id, reservationId))
         .limit(1)
 
       const firstRow = result[0]
@@ -207,20 +207,20 @@ export class DrizzleReviewRepository implements ReviewRepository {
   ): Promise<Result<Review, RepositoryError>> {
     try {
       const newReview: DbNewReview = {
-        salonId: data.salonId,
-        customerId: data.customerId,
-        reservationId: data.reservationId,
-        staffId: data.staffId,
+        salon_id: data.salonId,
+        customer_id: data.customerId,
+        reservation_id: data.reservationId,
+        staff_id: data.staffId,
         rating: data.rating,
         comment: data.comment,
-        serviceRating: data.serviceRating,
-        staffRating: data.staffRating,
-        atmosphereRating: data.atmosphereRating,
+        service_rating: data.serviceRating,
+        staff_rating: data.staffRating,
+        atmosphere_rating: data.atmosphereRating,
         images: data.images,
-        isVerified: false,
-        helpfulCount: 0,
-        createdBy: data.createdBy,
-        updatedBy: data.createdBy,
+        is_verified: false,
+        helpful_count: 0,
+        created_by: data.createdBy,
+        updated_by: data.createdBy,
       }
 
       const insertedReviews = await this.db
@@ -276,18 +276,18 @@ export class DrizzleReviewRepository implements ReviewRepository {
 
       // 更新データを準備
       const updateData: Partial<DbReview> = {
-        updatedAt: new Date(),
-        updatedBy: data.updatedBy,
+        updated_at: new Date().toISOString(),
+        updated_by: data.updatedBy,
       }
 
       if (data.rating !== undefined) updateData.rating = data.rating
       if (data.comment !== undefined) updateData.comment = data.comment
       if (data.serviceRating !== undefined)
-        updateData.serviceRating = data.serviceRating
+        updateData.service_rating = data.serviceRating
       if (data.staffRating !== undefined)
-        updateData.staffRating = data.staffRating
+        updateData.staff_rating = data.staffRating
       if (data.atmosphereRating !== undefined)
-        updateData.atmosphereRating = data.atmosphereRating
+        updateData.atmosphere_rating = data.atmosphereRating
       if (data.images !== undefined) updateData.images = data.images
 
       const updatedReviews = await this.db
@@ -392,9 +392,9 @@ export class DrizzleReviewRepository implements ReviewRepository {
       const result = await this.db
         .update(reviews)
         .set({
-          isVerified: true,
-          updatedAt: new Date(),
-          updatedBy: verifiedBy,
+          is_verified: true,
+          updated_at: new Date().toISOString(),
+          updated_by: verifiedBy,
         })
         .where(eq(reviews.id, id))
         .returning()
@@ -433,8 +433,8 @@ export class DrizzleReviewRepository implements ReviewRepository {
       const result = await this.db
         .update(reviews)
         .set({
-          helpfulCount: sql`${reviews.helpfulCount} + 1`,
-          updatedAt: new Date(),
+          helpful_count: sql`${reviews.helpful_count} + 1`,
+          updated_at: new Date().toISOString(),
         })
         .where(eq(reviews.id, id))
         .returning()
@@ -474,19 +474,19 @@ export class DrizzleReviewRepository implements ReviewRepository {
       const conditions = []
 
       if (criteria.salonId) {
-        conditions.push(eq(reviews.salonId, criteria.salonId))
+        conditions.push(eq(reviews.salon_id, criteria.salonId))
       }
       if (criteria.customerId) {
-        conditions.push(eq(reviews.customerId, criteria.customerId))
+        conditions.push(eq(reviews.customer_id, criteria.customerId))
       }
       if (criteria.staffId) {
-        conditions.push(eq(reviews.staffId, criteria.staffId))
+        conditions.push(eq(reviews.staff_id, criteria.staffId))
       }
       if (criteria.reservationId) {
-        conditions.push(eq(reviews.reservationId, criteria.reservationId))
+        conditions.push(eq(reviews.reservation_id, criteria.reservationId))
       }
       if (criteria.isVerified !== undefined) {
-        conditions.push(eq(reviews.isVerified, criteria.isVerified))
+        conditions.push(eq(reviews.is_verified, criteria.isVerified))
       }
       if (criteria.minRating !== undefined) {
         conditions.push(gte(reviews.rating, criteria.minRating))
@@ -496,12 +496,18 @@ export class DrizzleReviewRepository implements ReviewRepository {
       }
       if (criteria.startDate && criteria.endDate) {
         conditions.push(
-          between(reviews.createdAt, criteria.startDate, criteria.endDate)
+          between(
+            reviews.created_at,
+            criteria.startDate.toISOString(),
+            criteria.endDate.toISOString()
+          )
         )
       } else if (criteria.startDate) {
-        conditions.push(gte(reviews.createdAt, criteria.startDate))
+        conditions.push(
+          gte(reviews.created_at, criteria.startDate.toISOString())
+        )
       } else if (criteria.endDate) {
-        conditions.push(lte(reviews.createdAt, criteria.endDate))
+        conditions.push(lte(reviews.created_at, criteria.endDate.toISOString()))
       }
 
       const whereClause = conditions.length > 0 ? and(...conditions) : undefined
@@ -519,7 +525,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
         .select()
         .from(reviews)
         .where(whereClause)
-        .orderBy(desc(reviews.createdAt))
+        .orderBy(desc(reviews.created_at))
         .limit(pagination.limit)
         .offset(pagination.offset)
 
@@ -576,12 +582,12 @@ export class DrizzleReviewRepository implements ReviewRepository {
         .select({
           totalReviews: sql<number>`count(*)`,
           averageRating: sql<number>`avg(${reviews.rating})`,
-          averageServiceRating: sql<number>`avg(${reviews.serviceRating})`,
-          averageStaffRating: sql<number>`avg(${reviews.staffRating})`,
-          averageAtmosphereRating: sql<number>`avg(${reviews.atmosphereRating})`,
+          averageServiceRating: sql<number>`avg(${reviews.service_rating})`,
+          averageStaffRating: sql<number>`avg(${reviews.staff_rating})`,
+          averageAtmosphereRating: sql<number>`avg(${reviews.atmosphere_rating})`,
         })
         .from(reviews)
-        .where(eq(reviews.salonId, salonId))
+        .where(eq(reviews.salon_id, salonId))
 
       const summary = summaryResult[0]
       if (!summary) {
@@ -600,7 +606,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
           count: sql<number>`count(*)`,
         })
         .from(reviews)
-        .where(eq(reviews.salonId, salonId))
+        .where(eq(reviews.salon_id, salonId))
         .groupBy(reviews.rating)
 
       const ratingDistribution = new Map<number, number>()
@@ -641,10 +647,10 @@ export class DrizzleReviewRepository implements ReviewRepository {
         .select({
           totalReviews: sql<number>`count(*)`,
           averageRating: sql<number>`avg(${reviews.rating})`,
-          averageStaffRating: sql<number>`avg(${reviews.staffRating})`,
+          averageStaffRating: sql<number>`avg(${reviews.staff_rating})`,
         })
         .from(reviews)
-        .where(eq(reviews.staffId, staffId))
+        .where(eq(reviews.staff_id, staffId))
 
       const summary = summaryResult[0]
       if (!summary) {
@@ -663,7 +669,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
           count: sql<number>`count(*)`,
         })
         .from(reviews)
-        .where(eq(reviews.staffId, staffId))
+        .where(eq(reviews.staff_id, staffId))
         .groupBy(reviews.rating)
 
       const ratingDistribution = new Map<number, number>()
@@ -697,8 +703,8 @@ export class DrizzleReviewRepository implements ReviewRepository {
       const results = await this.db
         .select()
         .from(reviews)
-        .where(eq(reviews.salonId, salonId))
-        .orderBy(desc(reviews.createdAt))
+        .where(eq(reviews.salon_id, salonId))
+        .orderBy(desc(reviews.created_at))
         .limit(limit)
 
       const items: Review[] = []
@@ -729,9 +735,9 @@ export class DrizzleReviewRepository implements ReviewRepository {
         .select()
         .from(reviews)
         .where(
-          and(eq(reviews.salonId, salonId), gte(reviews.rating, minRating))
+          and(eq(reviews.salon_id, salonId), gte(reviews.rating, minRating))
         )
-        .orderBy(desc(reviews.rating), desc(reviews.helpfulCount))
+        .orderBy(desc(reviews.rating), desc(reviews.helpful_count))
         .limit(limit)
 
       const items: Review[] = []

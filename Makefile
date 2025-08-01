@@ -1,6 +1,6 @@
 .PHONY: help install build test lint format typecheck clean clean-all fresh \
         docker-up docker-down docker-logs docker-clean \
-        db-migrate db-seed db-reset \
+        db-migrate db-seed db-reset db-pull \
         backend-build backend-start frontend-build frontend-dev \
         frontend-build-test frontend-build-stg frontend-build-prod \
         backend-build-test backend-build-stg backend-build-prod \
@@ -50,6 +50,7 @@ help:
 	@echo "  make db-migrate    - Run database migrations"
 	@echo "  make db-seed       - Seed database with sample data"
 	@echo "  make db-reset      - Reset database (drop, create, migrate, seed)"
+	@echo "  make db-pull       - Pull database schema from existing database"
 	@echo ""
 	@echo "Release (Test/Staging/Production):"
 	@echo "  make frontend-build-test/stg/prod  - Build frontend for specific environment"
@@ -179,6 +180,13 @@ db-reset:
 	pnpm run db:reset
 	$(MAKE) db-migrate
 	@echo "Database reset complete!"
+
+db-pull:
+	@echo "Pulling database schema..."
+	pnpm --filter @beauty-salon-backend/migration run db:pull
+	@echo "Formatting generated files..."
+	pnpm format:fix
+	@echo "Database schema pulled and formatted in backend/packages/infrastructure/src/database/"
 
 
 # Utility targets

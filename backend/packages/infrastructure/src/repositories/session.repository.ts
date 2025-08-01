@@ -52,7 +52,7 @@ export class DrizzleSessionRepository implements SessionRepository {
       const results = await this.db
         .select()
         .from(sessions)
-        .where(eq(sessions.refreshToken, token))
+        .where(eq(sessions.refresh_token, token))
         .limit(1)
 
       if (results.length === 0) {
@@ -82,8 +82,8 @@ export class DrizzleSessionRepository implements SessionRepository {
       const results = await this.db
         .select()
         .from(sessions)
-        .where(eq(sessions.userId, userId))
-        .orderBy(desc(sessions.lastActivityAt))
+        .where(eq(sessions.user_id, userId))
+        .orderBy(desc(sessions.last_activity_at))
 
       const sessionList = results.map(this.mapToSession)
       return ok(sessionList)
@@ -135,8 +135,8 @@ export class DrizzleSessionRepository implements SessionRepository {
       const updatedRows = await this.db
         .update(sessions)
         .set({
-          lastActivityAt: dbSession.lastActivityAt,
-          expiresAt: dbSession.expiresAt,
+          last_activity_at: dbSession.last_activity_at,
+          expires_at: dbSession.expires_at,
         })
         .where(eq(sessions.id, session.id))
         .returning()
@@ -178,7 +178,7 @@ export class DrizzleSessionRepository implements SessionRepository {
     userId: UserId
   ): Promise<Result<void, SessionRepositoryError>> {
     try {
-      await this.db.delete(sessions).where(eq(sessions.userId, userId))
+      await this.db.delete(sessions).where(eq(sessions.user_id, userId))
 
       return ok(undefined)
     } catch (error) {
@@ -193,7 +193,9 @@ export class DrizzleSessionRepository implements SessionRepository {
   async deleteExpired(): Promise<Result<number, SessionRepositoryError>> {
     try {
       const now = new Date()
-      await this.db.delete(sessions).where(lt(sessions.expiresAt, now))
+      await this.db
+        .delete(sessions)
+        .where(lt(sessions.expires_at, now.toISOString()))
 
       // Get the number of deleted rows
       const deletedCount = 0 // drizzle-orm doesn't provide rowCount directly
@@ -215,7 +217,7 @@ export class DrizzleSessionRepository implements SessionRepository {
       const results = await this.db
         .select({ count: sessions.id })
         .from(sessions)
-        .where(eq(sessions.userId, userId))
+        .where(eq(sessions.user_id, userId))
 
       const count = results.length
       return ok(count)
@@ -231,28 +233,28 @@ export class DrizzleSessionRepository implements SessionRepository {
   private mapToSession(dbSession: typeof sessions.$inferSelect): Session {
     return {
       id: dbSession.id as SessionId,
-      userId: dbSession.userId as UserId,
-      refreshToken: dbSession.refreshToken,
-      ipAddress: dbSession.ipAddress,
-      userAgent: dbSession.userAgent,
-      expiresAt: dbSession.expiresAt,
-      rememberMe: dbSession.rememberMe,
-      createdAt: dbSession.createdAt,
-      lastActivityAt: dbSession.lastActivityAt,
+      userId: dbSession.user_id as UserId,
+      refreshToken: dbSession.refresh_token,
+      ipAddress: dbSession.ip_address,
+      userAgent: dbSession.user_agent,
+      expiresAt: new Date(dbSession.expires_at),
+      rememberMe: dbSession.remember_me,
+      createdAt: new Date(dbSession.created_at),
+      lastActivityAt: new Date(dbSession.last_activity_at),
     }
   }
 
   private mapToDbSession(session: Session): typeof sessions.$inferInsert {
     return {
       id: session.id || uuidv4(),
-      userId: session.userId,
-      refreshToken: session.refreshToken,
-      ipAddress: session.ipAddress,
-      userAgent: session.userAgent,
-      expiresAt: session.expiresAt,
-      rememberMe: session.rememberMe,
-      createdAt: session.createdAt,
-      lastActivityAt: session.lastActivityAt,
+      user_id: session.userId,
+      refresh_token: session.refreshToken,
+      ip_address: session.ipAddress,
+      user_agent: session.userAgent,
+      expires_at: session.expiresAt.toISOString(),
+      remember_me: session.rememberMe,
+      created_at: session.createdAt.toISOString(),
+      last_activity_at: session.lastActivityAt.toISOString(),
     }
   }
 }

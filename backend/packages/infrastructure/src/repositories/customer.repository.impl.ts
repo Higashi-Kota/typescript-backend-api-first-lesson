@@ -32,7 +32,7 @@ type DbNewCustomer = typeof customers.$inferInsert
 
 export class DrizzleCustomerRepository implements CustomerRepository {
   private encryptionService?: ReturnType<typeof getEncryptionService>
-  private encryptedFields: (keyof DbCustomer)[] = ['phoneNumber']
+  private encryptedFields: (keyof DbCustomer)[] = ['phone_number']
 
   constructor(private db: PostgresJsDatabase) {
     try {
@@ -75,20 +75,22 @@ export class DrizzleCustomerRepository implements CustomerRepository {
         name: decryptedCustomer.name,
         contactInfo: {
           email: decryptedCustomer.email,
-          phoneNumber: decryptedCustomer.phoneNumber,
-          alternativePhone: decryptedCustomer.alternativePhone || undefined,
+          phoneNumber: decryptedCustomer.phone_number,
+          alternativePhone: decryptedCustomer.alternative_phone || undefined,
         },
         preferences: decryptedCustomer.preferences,
         notes: decryptedCustomer.notes,
-        tags: decryptedCustomer.tags || [],
-        birthDate: decryptedCustomer.birthDate
-          ? new Date(decryptedCustomer.birthDate)
+        tags: Array.isArray(decryptedCustomer.tags)
+          ? decryptedCustomer.tags
+          : [],
+        birthDate: decryptedCustomer.birth_date
+          ? new Date(decryptedCustomer.birth_date)
           : null,
-        loyaltyPoints: decryptedCustomer.loyaltyPoints || 0,
-        membershipLevel: (decryptedCustomer.membershipLevel ||
+        loyaltyPoints: decryptedCustomer.loyalty_points || 0,
+        membershipLevel: (decryptedCustomer.membership_level ||
           'regular') as Customer['data']['membershipLevel'],
-        createdAt: decryptedCustomer.createdAt,
-        updatedAt: decryptedCustomer.updatedAt,
+        createdAt: new Date(decryptedCustomer.created_at),
+        updatedAt: new Date(decryptedCustomer.updated_at),
       },
     }
   }
@@ -100,17 +102,17 @@ export class DrizzleCustomerRepository implements CustomerRepository {
       id: data.id,
       name: data.name,
       email: data.contactInfo.email,
-      phoneNumber: data.contactInfo.phoneNumber,
-      alternativePhone: data.contactInfo.alternativePhone || null,
+      phone_number: data.contactInfo.phoneNumber,
+      alternative_phone: data.contactInfo.alternativePhone || null,
       preferences: data.preferences,
       notes: data.notes,
       tags: data.tags.length > 0 ? data.tags : null,
-      loyaltyPoints: data.loyaltyPoints,
-      membershipLevel: data.membershipLevel,
-      birthDate: data.birthDate
+      loyalty_points: data.loyaltyPoints,
+      membership_level: data.membershipLevel,
+      birth_date: data.birthDate
         ? data.birthDate.toISOString().split('T')[0]
         : null,
-      updatedAt: data.updatedAt,
+      updated_at: data.updatedAt.toISOString(),
     }
 
     // 暗号化が必要なフィールドを暗号化
@@ -215,15 +217,15 @@ export class DrizzleCustomerRepository implements CustomerRepository {
           set: {
             name: dbCustomer.name,
             email: dbCustomer.email,
-            phoneNumber: dbCustomer.phoneNumber,
-            alternativePhone: dbCustomer.alternativePhone,
+            phone_number: dbCustomer.phone_number,
+            alternative_phone: dbCustomer.alternative_phone,
             preferences: dbCustomer.preferences,
             notes: dbCustomer.notes,
             tags: dbCustomer.tags,
-            loyaltyPoints: dbCustomer.loyaltyPoints,
-            membershipLevel: dbCustomer.membershipLevel,
-            birthDate: dbCustomer.birthDate,
-            updatedAt: new Date(),
+            loyalty_points: dbCustomer.loyalty_points,
+            membership_level: dbCustomer.membership_level,
+            birth_date: dbCustomer.birth_date,
+            updated_at: new Date().toISOString(),
           },
         })
         .returning()
@@ -307,7 +309,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
           or(
             safeLike(customers.name, criteria.search),
             safeLike(customers.email, criteria.search),
-            safeLike(customers.phoneNumber, criteria.search)
+            safeLike(customers.phone_number, criteria.search)
           )
         )
       }
@@ -318,7 +320,9 @@ export class DrizzleCustomerRepository implements CustomerRepository {
       }
 
       if (criteria.membershipLevel) {
-        conditions.push(eq(customers.membershipLevel, criteria.membershipLevel))
+        conditions.push(
+          eq(customers.membership_level, criteria.membershipLevel)
+        )
       }
 
       // activeな顧客のみを取得（現在のDBスキーマでは全てactive扱い）
@@ -341,7 +345,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
         .select()
         .from(customers)
         .where(whereClause)
-        .orderBy(desc(customers.createdAt))
+        .orderBy(desc(customers.created_at))
         .limit(pagination.limit)
         .offset(pagination.offset)
 
@@ -432,11 +436,11 @@ export class DrizzleCustomerRepository implements CustomerRepository {
     try {
       const results = await this.db
         .select({
-          level: customers.membershipLevel,
+          level: customers.membership_level,
           count: sql<number>`count(*)::int`,
         })
         .from(customers)
-        .groupBy(customers.membershipLevel)
+        .groupBy(customers.membership_level)
 
       const counts: Record<string, number> = {
         regular: 0,

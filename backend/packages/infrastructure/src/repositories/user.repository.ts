@@ -12,7 +12,7 @@ import type {
   UserSearchCriteria,
 } from '@beauty-salon-backend/domain'
 import { err, ok } from '@beauty-salon-backend/domain'
-import { and, desc, eq } from 'drizzle-orm'
+import { and, desc, eq, sql } from 'drizzle-orm'
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
 import { v4 as uuidv4 } from 'uuid'
 import { users } from '../database/schema'
@@ -88,7 +88,7 @@ export class DrizzleUserRepository implements UserRepository {
       const results = await this.db
         .select()
         .from(users)
-        .where(eq(users.passwordResetToken, token))
+        .where(eq(users.password_reset_token, token))
         .limit(1)
 
       if (results.length === 0) {
@@ -118,7 +118,7 @@ export class DrizzleUserRepository implements UserRepository {
       const results = await this.db
         .select()
         .from(users)
-        .where(eq(users.emailVerificationToken, token))
+        .where(eq(users.email_verification_token, token))
         .limit(1)
 
       if (results.length === 0) {
@@ -242,39 +242,66 @@ export class DrizzleUserRepository implements UserRepository {
         )
       }
 
-      if (criteria.status) {
-        conditions.push(
-          eq(
-            users.status,
-            criteria.status as
-              | 'active'
-              | 'unverified'
-              | 'locked'
-              | 'suspended'
-              | 'deleted'
-          )
-        )
-      }
+      // Note: status column doesn't exist in the current schema
+      // if (criteria.status) {
+      //   conditions.push(
+      //     eq(
+      //       users.status,
+      //       criteria.status as
+      //         | 'active'
+      //         | 'unverified'
+      //         | 'locked'
+      //         | 'suspended'
+      //         | 'deleted'
+      //     )
+      //   )
+      // }
 
       if (criteria.emailVerified !== undefined) {
-        conditions.push(eq(users.emailVerified, criteria.emailVerified))
+        conditions.push(eq(users.email_verified, criteria.emailVerified))
       }
 
       const whereClause = conditions.length > 0 ? and(...conditions) : undefined
 
-      const [results, countResult] = await Promise.all([
-        this.db
+      // Count total matching records
+      const countResult = await this.db
+        .select({ count: sql<number>`count(*)` })
+        .from(users)
+        .where(whereClause)
+
+      const total = Number(countResult[0]?.count ?? 0)
+
+      // Get paginated results
+      const results = await this.db
+        .select()
+        .from(users)
+        .where(whereClause)
+        .orderBy(desc(users.created_at))
+        .limit(pagination.limit)
+        .offset(pagination.offset)
+
+      // Map to domain objects and filter by derived fields (status only)
+      let items = results.map(this.mapToUser)
+
+      // Filter by status if specified (still needs to be done in memory as it's derived)
+      if (criteria.status) {
+        items = items.filter((user) => user.status.type === criteria.status)
+        // Adjust total count if filtering by status
+        const allForStatus = await this.db
           .select()
           .from(users)
           .where(whereClause)
-          .orderBy(desc(users.createdAt))
-          .limit(pagination.limit)
-          .offset(pagination.offset),
-        this.db.select({ count: users.id }).from(users).where(whereClause),
-      ])
-
-      const items = results.map(this.mapToUser)
-      const total = countResult.length
+        const allMapped = allForStatus.map(this.mapToUser)
+        const statusFiltered = allMapped.filter(
+          (user) => user.status.type === criteria.status
+        )
+        return ok({
+          data: items,
+          total: statusFiltered.length,
+          limit: pagination.limit,
+          offset: pagination.offset,
+        })
+      }
 
       return ok({
         data: items,
@@ -294,67 +321,49 @@ export class DrizzleUserRepository implements UserRepository {
   private mapToUser(dbUser: typeof users.$inferSelect): User {
     // Map account status
     const status: UserAccountStatus = (() => {
-      switch (dbUser.status) {
-        case 'active':
-          return { type: 'active' as const }
-        case 'unverified':
-          return {
-            type: 'unverified' as const,
-            emailVerificationToken: dbUser.emailVerificationToken || '',
-            tokenExpiry: dbUser.emailVerificationTokenExpiry || new Date(),
-          }
-        case 'locked':
-          return {
-            type: 'locked' as const,
-            reason: 'Too many failed login attempts',
-            lockedAt: dbUser.lockedAt || new Date(),
-            failedAttempts: dbUser.failedLoginAttempts,
-          }
-        case 'suspended':
-          return {
-            type: 'suspended' as const,
-            reason: 'Account suspended by administrator',
-            suspendedAt: dbUser.updatedAt,
-          }
-        case 'deleted':
-          return {
-            type: 'deleted' as const,
-            deletedAt: dbUser.updatedAt,
-          }
-        default:
-          return { type: 'active' as const }
+      // Note: status column doesn't exist in schema, deriving from other fields
+      if (dbUser.locked_at) {
+        return {
+          type: 'locked' as const,
+          reason: 'Too many failed login attempts',
+          lockedAt: new Date(dbUser.locked_at),
+          failedAttempts: dbUser.failed_login_attempts,
+        }
       }
+      if (!dbUser.email_verified) {
+        return {
+          type: 'unverified' as const,
+          emailVerificationToken: dbUser.email_verification_token || '',
+          tokenExpiry: dbUser.email_verification_token_expiry
+            ? new Date(dbUser.email_verification_token_expiry)
+            : new Date(),
+        }
+      }
+      return { type: 'active' as const }
     })()
 
     // Map 2FA status
     const twoFactorStatus: TwoFactorStatus = (() => {
-      switch (dbUser.twoFactorStatus) {
-        case 'disabled':
-          return { type: 'disabled' as const }
-        case 'pending':
-          return {
-            type: 'pending' as const,
-            secret: dbUser.twoFactorSecret || '',
-            qrCodeUrl: '', // Generated dynamically when needed
-          }
-        case 'enabled':
-          return {
-            type: 'enabled' as const,
-            secret: dbUser.twoFactorSecret || '',
-            backupCodes: dbUser.backupCodes || [],
-          }
-        default:
-          return { type: 'disabled' as const }
+      // Note: two_factor_status column doesn't exist, deriving from two_factor_secret
+      if (dbUser.two_factor_secret) {
+        return {
+          type: 'enabled' as const,
+          secret: dbUser.two_factor_secret,
+          backupCodes: Array.isArray(dbUser.backup_codes)
+            ? dbUser.backup_codes
+            : [],
+        }
       }
+      return { type: 'disabled' as const }
     })()
 
     // Map password reset status
     const passwordResetStatus: PasswordResetStatus = (() => {
-      if (dbUser.passwordResetToken && dbUser.passwordResetTokenExpiry) {
+      if (dbUser.password_reset_token && dbUser.password_reset_token_expiry) {
         return {
           type: 'requested' as const,
-          token: dbUser.passwordResetToken,
-          tokenExpiry: dbUser.passwordResetTokenExpiry,
+          token: dbUser.password_reset_token,
+          tokenExpiry: new Date(dbUser.password_reset_token_expiry),
         }
       }
       return { type: 'none' as const }
@@ -366,20 +375,28 @@ export class DrizzleUserRepository implements UserRepository {
         id: dbUser.id as UserId,
         email: dbUser.email,
         name: dbUser.name,
-        passwordHash: dbUser.passwordHash,
+        passwordHash: dbUser.password_hash,
         role: dbUser.role as 'customer' | 'staff' | 'admin',
-        emailVerified: dbUser.emailVerified,
+        emailVerified: dbUser.email_verified,
         twoFactorStatus,
         passwordResetStatus,
-        lastPasswordChangeAt: dbUser.lastPasswordChangeAt || undefined,
-        passwordHistory: dbUser.passwordHistory || [],
-        trustedIpAddresses: dbUser.trustedIpAddresses || [],
-        customerId: dbUser.customerId || undefined,
-        staffId: dbUser.staffId || undefined,
-        createdAt: dbUser.createdAt,
-        updatedAt: dbUser.updatedAt,
-        lastLoginAt: dbUser.lastLoginAt || undefined,
-        lastLoginIp: dbUser.lastLoginIp || undefined,
+        lastPasswordChangeAt: dbUser.last_password_change_at
+          ? new Date(dbUser.last_password_change_at)
+          : undefined,
+        passwordHistory: Array.isArray(dbUser.password_history)
+          ? dbUser.password_history
+          : [],
+        trustedIpAddresses: Array.isArray(dbUser.trusted_ip_addresses)
+          ? dbUser.trusted_ip_addresses
+          : [],
+        customerId: dbUser.customer_id || undefined,
+        staffId: dbUser.staff_id || undefined,
+        createdAt: new Date(dbUser.created_at),
+        updatedAt: new Date(dbUser.updated_at),
+        lastLoginAt: dbUser.last_login_at
+          ? new Date(dbUser.last_login_at)
+          : undefined,
+        lastLoginIp: dbUser.last_login_ip || undefined,
       },
     }
   }
@@ -389,81 +406,54 @@ export class DrizzleUserRepository implements UserRepository {
       id: user.data.id || uuidv4(),
       email: user.data.email,
       name: user.data.name,
-      passwordHash: user.data.passwordHash,
+      password_hash: user.data.passwordHash,
       role: user.data.role,
-      status: this.getDbStatus(user.status),
-      emailVerified: user.data.emailVerified,
-      emailVerificationToken:
+      email_verified: user.data.emailVerified,
+      email_verification_token:
         user.status.type === 'unverified'
           ? user.status.emailVerificationToken
           : null,
-      emailVerificationTokenExpiry:
-        user.status.type === 'unverified' ? user.status.tokenExpiry : null,
-      twoFactorStatus: this.getDbTwoFactorStatus(user.data.twoFactorStatus),
-      twoFactorSecret:
+      email_verification_token_expiry:
+        user.status.type === 'unverified'
+          ? user.status.tokenExpiry.toISOString()
+          : null,
+      // Note: two_factor_status column doesn't exist in schema
+      two_factor_secret:
         user.data.twoFactorStatus.type !== 'disabled'
           ? user.data.twoFactorStatus.secret
           : null,
-      backupCodes:
+      backup_codes:
         user.data.twoFactorStatus.type === 'enabled'
           ? user.data.twoFactorStatus.backupCodes
           : null,
-      failedLoginAttempts:
+      failed_login_attempts:
         user.status.type === 'locked' ? user.status.failedAttempts : 0,
-      lockedAt: user.status.type === 'locked' ? user.status.lockedAt : null,
-      passwordResetToken:
+      locked_at:
+        user.status.type === 'locked'
+          ? user.status.lockedAt.toISOString()
+          : null,
+      password_reset_token:
         user.data.passwordResetStatus.type === 'requested'
           ? user.data.passwordResetStatus.token
           : null,
-      passwordResetTokenExpiry:
+      password_reset_token_expiry:
         user.data.passwordResetStatus.type === 'requested'
-          ? user.data.passwordResetStatus.tokenExpiry
+          ? user.data.passwordResetStatus.tokenExpiry.toISOString()
           : null,
-      lastPasswordChangeAt: user.data.lastPasswordChangeAt || null,
-      passwordHistory: user.data.passwordHistory,
-      trustedIpAddresses: user.data.trustedIpAddresses,
-      customerId: user.data.customerId || null,
-      staffId: user.data.staffId || null,
-      createdAt: user.data.createdAt,
-      updatedAt: user.data.updatedAt,
-      lastLoginAt: user.data.lastLoginAt || null,
-      lastLoginIp: user.data.lastLoginIp || null,
+      last_password_change_at:
+        user.data.lastPasswordChangeAt?.toISOString() || null,
+      password_history: user.data.passwordHistory,
+      trusted_ip_addresses: user.data.trustedIpAddresses,
+      customer_id: user.data.customerId || null,
+      staff_id: user.data.staffId || null,
+      created_at: user.data.createdAt.toISOString(),
+      updated_at: user.data.updatedAt.toISOString(),
+      last_login_at: user.data.lastLoginAt?.toISOString() || null,
+      last_login_ip: user.data.lastLoginIp || null,
     }
 
     return dbUser
   }
 
-  private getDbStatus(
-    status: UserAccountStatus
-  ): 'active' | 'unverified' | 'locked' | 'suspended' | 'deleted' {
-    switch (status.type) {
-      case 'active':
-        return 'active'
-      case 'unverified':
-        return 'unverified'
-      case 'locked':
-        return 'locked'
-      case 'suspended':
-        return 'suspended'
-      case 'deleted':
-        return 'deleted'
-      default:
-        return 'active'
-    }
-  }
-
-  private getDbTwoFactorStatus(
-    status: TwoFactorStatus
-  ): 'disabled' | 'pending' | 'enabled' {
-    switch (status.type) {
-      case 'disabled':
-        return 'disabled'
-      case 'pending':
-        return 'pending'
-      case 'enabled':
-        return 'enabled'
-      default:
-        return 'disabled'
-    }
-  }
+  // Removed unused methods - status columns don't exist in schema
 }

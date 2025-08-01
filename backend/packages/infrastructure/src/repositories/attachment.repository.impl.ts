@@ -4,12 +4,12 @@
 
 import { and, desc, eq, gte, ilike, lte, sql } from 'drizzle-orm'
 import type { Database } from '../database/index.js'
-import { attachments, downloadLogs, shareLinks } from '../database/schema.js'
+import { attachments, download_logs, share_links } from '../database/schema.js'
 
 // Database row types
 type AttachmentRow = typeof attachments.$inferSelect
-type ShareLinkRow = typeof shareLinks.$inferSelect
-type DownloadLogRow = typeof downloadLogs.$inferSelect
+type ShareLinkRow = typeof share_links.$inferSelect
+type DownloadLogRow = typeof download_logs.$inferSelect
 import { randomUUID } from 'node:crypto'
 import type {
   AttachmentData,
@@ -49,10 +49,9 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
           id: randomUUID(),
           key: input.key,
           filename: input.filename,
-          contentType: input.contentType,
+          content_type: input.contentType,
           size: input.size,
-          uploadedBy: input.uploadedBy,
-          fileType: this.getFileTypeFromContentType(input.contentType),
+          uploaded_by: input.uploadedBy,
           metadata: {},
           tags: {},
         })
@@ -117,7 +116,7 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
   ): Promise<Result<AttachmentData, RepositoryError>> {
     try {
       const updateData = {
-        updatedAt: new Date(),
+        updated_at: new Date().toISOString(),
       }
 
       // Note: The domain model expects status, scanStatus, scanMessage, deletedAt fields
@@ -185,7 +184,7 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
       const conditions = []
 
       if (criteria.uploadedBy) {
-        conditions.push(eq(attachments.uploadedBy, criteria.uploadedBy))
+        conditions.push(eq(attachments.uploaded_by, criteria.uploadedBy))
       }
       // Note: status and scanStatus fields don't exist in the current schema
       // These conditions are commented out until the schema is updated
@@ -199,7 +198,7 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
         conditions.push(ilike(attachments.filename, `%${criteria.filename}%`))
       }
       if (criteria.contentType) {
-        conditions.push(eq(attachments.contentType, criteria.contentType))
+        conditions.push(eq(attachments.content_type, criteria.contentType))
       }
       if (criteria.minSize !== undefined) {
         conditions.push(gte(attachments.size, criteria.minSize))
@@ -208,10 +207,14 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
         conditions.push(lte(attachments.size, criteria.maxSize))
       }
       if (criteria.uploadedAfter) {
-        conditions.push(gte(attachments.createdAt, criteria.uploadedAfter))
+        conditions.push(
+          gte(attachments.created_at, criteria.uploadedAfter.toISOString())
+        )
       }
       if (criteria.uploadedBefore) {
-        conditions.push(lte(attachments.createdAt, criteria.uploadedBefore))
+        conditions.push(
+          lte(attachments.created_at, criteria.uploadedBefore.toISOString())
+        )
       }
 
       const whereClause = conditions.length > 0 ? and(...conditions) : undefined
@@ -219,7 +222,7 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
       const [items, countResult] = await Promise.all([
         this.db.query.attachments.findMany({
           where: whereClause,
-          orderBy: [desc(attachments.createdAt)],
+          orderBy: [desc(attachments.created_at)],
           limit: pagination.limit,
           offset: pagination.offset,
         }),
@@ -264,7 +267,7 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
           totalSize: sql<number>`COALESCE(SUM(${attachments.size}), 0)`,
         })
         .from(attachments)
-        .where(eq(attachments.uploadedBy, userId))
+        .where(eq(attachments.uploaded_by, userId))
 
       return ok(Number(result?.totalSize ?? 0))
     } catch (error) {
@@ -281,16 +284,16 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
   ): Promise<Result<ShareLinkData, RepositoryError>> {
     try {
       const [shareLink] = await this.db
-        .insert(shareLinks)
+        .insert(share_links)
         .values({
           id: randomUUID(),
-          attachmentId: input.attachmentId,
+          attachment_id: input.attachmentId,
           token: input.token,
-          passwordHash: input.password || null, // Note: this should be hashed before storing
-          maxDownloads: input.maxDownloads || null,
-          downloadCount: 0,
-          expiresAt: input.expiresAt || null,
-          createdBy: input.createdBy,
+          password_hash: input.password || null, // Note: this should be hashed before storing
+          max_downloads: input.maxDownloads || null,
+          download_count: 0,
+          expires_at: input.expiresAt ? input.expiresAt.toISOString() : null,
+          created_by: input.createdBy,
         })
         .returning()
 
@@ -316,8 +319,8 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
     token: ShareToken
   ): Promise<Result<ShareLinkData | null, RepositoryError>> {
     try {
-      const shareLink = await this.db.query.shareLinks.findFirst({
-        where: eq(shareLinks.token, token),
+      const shareLink = await this.db.query.share_links.findFirst({
+        where: eq(share_links.token, token),
       })
 
       return ok(shareLink ? this.mapToShareLinkData(shareLink) : null)
@@ -335,12 +338,12 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
   ): Promise<Result<void, RepositoryError>> {
     try {
       await this.db
-        .update(shareLinks)
+        .update(share_links)
         .set({
-          downloadCount: sql`${shareLinks.downloadCount} + 1`,
-          updatedAt: new Date(),
+          download_count: sql`${share_links.download_count} + 1`,
+          updated_at: new Date().toISOString(),
         })
-        .where(eq(shareLinks.id, id))
+        .where(eq(share_links.id, id))
 
       return ok(undefined)
     } catch (error) {
@@ -356,7 +359,7 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
     id: ShareLinkId
   ): Promise<Result<void, RepositoryError>> {
     try {
-      await this.db.delete(shareLinks).where(eq(shareLinks.id, id))
+      await this.db.delete(share_links).where(eq(share_links.id, id))
       return ok(undefined)
     } catch (error) {
       return err({
@@ -371,16 +374,16 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
     input: CreateDownloadLogInput
   ): Promise<Result<void, RepositoryError>> {
     try {
-      await this.db.insert(downloadLogs).values({
+      await this.db.insert(download_logs).values({
         id: randomUUID(),
-        attachmentId: input.attachmentId,
-        downloadedBy: input.downloadedBy || null,
-        ipAddress: input.ipAddress,
-        userAgent: input.userAgent || null,
-        shareLinkId: input.shareToken
+        attachment_id: input.attachmentId,
+        downloaded_by: input.downloadedBy || null,
+        ip_address: input.ipAddress,
+        user_agent: input.userAgent || null,
+        share_link_id: input.shareToken
           ? (input.shareToken as unknown as string)
-          : null, // Note: mapping shareToken to shareLinkId - needs proper conversion
-        downloadedAt: new Date(),
+          : null, // Note: mapping shareToken to share_link_id - needs proper conversion
+        downloaded_at: new Date().toISOString(),
       })
 
       return ok(undefined)
@@ -399,16 +402,16 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
   ): Promise<Result<PaginatedResult<DownloadLogData>, RepositoryError>> {
     try {
       const [items, countResult] = await Promise.all([
-        this.db.query.downloadLogs.findMany({
-          where: eq(downloadLogs.attachmentId, attachmentId),
-          orderBy: [desc(downloadLogs.downloadedAt)],
+        this.db.query.download_logs.findMany({
+          where: eq(download_logs.attachment_id, attachmentId),
+          orderBy: [desc(download_logs.downloaded_at)],
           limit: pagination.limit,
           offset: pagination.offset,
         }),
         this.db
           .select({ count: sql<number>`count(*)` })
-          .from(downloadLogs)
-          .where(eq(downloadLogs.attachmentId, attachmentId)),
+          .from(download_logs)
+          .where(eq(download_logs.attachment_id, attachmentId)),
       ])
 
       const totalCount = Number(countResult[0]?.count ?? 0)
@@ -449,8 +452,8 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
   async deleteExpiredShareLinks(): Promise<Result<number, RepositoryError>> {
     try {
       await this.db
-        .delete(shareLinks)
-        .where(lte(shareLinks.expiresAt, new Date()))
+        .delete(share_links)
+        .where(lte(share_links.expires_at, new Date().toISOString()))
 
       return ok(0) // Drizzle doesn't return rowCount for delete operations
     } catch (error) {
@@ -467,63 +470,46 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
       id: AttachmentId.create(row.id),
       key: row.key,
       filename: row.filename,
-      contentType: row.contentType,
+      contentType: row.content_type,
       size: row.size,
-      uploadedBy: row.uploadedBy as UserId,
+      uploadedBy: row.uploaded_by as UserId,
       // Fields expected by domain model but not in database schema:
       status: 'active' as AttachmentStatus, // Mock value - schema doesn't have status
       scanStatus: 'pending', // Mock value - schema doesn't have scanStatus
       scanMessage: null, // Mock value - schema doesn't have scanMessage
       deletedAt: null, // Mock value - schema doesn't have deletedAt
       expiresAt: null, // Mock value - schema doesn't have expiresAt
-      createdAt: row.createdAt,
-      updatedAt: row.updatedAt,
+      createdAt: new Date(row.created_at),
+      updatedAt: new Date(row.updated_at),
     }
   }
 
   private mapToShareLinkData(row: ShareLinkRow): ShareLinkData {
     return {
       id: ShareLinkId.create(row.id),
-      attachmentId: AttachmentId.create(row.attachmentId),
+      attachmentId: AttachmentId.create(row.attachment_id),
       token: ShareToken.create(row.token),
-      password: row.passwordHash, // Note: this is the hashed password
-      maxDownloads: row.maxDownloads,
-      downloadCount: row.downloadCount,
-      expiresAt: row.expiresAt,
-      createdBy: row.createdBy as UserId,
-      createdAt: row.createdAt,
-      updatedAt: row.updatedAt,
+      password: row.password_hash, // Note: this is the hashed password
+      maxDownloads: row.max_downloads,
+      downloadCount: row.download_count,
+      expiresAt: row.expires_at ? new Date(row.expires_at) : null,
+      createdBy: row.created_by as UserId,
+      createdAt: new Date(row.created_at),
+      updatedAt: new Date(row.updated_at),
     }
   }
 
   private mapToDownloadLogData(row: DownloadLogRow): DownloadLogData {
     return {
       id: row.id,
-      attachmentId: AttachmentId.create(row.attachmentId),
-      downloadedBy: row.downloadedBy ? (row.downloadedBy as UserId) : null,
-      ipAddress: row.ipAddress || '', // Fallback to empty string if null
-      userAgent: row.userAgent,
-      shareToken: row.shareLinkId ? ShareToken.create(row.shareLinkId) : null, // Note: mapping shareLinkId to shareToken
-      downloadedAt: row.downloadedAt,
+      attachmentId: AttachmentId.create(row.attachment_id),
+      downloadedBy: row.downloaded_by ? (row.downloaded_by as UserId) : null,
+      ipAddress: row.ip_address || '', // Fallback to empty string if null
+      userAgent: row.user_agent,
+      shareToken: row.share_link_id
+        ? ShareToken.create(row.share_link_id)
+        : null, // Note: mapping share_link_id to shareToken
+      downloadedAt: new Date(row.downloaded_at),
     }
-  }
-
-  private getFileTypeFromContentType(
-    contentType: string
-  ): 'image' | 'document' | 'other' {
-    if (contentType.startsWith('image/')) {
-      return 'image'
-    }
-    if (
-      contentType.includes('pdf') ||
-      contentType.includes('document') ||
-      contentType.includes('text') ||
-      contentType.includes('msword') ||
-      contentType.includes('officedocument') ||
-      contentType.includes('spreadsheet')
-    ) {
-      return 'document'
-    }
-    return 'other'
   }
 }
