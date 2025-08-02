@@ -104,7 +104,7 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
 
       // ユーザーの取得
       const user = await userRepository.findByEmail(email)
-      if (!user) {
+      if (user == null) {
         return res.status(401).json({
           code: 'INVALID_CREDENTIALS',
           message: 'Invalid email or password',
@@ -246,7 +246,7 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
         refreshToken,
         async (userId) => {
           const user = await userRepository.findById(userId as UserId)
-          if (!user) return null
+          if (user == null) return null
           return {
             userId: user.id,
             email: user.email,
@@ -289,7 +289,7 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
    */
   router.get('/me', authenticate(authConfig), async (req, res, next) => {
     try {
-      if (!req.user) {
+      if (req.user == null) {
         return res.status(401).json({
           code: 'UNAUTHORIZED',
           message: 'Authentication required',
@@ -297,7 +297,7 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
       }
 
       const user = await userRepository.findById(req.user.id as UserId)
-      if (!user) {
+      if (user == null) {
         return res.status(404).json({
           code: 'USER_NOT_FOUND',
           message: 'User not found',

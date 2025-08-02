@@ -68,7 +68,7 @@ export const requestPasswordResetUseCase = async (
     return err(mapRepositoryErrorWithAlreadyExists(userResult.error))
   }
 
-  if (!userResult.value) {
+  if (userResult.value == null) {
     // Return success even if user not found (security best practice)
     // This prevents email enumeration attacks
     return ok(undefined)

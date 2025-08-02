@@ -58,7 +58,7 @@ export class TestEnvironmentWithIsolation {
   private schemaIsolation?: SchemaIsolation
 
   static async getInstance(): Promise<TestEnvironmentWithIsolation> {
-    if (!TestEnvironmentWithIsolation.instance) {
+    if (TestEnvironmentWithIsolation.instance == null) {
       TestEnvironmentWithIsolation.instance = new TestEnvironmentWithIsolation()
     }
     return TestEnvironmentWithIsolation.instance

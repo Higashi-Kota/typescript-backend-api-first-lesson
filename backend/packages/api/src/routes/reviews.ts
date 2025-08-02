@@ -380,7 +380,7 @@ export const createReviewRoutes = (deps: ReviewRouteDeps): Router => {
         const mappedInput = mapDeleteReviewRequest(
           idResult.data,
           req.body.reason,
-          req.user?.id || 'system'
+          req.user?.id ?? 'system'
         )
         if (mappedInput.type === 'err') {
           return res.status(400).json({
@@ -444,7 +444,7 @@ export const createReviewRoutes = (deps: ReviewRouteDeps): Router => {
         // UseCase実行
         const mappedInput = mapPublishReviewRequest(
           idResult.data,
-          req.user?.id || 'system'
+          req.user?.id ?? 'system'
         )
         if (mappedInput.type === 'err') {
           return res.status(400).json({
@@ -517,7 +517,7 @@ export const createReviewRoutes = (deps: ReviewRouteDeps): Router => {
         const mappedInput = mapHideReviewRequest(
           idResult.data,
           req.body.reason,
-          req.user?.id || 'system'
+          req.user?.id ?? 'system'
         )
         if (mappedInput.type === 'err') {
           return res.status(400).json({

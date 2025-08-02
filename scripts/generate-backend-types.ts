@@ -145,7 +145,7 @@ export * from './schemas';
 async function generateBrandHelpers(openApiPath: string): Promise<string> {
   const openApiContent = readFileSync(openApiPath, 'utf-8')
   const openApi = parse(openApiContent)
-  const schemas = openApi.components?.schemas || {}
+  const schemas = openApi.components?.schemas ?? {}
 
   let helpers = `import type { Brand } from './api-types';
 
@@ -155,7 +155,7 @@ async function generateBrandHelpers(openApiPath: string): Promise<string> {
   const brandTypes: string[] = []
 
   for (const [key, schema] of Object.entries(schemas)) {
-    const name = key.split('.').pop() || key
+    const name = key.split('.').pop() ?? key
     if (name.endsWith('Id') && (schema as any).type === 'string') {
       brandTypes.push(name)
       helpers += `export type ${name} = Brand<string, '${name}'>;\n`
@@ -170,7 +170,7 @@ async function generateBrandHelpers(openApiPath: string): Promise<string> {
 async function generateZodSchemas(openApiPath: string): Promise<string> {
   const openApiContent = readFileSync(openApiPath, 'utf-8')
   const openApi = parse(openApiContent)
-  const schemas = openApi.components?.schemas || {}
+  const schemas = openApi.components?.schemas ?? {}
 
   let zodSchemas = `import { z } from 'zod';
 import type { Brand } from './api-types';
@@ -185,7 +185,7 @@ const isValidUuid = (val: string): boolean => {
 
   // Brand型のZodスキーマ
   for (const [key, schema] of Object.entries(schemas)) {
-    const name = key.split('.').pop() || key
+    const name = key.split('.').pop() ?? key
     if (name.endsWith('Id') && (schema as any).type === 'string') {
       zodSchemas += `export const ${name}Schema = z.string().refine(
   (val): val is Brand<string, '${name}'> => isValidUuid(val),

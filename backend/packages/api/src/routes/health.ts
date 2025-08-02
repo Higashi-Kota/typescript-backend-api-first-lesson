@@ -67,7 +67,7 @@ const checkRedis = async (): Promise<ComponentHealth | undefined> => {
 
 const checkStorage = async (): Promise<ComponentHealth | undefined> => {
   // MinIO/S3チェック実装時に追加
-  if (!config.STORAGE_ENDPOINT) {
+  if (config.STORAGE_ENDPOINT == null) {
     return undefined
   }
 
@@ -97,7 +97,7 @@ const determineOverallStatus = (
   let hasDegraded = false
 
   for (const [component, health] of Object.entries(checks)) {
-    if (!health) continue
+    if (health == null) continue
 
     match(health)
       .with({ status: 'unhealthy' }, ({ message }) => {
@@ -158,7 +158,7 @@ router.get('/ready', async (_req: Request, res: Response) => {
         .with({ type: 'unhealthy' }, () => 'unhealthy' as const)
         .exhaustive(),
       timestamp: new Date().toISOString(),
-      version: process.env.npm_package_version || 'unknown',
+      version: process.env.npm_package_version ?? 'unknown',
       uptime: process.uptime(),
       checks,
     }
@@ -175,7 +175,7 @@ router.get('/ready', async (_req: Request, res: Response) => {
     res.status(503).json({
       status: 'unhealthy',
       timestamp: new Date().toISOString(),
-      version: process.env.npm_package_version || 'unknown',
+      version: process.env.npm_package_version ?? 'unknown',
       uptime: process.uptime(),
       checks: {
         database: {

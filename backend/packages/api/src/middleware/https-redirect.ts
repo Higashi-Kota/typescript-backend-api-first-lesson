@@ -71,7 +71,7 @@ export function httpsRedirect(options: HttpsRedirectOptions = {}) {
 
     // HTTPSでない場合はリダイレクト
     if (!isSecureRequest(req, trustProxy)) {
-      const host = req.headers.host || 'localhost'
+      const host = req.headers.host ?? 'localhost'
       const httpsUrl = `https://${host}${req.originalUrl}`
       return res.redirect(redirectStatusCode, httpsUrl)
     }

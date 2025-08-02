@@ -35,7 +35,7 @@ export const revokeSession = async (
   }
 
   const session = sessionResult.value
-  if (!session) {
+  if (session == null) {
     return err({ type: 'sessionNotFound' })
   }
 

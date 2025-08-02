@@ -81,7 +81,7 @@ export const verifyToken = (
 export const extractToken = (
   authHeader?: string
 ): Result<string, AuthError> => {
-  if (!authHeader) {
+  if (authHeader == null) {
     return err({
       type: 'missingToken',
       message: 'Authorization header is missing',
@@ -146,7 +146,7 @@ export const authenticate = (config: AuthConfig) => {
  */
 export const authorize = (...allowedRoles: UserRole[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    if (!req.user) {
+    if (req.user == null) {
       return res.status(401).json({
         code: 'UNAUTHORIZED',
         message: 'Authentication required',
@@ -172,7 +172,7 @@ export const optionalAuthenticate = (config: AuthConfig) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization
 
-    if (!authHeader) {
+    if (authHeader == null) {
       // 認証ヘッダーがない場合は認証なしで次へ
       return next()
     }
@@ -216,7 +216,7 @@ export const checkResourceOwner = (
   getResourceOwnerId: (req: Request) => string | undefined
 ) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    if (!req.user) {
+    if (req.user == null) {
       return res.status(401).json({
         code: 'UNAUTHORIZED',
         message: 'Authentication required',
@@ -224,7 +224,7 @@ export const checkResourceOwner = (
     }
 
     const ownerId = getResourceOwnerId(req)
-    if (!ownerId) {
+    if (ownerId == null) {
       return res.status(404).json({
         code: 'NOT_FOUND',
         message: 'Resource not found',

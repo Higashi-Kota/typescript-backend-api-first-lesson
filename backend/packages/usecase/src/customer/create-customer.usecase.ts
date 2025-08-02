@@ -94,9 +94,9 @@ export const createCustomerUseCase = async (
       email: input.email,
       phoneNumber: input.phoneNumber,
     },
-    preferences: input.preferences || undefined,
-    notes: input.notes || undefined,
-    tags: input.tags || undefined,
+    preferences: input.preferences ?? undefined,
+    notes: input.notes ?? undefined,
+    tags: input.tags ?? undefined,
     birthDate: input.birthDate ? new Date(input.birthDate) : undefined,
   }
 

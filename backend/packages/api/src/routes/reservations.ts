@@ -387,7 +387,7 @@ export const createReservationRoutes = (deps: ReservationRouteDeps): Router => {
         const mappedInput = mapCancelReservationRequest(
           idResult.data,
           req.body.reason,
-          req.user?.id || 'system'
+          req.user?.id ?? 'system'
         )
         if (mappedInput.type === 'err') {
           return res.status(400).json({
@@ -451,7 +451,7 @@ export const createReservationRoutes = (deps: ReservationRouteDeps): Router => {
         // UseCase実行
         const mappedInput = mapConfirmReservationRequest(
           idResult.data,
-          req.user?.id || 'system'
+          req.user?.id ?? 'system'
         )
         if (mappedInput.type === 'err') {
           return res.status(400).json({
@@ -515,7 +515,7 @@ export const createReservationRoutes = (deps: ReservationRouteDeps): Router => {
         // UseCase実行
         const mappedInput = mapCompleteReservationRequest(
           idResult.data,
-          req.user?.id || 'system'
+          req.user?.id ?? 'system'
         )
         if (mappedInput.type === 'err') {
           return res.status(400).json({
@@ -579,7 +579,7 @@ export const createReservationRoutes = (deps: ReservationRouteDeps): Router => {
         // UseCase実行
         const mappedInput = mapMarkAsNoShowRequest(
           idResult.data,
-          req.user?.id || 'system'
+          req.user?.id ?? 'system'
         )
         if (mappedInput.type === 'err') {
           return res.status(400).json({

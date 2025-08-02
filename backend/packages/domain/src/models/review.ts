@@ -255,10 +255,10 @@ export const calculateAverageRating = (reviews: Review[]): number => {
 }
 
 export const hasAllRatings = (review: Review): boolean => {
-  return !!(
-    review.data.serviceRating &&
-    review.data.staffRating &&
-    review.data.atmosphereRating
+  return (
+    review.data.serviceRating != null &&
+    review.data.staffRating != null &&
+    review.data.atmosphereRating != null
   )
 }
 

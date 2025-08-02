@@ -203,7 +203,7 @@ export class JwtService {
 
     // ユーザー情報の取得
     const userData = await getUserData(verifyResult.value.userId)
-    if (!userData) {
+    if (userData == null) {
       return err({
         type: 'tokenGenerationFailed',
         message: 'User not found',

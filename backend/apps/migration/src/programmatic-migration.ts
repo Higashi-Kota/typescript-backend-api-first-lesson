@@ -135,7 +135,7 @@ export class ProgrammaticMigration {
    * Run the migration to set up the database schema
    */
   async up(options?: MigrationOptions): Promise<void> {
-    const schemaName = options?.schemaName || 'public'
+    const schemaName = options?.schemaName ?? 'public'
 
     try {
       // Setup schema and search path
@@ -156,7 +156,7 @@ export class ProgrammaticMigration {
    * Drop all tables and types in the schema
    */
   async down(options?: MigrationOptions): Promise<void> {
-    const schemaName = options?.schemaName || 'public'
+    const schemaName = options?.schemaName ?? 'public'
 
     if (schemaName === 'public') {
       // For public schema, drop individual objects

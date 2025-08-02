@@ -32,7 +32,7 @@ export const jwtConfig = {
 
 export const corsConfig = {
   origin: config.CORS_ORIGIN,
-  allowedOrigins: config.CORS_ALLOWED_ORIGINS?.split(',') || [
+  allowedOrigins: config.CORS_ALLOWED_ORIGINS?.split(',') ?? [
     config.CORS_ORIGIN,
   ],
 } as const

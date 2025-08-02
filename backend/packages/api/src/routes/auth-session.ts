@@ -116,7 +116,7 @@ export const createSessionRoutes = (deps: SessionRouteDeps): Router => {
   router.post('/refresh', generalRateLimiter, async (req, res) => {
     const { refreshToken: token } = req.body as { refreshToken: string }
 
-    if (!token) {
+    if (token == null) {
       res.status(400).json({
         error: {
           type: 'BAD_REQUEST',

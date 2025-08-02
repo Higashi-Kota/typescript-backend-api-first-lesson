@@ -98,15 +98,15 @@ export const createErrorContextService = (): ErrorContextService => {
       tags: {
         method: request.method,
         path: request.path,
-        route: request.route?.path || 'unknown',
-        ip: request.ip || 'unknown',
+        route: request.route?.path ?? 'unknown',
+        ip: request.ip ?? 'unknown',
       },
       extra: {
         url: request.originalUrl,
         query: sanitizeData(request.query as Record<string, unknown>),
         body: request.body ? sanitizeData(request.body) : undefined,
         headers: sanitizeData(request.headers as Record<string, unknown>),
-        userAgent: request.get('user-agent') || 'unknown',
+        userAgent: request.get('user-agent') ?? 'unknown',
       },
     }
 

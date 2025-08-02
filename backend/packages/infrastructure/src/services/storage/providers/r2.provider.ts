@@ -177,12 +177,12 @@ export class R2StorageProvider implements StorageService {
 
       const metadata: FileMetadata = {
         filename:
-          response.Metadata?.originalFilename ||
-          key.split('/').pop() ||
+          response.Metadata?.originalFilename ??
+          key.split('/').pop() ??
           'unknown',
-        contentType: response.ContentType || 'application/octet-stream',
-        size: response.ContentLength || buffer.length,
-        type: (response.Metadata?.fileType as unknown as FileType) || 'other',
+        contentType: response.ContentType ?? 'application/octet-stream',
+        size: response.ContentLength ?? buffer.length,
+        type: (response.Metadata?.fileType as unknown as FileType) ?? 'other',
       }
 
       return ok({ data: buffer, metadata })
@@ -283,7 +283,7 @@ export class R2StorageProvider implements StorageService {
         Key: key,
       })
 
-      const expiresIn = options?.expiresIn || 3600 // 1 hour default
+      const expiresIn = options?.expiresIn ?? 3600 // 1 hour default
       const url = await getSignedUrl(this.client, command, { expiresIn })
 
       return ok({
@@ -314,7 +314,7 @@ export class R2StorageProvider implements StorageService {
           : undefined,
       })
 
-      const expiresIn = options?.expiresIn || 3600 // 1 hour default
+      const expiresIn = options?.expiresIn ?? 3600 // 1 hour default
       const url = await getSignedUrl(this.client, command, { expiresIn })
 
       return ok({
@@ -343,12 +343,12 @@ export class R2StorageProvider implements StorageService {
 
       const metadata: FileMetadata = {
         filename:
-          response.Metadata?.originalFilename ||
-          key.split('/').pop() ||
+          response.Metadata?.originalFilename ??
+          key.split('/').pop() ??
           'unknown',
-        contentType: response.ContentType || 'application/octet-stream',
-        size: response.ContentLength || 0,
-        type: (response.Metadata?.fileType as unknown as FileType) || 'other',
+        contentType: response.ContentType ?? 'application/octet-stream',
+        size: response.ContentLength ?? 0,
+        type: (response.Metadata?.fileType as unknown as FileType) ?? 'other',
       }
 
       const storageObject: StorageObject = {

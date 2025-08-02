@@ -35,7 +35,7 @@ export class DrizzleSalonRepository implements SalonRepository {
   // DBモデルからドメインモデルへの変換
   private async mapDbToDomain(dbSalon: DbSalon): Promise<Salon | null> {
     const id = createSalonId(dbSalon.id)
-    if (!id) return null
+    if (id == null) return null
 
     // 営業時間を取得
     const dbOpeningHours = await this.db
@@ -68,7 +68,7 @@ export class DrizzleSalonRepository implements SalonRepository {
       data: {
         id,
         name: dbSalon.name,
-        description: dbSalon.description || '',
+        description: dbSalon.description ?? '',
         address: dbSalon.address as Address,
         contactInfo: {
           email: dbSalon.email,
@@ -101,7 +101,7 @@ export class DrizzleSalonRepository implements SalonRepository {
         .limit(1)
 
       const firstRow = result[0]
-      if (!firstRow) {
+      if (firstRow == null) {
         return err({
           type: 'notFound' as const,
           entity: 'Salon',
@@ -110,7 +110,7 @@ export class DrizzleSalonRepository implements SalonRepository {
       }
 
       const salon = await this.mapDbToDomain(firstRow)
-      if (!salon) {
+      if (salon == null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map salon data',
@@ -141,8 +141,8 @@ export class DrizzleSalonRepository implements SalonRepository {
           email: data.contactInfo.email,
           phone_number: data.contactInfo.phoneNumber,
           alternative_phone: data.contactInfo.alternativePhone,
-          image_urls: data.imageUrls || [],
-          features: data.features || [],
+          image_urls: data.imageUrls ?? [],
+          features: data.features ?? [],
           created_by: data.createdBy,
           updated_by: data.createdBy,
         }
@@ -153,7 +153,7 @@ export class DrizzleSalonRepository implements SalonRepository {
           .returning()
 
         const insertedSalon = insertedSalons[0]
-        if (!insertedSalon) {
+        if (insertedSalon == null) {
           throw new Error('Failed to insert salon')
         }
 
@@ -174,7 +174,7 @@ export class DrizzleSalonRepository implements SalonRepository {
       })
 
       const salon = await this.mapDbToDomain(result)
-      if (!salon) {
+      if (salon == null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map created salon',
@@ -205,7 +205,7 @@ export class DrizzleSalonRepository implements SalonRepository {
           .limit(1)
 
         const existingRow = existing[0]
-        if (!existingRow) {
+        if (existingRow == null) {
           throw new Error('Salon not found')
         }
 
@@ -235,7 +235,7 @@ export class DrizzleSalonRepository implements SalonRepository {
           .returning()
 
         const updatedSalon = updatedSalons[0]
-        if (!updatedSalon) {
+        if (updatedSalon == null) {
           throw new Error('Failed to update salon')
         }
 
@@ -264,7 +264,7 @@ export class DrizzleSalonRepository implements SalonRepository {
       })
 
       const salon = await this.mapDbToDomain(result)
-      if (!salon) {
+      if (salon == null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map updated salon',

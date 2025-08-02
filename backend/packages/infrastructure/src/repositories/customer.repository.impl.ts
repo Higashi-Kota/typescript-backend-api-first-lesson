@@ -50,7 +50,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
     dbCustomer: DbCustomer
   ): Promise<Customer | null> {
     const id = createCustomerId(dbCustomer.id)
-    if (!id) return null
+    if (id == null) return null
 
     // 暗号化されたフィールドを復号化
     let decryptedCustomer = dbCustomer
@@ -76,7 +76,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
         contactInfo: {
           email: decryptedCustomer.email,
           phoneNumber: decryptedCustomer.phone_number,
-          alternativePhone: decryptedCustomer.alternative_phone || undefined,
+          alternativePhone: decryptedCustomer.alternative_phone ?? undefined,
         },
         preferences: decryptedCustomer.preferences,
         notes: decryptedCustomer.notes,
@@ -86,8 +86,8 @@ export class DrizzleCustomerRepository implements CustomerRepository {
         birthDate: decryptedCustomer.birth_date
           ? new Date(decryptedCustomer.birth_date)
           : null,
-        loyaltyPoints: decryptedCustomer.loyalty_points || 0,
-        membershipLevel: (decryptedCustomer.membership_level ||
+        loyaltyPoints: decryptedCustomer.loyalty_points ?? 0,
+        membershipLevel: (decryptedCustomer.membership_level ??
           'regular') as Customer['data']['membershipLevel'],
         createdAt: new Date(decryptedCustomer.created_at),
         updatedAt: new Date(decryptedCustomer.updated_at),
@@ -103,7 +103,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
       name: data.name,
       email: data.contactInfo.email,
       phone_number: data.contactInfo.phoneNumber,
-      alternative_phone: data.contactInfo.alternativePhone || null,
+      alternative_phone: data.contactInfo.alternativePhone ?? null,
       preferences: data.preferences,
       notes: data.notes,
       tags: data.tags.length > 0 ? data.tags : null,
@@ -143,7 +143,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
       }
 
       const firstRow = result[0]
-      if (!firstRow) {
+      if (firstRow == null) {
         return err({
           type: 'notFound' as const,
           entity: 'Customer',
@@ -151,7 +151,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
         })
       }
       const customer = await this.mapDbToDomain(firstRow)
-      if (!customer) {
+      if (customer == null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map customer from database',
@@ -183,11 +183,11 @@ export class DrizzleCustomerRepository implements CustomerRepository {
       }
 
       const firstRow = result[0]
-      if (!firstRow) {
+      if (firstRow == null) {
         return ok(null)
       }
       const customer = await this.mapDbToDomain(firstRow)
-      if (!customer) {
+      if (customer == null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map customer from database',
@@ -231,14 +231,14 @@ export class DrizzleCustomerRepository implements CustomerRepository {
         .returning()
 
       const firstRow = result[0]
-      if (!firstRow) {
+      if (firstRow == null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to return saved customer',
         })
       }
       const savedCustomer = await this.mapDbToDomain(firstRow)
-      if (!savedCustomer) {
+      if (savedCustomer == null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map saved customer',
@@ -338,7 +338,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
         .from(customers)
         .where(whereClause)
 
-      const total = countResult[0]?.count || 0
+      const total = countResult[0]?.count ?? 0
 
       // データ取得クエリ
       const results = await this.db
@@ -418,7 +418,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
     criteria?: CustomerSearchCriteria
   ): Promise<Result<number, RepositoryError>> {
     try {
-      const result = await this.search(criteria || {}, { limit: 0, offset: 0 })
+      const result = await this.search(criteria ?? {}, { limit: 0, offset: 0 })
       if (result.type === 'err') return result
       return ok(result.value.total)
     } catch (error) {
@@ -453,7 +453,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
         if (row.level) {
           counts[row.level] = row.count
         } else {
-          counts.regular = (counts.regular || 0) + row.count
+          counts.regular = (counts.regular ?? 0) + row.count
         }
       }
 

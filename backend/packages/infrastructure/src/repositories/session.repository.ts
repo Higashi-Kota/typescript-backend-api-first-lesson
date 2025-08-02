@@ -246,7 +246,7 @@ export class DrizzleSessionRepository implements SessionRepository {
 
   private mapToDbSession(session: Session): typeof sessions.$inferInsert {
     return {
-      id: session.id || uuidv4(),
+      id: session.id ?? uuidv4(),
       user_id: session.userId,
       refresh_token: session.refreshToken,
       ip_address: session.ipAddress,

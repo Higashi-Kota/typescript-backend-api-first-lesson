@@ -34,7 +34,7 @@ export const verifyResetTokenUseCase = async (
     return err({ type: 'invalidToken' })
   }
 
-  if (!userResult.value) {
+  if (userResult.value == null) {
     return err({ type: 'invalidToken' })
   }
 

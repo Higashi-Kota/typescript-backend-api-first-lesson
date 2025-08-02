@@ -51,7 +51,7 @@ export const refreshToken = async (
   }
 
   const session = sessionResult.value
-  if (!session) {
+  if (session == null) {
     return err({ type: 'invalidRefreshToken' })
   }
 
@@ -69,7 +69,7 @@ export const refreshToken = async (
   }
 
   const user = userResult.value
-  if (!user) {
+  if (user == null) {
     return err({ type: 'userNotFound' })
   }
 

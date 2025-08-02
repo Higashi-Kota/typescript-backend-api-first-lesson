@@ -333,7 +333,7 @@ export class DrizzleUserRepository implements UserRepository {
       if (!dbUser.email_verified) {
         return {
           type: 'unverified' as const,
-          emailVerificationToken: dbUser.email_verification_token || '',
+          emailVerificationToken: dbUser.email_verification_token ?? '',
           tokenExpiry: dbUser.email_verification_token_expiry
             ? new Date(dbUser.email_verification_token_expiry)
             : new Date(),
@@ -389,21 +389,21 @@ export class DrizzleUserRepository implements UserRepository {
         trustedIpAddresses: Array.isArray(dbUser.trusted_ip_addresses)
           ? dbUser.trusted_ip_addresses
           : [],
-        customerId: dbUser.customer_id || undefined,
-        staffId: dbUser.staff_id || undefined,
+        customerId: dbUser.customer_id ?? undefined,
+        staffId: dbUser.staff_id ?? undefined,
         createdAt: new Date(dbUser.created_at),
         updatedAt: new Date(dbUser.updated_at),
         lastLoginAt: dbUser.last_login_at
           ? new Date(dbUser.last_login_at)
           : undefined,
-        lastLoginIp: dbUser.last_login_ip || undefined,
+        lastLoginIp: dbUser.last_login_ip ?? undefined,
       },
     }
   }
 
   private mapToDbUser(user: User): typeof users.$inferInsert {
     const dbUser: typeof users.$inferInsert = {
-      id: user.data.id || uuidv4(),
+      id: user.data.id ?? uuidv4(),
       email: user.data.email,
       name: user.data.name,
       password_hash: user.data.passwordHash,
@@ -441,11 +441,11 @@ export class DrizzleUserRepository implements UserRepository {
           ? user.data.passwordResetStatus.tokenExpiry.toISOString()
           : null,
       last_password_change_at:
-        user.data.lastPasswordChangeAt?.toISOString() || null,
+        user.data.lastPasswordChangeAt?.toISOString() ?? null,
       password_history: user.data.passwordHistory,
       trusted_ip_addresses: user.data.trustedIpAddresses,
-      customer_id: user.data.customerId || null,
-      staff_id: user.data.staffId || null,
+      customer_id: user.data.customerId ?? null,
+      staff_id: user.data.staffId ?? null,
       created_at: user.data.createdAt.toISOString(),
       updated_at: user.data.updatedAt.toISOString(),
       last_login_at: user.data.lastLoginAt?.toISOString() || null,

@@ -9,7 +9,7 @@ export default defineConfig({
   out: '../../packages/infrastructure/src/database',
   dialect: 'postgresql',
   dbCredentials: {
-    url: process.env.DATABASE_URL || '',
+    url: process.env.DATABASE_URL ?? '',
   },
   introspect: {
     casing: 'preserve',

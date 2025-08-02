@@ -191,9 +191,9 @@ export const createSentryService = (): SentryService => {
     try {
       const options: NodeOptions = {
         dsn: config.SENTRY_DSN,
-        environment: config.SENTRY_ENVIRONMENT || config.NODE_ENV,
+        environment: config.SENTRY_ENVIRONMENT ?? config.NODE_ENV,
         release: config.SENTRY_RELEASE,
-        tracesSampleRate: config.SENTRY_TRACES_SAMPLE_RATE || 0.1,
+        tracesSampleRate: config.SENTRY_TRACES_SAMPLE_RATE ?? 0.1,
         enabled: config.NODE_ENV !== 'test',
         integrations: [
           Sentry.httpIntegration(),
@@ -246,8 +246,8 @@ export const createSentryService = (): SentryService => {
       return
     }
 
-    const severity = context?.level || determineSeverityLevel(event)
-    const fingerprint = context?.fingerprint || createErrorFingerprint(event)
+    const severity = context?.level ?? determineSeverityLevel(event)
+    const fingerprint = context?.fingerprint ?? createErrorFingerprint(event)
     const extra = {
       ...enrichErrorContext(event),
       ...context?.extra,
@@ -310,7 +310,7 @@ export const createSentryService = (): SentryService => {
 
   const setUser = (user: SentryContext['user']): void => {
     if (!isInitialized) return
-    Sentry.setUser(user || null)
+    Sentry.setUser(user ?? null)
   }
 
   const addBreadcrumb = (breadcrumb: Sentry.Breadcrumb): void => {

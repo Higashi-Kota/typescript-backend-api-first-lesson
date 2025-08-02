@@ -38,7 +38,7 @@ export const verifyTwoFactor = async (
   }
 
   const user = userResult.value
-  if (!user) {
+  if (user == null) {
     return err({ type: 'userNotFound', userId: request.userId })
   }
 

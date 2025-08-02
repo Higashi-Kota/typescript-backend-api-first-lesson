@@ -290,7 +290,7 @@ export const createSalonRoutes = (deps: SalonRouteDeps): Router => {
         // UseCase実行
         const mappedInput = mapDeleteSalonRequest(
           idResult.data,
-          req.user?.id || 'system'
+          req.user?.id ?? 'system'
         )
         if (mappedInput.type === 'err') {
           return res.status(400).json({
@@ -354,7 +354,7 @@ export const createSalonRoutes = (deps: SalonRouteDeps): Router => {
         const mappedInput = mapSuspendSalonRequest(
           idResult.data,
           req.body.reason,
-          req.user?.id || 'system'
+          req.user?.id ?? 'system'
         )
         if (mappedInput.type === 'err') {
           return res.status(400).json({
@@ -418,7 +418,7 @@ export const createSalonRoutes = (deps: SalonRouteDeps): Router => {
         // UseCase実行
         const mappedInput = mapReactivateSalonRequest(
           idResult.data,
-          req.user?.id || 'system'
+          req.user?.id ?? 'system'
         )
         if (mappedInput.type === 'err') {
           return res.status(400).json({

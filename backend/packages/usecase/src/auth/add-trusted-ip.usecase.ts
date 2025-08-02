@@ -41,7 +41,7 @@ export const addTrustedIp = async (
   }
 
   const admin = adminResult.value
-  if (!admin) {
+  if (admin == null) {
     return err({ type: 'adminNotFound', adminUserId: request.adminUserId })
   }
 
@@ -60,7 +60,7 @@ export const addTrustedIp = async (
   }
 
   const user = userResult.value
-  if (!user) {
+  if (user == null) {
     return err({ type: 'userNotFound', userId: request.userId })
   }
 

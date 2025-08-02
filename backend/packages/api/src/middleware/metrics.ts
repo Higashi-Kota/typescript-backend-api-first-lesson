@@ -19,7 +19,7 @@ export const metricsMiddleware = (
   next: NextFunction
 ): void => {
   const startTime = Date.now()
-  const route = req.route?.path || req.path || 'unknown'
+  const route = req.route?.path ?? req.path ?? 'unknown'
 
   // リクエスト開始時のメトリクス
   metricsService.system.httpRequestsInFlight.inc({ method: req.method, route })

@@ -57,7 +57,7 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
         })
         .returning()
 
-      if (!attachment) {
+      if (attachment == null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to create attachment',
@@ -129,7 +129,7 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
         .where(eq(attachments.id, input.id))
         .returning()
 
-      if (!attachment) {
+      if (attachment == null) {
         return err({
           type: 'notFound' as const,
           entity: 'Attachment',
@@ -289,15 +289,15 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
           id: randomUUID(),
           attachment_id: input.attachmentId,
           token: input.token,
-          password_hash: input.password || null, // Note: this should be hashed before storing
-          max_downloads: input.maxDownloads || null,
+          password_hash: input.password ?? null, // Note: this should be hashed before storing
+          max_downloads: input.maxDownloads ?? null,
           download_count: 0,
           expires_at: input.expiresAt ? input.expiresAt.toISOString() : null,
           created_by: input.createdBy,
         })
         .returning()
 
-      if (!shareLink) {
+      if (shareLink == null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to create share link',
@@ -377,9 +377,9 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
       await this.db.insert(download_logs).values({
         id: randomUUID(),
         attachment_id: input.attachmentId,
-        downloaded_by: input.downloadedBy || null,
+        downloaded_by: input.downloadedBy ?? null,
         ip_address: input.ipAddress,
-        user_agent: input.userAgent || null,
+        user_agent: input.userAgent ?? null,
         share_link_id: input.shareToken
           ? (input.shareToken as unknown as string)
           : null, // Note: mapping shareToken to share_link_id - needs proper conversion
@@ -504,7 +504,7 @@ export class AttachmentRepositoryImpl implements AttachmentRepository {
       id: row.id,
       attachmentId: AttachmentId.create(row.attachment_id),
       downloadedBy: row.downloaded_by ? (row.downloaded_by as UserId) : null,
-      ipAddress: row.ip_address || '', // Fallback to empty string if null
+      ipAddress: row.ip_address ?? '', // Fallback to empty string if null
       userAgent: row.user_agent,
       shareToken: row.share_link_id
         ? ShareToken.create(row.share_link_id)

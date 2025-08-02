@@ -269,7 +269,7 @@ export const createMetricsService = (): MetricsService => {
       return match(operation)
         .with({ type: 'increment' }, ({ metric, value = 1, labels }) => {
           const m =
-            customMetrics.get(metric) || getSystemOrBusinessMetric(metric)
+            customMetrics.get(metric) ?? getSystemOrBusinessMetric(metric)
           if (!m || !(m instanceof promClient.Counter)) {
             return err(new Error(`Counter metric ${metric} not found`))
           }
@@ -282,7 +282,7 @@ export const createMetricsService = (): MetricsService => {
         })
         .with({ type: 'decrement' }, ({ metric, value = 1, labels }) => {
           const m =
-            customMetrics.get(metric) || getSystemOrBusinessMetric(metric)
+            customMetrics.get(metric) ?? getSystemOrBusinessMetric(metric)
           if (!m || !(m instanceof promClient.Gauge)) {
             return err(new Error(`Gauge metric ${metric} not found`))
           }
@@ -295,7 +295,7 @@ export const createMetricsService = (): MetricsService => {
         })
         .with({ type: 'set' }, ({ metric, value, labels }) => {
           const m =
-            customMetrics.get(metric) || getSystemOrBusinessMetric(metric)
+            customMetrics.get(metric) ?? getSystemOrBusinessMetric(metric)
           if (!m || !(m instanceof promClient.Gauge)) {
             return err(new Error(`Gauge metric ${metric} not found`))
           }
@@ -308,7 +308,7 @@ export const createMetricsService = (): MetricsService => {
         })
         .with({ type: 'observe' }, ({ metric, value, labels }) => {
           const m =
-            customMetrics.get(metric) || getSystemOrBusinessMetric(metric)
+            customMetrics.get(metric) ?? getSystemOrBusinessMetric(metric)
           if (
             !m ||
             !(
@@ -329,7 +329,7 @@ export const createMetricsService = (): MetricsService => {
         })
         .with({ type: 'startTimer' }, ({ metric, labels }) => {
           const m =
-            customMetrics.get(metric) || getSystemOrBusinessMetric(metric)
+            customMetrics.get(metric) ?? getSystemOrBusinessMetric(metric)
           if (
             !m ||
             !(

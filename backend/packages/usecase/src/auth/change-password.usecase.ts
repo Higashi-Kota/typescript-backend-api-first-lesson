@@ -84,7 +84,7 @@ export const changePasswordUseCase = async (
     return err(mapRepositoryErrorWithAlreadyExists(userResult.error))
   }
 
-  if (!userResult.value) {
+  if (userResult.value == null) {
     return err({ type: 'userNotFound' })
   }
 

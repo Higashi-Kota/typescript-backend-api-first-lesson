@@ -72,7 +72,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       type: 'published' as const,
       data: reviewData,
       publishedAt: new Date(dbReview.created_at),
-      publishedBy: dbReview.created_by || 'system',
+      publishedBy: dbReview.created_by ?? 'system',
     }
   }
 
@@ -617,7 +617,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       return ok({
         salonId,
         totalReviews: Number(summary.totalReviews),
-        averageRating: Number(summary.averageRating) || 0,
+        averageRating: Number(summary.averageRating) ?? 0,
         averageServiceRating: summary.averageServiceRating
           ? Number(summary.averageServiceRating)
           : undefined,
@@ -680,7 +680,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       return ok({
         salonId: '' as SalonId,
         totalReviews: Number(summary.totalReviews),
-        averageRating: Number(summary.averageRating) || 0,
+        averageRating: Number(summary.averageRating) ?? 0,
         averageStaffRating: summary.averageStaffRating
           ? Number(summary.averageStaffRating)
           : undefined,

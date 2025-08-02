@@ -10,7 +10,7 @@ export class TestEnvironment {
   private constructor() {}
 
   static async getInstance(): Promise<TestEnvironment> {
-    if (!TestEnvironment.instance) {
+    if (TestEnvironment.instance == null) {
       TestEnvironment.instance = new TestEnvironment()
       await TestEnvironment.instance.start()
     }
@@ -57,7 +57,7 @@ export class TestEnvironment {
   }
 
   getPostgresConnectionString(): string {
-    if (!this.postgresContainer) {
+    if (this.postgresContainer == null) {
       throw new Error('PostgreSQL container not started')
     }
     return this.postgresContainer.getConnectionUri()

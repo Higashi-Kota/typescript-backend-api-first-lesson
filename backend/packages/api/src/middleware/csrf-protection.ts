@@ -120,7 +120,7 @@ export function csrfProtection(options: CsrfProtectionOptions = {}) {
       // セッションがある場合はトークンを生成
       if (req.session || !sessionRequired) {
         let token = getCsrfTokenFromSession(req)
-        if (!token) {
+        if (token == null) {
           token = generateCsrfToken()
           saveCsrfTokenToSession(req, token)
         }
@@ -142,7 +142,11 @@ export function csrfProtection(options: CsrfProtectionOptions = {}) {
     const sessionToken = getCsrfTokenFromSession(req)
     const requestToken = getCsrfTokenFromRequest(req)
 
-    if (!sessionToken || !requestToken || sessionToken !== requestToken) {
+    if (
+      sessionToken == null ||
+      requestToken == null ||
+      sessionToken !== requestToken
+    ) {
       return res.status(403).json({
         code: 'INVALID_CSRF_TOKEN',
         message: 'Invalid or missing CSRF token',
@@ -158,7 +162,7 @@ export function csrfProtection(options: CsrfProtectionOptions = {}) {
  * CSRFトークンを取得するエンドポイントハンドラー
  */
 export function csrfTokenHandler(req: Request, res: Response) {
-  if (!req.session) {
+  if (req.session == null) {
     return res.status(400).json({
       code: 'SESSION_REQUIRED',
       message: 'Session is required to generate CSRF token',
@@ -166,7 +170,7 @@ export function csrfTokenHandler(req: Request, res: Response) {
   }
 
   let token = getCsrfTokenFromSession(req)
-  if (!token) {
+  if (token == null) {
     token = generateCsrfToken()
     saveCsrfTokenToSession(req, token)
   }

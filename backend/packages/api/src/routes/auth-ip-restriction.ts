@@ -35,7 +35,7 @@ export const createIpRestrictionRoutes = (
       const userId = req.params.userId as UserId
       const { ipAddress } = req.body as { ipAddress: string }
 
-      if (!ipAddress) {
+      if (ipAddress == null) {
         res.status(400).json({
           error: {
             type: 'BAD_REQUEST',
@@ -47,7 +47,7 @@ export const createIpRestrictionRoutes = (
 
       const addTrustedIpDeps: AddTrustedIpDeps = {
         userRepository: deps.userRepository,
-        maxTrustedIps: deps.maxTrustedIps || 10,
+        maxTrustedIps: deps.maxTrustedIps ?? 10,
       }
 
       const result = await addTrustedIp(
@@ -135,7 +135,7 @@ export const createIpRestrictionRoutes = (
       const userId = req.params.userId as UserId
       const ipAddress = req.query.ipAddress as string
 
-      if (!ipAddress) {
+      if (ipAddress == null) {
         res.status(400).json({
           error: {
             type: 'BAD_REQUEST',
@@ -221,7 +221,7 @@ export const createIpRestrictionRoutes = (
 
       match(userResult)
         .with({ type: 'ok' }, ({ value }) => {
-          if (!value) {
+          if (value == null) {
             res.status(404).json({
               error: {
                 type: 'NOT_FOUND',
@@ -254,11 +254,11 @@ export const createIpRestrictionRoutes = (
     authenticate(deps.authConfig),
     async (req, res, next) => {
       // Get client IP address
-      const ipAddress = req.ip || req.socket.remoteAddress || ''
+      const ipAddress = req.ip ?? req.socket.remoteAddress ?? ''
 
       const checkIpDeps: CheckIpRestrictionDeps = {
         userRepository: deps.userRepository,
-        ipRestrictionEnabled: deps.ipRestrictionEnabled || false,
+        ipRestrictionEnabled: deps.ipRestrictionEnabled ?? false,
       }
 
       const result = await checkIpRestriction(

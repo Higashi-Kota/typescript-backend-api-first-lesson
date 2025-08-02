@@ -114,6 +114,216 @@ if (first !== undefined) {
 }
 ```
 
+## 論理演算子の使い分け - || vs ??
+
+### 基本原則
+
+- `||`（論理和演算子）: **真偽値の論理演算のみに使用**
+- `??`（null 合体演算子）: **デフォルト値/フォールバック値の設定に使用**
+
+### 問題のあるパターン
+
+```typescript
+// ❌ フォールバック値に || を使用
+const port = process.env.PORT || 3000; // 0や空文字列が falsy として扱われる
+const name = user.name || 'Anonymous'; // 空文字列が意図的に設定されていても 'Anonymous' になる
+const count = options.count || 10; // count が 0 の場合、意図せず 10 になる
+```
+
+### 推奨パターン
+
+```typescript
+// ✅ フォールバック値には ?? を使用
+const port = process.env.PORT ?? 3000; // undefined/null のみフォールバック
+const name = user.name ?? 'Anonymous'; // 空文字列は許容される
+const count = options.count ?? 10; // 0 は有効な値として扱われる
+
+// ✅ 真偽値の論理演算には || を使用（ドモルガンの法則など）
+const isInvalid = !isActive || !isEnabled; // 純粋な boolean 演算
+const shouldProcess = hasPermission || isAdmin; // boolean の結合
+const canAccess = (isPublic || isOwner) && !isBlocked; // 複雑な boolean 論理
+```
+
+### 具体的な使用例
+
+```typescript
+// ✅ 環境変数や設定値の読み込み
+const apiUrl = process.env.API_URL ?? 'http://localhost:3000';
+const timeout = config.timeout ?? 5000;
+const retryCount = options.retries ?? 3;
+
+// ✅ オプショナルな値の処理
+function greet(name?: string) {
+  const displayName = name ?? 'Guest';
+  return `Hello, ${displayName}!`;
+}
+
+// ✅ 配列やオブジェクトのデフォルト値
+const items = response.data ?? [];
+const settings = userPreferences ?? {};
+
+// ✅ boolean の論理演算
+const hasAccess = user.isActive && (user.isAdmin || user.hasPermission);
+const isDisabled = !isEnabled || isLoading || hasErrors;
+```
+
+## 厳密なFalsy判定 - !! や ! の代わりに明示的な比較
+
+### 基本原則
+
+- `!!value` や `!value` による暗黙的なfalsyチェックは禁止
+- 明示的な比較演算子を使用して、意図を明確にする
+
+### 問題のあるパターン
+
+```typescript
+// ❌ !! による真偽値変換
+const hasValue = !!user.name;
+const isValid = !!response.data;
+const exists = !!array.length;
+
+// ❌ ! による否定チェック
+if (!user.email) {
+  // null, undefined, 空文字列すべてをfalseとして扱う
+}
+
+if (!count) {
+  // 0, null, undefined すべてをfalseとして扱う
+}
+```
+
+### 推奨パターン
+
+```typescript
+// ✅ null/undefined の明示的チェック
+const hasValue = user.name != null; // null と undefined をチェック
+const isValid = response.data !== null && response.data !== undefined;
+const exists = array.length > 0;
+
+// ✅ 空文字列の明示的チェック
+if (user.email === '') {
+  // 空文字列のみをチェック
+}
+
+if (user.email == null || user.email === '') {
+  // null, undefined, 空文字列をチェック
+}
+
+// ✅ 数値の明示的チェック
+if (count === 0) {
+  // 0 のみをチェック
+}
+
+if (count == null) {
+  // null と undefined をチェック
+}
+
+// ✅ NaN の明示的チェック
+if (Number.isNaN(value)) {
+  // NaN のみをチェック
+}
+
+// ✅ 配列の存在チェック
+if (items != null && items.length > 0) {
+  // 配列が存在し、要素があることをチェック
+}
+
+// ✅ オブジェクトの存在チェック
+if (options != null && Object.keys(options).length > 0) {
+  // オブジェクトが存在し、プロパティがあることをチェック
+}
+```
+
+### 具体的な使用例
+
+```typescript
+// ✅ ユーザー入力の検証
+function validateInput(input?: string): boolean {
+  // 明示的に undefined と空文字列をチェック
+  if (input == null) {
+    return false;
+  }
+  if (input === '') {
+    return false;
+  }
+  return true;
+}
+
+// ✅ API レスポンスの処理
+function processResponse(data: unknown): void {
+  // 明示的な型チェック
+  if (data == null) {
+    throw new Error('No data received');
+  }
+  if (typeof data !== 'object') {
+    throw new Error('Invalid data format');
+  }
+  // データ処理...
+}
+
+// ✅ 配列要素の存在チェック
+function getFirstItem<T>(items?: T[]): T | undefined {
+  if (items == null || items.length === 0) {
+    return undefined;
+  }
+  return items[0];
+}
+
+// ✅ 真偽値の明示的な判定
+function isActive(status?: boolean): boolean {
+  // undefined と false を区別
+  if (status === undefined) {
+    return false; // デフォルト値
+  }
+  return status === true; // 明示的な true チェック
+}
+```
+
+### チェックの使い分け
+
+| 比較 | 用途 |
+|------|------|
+| `value == null` | null と undefined の両方をチェック |
+| `value === null` | null のみをチェック |
+| `value === undefined` | undefined のみをチェック |
+| `value === ''` | 空文字列のみをチェック |
+| `value === 0` | 数値の 0 のみをチェック |
+| `Number.isNaN(value)` | NaN のみをチェック |
+| `Array.isArray(value) && value.length > 0` | 配列で要素があることをチェック |
+
+### Boolean メソッドの戻り値に対する否定
+
+Boolean を返すメソッドの否定には `!` を使用します（`=== false` は不要）：
+
+```typescript
+// ❌ 不必要な === false
+if (allowedRoles.includes(role) === false) { }
+if (str.startsWith('http') === false) { }
+if (array.every(predicate) === false) { }
+
+// ✅ Boolean メソッドには ! を使用
+if (!allowedRoles.includes(role)) { }
+if (!str.startsWith('http')) { }
+if (!array.every(predicate)) { }
+```
+
+#### 重要な区別
+
+1. **Boolean メソッドの否定**: `!` を使用（正しい）
+   - `!array.includes(item)`
+   - `!str.startsWith(prefix)`
+   - `!obj.hasOwnProperty(key)`
+
+2. **Falsy チェック**: 明示的な比較を使用（`!` は避ける）
+   - `value == null` （null/undefined チェック）
+   - `value === ''` （空文字列チェック）
+   - `value === 0` （ゼロチェック）
+
+3. **Boolean 変数の否定**: `!` を使用（正しい）
+   - `!isEnabled`
+   - `!hasPermission`
+   - `!isValid`
+
 ## 必須のBiomeルール
 
 ```json

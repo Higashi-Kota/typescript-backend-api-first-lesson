@@ -44,7 +44,7 @@ export const setupTwoFactor = async (
   }
 
   const user = userResult.value
-  if (!user) {
+  if (user == null) {
     return err({ type: 'userNotFound', userId: request.userId })
   }
 
@@ -79,7 +79,7 @@ export const setupTwoFactor = async (
   })
 
   // Generate QR code
-  const qrCodeDataUrl = await qrcode.toDataURL(secret.otpauth_url || '')
+  const qrCodeDataUrl = await qrcode.toDataURL(secret.otpauth_url ?? '')
 
   // Generate backup codes
   const backupCodes = deps.generateBackupCodes()

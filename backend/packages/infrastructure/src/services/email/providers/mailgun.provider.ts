@@ -60,7 +60,7 @@ export class MailgunEmailProvider implements EmailService {
 
       const messageData: MailgunMessageData = {
         from: input.from
-          ? `${input.from.name || ''} <${input.from.email}>`.trim()
+          ? `${input.from.name ?? ''} <${input.from.email}>`.trim()
           : undefined,
         to: toAddresses.map((addr) =>
           addr.name ? `${addr.name} <${addr.email}>` : addr.email
@@ -91,7 +91,7 @@ export class MailgunEmailProvider implements EmailService {
       // Add custom tags
       if (input.tags) {
         for (const [key, value] of Object.entries(input.tags)) {
-          messageData['o:tag'] = messageData['o:tag'] || []
+          messageData['o:tag'] = messageData['o:tag'] ?? []
           messageData['o:tag'].push(`${key}:${value}`)
         }
       }

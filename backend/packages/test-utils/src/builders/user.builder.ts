@@ -49,7 +49,7 @@ export class UserBuilder {
   withId(id: UserId): UserBuilder {
     return match(this.state)
       .with({ type: 'building' }, ({ partial }) => {
-        if (!partial.data) {
+        if (partial.data == null) {
           return new UserBuilder({
             type: 'error',
             error: 'User data not initialized',
@@ -69,7 +69,7 @@ export class UserBuilder {
   withEmail(email: string): UserBuilder {
     return match(this.state)
       .with({ type: 'building' }, ({ partial }) => {
-        if (!partial.data) {
+        if (partial.data == null) {
           return new UserBuilder({
             type: 'error',
             error: 'User data not initialized',
@@ -89,7 +89,7 @@ export class UserBuilder {
   withName(name: string): UserBuilder {
     return match(this.state)
       .with({ type: 'building' }, ({ partial }) => {
-        if (!partial.data) {
+        if (partial.data == null) {
           return new UserBuilder({
             type: 'error',
             error: 'User data not initialized',
@@ -109,7 +109,7 @@ export class UserBuilder {
   withRole(role: UserRole): UserBuilder {
     return match(this.state)
       .with({ type: 'building' }, ({ partial }) => {
-        if (!partial.data) {
+        if (partial.data == null) {
           return new UserBuilder({
             type: 'error',
             error: 'User data not initialized',
@@ -149,13 +149,13 @@ export class UserBuilder {
   withTwoFactorEnabled(secret?: string, backupCodes?: string[]): UserBuilder {
     const twoFactorStatus: TwoFactorStatus = {
       type: 'enabled',
-      secret: secret || `test_secret_${randomUUID()}`,
-      backupCodes: backupCodes || ['CODE1', 'CODE2', 'CODE3', 'CODE4'],
+      secret: secret ?? `test_secret_${randomUUID()}`,
+      backupCodes: backupCodes ?? ['CODE1', 'CODE2', 'CODE3', 'CODE4'],
     }
 
     return match(this.state)
       .with({ type: 'building' }, ({ partial }) => {
-        if (!partial.data) {
+        if (partial.data == null) {
           return new UserBuilder({
             type: 'error',
             error: 'User data not initialized',
@@ -181,7 +181,7 @@ export class UserBuilder {
 
     return match(this.state)
       .with({ type: 'building' }, ({ partial }) => {
-        if (!partial.data) {
+        if (partial.data == null) {
           return new UserBuilder({
             type: 'error',
             error: 'User data not initialized',
@@ -202,9 +202,9 @@ export class UserBuilder {
   withLockedAccount(reason?: string, failedAttempts?: number): UserBuilder {
     const status: UserAccountStatus = {
       type: 'locked',
-      reason: reason || 'Too many failed login attempts',
+      reason: reason ?? 'Too many failed login attempts',
       lockedAt: new Date(),
-      failedAttempts: failedAttempts || 5,
+      failedAttempts: failedAttempts ?? 5,
     }
 
     return match(this.state)
@@ -235,7 +235,7 @@ export class UserBuilder {
 
     return match(this.state)
       .with({ type: 'building' }, ({ partial }) => {
-        if (!partial.data) {
+        if (partial.data == null) {
           return new UserBuilder({
             type: 'error',
             error: 'User data not initialized',
@@ -255,7 +255,7 @@ export class UserBuilder {
   build(): User {
     return match(this.state)
       .with({ type: 'building' }, ({ partial }) => {
-        if (!partial.status || !partial.data) {
+        if (partial.status == null || partial.data == null) {
           throw new Error('User data is incomplete')
         }
 
@@ -276,7 +276,7 @@ export class UserBuilder {
   async buildAsync(): Promise<Result<User, string>> {
     return match(this.state)
       .with({ type: 'building' }, ({ partial }) => {
-        if (!partial.status || !partial.data) {
+        if (partial.status == null || partial.data == null) {
           return err('User data is incomplete')
         }
 

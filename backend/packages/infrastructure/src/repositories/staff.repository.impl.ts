@@ -130,7 +130,7 @@ export class DrizzleStaffRepository implements StaffRepository {
         image_url: data.imageUrl,
         bio: data.bio,
         years_of_experience: data.yearsOfExperience,
-        certifications: data.certifications || [],
+        certifications: data.certifications ?? [],
         is_active: true,
         created_by: data.createdBy,
         updated_by: data.createdBy,

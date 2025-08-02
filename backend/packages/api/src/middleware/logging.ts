@@ -25,7 +25,7 @@ export function loggingMiddleware(
 
   // リクエストログ
   const userId = req.user?.id
-  const ip = req.ip || req.socket.remoteAddress || 'unknown'
+  const ip = req.ip ?? req.socket.remoteAddress ?? 'unknown'
 
   logger.logRequest(req.method, req.path, userId, ip)
 
@@ -57,7 +57,7 @@ export function errorLoggingMiddleware(
     method: req.method,
     path: req.path,
     userId: req.user?.id,
-    ip: req.ip || req.socket.remoteAddress || 'unknown',
+    ip: req.ip ?? req.socket.remoteAddress ?? 'unknown',
     headers: {
       'user-agent': req.headers['user-agent'],
       'content-type': req.headers['content-type'],

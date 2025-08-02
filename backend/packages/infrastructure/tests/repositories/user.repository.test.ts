@@ -34,10 +34,10 @@ async function createTestUser(
 ): Promise<User> {
   let builder = UserBuilder.create()
     .withEmail(
-      options.email || `test-${Date.now()}-${randomUUID()}@example.com`
+      options.email ?? `test-${Date.now()}-${randomUUID()}@example.com`
     )
-    .withName(options.name || 'Test User')
-    .withRole(options.role || 'customer')
+    .withName(options.name ?? 'Test User')
+    .withRole(options.role ?? 'customer')
 
   // ステータスに応じてビルダーを設定
   if (options.status === 'unverified' && options.emailVerificationToken) {

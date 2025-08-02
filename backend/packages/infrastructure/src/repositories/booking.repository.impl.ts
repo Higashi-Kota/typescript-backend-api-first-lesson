@@ -83,7 +83,7 @@ export class DrizzleBookingRepository implements BookingRepository {
         type: 'completed' as const,
         data: bookingData,
         completedAt: new Date(dbBooking.updated_at),
-        completedBy: dbBooking.updated_by || 'system',
+        completedBy: dbBooking.updated_by ?? 'system',
       }
     }
 

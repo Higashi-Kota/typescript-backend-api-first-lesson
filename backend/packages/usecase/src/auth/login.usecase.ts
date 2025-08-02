@@ -68,7 +68,7 @@ export const login = async (
   }
 
   const user = userResult.value
-  if (!user) {
+  if (user == null) {
     return err({ type: 'invalidCredentials' })
   }
 
@@ -109,11 +109,11 @@ export const login = async (
 
   // Check if 2FA is enabled
   if (user.data.twoFactorStatus.type === 'enabled') {
-    if (!request.twoFactorCode) {
+    if (request.twoFactorCode == null) {
       return err({ type: 'twoFactorRequired' })
     }
 
-    if (!deps.verifyTwoFactorCode) {
+    if (deps.verifyTwoFactorCode == null) {
       return err({
         type: 'databaseError',
         error: new Error('2FA verification not configured'),
@@ -154,7 +154,7 @@ export const login = async (
     ipAddress: request.ipAddress,
     userAgent: request.userAgent,
     expiresAt: new Date(Date.now() + deps.sessionTtlMinutes * 60 * 1000),
-    rememberMe: request.rememberMe || false,
+    rememberMe: request.rememberMe ?? false,
     createdAt: new Date(),
     lastActivityAt: new Date(),
   }

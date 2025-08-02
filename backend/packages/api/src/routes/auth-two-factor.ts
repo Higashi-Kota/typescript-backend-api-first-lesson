@@ -57,7 +57,7 @@ export const createTwoFactorRoutes = (deps: TwoFactorRouteDeps): Router => {
     async (req, res) => {
       const password = req.body.password as string
 
-      if (!password) {
+      if (password == null) {
         res.status(400).json({
           error: {
             type: 'BAD_REQUEST',
@@ -192,7 +192,7 @@ export const createTwoFactorRoutes = (deps: TwoFactorRouteDeps): Router => {
     async (req, res) => {
       const code = req.body.code as string
 
-      if (!code) {
+      if (code == null) {
         res.status(400).json({
           error: {
             type: 'BAD_REQUEST',
@@ -269,7 +269,7 @@ export const createTwoFactorRoutes = (deps: TwoFactorRouteDeps): Router => {
     async (req, res) => {
       const { password, code } = req.body as { password: string; code: string }
 
-      if (!password || !code) {
+      if (password == null || code == null) {
         res.status(400).json({
           error: {
             type: 'BAD_REQUEST',
@@ -354,7 +354,7 @@ export const createTwoFactorRoutes = (deps: TwoFactorRouteDeps): Router => {
     async (req, res) => {
       const code = req.body.code as string
 
-      if (!code) {
+      if (code == null) {
         res.status(400).json({
           error: {
             type: 'BAD_REQUEST',

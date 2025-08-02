@@ -26,7 +26,7 @@ export class EncryptionService {
     private masterKey: string,
     _keyDerivationIterations = 100000
   ) {
-    if (!masterKey || masterKey.length < 32) {
+    if (masterKey === '' || masterKey.length < 32) {
       throw new Error('Master key must be at least 32 characters long')
     }
   }

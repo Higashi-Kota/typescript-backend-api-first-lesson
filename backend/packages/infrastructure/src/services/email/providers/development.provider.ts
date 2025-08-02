@@ -22,31 +22,31 @@ export class DevelopmentEmailProvider implements EmailService {
     const toAddresses = Array.isArray(input.to) ? input.to : [input.to]
     console.log(
       'To:',
-      toAddresses.map((addr) => `${addr.name || ''} <${addr.email}>`).join(', ')
+      toAddresses.map((addr) => `${addr.name ?? ''} <${addr.email}>`).join(', ')
     )
 
     if (input.from) {
-      console.log('From:', `${input.from.name || ''} <${input.from.email}>`)
+      console.log('From:', `${input.from.name ?? ''} <${input.from.email}>`)
     }
 
     if (input.cc && input.cc.length > 0) {
       console.log(
         'CC:',
-        input.cc.map((addr) => `${addr.name || ''} <${addr.email}>`).join(', ')
+        input.cc.map((addr) => `${addr.name ?? ''} <${addr.email}>`).join(', ')
       )
     }
 
     if (input.bcc && input.bcc.length > 0) {
       console.log(
         'BCC:',
-        input.bcc.map((addr) => `${addr.name || ''} <${addr.email}>`).join(', ')
+        input.bcc.map((addr) => `${addr.name ?? ''} <${addr.email}>`).join(', ')
       )
     }
 
     if (input.replyTo) {
       console.log(
         'Reply-To:',
-        `${input.replyTo.name || ''} <${input.replyTo.email}>`
+        `${input.replyTo.name ?? ''} <${input.replyTo.email}>`
       )
     }
 
@@ -73,7 +73,7 @@ export class DevelopmentEmailProvider implements EmailService {
       console.log('Attachments:')
       input.attachments.forEach((att, idx) => {
         console.log(
-          `  ${idx + 1}. ${att.filename} (${att.contentType || 'application/octet-stream'})`
+          `  ${idx + 1}. ${att.filename} (${att.contentType ?? 'application/octet-stream'})`
         )
       })
     }

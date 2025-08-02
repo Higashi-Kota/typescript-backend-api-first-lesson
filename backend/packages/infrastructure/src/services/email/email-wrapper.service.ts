@@ -23,8 +23,8 @@ export class EmailWrapperService implements EmailService {
     emailService?: EmailService,
     templateService?: EmailTemplateService
   ) {
-    this.emailService = emailService || createEmailServiceWithFallback()
-    this.templateService = templateService || new DefaultEmailTemplateService()
+    this.emailService = emailService ?? createEmailServiceWithFallback()
+    this.templateService = templateService ?? new DefaultEmailTemplateService()
   }
 
   /**
@@ -36,7 +36,7 @@ export class EmailWrapperService implements EmailService {
       // Add default from address if not provided
       const emailInput: SendEmailInput = {
         ...input,
-        from: input.from || emailConfig.from,
+        from: input.from ?? emailConfig.from,
       }
 
       const result = await this.emailService.send(emailInput)
@@ -71,7 +71,7 @@ export class EmailWrapperService implements EmailService {
     // Add default from address if not provided
     const emailInput: SendEmailInput = {
       ...input,
-      from: input.from || emailConfig.from,
+      from: input.from ?? emailConfig.from,
     }
 
     // In development mode, just log

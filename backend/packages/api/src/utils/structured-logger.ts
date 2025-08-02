@@ -443,7 +443,7 @@ export class StructuredLogger {
         : {
             type: 'businessLogicError',
             error: event.error,
-            context: event.type === 'error' ? event.context || {} : {},
+            context: event.type === 'error' ? (event.context ?? {}) : {},
           }
 
     sentryService.captureError(sentryEvent, sentryContext)

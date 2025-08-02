@@ -48,7 +48,7 @@ export const createAttachmentRouter = (dependencies: {
 }): Router => {
   const router = express.Router()
   const storageService =
-    dependencies.storageService || createStorageServiceWithDefaults()
+    dependencies.storageService ?? createStorageServiceWithDefaults()
 
   /**
    * Get signed upload URL
@@ -68,7 +68,7 @@ export const createAttachmentRouter = (dependencies: {
           size: _size,
           salonId: _salonId,
         } = UploadUrlRequestSchema.parse(req.body)
-        const userId = req.user?.id || ''
+        const userId = req.user?.id ?? ''
 
         // TODO: Check user permissions for salon if salonId is provided
         // TODO: Check storage quota for user
@@ -122,7 +122,7 @@ export const createAttachmentRouter = (dependencies: {
         const parsedQuery = ListAttachmentsQuerySchema.parse(req.query)
         const { page, limit } = parsedQuery
         // const _salonId = parsedQuery.salonId
-        // const _userId = req.user?.id || ''
+        // const _userId = req.user?.id ?? ''
 
         // TODO: Implement attachment listing from repository
         // For now, return empty list

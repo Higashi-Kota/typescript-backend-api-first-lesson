@@ -147,7 +147,7 @@ export const mapCustomerProfileToResponse = (
     visitCount: profile.visitCount,
     lastVisitDate: profile.lastVisitDate?.toISOString(),
     totalSpent: profile.totalSpent,
-    favoriteStaffIds: profile.favoriteStaffIds || [],
-    favoriteServiceIds: profile.favoriteServiceIds || [],
+    favoriteStaffIds: profile.favoriteStaffIds ?? [],
+    favoriteServiceIds: profile.favoriteServiceIds ?? [],
   }
 }

@@ -66,7 +66,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
         type: 'cancelled' as const,
         data: reservationData,
         cancelledAt: new Date(dbReservation.updated_at),
-        cancelledBy: dbReservation.updated_by || 'system',
+        cancelledBy: dbReservation.updated_by ?? 'system',
         cancellationReason: dbReservation.cancellation_reason,
       }
     }

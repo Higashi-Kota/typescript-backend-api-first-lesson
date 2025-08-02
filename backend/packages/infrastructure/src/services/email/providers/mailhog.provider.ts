@@ -38,19 +38,19 @@ export class MailhogEmailProvider implements EmailService {
 
       const mailOptions = {
         from: input.from
-          ? `"${input.from.name || ''}" <${input.from.email}>`
+          ? `"${input.from.name ?? ''}" <${input.from.email}>`
           : undefined,
         to: toAddresses
-          .map((addr) => `"${addr.name || ''}" <${addr.email}>`)
+          .map((addr) => `"${addr.name ?? ''}" <${addr.email}>`)
           .join(', '),
         cc: input.cc
-          ?.map((addr) => `"${addr.name || ''}" <${addr.email}>`)
+          ?.map((addr) => `"${addr.name ?? ''}" <${addr.email}>`)
           .join(', '),
         bcc: input.bcc
-          ?.map((addr) => `"${addr.name || ''}" <${addr.email}>`)
+          ?.map((addr) => `"${addr.name ?? ''}" <${addr.email}>`)
           .join(', '),
         replyTo: input.replyTo
-          ? `"${input.replyTo.name || ''}" <${input.replyTo.email}>`
+          ? `"${input.replyTo.name ?? ''}" <${input.replyTo.email}>`
           : undefined,
         subject: input.content.subject,
         text: input.content.text,
