@@ -225,6 +225,76 @@ backend/packages/types/
   │   └── index.ts                # 型のRemap
 ```
 
+### DB型制約マッピング機構
+
+Drizzle ORMの推論型（`$inferSelect`、`$inferInsert`）を活用して、DBスキーマから型を自動推論し、全レイヤーで一貫した型安全性を保証します。
+
+#### マッピングの流れ
+
+```
+Database Schema (Drizzle ORM)
+    ↓ $inferSelect / $inferInsert
+DB Types (DbCustomer, DbNewCustomer)
+    ↓ @beauty-salon-backend/mappers
+Domain Models (Customer, User, Salon)
+    ↓ @beauty-salon-backend/mappers
+API Types (Request/Response)
+```
+
+#### マッパーパッケージの構成
+
+```typescript
+// packages/mappers/src/
+├── db-to-domain/        # DB → ドメインモデル変換
+│   ├── customer.mapper.ts
+│   ├── salon.mapper.ts
+│   └── user.mapper.ts
+├── domain-to-db/        # ドメインモデル → DB変換
+│   ├── customer.mapper.ts
+│   ├── salon.mapper.ts
+│   └── user.mapper.ts
+├── api-to-domain/       # APIリクエスト → ドメインモデル変換
+│   └── customer.mapper.ts
+└── domain-to-api/       # ドメインモデル → APIレスポンス変換
+    └── customer.mapper.ts
+```
+
+#### 実装例
+
+```typescript
+// DB型の定義（循環依存を避けるためハードコード）
+export type DbCustomer = {
+  id: string
+  name: string
+  email: string
+  phone_number: string
+  // ... その他のフィールド
+}
+
+// マッピング関数
+export const mapDbCustomerToDomain = (
+  dbCustomer: DbCustomer
+): Customer | null => {
+  const id = createCustomerId(dbCustomer.id)
+  if (id == null) return null
+  
+  return {
+    type: 'active',
+    data: {
+      id,
+      name: dbCustomer.name,
+      contactInfo: {
+        email: dbCustomer.email,
+        phoneNumber: dbCustomer.phone_number,
+      },
+      // ... その他のマッピング
+    }
+  }
+}
+```
+
+詳細は[DB型制約マッピング機構](./db-type-constraints-mapping.md)を参照してください。
+
 ### 型のRemapping戦略
 
 ```typescript

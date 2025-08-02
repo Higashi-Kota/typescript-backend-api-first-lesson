@@ -11,16 +11,12 @@ import {
   err,
   updateCustomer as updateCustomerEntity,
 } from '@beauty-salon-backend/domain'
-import type { components } from '@beauty-salon-backend/types/api'
-
-// TypeSpecで定義された型
-type UpdateCustomerRequest =
-  components['schemas']['Models.UpdateCustomerRequest']
-type UpdateCustomerRequestWithReset =
-  components['schemas']['Models.UpdateCustomerRequestWithReset']
 
 // UseCase エラー型
-export type UpdateCustomerUseCaseError = CustomerError | RepositoryError
+export type UpdateCustomerUseCaseError =
+  | CustomerError
+  | RepositoryError
+  | { type: 'duplicateEmail'; email: string }
 
 // UseCase 入力型
 export type UpdateCustomerUseCaseInput = {
@@ -29,9 +25,10 @@ export type UpdateCustomerUseCaseInput = {
     name?: string
     email?: string
     phoneNumber?: string
+    alternativePhone?: string | null
     preferences?: string | null
     notes?: string | null
-    tags?: string[]
+    tags?: string[] | null
     birthDate?: string | null
   }
 }
@@ -87,7 +84,8 @@ export const updateCustomerUseCase = async (
     name: input.updates.name,
     contactInfo:
       input.updates.email !== undefined ||
-      input.updates.phoneNumber !== undefined
+      input.updates.phoneNumber !== undefined ||
+      input.updates.alternativePhone !== undefined
         ? {
             email:
               input.updates.email !== undefined
@@ -97,6 +95,12 @@ export const updateCustomerUseCase = async (
               input.updates.phoneNumber !== undefined
                 ? input.updates.phoneNumber
                 : existingResult.value.data.contactInfo.phoneNumber,
+            alternativePhone:
+              input.updates.alternativePhone !== undefined
+                ? input.updates.alternativePhone === null
+                  ? undefined
+                  : input.updates.alternativePhone
+                : existingResult.value.data.contactInfo.alternativePhone,
           }
         : undefined,
     preferences: input.updates.preferences,
@@ -120,72 +124,5 @@ export const updateCustomerUseCase = async (
   return saveResult
 }
 
-/**
- * OpenAPI Request型からUseCase入力型への変換（通常の更新）
- */
-export const mapUpdateCustomerRequest = (
-  id: CustomerId,
-  request: UpdateCustomerRequest
-): UpdateCustomerUseCaseInput => {
-  const updates: UpdateCustomerUseCaseInput['updates'] = {}
-
-  // undefined のフィールドは更新しない
-  if (request.name !== undefined) {
-    updates.name = request.name
-  }
-  if (request.contactInfo?.email !== undefined) {
-    updates.email = request.contactInfo.email
-  }
-  if (request.contactInfo?.phoneNumber !== undefined) {
-    updates.phoneNumber = request.contactInfo.phoneNumber
-  }
-  if (request.preferences !== undefined) {
-    updates.preferences = request.preferences
-  }
-  if (request.notes !== undefined) {
-    updates.notes = request.notes
-  }
-  if (request.tags !== undefined) {
-    updates.tags = request.tags
-  }
-  if (request.birthDate !== undefined) {
-    updates.birthDate = request.birthDate
-  }
-
-  return { id, updates }
-}
-
-/**
- * OpenAPI Request型からUseCase入力型への変換（リセット機能付き）
- */
-export const mapUpdateCustomerRequestWithReset = (
-  id: CustomerId,
-  request: UpdateCustomerRequestWithReset
-): UpdateCustomerUseCaseInput => {
-  const updates: UpdateCustomerUseCaseInput['updates'] = {}
-
-  // undefined = 更新しない、null = リセット、値あり = 更新
-  if (request.name !== undefined) {
-    updates.name = request.name
-  }
-  if (request.contactInfo?.email !== undefined) {
-    updates.email = request.contactInfo.email
-  }
-  if (request.contactInfo?.phoneNumber !== undefined) {
-    updates.phoneNumber = request.contactInfo.phoneNumber
-  }
-  if (request.preferences !== undefined) {
-    updates.preferences = request.preferences
-  }
-  if (request.notes !== undefined) {
-    updates.notes = request.notes
-  }
-  if (request.tags !== undefined) {
-    updates.tags = request.tags
-  }
-  if (request.birthDate !== undefined) {
-    updates.birthDate = request.birthDate
-  }
-
-  return { id, updates }
-}
+// マッピング関数はmappersパッケージに移動済み
+// 詳細は @beauty-salon-backend/mappers を参照

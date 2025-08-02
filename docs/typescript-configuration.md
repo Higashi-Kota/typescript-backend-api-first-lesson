@@ -16,8 +16,8 @@ TypeScriptバックエンドおよびフロントエンド開発における設�
     "jsx": "react-jsx",
     
     // モジュール解決
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "paths": {
@@ -79,10 +79,11 @@ TypeScriptバックエンドおよびフロントエンド開発における設�
 
 ### モジュール解決設定
 
-#### `module: "NodeNext"` と `moduleResolution: "NodeNext"`
-- Node.js 12以降のネイティブESモジュールサポート
+#### `module: "ESNext"` と `moduleResolution: "bundler"`
+- 最新のESモジュール機能を使用
+- バンドラー（rslib、viteなど）との互換性を確保
 - package.jsonの`exports`フィールドに対応
-- `.js`拡張子を含むインポートをサポート
+- TypeScript 5.0以降の推奨設定
 
 #### `paths: { "@/*": ["./src/*"] }`
 - 絶対パスインポートを有効化
@@ -170,8 +171,12 @@ const firstItem = items[0]!; // 確実に存在する場合のみ
 
 ```
 backend/packages/
+├── database/
+│   └── src/          # DBスキーマ定義
 ├── domain/
 │   └── src/          # ドメイン固有の型
+├── mappers/
+│   └── src/          # 型変換レイヤー
 ├── types/
 │   └── src/          # 共有型定義
 │       ├── generated/    # 自動生成された型
@@ -266,7 +271,7 @@ class ApiClient {
 ### プロジェクト参照（モノレポ向け）
 
 ```json
-// packages/shared/tsconfig.json
+// packages/database/tsconfig.json
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
@@ -276,11 +281,14 @@ class ApiClient {
   }
 }
 
-// packages/backend/tsconfig.json
+// packages/infrastructure/tsconfig.json
 {
   "extends": "../../tsconfig.json",
   "references": [
-    { "path": "../shared" }
+    { "path": "../database" },
+    { "path": "../domain" },
+    { "path": "../mappers" },
+    { "path": "../types" }
   ]
 }
 ```

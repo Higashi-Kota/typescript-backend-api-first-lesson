@@ -12,7 +12,7 @@ export const BookingIdSchema = z.string().refine(
   { message: 'Invalid BookingId format' }
 );
 
-export const BookingStatusSchema = z.enum(['draft', 'pending', 'confirmed', 'in_progress', 'completed', 'cancelled']);
+export const BookingStatusSchema = z.enum(['draft', 'pending', 'confirmed', 'in_progress', 'completed', 'cancelled', 'no_show']);
 export type BookingStatus = z.infer<typeof BookingStatusSchema>;
 
 export const CategoryIdSchema = z.string().refine(

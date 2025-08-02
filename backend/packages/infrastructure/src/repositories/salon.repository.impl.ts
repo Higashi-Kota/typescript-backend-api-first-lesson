@@ -8,7 +8,6 @@ import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
 import { safeJsonbAccess, safeLike } from './security-patches'
 
 import type {
-  Address,
   CreateSalonRequest,
   PaginatedResult,
   PaginationParams,
@@ -20,13 +19,20 @@ import type {
   SalonSearchCriteria,
   UpdateSalonRequest,
 } from '@beauty-salon-backend/domain'
-import { createSalonId, err, ok } from '@beauty-salon-backend/domain'
+import { err, ok } from '@beauty-salon-backend/domain'
 
-import { opening_hours as openingHoursTable, salons } from '../database/schema'
+import {
+  type DbSalon,
+  mapDbSalonToDomain,
+} from '@beauty-salon-backend/mappers/db-to-domain'
+import type { DbNewSalon } from '@beauty-salon-backend/mappers/domain-to-db'
 
-// DB型からドメイン型へのマッピング
-type DbSalon = typeof salons.$inferSelect
-type DbNewSalon = typeof salons.$inferInsert
+import {
+  opening_hours as openingHoursTable,
+  salons,
+} from '@beauty-salon-backend/database'
+
+// DB型はマッパーパッケージからインポート
 type DbNewOpeningHours = typeof openingHoursTable.$inferInsert
 
 export class DrizzleSalonRepository implements SalonRepository {
@@ -34,12 +40,13 @@ export class DrizzleSalonRepository implements SalonRepository {
 
   // DBモデルからドメインモデルへの変換
   private async mapDbToDomain(dbSalon: DbSalon): Promise<Salon | null> {
-    const id = createSalonId(dbSalon.id)
-    if (id == null) {
+    // マッパーパッケージを使用
+    const salon = mapDbSalonToDomain(dbSalon)
+    if (salon == null) {
       return null
     }
 
-    // 営業時間を取得
+    // 営業時間を取得して追加
     const dbOpeningHours = await this.db
       .select()
       .from(openingHoursTable)
@@ -62,36 +69,10 @@ export class DrizzleSalonRepository implements SalonRepository {
       })
     )
 
-    // 現在のスキーマにはdeletedAt/suspendedAtがないため、すべてactiveとして扱う
-    // TODO: deletedAt, suspendedAtカラムを追加する際に実装
+    // openingHoursを追加
+    salon.data.openingHours = openingHours
 
-    return {
-      type: 'active' as const,
-      data: {
-        id,
-        name: dbSalon.name,
-        description: dbSalon.description ?? '',
-        address: dbSalon.address as Address,
-        contactInfo: {
-          email: dbSalon.email,
-          phoneNumber: dbSalon.phone_number,
-          alternativePhone: dbSalon.alternative_phone ?? undefined,
-        },
-        openingHours,
-        imageUrls:
-          Array.isArray(dbSalon.image_urls) && dbSalon.image_urls.length > 0
-            ? dbSalon.image_urls
-            : undefined,
-        features:
-          Array.isArray(dbSalon.features) && dbSalon.features.length > 0
-            ? dbSalon.features
-            : undefined,
-        createdAt: new Date(dbSalon.created_at),
-        createdBy: dbSalon.created_by ?? undefined,
-        updatedAt: new Date(dbSalon.updated_at),
-        updatedBy: dbSalon.updated_by ?? undefined,
-      },
-    }
+    return salon
   }
 
   async findById(id: SalonId): Promise<Result<Salon, RepositoryError>> {

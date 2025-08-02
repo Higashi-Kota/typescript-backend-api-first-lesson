@@ -33,7 +33,7 @@ import {
 import {
   service_categories as serviceCategories,
   services,
-} from '../database/schema'
+} from '@beauty-salon-backend/database'
 
 // DB型からドメイン型へのマッピング
 type DbService = typeof services.$inferSelect

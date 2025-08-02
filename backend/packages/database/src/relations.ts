@@ -16,7 +16,7 @@ import {
   staff,
   staff_working_hours,
   users,
-} from './schema'
+} from './schema.js'
 
 export const usersRelations = relations(users, ({ one, many }) => ({
   customer: one(customers, {

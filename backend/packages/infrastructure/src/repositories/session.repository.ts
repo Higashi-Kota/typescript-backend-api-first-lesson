@@ -1,3 +1,4 @@
+import { sessions } from '@beauty-salon-backend/database'
 import type {
   Result,
   Session,
@@ -10,7 +11,6 @@ import { err, ok } from '@beauty-salon-backend/domain'
 import { desc, eq, lt } from 'drizzle-orm'
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
 import { v4 as uuidv4 } from 'uuid'
-import { sessions } from '../database/schema'
 
 export class DrizzleSessionRepository implements SessionRepository {
   constructor(private db: PostgresJsDatabase) {}

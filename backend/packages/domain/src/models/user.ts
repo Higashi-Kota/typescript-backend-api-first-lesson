@@ -1,10 +1,22 @@
 import type { Brand } from '../shared/brand.js'
+import { createBrand, createBrandSafe } from '../shared/brand.js'
 import type { Result } from '../shared/result.js'
 import { err, ok } from '../shared/result.js'
 
 // Brand types for User IDs
 export type UserId = Brand<string, 'UserId'>
 export type SessionId = Brand<string, 'SessionId'>
+
+// UserID作成関数
+export const createUserId = (value: string) => createBrand(value, 'UserId')
+export const createUserIdSafe = (value: string) =>
+  createBrandSafe(value, 'UserId')
+
+// SessionID作成関数
+export const createSessionId = (value: string) =>
+  createBrand(value, 'SessionId')
+export const createSessionIdSafe = (value: string) =>
+  createBrandSafe(value, 'SessionId')
 
 // User role type matching TypeSpec
 export type UserRole = 'customer' | 'staff' | 'admin'

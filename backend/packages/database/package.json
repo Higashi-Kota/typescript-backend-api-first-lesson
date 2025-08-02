@@ -1,0 +1,47 @@
+{
+  "name": "@beauty-salon-backend/database",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "files": ["dist"],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "clean": "rm -rf dist *.tsbuildinfo",
+    "build:dev": "NODE_ENV=development rslib build",
+    "build:test": "NODE_ENV=test rslib build",
+    "build:stg": "NODE_ENV=staging rslib build",
+    "build:prod": "NODE_ENV=production rslib build",
+    "build": "NODE_ENV=production rslib build",
+    "build:watch": "NODE_ENV=development rslib build --watch",
+    "dev": "NODE_ENV=development rslib build --watch",
+    "dev:tsc": "tsc --build --watch",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "typecheck": "tsc --noEmit",
+    "format": "biome format --write .",
+    "format:fix": "biome check . --fix --unsafe",
+    "lint": "biome lint .",
+    "lint:fix": "biome lint . --write",
+    "knip": "knip --include dependencies,optionalPeerDependencies,unlisted,binaries,unresolved",
+    "package:check": "taze -r"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.44.2",
+    "postgres": "^3.4.7"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@rslib/core": "^0.10.5",
+    "@types/node": "^24.0.13",
+    "knip": "^5.61.3",
+    "taze": "^19.1.0",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  }
+}

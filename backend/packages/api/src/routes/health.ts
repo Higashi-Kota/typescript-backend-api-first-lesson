@@ -1,5 +1,5 @@
 import { env as config } from '@beauty-salon-backend/config'
-import { db } from '@beauty-salon-backend/infrastructure/database'
+import { getDb } from '@beauty-salon-backend/infrastructure'
 import { sql } from 'drizzle-orm'
 import { Router } from 'express'
 import type { Request, Response } from 'express'
@@ -35,7 +35,7 @@ export type ComponentHealth =
 const checkDatabase = async (): Promise<ComponentHealth> => {
   const startTime = Date.now()
   try {
-    await db.execute(sql`SELECT 1`)
+    await getDb().execute(sql`SELECT 1`)
     const latency = Date.now() - startTime
 
     if (latency > 1000) {

@@ -33,7 +33,7 @@ import {
   salons,
   services,
   staff,
-} from '../database/schema'
+} from '@beauty-salon-backend/database'
 
 // DB型からドメイン型へのマッピング
 type DbReview = typeof reviews.$inferSelect

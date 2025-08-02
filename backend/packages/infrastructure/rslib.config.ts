@@ -12,7 +12,6 @@ export default defineConfig({
         entry: {
           index: 'src/index.ts',
           'database/index': 'src/database/index.ts',
-          'database/schema': 'src/database/schema.ts',
         },
         tsconfigPath: './tsconfig.json',
       },

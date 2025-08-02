@@ -65,7 +65,7 @@ export type UpdateCustomerInput = {
   contactInfo?: ContactInfo
   preferences?: string | null
   notes?: string | null
-  tags?: string[]
+  tags?: string[] | null
   birthDate?: Date | null
 }
 

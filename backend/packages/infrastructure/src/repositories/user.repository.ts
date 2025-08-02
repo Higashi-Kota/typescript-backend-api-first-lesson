@@ -1,3 +1,4 @@
+import { users } from '@beauty-salon-backend/database'
 import type {
   PaginatedResult,
   PaginationParams,
@@ -15,7 +16,6 @@ import { err, ok } from '@beauty-salon-backend/domain'
 import { and, desc, eq, sql } from 'drizzle-orm'
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
 import { v4 as uuidv4 } from 'uuid'
-import { users } from '../database/schema'
 import { safeLike } from './security-patches'
 
 export class DrizzleUserRepository implements UserRepository {

@@ -13,8 +13,6 @@ import type {
   RepositoryError,
   Result,
 } from '@beauty-salon-backend/domain'
-import type { components } from '@beauty-salon-backend/types/api'
-import { mapCustomerToResponse } from './create-customer.usecase.js'
 
 // UseCase エラー型
 export type GetCustomerUseCaseError = RepositoryError
@@ -121,33 +119,5 @@ export const getCustomerProfileUseCase = async (
   return { type: 'ok', value: profile }
 }
 
-/**
- * Customer一覧レスポンスへの変換
- */
-export const mapCustomerListToResponse = (
-  result: PaginatedResult<Customer>
-): components['schemas']['Models.PaginationResponseModelsCustomer'] => {
-  return {
-    data: result.data.map((customer) => mapCustomerToResponse(customer)),
-    total: result.total,
-    limit: result.limit,
-    offset: result.offset,
-  }
-}
-
-/**
- * CustomerProfileレスポンスへの変換
- */
-export const mapCustomerProfileToResponse = (
-  profile: CustomerProfile
-): components['schemas']['Models.CustomerProfile'] => {
-  const base = mapCustomerToResponse(profile)
-  return {
-    ...base,
-    visitCount: profile.visitCount,
-    lastVisitDate: profile.lastVisitDate?.toISOString(),
-    totalSpent: profile.totalSpent,
-    favoriteStaffIds: profile.favoriteStaffIds ?? [],
-    favoriteServiceIds: profile.favoriteServiceIds ?? [],
-  }
-}
+// マッピング関数はmappersパッケージに移動済み
+// 詳細は @beauty-salon-backend/mappers を参照

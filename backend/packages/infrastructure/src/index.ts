@@ -1,6 +1,23 @@
 // Database connection
 export { getDb } from './database/index'
 
+// Database schema types and tables
+export * as schema from '@beauty-salon-backend/database'
+export {
+  users,
+  customers,
+  salons,
+  reservations,
+  bookings,
+  services,
+  staff,
+  reviews,
+  attachments,
+  share_links,
+  sessions,
+  opening_hours,
+} from '@beauty-salon-backend/database'
+
 // Repository implementations
 export { DrizzleCustomerRepository } from './repositories/customer.repository.impl'
 export { DrizzleSalonRepository } from './repositories/salon.repository.impl'

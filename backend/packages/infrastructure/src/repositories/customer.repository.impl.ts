@@ -19,16 +19,20 @@ import {
   type CustomerId,
   type RepositoryError,
   type Result,
-  createCustomerId,
   err,
   ok,
 } from '@beauty-salon-backend/domain'
 
-import { customers } from '../database/schema'
+import {
+  type DbCustomer,
+  mapDecryptedDbCustomerToDomain,
+} from '@beauty-salon-backend/mappers/db-to-domain'
+import {
+  type DbNewCustomer,
+  mapDomainCustomerToDbInsert,
+} from '@beauty-salon-backend/mappers/domain-to-db'
 
-// DB型からドメイン型へのマッピング
-type DbCustomer = typeof customers.$inferSelect
-type DbNewCustomer = typeof customers.$inferInsert
+import { customers } from '@beauty-salon-backend/database'
 
 export class DrizzleCustomerRepository implements CustomerRepository {
   private encryptionService?: ReturnType<typeof getEncryptionService>
@@ -49,11 +53,6 @@ export class DrizzleCustomerRepository implements CustomerRepository {
   private async mapDbToDomain(
     dbCustomer: DbCustomer
   ): Promise<Customer | null> {
-    const id = createCustomerId(dbCustomer.id)
-    if (id == null) {
-      return null
-    }
-
     // 暗号化されたフィールドを復号化
     let decryptedCustomer = dbCustomer
     if (this.encryptionService) {
@@ -68,54 +67,13 @@ export class DrizzleCustomerRepository implements CustomerRepository {
       }
     }
 
-    // 削除済みフラグやステータスがDBに存在しない場合は、すべてactiveとして扱う
-    // 実際のプロジェクトでは、DBスキーマに status, deletedAt, suspendedAt などのカラムを追加
-    return {
-      type: 'active' as const,
-      data: {
-        id,
-        name: decryptedCustomer.name,
-        contactInfo: {
-          email: decryptedCustomer.email,
-          phoneNumber: decryptedCustomer.phone_number,
-          alternativePhone: decryptedCustomer.alternative_phone ?? undefined,
-        },
-        preferences: decryptedCustomer.preferences,
-        notes: decryptedCustomer.notes,
-        tags: Array.isArray(decryptedCustomer.tags)
-          ? decryptedCustomer.tags
-          : [],
-        birthDate: decryptedCustomer.birth_date
-          ? new Date(decryptedCustomer.birth_date)
-          : null,
-        loyaltyPoints: decryptedCustomer.loyalty_points ?? 0,
-        membershipLevel: (decryptedCustomer.membership_level ??
-          'regular') as Customer['data']['membershipLevel'],
-        createdAt: new Date(decryptedCustomer.created_at),
-        updatedAt: new Date(decryptedCustomer.updated_at),
-      },
-    }
+    // マッパーを使用して変換
+    return mapDecryptedDbCustomerToDomain(decryptedCustomer)
   }
 
   // ドメインモデルからDBモデルへの変換
   private async mapDomainToDb(customer: Customer): Promise<DbNewCustomer> {
-    const data = customer.data
-    const dbCustomer: DbNewCustomer = {
-      id: data.id,
-      name: data.name,
-      email: data.contactInfo.email,
-      phone_number: data.contactInfo.phoneNumber,
-      alternative_phone: data.contactInfo.alternativePhone ?? null,
-      preferences: data.preferences,
-      notes: data.notes,
-      tags: data.tags.length > 0 ? data.tags : null,
-      loyalty_points: data.loyaltyPoints,
-      membership_level: data.membershipLevel,
-      birth_date: data.birthDate
-        ? data.birthDate.toISOString().split('T')[0]
-        : null,
-      updated_at: data.updatedAt.toISOString(),
-    }
+    const dbCustomer = mapDomainCustomerToDbInsert(customer)
 
     // 暗号化が必要なフィールドを暗号化
     if (this.encryptionService) {

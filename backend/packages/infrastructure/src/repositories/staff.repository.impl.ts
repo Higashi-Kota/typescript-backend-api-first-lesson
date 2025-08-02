@@ -26,7 +26,7 @@ import { createStaffId, err, ok } from '@beauty-salon-backend/domain'
 import {
   staff,
   staff_working_hours as staffWorkingHours,
-} from '../database/schema'
+} from '@beauty-salon-backend/database'
 
 // DB型からドメイン型へのマッピング
 type DbStaff = typeof staff.$inferSelect

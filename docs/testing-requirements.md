@@ -351,9 +351,11 @@ export class TestEnvironment {
 ```typescript
 // backend/packages/api/src/__tests__/reservation.integration.test.ts
 import { TestEnvironment } from '../../setup/testcontainers';
-import { PrismaClient } from '@prisma/client';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
+import * as schema from '@beauty-salon-backend/database';
 import { createApp } from '../../../src/app';
-import { createUserId, createSalonId, createStaffId } from '@/types/branded';
+import { createCustomerId, createSalonId, createStaffId } from '@beauty-salon-backend/domain';
 
 describe('Reservation API Integration Tests', () => {
   let testEnv: TestEnvironment;
@@ -364,69 +366,59 @@ describe('Reservation API Integration Tests', () => {
     // Testcontainersで実際のDBを起動
     testEnv = await TestEnvironment.getInstance();
     
-    // Prismaクライアントの初期化
-    prisma = new PrismaClient({
-      datasources: {
-        db: {
-          url: testEnv.getPostgresConnectionString()
-        }
-      }
-    });
+    // Drizzle ORMクライアントの初期化
+    const queryClient = postgres(testEnv.getPostgresConnectionString());
+    db = drizzle(queryClient, { schema });
     
     // マイグレーションの実行
-    await prisma.$executeRaw`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-    await prisma.$migrate.deploy();
+    await db.execute(sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
+    // Drizzleマイグレーションを実行
+    await migrate(db, { migrationsFolder: './migrations' });
     
     // アプリケーションの初期化
     app = createApp({
-      database: prisma,
+      database: db,
       redis: testEnv.getRedisConnectionString()
     });
   });
   
   afterAll(async () => {
-    await prisma.$disconnect();
+    // 接続をクローズ
+    await queryClient.end();
     // Testcontainersは自動的にクリーンアップされる
   });
   
   beforeEach(async () => {
     // 各テスト前にデータをクリア
-    await prisma.$transaction([
-      prisma.reservation.deleteMany(),
-      prisma.customer.deleteMany(),
-      prisma.staff.deleteMany(),
-      prisma.salon.deleteMany(),
-    ]);
+    await db.delete(schema.reservations);
+    await db.delete(schema.customers);
+    await db.delete(schema.staffs);
+    await db.delete(schema.salons);
   });
   
   it('should create reservation with real database', async () => {
     // Arrange: 実際のDBにテストデータを作成
     const salonId = createSalonId(randomUUID());
-    const salon = await prisma.salon.create({
-      data: {
-        id: salonId,
-        name: 'Test Salon',
-        address: '123 Test St'
-      }
-    });
+    const [salon] = await db.insert(schema.salons).values({
+      id: salonId,
+      name: 'Test Salon',
+      address: '123 Test St'
+    }).returning();
     
     const staffId = createStaffId(randomUUID());
-    const staff = await prisma.staff.create({
-      data: {
-        id: staffId,
-        name: 'Test Staff',
-        salonId: salon.id
-      }
-    });
+    const [staff] = await db.insert(schema.staffs).values({
+      id: staffId,
+      name: 'Test Staff',
+      salonId: salon.id
+    }).returning();
     
     const customerId = createCustomerId(randomUUID());
-    const customer = await prisma.customer.create({
-      data: {
-        id: customerId,
-        name: 'Test Customer',
-        email: 'test@example.com'
-      }
-    });
+    const [customer] = await db.insert(schema.customers).values({
+      id: customerId,
+      name: 'Test Customer',
+      email: 'test@example.com',
+      phone_number: '090-1234-5678'
+    }).returning();
     
     // Act: APIエンドポイントにリクエスト
     const response = await request(app)
@@ -443,9 +435,11 @@ describe('Reservation API Integration Tests', () => {
     expect(response.body.type).toBe('success');
     
     // 実際のDBから確認
-    const savedReservation = await prisma.reservation.findUnique({
-      where: { id: response.body.data.id }
-    });
+    const [savedReservation] = await db
+      .select()
+      .from(schema.reservations)
+      .where(eq(schema.reservations.id, response.body.data.id))
+      .limit(1);
     
     expect(savedReservation).toBeDefined();
     expect(savedReservation?.customerId).toBe(customer.id);

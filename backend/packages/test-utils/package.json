@@ -28,18 +28,18 @@
   },
   "dependencies": {
     "@beauty-salon-backend/domain": "workspace:*",
+    "@beauty-salon-backend/migration": "workspace:*",
     "@testcontainers/postgresql": "^10.20.3",
     "testcontainers": "^10.20.3",
     "drizzle-orm": "^0.44.2",
     "postgres": "^3.4.7",
-    "ts-pattern": "^5.5.0",
+    "ts-pattern": "^5.7.1",
     "uuid": "^11.0.6",
     "dotenv": "^16.5.0"
   },
   "devDependencies": {
-    "@beauty-salon-backend/migration": "workspace:*",
     "@rslib/core": "^0.10.5",
-    "@types/node": "^22.12.1",
+    "@types/node": "^24.0.13",
     "@types/uuid": "^10.0.0",
     "vitest": "^3.2.4"
   }

@@ -10,14 +10,6 @@
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
-    "./database": {
-      "import": "./dist/database/index.js",
-      "types": "./dist/database/index.d.ts"
-    },
-    "./src/database/schema": {
-      "import": "./dist/database/schema.js",
-      "types": "./dist/database/schema.d.ts"
-    },
     "./src/test/db-test-helper": {
       "import": "./dist/test/db-test-helper.js",
       "types": "./dist/test/db-test-helper.d.ts"
@@ -51,6 +43,8 @@
     "@beauty-salon-backend/domain": "workspace:*",
     "@beauty-salon-backend/config": "workspace:*",
     "@beauty-salon-backend/types": "workspace:*",
+    "@beauty-salon-backend/mappers": "workspace:*",
+    "@beauty-salon-backend/database": "workspace:*",
     "drizzle-orm": "^0.44.2",
     "postgres": "^3.4.7",
     "dotenv": "^16.5.0",

@@ -36,6 +36,7 @@
     "@beauty-salon-backend/config": "workspace:*",
     "@beauty-salon-backend/domain": "workspace:*",
     "@beauty-salon-backend/infrastructure": "workspace:*",
+    "@beauty-salon-backend/mappers": "workspace:*",
     "@beauty-salon-backend/types": "workspace:*",
     "@beauty-salon-backend/usecase": "workspace:*",
     "@sentry/integrations": "^7.114.0",

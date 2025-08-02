@@ -14,13 +14,16 @@ export declare const brand: unique symbol
 
 export type Brand<T, TBrand extends string> = T & { [brand]: TBrand }
 
-// ID型の定義
+// ID型の定義 - プロジェクトで使用している実際のID型
+export type CustomerId = Brand<string, 'CustomerId'>
 export type UserId = Brand<string, 'UserId'>
 export type SalonId = Brand<string, 'SalonId'>
 export type StaffId = Brand<string, 'StaffId'>
 export type ServiceId = Brand<string, 'ServiceId'>
+export type BookingId = Brand<string, 'BookingId'>
 export type ReservationId = Brand<string, 'ReservationId'>
-export type CustomerId = Brand<string, 'CustomerId'>
+export type ReviewId = Brand<string, 'ReviewId'>
+export type AttachmentId = Brand<string, 'AttachmentId'>
 ```
 
 ## Zodスキーマとの統合
@@ -29,6 +32,11 @@ export type CustomerId = Brand<string, 'CustomerId'>
 import { z } from 'zod'
 
 // バリデーション付きスキーマ
+export const CustomerIdSchema = z
+  .string()
+  .uuid()
+  .transform((val) => val as CustomerId)
+
 export const UserIdSchema = z
   .string()
   .uuid()
@@ -40,8 +48,29 @@ export const SalonIdSchema = z
   .transform((val) => val as SalonId)
 
 // ファクトリー関数
-export const createUserId = (id: string): UserId => UserIdSchema.parse(id)
-export const createSalonId = (id: string): SalonId => SalonIdSchema.parse(id)
+export const createCustomerId = (id: string): CustomerId | null => {
+  try {
+    return CustomerIdSchema.parse(id)
+  } catch {
+    return null
+  }
+}
+
+export const createUserId = (id: string): UserId | null => {
+  try {
+    return UserIdSchema.parse(id)
+  } catch {
+    return null
+  }
+}
+
+export const createSalonId = (id: string): SalonId | null => {
+  try {
+    return SalonIdSchema.parse(id)
+  } catch {
+    return null
+  }
+}
 ```
 
 ## 使用例
@@ -128,7 +157,7 @@ function confirmReservation(
 ### 3. リポジトリパターンでの使用
 
 ```typescript
-// backend/packages/domain/src/reservation/repository.ts
+// backend/packages/domain/src/repositories/reservation.repository.ts
 export interface ReservationRepository {
   findById(id: ReservationId): Promise<Reservation | null>
   findByCustomer(customerId: CustomerId): Promise<Reservation[]>
@@ -139,24 +168,32 @@ export interface ReservationRepository {
   delete(id: ReservationId): Promise<void>
 }
 
-// 実装
-export class PrismaReservationRepository implements ReservationRepository {
+// backend/packages/infrastructure/src/repositories/reservation.repository.impl.ts
+import { reservations } from '@beauty-salon-backend/database'
+import { mapDbToDomain } from '@beauty-salon-backend/mappers'
+
+export class DrizzleReservationRepository implements ReservationRepository {
+  constructor(private db: Database) {}
+  
   async findById(id: ReservationId): Promise<Reservation | null> {
-    const data = await this.prisma.reservation.findUnique({
-      where: { id } // Brand型はstring型と互換性があるため、そのまま使用可能
-    })
+    const data = await this.db
+      .select()
+      .from(reservations)
+      .where(eq(reservations.id, id)) // Brand型はstring型と互換性がある
+      .limit(1)
     
-    if (!data) return null
+    if (data.length === 0) return null
     
-    return this.toDomainModel(data)
+    return mapDbToDomain(data[0])
   }
   
   async findByCustomer(customerId: CustomerId): Promise<Reservation[]> {
-    const data = await this.prisma.reservation.findMany({
-      where: { customerId } // 型安全なクエリ
-    })
+    const data = await this.db
+      .select()
+      .from(reservations)
+      .where(eq(reservations.customerId, customerId))
     
-    return data.map(this.toDomainModel)
+    return data.map(mapDbToDomain).filter((r): r is Reservation => r !== null)
   }
 }
 ```
@@ -252,8 +289,8 @@ describe('Reservation Service', () => {
 ### 1. ID生成ヘルパー
 
 ```typescript
-// shared/utils/id.ts
-import { randomUUID } from 'crypto'
+// backend/packages/domain/src/utils/id.ts
+import { randomUUID } from 'node:crypto'
 import { 
   createUserId, 
   createSalonId, 

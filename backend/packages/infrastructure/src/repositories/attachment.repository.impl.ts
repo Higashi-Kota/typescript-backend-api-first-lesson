@@ -2,9 +2,13 @@
  * Attachment Repository Implementation
  */
 
+import {
+  attachments,
+  download_logs,
+  share_links,
+} from '@beauty-salon-backend/database'
 import { and, desc, eq, gte, ilike, lte, sql } from 'drizzle-orm'
 import type { Database } from '../database/index.js'
-import { attachments, download_logs, share_links } from '../database/schema.js'
 
 // Database row types
 type AttachmentRow = typeof attachments.$inferSelect

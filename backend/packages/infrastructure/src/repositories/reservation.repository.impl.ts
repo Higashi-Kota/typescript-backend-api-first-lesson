@@ -27,7 +27,12 @@ import type {
 } from '@beauty-salon-backend/domain'
 import { createReservationId, err, ok } from '@beauty-salon-backend/domain'
 
-import { customers, reservations, services, staff } from '../database/schema'
+import {
+  customers,
+  reservations,
+  services,
+  staff,
+} from '@beauty-salon-backend/database'
 
 // DB型からドメイン型へのマッピング
 type DbReservation = typeof reservations.$inferSelect

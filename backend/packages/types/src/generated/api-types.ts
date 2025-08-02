@@ -1336,7 +1336,7 @@ export interface components {
         } & components["schemas"]["Models.Booking"];
         "Models.BookingId": string;
         /** @enum {string} */
-        "Models.BookingStatus": "draft" | "pending" | "confirmed" | "in_progress" | "completed" | "cancelled";
+        "Models.BookingStatus": "draft" | "pending" | "confirmed" | "in_progress" | "completed" | "cancelled" | "no_show";
         "Models.CategoryId": string;
         "Models.ContactInfo": {
             email: string;

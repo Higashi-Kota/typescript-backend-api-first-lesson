@@ -16,13 +16,7 @@ import {
   createCustomerIdSafe,
   err,
 } from '@beauty-salon-backend/domain'
-import type { components } from '@beauty-salon-backend/types/api'
-import { match } from 'ts-pattern'
 import { v4 as uuidv4 } from 'uuid'
-
-// TypeSpecで定義された型
-type CreateCustomerRequest =
-  components['schemas']['Models.CreateCustomerRequest']
 
 // UseCase エラー型
 export type CreateCustomerUseCaseError =
@@ -113,90 +107,5 @@ export const createCustomerUseCase = async (
   return saveResult
 }
 
-/**
- * OpenAPI Request型からUseCase入力型への変換
- */
-export const mapCreateCustomerRequest = (
-  request: CreateCustomerRequest
-): CreateCustomerUseCaseInput => {
-  return {
-    name: request.name,
-    email: request.contactInfo.email,
-    phoneNumber: request.contactInfo.phoneNumber,
-    preferences: request.preferences,
-    notes: request.notes,
-    tags: request.tags,
-    birthDate: request.birthDate,
-  }
-}
-
-/**
- * Customer型からOpenAPI Response型への変換
- */
-export const mapCustomerToResponse = (
-  customer: Customer
-): components['schemas']['Models.Customer'] => {
-  const data = customer.data
-  return {
-    id: data.id,
-    name: data.name,
-    contactInfo: {
-      email: data.contactInfo.email,
-      phoneNumber: data.contactInfo.phoneNumber,
-    },
-    preferences: data.preferences,
-    notes: data.notes,
-    tags: data.tags,
-    loyaltyPoints: data.loyaltyPoints,
-    membershipLevel: data.membershipLevel,
-    birthDate: data.birthDate?.toISOString().split('T')[0],
-    createdAt: data.createdAt.toISOString(),
-    createdBy: null,
-    updatedAt: data.updatedAt.toISOString(),
-    updatedBy: null,
-  }
-}
-
-/**
- * エラーレスポンスの生成
- */
-export const createCustomerErrorResponse = (
-  error: CreateCustomerUseCaseError
-): components['schemas']['Models.Error'] => {
-  return match(error)
-    .with({ type: 'invalidEmail' }, (e) => ({
-      code: 'INVALID_EMAIL',
-      message: `Invalid email format: ${e.email}`,
-      target: 'email',
-    }))
-    .with({ type: 'invalidPhoneNumber' }, (e) => ({
-      code: 'INVALID_PHONE_NUMBER',
-      message: `Invalid phone number format: ${e.phoneNumber}`,
-      target: 'phoneNumber',
-    }))
-    .with({ type: 'invalidName' }, (e) => ({
-      code: 'INVALID_NAME',
-      message: `Invalid name: ${e.name}`,
-      target: 'name',
-    }))
-    .with({ type: 'duplicateEmail' }, (e) => ({
-      code: 'DUPLICATE_EMAIL',
-      message: `Email already exists: ${e.email}`,
-      target: 'email',
-    }))
-    .with({ type: 'notFound' }, (e) => ({
-      code: 'NOT_FOUND',
-      message: `${e.entity} not found: ${e.id}`,
-      target: null,
-    }))
-    .with({ type: 'databaseError' }, (e) => ({
-      code: 'DATABASE_ERROR',
-      message: e.message,
-      target: null,
-    }))
-    .otherwise(() => ({
-      code: 'UNKNOWN_ERROR',
-      message: 'An unexpected error occurred',
-      target: null,
-    }))
-}
+// マッピング関数はmappersパッケージに移動済み
+// 詳細は @beauty-salon-backend/mappers を参照

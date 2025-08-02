@@ -12,17 +12,20 @@ import {
   createCustomerIdSafe,
 } from '@beauty-salon-backend/domain'
 import {
-  createCustomerErrorResponse,
+  mapCreateCustomerRequest,
+  mapCreateCustomerUseCaseErrorToResponse,
+  mapCustomerListToResponse,
+  mapCustomerProfileToResponse,
+  mapCustomerToResponse,
+  mapUpdateCustomerRequest,
+  mapUpdateCustomerUseCaseErrorToResponse,
+} from '@beauty-salon-backend/mappers'
+import {
   createCustomerUseCase,
   deleteCustomerUseCase,
   getCustomerByIdUseCase,
   getCustomerProfileUseCase,
   listCustomersUseCase,
-  mapCreateCustomerRequest,
-  mapCustomerListToResponse,
-  mapCustomerProfileToResponse,
-  mapCustomerToResponse,
-  mapUpdateCustomerRequest,
   updateCustomerUseCase,
 } from '@beauty-salon-backend/usecase'
 
@@ -123,7 +126,9 @@ export const createCustomerRoutes = (deps: CustomerRouteDeps): Router => {
             .with('databaseError', () => 500)
             .otherwise(() => 400)
 
-          res.status(statusCode).json(createCustomerErrorResponse(error))
+          res
+            .status(statusCode)
+            .json(mapCreateCustomerUseCaseErrorToResponse(error))
         })
         .exhaustive()
     } catch (error) {
@@ -277,7 +282,27 @@ export const createCustomerRoutes = (deps: CustomerRouteDeps): Router => {
           })
         })
         .with({ type: 'err' }, ({ error }) => {
-          res.status(400).json(createCustomerErrorResponse(error))
+          const statusCode = match(error.type)
+            .with('notFound', 'customerNotFound', () => 404)
+            .with('customerSuspended', () => 409)
+            .with('duplicateEmail', () => 409)
+            .with(
+              'invalidEmail',
+              'invalidPhoneNumber',
+              'invalidName',
+              () => 400
+            )
+            .with(
+              'databaseError',
+              'connectionError',
+              'constraintViolation',
+              () => 500
+            )
+            .otherwise(() => 400)
+
+          res
+            .status(statusCode)
+            .json(mapUpdateCustomerUseCaseErrorToResponse(error))
         })
         .exhaustive()
     } catch (error) {

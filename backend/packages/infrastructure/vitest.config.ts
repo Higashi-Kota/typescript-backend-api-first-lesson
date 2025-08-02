@@ -36,6 +36,26 @@ export default defineConfig({
       '@beauty-salon-backend/domain': path.resolve(__dirname, '../domain/src'),
       '@beauty-salon-backend/types': path.resolve(__dirname, '../types/src'),
       '@beauty-salon-backend/config': path.resolve(__dirname, '../config/src'),
+      '@beauty-salon-backend/mappers/db-to-domain': path.resolve(
+        __dirname,
+        '../mappers/src/db-to-domain'
+      ),
+      '@beauty-salon-backend/mappers/domain-to-db': path.resolve(
+        __dirname,
+        '../mappers/src/domain-to-db'
+      ),
+      '@beauty-salon-backend/mappers/api-to-domain': path.resolve(
+        __dirname,
+        '../mappers/src/api-to-domain'
+      ),
+      '@beauty-salon-backend/mappers/domain-to-api': path.resolve(
+        __dirname,
+        '../mappers/src/domain-to-api'
+      ),
+      '@beauty-salon-backend/mappers': path.resolve(
+        __dirname,
+        '../mappers/src'
+      ),
     },
   },
 })
