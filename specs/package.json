@@ -7,7 +7,7 @@
     "compile": "tsp compile .",
     "watch": "tsp compile . --watch",
     "format": "tsp format **/*.tsp",
-    "generate:backend": "tsp compile . && tsx ../scripts/generate-backend-types.ts"
+    "generate:backend": "tsp compile . && pnpm --filter '@beauty-salon-backend/types' run generate"
   },
   "devDependencies": {
     "@typespec/compiler": "^1.1.0",

@@ -5,8 +5,8 @@
 
 import type {
   Customer,
-  PaginatedResult,
   CustomerError,
+  PaginatedResult,
   RepositoryError,
 } from '@beauty-salon-backend/domain'
 import type { components } from '@beauty-salon-backend/types/api'

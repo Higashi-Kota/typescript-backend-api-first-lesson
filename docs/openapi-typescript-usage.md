@@ -25,15 +25,33 @@ pnpm run generate:backend
 pnpm run generate
 ```
 
+## 型生成スクリプトの場所
+
+型生成スクリプトは `@beauty-salon-backend/types` パッケージ内に配置されています：
+
+- **場所**: `backend/packages/types/scripts/generate-types.ts`
+- **実行方法**: 
+  - ルートから: `pnpm generate:backend`
+  - typesパッケージから: `pnpm generate` または `pnpm generate:types`
+- **依存**: OpenAPI仕様ファイル（`specs/tsp-output/@typespec/openapi3/generated/openapi.yaml`）
+
 ## 生成される型ファイル
 
 ```
-backend/packages/types/src/generated/
-├── api-types.ts      # OpenAPI型定義（paths, operations, components）
-├── brand-helpers.ts  # Brand型のヘルパー関数
-├── schemas.ts        # Zodスキーマ（後方互換性）
-└── index.ts          # エクスポート
+backend/packages/types/
+├── scripts/
+│   └── generate-types.ts     # 型生成スクリプト（openapi-typescriptを使用）
+└── src/
+    └── generated/
+        ├── api-types.ts      # OpenAPI型定義（paths, operations, components）
+        ├── schemas.ts        # Zodスキーマ（後方互換性）
+        └── index.ts          # エクスポート
 ```
+
+### 注意事項
+
+- `brand-helpers.ts`は生成されなくなりました（ドメインパッケージに独自のBrand実装があるため）
+- 型生成前にTypeSpec仕様のコンパイル（`pnpm generate:spec`）が必要です
 
 ## 使用例
 

@@ -3,8 +3,8 @@
  * APIリクエストからドメインモデルへの変換
  */
 
-import type { components } from '@beauty-salon-backend/types/api'
 import type { CustomerId } from '@beauty-salon-backend/domain'
+import type { components } from '@beauty-salon-backend/types/api'
 
 // API Request Types
 type CreateCustomerRequest =

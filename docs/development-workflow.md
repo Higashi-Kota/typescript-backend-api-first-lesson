@@ -21,7 +21,10 @@ API定義の変更は、バックエンドとフロントエンドの両方に�
 vim specs/models/customer.tsp  # または該当するファイル
 
 # 2. 型定義を生成
-pnpm generate
+pnpm generate  # または個別に実行：
+# - pnpm generate:spec     # TypeSpecからOpenAPIを生成
+# - pnpm generate:backend  # OpenAPIからTypeScript型を生成
+# - pnpm generate:api      # フロントエンドAPIクライアントを生成
 
 # 3. バックエンドの実装を更新
 # - backend/packages/types/src/generated/ に新しい型が生成される
@@ -32,7 +35,7 @@ pnpm generate
 #   - APIルート
 
 # 4. バックエンドをビルド・起動
-make backend-build
+make backend-build  # 型生成を含む完全なビルド
 make backend-start
 
 # 5. フロントエンドの実装を更新
@@ -44,10 +47,21 @@ make frontend-build  # 必須：初回または依存関係の変更時
 make frontend-dev    # 開発サーバーを起動
 ```
 
+### 型生成スクリプトの場所
+
+型生成スクリプトは `@beauty-salon-backend/types` パッケージ内に配置されています：
+
+- **スクリプトの場所**: `backend/packages/types/scripts/generate-types.ts`
+- **実行方法**:
+  - ルートから: `pnpm generate:backend`
+  - specsパッケージから: `cd specs && pnpm generate:backend`
+  - typesパッケージから: `cd backend/packages/types && pnpm generate`
+
 ### 注意点
 
 - TypeSpecの変更は破壊的変更になる可能性があるため、既存のAPIクライアントへの影響を確認
 - 型定義の生成後、TypeScriptのコンパイルエラーが出る箇所をすべて修正
+- 型生成スクリプトはOpenAPI仕様ファイルに依存するため、必ず`pnpm generate:spec`を先に実行
 
 ## 新しい依存関係を追加する場合
 
@@ -97,6 +111,97 @@ make frontend-dev    # 開発サーバーを起動
 - 型定義（@types/*）も忘れずに追加
 - グローバルな依存関係はルートのpackage.jsonに追加
 - `make frontend-build`はpnpmのワークスペース機能により依存関係を自動解決
+
+## 型生成システムの詳細
+
+### 型生成のアーキテクチャ
+
+```mermaid
+graph TD
+    A[TypeSpec定義] -->|tsp compile| B[OpenAPI仕様]
+    B -->|openapi-typescript| C[バックエンド型]
+    B -->|openapi-typescript-codegen| D[フロントエンドAPIクライアント]
+    
+    C --> E[backend/packages/types/src/generated/]
+    D --> F[frontend/packages/api-client/src/generated/]
+```
+
+### 型生成スクリプトの詳細
+
+#### 場所と役割
+
+| スクリプト | 場所 | 役割 |
+|------------|------|------|
+| TypeSpecコンパイラ | `specs/package.json` | TypeSpecからOpenAPIを生成 |
+| バックエンド型生成 | `backend/packages/types/scripts/generate-types.ts` | OpenAPIからTypeScript型を生成 |
+| フロントエンドクライアント生成 | `frontend/packages/api-client/scripts/` | OpenAPIからAPIクライアントを生成 |
+
+#### 実行コマンド
+
+```bash
+# 全体の型生成（推奨）
+pnpm generate
+
+# 個別実行
+pnpm generate:spec      # 1. TypeSpec → OpenAPI
+pnpm generate:backend   # 2. OpenAPI → バックエンド型
+pnpm generate:api       # 3. OpenAPI → フロントエンドクライアント
+
+# Makefile経由（ビルドプロセスに統合）
+make backend-build      # 型生成を含むバックエンドビルド
+make frontend-build     # 型生成を含むフロントエンドビルド
+```
+
+### 生成されるファイル
+
+#### バックエンド型ファイル
+
+```
+backend/packages/types/src/generated/
+├── api-types.ts      # OpenAPIから生成された型定義
+│                     # - paths: APIエンドポイントの型
+│                     # - components: コンポーネント型（モデル、リクエスト、レスポンス）
+│                     # - operations: 操作型
+├── schemas.ts        # Zodスキーマ（バリデーション用）
+└── index.ts          # エクスポート用インデックス
+```
+
+#### フロントエンドAPIクライアントファイル
+
+```
+frontend/packages/api-client/src/generated/
+├── core/             # APIクライアントコア
+├── models/           # データモデル
+├── services/         # APIサービスクラス
+└── index.ts          # エクスポート
+```
+
+### トラブルシューティング
+
+#### 型生成が失敗する場合
+
+```bash
+# OpenAPIファイルが存在しない場合
+pnpm generate:spec  # まずTypeSpecをコンパイル
+
+# 型生成スクリプトのパスを確認
+ls backend/packages/types/scripts/generate-types.ts
+
+# 手動で実行してエラーを確認
+cd backend/packages/types
+pnpm tsx scripts/generate-types.ts
+```
+
+#### TypeScriptの型エラーが解決しない場合
+
+```bash
+# TypeScriptサーバーを再起動（VSCode）
+# Cmd/Ctrl + Shift + P → "TypeScript: Restart TS Server"
+
+# ビルドキャッシュをクリア
+find . -name "*.tsbuildinfo" -delete
+pnpm typecheck
+```
 
 ## 新しいエンドポイントを追加する場合
 

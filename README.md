@@ -68,6 +68,8 @@
 │   │   │   └── middleware/  # ミドルウェア
 │   │   │
 │   │   └── types/           # 自動生成された型定義
+│   │       ├── scripts/
+│   │       │   └── generate-types.ts  # 型生成スクリプト
 │   │       └── src/generated/
 │   │
 │   └── apps/

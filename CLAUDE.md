@@ -19,13 +19,14 @@
 ### API開発
 9. [API開発ガイド](#api開発ガイド)
 10. [TypeSpec/OpenAPI利用ガイド](#typespecopenapi利用ガイド)
+11. [型生成システム](#型生成システム)
 
 ### 開発フロー
-11. [開発ワークフロー](#開発ワークフロー)
-12. [リリースワークフロー](#リリースワークフロー)
+12. [開発ワークフロー](#開発ワークフロー)
+13. [リリースワークフロー](#リリースワークフロー)
 
 ### 追加リソース
-13. [その他のドキュメント](#その他のドキュメント)
+14. [その他のドキュメント](#その他のドキュメント)
 
 ## 🔒 型安全性の原則
 
@@ -134,6 +135,38 @@ TypeScriptバックエンド開発における包括的なアーキテクチャ�
 
 **[→ 詳細を読む](./docs/backend-architecture-guidelines.md)**
 
+## 🔄 型生成システム
+
+TypeSpecからOpenAPIを経由してTypeScript型を自動生成するシステムです。
+
+### 型生成スクリプトの場所
+
+- **スクリプト**: `backend/packages/types/scripts/generate-types.ts`
+- **パッケージ**: `@beauty-salon-backend/types`
+- **使用ツール**: `openapi-typescript`
+
+### 実行方法
+
+```bash
+# 全体の型生成（推奨）
+pnpm generate
+
+# バックエンド型のみ生成
+pnpm generate:backend
+
+# Makefile経由（ビルドプロセスに統合）
+make backend-build
+```
+
+### 型生成のフロー
+
+1. **TypeSpec定義**: `specs/*.tsp`ファイルを編集
+2. **OpenAPI生成**: `pnpm generate:spec`でOpenAPI仕様を生成
+3. **TypeScript型生成**: `pnpm generate:backend`で型を生成
+4. **ビルド**: 生成された型を使用してビルド
+
+**[→ 型生成システムの詳細](./docs/type-generation-system.md)**
+
 ## 🚀 クイックスタート
 
 ### 必須の設定
@@ -235,7 +268,8 @@ TypeSpecからOpenAPI仕様を生成し、型安全なAPI開発を実現する�
 - APIファーストな開発フロー
 
 **[→ OpenAPI-TypeScript利用ガイド](./docs/openapi-typescript-usage.md)**  
-**[→ TypeSpec API型定義ルール](./docs/typespec-api-type-rules.md)**
+**[→ TypeSpec API型定義ルール](./docs/typespec-api-type-rules.md)**  
+**[→ 型生成システムガイド](./docs/type-generation-system.md)**
 
 ## 🔄 開発ワークフロー
 

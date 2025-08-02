@@ -7,7 +7,7 @@ import type { InferSelectModel } from '@beauty-salon-backend/database'
 import type { users } from '@beauty-salon-backend/database'
 import type { User } from '@beauty-salon-backend/domain'
 import { createUserId } from '@beauty-salon-backend/domain'
-import { match, P } from 'ts-pattern'
+import { P, match } from 'ts-pattern'
 
 // DB Schema Types - Drizzle ORMから自動推論
 export type DbUser = InferSelectModel<typeof users>

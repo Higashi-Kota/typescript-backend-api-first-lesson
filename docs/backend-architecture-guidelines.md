@@ -215,15 +215,62 @@ specs/
   └── tsp-output/
       └── openapi.yaml            # 生成されたOpenAPI
 
-↓ pnpm generate  # TypeSpec → OpenAPI → 型定義の生成
+↓ pnpm generate:backend  # TypeSpec → OpenAPI → 型定義の生成
 
 backend/packages/types/
+  ├── scripts/
+  │   └── generate-types.ts       # 型生成スクリプト
   ├── src/
   │   ├── generated/              # 自動生成された型
-  │   │   └── api-types.ts
-  │   ├── branded.ts              # Brand型定義
-  │   └── index.ts                # 型のRemap
+  │   │   ├── api-types.ts       # OpenAPI型定義
+  │   │   ├── schemas.ts         # Zodスキーマ
+  │   │   └── index.ts           # エクスポート
+  │   ├── api.ts                  # API型のRemap
+  │   └── index.ts                # 型のエクスポート
 ```
+
+### 型生成の実行方法
+
+```bash
+# 方法1: ルートから実行（推奨）
+pnpm generate:backend
+
+# 方法2: specsパッケージから実行
+cd specs
+pnpm generate:backend
+
+# 方法3: typesパッケージから直接実行
+cd backend/packages/types
+pnpm generate  # または pnpm generate:types
+
+# 方法4: Makefileを使用（ビルドプロセス全体）
+make backend-build  # 型生成を含む完全なビルド
+```
+
+### 型生成スクリプトの場所
+
+型生成スクリプトは `@beauty-salon-backend/types` パッケージ内に配置されています：
+
+- **場所**: `backend/packages/types/scripts/generate-types.ts`
+- **目的**: OpenAPI仕様からTypeScript型を生成
+- **使用ツール**: `openapi-typescript`
+
+### ビルド順序と依存関係
+
+```mermaid
+graph TD
+    A[TypeSpec定義の変更] --> B[pnpm generate:spec]
+    B --> C[OpenAPI仕様の生成]
+    C --> D[pnpm generate:backend]
+    D --> E[型定義の生成]
+    E --> F[backend/packages/types/src/generated/]
+    F --> G[ビルド]
+```
+
+1. **TypeSpec定義の変更**: `specs/*.tsp`ファイルを編集
+2. **OpenAPI仕様の生成**: `pnpm generate:spec`または`tsp compile`
+3. **型定義の生成**: `pnpm generate:backend`を実行
+4. **ビルド**: 型を使用するパッケージをビルド
 
 ### DB型制約マッピング機構
 

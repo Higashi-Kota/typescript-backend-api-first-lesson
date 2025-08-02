@@ -32,6 +32,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Generate API specifications and types
+        run: pnpm generate
+
       - name: Build all packages
         run: pnpm run --recursive --workspace-concurrency=1 build
 
@@ -81,6 +84,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Generate API specifications and types
+        run: pnpm generate
 
       - name: Build packages for tests
         run: pnpm run --recursive --workspace-concurrency=1 build
@@ -135,6 +141,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Generate API specifications and types
+        run: pnpm generate
+
       - name: Build for ${{ matrix.environment }}
         run: pnpm run --recursive --workspace-concurrency=1 build:${{ matrix.environment }}
 
@@ -175,6 +184,9 @@ jobs:
 
       - name: Verify API client generation
         run: pnpm generate:api
+
+      - name: Verify backend types generation
+        run: pnpm generate:backend
 
       - name: Upload API specification
         uses: actions/upload-artifact@v4

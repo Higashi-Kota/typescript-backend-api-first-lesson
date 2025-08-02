@@ -359,43 +359,47 @@ ci-check:
 	@echo "Running CI checks locally..."
 	@echo "======================================"
 	@echo ""
-	@echo "Step 1/10: Verifying lockfile integrity..."
+	@echo "Step 1/11: Verifying lockfile integrity..."
 	@pnpm install --frozen-lockfile || (echo "❌ Lockfile check failed. Run 'pnpm install' to update." && exit 1)
 	@echo "✅ Lockfile integrity verified"
 	@echo ""
-	@echo "Step 2/10: Code formatting check..."
+	@echo "Step 2/11: Code formatting check..."
 	@pnpm format:check || (echo "❌ Formatting check failed. Run 'make format:fix' to fix." && exit 1)
 	@echo "✅ Formatting check passed"
 	@echo ""
-	@echo "Step 3/10: Linting..."
+	@echo "Step 3/11: Linting..."
 	@pnpm lint || (echo "❌ Linting failed. Run 'make lint' to see errors." && exit 1)
 	@echo "✅ Linting passed"
 	@echo ""
-	@echo "Step 4/10: API specification generation..."
+	@echo "Step 4/11: API specification generation..."
 	@pnpm generate:spec || (echo "❌ TypeSpec compilation failed." && exit 1)
 	@echo "✅ API specification generated successfully"
 	@echo ""
-	@echo "Step 5/10: API client generation..."
+	@echo "Step 5/11: API client generation..."
 	@pnpm generate:api || (echo "❌ API client generation failed." && exit 1)
 	@echo "✅ API client generated successfully"
 	@echo ""
-	@echo "Step 6/10: Building all packages (CI mode)..."
+	@echo "Step 6/11: Backend types generation..."
+	@pnpm generate:backend || (echo "❌ Backend types generation failed." && exit 1)
+	@echo "✅ Backend types generated successfully"
+	@echo ""
+	@echo "Step 7/11: Building all packages (CI mode)..."
 	@pnpm run --recursive --workspace-concurrency=1 build || (echo "❌ Build failed." && exit 1)
 	@echo "✅ Build completed successfully"
 	@echo ""
-	@echo "Step 7/10: Type checking..."
+	@echo "Step 8/11: Type checking..."
 	@pnpm typecheck || (echo "❌ Type checking failed." && exit 1)
 	@echo "✅ Type checking passed"
 	@echo ""
-	@echo "Step 8/10: Security audit..."
+	@echo "Step 9/11: Security audit..."
 	@pnpm audit --audit-level=high || (echo "❌ Security vulnerabilities found." && exit 1)
 	@echo "✅ No high severity vulnerabilities found"
 	@echo ""
-	@echo "Step 9/10: Running backend tests..."
+	@echo "Step 10/11: Running backend tests..."
 	@$(MAKE) test-backend-ci || (echo "❌ Backend tests failed." && exit 1)
 	@echo "✅ Backend tests passed"
 	@echo ""
-	@echo "Step 10/10: Running frontend tests..."
+	@echo "Step 11/11: Running frontend tests..."
 	@$(MAKE) test-frontend || (echo "❌ Frontend tests failed." && exit 1)
 	@echo "✅ Frontend tests passed"
 	@echo ""

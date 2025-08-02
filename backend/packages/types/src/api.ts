@@ -1,8 +1,7 @@
-// Re-export specific types to avoid conflicts
-export * from './generated/models'
+// Re-export schemas only (models.ts was removed as unused)
 export * from './generated/schemas'
 
-// Re-export OpenAPI types excluding Brand utilities
+// Re-export OpenAPI types
 export type {
   components,
   paths,
@@ -11,15 +10,8 @@ export type {
   $defs,
 } from './generated/api-types'
 
-// Re-export helper types
+// Re-export helper types that are actually used
 export type {
-  ExtractRequest,
-  ExtractResponse,
-  ExtractQuery,
-  ExtractParams,
-  Nullable,
-  DeepPartial,
   Components,
   Schemas,
-  GetOperation,
 } from './generated/api-types'
