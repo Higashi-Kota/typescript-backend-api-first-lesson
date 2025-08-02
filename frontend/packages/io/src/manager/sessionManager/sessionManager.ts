@@ -43,7 +43,7 @@ export class SessionManager<T extends CacheItem, U = undefined> {
   getCache(): T | null {
     const cache = localStorage.get<T>(this.state.cacheKey)
 
-    return !isNullOrUndefined(cache) ? JSON.parse(String(cache)) : null
+    return isNullOrUndefined(cache) ? null : JSON.parse(String(cache))
   }
 
   setCache(cache: T): void {
@@ -57,7 +57,9 @@ export class SessionManager<T extends CacheItem, U = undefined> {
   isCacheExpired(buffer = 0): boolean {
     const cache = this.getCache()
 
-    if (!cache) return true
+    if (cache === null) {
+      return true
+    }
 
     return Date.now() > cache.expiresAt - buffer
   }
@@ -70,12 +72,10 @@ export class SessionManager<T extends CacheItem, U = undefined> {
     const cache = this.getCache()
 
     if (
-      !this.isCacheExpired(buffer) &&
-      !isNullOrUndefined(cache?.id) &&
-      !isEmpty(cache.id)
+      this.isCacheExpired(buffer) ||
+      isNullOrUndefined(cache?.id) ||
+      isEmpty(cache.id)
     ) {
-      this.setCacheId(cache.id)
-    } else {
       await fetchFn()
       const id = this.getCacheId()
       if (!isNullOrUndefined(id)) {
@@ -84,6 +84,8 @@ export class SessionManager<T extends CacheItem, U = undefined> {
           expiresAt: Date.now() + expiryTime,
         } as T)
       }
+    } else {
+      this.setCacheId(cache.id)
     }
   }
 }

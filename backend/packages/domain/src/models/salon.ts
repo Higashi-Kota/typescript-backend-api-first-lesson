@@ -176,7 +176,7 @@ export const validateOpeningHours = (
   // 時刻形式のチェック
   const timeRegex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/
   for (const hour of hours) {
-    if (!timeRegex.test(hour.openTime) || !timeRegex.test(hour.closeTime)) {
+    if (!(timeRegex.test(hour.openTime) && timeRegex.test(hour.closeTime))) {
       return err({
         type: 'invalidOpeningHours',
         message: 'Invalid time format (use HH:MM)',

@@ -45,14 +45,27 @@
     "rules": {
       "correctness": {
         "noUnusedImports": "error",
-        "noUnusedVariables": "warn",
-        "useArrayLiterals": "off"
+        "noUnusedVariables": "error",
+        "useArrayLiterals": "off",
+        "useExhaustiveDependencies": "error"
       },
       "recommended": true,
       "style": {
         "noVar": "error",
         "useAsConstAssertion": "error",
-        "useConst": "error"
+        "useConst": "error",
+        "noNegationElse": "warn",
+        "useBlockStatements": "warn"
+      },
+      "suspicious": {
+        "noExplicitAny": "error",
+        "noImplicitAnyLet": "error",
+        "noDoubleEquals": "warn",
+        "noConfusingVoidType": "error",
+        "useValidTypeof": "error"
+      },
+      "complexity": {
+        "useSimplifiedLogicExpression": "warn"
       }
     }
   },

@@ -6,7 +6,9 @@
 export const isSingleFile = (
   files: File | FileList | File[] | null | undefined
 ): boolean => {
-  if (!files) return false
+  if (files == null) {
+    return false
+  }
 
   if (files instanceof File) {
     return true

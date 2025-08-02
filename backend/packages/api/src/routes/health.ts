@@ -97,7 +97,9 @@ const determineOverallStatus = (
   let hasDegraded = false
 
   for (const [component, health] of Object.entries(checks)) {
-    if (health == null) continue
+    if (health == null) {
+      continue
+    }
 
     match(health)
       .with({ status: 'unhealthy' }, ({ message }) => {

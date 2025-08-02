@@ -130,16 +130,27 @@ export const mapUpdateCustomerRequest = (
   const updates: UpdateCustomerUseCaseInput['updates'] = {}
 
   // undefined のフィールドは更新しない
-  if (request.name !== undefined) updates.name = request.name
-  if (request.contactInfo?.email !== undefined)
+  if (request.name !== undefined) {
+    updates.name = request.name
+  }
+  if (request.contactInfo?.email !== undefined) {
     updates.email = request.contactInfo.email
-  if (request.contactInfo?.phoneNumber !== undefined)
+  }
+  if (request.contactInfo?.phoneNumber !== undefined) {
     updates.phoneNumber = request.contactInfo.phoneNumber
-  if (request.preferences !== undefined)
+  }
+  if (request.preferences !== undefined) {
     updates.preferences = request.preferences
-  if (request.notes !== undefined) updates.notes = request.notes
-  if (request.tags !== undefined) updates.tags = request.tags
-  if (request.birthDate !== undefined) updates.birthDate = request.birthDate
+  }
+  if (request.notes !== undefined) {
+    updates.notes = request.notes
+  }
+  if (request.tags !== undefined) {
+    updates.tags = request.tags
+  }
+  if (request.birthDate !== undefined) {
+    updates.birthDate = request.birthDate
+  }
 
   return { id, updates }
 }
@@ -154,16 +165,27 @@ export const mapUpdateCustomerRequestWithReset = (
   const updates: UpdateCustomerUseCaseInput['updates'] = {}
 
   // undefined = 更新しない、null = リセット、値あり = 更新
-  if (request.name !== undefined) updates.name = request.name
-  if (request.contactInfo?.email !== undefined)
+  if (request.name !== undefined) {
+    updates.name = request.name
+  }
+  if (request.contactInfo?.email !== undefined) {
     updates.email = request.contactInfo.email
-  if (request.contactInfo?.phoneNumber !== undefined)
+  }
+  if (request.contactInfo?.phoneNumber !== undefined) {
     updates.phoneNumber = request.contactInfo.phoneNumber
-  if (request.preferences !== undefined)
+  }
+  if (request.preferences !== undefined) {
     updates.preferences = request.preferences
-  if (request.notes !== undefined) updates.notes = request.notes
-  if (request.tags !== undefined) updates.tags = request.tags
-  if (request.birthDate !== undefined) updates.birthDate = request.birthDate
+  }
+  if (request.notes !== undefined) {
+    updates.notes = request.notes
+  }
+  if (request.tags !== undefined) {
+    updates.tags = request.tags
+  }
+  if (request.birthDate !== undefined) {
+    updates.birthDate = request.birthDate
+  }
 
   return { id, updates }
 }

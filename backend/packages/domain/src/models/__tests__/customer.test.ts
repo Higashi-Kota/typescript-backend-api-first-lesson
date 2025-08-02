@@ -31,7 +31,7 @@ import {
 // Test helper function to create CustomerId with assertion
 const createTestCustomerId = (uuid: string): CustomerId => {
   const id = createCustomerId(uuid)
-  if (!id) {
+  if (id === null) {
     throw new Error(`Failed to create CustomerId from UUID: ${uuid}`)
   }
   return id

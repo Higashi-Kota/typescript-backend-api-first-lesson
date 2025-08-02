@@ -36,7 +36,7 @@ export class DrizzleUserRepository implements UserRepository {
       }
 
       const firstResult = results[0]
-      if (!firstResult) {
+      if (firstResult === undefined) {
         return ok(null)
       }
 
@@ -66,7 +66,7 @@ export class DrizzleUserRepository implements UserRepository {
       }
 
       const firstResult = results[0]
-      if (!firstResult) {
+      if (firstResult === undefined) {
         return ok(null)
       }
 
@@ -96,7 +96,7 @@ export class DrizzleUserRepository implements UserRepository {
       }
 
       const firstResult = results[0]
-      if (!firstResult) {
+      if (firstResult === undefined) {
         return ok(null)
       }
 
@@ -126,7 +126,7 @@ export class DrizzleUserRepository implements UserRepository {
       }
 
       const firstResult = results[0]
-      if (!firstResult) {
+      if (firstResult === undefined) {
         return ok(null)
       }
 
@@ -164,7 +164,7 @@ export class DrizzleUserRepository implements UserRepository {
         .returning()
 
       const inserted = insertedRows[0]
-      if (!inserted) {
+      if (inserted === undefined) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to insert user',
@@ -193,7 +193,7 @@ export class DrizzleUserRepository implements UserRepository {
         .returning()
 
       const updated = updatedRows[0]
-      if (!updated) {
+      if (updated === undefined) {
         return err({
           type: 'notFound' as const,
           userId: user.data.id,
@@ -448,8 +448,8 @@ export class DrizzleUserRepository implements UserRepository {
       staff_id: user.data.staffId ?? null,
       created_at: user.data.createdAt.toISOString(),
       updated_at: user.data.updatedAt.toISOString(),
-      last_login_at: user.data.lastLoginAt?.toISOString() || null,
-      last_login_ip: user.data.lastLoginIp || null,
+      last_login_at: user.data.lastLoginAt?.toISOString() ?? null,
+      last_login_ip: user.data.lastLoginIp ?? null,
     }
 
     return dbUser

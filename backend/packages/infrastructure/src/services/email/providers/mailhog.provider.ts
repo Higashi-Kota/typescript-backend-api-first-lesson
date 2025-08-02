@@ -69,7 +69,7 @@ export class MailhogEmailProvider implements EmailService {
       const info = await this.transporter.sendMail(mailOptions)
 
       const result: EmailSendResult = {
-        messageId: info.messageId || `mailhog-${randomUUID()}`,
+        messageId: info.messageId ?? `mailhog-${randomUUID()}`,
         provider: this.provider,
         timestamp: new Date(),
       }

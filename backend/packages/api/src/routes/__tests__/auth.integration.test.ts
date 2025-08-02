@@ -112,8 +112,12 @@ const test = base.extend<Fixtures>({
     const userRepositoryAdapter = {
       findByEmail: async (email: string) => {
         const result = await userRepository.findByEmail(email)
-        if (result.type === 'err') return null
-        if (!result.value) return null
+        if (result.type === 'err') {
+          return null
+        }
+        if (!result.value) {
+          return null
+        }
 
         // Map domain User to the auth route's User type
         return {
@@ -166,8 +170,12 @@ const test = base.extend<Fixtures>({
       },
       findById: async (id: UserId) => {
         const result = await userRepository.findById(id)
-        if (result.type === 'err') return null
-        if (!result.value) return null
+        if (result.type === 'err') {
+          return null
+        }
+        if (!result.value) {
+          return null
+        }
 
         // Map domain User to the auth route's User type
         return {

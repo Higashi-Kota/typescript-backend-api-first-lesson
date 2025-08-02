@@ -98,7 +98,7 @@ export const validatePassword = (password: string): Result<void, UserError> => {
   const hasNumbers = /\d/.test(password)
   const hasSpecialChar = /[^A-Za-z0-9]/.test(password)
 
-  if (!hasUpperCase || !hasLowerCase || !hasNumbers || !hasSpecialChar) {
+  if (!(hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChar)) {
     return err({
       type: 'weakPassword',
       reason:

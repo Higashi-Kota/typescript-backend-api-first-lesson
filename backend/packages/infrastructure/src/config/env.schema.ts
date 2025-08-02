@@ -106,7 +106,7 @@ export const validateEnv = (
 
   // Validate email provider configuration
   if (config.EMAIL_PROVIDER === 'mailgun') {
-    if (!config.MAILGUN_API_KEY || !config.MAILGUN_DOMAIN) {
+    if (!(config.MAILGUN_API_KEY && config.MAILGUN_DOMAIN)) {
       throw new Error(
         'MAILGUN_API_KEY and MAILGUN_DOMAIN are required when EMAIL_PROVIDER is mailgun'
       )

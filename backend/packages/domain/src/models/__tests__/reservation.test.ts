@@ -34,7 +34,7 @@ import { type StaffId, createStaffId } from '../staff.js'
 // Test helper functions to create IDs with assertion
 const createTestReservationId = (uuid: string): ReservationId => {
   const id = createReservationId(uuid)
-  if (!id) {
+  if (id === null) {
     throw new Error(`Failed to create ReservationId from UUID: ${uuid}`)
   }
   return id
@@ -42,7 +42,7 @@ const createTestReservationId = (uuid: string): ReservationId => {
 
 const createTestCustomerId = (uuid: string): CustomerId => {
   const id = createCustomerId(uuid)
-  if (!id) {
+  if (id === null) {
     throw new Error(`Failed to create CustomerId from UUID: ${uuid}`)
   }
   return id
@@ -50,7 +50,7 @@ const createTestCustomerId = (uuid: string): CustomerId => {
 
 const createTestSalonId = (uuid: string): SalonId => {
   const id = createSalonId(uuid)
-  if (!id) {
+  if (id === null) {
     throw new Error(`Failed to create SalonId from UUID: ${uuid}`)
   }
   return id
@@ -58,7 +58,7 @@ const createTestSalonId = (uuid: string): SalonId => {
 
 const createTestStaffId = (uuid: string): StaffId => {
   const id = createStaffId(uuid)
-  if (!id) {
+  if (id === null) {
     throw new Error(`Failed to create StaffId from UUID: ${uuid}`)
   }
   return id
@@ -66,7 +66,7 @@ const createTestStaffId = (uuid: string): StaffId => {
 
 const createTestServiceId = (uuid: string): ServiceId => {
   const id = createServiceId(uuid)
-  if (!id) {
+  if (id === null) {
     throw new Error(`Failed to create ServiceId from UUID: ${uuid}`)
   }
   return id

@@ -143,7 +143,9 @@ export const STORAGE_LIMITS: Record<SubscriptionTier, StorageLimits> = {
 
 // Helper functions
 export const getFileType = (contentType: string): FileType => {
-  if (contentType.startsWith('image/')) return 'image'
+  if (contentType.startsWith('image/')) {
+    return 'image'
+  }
   if (
     contentType === 'application/pdf' ||
     contentType.includes('document') ||

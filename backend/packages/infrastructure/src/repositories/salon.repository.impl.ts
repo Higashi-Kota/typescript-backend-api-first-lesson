@@ -35,7 +35,9 @@ export class DrizzleSalonRepository implements SalonRepository {
   // DBモデルからドメインモデルへの変換
   private async mapDbToDomain(dbSalon: DbSalon): Promise<Salon | null> {
     const id = createSalonId(dbSalon.id)
-    if (id == null) return null
+    if (id == null) {
+      return null
+    }
 
     // 営業時間を取得
     const dbOpeningHours = await this.db
@@ -85,9 +87,9 @@ export class DrizzleSalonRepository implements SalonRepository {
             ? dbSalon.features
             : undefined,
         createdAt: new Date(dbSalon.created_at),
-        createdBy: dbSalon.created_by || undefined,
+        createdBy: dbSalon.created_by ?? undefined,
         updatedAt: new Date(dbSalon.updated_at),
-        updatedBy: dbSalon.updated_by || undefined,
+        updatedBy: dbSalon.updated_by ?? undefined,
       },
     }
   }
@@ -215,17 +217,26 @@ export class DrizzleSalonRepository implements SalonRepository {
           updated_by: data.updatedBy,
         }
 
-        if (data.name !== undefined) updateData.name = data.name
-        if (data.description !== undefined)
+        if (data.name !== undefined) {
+          updateData.name = data.name
+        }
+        if (data.description !== undefined) {
           updateData.description = data.description
-        if (data.address !== undefined) updateData.address = data.address
+        }
+        if (data.address !== undefined) {
+          updateData.address = data.address
+        }
         if (data.contactInfo !== undefined) {
           updateData.email = data.contactInfo.email
           updateData.phone_number = data.contactInfo.phoneNumber
           updateData.alternative_phone = data.contactInfo.alternativePhone
         }
-        if (data.imageUrls !== undefined) updateData.image_urls = data.imageUrls
-        if (data.features !== undefined) updateData.features = data.features
+        if (data.imageUrls !== undefined) {
+          updateData.image_urls = data.imageUrls
+        }
+        if (data.features !== undefined) {
+          updateData.features = data.features
+        }
 
         // Salonを更新
         const updatedSalons = await tx

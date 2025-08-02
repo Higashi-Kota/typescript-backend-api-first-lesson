@@ -39,7 +39,9 @@ export class DrizzleReservationRepository implements ReservationRepository {
   // DBモデルからドメインモデルへの変換
   private mapDbToDomain(dbReservation: DbReservation): Reservation | null {
     const id = createReservationId(dbReservation.id)
-    if (!id) return null
+    if (id === null) {
+      return null
+    }
 
     const reservationData = {
       id,
@@ -89,7 +91,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
         .limit(1)
 
       const firstRow = result[0]
-      if (!firstRow) {
+      if (firstRow === undefined) {
         return err({
           type: 'notFound' as const,
           entity: 'Reservation',
@@ -98,7 +100,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       }
 
       const reservation = this.mapDbToDomain(firstRow)
-      if (!reservation) {
+      if (reservation === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map reservation data',
@@ -134,7 +136,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
         .limit(1)
 
       const firstRow = result[0]
-      if (!firstRow) {
+      if (firstRow === undefined) {
         return err({
           type: 'notFound' as const,
           entity: 'Reservation',
@@ -143,7 +145,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       }
 
       const reservation = this.mapDbToDomain(firstRow.reservation)
-      if (!reservation) {
+      if (reservation === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map reservation data',
@@ -197,7 +199,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
         .returning()
 
       const insertedReservation = insertedReservations[0]
-      if (!insertedReservation) {
+      if (insertedReservation === undefined) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to insert reservation',
@@ -205,7 +207,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       }
 
       const reservation = this.mapDbToDomain(insertedReservation)
-      if (!reservation) {
+      if (reservation === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map created reservation',
@@ -234,7 +236,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
         .limit(1)
 
       const existingRow = existing[0]
-      if (!existingRow) {
+      if (existingRow === undefined) {
         return err({
           type: 'notFound' as const,
           entity: 'Reservation',
@@ -248,12 +250,18 @@ export class DrizzleReservationRepository implements ReservationRepository {
         updated_by: data.updatedBy,
       }
 
-      if (data.startTime !== undefined)
+      if (data.startTime !== undefined) {
         updateData.start_time = data.startTime.toISOString()
-      if (data.endTime !== undefined)
+      }
+      if (data.endTime !== undefined) {
         updateData.end_time = data.endTime.toISOString()
-      if (data.staffId !== undefined) updateData.staff_id = data.staffId
-      if (data.notes !== undefined) updateData.notes = data.notes
+      }
+      if (data.staffId !== undefined) {
+        updateData.staff_id = data.staffId
+      }
+      if (data.notes !== undefined) {
+        updateData.notes = data.notes
+      }
 
       const updatedReservations = await this.db
         .update(reservations)
@@ -262,7 +270,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
         .returning()
 
       const updatedReservation = updatedReservations[0]
-      if (!updatedReservation) {
+      if (updatedReservation === undefined) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to update reservation',
@@ -270,7 +278,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       }
 
       const reservation = this.mapDbToDomain(updatedReservation)
-      if (!reservation) {
+      if (reservation === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map updated reservation',
@@ -302,7 +310,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
         .returning()
 
       const updatedRow = result[0]
-      if (!updatedRow) {
+      if (updatedRow === undefined) {
         return err({
           type: 'notFound' as const,
           entity: 'Reservation',
@@ -311,7 +319,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       }
 
       const reservation = this.mapDbToDomain(updatedRow)
-      if (!reservation) {
+      if (reservation === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map confirmed reservation',
@@ -345,7 +353,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
         .returning()
 
       const updatedRow = result[0]
-      if (!updatedRow) {
+      if (updatedRow === undefined) {
         return err({
           type: 'notFound' as const,
           entity: 'Reservation',
@@ -354,7 +362,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       }
 
       const reservation = this.mapDbToDomain(updatedRow)
-      if (!reservation) {
+      if (reservation === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map cancelled reservation',
@@ -386,7 +394,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
         .returning()
 
       const updatedRow = result[0]
-      if (!updatedRow) {
+      if (updatedRow === undefined) {
         return err({
           type: 'notFound' as const,
           entity: 'Reservation',
@@ -395,7 +403,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       }
 
       const reservation = this.mapDbToDomain(updatedRow)
-      if (!reservation) {
+      if (reservation === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map completed reservation',
@@ -427,7 +435,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
         .returning()
 
       const updatedRow = result[0]
-      if (!updatedRow) {
+      if (updatedRow === undefined) {
         return err({
           type: 'notFound' as const,
           entity: 'Reservation',
@@ -436,7 +444,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       }
 
       const reservation = this.mapDbToDomain(updatedRow)
-      if (!reservation) {
+      if (reservation === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map no-show reservation',
@@ -470,7 +478,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
         .returning()
 
       const updatedRow = result[0]
-      if (!updatedRow) {
+      if (updatedRow === undefined) {
         return err({
           type: 'notFound' as const,
           entity: 'Reservation',
@@ -479,7 +487,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
       }
 
       const reservation = this.mapDbToDomain(updatedRow)
-      if (!reservation) {
+      if (reservation === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map reservation',

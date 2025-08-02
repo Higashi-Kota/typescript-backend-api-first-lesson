@@ -19,7 +19,7 @@ const queryClient = new QueryClient({
 })
 
 const rootElement = document.getElementById('root')
-if (!rootElement) {
+if (rootElement === null) {
   throw new Error('Failed to find the root element')
 }
 

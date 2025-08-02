@@ -39,7 +39,9 @@ export class DrizzleStaffRepository implements StaffRepository {
   // DBモデルからドメインモデルへの変換
   private mapDbToDomain(dbStaff: DbStaff): Staff | null {
     const id = createStaffId(dbStaff.id)
-    if (!id) return null
+    if (id === null) {
+      return null
+    }
 
     const staffData = {
       id,
@@ -90,7 +92,7 @@ export class DrizzleStaffRepository implements StaffRepository {
         .limit(1)
 
       const firstRow = result[0]
-      if (!firstRow) {
+      if (firstRow === undefined) {
         return err({
           type: 'notFound' as const,
           entity: 'Staff',
@@ -99,7 +101,7 @@ export class DrizzleStaffRepository implements StaffRepository {
       }
 
       const staffModel = this.mapDbToDomain(firstRow)
-      if (!staffModel) {
+      if (staffModel === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map staff data',
@@ -142,7 +144,7 @@ export class DrizzleStaffRepository implements StaffRepository {
         .returning()
 
       const insertedRow = insertedStaff[0]
-      if (!insertedRow) {
+      if (insertedRow === undefined) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to insert staff',
@@ -150,7 +152,7 @@ export class DrizzleStaffRepository implements StaffRepository {
       }
 
       const staffModel = this.mapDbToDomain(insertedRow)
-      if (!staffModel) {
+      if (staffModel === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map created staff',
@@ -179,7 +181,7 @@ export class DrizzleStaffRepository implements StaffRepository {
         .limit(1)
 
       const existingRow = existing[0]
-      if (!existingRow) {
+      if (existingRow === undefined) {
         return err({
           type: 'notFound' as const,
           entity: 'Staff',
@@ -193,20 +195,29 @@ export class DrizzleStaffRepository implements StaffRepository {
         updated_by: data.updatedBy,
       }
 
-      if (data.name !== undefined) updateData.name = data.name
+      if (data.name !== undefined) {
+        updateData.name = data.name
+      }
       if (data.contactInfo !== undefined) {
         updateData.email = data.contactInfo.email
         updateData.phone_number = data.contactInfo.phoneNumber
         updateData.alternative_phone = data.contactInfo.alternativePhone
       }
-      if (data.specialties !== undefined)
+      if (data.specialties !== undefined) {
         updateData.specialties = data.specialties
-      if (data.imageUrl !== undefined) updateData.image_url = data.imageUrl
-      if (data.bio !== undefined) updateData.bio = data.bio
-      if (data.yearsOfExperience !== undefined)
+      }
+      if (data.imageUrl !== undefined) {
+        updateData.image_url = data.imageUrl
+      }
+      if (data.bio !== undefined) {
+        updateData.bio = data.bio
+      }
+      if (data.yearsOfExperience !== undefined) {
         updateData.years_of_experience = data.yearsOfExperience
-      if (data.certifications !== undefined)
+      }
+      if (data.certifications !== undefined) {
         updateData.certifications = data.certifications
+      }
 
       const updatedStaff = await this.db
         .update(staff)
@@ -215,7 +226,7 @@ export class DrizzleStaffRepository implements StaffRepository {
         .returning()
 
       const updatedRow = updatedStaff[0]
-      if (!updatedRow) {
+      if (updatedRow === undefined) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to update staff',
@@ -223,7 +234,7 @@ export class DrizzleStaffRepository implements StaffRepository {
       }
 
       const staffModel = this.mapDbToDomain(updatedRow)
-      if (!staffModel) {
+      if (staffModel === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map updated staff',
@@ -266,7 +277,7 @@ export class DrizzleStaffRepository implements StaffRepository {
       }
 
       const staffModel = this.mapDbToDomain(updatedRow)
-      if (!staffModel) {
+      if (staffModel === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map deactivated staff',
@@ -308,7 +319,7 @@ export class DrizzleStaffRepository implements StaffRepository {
       }
 
       const staffModel = this.mapDbToDomain(updatedRow)
-      if (!staffModel) {
+      if (staffModel === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map reactivated staff',

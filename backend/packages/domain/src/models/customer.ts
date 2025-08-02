@@ -85,7 +85,7 @@ export const validateEmail = (email: string): Result<string, CustomerError> => {
     /^[a-zA-Z0-9][a-zA-Z0-9._%+-]*@[a-zA-Z0-9][a-zA-Z0-9.-]*\.[a-zA-Z]{2,}$/
 
   // 空文字列チェック
-  if (!email) {
+  if (email === '') {
     return err({ type: 'invalidEmail', email })
   }
 
@@ -134,13 +134,19 @@ export const createCustomer = (
 ): Result<Customer, CustomerError> => {
   // バリデーション
   const nameResult = validateName(input.name)
-  if (nameResult.type === 'err') return nameResult
+  if (nameResult.type === 'err') {
+    return nameResult
+  }
 
   const emailResult = validateEmail(input.contactInfo.email)
-  if (emailResult.type === 'err') return emailResult
+  if (emailResult.type === 'err') {
+    return emailResult
+  }
 
   const phoneResult = validatePhoneNumber(input.contactInfo.phoneNumber)
-  if (phoneResult.type === 'err') return phoneResult
+  if (phoneResult.type === 'err') {
+    return phoneResult
+  }
 
   const now = new Date()
 
@@ -178,18 +184,24 @@ export const updateCustomer = (
   // 名前の更新がある場合はバリデーション
   if (input.name !== undefined) {
     const nameResult = validateName(input.name)
-    if (nameResult.type === 'err') return nameResult
+    if (nameResult.type === 'err') {
+      return nameResult
+    }
   }
 
   // 連絡先の更新がある場合はバリデーション
   if (input.contactInfo) {
     if (input.contactInfo.email) {
       const emailResult = validateEmail(input.contactInfo.email)
-      if (emailResult.type === 'err') return emailResult
+      if (emailResult.type === 'err') {
+        return emailResult
+      }
     }
     if (input.contactInfo.phoneNumber) {
       const phoneResult = validatePhoneNumber(input.contactInfo.phoneNumber)
-      if (phoneResult.type === 'err') return phoneResult
+      if (phoneResult.type === 'err') {
+        return phoneResult
+      }
     }
   }
 

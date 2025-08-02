@@ -70,7 +70,9 @@ export class MinioStorageProvider implements StorageService {
     try {
       while (true) {
         const { done, value } = await reader.read()
-        if (done) break
+        if (done) {
+          break
+        }
         chunks.push(value)
       }
       return Buffer.concat(chunks)
@@ -95,7 +97,7 @@ export class MinioStorageProvider implements StorageService {
         Metadata: {
           originalFilename: input.metadata.filename,
           fileType: input.metadata.type,
-          ...(input.tags || {}),
+          ...(input.tags ?? {}),
         },
       }
 
@@ -193,7 +195,7 @@ export class MinioStorageProvider implements StorageService {
         type: 'providerError',
         provider: this.provider,
         message:
-          (error as { message?: string })?.message ||
+          (error as { message?: string })?.message ??
           'Unknown error occurred during download',
       })
     }
@@ -225,7 +227,7 @@ export class MinioStorageProvider implements StorageService {
         type: 'providerError',
         provider: this.provider,
         message:
-          (error as { message?: string })?.message ||
+          (error as { message?: string })?.message ??
           'Unknown error occurred during deletion',
       })
     }
@@ -256,7 +258,7 @@ export class MinioStorageProvider implements StorageService {
         type: 'providerError',
         provider: this.provider,
         message:
-          (error as { message?: string })?.message ||
+          (error as { message?: string })?.message ??
           'Unknown error occurred during existence check',
       })
     }

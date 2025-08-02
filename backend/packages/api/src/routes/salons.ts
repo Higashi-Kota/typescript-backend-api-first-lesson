@@ -107,10 +107,12 @@ export const createSalonRoutes = (deps: SalonRouteDeps): Router => {
       try {
         // リクエストボディの基本的な検証
         if (
-          !req.body.name ||
-          !req.body.address ||
-          !req.body.contactInfo ||
-          !req.body.openingHours
+          !(
+            req.body.name &&
+            req.body.address &&
+            req.body.contactInfo &&
+            req.body.openingHours
+          )
         ) {
           return res.status(400).json({
             code: 'INVALID_REQUEST',

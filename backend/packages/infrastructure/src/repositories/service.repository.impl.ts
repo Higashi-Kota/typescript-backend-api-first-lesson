@@ -46,7 +46,9 @@ export class DrizzleServiceRepository implements ServiceRepository {
   // DBモデルからドメインモデルへの変換
   private mapDbToDomain(dbService: DbService): Service | null {
     const id = createServiceId(dbService.id)
-    if (!id) return null
+    if (id === null) {
+      return null
+    }
 
     const categoryId =
       dbService.category_id && dbService.category_id !== null
@@ -91,7 +93,9 @@ export class DrizzleServiceRepository implements ServiceRepository {
     dbCategory: DbServiceCategory
   ): ServiceCategoryData | null {
     const id = createCategoryId(dbCategory.id)
-    if (!id) return null
+    if (id === null) {
+      return null
+    }
 
     const parentId =
       dbCategory.parent_id && dbCategory.parent_id !== null
@@ -121,7 +125,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
         .limit(1)
 
       const firstRow = result[0]
-      if (!firstRow) {
+      if (firstRow === undefined) {
         return err({
           type: 'notFound' as const,
           entity: 'Service',
@@ -130,7 +134,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
       }
 
       const service = this.mapDbToDomain(firstRow)
-      if (!service) {
+      if (service === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map service data',
@@ -171,7 +175,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
         .returning()
 
       const insertedService = insertedServices[0]
-      if (!insertedService) {
+      if (insertedService === undefined) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to insert service',
@@ -179,7 +183,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
       }
 
       const service = this.mapDbToDomain(insertedService)
-      if (!service) {
+      if (service === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map created service',
@@ -208,7 +212,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
         .limit(1)
 
       const existingRow = existing[0]
-      if (!existingRow) {
+      if (existingRow === undefined) {
         return err({
           type: 'notFound' as const,
           entity: 'Service',
@@ -222,16 +226,27 @@ export class DrizzleServiceRepository implements ServiceRepository {
         updated_by: data.updatedBy,
       }
 
-      if (data.name !== undefined) updateData.name = data.name
-      if (data.description !== undefined)
+      if (data.name !== undefined) {
+        updateData.name = data.name
+      }
+      if (data.description !== undefined) {
         updateData.description = data.description
-      if (data.duration !== undefined) updateData.duration = data.duration
-      if (data.price !== undefined) updateData.price = data.price
-      if (data.categoryId !== undefined)
+      }
+      if (data.duration !== undefined) {
+        updateData.duration = data.duration
+      }
+      if (data.price !== undefined) {
+        updateData.price = data.price
+      }
+      if (data.categoryId !== undefined) {
         updateData.category_id = data.categoryId
-      if (data.imageUrl !== undefined) updateData.image_url = data.imageUrl
-      if (data.requiredStaffLevel !== undefined)
+      }
+      if (data.imageUrl !== undefined) {
+        updateData.image_url = data.imageUrl
+      }
+      if (data.requiredStaffLevel !== undefined) {
         updateData.required_staff_level = data.requiredStaffLevel
+      }
 
       const updatedServices = await this.db
         .update(services)
@@ -240,7 +255,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
         .returning()
 
       const updatedService = updatedServices[0]
-      if (!updatedService) {
+      if (updatedService === undefined) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to update service',
@@ -248,7 +263,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
       }
 
       const service = this.mapDbToDomain(updatedService)
-      if (!service) {
+      if (service === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map updated service',
@@ -282,7 +297,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
         .returning()
 
       const updatedRow = result[0]
-      if (!updatedRow) {
+      if (updatedRow === undefined) {
         return err({
           type: 'notFound' as const,
           entity: 'Service',
@@ -291,7 +306,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
       }
 
       const service = this.mapDbToDomain(updatedRow)
-      if (!service) {
+      if (service === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map deactivated service',
@@ -324,7 +339,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
         .returning()
 
       const updatedRow = result[0]
-      if (!updatedRow) {
+      if (updatedRow === undefined) {
         return err({
           type: 'notFound' as const,
           entity: 'Service',
@@ -333,7 +348,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
       }
 
       const service = this.mapDbToDomain(updatedRow)
-      if (!service) {
+      if (service === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map reactivated service',
@@ -555,7 +570,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
         .limit(1)
 
       const firstRow = result[0]
-      if (!firstRow) {
+      if (firstRow === undefined) {
         return err({
           type: 'notFound' as const,
           entity: 'ServiceCategory',
@@ -564,7 +579,7 @@ export class DrizzleServiceRepository implements ServiceRepository {
       }
 
       const category = this.mapDbCategoryToDomain(firstRow)
-      if (!category) {
+      if (category === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map category data',

@@ -309,12 +309,16 @@ export const createSentryService = (): SentryService => {
   }
 
   const setUser = (user: SentryContext['user']): void => {
-    if (!isInitialized) return
+    if (!isInitialized) {
+      return
+    }
     Sentry.setUser(user ?? null)
   }
 
   const addBreadcrumb = (breadcrumb: Sentry.Breadcrumb): void => {
-    if (!isInitialized) return
+    if (!isInitialized) {
+      return
+    }
     Sentry.addBreadcrumb(breadcrumb)
   }
 
@@ -322,14 +326,18 @@ export const createSentryService = (): SentryService => {
     name: string,
     op: string
   ): Sentry.Span | undefined => {
-    if (!isInitialized) return undefined
+    if (!isInitialized) {
+      return undefined
+    }
     return Sentry.startSpan({ name, op }, () => {
       return undefined as never
     })
   }
 
   const flush = async (timeout?: number): Promise<boolean> => {
-    if (!isInitialized) return true
+    if (!isInitialized) {
+      return true
+    }
     return Sentry.flush(timeout)
   }
 

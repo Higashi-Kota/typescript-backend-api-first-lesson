@@ -270,7 +270,7 @@ export const createMetricsService = (): MetricsService => {
         .with({ type: 'increment' }, ({ metric, value = 1, labels }) => {
           const m =
             customMetrics.get(metric) ?? getSystemOrBusinessMetric(metric)
-          if (!m || !(m instanceof promClient.Counter)) {
+          if (!(m && m instanceof promClient.Counter)) {
             return err(new Error(`Counter metric ${metric} not found`))
           }
           if (labels) {
@@ -283,7 +283,7 @@ export const createMetricsService = (): MetricsService => {
         .with({ type: 'decrement' }, ({ metric, value = 1, labels }) => {
           const m =
             customMetrics.get(metric) ?? getSystemOrBusinessMetric(metric)
-          if (!m || !(m instanceof promClient.Gauge)) {
+          if (!(m && m instanceof promClient.Gauge)) {
             return err(new Error(`Gauge metric ${metric} not found`))
           }
           if (labels) {
@@ -296,7 +296,7 @@ export const createMetricsService = (): MetricsService => {
         .with({ type: 'set' }, ({ metric, value, labels }) => {
           const m =
             customMetrics.get(metric) ?? getSystemOrBusinessMetric(metric)
-          if (!m || !(m instanceof promClient.Gauge)) {
+          if (!(m && m instanceof promClient.Gauge)) {
             return err(new Error(`Gauge metric ${metric} not found`))
           }
           if (labels) {
@@ -310,10 +310,10 @@ export const createMetricsService = (): MetricsService => {
           const m =
             customMetrics.get(metric) ?? getSystemOrBusinessMetric(metric)
           if (
-            !m ||
             !(
-              m instanceof promClient.Histogram ||
-              m instanceof promClient.Summary
+              m &&
+              (m instanceof promClient.Histogram ||
+                m instanceof promClient.Summary)
             )
           ) {
             return err(
@@ -331,10 +331,10 @@ export const createMetricsService = (): MetricsService => {
           const m =
             customMetrics.get(metric) ?? getSystemOrBusinessMetric(metric)
           if (
-            !m ||
             !(
-              m instanceof promClient.Histogram ||
-              m instanceof promClient.Summary
+              m &&
+              (m instanceof promClient.Histogram ||
+                m instanceof promClient.Summary)
             )
           ) {
             return err(

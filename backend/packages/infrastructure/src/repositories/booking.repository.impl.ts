@@ -46,7 +46,9 @@ export class DrizzleBookingRepository implements BookingRepository {
   // DBモデルからドメインモデルへの変換
   private async mapDbToDomain(dbBooking: DbBooking): Promise<Booking | null> {
     const id = createBookingId(dbBooking.id)
-    if (!id) return null
+    if (id === null) {
+      return null
+    }
 
     // booking_reservationsから関連するreservationIdを取得
     const bookingReservationRows = await this.db
@@ -103,7 +105,7 @@ export class DrizzleBookingRepository implements BookingRepository {
         .limit(1)
 
       const firstRow = result[0]
-      if (!firstRow) {
+      if (firstRow === undefined) {
         return err({
           type: 'notFound' as const,
           entity: 'Booking',
@@ -112,7 +114,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       }
 
       const booking = await this.mapDbToDomain(firstRow)
-      if (!booking) {
+      if (booking === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map booking data',
@@ -222,7 +224,7 @@ export class DrizzleBookingRepository implements BookingRepository {
         .returning()
 
       const insertedBooking = insertedBookings[0]
-      if (!insertedBooking) {
+      if (insertedBooking === undefined) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to insert booking',
@@ -240,7 +242,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       }
 
       const booking = await this.mapDbToDomain(insertedBooking)
-      if (!booking) {
+      if (booking === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map created booking',
@@ -269,7 +271,7 @@ export class DrizzleBookingRepository implements BookingRepository {
         .limit(1)
 
       const existingRow = existing[0]
-      if (!existingRow) {
+      if (existingRow === undefined) {
         return err({
           type: 'notFound' as const,
           entity: 'Booking',
@@ -283,11 +285,15 @@ export class DrizzleBookingRepository implements BookingRepository {
         updated_by: data.updatedBy,
       }
 
-      if (data.paymentMethod !== undefined)
+      if (data.paymentMethod !== undefined) {
         updateData.payment_method = data.paymentMethod
-      if (data.paymentStatus !== undefined)
+      }
+      if (data.paymentStatus !== undefined) {
         updateData.payment_status = data.paymentStatus
-      if (data.notes !== undefined) updateData.notes = data.notes
+      }
+      if (data.notes !== undefined) {
+        updateData.notes = data.notes
+      }
 
       const updatedBookings = await this.db
         .update(bookings)
@@ -296,7 +302,7 @@ export class DrizzleBookingRepository implements BookingRepository {
         .returning()
 
       const updatedBooking = updatedBookings[0]
-      if (!updatedBooking) {
+      if (updatedBooking === undefined) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to update booking',
@@ -304,7 +310,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       }
 
       const booking = await this.mapDbToDomain(updatedBooking)
-      if (!booking) {
+      if (booking === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map updated booking',
@@ -336,7 +342,7 @@ export class DrizzleBookingRepository implements BookingRepository {
         .returning()
 
       const updatedRow = result[0]
-      if (!updatedRow) {
+      if (updatedRow === undefined) {
         return err({
           type: 'notFound' as const,
           entity: 'Booking',
@@ -345,7 +351,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       }
 
       const booking = await this.mapDbToDomain(updatedRow)
-      if (!booking) {
+      if (booking === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map confirmed booking',
@@ -379,7 +385,7 @@ export class DrizzleBookingRepository implements BookingRepository {
         .returning()
 
       const updatedRow = result[0]
-      if (!updatedRow) {
+      if (updatedRow === undefined) {
         return err({
           type: 'notFound' as const,
           entity: 'Booking',
@@ -388,7 +394,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       }
 
       const booking = await this.mapDbToDomain(updatedRow)
-      if (!booking) {
+      if (booking === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map cancelled booking',
@@ -420,7 +426,7 @@ export class DrizzleBookingRepository implements BookingRepository {
         .returning()
 
       const updatedRow = result[0]
-      if (!updatedRow) {
+      if (updatedRow === undefined) {
         return err({
           type: 'notFound' as const,
           entity: 'Booking',
@@ -429,7 +435,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       }
 
       const booking = await this.mapDbToDomain(updatedRow)
-      if (!booking) {
+      if (booking === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map completed booking',
@@ -461,7 +467,7 @@ export class DrizzleBookingRepository implements BookingRepository {
         .returning()
 
       const updatedRow = result[0]
-      if (!updatedRow) {
+      if (updatedRow === undefined) {
         return err({
           type: 'notFound' as const,
           entity: 'Booking',
@@ -470,7 +476,7 @@ export class DrizzleBookingRepository implements BookingRepository {
       }
 
       const booking = await this.mapDbToDomain(updatedRow)
-      if (!booking) {
+      if (booking === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map no-show booking',

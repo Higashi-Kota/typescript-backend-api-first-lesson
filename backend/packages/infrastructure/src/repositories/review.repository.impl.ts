@@ -45,7 +45,9 @@ export class DrizzleReviewRepository implements ReviewRepository {
   // DBモデルからドメインモデルへの変換
   private mapDbToDomain(dbReview: DbReview): Review | null {
     const id = createReviewId(dbReview.id)
-    if (!id) return null
+    if (id === null) {
+      return null
+    }
 
     const reviewData = {
       id,
@@ -85,7 +87,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
         .limit(1)
 
       const firstRow = result[0]
-      if (!firstRow) {
+      if (firstRow === undefined) {
         return err({
           type: 'notFound' as const,
           entity: 'Review',
@@ -94,7 +96,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       }
 
       const review = this.mapDbToDomain(firstRow)
-      if (!review) {
+      if (review === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map review data',
@@ -134,7 +136,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
         .limit(1)
 
       const firstRow = result[0]
-      if (!firstRow) {
+      if (firstRow === undefined) {
         return err({
           type: 'notFound' as const,
           entity: 'Review',
@@ -143,7 +145,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       }
 
       const review = this.mapDbToDomain(firstRow.review)
-      if (!review) {
+      if (review === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map review data',
@@ -180,12 +182,12 @@ export class DrizzleReviewRepository implements ReviewRepository {
         .limit(1)
 
       const firstRow = result[0]
-      if (!firstRow) {
+      if (firstRow === undefined) {
         return ok(null)
       }
 
       const review = this.mapDbToDomain(firstRow)
-      if (!review) {
+      if (review === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map review data',
@@ -229,7 +231,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
         .returning()
 
       const insertedReview = insertedReviews[0]
-      if (!insertedReview) {
+      if (insertedReview === undefined) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to insert review',
@@ -237,7 +239,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       }
 
       const review = this.mapDbToDomain(insertedReview)
-      if (!review) {
+      if (review === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map created review',
@@ -266,7 +268,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
         .limit(1)
 
       const existingRow = existing[0]
-      if (!existingRow) {
+      if (existingRow === undefined) {
         return err({
           type: 'notFound' as const,
           entity: 'Review',
@@ -280,15 +282,24 @@ export class DrizzleReviewRepository implements ReviewRepository {
         updated_by: data.updatedBy,
       }
 
-      if (data.rating !== undefined) updateData.rating = data.rating
-      if (data.comment !== undefined) updateData.comment = data.comment
-      if (data.serviceRating !== undefined)
+      if (data.rating !== undefined) {
+        updateData.rating = data.rating
+      }
+      if (data.comment !== undefined) {
+        updateData.comment = data.comment
+      }
+      if (data.serviceRating !== undefined) {
         updateData.service_rating = data.serviceRating
-      if (data.staffRating !== undefined)
+      }
+      if (data.staffRating !== undefined) {
         updateData.staff_rating = data.staffRating
-      if (data.atmosphereRating !== undefined)
+      }
+      if (data.atmosphereRating !== undefined) {
         updateData.atmosphere_rating = data.atmosphereRating
-      if (data.images !== undefined) updateData.images = data.images
+      }
+      if (data.images !== undefined) {
+        updateData.images = data.images
+      }
 
       const updatedReviews = await this.db
         .update(reviews)
@@ -297,7 +308,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
         .returning()
 
       const updatedReview = updatedReviews[0]
-      if (!updatedReview) {
+      if (updatedReview === undefined) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to update review',
@@ -305,7 +316,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       }
 
       const review = this.mapDbToDomain(updatedReview)
-      if (!review) {
+      if (review === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map updated review',
@@ -351,7 +362,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
         .returning()
 
       const deletedReview = deleteResult[0]
-      if (!deletedReview) {
+      if (deletedReview === undefined) {
         return err({
           type: 'notFound' as const,
           entity: 'Review',
@@ -360,7 +371,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       }
 
       const review = this.mapDbToDomain(deletedReview)
-      if (!review) {
+      if (review === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map deleted review',
@@ -400,7 +411,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
         .returning()
 
       const updatedRow = result[0]
-      if (!updatedRow) {
+      if (updatedRow === undefined) {
         return err({
           type: 'notFound' as const,
           entity: 'Review',
@@ -409,7 +420,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       }
 
       const review = this.mapDbToDomain(updatedRow)
-      if (!review) {
+      if (review === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map verified review',
@@ -440,7 +451,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
         .returning()
 
       const updatedRow = result[0]
-      if (!updatedRow) {
+      if (updatedRow === undefined) {
         return err({
           type: 'notFound' as const,
           entity: 'Review',
@@ -449,7 +460,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
       }
 
       const review = this.mapDbToDomain(updatedRow)
-      if (!review) {
+      if (review === null) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to map review',
@@ -590,7 +601,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
         .where(eq(reviews.salon_id, salonId))
 
       const summary = summaryResult[0]
-      if (!summary) {
+      if (summary === undefined) {
         return ok({
           salonId,
           totalReviews: 0,
@@ -653,7 +664,7 @@ export class DrizzleReviewRepository implements ReviewRepository {
         .where(eq(reviews.staff_id, staffId))
 
       const summary = summaryResult[0]
-      if (!summary) {
+      if (summary === undefined) {
         return ok({
           salonId: '' as SalonId, // staffの場合でもsalonIdが必要なのでダミー値
           totalReviews: 0,

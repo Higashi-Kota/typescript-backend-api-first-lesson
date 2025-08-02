@@ -168,7 +168,7 @@ export const validateRating = (
 export const validateComment = (
   comment?: string
 ): Result<string | undefined, ReviewError> => {
-  if (!comment) {
+  if (comment == null || comment === '') {
     return ok(undefined)
   }
 

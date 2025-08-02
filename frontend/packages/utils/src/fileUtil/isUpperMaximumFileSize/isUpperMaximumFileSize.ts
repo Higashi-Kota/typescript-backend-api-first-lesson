@@ -8,7 +8,9 @@ export const isUpperMaximumFileSize = (
   file: File | null | undefined,
   maxSize: number
 ): boolean => {
-  if (!file) return false // No file is considered valid
+  if (file == null) {
+    return false // No file is considered valid
+  }
 
   return file.size > maxSize
 }

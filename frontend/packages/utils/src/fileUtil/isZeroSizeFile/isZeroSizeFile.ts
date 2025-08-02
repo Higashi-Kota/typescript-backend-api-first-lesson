@@ -4,7 +4,9 @@
  * @returns true if file has zero size, false otherwise
  */
 export const isZeroSizeFile = (file: File | null | undefined): boolean => {
-  if (!file) return false
+  if (file == null) {
+    return false
+  }
 
   return file.size === 0
 }

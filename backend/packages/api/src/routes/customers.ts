@@ -92,7 +92,7 @@ export const createCustomerRoutes = (deps: CustomerRouteDeps): Router => {
   router.post('/', async (req, res, next) => {
     try {
       // リクエストボディの基本的な検証
-      if (!req.body.name || !req.body.contactInfo) {
+      if (!(req.body.name && req.body.contactInfo)) {
         return res.status(400).json({
           code: 'INVALID_REQUEST',
           message: 'Name and contact info are required',

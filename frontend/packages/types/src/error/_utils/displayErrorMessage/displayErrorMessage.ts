@@ -11,9 +11,13 @@ export const displayErrorMessage = (
   error: ApplicationErrorData,
   options?: { customErrorMessage: string }
 ): string => {
-  if (!isNullOrUndefined(options)) return options.customErrorMessage
+  if (!isNullOrUndefined(options)) {
+    return options.customErrorMessage
+  }
 
-  if (isApplicationError(error)) return error.message
+  if (isApplicationError(error)) {
+    return error.message
+  }
 
   return defaultErrorMessage
 }

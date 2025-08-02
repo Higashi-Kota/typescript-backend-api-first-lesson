@@ -30,7 +30,7 @@ export class DrizzleSessionRepository implements SessionRepository {
       }
 
       const firstResult = results[0]
-      if (!firstResult) {
+      if (firstResult === undefined) {
         return ok(null)
       }
 
@@ -60,7 +60,7 @@ export class DrizzleSessionRepository implements SessionRepository {
       }
 
       const firstResult = results[0]
-      if (!firstResult) {
+      if (firstResult === undefined) {
         return ok(null)
       }
 
@@ -108,7 +108,7 @@ export class DrizzleSessionRepository implements SessionRepository {
         .returning()
 
       const inserted = insertedRows[0]
-      if (!inserted) {
+      if (inserted === undefined) {
         return err({
           type: 'databaseError' as const,
           message: 'Failed to insert session',
@@ -142,7 +142,7 @@ export class DrizzleSessionRepository implements SessionRepository {
         .returning()
 
       const updated = updatedRows[0]
-      if (!updated) {
+      if (updated === undefined) {
         return err({
           type: 'notFound' as const,
           sessionId: session.id,

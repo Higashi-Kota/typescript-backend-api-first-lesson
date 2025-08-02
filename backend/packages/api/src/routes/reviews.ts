@@ -140,9 +140,11 @@ export const createReviewRoutes = (deps: ReviewRouteDeps): Router => {
       try {
         // リクエストボディの基本的な検証
         if (
-          !req.body.salonId ||
-          !req.body.customerId ||
-          !req.body.reservationId ||
+          !(
+            req.body.salonId &&
+            req.body.customerId &&
+            req.body.reservationId
+          ) ||
           req.body.rating === undefined
         ) {
           return res.status(400).json({

@@ -6,7 +6,9 @@
 export const toFiles = (
   input: File | FileList | File[] | null | undefined
 ): File[] => {
-  if (!input) return []
+  if (input == null) {
+    return []
+  }
 
   if (input instanceof File) {
     return [input]

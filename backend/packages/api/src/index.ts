@@ -272,7 +272,9 @@ export const createApp = (deps: AppDependencies): Express => {
   const authUserRepository = {
     findByEmail: async (email: string) => {
       const result = await userRepository.findByEmail(email)
-      if (result.type === 'err' || result.value == null) return null
+      if (result.type === 'err' || result.value == null) {
+        return null
+      }
       return {
         id: result.value.data.id,
         email: result.value.data.email,
@@ -310,7 +312,9 @@ export const createApp = (deps: AppDependencies): Express => {
         },
       }
       const result = await userRepository.save(newUser)
-      if (result.type === 'err') throw new Error('Failed to create user')
+      if (result.type === 'err') {
+        throw new Error('Failed to create user')
+      }
       return {
         id: result.value.data.id,
         email: result.value.data.email,
@@ -322,7 +326,9 @@ export const createApp = (deps: AppDependencies): Express => {
     },
     findById: async (id: string) => {
       const result = await userRepository.findById(id as UserId)
-      if (result.type === 'err' || result.value == null) return null
+      if (result.type === 'err' || result.value == null) {
+        return null
+      }
       return {
         id: result.value.data.id,
         email: result.value.data.email,

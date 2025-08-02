@@ -123,7 +123,7 @@ export class MailgunEmailProvider implements EmailService {
       )
 
       const result: EmailSendResult = {
-        messageId: response.id || `mailgun-${Date.now()}`,
+        messageId: response.id ?? `mailgun-${Date.now()}`,
         provider: this.provider,
         timestamp: new Date(),
       }

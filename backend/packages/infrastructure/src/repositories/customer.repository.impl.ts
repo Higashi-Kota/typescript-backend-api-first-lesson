@@ -50,7 +50,9 @@ export class DrizzleCustomerRepository implements CustomerRepository {
     dbCustomer: DbCustomer
   ): Promise<Customer | null> {
     const id = createCustomerId(dbCustomer.id)
-    if (id == null) return null
+    if (id == null) {
+      return null
+    }
 
     // 暗号化されたフィールドを復号化
     let decryptedCustomer = dbCustomer
@@ -419,7 +421,9 @@ export class DrizzleCustomerRepository implements CustomerRepository {
   ): Promise<Result<number, RepositoryError>> {
     try {
       const result = await this.search(criteria ?? {}, { limit: 0, offset: 0 })
-      if (result.type === 'err') return result
+      if (result.type === 'err') {
+        return result
+      }
       return ok(result.value.total)
     } catch (error) {
       return err({

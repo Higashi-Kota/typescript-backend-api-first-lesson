@@ -139,12 +139,14 @@ export const createReservationRoutes = (deps: ReservationRouteDeps): Router => {
     try {
       // リクエストボディの基本的な検証
       if (
-        !req.body.salonId ||
-        !req.body.customerId ||
-        !req.body.staffId ||
-        !req.body.serviceId ||
-        !req.body.startTime ||
-        !req.body.endTime
+        !(
+          req.body.salonId &&
+          req.body.customerId &&
+          req.body.staffId &&
+          req.body.serviceId &&
+          req.body.startTime &&
+          req.body.endTime
+        )
       ) {
         return res.status(400).json({
           code: 'INVALID_REQUEST',
@@ -628,10 +630,12 @@ export const createReservationRoutes = (deps: ReservationRouteDeps): Router => {
     try {
       // リクエストボディの検証
       if (
-        !req.body.salonId ||
-        !req.body.serviceId ||
-        !req.body.date ||
-        !req.body.duration
+        !(
+          req.body.salonId &&
+          req.body.serviceId &&
+          req.body.date &&
+          req.body.duration
+        )
       ) {
         return res.status(400).json({
           code: 'INVALID_REQUEST',

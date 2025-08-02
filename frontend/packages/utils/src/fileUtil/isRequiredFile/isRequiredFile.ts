@@ -8,9 +8,13 @@ export const isRequiredFile = (
   file: File | FileList | null | undefined,
   isRequired: boolean
 ): boolean => {
-  if (!isRequired) return true
+  if (!isRequired) {
+    return true
+  }
 
-  if (!file) return false
+  if (file == null) {
+    return false
+  }
 
   if (file instanceof File) {
     return file.size > 0

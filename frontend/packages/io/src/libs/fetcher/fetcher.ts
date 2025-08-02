@@ -79,7 +79,9 @@ export interface CancellablePromise<T> extends Promise<T> {
 // URLパラメータを構築する関数
 // biome-ignore lint/suspicious/noExplicitAny: flexible params type for URL building
 const buildURL = (url: string, params?: Record<string, any>): string => {
-  if (!params) return url
+  if (params === undefined) {
+    return url
+  }
 
   const urlObj = new URL(url, fetchConfig.getBaseURL())
   for (const [key, value] of Object.entries(params)) {
@@ -155,7 +157,9 @@ export function customInstance<T>(
   const convertRequestInit = (
     init?: RequestInit | FetchRequestConfig
   ): FetchRequestConfig => {
-    if (!init) return {}
+    if (init === undefined) {
+      return {}
+    }
 
     // FetchRequestConfigの場合はそのまま返す
     if ('url' in init || 'params' in init || 'baseURL' in init) {
@@ -166,7 +170,9 @@ export function customInstance<T>(
     const requestInit = init as RequestInit
     const config: FetchRequestConfig = {}
 
-    if (requestInit.method) config.method = requestInit.method
+    if (requestInit.method) {
+      config.method = requestInit.method
+    }
     if (requestInit.headers) {
       // HeadersInitをRecord<string, string>に変換
       if (requestInit.headers instanceof Headers) {
@@ -185,8 +191,12 @@ export function customInstance<T>(
         config.headers = requestInit.headers as Record<string, string>
       }
     }
-    if (requestInit.body) config.data = requestInit.body
-    if (requestInit.signal) config.signal = requestInit.signal
+    if (requestInit.body) {
+      config.data = requestInit.body
+    }
+    if (requestInit.signal) {
+      config.signal = requestInit.signal
+    }
 
     return config
   }
@@ -260,7 +270,7 @@ export function customInstance<T>(
       }
 
       // レスポンスの Content-Type を確認
-      const contentType = response.headers.get('content-type') || ''
+      const contentType = response.headers.get('content-type') ?? ''
 
       if (contentType.includes('application/json')) {
         return response.json()

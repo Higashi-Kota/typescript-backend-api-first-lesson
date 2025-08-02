@@ -28,7 +28,9 @@ export const messageFactory = {
             return `不正な${featureName}IDです`
           },
           invalidParams: (...props: unknown[]) => {
-            if (props.length === 0) return '不正な引数です'
+            if (props.length === 0) {
+              return '不正な引数です'
+            }
 
             return `不正な引数です[${props.join(',')}]`
           },

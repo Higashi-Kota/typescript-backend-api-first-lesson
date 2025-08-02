@@ -8,7 +8,7 @@ export type StorageProvider = 'minio' | 'r2'
 export function createStorageService(
   provider?: StorageProvider
 ): StorageService {
-  const selectedProvider = provider || storageConfig.provider
+  const selectedProvider = provider ?? storageConfig.provider
 
   switch (selectedProvider) {
     case 'minio':

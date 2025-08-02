@@ -401,7 +401,9 @@ export class StructuredLogger {
 
   // Sentryへのエラー送信
   private sendErrorToSentry(event: LogEvent): void {
-    if (event.type !== 'error' && event.type !== 'unhandledError') return
+    if (event.type !== 'error' && event.type !== 'unhandledError') {
+      return
+    }
 
     const sentryContext = {
       tags: {

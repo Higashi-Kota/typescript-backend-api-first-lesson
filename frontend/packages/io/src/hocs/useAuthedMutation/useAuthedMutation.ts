@@ -44,12 +44,15 @@ export const useAuthedMutation = <TData, TError, TVariables, TContext>(
 
     const result = await authRepository.retrieveAuthedUserSession({})
 
-    if (result.isErr()) return options.mutationFn(variables)
+    if (result.isErr()) {
+      return options.mutationFn(variables)
+    }
 
     const idToken = result.value?.tokens?.idToken?.toString()
 
-    if (isNullOrUndefined(idToken) || isEmpty(idToken))
+    if (isNullOrUndefined(idToken) || isEmpty(idToken)) {
       return options.mutationFn(variables)
+    }
 
     setAuthorizationHeader(idToken)
     // setGlobalHeaders({

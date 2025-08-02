@@ -7,14 +7,14 @@ import { MailhogEmailProvider } from './providers/mailhog.provider.js'
 export type EmailProvider = 'development' | 'mailhog' | 'mailgun'
 
 export function createEmailService(provider?: EmailProvider): EmailService {
-  const selectedProvider = provider || emailConfig.provider
+  const selectedProvider = provider ?? emailConfig.provider
 
   switch (selectedProvider) {
     case 'development':
       return new DevelopmentEmailProvider()
 
     case 'mailhog':
-      if (!emailConfig.mailhog.host || !emailConfig.mailhog.port) {
+      if (!(emailConfig.mailhog.host && emailConfig.mailhog.port)) {
         throw new Error('MailHog configuration is missing')
       }
       return new MailhogEmailProvider({
@@ -23,7 +23,7 @@ export function createEmailService(provider?: EmailProvider): EmailService {
       })
 
     case 'mailgun':
-      if (!emailConfig.mailgun.apiKey || !emailConfig.mailgun.domain) {
+      if (!(emailConfig.mailgun.apiKey && emailConfig.mailgun.domain)) {
         throw new Error('Mailgun configuration is missing')
       }
       return new MailgunEmailProvider({

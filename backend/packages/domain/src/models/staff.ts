@@ -160,8 +160,10 @@ export const validateAvailability = (
   const timeRegex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/
 
   if (
-    !timeRegex.test(availability.startTime) ||
-    !timeRegex.test(availability.endTime)
+    !(
+      timeRegex.test(availability.startTime) &&
+      timeRegex.test(availability.endTime)
+    )
   ) {
     return err({
       type: 'invalidAvailability',

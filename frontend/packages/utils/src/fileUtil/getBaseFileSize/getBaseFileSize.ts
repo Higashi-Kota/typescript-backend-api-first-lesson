@@ -22,7 +22,7 @@ export const getBaseFileSize = (size: string | number): number => {
   // Extract number and unit
   const match = normalizedSize.match(/^(\d+(?:\.\d+)?)(B|KB|MB|GB|TB)?$/)
 
-  if (!match) {
+  if (match === null) {
     return 0
   }
 

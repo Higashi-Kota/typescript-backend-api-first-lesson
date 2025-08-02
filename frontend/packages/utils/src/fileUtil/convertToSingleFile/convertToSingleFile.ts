@@ -5,7 +5,9 @@
 export const convertToSingleFile = (
   files: FileList | File[] | null | undefined
 ): File | null => {
-  if (!files) return null
+  if (files == null) {
+    return null
+  }
 
   if (files instanceof FileList) {
     return files.length > 0 ? (files[0] ?? null) : null

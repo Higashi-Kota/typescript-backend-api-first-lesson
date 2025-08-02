@@ -246,7 +246,9 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
         refreshToken,
         async (userId) => {
           const user = await userRepository.findById(userId as UserId)
-          if (user == null) return null
+          if (user == null) {
+            return null
+          }
           return {
             userId: user.id,
             email: user.email,

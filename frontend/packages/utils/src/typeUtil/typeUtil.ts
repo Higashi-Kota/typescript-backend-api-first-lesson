@@ -88,38 +88,57 @@ export const JsonSchema: z.ZodType<JSON> = z.lazy(() =>
  */
 export const isJSONData = (data: unknown): data is JsonValue => {
   // Early return for primitive JSON values
-  if (data === null) return true
+  if (data === null) {
+    return true
+  }
   if (
     typeof data === 'string' ||
     typeof data === 'number' ||
     typeof data === 'boolean'
-  )
+  ) {
     return true
-  if (typeof data !== 'object') return false
+  }
+  if (typeof data !== 'object') {
+    return false
+  }
 
   // Check special case of non-json objects
-  if (data instanceof Date) return false
-  if (data instanceof RegExp) return false
-  if (data instanceof Map) return false
-  if (data instanceof Set) return false
-  if (data instanceof Promise) return false
+  if (data instanceof Date) {
+    return false
+  }
+  if (data instanceof RegExp) {
+    return false
+  }
+  if (data instanceof Map) {
+    return false
+  }
+  if (data instanceof Set) {
+    return false
+  }
+  if (data instanceof Promise) {
+    return false
+  }
   // biome-ignore lint/suspicious/noExplicitAny: necessary for runtime type checking
-  if (typeof (data as any).then === 'function') return false
+  if (typeof (data as any).then === 'function') {
+    return false
+  }
   if (
     // biome-ignore lint/suspicious/noExplicitAny: necessary for runtime type checking
     typeof (data as any).toJSON === 'function' &&
     data.constructor !== Object &&
     data.constructor !== Array
-  )
+  ) {
     return false
+  }
 
   // If it's a function or non-standard object, it's not JSON serializable
   if (
     typeof data === 'function' ||
     (Object.prototype.toString.call(data) !== '[object Object]' &&
       !Array.isArray(data))
-  )
+  ) {
     return false
+  }
 
   try {
     // Final validation through Zod schema

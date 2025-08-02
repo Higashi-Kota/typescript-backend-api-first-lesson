@@ -114,19 +114,36 @@ export function checkPasswordStrength(password: string): {
   let score = 0
 
   // 長さチェック
-  if (password.length >= 12) score += 1
-  if (password.length >= 16) score += 1
-  if (password.length >= 20) score += 1
+  if (password.length >= 12) {
+    score += 1
+  }
+  if (password.length >= 16) {
+    score += 1
+  }
+  if (password.length >= 20) {
+    score += 1
+  }
 
   // 文字種チェック
-  if (/[a-z]/.test(password)) score += 1
-  if (/[A-Z]/.test(password)) score += 1
-  if (/\d/.test(password)) score += 1
-  if (/[@$!%*?&]/.test(password)) score += 1
+  if (/[a-z]/.test(password)) {
+    score += 1
+  }
+  if (/[A-Z]/.test(password)) {
+    score += 1
+  }
+  if (/\d/.test(password)) {
+    score += 1
+  }
+  if (/[@$!%*?&]/.test(password)) {
+    score += 1
+  }
 
   // 連続文字チェック
-  if (!/(.)\1{2,}/.test(password)) score += 1
-  else feedback.push('Avoid repeated characters')
+  if (/(.)\1{2,}/.test(password)) {
+    feedback.push('Avoid repeated characters')
+  } else {
+    score += 1
+  }
 
   // 一般的な弱いパスワードパターン
   const weakPatterns = [
@@ -134,18 +151,24 @@ export function checkPasswordStrength(password: string): {
     /^(\d{6,}|[a-z]{6,}|[A-Z]{6,})$/,
   ]
 
-  if (!weakPatterns.some((pattern) => pattern.test(password))) {
-    score += 1
-  } else {
+  if (weakPatterns.some((pattern) => pattern.test(password))) {
     feedback.push('Password is too common')
+  } else {
+    score += 1
   }
 
   // フィードバック生成
-  if (score < 3) feedback.push('Very weak password')
-  else if (score < 5) feedback.push('Weak password')
-  else if (score < 7) feedback.push('Fair password')
-  else if (score < 9) feedback.push('Good password')
-  else feedback.push('Strong password')
+  if (score < 3) {
+    feedback.push('Very weak password')
+  } else if (score < 5) {
+    feedback.push('Weak password')
+  } else if (score < 7) {
+    feedback.push('Fair password')
+  } else if (score < 9) {
+    feedback.push('Good password')
+  } else {
+    feedback.push('Strong password')
+  }
 
   return { score: Math.min(score, 10), feedback }
 }
