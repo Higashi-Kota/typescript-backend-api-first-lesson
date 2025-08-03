@@ -5,8 +5,8 @@
  * This enforces compile-time guarantees that API implementations match the OpenAPI contract.
  */
 
-import type { ZodSchema } from 'zod'
 import type { Result } from '@beauty-salon-backend/domain'
+import type { ZodSchema } from 'zod'
 
 /**
  * Validates request data against a Zod schema and returns a Result type

@@ -181,6 +181,122 @@ function getBookingStatusLabel(status: BookingStatus): string {
 }
 ```
 
+## 型マッピングフローの実装例
+
+### 顧客作成フロー
+
+OpenAPIからデータベースまでの完全な型マッピングの例：
+
+```typescript
+// 1. OpenAPI型（生成された型）
+type CreateCustomerRequest = components['schemas']['Models.CreateCustomerRequest']
+// {
+//   name: string
+//   contactInfo: ContactInfo
+//   preferences?: string
+//   notes?: string
+//   tags?: string[]
+//   birthDate?: string
+// }
+
+// 2. APIルートがOpenAPI型を受け取る
+router.post('/', async (
+  req: Request<unknown, CreateCustomerResponse, CreateCustomerRequest>,
+  res: Response<CreateCustomerResponse>
+) => {
+  const requestData: CreateCustomerRequest = req.body
+  
+  // 3. UseCase入力へマッピング
+  const input = mapCreateCustomerRequest(requestData)
+  // Returns: CreateCustomerInput
+  
+  // 4. UseCase実行
+  const result = await createCustomerUseCase(input, deps)
+  // Returns: Result<Customer, CreateCustomerError>
+  
+  // 5. APIレスポンスへマッピング
+  const response = mapCustomerToResponse(result.value)
+  // Returns: CreateCustomerResponse (OpenAPI型)
+  
+  res.json(response)
+})
+```
+
+### 認証フロー
+
+```typescript
+// OpenAPI型
+type LoginRequest = components['schemas']['Models.LoginRequest']
+// {
+//   email: string
+//   password: string
+//   rememberMe: boolean
+//   twoFactorCode?: string
+// }
+
+type LoginResponse = components['schemas']['Models.LoginResponse']
+// {
+//   accessToken: string
+//   refreshToken: string
+//   tokenType: string
+//   expiresIn: number
+//   user: User
+// }
+
+// APIルート
+router.post('/login', async (
+  req: Request<unknown, unknown, LoginRequest>,
+  res: Response<LoginResponse>
+) => {
+  const loginData: LoginRequest = req.body
+  
+  // 検証と認証
+  const user = await authenticateUser(loginData)
+  
+  // トークン生成
+  const tokens = await generateTokens(user)
+  
+  // OpenAPI準拠のレスポンス構築
+  const response: LoginResponse = {
+    accessToken: tokens.accessToken,
+    refreshToken: tokens.refreshToken,
+    tokenType: 'Bearer',
+    expiresIn: tokens.expiresIn,
+    user: mapUserToApiResponse(user)
+  }
+  
+  res.json(response)
+})
+```
+
+### 型安全性の保証
+
+#### コンパイル時チェック
+1. **リクエスト型安全性**: TypeScriptがリクエストボディがOpenAPIスキーマと一致することを保証
+2. **レスポンス型安全性**: レスポンス型がコンパイル時に強制される
+3. **パスパラメータ安全性**: パスパラメータが型チェックされる
+4. **クエリパラメータ安全性**: クエリパラメータが適切な型を持つ
+
+#### ランタイム検証
+1. **Zodスキーマ**: 受信リクエストが期待される型と一致することを検証
+2. **Result型**: 例外なしでエラーを処理
+3. **パターンマッチング**: すべてのケースの網羅的な処理
+
+### ベストプラクティス
+
+#### DO ✅
+- APIルートで常にOpenAPI生成型を使用
+- 適切なジェネリクスでリクエストハンドラーに型を付ける
+- レイヤー遷移にマッパー関数を使用
+- OpenAPI型と一致するZodスキーマでリクエストを検証
+- エラーハンドリングにResult型を使用
+
+#### DON'T ❌
+- OpenAPIスキーマと重複するカスタム型を定義
+- `any`や型アサーションを使用
+- 「信頼できる」入力の検証をスキップ
+- レイヤーの関心事を混在させる（例：APIからDBモデルを返す）
+
 ## TypeSpecでの型定義ルール
 
 ### 検索API（optional fields）
@@ -280,13 +396,113 @@ TypeSpecの定義とOpenAPIの出力が一致していることを確認：
 cat specs/tsp-output/@typespec/openapi3/generated/openapi.yaml
 ```
 
+## フロントエンドでの使用（Orval）
+
+### 基本的な使用例
+
+```typescript
+// 自動生成されたReact Queryフックの使用
+import { useCustomerOperationsList } from '@beauty-salon-frontend/api-client/generated/endpoints/customers/customers'
+import type { ModelsCustomer } from '@beauty-salon-frontend/api-client/generated/models'
+
+function CustomerList() {
+  // 型安全なAPIコール
+  const { data, isLoading, error } = useCustomerOperationsList(
+    {
+      limit: 10,
+      offset: 0,
+      search: 'john'  // すべてのパラメータが型チェックされる
+    },
+    {
+      query: {
+        staleTime: 5 * 60 * 1000,  // 5分間キャッシュ
+      }
+    }
+  )
+
+  if (isLoading) return <div>Loading...</div>
+  if (error) return <div>Error: {error.message}</div>
+
+  // data.dataは完全に型付けされている
+  return (
+    <div>
+      {data?.data.customers.map((customer: ModelsCustomer) => (
+        <div key={customer.id}>{customer.name}</div>
+      ))}
+    </div>
+  )
+}
+```
+
+### ミューテーションの使用
+
+```typescript
+import { useCustomerOperationsCreate } from '@beauty-salon-frontend/api-client/generated/endpoints/customers/customers'
+import type { ModelsCreateCustomerRequest } from '@beauty-salon-frontend/api-client/generated/models'
+
+function CreateCustomerForm() {
+  const { mutate, isPending } = useCustomerOperationsCreate({
+    mutation: {
+      onSuccess: (response) => {
+        // response.dataは型安全
+        console.log('Created customer:', response.data.id)
+        queryClient.invalidateQueries({ queryKey: ['/api/v1/customers'] })
+      }
+    }
+  })
+
+  const handleSubmit = (formData: ModelsCreateCustomerRequest) => {
+    mutate({ data: formData })  // 型チェックされる
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      {/* フォームフィールド */}
+    </form>
+  )
+}
+```
+
+### 型の再利用
+
+```typescript
+import type { 
+  ModelsCustomer,
+  ModelsCreateCustomerRequest,
+  ModelsUpdateCustomerRequest,
+  ModelsError 
+} from '@beauty-salon-frontend/api-client/generated/models'
+
+// フォームバリデーションに型を活用
+const customerSchema = z.object({
+  name: z.string().min(1),
+  email: z.string().email(),
+  phone: z.string().optional(),
+}) satisfies z.ZodType<ModelsCreateCustomerRequest>
+
+// ストアの型定義に活用
+interface CustomerStore {
+  customers: ModelsCustomer[]
+  selectedCustomer: ModelsCustomer | null
+  createCustomer: (data: ModelsCreateCustomerRequest) => Promise<void>
+  updateCustomer: (id: string, data: ModelsUpdateCustomerRequest) => Promise<void>
+}
+```
+
 ## まとめ
 
 新しい型生成システムにより、以下が実現されました：
 
+### バックエンド
 1. **型安全性の向上**: パス、メソッド、パラメータ、ボディ、レスポンスすべてが型安全
 2. **保守性の向上**: openapi-typescriptによる標準的な型生成
 3. **開発効率の向上**: 自動補完とコンパイル時チェックの強化
 4. **一貫性の確保**: TypeSpec → OpenAPI → TypeScriptの自動変換
 
-このシステムを活用することで、より安全で保守しやすいAPIの実装が可能になります。
+### フロントエンド
+1. **React Query統合**: データフェッチングの最適化とキャッシュ管理
+2. **完全な型安全性**: APIクライアント全体で型チェック
+3. **自動生成**: ボイラープレートコードの削減
+4. **優れたDX**: 自動補完とインテリセンス
+
+このシステムを活用することで、フロントエンドとバックエンドの契約を厳密に守りながら、より安全で保守しやすいAPIの実装が可能になります。

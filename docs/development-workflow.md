@@ -23,8 +23,8 @@ vim specs/models/customer.tsp  # または該当するファイル
 # 2. 型定義を生成
 pnpm generate  # または個別に実行：
 # - pnpm generate:spec     # TypeSpecからOpenAPIを生成
-# - pnpm generate:backend  # OpenAPIからTypeScript型を生成
-# - pnpm generate:api      # フロントエンドAPIクライアントを生成
+# - pnpm generate:backend  # OpenAPIからバックエンド型を生成
+# - pnpm generate:api      # OrvalでフロントエンドAPIクライアントを生成
 
 # 3. バックエンドの実装を更新
 # - backend/packages/types/src/generated/ に新しい型が生成される
@@ -40,7 +40,9 @@ make backend-start
 
 # 5. フロントエンドの実装を更新
 # - frontend/packages/api-client/src/generated/ に新しいクライアントが生成される
-# - コンポーネントやストアを更新
+#   - endpoints/ : React Queryフック、API関数、型定義
+#   - models/ : 共通の型定義
+# - 生成されたフックを使用してコンポーネントを更新
 
 # 6. フロントエンドをビルド・起動
 make frontend-build  # 必須：初回または依存関係の変更時
@@ -62,6 +64,21 @@ make frontend-dev    # 開発サーバーを起動
 - TypeSpecの変更は破壊的変更になる可能性があるため、既存のAPIクライアントへの影響を確認
 - 型定義の生成後、TypeScriptのコンパイルエラーが出る箇所をすべて修正
 - 型生成スクリプトはOpenAPI仕様ファイルに依存するため、必ず`pnpm generate:spec`を先に実行
+- Orvalで生成されたフックは自動的にReact Queryのキャッシュキーを管理するため、手動でのキー管理は不要
+
+### フロントエンドでの型生成後の確認
+
+```bash
+# 生成されたファイルを確認
+ls -la frontend/packages/api-client/src/generated/
+
+# TypeScriptの型チェック
+cd frontend/packages/api-client
+pnpm typecheck
+
+# 生成されたコードのフォーマット（Orvalが自動実行）
+pnpm format
+```
 
 ## 新しい依存関係を追加する場合
 

@@ -32,13 +32,13 @@ import {
 import type {
   CreateCustomerRequest,
   CreateCustomerResponse,
-  UpdateCustomerRequest,
-  UpdateCustomerResponse,
-  GetCustomerResponse,
-  GetCustomerProfileResponse,
-  ListCustomersResponse,
   CustomerPathParams,
   ErrorResponse,
+  GetCustomerProfileResponse,
+  GetCustomerResponse,
+  ListCustomersResponse,
+  UpdateCustomerRequest,
+  UpdateCustomerResponse,
 } from '../utils/openapi-types.js'
 
 // バリデーションスキーマ

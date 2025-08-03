@@ -1,29 +1,71 @@
 # DB型制約マッピング機構
 
-このドキュメントでは、Drizzle ORMの推論型（`$inferSelect`、`$inferInsert`）を活用したDB型制約マッピング機構の実装方法とベストプラクティスについて説明します。
+このドキュメントでは、フロントエンド（Orval）からデータベース（Drizzle ORM）まで、エンドツーエンドの型安全性とデータ整合性を保証する型制約マッピング機構について説明します。
 
 ## 目次
 
 1. [概要](#概要)
-2. [API-First開発のデータフロー](#api-first開発のデータフロー)
-3. [アーキテクチャ](#アーキテクチャ)
-4. [実装方法](#実装方法)
-5. [各レイヤーでの使用例](#各レイヤーでの使用例)
-6. [型安全性の保証](#型安全性の保証)
-7. [ベストプラクティス](#ベストプラクティス)
-8. [アーキテクチャの進化：循環依存の解決](#アーキテクチャの進化循環依存の解決)
+2. [エンドツーエンドの型変換チェーン](#エンドツーエンドの型変換チェーン)
+3. [API-First開発のデータフロー](#api-first開発のデータフロー)
+4. [アーキテクチャ](#アーキテクチャ)
+5. [実装方法](#実装方法)
+6. [各レイヤーでの使用例](#各レイヤーでの使用例)
+7. [型安全性の保証](#型安全性の保証)
+8. [データ整合性パターン](#データ整合性パターン)
+9. [ベストプラクティス](#ベストプラクティス)
+10. [アーキテクチャの進化：循環依存の解決](#アーキテクチャの進化循環依存の解決)
 
 ## 概要
 
-DB型制約マッピング機構は、API-First開発アプローチにおいて、TypeSpec → OpenAPI → TypeScript型 → Drizzle ORMスキーマという一貫したデータフローを実現する仕組みです。独立した`@beauty-salon-backend/database`パッケージにより、循環依存を解消し、型安全性を最大化しています。
+DB型制約マッピング機構は、フロントエンドのフォーム入力からデータベース保存まで、エンドツーエンドの型安全性とデータ整合性を保証する包括的なシステムです。TypeSpecをSingle Source of Truth（単一の真実の源）として、全レイヤーで一貫した型定義と検証を実現します。
 
 ### 主な利点
 
+- **エンドツーエンド型安全性**: フロントエンドフォームからDBカラムまで完全な型追跡
 - **API-First開発**: TypeSpecが契約の起点となり、OpenAPIを介して型定義を自動生成
 - **型の一元管理**: DBスキーマが独立パッケージとして管理され、循環依存を防止
 - **自動型推論**: Drizzle ORMの`$inferSelect`と`$inferInsert`による自動型生成
-- **型安全性**: TypeSpec → OpenAPI → TypeScript → Database の全レイヤーで型整合性を保証
+- **データ整合性**: 各層での検証により、不正なデータのDB保存を防止
 - **保守性向上**: スキーマ変更時の型定義の自動更新とマッパーによる変換
+
+## エンドツーエンドの型変換チェーン
+
+### 完全な型変換フロー
+
+```mermaid
+graph TD
+    A[Frontend Form Input<br/>React Hook Form + Zod] -->|Validate| B[Orval Generated Types<br/>@beauty-salon-frontend/api-client]
+    B -->|HTTP Request| C[API Request Types<br/>@beauty-salon-backend/types]
+    C -->|Validate & Map| D[Domain Models<br/>Sum Types]
+    D -->|Business Logic| E[DB Insert/Update Types<br/>Drizzle InferInsertModel]
+    E -->|SQL Constraints| F[Database Table<br/>PostgreSQL]
+    
+    F -->|Query| G[DB Select Types<br/>Drizzle InferSelectModel]
+    G -->|Map| H[Domain Models<br/>Sum Types]
+    H -->|Transform| I[API Response Types<br/>@beauty-salon-backend/types]
+    I -->|HTTP Response| J[Orval Response Types<br/>@beauty-salon-frontend/api-client]
+    J -->|Update| K[React State/UI<br/>TanStack Query Cache]
+    
+    style A fill:#e1f5fe
+    style K fill:#e1f5fe
+    style D fill:#fff3e0
+    style H fill:#fff3e0
+    style F fill:#f3e5f5
+```
+
+### 各層での型と検証
+
+| レイヤー | 型定義 | 検証方法 | エラー処理 |
+|---------|--------|----------|------------|
+| **Frontend Form** | Zod Schema | Runtime validation | Form field errors |
+| **Frontend API Client** | Orval Generated Types | TypeScript compile-time | Type errors |
+| **API Request** | OpenAPI Types | Zod validation | 422 Validation Error |
+| **Domain Model** | Sum Types | Pattern matching | Result type |
+| **Database Insert** | Drizzle InferInsertModel | DB constraints | Transaction rollback |
+| **Database Table** | SQL DDL | CHECK, NOT NULL, UNIQUE | Constraint violations |
+| **Database Select** | Drizzle InferSelectModel | Type inference | Never fails |
+| **API Response** | OpenAPI Types | TypeScript types | Never fails |
+| **Frontend State** | Orval Response Types | TypeScript types | Never fails |
 
 ## API-First開発のデータフロー
 
@@ -339,6 +381,301 @@ type Customer =
   | { type: 'active'; data: ActiveCustomerData }
   | { type: 'suspended'; data: SuspendedCustomerData; suspendedAt: Date }
   | { type: 'deleted'; data: DeletedCustomerData; deletedAt: Date }
+```
+
+## データ整合性パターン
+
+### 日時処理（タイムゾーン考慮）
+
+#### Frontend → Backend → Database
+
+```typescript
+// Frontend: ユーザー入力（ローカル時間）
+const appointmentForm = {
+  date: '2024-03-15',
+  time: '14:30',
+  timezone: 'Asia/Tokyo'
+}
+
+// API Request: ISO 8601形式に変換
+const apiRequest = {
+  appointmentAt: '2024-03-15T14:30:00+09:00'  // タイムゾーン付き
+}
+
+// Domain Model: Date型で管理
+const domainModel = {
+  appointmentAt: new Date('2024-03-15T14:30:00+09:00')  // UTC: 2024-03-15T05:30:00Z
+}
+
+// Database: UTCで保存
+INSERT INTO appointments (appointment_at) 
+VALUES ('2024-03-15 05:30:00+00');  -- PostgreSQL timestamptz
+
+// Response: クライアントのタイムゾーンで表示
+const response = {
+  appointmentAt: '2024-03-15T14:30:00+09:00',  // 元のタイムゾーンを保持
+  utcTime: '2024-03-15T05:30:00Z'  // UTC表記も提供
+}
+```
+
+#### ベストプラクティス
+
+```typescript
+// backend/packages/mappers/src/domain-to-db/appointment.mapper.ts
+export const mapAppointmentToDb = (appointment: Appointment): DbAppointment => {
+  return {
+    // 常にUTCで保存
+    appointment_at: appointment.appointmentAt.toISOString(),
+    // タイムゾーン情報は別カラムで保持
+    timezone: appointment.timezone,
+    // 日付のみの場合はDATE型を使用
+    appointment_date: format(appointment.appointmentAt, 'yyyy-MM-dd'),
+  }
+}
+
+// backend/packages/mappers/src/db-to-domain/appointment.mapper.ts
+export const mapDbAppointmentToDomain = (db: DbAppointment): Appointment => {
+  return {
+    // UTCからDateオブジェクトを作成
+    appointmentAt: new Date(db.appointment_at),
+    // タイムゾーン情報を復元
+    timezone: db.timezone,
+    // ローカル時間での表示用
+    localTime: formatInTimeZone(
+      new Date(db.appointment_at),
+      db.timezone,
+      'yyyy-MM-dd HH:mm:ss zzz'
+    )
+  }
+}
+```
+
+### UUID生成と検証
+
+#### 各層でのUUID処理
+
+```typescript
+// Frontend: 新規作成時はバックエンドで生成
+const createCustomer = async (data: CustomerFormData) => {
+  const response = await api.customers.create(data)
+  // response.id は バックエンドで生成されたUUID
+  return response
+}
+
+// Backend: UUID生成と検証
+import { v4 as uuidv4 } from 'uuid'
+import { z } from 'zod'
+
+// UUID検証スキーマ
+const uuidSchema = z.string().uuid()
+
+// ユースケースでのUUID生成
+export const createCustomerUseCase = async (
+  input: CreateCustomerInput
+): Promise<Result<Customer, CreateCustomerError>> => {
+  const customerId = uuidv4()  // サーバー側で生成
+  
+  const customer: Customer = {
+    type: 'active',
+    data: {
+      id: customerId as CustomerId,  // Brand型でタイプセーフ
+      ...input
+    }
+  }
+  
+  return await repository.create(customer)
+}
+
+// Database: UUID型カラム
+CREATE TABLE customers (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  -- または VARCHAR(36) with CHECK constraint
+  id VARCHAR(36) PRIMARY KEY CHECK (id ~* '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'),
+)
+```
+
+### Nullable vs Required フィールドの一貫性
+
+#### TypeSpec → Database の null 処理マッピング
+
+```typescript
+// TypeSpec定義
+model Customer {
+  name: string;                    // 必須
+  alternativePhone: string | null; // nullable
+  preferences?: string;             // optional (APIレベル)
+  tags: string[] = [];             // デフォルト値あり
+}
+
+// Orval生成型（Frontend）
+interface ModelsCustomer {
+  name: string;                    // 必須
+  alternativePhone: string | null; // null許容
+  preferences?: string;             // undefined許容
+  tags: string[];                  // 常に配列
+}
+
+// Domain Model
+type Customer = {
+  name: string;                    // 必須
+  alternativePhone: string | null; // null使用
+  preferences: string | null;      // nullに統一
+  tags: string[];                  // 空配列デフォルト
+}
+
+// Database Schema
+CREATE TABLE customers (
+  name VARCHAR(255) NOT NULL,
+  alternative_phone VARCHAR(20),    -- NULL許容
+  preferences TEXT,                  -- NULL許容
+  tags JSONB DEFAULT '[]'::jsonb    -- デフォルト値
+);
+
+// マッパーでの変換
+export const mapApiToDomain = (api: ApiCustomer): DomainCustomer => {
+  return {
+    name: api.name,
+    alternativePhone: api.alternativePhone ?? null,  // undefined → null
+    preferences: api.preferences ?? null,             // undefined → null
+    tags: api.tags ?? [],                            // undefined → []
+  }
+}
+
+export const mapDomainToDb = (domain: DomainCustomer): DbCustomer => {
+  return {
+    name: domain.name,
+    alternative_phone: domain.alternativePhone,       // null → NULL
+    preferences: domain.preferences,                  // null → NULL
+    tags: domain.tags.length > 0 ? domain.tags : null // [] → NULL or JSONB
+  }
+}
+```
+
+### Enum マッピング
+
+#### Frontend → Backend → Database
+
+```typescript
+// TypeSpec定義
+enum MembershipLevel {
+  regular: "regular",
+  silver: "silver",
+  gold: "gold",
+  platinum: "platinum"
+}
+
+// Frontend（TypeScript Enum）
+enum MembershipLevel {
+  Regular = 'regular',
+  Silver = 'silver',
+  Gold = 'gold',
+  Platinum = 'platinum'
+}
+
+// Domain Model（Union Type）
+type MembershipLevel = 'regular' | 'silver' | 'gold' | 'platinum'
+
+// Database（CHECK制約）
+CREATE TYPE membership_level AS ENUM ('regular', 'silver', 'gold', 'platinum');
+-- または
+CREATE TABLE customers (
+  membership_level VARCHAR(20) 
+    CHECK (membership_level IN ('regular', 'silver', 'gold', 'platinum'))
+);
+
+// 検証とマッピング
+const membershipLevelSchema = z.enum(['regular', 'silver', 'gold', 'platinum'])
+
+export const validateMembershipLevel = (
+  level: unknown
+): MembershipLevel | null => {
+  const result = membershipLevelSchema.safeParse(level)
+  return result.success ? result.data : null
+}
+```
+
+### 配列/JSON フィールドの処理
+
+#### JSONB カラムの型安全な処理
+
+```typescript
+// TypeSpec定義
+model Customer {
+  tags: string[];
+  preferences: CustomerPreferences;
+}
+
+model CustomerPreferences {
+  newsletter: boolean;
+  language: string;
+  notifications: NotificationSettings;
+}
+
+// Domain Model
+type CustomerTags = string[]
+type CustomerPreferences = {
+  newsletter: boolean
+  language: string
+  notifications: {
+    email: boolean
+    sms: boolean
+    push: boolean
+  }
+}
+
+// Database Schema
+CREATE TABLE customers (
+  tags JSONB DEFAULT '[]'::jsonb,
+  preferences JSONB DEFAULT '{}'::jsonb
+);
+
+// 型安全なJSONB処理
+export const mapTagsToDb = (tags: string[]): unknown => {
+  // 配列を検証してからJSONBに変換
+  return tags.filter(tag => typeof tag === 'string' && tag.length > 0)
+}
+
+export const mapDbTagsToDomai = (dbTags: unknown): string[] => {
+  // unknown から安全に string[] へ変換
+  if (!Array.isArray(dbTags)) return []
+  
+  return dbTags
+    .filter((tag): tag is string => typeof tag === 'string')
+    .filter(tag => tag.length > 0)
+}
+
+export const mapPreferencesToDb = (
+  prefs: CustomerPreferences
+): unknown => {
+  // ネストしたオブジェクトを検証
+  return {
+    newsletter: Boolean(prefs.newsletter),
+    language: prefs.language || 'ja',
+    notifications: {
+      email: Boolean(prefs.notifications?.email),
+      sms: Boolean(prefs.notifications?.sms),
+      push: Boolean(prefs.notifications?.push)
+    }
+  }
+}
+
+// Zodによる実行時検証
+const preferencesSchema = z.object({
+  newsletter: z.boolean(),
+  language: z.string(),
+  notifications: z.object({
+    email: z.boolean(),
+    sms: z.boolean(),
+    push: z.boolean()
+  })
+})
+
+export const mapDbPreferencesToDomain = (
+  dbPrefs: unknown
+): CustomerPreferences | null => {
+  const result = preferencesSchema.safeParse(dbPrefs)
+  return result.success ? result.data : null
+}
 ```
 
 ## ベストプラクティス
@@ -1007,15 +1344,497 @@ alternativePhone: request.alternativePhone ?? undefined
 alternativePhone: data.contactInfo.alternativePhone ?? null
 ```
 
+## 実践例：顧客作成フローの完全な型変換
+
+### 1. Frontend: フォーム入力と検証
+
+```typescript
+// frontend/components/CustomerForm.tsx
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { useCustomerOperationsCreate } from '@beauty-salon-frontend/api-client'
+
+// フォーム検証スキーマ
+const customerFormSchema = z.object({
+  name: z.string().min(1, '名前は必須です').max(100, '100文字以内で入力してください'),
+  email: z.string().email('有効なメールアドレスを入力してください'),
+  phoneNumber: z.string().regex(/^\d{10,11}$/, '電話番号の形式が正しくありません'),
+  alternativePhone: z.string().regex(/^\d{10,11}$/).optional().nullable(),
+  birthDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  tags: z.array(z.string()).default([])
+})
+
+type CustomerFormData = z.infer<typeof customerFormSchema>
+
+export function CustomerForm() {
+  const { mutate: createCustomer, isPending, error } = useCustomerOperationsCreate()
+  
+  const form = useForm<CustomerFormData>({
+    resolver: zodResolver(customerFormSchema),
+    defaultValues: {
+      tags: []
+    }
+  })
+  
+  const onSubmit = async (data: CustomerFormData) => {
+    // Orval生成型に変換
+    createCustomer({
+      data: {
+        name: data.name,
+        email: data.email,
+        phoneNumber: data.phoneNumber,
+        alternativePhone: data.alternativePhone ?? null,
+        birthDate: data.birthDate ?? null,
+        tags: data.tags
+      }
+    }, {
+      onSuccess: (response) => {
+        console.log('Customer created:', response.data.id)
+        // TanStack Queryのキャッシュが自動更新される
+      },
+      onError: (error) => {
+        // APIエラーは型安全
+        if (error.status === 422) {
+          // バリデーションエラーの処理
+          const validationErrors = error.data.errors
+          Object.entries(validationErrors).forEach(([field, messages]) => {
+            form.setError(field as any, { message: messages.join(', ') })
+          })
+        }
+      }
+    })
+  }
+  
+  return (
+    <form onSubmit={form.handleSubmit(onSubmit)}>
+      {/* フォームフィールド */}
+    </form>
+  )
+}
+```
+
+### 2. API Layer: リクエスト受信と検証
+
+```typescript
+// backend/packages/api/src/routes/customers.ts
+import { Router } from 'express'
+import { z } from 'zod'
+import { match } from 'ts-pattern'
+import { createCustomerUseCase } from '@beauty-salon-backend/usecase'
+import { mapCreateCustomerRequest } from '@beauty-salon-backend/mappers'
+
+const router = Router()
+
+// APIリクエストの検証スキーマ（OpenAPIから生成）
+const createCustomerRequestSchema = z.object({
+  name: z.string(),
+  email: z.string().email(),
+  phoneNumber: z.string(),
+  alternativePhone: z.string().nullable().optional(),
+  birthDate: z.string().nullable().optional(),
+  tags: z.array(z.string()).optional()
+})
+
+router.post('/customers', async (req, res, next) => {
+  try {
+    // 1. リクエストボディの検証
+    const validationResult = createCustomerRequestSchema.safeParse(req.body)
+    
+    if (!validationResult.success) {
+      return res.status(422).json({
+        error: 'VALIDATION_ERROR',
+        errors: validationResult.error.flatten().fieldErrors
+      })
+    }
+    
+    // 2. APIリクエスト → ドメインモデルへの変換
+    const domainInput = mapCreateCustomerRequest(validationResult.data)
+    
+    // 3. ユースケース実行
+    const result = await createCustomerUseCase(domainInput, {
+      customerRepository: req.context.customerRepository
+    })
+    
+    // 4. 結果の処理（Sum型のパターンマッチング）
+    return match(result)
+      .with({ type: 'ok' }, ({ value }) => {
+        res.status(201)
+           .header('Location', `/api/v1/customers/${value.data.id}`)
+           .json({ data: mapCustomerToResponse(value) })
+      })
+      .with({ type: 'err' }, ({ error }) => {
+        match(error.type)
+          .with('duplicateEmail', () => {
+            res.status(409).json({
+              error: 'DUPLICATE_EMAIL',
+              message: 'このメールアドレスは既に登録されています'
+            })
+          })
+          .with('invalidInput', () => {
+            res.status(400).json({
+              error: 'INVALID_INPUT',
+              message: error.message
+            })
+          })
+          .exhaustive()
+      })
+      .exhaustive()
+  } catch (error) {
+    next(error)
+  }
+})
+```
+
+### 3. Use Case Layer: ビジネスロジック
+
+```typescript
+// backend/packages/usecase/src/customer/create-customer.usecase.ts
+import { match } from 'ts-pattern'
+import { v4 as uuidv4 } from 'uuid'
+import type { Customer, CreateCustomerInput, CreateCustomerError } from '@beauty-salon-backend/domain'
+
+export const createCustomerUseCase = async (
+  input: CreateCustomerInput,
+  deps: { customerRepository: CustomerRepository }
+): Promise<Result<Customer, CreateCustomerError>> => {
+  // 1. ビジネスルールの検証
+  if (input.birthDate && isFutureDate(input.birthDate)) {
+    return {
+      type: 'err',
+      error: {
+        type: 'invalidInput',
+        message: '生年月日は未来の日付を指定できません'
+      }
+    }
+  }
+  
+  // 2. ドメインモデルの作成
+  const customer: Customer = {
+    type: 'active',
+    data: {
+      id: uuidv4() as CustomerId,
+      name: input.name,
+      contactInfo: {
+        email: input.email,
+        phoneNumber: input.phoneNumber,
+        alternativePhone: input.alternativePhone
+      },
+      birthDate: input.birthDate,
+      tags: input.tags ?? [],
+      loyaltyPoints: 0,  // 初期値
+      membershipLevel: 'regular',  // 初期値
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }
+  }
+  
+  // 3. リポジトリでの永続化
+  return await deps.customerRepository.create(customer)
+}
+```
+
+### 4. Repository Layer: データベース永続化
+
+```typescript
+// backend/packages/infrastructure/src/repositories/customer.repository.impl.ts
+import { db } from '../database'
+import { customers } from '@beauty-salon-backend/database'
+import { mapDomainCustomerToDbInsert, mapDbCustomerToDomain } from '@beauty-salon-backend/mappers'
+
+export class DrizzleCustomerRepository implements CustomerRepository {
+  async create(customer: Customer): Promise<Result<Customer, RepositoryError>> {
+    try {
+      // 1. ドメインモデル → DBモデルへの変換
+      const dbCustomer = mapDomainCustomerToDbInsert(customer)
+      
+      // 2. トランザクション内での実行
+      const result = await db.transaction(async (tx) => {
+        // 重複チェック
+        const existing = await tx
+          .select()
+          .from(customers)
+          .where(eq(customers.email, dbCustomer.email))
+          .limit(1)
+        
+        if (existing.length > 0) {
+          throw new DuplicateEmailError()
+        }
+        
+        // 挿入
+        const [inserted] = await tx
+          .insert(customers)
+          .values(dbCustomer)
+          .returning()
+        
+        return inserted
+      })
+      
+      // 3. DBモデル → ドメインモデルへの逆変換
+      const domainCustomer = mapDbCustomerToDomain(result)
+      
+      if (!domainCustomer) {
+        return {
+          type: 'err',
+          error: {
+            type: 'mappingError',
+            message: 'Failed to map database result to domain model'
+          }
+        }
+      }
+      
+      return { type: 'ok', value: domainCustomer }
+      
+    } catch (error) {
+      // 4. データベースエラーの処理
+      if (error instanceof DuplicateEmailError) {
+        return {
+          type: 'err',
+          error: { type: 'duplicateEmail' }
+        }
+      }
+      
+      // PostgreSQL制約違反
+      if (error.code === '23505') {  // unique_violation
+        return {
+          type: 'err',
+          error: { type: 'duplicateEmail' }
+        }
+      }
+      
+      if (error.code === '23502') {  // not_null_violation
+        return {
+          type: 'err',
+          error: {
+            type: 'invalidInput',
+            message: 'Required field is missing'
+          }
+        }
+      }
+      
+      return {
+        type: 'err',
+        error: {
+          type: 'unknown',
+          message: 'Database error occurred'
+        }
+      }
+    }
+  }
+}
+```
+
+### 5. Database: 制約とトリガー
+
+```sql
+-- PostgreSQL データベーススキーマ
+CREATE TABLE customers (
+  -- 主キー（UUID v4）
+  id VARCHAR(36) PRIMARY KEY 
+    CHECK (id ~* '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'),
+  
+  -- 必須フィールド
+  name VARCHAR(255) NOT NULL 
+    CHECK (length(trim(name)) > 0),
+  
+  email VARCHAR(255) NOT NULL 
+    CHECK (email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'),
+  
+  phone_number VARCHAR(20) NOT NULL 
+    CHECK (phone_number ~* '^\d{10,11}$'),
+  
+  -- オプショナルフィールド
+  alternative_phone VARCHAR(20) 
+    CHECK (alternative_phone IS NULL OR alternative_phone ~* '^\d{10,11}$'),
+  
+  birth_date DATE 
+    CHECK (birth_date IS NULL OR birth_date <= CURRENT_DATE),
+  
+  -- JSON型フィールド
+  tags JSONB DEFAULT '[]'::jsonb 
+    CHECK (jsonb_typeof(tags) = 'array'),
+  
+  preferences JSONB DEFAULT '{}'::jsonb 
+    CHECK (jsonb_typeof(preferences) = 'object'),
+  
+  -- ビジネスフィールド
+  loyalty_points INTEGER DEFAULT 0 
+    CHECK (loyalty_points >= 0),
+  
+  membership_level VARCHAR(20) DEFAULT 'regular' 
+    CHECK (membership_level IN ('regular', 'silver', 'gold', 'platinum')),
+  
+  -- タイムスタンプ
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  
+  -- 複合ユニーク制約
+  CONSTRAINT unique_email UNIQUE (email)
+);
+
+-- インデックス
+CREATE INDEX idx_customers_email ON customers(email);
+CREATE INDEX idx_customers_phone ON customers(phone_number);
+CREATE INDEX idx_customers_created_at ON customers(created_at DESC);
+CREATE INDEX idx_customers_tags ON customers USING GIN (tags);
+
+-- 更新時刻の自動更新トリガー
+CREATE OR REPLACE FUNCTION update_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER customers_updated_at
+  BEFORE UPDATE ON customers
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at();
+```
+
+## データ整合性の保証メカニズム
+
+### トランザクション境界と型の一貫性
+
+```typescript
+// backend/packages/infrastructure/src/database/transaction.ts
+export async function withTransaction<T>(
+  fn: (tx: Transaction) => Promise<T>
+): Promise<Result<T, TransactionError>> {
+  try {
+    const result = await db.transaction(async (tx) => {
+      // トランザクション内で型安全性を保持
+      return await fn(tx)
+    }, {
+      isolationLevel: 'read committed',
+      accessMode: 'read write',
+      deferrable: false
+    })
+    
+    return { type: 'ok', value: result }
+  } catch (error) {
+    // ロールバック後のエラー処理
+    return {
+      type: 'err',
+      error: {
+        type: 'transactionFailed',
+        cause: error
+      }
+    }
+  }
+}
+
+// 使用例：複数テーブルの更新
+export async function transferLoyaltyPoints(
+  fromCustomerId: CustomerId,
+  toCustomerId: CustomerId,
+  points: number
+): Promise<Result<void, TransferError>> {
+  return withTransaction(async (tx) => {
+    // 1. 送信元の顧客を取得（行ロック）
+    const [fromCustomer] = await tx
+      .select()
+      .from(customers)
+      .where(eq(customers.id, fromCustomerId))
+      .for('update')
+    
+    if (!fromCustomer || fromCustomer.loyalty_points < points) {
+      throw new InsufficientPointsError()
+    }
+    
+    // 2. ポイント移動
+    await tx
+      .update(customers)
+      .set({ loyalty_points: sql`loyalty_points - ${points}` })
+      .where(eq(customers.id, fromCustomerId))
+    
+    await tx
+      .update(customers)
+      .set({ loyalty_points: sql`loyalty_points + ${points}` })
+      .where(eq(customers.id, toCustomerId))
+    
+    // 3. 履歴記録
+    await tx.insert(pointTransferHistory).values({
+      id: uuidv4(),
+      from_customer_id: fromCustomerId,
+      to_customer_id: toCustomerId,
+      points,
+      transferred_at: new Date()
+    })
+  })
+}
+```
+
+### バリデーションエラーの伝播
+
+```typescript
+// エラーの型定義と伝播
+type ValidationError = {
+  field: string
+  message: string
+  code: string
+}
+
+// Frontend → Backend
+interface ApiValidationErrorResponse {
+  error: 'VALIDATION_ERROR'
+  errors: Record<string, string[]>
+}
+
+// Backend内部
+type DomainValidationError = {
+  type: 'validationError'
+  errors: ValidationError[]
+}
+
+// Backend → Frontend
+export const mapValidationErrorToResponse = (
+  error: DomainValidationError
+): ApiValidationErrorResponse => {
+  const errors: Record<string, string[]> = {}
+  
+  for (const err of error.errors) {
+    if (!errors[err.field]) {
+      errors[err.field] = []
+    }
+    errors[err.field].push(err.message)
+  }
+  
+  return {
+    error: 'VALIDATION_ERROR',
+    errors
+  }
+}
+
+// Frontendでのエラー表示
+function handleApiError(error: ApiError) {
+  if (error.status === 422 && error.data.error === 'VALIDATION_ERROR') {
+    const validationErrors = error.data.errors
+    
+    // React Hook Formにエラーを設定
+    Object.entries(validationErrors).forEach(([field, messages]) => {
+      form.setError(field, {
+        type: 'server',
+        message: messages.join(', ')
+      })
+    })
+  }
+}
+```
+
 ## まとめ
 
 DB型制約マッピング機構により、以下の利点が得られます：
 
-1. **API-First開発**: TypeSpecが契約の起点となり、一貫した型定義が全レイヤーに伝播
-2. **型安全性の向上**: TypeSpec → OpenAPI → TypeScript → Drizzle ORMの全段階で型チェック
-3. **循環依存の解消**: 独立したdatabaseパッケージにより、クリーンな依存関係を維持
-4. **保守性の向上**: スキーマ変更時の影響範囲の明確化と自動型生成
-5. **開発効率の向上**: 4層のマッパーによる明確な責務分離
+1. **エンドツーエンド型安全性**: フロントエンドのフォーム入力からデータベース保存まで完全な型追跡
+2. **API-First開発**: TypeSpecが契約の起点となり、一貫した型定義が全レイヤーに伝播
+3. **データ整合性の保証**: 各層での検証とデータベース制約により不正データを防止
+4. **型安全性の向上**: TypeSpec → OpenAPI → TypeScript → Drizzle ORMの全段階で型チェック
+5. **循環依存の解消**: 独立したdatabaseパッケージにより、クリーンな依存関係を維持
+6. **保守性の向上**: スキーマ変更時の影響範囲の明確化と自動型生成
+7. **開発効率の向上**: 4層のマッパーによる明確な責務分離
+8. **エラー処理の一貫性**: バリデーションエラーが型安全にフロントエンドまで伝播
 
 ### 関連ドキュメント
 
