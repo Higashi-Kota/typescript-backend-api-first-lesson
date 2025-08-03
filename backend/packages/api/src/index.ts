@@ -275,13 +275,17 @@ export const createApp = (deps: AppDependencies): Express => {
       if (result.type === 'err' || result.value == null) {
         return null
       }
+      // Map to UserDbModel type expected by auth routes
       return {
         id: result.value.data.id,
         email: result.value.data.email,
         name: result.value.data.name,
         passwordHash: result.value.data.passwordHash,
         role: result.value.data.role,
+        status: 'active' as const,
+        emailVerified: result.value.data.emailVerified,
         createdAt: result.value.data.createdAt,
+        updatedAt: result.value.data.updatedAt,
       }
     },
     create: async (user: {
@@ -289,6 +293,8 @@ export const createApp = (deps: AppDependencies): Express => {
       name: string
       passwordHash: string
       role: UserRole
+      status: 'active' | 'suspended' | 'deleted'
+      emailVerified: boolean
     }) => {
       const newUser = {
         status: {
@@ -302,7 +308,7 @@ export const createApp = (deps: AppDependencies): Express => {
           name: user.name,
           passwordHash: user.passwordHash,
           role: user.role,
-          emailVerified: false,
+          emailVerified: user.emailVerified,
           twoFactorStatus: { type: 'disabled' as const },
           passwordResetStatus: { type: 'none' as const },
           passwordHistory: [],
@@ -315,13 +321,17 @@ export const createApp = (deps: AppDependencies): Express => {
       if (result.type === 'err') {
         throw new Error('Failed to create user')
       }
+      // Map to UserDbModel type expected by auth routes
       return {
         id: result.value.data.id,
         email: result.value.data.email,
         name: result.value.data.name,
         passwordHash: result.value.data.passwordHash,
         role: result.value.data.role,
+        status: 'active' as const,
+        emailVerified: result.value.data.emailVerified,
         createdAt: result.value.data.createdAt,
+        updatedAt: result.value.data.updatedAt,
       }
     },
     findById: async (id: string) => {
@@ -329,13 +339,17 @@ export const createApp = (deps: AppDependencies): Express => {
       if (result.type === 'err' || result.value == null) {
         return null
       }
+      // Map to UserDbModel type expected by auth routes
       return {
         id: result.value.data.id,
         email: result.value.data.email,
         name: result.value.data.name,
         passwordHash: result.value.data.passwordHash,
         role: result.value.data.role,
+        status: 'active' as const,
+        emailVerified: result.value.data.emailVerified,
         createdAt: result.value.data.createdAt,
+        updatedAt: result.value.data.updatedAt,
       }
     },
   }

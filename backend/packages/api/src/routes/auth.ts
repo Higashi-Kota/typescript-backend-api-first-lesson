@@ -1,10 +1,11 @@
 /**
  * Auth API Routes
  * 認証関連のAPIエンドポイント
- * CLAUDEガイドラインに準拠
+ * OpenAPI型定義を使用したAPI First開発
  */
 
 import type { UserId } from '@beauty-salon-backend/domain'
+import type { Request, Response } from 'express'
 import bcrypt from 'bcrypt'
 import { Router } from 'express'
 import { z } from 'zod'
@@ -17,55 +18,40 @@ import {
   commonSchemas,
   formatValidationErrors,
 } from '../utils/validation-helpers.js'
+import type {
+  LoginRequest,
+  LoginResponse,
+  RegisterRequest,
+  TokenRefreshRequest,
+  ErrorResponse,
+} from '../utils/openapi-types.js'
 
-// 認証関連の型定義
-export type LoginRequest = {
-  email: string
-  password: string
-}
-
-export type RegisterRequest = {
-  email: string
-  password: string
-  name: string
-  phoneNumber: string
-  role?: UserRole
-}
-
-export type AuthResponse = {
-  accessToken: string
-  refreshToken: string
-  expiresIn: number
-  user: {
-    id: string
-    email: string
-    name: string
-    role: UserRole
-  }
-}
-
-// ユーザー情報の型（仮実装用）
-export type User = {
+// ユーザー情報の型（仮実装用 - DBモデルの代替）
+export type UserDbModel = {
   id: string
   email: string
   name: string
   passwordHash: string
   role: UserRole
+  status: 'active' | 'suspended' | 'deleted'
+  emailVerified: boolean
   createdAt: Date
+  updatedAt: Date
 }
 
-// バリデーションスキーマ
+// バリデーションスキーマ (OpenAPI型に合わせて調整)
 const loginSchema = z.object({
   email: commonSchemas.email,
   password: z.string().min(1), // ログイン時は最小長のみチェック
+  rememberMe: z.boolean().optional().default(false),
+  twoFactorCode: z.string().optional(),
 })
 
 const registerSchema = z.object({
   email: commonSchemas.email,
   password: commonSchemas.password,
   name: commonSchemas.name,
-  phoneNumber: commonSchemas.phoneNumber,
-  role: z.enum(['customer', 'staff', 'admin']).optional(),
+  role: z.enum(['customer', 'staff', 'admin']).optional().default('customer'),
 })
 
 const refreshTokenSchema = z.object({
@@ -76,9 +62,11 @@ const refreshTokenSchema = z.object({
 export type AuthRouteDeps = {
   jwtService: JwtService
   userRepository: {
-    findByEmail: (email: string) => Promise<User | null>
-    create: (user: Omit<User, 'id' | 'createdAt'>) => Promise<User>
-    findById: (id: UserId) => Promise<User | null>
+    findByEmail: (email: string) => Promise<UserDbModel | null>
+    create: (
+      user: Omit<UserDbModel, 'id' | 'createdAt' | 'updatedAt'>
+    ) => Promise<UserDbModel>
+    findById: (id: UserId) => Promise<UserDbModel | null>
   }
   authConfig: {
     jwtSecret: string
@@ -91,184 +79,297 @@ export const createAuthRoutes = (deps: AuthRouteDeps): Router => {
 
   /**
    * POST /auth/login - ログイン
+   * OpenAPI Operation: AuthOperations_login
    */
-  router.post('/login', authRateLimiter, async (req, res, next) => {
-    try {
-      // リクエストボディのバリデーション
-      const parseResult = loginSchema.safeParse(req.body)
-      if (!parseResult.success) {
-        return res.status(400).json(formatValidationErrors(parseResult.error))
-      }
+  router.post(
+    '/login',
+    authRateLimiter,
+    async (
+      req: Request<unknown, unknown, LoginRequest>,
+      res: Response<LoginResponse | ErrorResponse>,
+      next
+    ) => {
+      try {
+        // リクエストボディのバリデーション
+        const parseResult = loginSchema.safeParse(req.body)
+        if (!parseResult.success) {
+          const errorResponse: ErrorResponse = {
+            code: 'VALIDATION_ERROR',
+            message: 'Validation failed',
+            details: {
+              errors: formatValidationErrors(parseResult.error).errors,
+            },
+          }
+          return res.status(400).json(errorResponse)
+        }
 
-      const { email, password } = parseResult.data
+        const requestData: LoginRequest = parseResult.data
 
-      // ユーザーの取得
-      const user = await userRepository.findByEmail(email)
-      if (user == null) {
-        return res.status(401).json({
-          code: 'INVALID_CREDENTIALS',
-          message: 'Invalid email or password',
-        })
-      }
+        // ユーザーの取得
+        const user = await userRepository.findByEmail(requestData.email)
+        if (user == null) {
+          const errorResponse: ErrorResponse = {
+            code: 'INVALID_CREDENTIALS',
+            message: 'Invalid email or password',
+          }
+          return res.status(401).json(errorResponse)
+        }
 
-      // パスワードの検証
-      const isPasswordValid = await bcrypt.compare(password, user.passwordHash)
-      if (!isPasswordValid) {
-        return res.status(401).json({
-          code: 'INVALID_CREDENTIALS',
-          message: 'Invalid email or password',
-        })
-      }
+        // パスワードの検証
+        const isPasswordValid = await bcrypt.compare(
+          requestData.password,
+          user.passwordHash
+        )
+        if (!isPasswordValid) {
+          const errorResponse: ErrorResponse = {
+            code: 'INVALID_CREDENTIALS',
+            message: 'Invalid email or password',
+          }
+          return res.status(401).json(errorResponse)
+        }
 
-      // トークンの生成
-      const tokenResult = jwtService.generateTokens({
-        userId: user.id,
-        email: user.email,
-        role: user.role,
-      })
+        // アカウントステータスチェック
+        if (user.status !== 'active') {
+          const errorResponse: ErrorResponse = {
+            code: 'ACCOUNT_SUSPENDED',
+            message: 'Account is not active',
+          }
+          return res.status(403).json(errorResponse)
+        }
 
-      if (tokenResult.type === 'err') {
-        return res.status(500).json({
-          code: 'TOKEN_GENERATION_FAILED',
-          message: 'Failed to generate authentication token',
-        })
-      }
-
-      // レスポンス
-      const response: AuthResponse = {
-        ...tokenResult.value,
-        user: {
-          id: user.id,
+        // トークンの生成
+        const tokenResult = jwtService.generateTokens({
+          userId: user.id,
           email: user.email,
-          name: user.name,
           role: user.role,
-        },
-      }
+        })
 
-      res.json(response)
-    } catch (error) {
-      next(error)
+        if (tokenResult.type === 'err') {
+          const errorResponse: ErrorResponse = {
+            code: 'TOKEN_GENERATION_FAILED',
+            message: 'Failed to generate authentication token',
+          }
+          return res.status(500).json(errorResponse)
+        }
+
+        // OpenAPI準拠のレスポンス
+        const response: LoginResponse = {
+          accessToken: tokenResult.value.accessToken,
+          refreshToken: tokenResult.value.refreshToken,
+          tokenType: 'Bearer',
+          expiresIn: tokenResult.value.expiresIn,
+          user: {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+            status: user.status,
+            emailVerified: user.emailVerified,
+            twoFactorStatus: 'disabled',
+            failedLoginAttempts: 0,
+            createdAt: user.createdAt.toISOString(),
+            updatedAt: user.updatedAt.toISOString(),
+          },
+        }
+
+        res.json(response)
+      } catch (error) {
+        next(error)
+      }
     }
-  })
+  )
 
   /**
    * POST /auth/register - ユーザー登録
+   * OpenAPI Operation: AuthOperations_register
+   * Note: Returns LoginResponse for auto-login after registration
    */
-  router.post('/register', authRateLimiter, async (req, res, next) => {
-    try {
-      // リクエストボディのバリデーション
-      const parseResult = registerSchema.safeParse(req.body)
-      if (!parseResult.success) {
-        return res.status(400).json(formatValidationErrors(parseResult.error))
-      }
+  router.post(
+    '/register',
+    authRateLimiter,
+    async (
+      req: Request<unknown, unknown, RegisterRequest>,
+      res: Response<LoginResponse | ErrorResponse>,
+      next
+    ) => {
+      try {
+        // リクエストボディのバリデーション
+        const parseResult = registerSchema.safeParse(req.body)
+        if (!parseResult.success) {
+          const errorResponse: ErrorResponse = {
+            code: 'VALIDATION_ERROR',
+            message: 'Validation failed',
+            details: {
+              errors: formatValidationErrors(parseResult.error).errors,
+            },
+          }
+          return res.status(400).json(errorResponse)
+        }
 
-      const { email, password, name, role = 'customer' } = parseResult.data
+        const requestData: RegisterRequest = parseResult.data
 
-      // パスワード強度チェック
-      const passwordStrength = checkPasswordStrength(password)
-      if (passwordStrength.score < 5) {
-        return res.status(400).json({
-          code: 'WEAK_PASSWORD',
-          message: 'Password is too weak',
-          details: passwordStrength.feedback,
+        // パスワード強度チェック
+        const passwordStrength = checkPasswordStrength(requestData.password)
+        if (passwordStrength.score < 5) {
+          const errorResponse: ErrorResponse = {
+            code: 'WEAK_PASSWORD',
+            message: 'Password is too weak',
+            details: { feedback: passwordStrength.feedback },
+          }
+          return res.status(400).json(errorResponse)
+        }
+
+        // 既存ユーザーのチェック
+        const existingUser = await userRepository.findByEmail(requestData.email)
+        if (existingUser) {
+          const errorResponse: ErrorResponse = {
+            code: 'EMAIL_ALREADY_EXISTS',
+            message: 'Email already registered',
+          }
+          return res.status(409).json(errorResponse)
+        }
+
+        // パスワードのハッシュ化
+        const passwordHash = await bcrypt.hash(requestData.password, 10)
+
+        // ユーザーの作成
+        const newUser = await userRepository.create({
+          email: requestData.email,
+          name: requestData.name,
+          passwordHash,
+          role: requestData.role || 'customer',
+          status: 'active',
+          emailVerified: false,
         })
-      }
 
-      // 既存ユーザーのチェック
-      const existingUser = await userRepository.findByEmail(email)
-      if (existingUser) {
-        return res.status(409).json({
-          code: 'EMAIL_ALREADY_EXISTS',
-          message: 'Email already registered',
-        })
-      }
-
-      // パスワードのハッシュ化
-      const passwordHash = await bcrypt.hash(password, 10)
-
-      // ユーザーの作成
-      const newUser = await userRepository.create({
-        email,
-        name,
-        passwordHash,
-        role,
-      })
-
-      // トークンの生成
-      const tokenResult = jwtService.generateTokens({
-        userId: newUser.id,
-        email: newUser.email,
-        role: newUser.role,
-      })
-
-      if (tokenResult.type === 'err') {
-        return res.status(500).json({
-          code: 'TOKEN_GENERATION_FAILED',
-          message: 'Failed to generate authentication token',
-        })
-      }
-
-      // レスポンス
-      const response: AuthResponse = {
-        ...tokenResult.value,
-        user: {
-          id: newUser.id,
+        // Generate tokens for auto-login after registration
+        const tokenResult = jwtService.generateTokens({
+          userId: newUser.id,
           email: newUser.email,
-          name: newUser.name,
           role: newUser.role,
-        },
-      }
+        })
 
-      res.status(201).json(response)
-    } catch (error) {
-      next(error)
+        if (tokenResult.type === 'err') {
+          const errorResponse: ErrorResponse = {
+            code: 'TOKEN_GENERATION_FAILED',
+            message: 'Failed to generate authentication token',
+          }
+          return res.status(500).json(errorResponse)
+        }
+
+        // Return LoginResponse for auto-login experience
+        const response: LoginResponse = {
+          accessToken: tokenResult.value.accessToken,
+          refreshToken: tokenResult.value.refreshToken,
+          tokenType: 'Bearer',
+          expiresIn: tokenResult.value.expiresIn,
+          user: {
+            id: newUser.id,
+            email: newUser.email,
+            name: newUser.name,
+            role: newUser.role,
+            status: newUser.status,
+            emailVerified: newUser.emailVerified,
+            twoFactorStatus: 'disabled',
+            failedLoginAttempts: 0,
+            createdAt: newUser.createdAt.toISOString(),
+            updatedAt: newUser.updatedAt.toISOString(),
+          },
+        }
+
+        res.status(201).json(response)
+      } catch (error) {
+        next(error)
+      }
     }
-  })
+  )
 
   /**
    * POST /auth/refresh - トークンリフレッシュ
+   * OpenAPI Operation: AuthOperations_refreshToken
    */
-  router.post('/refresh', async (req, res, next) => {
-    try {
-      // リクエストボディのバリデーション
-      const parseResult = refreshTokenSchema.safeParse(req.body)
-      if (!parseResult.success) {
-        return res.status(400).json({
-          code: 'INVALID_REQUEST',
-          message: 'Refresh token is required',
-        })
-      }
-
-      const { refreshToken } = parseResult.data
-
-      // トークンのリフレッシュ
-      const tokenResult = await jwtService.refreshTokens(
-        refreshToken,
-        async (userId) => {
-          const user = await userRepository.findById(userId as UserId)
-          if (user == null) {
-            return null
+  router.post(
+    '/refresh',
+    async (
+      req: Request<unknown, unknown, TokenRefreshRequest>,
+      res: Response<LoginResponse | ErrorResponse>,
+      next
+    ) => {
+      try {
+        // リクエストボディのバリデーション
+        const parseResult = refreshTokenSchema.safeParse(req.body)
+        if (!parseResult.success) {
+          const errorResponse: ErrorResponse = {
+            code: 'INVALID_REQUEST',
+            message: 'Refresh token is required',
           }
-          return {
-            userId: user.id,
-            email: user.email,
-            role: user.role,
-          }
+          return res.status(400).json(errorResponse)
         }
-      )
 
-      if (tokenResult.type === 'err') {
-        return res.status(401).json({
-          code: 'INVALID_REFRESH_TOKEN',
-          message: 'Invalid or expired refresh token',
+        const { refreshToken } = parseResult.data
+
+        // First verify the refresh token and get the user ID
+        const verifyResult = jwtService.verifyRefreshToken(refreshToken)
+        if (verifyResult.type === 'err') {
+          const errorResponse: ErrorResponse = {
+            code: 'INVALID_REFRESH_TOKEN',
+            message: 'Invalid or expired refresh token',
+          }
+          return res.status(401).json(errorResponse)
+        }
+
+        // Get the user data
+        const user = await userRepository.findById(
+          verifyResult.value.userId as UserId
+        )
+        if (user == null) {
+          const errorResponse: ErrorResponse = {
+            code: 'USER_NOT_FOUND',
+            message: 'User not found',
+          }
+          return res.status(404).json(errorResponse)
+        }
+
+        // Generate new tokens
+        const tokenResult = jwtService.generateTokens({
+          userId: user.id,
+          email: user.email,
+          role: user.role,
         })
-      }
 
-      res.json(tokenResult.value)
-    } catch (error) {
-      next(error)
+        if (tokenResult.type === 'err') {
+          const errorResponse: ErrorResponse = {
+            code: 'TOKEN_GENERATION_FAILED',
+            message: 'Failed to generate new tokens',
+          }
+          return res.status(500).json(errorResponse)
+        }
+
+        // トークンリフレッシュのレスポンス
+        const response: LoginResponse = {
+          accessToken: tokenResult.value.accessToken,
+          refreshToken: tokenResult.value.refreshToken,
+          tokenType: 'Bearer',
+          expiresIn: tokenResult.value.expiresIn,
+          user: {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+            status: user.status,
+            emailVerified: user.emailVerified,
+            twoFactorStatus: 'disabled',
+            failedLoginAttempts: 0,
+            createdAt: user.createdAt.toISOString(),
+            updatedAt: user.updatedAt.toISOString(),
+          },
+        }
+        res.json(response)
+      } catch (error) {
+        next(error)
+      }
     }
-  })
+  )
 
   /**
    * POST /auth/logout - ログアウト

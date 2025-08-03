@@ -119,14 +119,17 @@ const test = base.extend<Fixtures>({
           return null
         }
 
-        // Map domain User to the auth route's User type
+        // Map domain User to UserDbModel type
         return {
           id: result.value.data.id,
           email: result.value.data.email,
           name: result.value.data.name,
           passwordHash: result.value.data.passwordHash,
           role: result.value.data.role,
+          status: 'active' as const,
+          emailVerified: result.value.data.emailVerified,
           createdAt: result.value.data.createdAt,
+          updatedAt: result.value.data.updatedAt,
         }
       },
       create: async (userData: {
@@ -158,14 +161,17 @@ const test = base.extend<Fixtures>({
           throw new Error('Failed to create user')
         }
 
-        // Return simplified user for auth route
+        // Return UserDbModel for auth route
         return {
           id: result.value.data.id,
           email: result.value.data.email,
           name: result.value.data.name,
           passwordHash: result.value.data.passwordHash,
           role: result.value.data.role,
+          status: 'active' as const,
+          emailVerified: result.value.data.emailVerified,
           createdAt: result.value.data.createdAt,
+          updatedAt: result.value.data.updatedAt,
         }
       },
       findById: async (id: UserId) => {
@@ -177,14 +183,17 @@ const test = base.extend<Fixtures>({
           return null
         }
 
-        // Map domain User to the auth route's User type
+        // Map domain User to UserDbModel type
         return {
           id: result.value.data.id,
           email: result.value.data.email,
           name: result.value.data.name,
           passwordHash: result.value.data.passwordHash,
           role: result.value.data.role,
+          status: 'active' as const,
+          emailVerified: result.value.data.emailVerified,
           createdAt: result.value.data.createdAt,
+          updatedAt: result.value.data.updatedAt,
         }
       },
     }
