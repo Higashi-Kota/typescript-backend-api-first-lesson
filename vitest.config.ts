@@ -1,3 +1,4 @@
+import path from 'node:path'
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
@@ -20,12 +21,39 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@beauty-salon-backend/types': '/backend/packages/types/src',
-      '@beauty-salon-backend/core': '/backend/packages/core/src',
-      '@beauty-salon-backend/infrastructure':
-        '/backend/packages/infrastructure/src',
-      '@beauty-salon-backend/api': '/backend/packages/api/src',
-      '@beauty-salon-backend/config': '/backend/packages/config/src',
+      // backend packages
+      '@beauty-salon-backend/domain': path.resolve(
+        __dirname,
+        'backend/packages/domain/src'
+      ),
+      '@beauty-salon-backend/types': path.resolve(
+        __dirname,
+        'backend/packages/types/src'
+      ),
+      '@beauty-salon-backend/infrastructure': path.resolve(
+        __dirname,
+        'backend/packages/infrastructure/src'
+      ),
+      '@beauty-salon-backend/api': path.resolve(
+        __dirname,
+        'backend/packages/api/src'
+      ),
+      '@beauty-salon-backend/config': path.resolve(
+        __dirname,
+        'backend/packages/config/src'
+      ),
+      '@beauty-salon-backend/mappers': path.resolve(
+        __dirname,
+        'backend/packages/mappers/src'
+      ),
+      '@beauty-salon-backend/test-utils': path.resolve(
+        __dirname,
+        'backend/packages/test-utils/src'
+      ),
+      '@beauty-salon-backend/migration': path.resolve(
+        __dirname,
+        'backend/apps/migration/src'
+      ),
     },
   },
 })

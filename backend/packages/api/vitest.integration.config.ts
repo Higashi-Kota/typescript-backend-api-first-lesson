@@ -1,3 +1,4 @@
+import path from 'node:path'
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
@@ -17,11 +18,13 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@beauty-salon-backend/domain': '../../../backend/packages/domain/src',
-      '@backend/usecase': '../../../backend/packages/usecase/src',
-      '@beauty-salon-backend/infrastructure':
-        '../../../backend/packages/infrastructure/src',
-      '@beauty-salon-backend/types': '../../../backend/packages/types/src',
+      '@beauty-salon-backend/domain': path.resolve(__dirname, '../domain/src'),
+      '@backend/usecase': path.resolve(__dirname, '../usecase/src'),
+      '@beauty-salon-backend/infrastructure': path.resolve(
+        __dirname,
+        '../infrastructure/src'
+      ),
+      '@beauty-salon-backend/types': path.resolve(__dirname, '../types/src'),
     },
   },
 })
