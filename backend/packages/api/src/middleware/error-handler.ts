@@ -3,15 +3,15 @@
  * CLAUDE.mdのガイドラインに準拠
  */
 
+import { createErrorContextService } from '@beauty-salon-backend/infrastructure/services'
+import {
+  type SentryErrorEvent,
+  createSentryService,
+} from '@beauty-salon-backend/infrastructure/services'
 import type { NextFunction, Request, Response } from 'express'
 import type { Request as ExpressRequest } from 'express'
 import { match } from 'ts-pattern'
 import { ZodError } from 'zod'
-import { createErrorContextService } from '../services/error-context.service'
-import {
-  type SentryErrorEvent,
-  createSentryService,
-} from '../services/sentry.service'
 import type { AuthenticatedUser } from '../types/auth'
 import type { ErrorResponse } from '../types/error'
 import { createStructuredLogger } from '../utils/structured-logger'

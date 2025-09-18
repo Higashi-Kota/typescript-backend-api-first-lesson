@@ -42,8 +42,7 @@
   "dependencies": {
     "@beauty-salon-backend/domain": "workspace:*",
     "@beauty-salon-backend/config": "workspace:*",
-    "@beauty-salon-backend/types": "workspace:*",
-    "@beauty-salon-backend/mappers": "workspace:*",
+    "@beauty-salon-backend/generated": "workspace:*",
     "@beauty-salon-backend/database": "workspace:*",
     "drizzle-orm": "^0.44.2",
     "postgres": "^3.4.7",
@@ -56,7 +55,7 @@
     "@aws-sdk/s3-request-presigner": "^3.709.0"
   },
   "devDependencies": {
-    "@beauty-salon-backend/migration": "workspace:*",
+    "@beauty-salon-backend/database": "workspace:*",
     "@beauty-salon-shared/config": "workspace:*",
     "@beauty-salon-backend/test-utils": "workspace:*",
     "@biomejs/biome": "^1.9.4",

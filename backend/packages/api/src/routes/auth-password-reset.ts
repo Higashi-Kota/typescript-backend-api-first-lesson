@@ -8,16 +8,16 @@ import type {
   SessionRepository,
   UserRepository,
 } from '@beauty-salon-backend/domain'
-import type { components } from '@beauty-salon-backend/types/api'
-import type { RequestPasswordResetDeps } from '@beauty-salon-backend/usecase'
-import type { ResetPasswordDeps } from '@beauty-salon-backend/usecase'
-import { requestPasswordResetUseCase } from '@beauty-salon-backend/usecase'
-import { verifyResetTokenUseCase } from '@beauty-salon-backend/usecase'
-import { resetPasswordUseCase } from '@beauty-salon-backend/usecase'
+import type { RequestPasswordResetDeps } from '@beauty-salon-backend/domain/business-logic'
+import type { ResetPasswordDeps } from '@beauty-salon-backend/domain/business-logic'
+import { requestPasswordResetUseCase } from '@beauty-salon-backend/domain/business-logic'
+import { verifyResetTokenUseCase } from '@beauty-salon-backend/domain/business-logic'
+import { resetPasswordUseCase } from '@beauty-salon-backend/domain/business-logic'
+import type { components } from '@beauty-salon-backend/generated'
 import { Router } from 'express'
 import { match } from 'ts-pattern'
 import { z } from 'zod'
-import { passwordResetRateLimiter } from '../middleware/rate-limit.js'
+import { passwordResetRateLimiter } from '../middleware/rate-limit'
 
 // バリデーションスキーマ
 const passwordResetRequestSchema = z.object({

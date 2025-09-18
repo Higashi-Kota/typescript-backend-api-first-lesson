@@ -524,22 +524,6 @@ Drizzleが自動生成するファイル名：
 
 ファイル名の数字は順序を表し、この順番で適用されます。
 
-### マイグレーションファイルの管理
-
-```
-backend/apps/migration/
-├── scripts/                    # マイグレーションファイル
-│   ├── 0000_drop_existing_types.sql
-│   ├── 0001_material_ironclad.sql
-│   └── meta/
-│       ├── _journal.json       # マイグレーション履歴
-│       └── 0001_snapshot.json  # スキーマスナップショット
-├── src/
-│   ├── migrate.ts             # マイグレーション実行スクリプト
-│   ├── reset.ts               # データベースリセットスクリプト
-│   └── seed.ts                # シードデータ投入スクリプト
-└── drizzle.config.ts          # Drizzle設定ファイル
-```
 
 ### トラブルシューティング
 
@@ -559,7 +543,6 @@ pnpm run db:migrate
 #### マイグレーション履歴の不整合
 ```bash
 # マイグレーション履歴をクリア
-rm -rf backend/apps/migration/scripts/meta
 pnpm run db:generate
 ```
 
@@ -608,8 +591,6 @@ pnpm run db:reset
 PGPASSWORD=postgres psql -h localhost -U postgres -d beauty_salon \
   -c "DROP TABLE IF EXISTS drizzle.__drizzle_migrations"
 
-# 3. マイグレーションメタデータを削除
-rm -rf backend/apps/migration/scripts/meta
 
 # 4. 新しいマイグレーションを生成
 pnpm run db:generate

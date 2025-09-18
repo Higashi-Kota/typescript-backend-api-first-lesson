@@ -11,8 +11,8 @@ import {
   authenticate,
   authorize,
   optionalAuthenticate,
-} from '../middleware/auth.middleware.js'
-import type { AuthConfig } from '../middleware/auth.middleware.js'
+} from '../middleware/auth.middleware'
+import type { AuthConfig } from '../middleware/auth.middleware'
 
 import type {
   ReservationRepository,
@@ -49,7 +49,7 @@ import {
   mapUpdateReviewRequest,
   publishReviewUseCase,
   updateReviewUseCase,
-} from '@beauty-salon-backend/usecase'
+} from '@beauty-salon-backend/domain/business-logic'
 
 // バリデーションスキーマ
 const reviewIdSchema = z.string().uuid()

@@ -9,7 +9,6 @@
     "paths": {
       "@beauty-salon/core": ["./packages/core/src"],
       "@beauty-salon/core/*": ["./packages/core/src/*"],
-      "@beauty-salon/types/*": ["./packages/types/src/*"],
       "@beauty-salon/infrastructure": ["./packages/infrastructure/src"],
       "@beauty-salon/infrastructure/*": ["./packages/infrastructure/src/*"],
       "@beauty-salon/api": ["./packages/api/src"],
@@ -19,12 +18,10 @@
     }
   },
   "references": [
-    { "path": "./packages/types" },
+    { "path": "./packages/generated" },
     { "path": "./packages/config" },
-    { "path": "./packages/usecase" },
     { "path": "./packages/infrastructure" },
     { "path": "./packages/api" },
-    { "path": "./apps/server" },
-    { "path": "./apps/migration" }
+    { "path": "./apps/server" }
   ]
 }

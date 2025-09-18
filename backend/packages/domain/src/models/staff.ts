@@ -1,234 +1,390 @@
 /**
  * Staff Domain Model
- * CLAUDEガイドラインに準拠したSum型によるモデリング
+ * Implements state management and business logic for staff members
  */
 
-import type { Brand } from '../shared/brand.js'
-import { createBrand, createBrandSafe } from '../shared/brand.js'
-import type { Result } from '../shared/result.js'
-import { err, ok } from '../shared/result.js'
-import type { SalonId } from './salon.js'
+import type { components } from '@beauty-salon-backend/generated'
+import { match } from 'ts-pattern'
+import type { Brand } from '../shared/brand'
+import type { DomainError, ValidationError } from '../shared/errors'
+import type {
+  StaffLevel,
+  StaffPermission,
+  StaffQualification,
+  StaffSchedule,
+} from '../shared/generated-types-shim'
+import type { Result } from '../shared/result'
+import { err, ok } from '../shared/result'
 
-// Staff固有のID型
-export type StaffId = Brand<string, 'StaffId'>
+// Brand the ID types for type safety
+export type StaffId = Brand<components['schemas']['Models.StaffId'], 'StaffId'>
+export type SalonId = Brand<components['schemas']['Models.SalonId'], 'SalonId'>
 
-// StaffID作成関数
-export const createStaffId = (value: string) => createBrand(value, 'StaffId')
-export const createStaffIdSafe = (value: string) =>
-  createBrandSafe(value, 'StaffId')
-
-// 監査情報（Salonと共通）
-import type { AuditInfo, ContactInfo, DayOfWeek } from './salon.js'
-
-// Staffベースデータ
-export type StaffData = {
+// Domain Staff Model - extends generated type with additional business properties
+export interface Staff
+  extends Omit<components['schemas']['Models.Staff'], 'id' | 'salonId'> {
   id: StaffId
   salonId: SalonId
-  name: string
-  contactInfo: ContactInfo
-  specialties: string[]
-  imageUrl?: string
-  bio?: string
-  yearsOfExperience?: number
-  certifications?: string[]
-} & AuditInfo
+  // Additional domain properties not in generated types
+  qualifications?: StaffQualification[]
+  schedules?: StaffSchedule[]
+  permissions?: StaffPermission[]
+}
 
-// Staff Sum型（ステータスベース）
-export type Staff =
+// Staff State Management (Sum Type)
+export type StaffState =
+  | { type: 'active'; staff: Staff }
   | {
-      type: 'active'
-      data: StaffData
+      type: 'on_leave'
+      staff: Staff
+      leaveType: LeaveType
+      returnDate?: string
     }
   | {
-      type: 'inactive'
-      data: StaffData
-      inactivatedAt: Date
-      inactivatedReason?: string
+      type: 'training'
+      staff: Staff
+      trainingProgram: string
+      completionDate: string
     }
+  | { type: 'suspended'; staff: Staff; reason: string; until?: string }
   | {
       type: 'terminated'
-      data: StaffData
-      terminatedAt: Date
-      terminatedBy: string
-      terminatedReason?: string
+      staffId: StaffId
+      terminatedAt: string
+      reason?: string
     }
 
-// Staff作成リクエスト
-export type CreateStaffRequest = {
-  salonId: SalonId
-  name: string
-  contactInfo: ContactInfo
-  specialties: string[]
-  imageUrl?: string
-  bio?: string
-  yearsOfExperience?: number
-  certifications?: string[]
-  createdBy?: string
-}
+export type LeaveType =
+  | 'vacation'
+  | 'sick'
+  | 'maternity'
+  | 'paternity'
+  | 'personal'
+  | 'sabbatical'
 
-// Staff更新リクエスト
-export type UpdateStaffRequest = {
-  id: StaffId
-  name?: string
-  contactInfo?: ContactInfo
-  specialties?: string[]
-  imageUrl?: string
-  bio?: string
-  yearsOfExperience?: number
-  certifications?: string[]
-  updatedBy?: string
-}
+// Staff Operation Results (Sum Type for business operations)
+export type StaffOperationResult =
+  | { type: 'created'; staff: Staff }
+  | { type: 'updated'; staff: Staff; changes: string[] }
+  | { type: 'activated'; staff: Staff }
+  | { type: 'deactivated'; staff: Staff; reason: string }
+  | { type: 'leave_started'; staff: Staff; leaveType: LeaveType }
+  | { type: 'returned_from_leave'; staff: Staff }
+  | { type: 'schedule_updated'; staff: Staff; scheduleId: string }
+  | { type: 'permissions_updated'; staff: Staff; permissions: string[] }
+  | { type: 'terminated'; staffId: StaffId; terminatedAt: string }
+  | { type: 'validation_failed'; errors: ValidationError[] }
+  | { type: 'not_found'; staffId: StaffId }
+  | { type: 'salon_not_found'; salonId: SalonId }
+  | { type: 'conflict'; message: string }
+  | { type: 'error'; error: DomainError }
 
-// Staff可用性
-export type StaffAvailability = {
-  staffId: StaffId
-  dayOfWeek: DayOfWeek
-  startTime: string // HH:MM format
-  endTime: string // HH:MM format
-  breakStart?: string // HH:MM format
-  breakEnd?: string // HH:MM format
-}
+// Staff Search and Filter Results
+export type StaffSearchResult =
+  | { type: 'found'; staff: Staff[]; totalCount: number }
+  | { type: 'empty'; query: StaffSearchQuery }
+  | { type: 'error'; error: DomainError }
 
-// Staff検索条件
-export type StaffSearchCriteria = {
+export interface StaffSearchQuery {
   salonId?: SalonId
-  keyword?: string
   specialties?: string[]
   isActive?: boolean
+  level?: StaffLevel
+  hasAvailability?: boolean
+  searchTerm?: string
 }
 
-// エラー型の定義
-export type StaffError =
-  | { type: 'invalidName'; message: string }
-  | { type: 'invalidSpecialties'; message: string }
-  | { type: 'invalidExperience'; message: string }
-  | { type: 'invalidAvailability'; message: string }
+// Staff Events for audit/tracking
+export type StaffEvent =
+  | {
+      type: 'staff_created'
+      staff: Staff
+      createdBy: string
+      timestamp: string
+    }
+  | {
+      type: 'staff_updated'
+      staffId: StaffId
+      changes: StaffChanges
+      updatedBy: string
+      timestamp: string
+    }
+  | {
+      type: 'staff_activated'
+      staffId: StaffId
+      activatedBy: string
+      timestamp: string
+    }
+  | {
+      type: 'staff_deactivated'
+      staffId: StaffId
+      reason: string
+      deactivatedBy: string
+      timestamp: string
+    }
+  | {
+      type: 'leave_requested'
+      staffId: StaffId
+      leaveType: LeaveType
+      startDate: string
+      endDate?: string
+    }
+  | {
+      type: 'leave_approved'
+      staffId: StaffId
+      approvedBy: string
+      timestamp: string
+    }
+  | {
+      type: 'schedule_changed'
+      staffId: StaffId
+      newSchedule: StaffSchedule[]
+      changedBy: string
+    }
+  | {
+      type: 'certification_added'
+      staffId: StaffId
+      certification: string
+      timestamp: string
+    }
+  | {
+      type: 'performance_reviewed'
+      staffId: StaffId
+      rating: number
+      reviewedBy: string
+      timestamp: string
+    }
 
-// バリデーション関数
-export const validateStaffName = (name: string): Result<string, StaffError> => {
-  if (!name || name.trim().length === 0) {
-    return err({ type: 'invalidName', message: 'Staff name cannot be empty' })
+export interface StaffChanges {
+  name?: { from: string; to: string }
+  contactInfo?: { from: any; to: any }
+  specialties?: { added: string[]; removed: string[] }
+  certifications?: { added: string[]; removed: string[] }
+  schedules?: {
+    from: StaffSchedule[]
+    to: StaffSchedule[]
   }
-  if (name.length > 100) {
-    return err({ type: 'invalidName', message: 'Staff name is too long' })
-  }
-  return ok(name.trim())
+  permissions?: { added: string[]; removed: string[] }
+  isActive?: { from: boolean; to: boolean }
 }
 
-export const validateSpecialties = (
-  specialties: string[]
-): Result<string[], StaffError> => {
-  if (!specialties || specialties.length === 0) {
-    return err({
-      type: 'invalidSpecialties',
+// Import types from generated schemas
+export type CreateStaffRequest =
+  components['schemas']['Models.CreateStaffRequest']
+export type UpdateStaffRequest =
+  components['schemas']['Models.UpdateStaffRequest']
+export type UpdateStaffRequestWithReset =
+  components['schemas']['Models.UpdateStaffRequestWithReset']
+export type StaffAvailability =
+  components['schemas']['Models.StaffAvailability']
+export type StaffPerformance = components['schemas']['Models.StaffPerformance']
+
+// Import missing types from shim (temporary workaround)
+export type {
+  StaffSchedule,
+  StaffQualification,
+  StaffPermission,
+  StaffLevel,
+} from '../shared/generated-types-shim'
+
+// Business Logic Functions
+
+/**
+ * Check if a staff member is available for bookings
+ */
+export const isStaffAvailable = (state: StaffState): boolean => {
+  return match(state)
+    .with({ type: 'active' }, () => true)
+    .with({ type: 'training' }, () => false)
+    .with({ type: 'on_leave' }, () => false)
+    .with({ type: 'suspended' }, () => false)
+    .with({ type: 'terminated' }, () => false)
+    .exhaustive()
+}
+
+/**
+ * Check if a staff member can perform a specific service
+ */
+export const canPerformService = (
+  staff: Staff,
+  serviceCategory: string,
+  requiredLevel?: StaffLevel
+): boolean => {
+  // Check if staff has the required specialty
+  const hasSpecialty = staff.specialties.includes(serviceCategory)
+
+  // If a level is required, check staff qualifications
+  if (requiredLevel && staff.qualifications) {
+    const hasRequiredLevel = staff.qualifications.some(
+      (q: any) =>
+        q.type === 'level' &&
+        compareStaffLevels(q.value as StaffLevel, requiredLevel) >= 0
+    )
+    return hasSpecialty && hasRequiredLevel
+  }
+
+  return hasSpecialty
+}
+
+/**
+ * Compare staff levels (returns positive if level1 > level2)
+ */
+const compareStaffLevels = (level1: StaffLevel, level2: StaffLevel): number => {
+  const levels: StaffLevel[] = [
+    'junior',
+    'stylist',
+    'senior',
+    'expert',
+    'director',
+  ]
+  return levels.indexOf(level1) - levels.indexOf(level2)
+}
+
+/**
+ * Calculate staff utilization rate
+ */
+export const calculateUtilization = (
+  schedules: StaffSchedule[],
+  actualHoursWorked: number
+): number => {
+  const totalScheduledHours = schedules.reduce((total, _schedule) => {
+    // Simple calculation - would need proper time parsing in production
+    return total + 8 // Assuming 8-hour shifts
+  }, 0)
+
+  return totalScheduledHours > 0
+    ? (actualHoursWorked / totalScheduledHours) * 100
+    : 0
+}
+
+/**
+ * Validate staff data
+ */
+export const validateStaff = (
+  staff: Partial<Staff>
+): Result<Staff, ValidationError[]> => {
+  const errors: ValidationError[] = []
+
+  if (!staff.name || staff.name.trim().length === 0) {
+    errors.push({ field: 'name', message: 'Staff name is required' })
+  }
+
+  if (!staff.salonId) {
+    errors.push({ field: 'salonId', message: 'Salon ID is required' })
+  }
+
+  if (!(staff.contactInfo?.email && staff.contactInfo?.phoneNumber)) {
+    errors.push({
+      field: 'contactInfo',
+      message: 'Email and phone number are required',
+    })
+  }
+
+  if (!staff.specialties || staff.specialties.length === 0) {
+    errors.push({
+      field: 'specialties',
       message: 'At least one specialty is required',
     })
   }
-  if (specialties.length > 20) {
-    return err({
-      type: 'invalidSpecialties',
-      message: 'Too many specialties',
-    })
-  }
-  return ok(specialties)
-}
 
-export const validateYearsOfExperience = (
-  years?: number
-): Result<number | undefined, StaffError> => {
-  if (years === undefined) {
-    return ok(undefined)
-  }
-  if (years < 0) {
-    return err({
-      type: 'invalidExperience',
+  if (staff.yearsOfExperience && staff.yearsOfExperience < 0) {
+    errors.push({
+      field: 'yearsOfExperience',
       message: 'Years of experience cannot be negative',
     })
   }
-  if (years > 100) {
-    return err({
-      type: 'invalidExperience',
-      message: 'Years of experience is unrealistic',
-    })
+
+  if (errors.length > 0) {
+    return err(errors)
   }
-  return ok(years)
+
+  return ok(staff as Staff)
 }
 
-export const validateAvailability = (
-  availability: StaffAvailability
-): Result<StaffAvailability, StaffError> => {
-  const timeRegex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/
+/**
+ * Check if staff has required permissions
+ */
+export const hasPermission = (
+  staff: Staff,
+  resource: string,
+  action: string
+): boolean => {
+  if (!staff.permissions) {
+    return false
+  }
 
-  if (
-    !(
-      timeRegex.test(availability.startTime) &&
-      timeRegex.test(availability.endTime)
+  return staff.permissions.some((permission: any) => {
+    // Check if permission has expired
+    if (permission.expiresAt && new Date(permission.expiresAt) < new Date()) {
+      return false
+    }
+
+    // Check resource and action match
+    return (
+      permission.resource === resource && permission.actions.includes(action)
     )
-  ) {
-    return err({
-      type: 'invalidAvailability',
-      message: 'Invalid time format (use HH:MM)',
-    })
-  }
-
-  if (availability.breakStart && !timeRegex.test(availability.breakStart)) {
-    return err({
-      type: 'invalidAvailability',
-      message: 'Invalid break start time format',
-    })
-  }
-
-  if (availability.breakEnd && !timeRegex.test(availability.breakEnd)) {
-    return err({
-      type: 'invalidAvailability',
-      message: 'Invalid break end time format',
-    })
-  }
-
-  // 開始時間が終了時間より後にならないようにチェック
-  const startParts = availability.startTime.split(':').map(Number)
-  const endParts = availability.endTime.split(':').map(Number)
-  const startHour = startParts[0]
-  const startMin = startParts[1]
-  const endHour = endParts[0]
-  const endMin = endParts[1]
-
-  if (
-    startHour === undefined ||
-    startMin === undefined ||
-    endHour === undefined ||
-    endMin === undefined
-  ) {
-    return err({
-      type: 'invalidAvailability',
-      message: 'Invalid time format',
-    })
-  }
-
-  if (startHour > endHour || (startHour === endHour && startMin >= endMin)) {
-    return err({
-      type: 'invalidAvailability',
-      message: 'Start time must be before end time',
-    })
-  }
-
-  return ok(availability)
+  })
 }
 
-// 便利なヘルパー関数
-export const isActiveStaff = (
-  staff: Staff
-): staff is Extract<Staff, { type: 'active' }> => staff.type === 'active'
+/**
+ * Get staff availability for a specific day
+ */
+export const getAvailabilityForDay = (
+  staff: Staff,
+  dayOfWeek: string
+): StaffAvailability | undefined => {
+  if (!staff.schedules) {
+    return undefined
+  }
 
-export const isInactiveStaff = (
-  staff: Staff
-): staff is Extract<Staff, { type: 'inactive' }> => staff.type === 'inactive'
+  // Find schedule for the specific day
+  const schedule = staff.schedules.find(
+    (s: any) => s.dayOfWeek === dayOfWeek && s.isActive
+  )
 
-export const isTerminatedStaff = (
-  staff: Staff
-): staff is Extract<Staff, { type: 'terminated' }> =>
-  staff.type === 'terminated'
+  if (!schedule) {
+    return undefined
+  }
 
-export const canProvideService = (staff: Staff): boolean => {
-  return staff.type === 'active'
+  return {
+    staffId: staff.id,
+    dayOfWeek: schedule.dayOfWeek,
+    startTime: schedule.startTime,
+    endTime: schedule.endTime,
+    breakStart: schedule.breakStart,
+    breakEnd: schedule.breakEnd,
+  } as StaffAvailability
+}
+
+/**
+ * Transform staff state for different contexts
+ */
+export const getStaffDisplayInfo = (state: StaffState) => {
+  return match(state)
+    .with({ type: 'active' }, ({ staff }) => ({
+      ...staff,
+      status: 'Available',
+      statusColor: 'green',
+    }))
+    .with({ type: 'on_leave' }, ({ staff, leaveType }) => ({
+      ...staff,
+      status: `On ${leaveType} leave`,
+      statusColor: 'yellow',
+    }))
+    .with({ type: 'training' }, ({ staff, trainingProgram }) => ({
+      ...staff,
+      status: `In training: ${trainingProgram}`,
+      statusColor: 'blue',
+    }))
+    .with({ type: 'suspended' }, ({ staff, reason }) => ({
+      ...staff,
+      status: `Suspended: ${reason}`,
+      statusColor: 'red',
+    }))
+    .with({ type: 'terminated' }, ({ staffId }) => ({
+      id: staffId,
+      status: 'Terminated',
+      statusColor: 'gray',
+    }))
+    .exhaustive()
 }

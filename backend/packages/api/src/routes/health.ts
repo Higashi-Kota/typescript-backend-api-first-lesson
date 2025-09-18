@@ -4,7 +4,7 @@ import { sql } from 'drizzle-orm'
 import { Router } from 'express'
 import type { Request, Response } from 'express'
 import { match } from 'ts-pattern'
-import { createStructuredLogger } from '../utils/structured-logger.js'
+import { createStructuredLogger } from '../utils/structured-logger'
 
 const router = Router()
 const logger = createStructuredLogger('health')

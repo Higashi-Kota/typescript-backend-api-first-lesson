@@ -12,11 +12,16 @@
   },
   "references": [
     { "path": "../domain" },
-    { "path": "../usecase" },
-    { "path": "../types" },
-    { "path": "../config" },
+    { "path": "../generated" },
     { "path": "../infrastructure" }
   ],
-  "include": ["src/**/*"],
+  "include": [
+    "src/**/*",
+    "../infrastructure/src/services/sentry.service.ts",
+    "../infrastructure/src/services/metrics.service.ts",
+    "../infrastructure/src/services/jwt.service.ts",
+    "../infrastructure/src/services/error-context.service.ts",
+    "../infrastructure/src/services/email-adapter.service.ts"
+  ],
   "exclude": ["node_modules", "dist"]
 }

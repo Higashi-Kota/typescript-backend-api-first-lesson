@@ -1,6 +1,6 @@
 import path from 'node:path'
 import { config as dotenvConfig } from 'dotenv'
-import { type EnvConfig, validateEnv } from './env.schema.js'
+import { type EnvConfig, validateEnv } from './env.schema'
 
 // Load environment variables from root .env file
 dotenvConfig({ path: path.resolve(process.cwd(), '../../../.env') })

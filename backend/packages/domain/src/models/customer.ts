@@ -1,338 +1,461 @@
 /**
- * Customer ドメインモデル
- * Sum型を使用して顧客の状態を表現
+ * Customer Domain Model
+ *
+ * Generated types from specs with Sum types for state management
+ * All types are derived from TypeSpec/OpenAPI specifications
  */
 
+import type { components } from '@beauty-salon-backend/generated'
 import { match } from 'ts-pattern'
-import type { Brand } from '../shared/brand.js'
-import { createBrand, createBrandSafe } from '../shared/brand.js'
-import type { Result } from '../shared/result.js'
-import { err, ok } from '../shared/result.js'
+import type { Brand } from '../shared/brand'
+import type { ValidationError } from '../shared/errors'
+import type { Result } from '../shared/result'
+import { err, ok } from '../shared/result'
 
-// Customer固有のID型
-export type CustomerId = Brand<string, 'CustomerId'>
+// ============================================================================
+// Type Aliases - Re-export generated types with branding
+// ============================================================================
 
-// CustomerID作成関数
-export const createCustomerId = (value: string) =>
-  createBrand(value, 'CustomerId')
-export const createCustomerIdSafe = (value: string) =>
-  createBrandSafe(value, 'CustomerId')
+// Brand the ID types for type safety
+export type CustomerId = Brand<
+  components['schemas']['Models.CustomerId'],
+  'CustomerId'
+>
+export type SalonId = Brand<components['schemas']['Models.SalonId'], 'SalonId'>
+export type StaffId = Brand<components['schemas']['Models.StaffId'], 'StaffId'>
+export type BookingId = Brand<
+  components['schemas']['Models.BookingId'],
+  'BookingId'
+>
+export type ReservationId = Brand<
+  components['schemas']['Models.ReservationId'],
+  'ReservationId'
+>
+export type MedicalChartId = Brand<
+  components['schemas']['Models.MedicalChartId'],
+  'MedicalChartId'
+>
+export type MembershipLevelId = Brand<
+  components['schemas']['Models.MembershipLevelId'],
+  'MembershipLevelId'
+>
 
-// 連絡先情報
-export type ContactInfo = {
-  email: string
-  phoneNumber: string
-  alternativePhone?: string
-}
-
-// 顧客の基本情報
-export type CustomerData = {
+// Domain Customer Model - extends generated type with domain-specific fields
+export interface Customer
+  extends Omit<components['schemas']['Models.Customer'], 'id' | 'referredBy'> {
   id: CustomerId
-  name: string
-  contactInfo: ContactInfo
-  preferences: string | null
-  notes: string | null
-  tags: string[]
-  birthDate: Date | null
-  loyaltyPoints: number
-  membershipLevel: MembershipLevel
-  createdAt: Date
-  updatedAt: Date
+  referredBy?: CustomerId
 }
 
-// メンバーシップレベル（Sum型）
-export type MembershipLevel = 'regular' | 'silver' | 'gold' | 'platinum'
-
-// 顧客の状態（Sum型）
-export type Customer =
-  | { type: 'active'; data: CustomerData }
-  | { type: 'suspended'; data: CustomerData; reason: string; suspendedAt: Date }
-  | { type: 'deleted'; data: CustomerData; deletedAt: Date }
-
-// 顧客作成時の入力
-export type CreateCustomerInput = {
-  name: string
-  contactInfo: ContactInfo
-  preferences?: string
-  notes?: string
-  tags?: string[]
-  birthDate?: Date
+// Customer Profile with computed fields
+export interface CustomerProfile
+  extends Omit<components['schemas']['Models.CustomerProfile'], 'id'> {
+  id: CustomerId
 }
 
-// 顧客更新時の入力
-export type UpdateCustomerInput = {
-  name?: string
-  contactInfo?: ContactInfo
-  preferences?: string | null
-  notes?: string | null
-  tags?: string[] | null
-  birthDate?: Date | null
-}
+// Re-export generated types
+export type CustomerGender = components['schemas']['Models.CustomerGender']
+export type ContactInfo = components['schemas']['Models.ContactInfo']
+export type Address = components['schemas']['Models.Address']
+export type NotificationSettings =
+  components['schemas']['Models.NotificationSettings']
+export type MembershipLevel = components['schemas']['Models.MembershipLevel']
 
-// エラー型
-export type CustomerError =
-  | { type: 'invalidEmail'; email: string }
-  | { type: 'invalidPhoneNumber'; phoneNumber: string }
+// Request types
+export type CreateCustomerRequest =
+  components['schemas']['Models.CreateCustomerRequest']
+export type UpdateCustomerRequest =
+  components['schemas']['Models.UpdateCustomerRequest']
+export type UpdateCustomerRequestWithReset =
+  components['schemas']['Models.UpdateCustomerRequestWithReset']
+export type SearchCustomerRequest =
+  components['schemas']['Models.SearchCustomerRequest']
+export type GetCustomerBookingsRequest =
+  components['schemas']['Models.GetCustomerBookingsRequest']
+export type GetCustomerReservationsRequest =
+  components['schemas']['Models.GetCustomerReservationsRequest']
+
+// ============================================================================
+// Sum Types for State Management
+// ============================================================================
+
+// Customer state with Sum types
+export type CustomerState =
+  | { type: 'active'; customer: Customer }
+  | {
+      type: 'inactive'
+      customer: Customer
+      inactivatedAt: string
+      reason?: string
+    }
+  | {
+      type: 'suspended'
+      customer: Customer
+      suspendedAt: string
+      reason: string
+      until?: string
+    }
+  | {
+      type: 'deleted'
+      customerId: CustomerId
+      deletedAt: string
+      deletedBy?: string
+    }
+
+// Customer operation results
+export type CustomerOperationResult<T = Customer> =
+  | { type: 'success'; data: T }
+  | { type: 'notFound'; customerId: CustomerId }
+  | { type: 'validationError'; errors: ValidationError[] }
   | { type: 'duplicateEmail'; email: string }
-  | { type: 'customerNotFound'; id: CustomerId }
-  | { type: 'customerSuspended'; id: CustomerId }
-  | { type: 'invalidName'; name: string }
+  | { type: 'duplicatePhone'; phone: string }
+  | { type: 'businessRuleViolation'; rule: string; message: string }
+  | { type: 'systemError'; message: string }
 
-// バリデーション関数
-export const validateEmail = (email: string): Result<string, CustomerError> => {
-  // より厳密なメールアドレスの正規表現
-  const emailRegex =
-    /^[a-zA-Z0-9][a-zA-Z0-9._%+-]*@[a-zA-Z0-9][a-zA-Z0-9.-]*\.[a-zA-Z]{2,}$/
+// Customer events for audit trail
+export type CustomerEvent =
+  | {
+      type: 'created'
+      customer: Customer
+      createdBy?: string
+      timestamp: string
+    }
+  | {
+      type: 'updated'
+      customerId: CustomerId
+      changes: Record<string, unknown>
+      updatedBy: string
+      timestamp: string
+    }
+  | {
+      type: 'deleted'
+      customerId: CustomerId
+      deletedBy: string
+      timestamp: string
+    }
+  | {
+      type: 'merged'
+      primaryId: CustomerId
+      secondaryId: CustomerId
+      mergedBy: string
+      timestamp: string
+    }
+  | {
+      type: 'statusChanged'
+      customerId: CustomerId
+      from: CustomerState['type']
+      to: CustomerState['type']
+      changedBy: string
+      timestamp: string
+    }
+  | {
+      type: 'pointsAdded'
+      customerId: CustomerId
+      points: number
+      reason: string
+      timestamp: string
+    }
+  | {
+      type: 'pointsUsed'
+      customerId: CustomerId
+      points: number
+      reason: string
+      timestamp: string
+    }
+  | {
+      type: 'membershipChanged'
+      customerId: CustomerId
+      from?: MembershipLevel
+      to: MembershipLevel
+      timestamp: string
+    }
 
-  // 空文字列チェック
-  if (email === '') {
-    return err({ type: 'invalidEmail', email })
+// Customer search results
+export type CustomerSearchResult =
+  | {
+      type: 'found'
+      customers: Customer[]
+      total: number
+      page: number
+      limit: number
+    }
+  | { type: 'empty'; query: SearchCustomerRequest }
+  | { type: 'error'; message: string }
+
+// Customer merge operation
+export type CustomerMergeOperation =
+  | {
+      type: 'canMerge'
+      primary: Customer
+      secondary: Customer
+      conflicts: MergeConflict[]
+    }
+  | {
+      type: 'cannotMerge'
+      reason: 'sameCustomer' | 'bothHaveUsers' | 'invalidState'
+    }
+  | { type: 'merged'; result: Customer; mergedFields: string[] }
+
+export type MergeConflict = {
+  field: string
+  primaryValue: unknown
+  secondaryValue: unknown
+  resolution: 'usePrimary' | 'useSecondary' | 'combine'
+}
+
+// ============================================================================
+// Business Rules
+// ============================================================================
+
+// Loyalty points calculation
+export type LoyaltyPointsCalculation =
+  | { type: 'purchase'; amount: number; multiplier: number; points: number }
+  | { type: 'referral'; referredCustomerId: CustomerId; points: number }
+  | { type: 'birthday'; points: number }
+  | { type: 'review'; reviewId: string; points: number }
+  | { type: 'milestone'; visits: number; points: number }
+
+// Membership tier rules
+export type MembershipTierRule =
+  | { type: 'pointsBased'; minPoints: number; tier: MembershipLevel }
+  | {
+      type: 'spendingBased'
+      minSpending: number
+      period: 'monthly' | 'yearly'
+      tier: MembershipLevel
+    }
+  | {
+      type: 'visitsBased'
+      minVisits: number
+      period: 'monthly' | 'yearly'
+      tier: MembershipLevel
+    }
+  | { type: 'manual'; tier: MembershipLevel; reason: string }
+
+// ============================================================================
+// Domain Functions
+// ============================================================================
+
+// Validate email format
+export const validateEmail = (
+  email: string
+): Result<string, ValidationError> => {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+
+  if (!email) {
+    return err({
+      field: 'email',
+      message: 'Email is required',
+      code: 'required',
+    })
   }
 
-  // 基本的な形式チェック
   if (!emailRegex.test(email)) {
-    return err({ type: 'invalidEmail', email })
+    return err({
+      field: 'email',
+      message: 'Invalid email format',
+      code: 'format',
+    })
   }
 
-  // 連続するドットのチェック
-  if (email.includes('..')) {
-    return err({ type: 'invalidEmail', email })
-  }
-
-  // @マークの前後が適切かチェック
-  const parts = email.split('@')
-  if (parts.length !== 2 || !parts[0] || !parts[1]) {
-    return err({ type: 'invalidEmail', email })
-  }
-
-  return ok(email)
+  return ok(email.toLowerCase())
 }
 
+// Validate phone number (Japanese format)
 export const validatePhoneNumber = (
-  phoneNumber: string
-): Result<string, CustomerError> => {
-  const phoneRegex = /^[\d+\-\s()]+$/
-  if (!phoneRegex.test(phoneNumber) || phoneNumber.length < 10) {
-    return err({ type: 'invalidPhoneNumber', phoneNumber })
+  phone: string
+): Result<string, ValidationError> => {
+  const cleanedNumber = phone.replace(/[\s\-()]/g, '')
+  const phoneRegex = /^(\+81|0)[0-9]{9,10}$/
+
+  if (!phone) {
+    return err({
+      field: 'phoneNumber',
+      message: 'Phone number is required',
+      code: 'required',
+    })
   }
-  return ok(phoneNumber)
+
+  if (!phoneRegex.test(cleanedNumber)) {
+    return err({
+      field: 'phoneNumber',
+      message: 'Invalid phone number format',
+      code: 'format',
+    })
+  }
+
+  return ok(cleanedNumber)
 }
 
-export const validateName = (name: string): Result<string, CustomerError> => {
-  if (name.trim().length === 0) {
-    return err({ type: 'invalidName', name })
-  }
-  return ok(name.trim())
-}
-
-// ドメインロジック
-
-// 顧客の作成
-export const createCustomer = (
-  id: CustomerId,
-  input: CreateCustomerInput
-): Result<Customer, CustomerError> => {
-  // バリデーション
-  const nameResult = validateName(input.name)
-  if (nameResult.type === 'err') {
-    return nameResult
-  }
-
-  const emailResult = validateEmail(input.contactInfo.email)
-  if (emailResult.type === 'err') {
-    return emailResult
-  }
-
-  const phoneResult = validatePhoneNumber(input.contactInfo.phoneNumber)
-  if (phoneResult.type === 'err') {
-    return phoneResult
-  }
-
-  const now = new Date()
-
-  return ok({
-    type: 'active',
-    data: {
-      id,
-      name: nameResult.value,
-      contactInfo: {
-        email: emailResult.value,
-        phoneNumber: phoneResult.value,
-      },
-      preferences: input.preferences ?? null,
-      notes: input.notes ?? null,
-      tags: input.tags ?? [],
-      birthDate: input.birthDate ?? null,
-      loyaltyPoints: 0,
-      membershipLevel: 'regular',
-      createdAt: now,
-      updatedAt: now,
-    },
-  })
-}
-
-// 顧客の更新
-export const updateCustomer = (
-  customer: Customer,
-  input: UpdateCustomerInput
-): Result<Customer, CustomerError> => {
-  // アクティブな顧客のみ更新可能
-  if (customer.type !== 'active') {
-    return err({ type: 'customerSuspended', id: customer.data.id })
-  }
-
-  // 名前の更新がある場合はバリデーション
-  if (input.name !== undefined) {
-    const nameResult = validateName(input.name)
-    if (nameResult.type === 'err') {
-      return nameResult
-    }
-  }
-
-  // 連絡先の更新がある場合はバリデーション
-  if (input.contactInfo) {
-    if (input.contactInfo.email) {
-      const emailResult = validateEmail(input.contactInfo.email)
-      if (emailResult.type === 'err') {
-        return emailResult
-      }
-    }
-    if (input.contactInfo.phoneNumber) {
-      const phoneResult = validatePhoneNumber(input.contactInfo.phoneNumber)
-      if (phoneResult.type === 'err') {
-        return phoneResult
-      }
-    }
-  }
-
-  return ok({
-    type: 'active',
-    data: {
-      ...customer.data,
-      name: input.name ?? customer.data.name,
-      contactInfo: input.contactInfo
-        ? {
-            email: input.contactInfo.email ?? customer.data.contactInfo.email,
-            phoneNumber:
-              input.contactInfo.phoneNumber ??
-              customer.data.contactInfo.phoneNumber,
-          }
-        : customer.data.contactInfo,
-      preferences:
-        input.preferences !== undefined
-          ? input.preferences
-          : customer.data.preferences,
-      notes: input.notes !== undefined ? input.notes : customer.data.notes,
-      tags: input.tags ?? customer.data.tags,
-      birthDate:
-        input.birthDate !== undefined
-          ? input.birthDate
-          : customer.data.birthDate,
-      updatedAt: new Date(),
-    },
-  })
-}
-
-// 顧客の一時停止
-export const suspendCustomer = (
-  customer: Customer,
-  reason: string
-): Result<Customer, CustomerError> => {
-  if (customer.type !== 'active') {
-    return ok(customer) // 既に停止または削除済みの場合はそのまま返す
-  }
-
-  return ok({
-    type: 'suspended',
-    data: customer.data,
-    reason,
-    suspendedAt: new Date(),
-  })
-}
-
-// 顧客の再開
-export const reactivateCustomer = (
-  customer: Customer
-): Result<Customer, CustomerError> => {
-  if (customer.type !== 'suspended') {
-    return ok(customer) // 既にアクティブまたは削除済みの場合はそのまま返す
-  }
-
-  return ok({
-    type: 'active',
-    data: {
-      ...customer.data,
-      updatedAt: new Date(),
-    },
-  })
-}
-
-// 顧客の削除（論理削除）
-export const deleteCustomer = (
-  customer: Customer
-): Result<Customer, CustomerError> => {
-  if (customer.type === 'deleted') {
-    return ok(customer) // 既に削除済みの場合はそのまま返す
-  }
-
-  return ok({
-    type: 'deleted',
-    data: customer.data,
-    deletedAt: new Date(),
-  })
-}
-
-// ロイヤリティポイントの追加
-export const addLoyaltyPoints = (
-  customer: Customer,
-  points: number
-): Result<Customer, CustomerError> => {
-  if (customer.type !== 'active') {
-    return err({ type: 'customerSuspended', id: customer.data.id })
-  }
-
-  const newPoints = customer.data.loyaltyPoints + points
-  const newLevel = calculateMembershipLevel(newPoints)
-
-  return ok({
-    type: 'active',
-    data: {
-      ...customer.data,
-      loyaltyPoints: newPoints,
-      membershipLevel: newLevel,
-      updatedAt: new Date(),
-    },
-  })
-}
-
-// メンバーシップレベルの計算
-export const calculateMembershipLevel = (points: number): MembershipLevel => {
-  return match(points)
-    .when(
-      (p) => p >= 10000,
-      () => 'platinum' as const
+// Check if customer can make bookings
+export const canMakeBooking = (state: CustomerState): Result<true, string> => {
+  return match(state)
+    .with({ type: 'active' }, () => ok(true as const))
+    .with({ type: 'inactive' }, ({ reason }) =>
+      err(`Customer is inactive${reason ? `: ${reason}` : ''}`)
     )
-    .when(
-      (p) => p >= 5000,
-      () => 'gold' as const
+    .with({ type: 'suspended' }, ({ reason }) =>
+      err(`Customer is suspended: ${reason}`)
     )
-    .when(
-      (p) => p >= 1000,
-      () => 'silver' as const
-    )
-    .otherwise(() => 'regular' as const)
-}
-
-// 顧客が予約可能かどうかの確認
-export const canMakeReservation = (customer: Customer): boolean => {
-  return customer.type === 'active'
-}
-
-// 顧客の表示名を取得
-export const getCustomerDisplayName = (customer: Customer): string => {
-  return match(customer)
-    .with({ type: 'active' }, ({ data }) => data.name)
-    .with({ type: 'suspended' }, ({ data }) => `${data.name} (停止中)`)
-    .with({ type: 'deleted' }, ({ data }) => `${data.name} (削除済み)`)
+    .with({ type: 'deleted' }, () => err('Customer has been deleted'))
     .exhaustive()
+}
+
+// Calculate loyalty points from purchase
+export const calculateLoyaltyPoints = (
+  amount: number,
+  membershipLevel?: MembershipLevel
+): LoyaltyPointsCalculation => {
+  // Default multiplier based on membership level
+  const multiplier = match(membershipLevel)
+    .with('platinum', () => 3)
+    .with('gold', () => 2)
+    .with('silver', () => 1.5)
+    .with('bronze', () => 1)
+    .with(undefined, () => 1)
+    .otherwise(() => 1)
+
+  const points = Math.floor(amount * 0.01 * multiplier) // 1% of amount * multiplier
+
+  return {
+    type: 'purchase',
+    amount,
+    multiplier,
+    points,
+  }
+}
+
+// Determine membership tier based on points
+export const determineMembershipTier = (
+  loyaltyPoints: number
+): MembershipLevel => {
+  if (loyaltyPoints >= 10000) {
+    return 'platinum'
+  }
+  if (loyaltyPoints >= 5000) {
+    return 'gold'
+  }
+  if (loyaltyPoints >= 1000) {
+    return 'silver'
+  }
+  return 'bronze'
+}
+
+// Format customer name for display
+export const formatCustomerName = (customer: Customer): string => {
+  return customer.name
+}
+
+// Check if customer has birthday this month
+export const hasBirthdayThisMonth = (customer: Customer): boolean => {
+  if (!customer.birthDate) {
+    return false
+  }
+
+  const birthDate = new Date(customer.birthDate)
+  const today = new Date()
+
+  return birthDate.getMonth() === today.getMonth()
+}
+
+// Calculate customer age
+export const calculateAge = (birthDate?: string): number | null => {
+  if (!birthDate) {
+    return null
+  }
+
+  const birth = new Date(birthDate)
+  const today = new Date()
+  let age = today.getFullYear() - birth.getFullYear()
+  const monthDiff = today.getMonth() - birth.getMonth()
+
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+    age--
+  }
+
+  return age
+}
+
+// Check if customer is eligible for referral bonus
+export const isEligibleForReferralBonus = (
+  referrer: Customer,
+  referred: Customer
+): Result<true, string> => {
+  if (!referrer.isActive) {
+    return err('Referrer must be an active customer')
+  }
+
+  if (referrer.id === referred.id) {
+    return err('Cannot refer yourself')
+  }
+
+  if (referred.referredBy && referred.referredBy !== referrer.id) {
+    return err('Customer was already referred by someone else')
+  }
+
+  return ok(true as const)
+}
+
+// Merge customer records
+export const mergeCustomers = (
+  primary: Customer,
+  secondary: Customer
+): CustomerMergeOperation => {
+  if (primary.id === secondary.id) {
+    return { type: 'cannotMerge', reason: 'sameCustomer' }
+  }
+
+  // Identify conflicts
+  const conflicts: MergeConflict[] = []
+
+  if (primary.contactInfo.email !== secondary.contactInfo.email) {
+    conflicts.push({
+      field: 'email',
+      primaryValue: primary.contactInfo.email,
+      secondaryValue: secondary.contactInfo.email,
+      resolution: 'usePrimary',
+    })
+  }
+
+  if (primary.contactInfo.phoneNumber !== secondary.contactInfo.phoneNumber) {
+    conflicts.push({
+      field: 'phoneNumber',
+      primaryValue: primary.contactInfo.phoneNumber,
+      secondaryValue: secondary.contactInfo.phoneNumber,
+      resolution: 'usePrimary',
+    })
+  }
+
+  return {
+    type: 'canMerge',
+    primary,
+    secondary,
+    conflicts,
+  }
+}
+
+// ============================================================================
+// Type Guards
+// ============================================================================
+
+export const isActiveCustomer = (
+  state: CustomerState
+): state is { type: 'active'; customer: Customer } => {
+  return state.type === 'active'
+}
+
+export const isDeletedCustomer = (
+  state: CustomerState
+): state is { type: 'deleted'; customerId: CustomerId; deletedAt: string } => {
+  return state.type === 'deleted'
+}
+
+export const hasLoyaltyPoints = (customer: Customer): boolean => {
+  return (customer.loyaltyPoints ?? 0) > 0
+}
+
+export const hasMembershipLevel = (
+  customer: Customer
+): customer is Customer & { membershipLevel: MembershipLevel } => {
+  return customer.membershipLevel !== undefined
 }

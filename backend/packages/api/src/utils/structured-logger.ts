@@ -6,14 +6,10 @@
 import type { Logger } from 'pino'
 import { P, match } from 'ts-pattern'
 import { v4 as uuidv4 } from 'uuid'
-import {
-  type SentryErrorEvent,
-  createSentryService,
-} from '../services/sentry.service.js'
-import { logger as pinoLogger } from './logger.js'
+import { logger as pinoLogger } from './logger'
 
 // Sentryサービスのシングルトンインスタンス
-const sentryService = createSentryService()
+const _sentryService = null // Disabled temporarily
 
 // ログイベントをSum型で表現
 export type LogEvent =
@@ -328,7 +324,7 @@ export class StructuredLogger {
 
   constructor(moduleName: string) {
     this.module = moduleName
-    this.logger = pinoLogger.child({ module: moduleName })
+    this.logger = pinoLogger.child({ module: this.module })
   }
 
   // 相関IDの設定（リクエスト単位でトレース）
@@ -405,50 +401,51 @@ export class StructuredLogger {
       return
     }
 
-    const sentryContext = {
-      tags: {
-        module: this.module,
-        ...(this.correlationId && { correlationId: this.correlationId }),
-      },
-      extra: {
-        ...(event.type === 'error' ? event.context : {}),
-        ...(event.type === 'unhandledError' && event.request
-          ? {
-              request: {
-                method: event.request.method,
-                path: event.request.path,
-                query: event.request.query,
-                body: event.request.body,
-              },
-            }
-          : {}),
-      },
-      ...(event.type === 'unhandledError' && event.user
-        ? {
-            user: {
-              id: event.user.id,
-              email: event.user.email,
-            },
-          }
-        : {}),
-    }
+    // const sentryContext = {
+    //   tags: {
+    //     module: this.module,
+    //     ...(this.correlationId && { correlationId: this.correlationId }),
+    //   },
+    //   extra: {
+    //     ...(event.type === 'error' ? event.context : {}),
+    //     ...(event.type === 'unhandledError' && event.request
+    //       ? {
+    //           request: {
+    //             method: event.request.method,
+    //             path: event.request.path,
+    //             query: event.request.query,
+    //             body: event.request.body,
+    //           },
+    //         }
+    //       : {}),
+    //   },
+    //   ...(event.type === 'unhandledError' && event.user
+    //     ? {
+    //         user: {
+    //           id: event.user.id,
+    //           email: event.user.email,
+    //         },
+    //       }
+    //     : {}),
+    // }
 
-    const sentryEvent: SentryErrorEvent =
-      event.type === 'unhandledError' && event.request
-        ? {
-            type: 'apiError',
-            error: event.error,
-            endpoint: event.request.path,
-            method: event.request.method,
-            statusCode: 500,
-          }
-        : {
-            type: 'businessLogicError',
-            error: event.error,
-            context: event.type === 'error' ? (event.context ?? {}) : {},
-          }
-
-    sentryService.captureError(sentryEvent, sentryContext)
+    // Disabled Sentry temporarily
+    // const sentryEvent: SentryErrorEvent =
+    //   event.type === 'unhandledError' && event.request
+    //     ? {
+    //         type: 'apiError',
+    //         error: event.error,
+    //         endpoint: event.request.path,
+    //         method: event.request.method,
+    //         statusCode: 500,
+    //       }
+    //     : {
+    //         type: 'businessLogicError',
+    //         error: event.error,
+    //         context: event.type === 'error' ? (event.context ?? {}) : {},
+    //       }
+    //
+    // sentryService?.captureError(sentryEvent, sentryContext)
   }
 
   logBusiness(action: string, details: Record<string, unknown>): void {

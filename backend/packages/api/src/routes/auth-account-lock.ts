@@ -2,12 +2,12 @@ import type { UserId, UserRepository } from '@beauty-salon-backend/domain'
 import {
   type UnlockAccountDeps,
   unlockAccount,
-} from '@beauty-salon-backend/usecase'
+} from '@beauty-salon-backend/domain/business-logic'
 import { Router } from 'express'
 import { match } from 'ts-pattern'
-import type { AuthConfig } from '../middleware/auth.middleware.js'
-import { authenticate, authorize } from '../middleware/auth.middleware.js'
-import { adminRateLimiter } from '../middleware/rate-limit.js'
+import type { AuthConfig } from '../middleware/auth.middleware'
+import { authenticate, authorize } from '../middleware/auth.middleware'
+import { adminRateLimiter } from '../middleware/rate-limit'
 
 export type AccountLockRouteDeps = {
   userRepository: UserRepository

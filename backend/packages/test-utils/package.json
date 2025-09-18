@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@beauty-salon-backend/domain": "workspace:*",
-    "@beauty-salon-backend/migration": "workspace:*",
+    "@beauty-salon-backend/database": "workspace:*",
     "@testcontainers/postgresql": "^10.20.3",
     "testcontainers": "^10.20.3",
     "drizzle-orm": "^0.44.2",

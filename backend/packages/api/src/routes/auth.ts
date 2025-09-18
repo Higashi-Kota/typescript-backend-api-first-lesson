@@ -5,26 +5,26 @@
  */
 
 import type { UserId } from '@beauty-salon-backend/domain'
+import type { JwtService } from '@beauty-salon-backend/infrastructure/services'
 import bcrypt from 'bcrypt'
 import type { Request, Response } from 'express'
 import { Router } from 'express'
 import { z } from 'zod'
-import { authenticate } from '../middleware/auth.middleware.js'
-import type { UserRole } from '../middleware/auth.middleware.js'
-import { authRateLimiter } from '../middleware/rate-limit.js'
-import type { JwtService } from '../services/jwt.service.js'
+import { authenticate } from '../middleware/auth.middleware'
+import type { UserRole } from '../middleware/auth.middleware'
+import { authRateLimiter } from '../middleware/rate-limit'
 import type {
   ErrorResponse,
   LoginRequest,
   LoginResponse,
   RegisterRequest,
   TokenRefreshRequest,
-} from '../utils/openapi-types.js'
+} from '../utils/openapi-types'
 import {
   checkPasswordStrength,
   commonSchemas,
   formatValidationErrors,
-} from '../utils/validation-helpers.js'
+} from '../utils/validation-helpers'
 
 // ユーザー情報の型（仮実装用 - DBモデルの代替）
 export type UserDbModel = {

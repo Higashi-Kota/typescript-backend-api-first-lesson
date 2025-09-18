@@ -1,116 +1,195 @@
 /**
  * Customer Repository Interface
- * ドメイン層で定義されるリポジトリインターフェース
- * 実装はInfrastructure層で行う
+ *
+ * Domain layer repository interface for customer operations
+ * Implementation is done in Infrastructure layer
+ * Uses Result types for error handling
  */
 
-import type {
-  CreateCustomerInput,
-  Customer,
-  CustomerError,
-  CustomerId,
-  UpdateCustomerInput,
-} from '../models/customer.js'
-import type { RepositoryError } from '../shared/errors.js'
-import type { PaginatedResult, PaginationParams } from '../shared/pagination.js'
-import type { Result } from '../shared/result.js'
+import type { customers } from '@beauty-salon-backend/database'
+import type { CustomerId } from '../models/customer'
+import type { Result } from '../shared/result'
 
-// 検索条件
-export type CustomerSearchCriteria = {
-  search?: string // 名前、メール、電話番号での検索
-  tags?: string[] // タグでのフィルタリング
-  membershipLevel?: string // メンバーシップレベルでのフィルタリング
-  isActive?: boolean // アクティブな顧客のみ
+// Database entity type
+export type CustomerDbEntity = typeof customers.$inferSelect
+
+// Repository error types
+export type CustomerRepositoryError =
+  | { type: 'notFound'; id: string }
+  | { type: 'databaseError'; message: string }
+  | { type: 'connectionError'; message: string }
+  | { type: 'transactionError'; message: string }
+
+// Search parameters
+export type CustomerSearchParams = {
+  limit: number
+  offset: number
+  search?: string // Search in name, email, phone
+  tags?: string[]
+  membershipTier?: string
+  isActive?: boolean
+  salonId?: string
+  includeDeleted?: boolean
+  sortBy?: 'createdAt' | 'updatedAt' | 'name' | 'loyaltyPoints'
+  sortOrder?: 'asc' | 'desc'
 }
 
-// CustomerRepositoryインターフェース
+// Database insert/update types (from mappers)
+export type CustomerDbInsert = typeof customers.$inferInsert
+
+export type CustomerDbUpdate = Partial<CustomerDbInsert>
+
+/**
+ * Customer Repository Interface
+ * All methods return Result types for error handling
+ */
 export interface CustomerRepository {
-  // 基本的なCRUD操作
+  // Basic CRUD operations
 
   /**
-   * IDで顧客を取得
+   * Find customer by ID
+   * Returns null if not found
    */
-  findById(id: CustomerId): Promise<Result<Customer, RepositoryError>>
+  findById(
+    id: CustomerId
+  ): Promise<Result<CustomerDbEntity | null, CustomerRepositoryError>>
 
   /**
-   * メールアドレスで顧客を取得
+   * Find customer by email
+   * Returns null if not found
    */
-  findByEmail(email: string): Promise<Result<Customer | null, RepositoryError>>
+  findByEmail(
+    email: string
+  ): Promise<Result<CustomerDbEntity | null, CustomerRepositoryError>>
 
   /**
-   * 顧客を保存（作成/更新）
+   * Find customer by phone number
+   * Returns null if not found
    */
-  save(customer: Customer): Promise<Result<Customer, RepositoryError>>
+  findByPhone(
+    phoneNumber: string
+  ): Promise<Result<CustomerDbEntity | null, CustomerRepositoryError>>
 
   /**
-   * 顧客を削除（物理削除）
+   * Find customer by referral code
+   * Returns null if not found
    */
-  delete(id: CustomerId): Promise<Result<void, RepositoryError>>
-
-  // 検索・一覧取得
+  findByReferralCode(
+    code: string
+  ): Promise<Result<CustomerDbEntity | null, CustomerRepositoryError>>
 
   /**
-   * 検索条件に基づいて顧客を検索
+   * Create a new customer
+   * Returns created entity with generated ID
+   */
+  create(
+    data: CustomerDbInsert
+  ): Promise<Result<CustomerDbEntity, CustomerRepositoryError>>
+
+  /**
+   * Update an existing customer
+   * Returns updated entity
+   */
+  update(
+    id: CustomerId,
+    data: CustomerDbUpdate
+  ): Promise<Result<CustomerDbEntity, CustomerRepositoryError>>
+
+  /**
+   * Soft delete a customer (set deletedAt)
+   */
+  softDelete(id: CustomerId): Promise<Result<void, CustomerRepositoryError>>
+
+  /**
+   * Hard delete a customer (physical deletion)
+   */
+  hardDelete(id: CustomerId): Promise<Result<void, CustomerRepositoryError>>
+
+  // Search and listing
+
+  /**
+   * Search customers with filtering and pagination
+   * Returns list of entities matching criteria
    */
   search(
-    criteria: CustomerSearchCriteria,
-    pagination: PaginationParams
-  ): Promise<Result<PaginatedResult<Customer>, RepositoryError>>
+    params: CustomerSearchParams
+  ): Promise<Result<CustomerDbEntity[], CustomerRepositoryError>>
 
   /**
-   * すべての顧客を取得（ページネーション付き）
-   */
-  findAll(
-    pagination: PaginationParams
-  ): Promise<Result<PaginatedResult<Customer>, RepositoryError>>
-
-  // バッチ操作
-
-  /**
-   * 複数の顧客IDで顧客を取得
-   */
-  findByIds(ids: CustomerId[]): Promise<Result<Customer[], RepositoryError>>
-
-  /**
-   * タグで顧客を取得
-   */
-  findByTags(
-    tags: string[],
-    pagination: PaginationParams
-  ): Promise<Result<PaginatedResult<Customer>, RepositoryError>>
-
-  // 統計・集計
-
-  /**
-   * 顧客数を取得
+   * Count customers matching search criteria
+   * Used for pagination total count
    */
   count(
-    criteria?: CustomerSearchCriteria
-  ): Promise<Result<number, RepositoryError>>
+    params: CustomerSearchParams
+  ): Promise<Result<number, CustomerRepositoryError>>
 
   /**
-   * メンバーシップレベル別の顧客数を取得
+   * Find all customers with pagination
+   * Convenience method for listing without filters
    */
-  countByMembershipLevel(): Promise<
-    Result<Record<string, number>, RepositoryError>
+  findAll(
+    limit: number,
+    offset: number
+  ): Promise<Result<CustomerDbEntity[], CustomerRepositoryError>>
+
+  // Batch operations
+
+  /**
+   * Find customers by multiple IDs
+   * Returns all found entities (may be less than requested)
+   */
+  findByIds(
+    ids: CustomerId[]
+  ): Promise<Result<CustomerDbEntity[], CustomerRepositoryError>>
+
+  /**
+   * Find customers by salon ID
+   * Used for salon-specific customer lists
+   */
+  findBySalonId(
+    salonId: string,
+    limit: number,
+    offset: number
+  ): Promise<Result<CustomerDbEntity[], CustomerRepositoryError>>
+
+  // Statistics and aggregation
+
+  /**
+   * Count by membership tier
+   * Returns counts grouped by tier
+   */
+  countByMembershipTier(): Promise<
+    Result<
+      Record<'regular' | 'silver' | 'gold' | 'platinum' | 'vip', number>,
+      CustomerRepositoryError
+    >
   >
 
-  // トランザクション
+  /**
+   * Check if email exists (for duplicate checking)
+   */
+  emailExists(
+    email: string,
+    excludeId?: CustomerId
+  ): Promise<Result<boolean, CustomerRepositoryError>>
 
   /**
-   * トランザクション内で実行
+   * Check if phone exists (for duplicate checking)
+   */
+  phoneExists(
+    phoneNumber: string,
+    excludeId?: CustomerId
+  ): Promise<Result<boolean, CustomerRepositoryError>>
+
+  // Transaction support
+
+  /**
+   * Execute operations in a transaction
+   * Automatically rolls back on error
    */
   withTransaction<T>(
     fn: (
       repo: CustomerRepository
-    ) => Promise<Result<T, RepositoryError | CustomerError>>
-  ): Promise<Result<T, RepositoryError | CustomerError>>
-}
-
-// リポジトリで使用する型のエクスポート
-export type {
-  Customer,
-  CreateCustomerInput,
-  UpdateCustomerInput,
-  CustomerError,
+    ) => Promise<Result<T, CustomerRepositoryError>>
+  ): Promise<Result<T, CustomerRepositoryError>>
 }

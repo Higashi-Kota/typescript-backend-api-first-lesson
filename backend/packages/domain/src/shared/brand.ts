@@ -26,8 +26,8 @@ export const createBrand = <B extends string>(
 }
 
 // Brand型作成の安全な関数（Result型を返す）
-import type { Result } from './result.js'
-import { err, ok } from './result.js'
+import type { Result } from './result'
+import { err, ok } from './result'
 
 export type BrandError = {
   type: 'invalidFormat'

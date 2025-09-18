@@ -1,3 +1,3 @@
-export * from './storage.factory.js'
-export * from './providers/minio.provider.js'
-export * from './providers/r2.provider.js'
+export * from './storage.factory'
+export * from './providers/minio.provider'
+export * from './providers/r2.provider'

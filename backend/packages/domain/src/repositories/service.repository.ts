@@ -3,20 +3,29 @@
  * CLAUDEガイドラインに準拠した例外フリーなリポジトリインターフェース
  */
 
-import type { SalonId } from '../models/salon.js'
+import type { SalonId } from '../models/salon'
 import type {
   CategoryId,
   CreateServiceRequest,
   Service,
   ServiceCategory,
-  ServiceCategoryData,
+  ServiceCategoryModel,
   ServiceId,
-  ServiceSearchCriteria,
   UpdateServiceRequest,
-} from '../models/service.js'
-import type { RepositoryError } from '../shared/errors.js'
-import type { PaginatedResult, PaginationParams } from '../shared/pagination.js'
-import type { Result } from '../shared/result.js'
+} from '../models/service'
+import type { RepositoryError } from '../shared/errors'
+import type { PaginatedResult, PaginationParams } from '../shared/pagination'
+import type { Result } from '../shared/result'
+
+// Search criteria for services
+export interface ServiceSearchCriteria {
+  salonId?: SalonId
+  category?: ServiceCategory
+  name?: string
+  minPrice?: number
+  maxPrice?: number
+  isActive?: boolean
+}
 
 export interface ServiceRepository {
   /**
@@ -108,12 +117,12 @@ export interface ServiceRepository {
    */
   findCategoryById(
     id: CategoryId
-  ): Promise<Result<ServiceCategoryData, RepositoryError>>
+  ): Promise<Result<ServiceCategoryModel, RepositoryError>>
 
   /**
    * すべてのアクティブなServiceカテゴリを取得
    */
   findAllActiveCategories(): Promise<
-    Result<ServiceCategoryData[], RepositoryError>
+    Result<ServiceCategoryModel[], RepositoryError>
   >
 }

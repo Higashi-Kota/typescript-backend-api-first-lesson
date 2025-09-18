@@ -1,8 +1,8 @@
 import type { EmailService } from '@beauty-salon-backend/domain'
-import { emailConfig } from '../../config/index.js'
-import { DevelopmentEmailProvider } from './providers/development.provider.js'
-import { MailgunEmailProvider } from './providers/mailgun.provider.js'
-import { MailhogEmailProvider } from './providers/mailhog.provider.js'
+import { emailConfig } from '../../config/index'
+import { DevelopmentEmailProvider } from './providers/development.provider'
+import { MailgunEmailProvider } from './providers/mailgun.provider'
+import { MailhogEmailProvider } from './providers/mailhog.provider'
 
 export type EmailProvider = 'development' | 'mailhog' | 'mailgun'
 

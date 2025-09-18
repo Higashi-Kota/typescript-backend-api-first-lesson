@@ -7,16 +7,27 @@ import type {
   Booking,
   BookingDetail,
   BookingId,
-  BookingSearchCriteria,
+  BookingStatus,
   CreateBookingRequest,
   UpdateBookingRequest,
-} from '../models/booking.js'
-import type { CustomerId } from '../models/customer.js'
-import type { ReservationId } from '../models/reservation.js'
-import type { SalonId } from '../models/salon.js'
-import type { RepositoryError } from '../shared/errors.js'
-import type { PaginatedResult, PaginationParams } from '../shared/pagination.js'
-import type { Result } from '../shared/result.js'
+} from '../models/booking'
+import type { CustomerId } from '../models/customer'
+import type { ReservationId } from '../models/reservation'
+import type { SalonId } from '../models/salon'
+import type { RepositoryError } from '../shared/errors'
+import type { PaginatedResult, PaginationParams } from '../shared/pagination'
+import type { Result } from '../shared/result'
+
+// Search criteria for bookings
+export interface BookingSearchCriteria {
+  customerId?: CustomerId
+  salonId?: SalonId
+  status?: BookingStatus
+  startDate?: Date
+  endDate?: Date
+  minAmount?: number
+  maxAmount?: number
+}
 
 export interface BookingRepository {
   /**
@@ -37,7 +48,10 @@ export interface BookingRepository {
   /**
    * Bookingを更新
    */
-  update(data: UpdateBookingRequest): Promise<Result<Booking, RepositoryError>>
+  update(
+    id: BookingId,
+    data: UpdateBookingRequest
+  ): Promise<Result<Booking, RepositoryError>>
 
   /**
    * Bookingを確定

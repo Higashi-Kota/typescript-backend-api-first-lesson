@@ -6,7 +6,6 @@
   },
   "references": [
     { "path": "../domain" },
-    { "path": "../types" },
     { "path": "../config" },
     { "path": "../test-utils" }
   ],

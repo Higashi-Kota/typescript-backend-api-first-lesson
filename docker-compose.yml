@@ -75,7 +75,7 @@ services:
         condition: service_healthy
     networks:
       - beauty-salon-network
-    command: pnpm --filter @beauty-salon-backend/migration run migrate
+    command: pnpm --filter @beauty-salon-backend/database run migrate
 
   mailhog:
     image: mailhog/mailhog:latest

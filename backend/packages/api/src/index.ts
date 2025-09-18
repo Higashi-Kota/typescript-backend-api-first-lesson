@@ -19,6 +19,8 @@ import {
   DrizzleSalonRepository,
   DrizzleSessionRepository,
   DrizzleUserRepository,
+  JwtService,
+  createProductionEmailService,
   initializeEncryptionService,
 } from '@beauty-salon-backend/infrastructure'
 import compression from 'compression'
@@ -28,44 +30,32 @@ import session from 'express-session'
 import helmet from 'helmet'
 import type { StringValue } from 'ms'
 import { pinoHttp } from 'pino-http'
-import type { AuthConfig, UserRole } from './middleware/auth.middleware.js'
-import {
-  csrfProtection,
-  csrfTokenHandler,
-} from './middleware/csrf-protection.js'
+import type { AuthConfig, UserRole } from './middleware/auth.middleware'
+import { csrfProtection, csrfTokenHandler } from './middleware/csrf-protection'
 import { errorHandler } from './middleware/error-handler'
 import {
   enforceSecureCookies,
   httpsRedirect,
-} from './middleware/https-redirect.js'
-import {
-  errorLoggingMiddleware,
-  loggingMiddleware,
-} from './middleware/logging.js'
-import { metricsHandler, metricsMiddleware } from './middleware/metrics.js'
-import { generalRateLimiter } from './middleware/rate-limit.js'
+} from './middleware/https-redirect'
+import { errorLoggingMiddleware, loggingMiddleware } from './middleware/logging'
+import { metricsHandler, metricsMiddleware } from './middleware/metrics'
+import { generalRateLimiter } from './middleware/rate-limit'
 import { requestId } from './middleware/request-id'
-import { xssProtectionWithExclusions } from './middleware/xss-protection.js'
-import {
-  createAttachmentRouter,
-  createShareRouter,
-} from './routes/attachments.js'
-import { createAccountLockRoutes } from './routes/auth-account-lock.js'
-import { createEmailVerificationRoutes } from './routes/auth-email-verification.js'
-import { createIpRestrictionRoutes } from './routes/auth-ip-restriction.js'
-import { createPasswordChangeRoutes } from './routes/auth-password-change.js'
-import { createPasswordResetRoutes } from './routes/auth-password-reset.js'
-import { createSessionRoutes } from './routes/auth-session.js'
-import { createTwoFactorRoutes } from './routes/auth-two-factor.js'
-import { createAuthRoutes } from './routes/auth.js'
-import { createCustomerRoutes } from './routes/customers.js'
-import { healthRouter } from './routes/health.js'
-import { createReservationRoutes } from './routes/reservations.js'
-import { createReviewRoutes } from './routes/reviews.js'
-import { createSalonRoutes } from './routes/salons.js'
-import { createProductionEmailService } from './services/email-adapter.service.js'
-import { createEmailServiceWrappers } from './services/email.service.js'
-import { JwtService } from './services/jwt.service.js'
+import { xssProtectionWithExclusions } from './middleware/xss-protection'
+import { createAttachmentRouter, createShareRouter } from './routes/attachments'
+import { createAuthRoutes } from './routes/auth'
+import { createAccountLockRoutes } from './routes/auth-account-lock'
+import { createEmailVerificationRoutes } from './routes/auth-email-verification'
+import { createIpRestrictionRoutes } from './routes/auth-ip-restriction'
+import { createPasswordChangeRoutes } from './routes/auth-password-change'
+import { createPasswordResetRoutes } from './routes/auth-password-reset'
+import { createSessionRoutes } from './routes/auth-session'
+import { createTwoFactorRoutes } from './routes/auth-two-factor'
+import { createCustomerRoutes } from './routes/customers'
+import { healthRouter } from './routes/health'
+import { createReservationRoutes } from './routes/reservations'
+import { createReviewRoutes } from './routes/reviews'
+import { createSalonRoutes } from './routes/salons'
 
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
 
@@ -89,7 +79,7 @@ export const createApp = (deps: AppDependencies): Express => {
   } = deps
 
   // Sentryの初期化
-  const { createSentryService } = require('./services/sentry.service.js')
+  const { createSentryService } = require('./services/sentry.service')
   const sentryService = createSentryService()
   const sentryInit = sentryService.init()
   if (sentryInit.type === 'err') {
@@ -449,14 +439,16 @@ export const createApp = (deps: AppDependencies): Express => {
 export {
   createStructuredLogger,
   StructuredLogger,
-} from './utils/structured-logger.js'
+} from './utils/structured-logger'
 export type {
   LogEvent,
   SecurityEvent,
   DatabaseOperation,
   EmailEvent,
   StorageEvent,
-} from './utils/structured-logger.js'
+} from './utils/structured-logger'
+
+// Re-export generated types from TypeSpec/OpenAPI are now available via @beauty-salon-backend/generated package
 
 // 開発用のスタンドアロンサーバー
 if (import.meta.url === `file://${process.argv[1]}`) {

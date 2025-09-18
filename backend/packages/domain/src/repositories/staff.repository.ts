@@ -3,18 +3,27 @@
  * CLAUDEガイドラインに準拠した例外フリーなリポジトリインターフェース
  */
 
-import type { SalonId } from '../models/salon.js'
+import type { SalonId } from '../models/salon'
 import type {
   CreateStaffRequest,
   Staff,
   StaffAvailability,
   StaffId,
-  StaffSearchCriteria,
   UpdateStaffRequest,
-} from '../models/staff.js'
-import type { RepositoryError } from '../shared/errors.js'
-import type { PaginatedResult, PaginationParams } from '../shared/pagination.js'
-import type { Result } from '../shared/result.js'
+} from '../models/staff'
+import type { RepositoryError } from '../shared/errors'
+import type { PaginatedResult, PaginationParams } from '../shared/pagination'
+import type { Result } from '../shared/result'
+
+// Search criteria for staff
+export interface StaffSearchCriteria {
+  salonId?: SalonId
+  name?: string
+  specialties?: string[]
+  isActive?: boolean
+  minRating?: number
+  maxHourlyRate?: number
+}
 
 export interface StaffRepository {
   /**

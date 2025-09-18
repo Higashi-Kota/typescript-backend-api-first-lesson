@@ -3,14 +3,93 @@ import "@typespec/http";
 using TypeSpec.Http;
 
 namespace BeautySalon.Models {
+  // ID Types (Brand型)
+  // These are branded types that will be transformed during TypeScript generation
+  // The format annotation helps identify them as branded types
+  @format("uuid")
+  @doc("Branded UUID type for User ID")
+  scalar UserId extends string;
+
+  @format("uuid")
+  @doc("Branded UUID type for Session ID")
+  scalar SessionId extends string;
+
+  @format("uuid")
+  @doc("Branded UUID type for Salon ID")
   scalar SalonId extends string;
+
+  @format("uuid")
+  @doc("Branded UUID type for Staff ID")
   scalar StaffId extends string;
+
+  @format("uuid")
+  @doc("Branded UUID type for Service ID")
   scalar ServiceId extends string;
+
+  @format("uuid")
+  @doc("Branded UUID type for Customer ID")
   scalar CustomerId extends string;
+
+  @format("uuid")
+  @doc("Branded UUID type for Reservation ID")
   scalar ReservationId extends string;
+
+  @format("uuid")
+  @doc("Branded UUID type for Booking ID")
   scalar BookingId extends string;
+
+  @format("uuid")
+  @doc("Branded UUID type for Review ID")
   scalar ReviewId extends string;
+
+  @format("uuid")
+  @doc("Branded UUID type for Category ID")
   scalar CategoryId extends string;
+
+  @format("uuid")
+  @doc("Branded UUID type for Inventory ID")
+  scalar InventoryId extends string;
+
+  @format("uuid")
+  @doc("Branded UUID type for Order ID")
+  scalar OrderId extends string;
+
+  @format("uuid")
+  @doc("Branded UUID type for Payment ID")
+  scalar PaymentId extends string;
+
+  @format("uuid")
+  @doc("Branded UUID type for Treatment Record ID")
+  scalar TreatmentRecordId extends string;
+
+  @format("uuid")
+  @doc("Branded UUID type for Medical Chart ID")
+  scalar MedicalChartId extends string;
+
+  @format("uuid")
+  @doc("Branded UUID type for Attachment ID")
+  scalar AttachmentId extends string;
+
+  @format("uuid")
+  @doc("Branded UUID type for Role ID")
+  scalar RoleId extends string;
+
+  @format("uuid")
+  @doc("Branded UUID type for Permission ID")
+  scalar PermissionId extends string;
+
+  @format("uuid")
+  @doc("Branded UUID type for Point Transaction ID")
+  scalar PointTransactionId extends string;
+
+  @format("uuid")
+  @doc("Branded UUID type for Membership Level ID")
+  scalar MembershipLevelId extends string;
+
+  @format("uuid")
+  @doc("Branded UUID type for Refund ID")
+  scalar RefundId extends string;
+  scalar decimal extends float64;
 
   enum DayOfWeek {
     monday,
@@ -39,14 +118,77 @@ namespace BeautySalon.Models {
     no_show,
   }
 
-  enum BookingStatus {
+  enum CurrencyCode {
+    JPY,
+    USD,
+    EUR,
+    GBP,
+    AUD,
+    CAD,
+    CNY,
+    KRW,
+    SGD,
+    TWD,
+  }
+
+  enum InventoryStatus {
+    in_stock,
+    low_stock,
+    out_of_stock,
+    ordered,
+    discontinued,
+  }
+
+  enum OrderStatus {
     draft,
     pending,
-    confirmed,
-    in_progress,
-    completed,
+    approved,
+    ordered,
+    shipped,
+    delivered,
     cancelled,
-    no_show,
+  }
+
+  enum CustomerGender {
+    male,
+    female,
+    other,
+    prefer_not_to_say,
+  }
+
+  enum MembershipLevel {
+    bronze,
+    silver,
+    gold,
+    platinum,
+    vip,
+  }
+
+  enum TreatmentType {
+    cut,
+    color,
+    perm,
+    treatment,
+    head_spa,
+    styling,
+    extension,
+    nail,
+    eyelash,
+    other,
+  }
+
+  enum NotificationType {
+    email,
+    sms,
+    push,
+    line,
+  }
+
+  enum ReminderTiming {
+    one_day_before,
+    three_hours_before,
+    one_hour_before,
+    thirty_minutes_before,
   }
 
   model Error {
@@ -93,5 +235,84 @@ namespace BeautySalon.Models {
     createdBy?: string;
     updatedAt: utcDateTime;
     updatedBy?: string;
+  }
+
+  // Result型 - Sum型パターン（シンプルなunion型として定義）
+  union Result<TSuccess, TError = Error> {
+    success: SuccessResult<TSuccess>,
+    error: ErrorResult<TError>,
+  }
+
+  model SuccessResult<T> {
+    status: "success";
+    data: T;
+  }
+
+  model ErrorResult<T = Error> {
+    status: "error";
+    error: T;
+  }
+
+  // 検索パラメータ
+  model SearchParams {
+    @query q?: string;
+    @query sortBy?: string;
+    @query sortOrder?: "asc" | "desc";
+    ...PaginationParams;
+  }
+
+  // 共通期間型
+  model DateRange {
+    startDate: utcDateTime;
+    endDate: utcDateTime;
+  }
+
+  model Money {
+    value: int64;
+    currency: CurrencyCode;
+    taxRate?: decimal;
+  }
+
+  // 日付範囲フィルタ
+  model DateRangeFilter {
+    @query startDate?: utcDateTime;
+    @query endDate?: utcDateTime;
+  }
+
+  // 価格範囲フィルタ
+  model PriceRangeFilter {
+    @query minPrice?: float32;
+    @query maxPrice?: float32;
+  }
+
+  // 時間スロット
+  model TimeSlot {
+    startTime: string; // HH:mm format
+    endTime: string;   // HH:mm format
+  }
+
+  model BusinessHours {
+    dayOfWeek: DayOfWeek;
+    operatingSlots: TimeSlot[];
+    breakSlots?: TimeSlot[];
+    isClosed: boolean = false;
+    effectivePeriod?: DateRange;
+    timezone?: string;
+  }
+
+  // 通知設定
+  model NotificationSettings {
+    types: NotificationType[];
+    reminderTimings: ReminderTiming[];
+    enabled: boolean;
+  }
+
+  // ポイント情報
+  model PointInfo {
+    currentPoints: int32;
+    totalEarnedPoints: int32;
+    totalUsedPoints: int32;
+    expiringPoints?: int32;
+    expirationDate?: utcDateTime;
   }
 }

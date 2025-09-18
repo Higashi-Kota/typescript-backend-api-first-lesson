@@ -169,11 +169,11 @@ docker-clean:
 
 # Database
 db-migrate:
-	pnpm --filter @beauty-salon-backend/migration run generate
-	pnpm --filter @beauty-salon-backend/migration run migrate
+	pnpm --filter @beauty-salon-backend/database run generate
+	pnpm --filter @beauty-salon-backend/database run migrate
 
 db-seed:
-	pnpm --filter @beauty-salon-backend/migration run seed
+	pnpm --filter @beauty-salon-backend/database run seed
 
 db-reset:
 	@echo "Resetting database..."
@@ -183,7 +183,7 @@ db-reset:
 
 db-pull:
 	@echo "Pulling database schema..."
-	pnpm --filter @beauty-salon-backend/migration run db:pull
+	pnpm --filter @beauty-salon-backend/database run db:pull
 	@echo "Formatting generated files..."
 	pnpm format:fix
 	@echo "Database schema pulled and formatted in backend/packages/infrastructure/src/database/"

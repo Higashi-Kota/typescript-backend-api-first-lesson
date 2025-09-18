@@ -21,18 +21,16 @@ import type {
 } from '@beauty-salon-backend/domain'
 import { err, ok } from '@beauty-salon-backend/domain'
 
-import {
-  type DbSalon,
-  mapDbSalonToDomain,
-} from '@beauty-salon-backend/mappers/db-to-domain'
-import type { DbNewSalon } from '@beauty-salon-backend/mappers/domain-to-db'
+import { mapDbSalonToDomain } from '@beauty-salon-backend/domain'
 
 import {
-  opening_hours as openingHoursTable,
+  openingHours as openingHoursTable,
   salons,
 } from '@beauty-salon-backend/database'
 
-// DB型はマッパーパッケージからインポート
+// DB型の定義
+type DbSalon = typeof salons.$inferSelect
+type DbNewSalon = typeof salons.$inferInsert
 type DbNewOpeningHours = typeof openingHoursTable.$inferInsert
 
 export class DrizzleSalonRepository implements SalonRepository {
@@ -50,7 +48,7 @@ export class DrizzleSalonRepository implements SalonRepository {
     const dbOpeningHours = await this.db
       .select()
       .from(openingHoursTable)
-      .where(eq(openingHoursTable.salon_id, dbSalon.id))
+      .where(eq(openingHoursTable.salonId, dbSalon.id))
 
     const openingHours = dbOpeningHours.map(
       (hours: (typeof dbOpeningHours)[0]) => ({
@@ -63,14 +61,14 @@ export class DrizzleSalonRepository implements SalonRepository {
           | 'friday'
           | 'saturday'
           | 'sunday', // Mock value
-        openTime: hours.open_time,
-        closeTime: hours.close_time,
-        isHoliday: hours.is_holiday,
+        openTime: hours.openTime || '',
+        closeTime: hours.closeTime || '',
+        isHoliday: hours.isHoliday,
       })
     )
 
     // openingHoursを追加
-    salon.data.openingHours = openingHours
+    salon.openingHours = openingHours
 
     return salon
   }
@@ -120,14 +118,17 @@ export class DrizzleSalonRepository implements SalonRepository {
         const newSalon: DbNewSalon = {
           name: data.name,
           description: data.description,
-          address: data.address,
+          address: data.address.street,
+          city: data.address.city,
+          prefecture: data.address.state,
+          postalCode: data.address.postalCode,
+          building: undefined,
           email: data.contactInfo.email,
-          phone_number: data.contactInfo.phoneNumber,
-          alternative_phone: data.contactInfo.alternativePhone,
-          image_urls: data.imageUrls ?? [],
+          phoneNumber: data.contactInfo.phoneNumber,
+          alternativePhone: data.contactInfo.alternativePhone,
+          websiteUrl: undefined,
+          imageUrls: data.imageUrls ?? [],
           features: data.features ?? [],
-          created_by: data.createdBy,
-          updated_by: data.createdBy,
         }
 
         const insertedSalons = await tx
@@ -143,11 +144,11 @@ export class DrizzleSalonRepository implements SalonRepository {
         // 営業時間を作成
         const openingHoursData: DbNewOpeningHours[] = data.openingHours.map(
           (hours: (typeof data.openingHours)[0]) => ({
-            salon_id: insertedSalon.id,
-            day_of_week: hours.dayOfWeek,
-            open_time: hours.openTime,
-            close_time: hours.closeTime,
-            is_holiday: hours.isHoliday,
+            salonId: insertedSalon.id,
+            dayOfWeek: hours.dayOfWeek,
+            openTime: hours.openTime,
+            closeTime: hours.closeTime,
+            isHoliday: hours.isHoliday,
           })
         )
 
@@ -175,7 +176,7 @@ export class DrizzleSalonRepository implements SalonRepository {
   }
 
   async update(
-    data: UpdateSalonRequest
+    data: UpdateSalonRequest & { id: SalonId }
   ): Promise<Result<Salon, RepositoryError>> {
     try {
       // トランザクション内で更新
@@ -194,8 +195,7 @@ export class DrizzleSalonRepository implements SalonRepository {
 
         // 更新データを準備
         const updateData: Partial<DbSalon> = {
-          updated_at: new Date().toISOString(),
-          updated_by: data.updatedBy,
+          updatedAt: new Date().toISOString(),
         }
 
         if (data.name !== undefined) {
@@ -205,15 +205,20 @@ export class DrizzleSalonRepository implements SalonRepository {
           updateData.description = data.description
         }
         if (data.address !== undefined) {
-          updateData.address = data.address
+          updateData.address = data.address.street
+          updateData.city = data.address.city
+          updateData.prefecture = data.address.state
+          updateData.postalCode = data.address.postalCode
+          updateData.building = undefined
         }
         if (data.contactInfo !== undefined) {
           updateData.email = data.contactInfo.email
-          updateData.phone_number = data.contactInfo.phoneNumber
-          updateData.alternative_phone = data.contactInfo.alternativePhone
+          updateData.phoneNumber = data.contactInfo.phoneNumber
+          updateData.alternativePhone = data.contactInfo.alternativePhone
+          updateData.websiteUrl = undefined
         }
         if (data.imageUrls !== undefined) {
-          updateData.image_urls = data.imageUrls
+          updateData.imageUrls = data.imageUrls
         }
         if (data.features !== undefined) {
           updateData.features = data.features
@@ -236,16 +241,16 @@ export class DrizzleSalonRepository implements SalonRepository {
           // 既存の営業時間を削除
           await tx
             .delete(openingHoursTable)
-            .where(eq(openingHoursTable.salon_id, data.id))
+            .where(eq(openingHoursTable.salonId, data.id))
 
           // 新しい営業時間を挿入
           const openingHoursData: DbNewOpeningHours[] = data.openingHours.map(
             (hours: (typeof data.openingHours)[0]) => ({
-              salon_id: data.id,
-              day_of_week: hours.dayOfWeek,
-              open_time: hours.openTime,
-              close_time: hours.closeTime,
-              is_holiday: hours.isHoliday,
+              salonId: data.id,
+              dayOfWeek: hours.dayOfWeek,
+              openTime: hours.openTime,
+              closeTime: hours.closeTime,
+              isHoliday: hours.isHoliday,
             })
           )
 
@@ -347,7 +352,7 @@ export class DrizzleSalonRepository implements SalonRepository {
         .select()
         .from(salons)
         .where(whereClause)
-        .orderBy(desc(salons.created_at))
+        .orderBy(desc(salons.createdAt))
         .limit(pagination.limit)
         .offset(pagination.offset)
 
@@ -377,7 +382,7 @@ export class DrizzleSalonRepository implements SalonRepository {
   async findAllActive(
     pagination: PaginationParams
   ): Promise<Result<PaginatedResult<Salon>, RepositoryError>> {
-    return this.search({ isActive: true }, pagination)
+    return this.search({}, pagination)
   }
 
   async suspend(

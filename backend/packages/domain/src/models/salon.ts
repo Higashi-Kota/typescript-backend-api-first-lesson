@@ -1,201 +1,302 @@
 /**
  * Salon Domain Model
- * CLAUDEガイドラインに準拠したSum型によるモデリング
+ * Following the established pattern from Customer model
  */
 
-import type { Brand } from '../shared/brand.js'
-import { createBrand, createBrandSafe } from '../shared/brand.js'
-import type { Result } from '../shared/result.js'
-import { err, ok } from '../shared/result.js'
+import type { components } from '@beauty-salon-backend/generated'
+import { match } from 'ts-pattern'
+import type { Brand } from '../shared/brand'
+import type { ValidationError } from '../shared/errors'
+import type { BusinessHours } from '../shared/generated-types-shim'
+import type { Result } from '../shared/result'
+import { err, ok } from '../shared/result'
 
-// Salon固有のID型
-export type SalonId = Brand<string, 'SalonId'>
+// ============================================================================
+// Type Definitions
+// ============================================================================
 
-// SalonID作成関数
-export const createSalonId = (value: string) => createBrand(value, 'SalonId')
-export const createSalonIdSafe = (value: string) =>
-  createBrandSafe(value, 'SalonId')
+// Brand the ID types for type safety
+export type SalonId = Brand<components['schemas']['Models.SalonId'], 'SalonId'>
 
-// 住所
-export type Address = {
-  street: string
-  city: string
-  state: string
-  postalCode: string
-  country: string
-}
-
-// 連絡先情報
-export type ContactInfo = {
-  email: string
-  phoneNumber: string
-  alternativePhone?: string
-}
-
-// 曜日
-export type DayOfWeek =
-  | 'monday'
-  | 'tuesday'
-  | 'wednesday'
-  | 'thursday'
-  | 'friday'
-  | 'saturday'
-  | 'sunday'
-
-// 営業時間
-export type OpeningHours = {
-  dayOfWeek: DayOfWeek
-  openTime: string // HH:MM format
-  closeTime: string // HH:MM format
-  isHoliday: boolean
-}
-
-// 監査情報
-export type AuditInfo = {
-  createdAt: Date
-  createdBy?: string
-  updatedAt: Date
-  updatedBy?: string
-}
-
-// Salonベースデータ
-export type SalonData = {
+// Domain Salon Model - extends generated type with additional business properties
+export interface Salon
+  extends Omit<components['schemas']['Models.Salon'], 'id'> {
   id: SalonId
-  name: string
-  description: string
-  address: Address
-  contactInfo: ContactInfo
-  openingHours: OpeningHours[]
-  imageUrls?: string[]
-  features?: string[]
-  rating?: number
-  reviewCount?: number
-} & AuditInfo
+  // Additional domain properties not in generated types
+  businessHours?: BusinessHours[]
+}
 
-// Salon Sum型（ステータスベース）
-export type Salon =
+// Re-export related types from generated schemas
+export type SalonSummary = components['schemas']['Models.SalonSummary']
+export type CreateSalonRequest =
+  components['schemas']['Models.CreateSalonRequest']
+export type UpdateSalonRequest =
+  components['schemas']['Models.UpdateSalonRequest']
+export type SearchSalonRequest =
+  components['schemas']['Models.SearchSalonRequest']
+export type OpeningHours = components['schemas']['Models.OpeningHours']
+export type { BusinessHours } from '../shared/generated-types-shim'
+export type Address = components['schemas']['Models.Address']
+
+// ============================================================================
+// Sum Types (Discriminated Unions)
+// ============================================================================
+
+// Salon state management
+export type SalonState =
+  | { type: 'active'; salon: Salon }
+  | { type: 'suspended'; salon: Salon; reason: string; suspendedAt: string }
+  | { type: 'inactive'; salon: Salon; inactiveSince: string }
+  | { type: 'pending'; salon: Partial<Salon> }
+  | { type: 'deleted'; salonId: SalonId; deletedAt: string }
+
+// Operation results
+export type SalonOperationResult =
+  | { type: 'success'; salon: Salon }
+  | { type: 'validationError'; errors: ValidationError[] }
+  | { type: 'notFound'; salonId: SalonId }
+  | { type: 'duplicateName'; name: string }
+  | { type: 'businessRuleViolation'; rule: string; message: string }
+  | { type: 'systemError'; message: string }
+
+// Search results
+export type SalonSearchResult =
+  | { type: 'found'; salons: Salon[]; total: number }
+  | { type: 'empty'; query: SearchSalonRequest }
+  | { type: 'error'; message: string }
+
+// Events for event sourcing
+export type SalonEvent =
   | {
-      type: 'active'
-      data: SalonData
+      type: 'created'
+      salonId: SalonId
+      data: Salon
+      createdBy: string
+      timestamp: string
+    }
+  | {
+      type: 'updated'
+      salonId: SalonId
+      changes: Partial<Salon>
+      updatedBy: string
+      timestamp: string
     }
   | {
       type: 'suspended'
-      data: SalonData
-      suspendedAt: Date
-      suspendedReason: string
+      salonId: SalonId
+      reason: string
+      suspendedBy: string
+      timestamp: string
     }
   | {
-      type: 'deleted'
-      data: SalonData
-      deletedAt: Date
-      deletedBy: string
+      type: 'activated'
+      salonId: SalonId
+      activatedBy: string
+      timestamp: string
     }
+  | { type: 'deleted'; salonId: SalonId; deletedBy: string; timestamp: string }
 
-// Salon作成リクエスト
-export type CreateSalonRequest = {
-  name: string
-  description: string
-  address: Address
-  contactInfo: ContactInfo
-  openingHours: OpeningHours[]
-  imageUrls?: string[]
-  features?: string[]
-  createdBy?: string
-}
+// ============================================================================
+// Domain Logic Functions
+// ============================================================================
 
-// Salon更新リクエスト
-export type UpdateSalonRequest = {
-  id: SalonId
-  name?: string
-  description?: string
-  address?: Address
-  contactInfo?: ContactInfo
-  openingHours?: OpeningHours[]
-  imageUrls?: string[]
-  features?: string[]
-  updatedBy?: string
-}
+// Validate salon data
+export const validateSalon = (
+  salon: Partial<Salon>
+): Result<true, ValidationError[]> => {
+  const errors: ValidationError[] = []
 
-// Salon検索条件
-export type SalonSearchCriteria = {
-  keyword?: string
-  city?: string
-  isActive?: boolean
-}
-
-// エラー型の定義
-export type SalonError =
-  | { type: 'invalidName'; message: string }
-  | { type: 'invalidEmail'; message: string }
-  | { type: 'invalidPhoneNumber'; message: string }
-  | { type: 'invalidOpeningHours'; message: string }
-
-// バリデーション関数
-export const validateSalonName = (name: string): Result<string, SalonError> => {
-  if (!name || name.trim().length === 0) {
-    return err({ type: 'invalidName', message: 'Salon name cannot be empty' })
-  }
-  if (name.length > 200) {
-    return err({ type: 'invalidName', message: 'Salon name is too long' })
-  }
-  return ok(name.trim())
-}
-
-export const validateEmail = (email: string): Result<string, SalonError> => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!emailRegex.test(email)) {
-    return err({ type: 'invalidEmail', message: 'Invalid email format' })
-  }
-  return ok(email)
-}
-
-export const validatePhoneNumber = (
-  phoneNumber: string
-): Result<string, SalonError> => {
-  // 日本の電話番号形式をチェック（簡易版）
-  const phoneRegex = /^[+]?[\d-]+$/
-  if (!phoneRegex.test(phoneNumber)) {
-    return err({
-      type: 'invalidPhoneNumber',
-      message: 'Invalid phone number format',
-    })
-  }
-  return ok(phoneNumber)
-}
-
-export const validateOpeningHours = (
-  hours: OpeningHours[]
-): Result<OpeningHours[], SalonError> => {
-  if (!hours || hours.length === 0) {
-    return err({
-      type: 'invalidOpeningHours',
-      message: 'Opening hours cannot be empty',
+  if (!salon.name || salon.name.trim().length === 0) {
+    errors.push({
+      field: 'name',
+      message: 'Salon name is required',
+      code: 'required',
     })
   }
 
-  // 時刻形式のチェック
-  const timeRegex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/
-  for (const hour of hours) {
-    if (!(timeRegex.test(hour.openTime) && timeRegex.test(hour.closeTime))) {
-      return err({
-        type: 'invalidOpeningHours',
-        message: 'Invalid time format (use HH:MM)',
-      })
+  if (!salon.description || salon.description.trim().length === 0) {
+    errors.push({
+      field: 'description',
+      message: 'Description is required',
+      code: 'required',
+    })
+  }
+
+  if (!salon.address) {
+    errors.push({
+      field: 'address',
+      message: 'Address is required',
+      code: 'required',
+    })
+  }
+
+  if (!salon.contactInfo?.email) {
+    errors.push({
+      field: 'contactInfo.email',
+      message: 'Email is required',
+      code: 'required',
+    })
+  }
+
+  if (!salon.contactInfo?.phoneNumber) {
+    errors.push({
+      field: 'contactInfo.phoneNumber',
+      message: 'Phone number is required',
+      code: 'required',
+    })
+  }
+
+  if (salon.openingHours && salon.openingHours.length === 0) {
+    errors.push({
+      field: 'openingHours',
+      message: 'At least one opening hour schedule is required',
+      code: 'required',
+    })
+  }
+
+  if (errors.length > 0) {
+    return err(errors)
+  }
+
+  return ok(true as const)
+}
+
+// Check if salon is operational
+export const isSalonOperational = (salon: Salon): boolean => {
+  const now = new Date()
+  const currentDay = now
+    .toLocaleDateString('en-US', { weekday: 'long' })
+    .toLowerCase()
+  const currentTime = now.toTimeString().slice(0, 5) // HH:MM format
+
+  return salon.openingHours.some((hours) => {
+    if (hours.dayOfWeek.toLowerCase() !== currentDay) {
+      return false
+    }
+    return hours.openTime <= currentTime && hours.closeTime >= currentTime
+  })
+}
+
+// Calculate salon capacity based on staff and services
+export const calculateSalonCapacity = (
+  staffCount: number,
+  averageServiceDuration: number
+): number => {
+  const hoursPerDay = 8
+  const minutesPerHour = 60
+  const totalMinutesPerDay = hoursPerDay * minutesPerHour
+  const servicesPerStaff = Math.floor(
+    totalMinutesPerDay / averageServiceDuration
+  )
+
+  return staffCount * servicesPerStaff
+}
+
+// Get salon status
+export const getSalonStatus = (state: SalonState): string => {
+  return match(state)
+    .with({ type: 'active' }, () => 'Active')
+    .with({ type: 'suspended' }, () => 'Suspended')
+    .with({ type: 'inactive' }, () => 'Inactive')
+    .with({ type: 'pending' }, () => 'Pending')
+    .with({ type: 'deleted' }, () => 'Deleted')
+    .exhaustive()
+}
+
+// Business rules
+export const canAcceptReservations = (
+  salon: Salon,
+  state: SalonState
+): boolean => {
+  return match(state)
+    .with({ type: 'active' }, () => isSalonOperational(salon))
+    .otherwise(() => false)
+}
+
+export const canUpdateSalon = (state: SalonState): boolean => {
+  return match(state)
+    .with({ type: 'active' }, () => true)
+    .with({ type: 'suspended' }, () => true)
+    .with({ type: 'inactive' }, () => true)
+    .otherwise(() => false)
+}
+
+// Format salon for display
+export const formatSalonSummary = (salon: Salon): SalonSummary => {
+  return {
+    id: salon.id,
+    name: salon.name,
+    address: salon.address,
+    rating: undefined, // Will be populated from reviews
+    reviewCount: undefined, // Will be populated from reviews
+  }
+}
+
+// Check for schedule conflicts
+export const hasScheduleConflict = (
+  schedule1: OpeningHours,
+  schedule2: OpeningHours
+): boolean => {
+  if (schedule1.dayOfWeek !== schedule2.dayOfWeek) {
+    return false
+  }
+
+  const start1 = schedule1.openTime
+  const end1 = schedule1.closeTime
+  const start2 = schedule2.openTime
+  const end2 = schedule2.closeTime
+
+  return !(end1 <= start2 || end2 <= start1)
+}
+
+// Merge opening hours
+export const mergeOpeningHours = (
+  existingHours: OpeningHours[],
+  newHours: OpeningHours[]
+): Result<OpeningHours[], string> => {
+  const merged = [...existingHours]
+
+  for (const newSchedule of newHours) {
+    const conflictIndex = merged.findIndex((existing) =>
+      hasScheduleConflict(existing, newSchedule)
+    )
+
+    if (conflictIndex !== -1) {
+      // Replace conflicting schedule
+      merged[conflictIndex] = newSchedule
+    } else {
+      merged.push(newSchedule)
     }
   }
 
-  return ok(hours)
+  return ok(merged)
 }
 
-// 便利なヘルパー関数
-export const isActiveSalon = (
-  salon: Salon
-): salon is Extract<Salon, { type: 'active' }> => salon.type === 'active'
+// Feature management
+export const addFeature = (
+  salon: Salon,
+  feature: string
+): Result<Salon, string> => {
+  if (salon.features?.includes(feature)) {
+    return err('Feature already exists')
+  }
 
-export const isSuspendedSalon = (
-  salon: Salon
-): salon is Extract<Salon, { type: 'suspended' }> => salon.type === 'suspended'
+  return ok({
+    ...salon,
+    features: [...(salon.features ?? []), feature],
+  })
+}
 
-export const isDeletedSalon = (
-  salon: Salon
-): salon is Extract<Salon, { type: 'deleted' }> => salon.type === 'deleted'
+export const removeFeature = (
+  salon: Salon,
+  feature: string
+): Result<Salon, string> => {
+  if (!salon.features?.includes(feature)) {
+    return err('Feature not found')
+  }
+
+  return ok({
+    ...salon,
+    features: salon.features.filter((f) => f !== feature),
+  })
+}

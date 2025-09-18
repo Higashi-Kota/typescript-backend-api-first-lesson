@@ -1,4 +1,4 @@
-import type { Result } from '../shared/result.js'
+import type { Result } from '../shared/result'
 
 export type EmailAddress = {
   email: string

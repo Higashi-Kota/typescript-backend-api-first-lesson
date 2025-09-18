@@ -67,14 +67,14 @@ export const testWithSeeds = databaseTest.extend<{
             UserBuilder.create()
               .withEmail('locked@example.com')
               .withRole('customer')
-              .withLockedAccount()
+              .withAccountStatus('locked')
               .withName('Locked User')
           ),
           unverified: await createUser(
             repository,
             UserBuilder.create()
               .withEmail('unverified@example.com')
-              .withUnverifiedEmail('verification_token_123')
+              .withEmailVerified(false)
               .withName('Unverified User')
           ),
         }

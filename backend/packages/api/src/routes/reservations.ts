@@ -7,8 +7,8 @@
 import { Router } from 'express'
 import { match } from 'ts-pattern'
 import { z } from 'zod'
-import { authenticate, authorize } from '../middleware/auth.middleware.js'
-import type { AuthConfig } from '../middleware/auth.middleware.js'
+import { authenticate, authorize } from '../middleware/auth.middleware'
+import type { AuthConfig } from '../middleware/auth.middleware'
 
 import type {
   ReservationRepository,
@@ -42,7 +42,7 @@ import {
   mapUpdateReservationRequest,
   markAsNoShowUseCase,
   updateReservationUseCase,
-} from '@beauty-salon-backend/usecase'
+} from '@beauty-salon-backend/domain/business-logic'
 
 // バリデーションスキーマ
 const reservationIdSchema = z.string().uuid()

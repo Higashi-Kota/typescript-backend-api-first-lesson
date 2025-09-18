@@ -8,13 +8,13 @@
 // import { match } from 'ts-pattern'
 import { randomUUID } from 'node:crypto'
 import type { StorageService } from '@beauty-salon-backend/domain'
-// import { validateRequest } from '../middleware/validation.js' // TODO: Implement validation middleware
+import type { components } from '@beauty-salon-backend/generated'
+// import { validateRequest } from '../middleware/validation' // TODO: Implement validation middleware
 import { createStorageServiceWithDefaults } from '@beauty-salon-backend/infrastructure'
-import type { components } from '@beauty-salon-backend/types'
 import type { Router } from 'express'
 import express from 'express'
 import { z } from 'zod'
-import { type AuthConfig, authenticate } from '../middleware/auth.middleware.js'
+import { type AuthConfig, authenticate } from '../middleware/auth.middleware'
 
 // Request schemas
 const UploadUrlRequestSchema = z.object({

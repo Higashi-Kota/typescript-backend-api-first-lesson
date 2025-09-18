@@ -2,7 +2,7 @@
  * Express Request型の拡張
  */
 
-import type { UserRole } from '../middleware/auth.middleware.js'
+import type { UserRole } from '../middleware/auth.middleware'
 
 declare global {
   namespace Express {

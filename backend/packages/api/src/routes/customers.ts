@@ -9,26 +9,17 @@ import { match } from 'ts-pattern'
 import { z } from 'zod'
 
 import {
+  type Customer,
   type CustomerRepository,
-  createCustomerIdSafe,
+  createCustomerId,
+  // Import API to domain mappers
+  mapCreateCustomerRequestToDomain,
+  // Import mappers from domain
+  mapCustomerToApiResponse,
+  mapCustomerToProfileResponse,
+  mapCustomersToPaginatedResponse,
+  mapUpdateCustomerRequestToDomain,
 } from '@beauty-salon-backend/domain'
-import {
-  mapCreateCustomerRequest,
-  mapCreateCustomerUseCaseErrorToResponse,
-  mapCustomerListToResponse,
-  mapCustomerProfileToResponse,
-  mapCustomerToResponse,
-  mapUpdateCustomerRequest,
-  mapUpdateCustomerUseCaseErrorToResponse,
-} from '@beauty-salon-backend/mappers'
-import {
-  createCustomerUseCase,
-  deleteCustomerUseCase,
-  getCustomerByIdUseCase,
-  getCustomerProfileUseCase,
-  listCustomersUseCase,
-  updateCustomerUseCase,
-} from '@beauty-salon-backend/usecase'
 import type {
   CreateCustomerRequest,
   CreateCustomerResponse,
@@ -39,7 +30,7 @@ import type {
   ListCustomersResponse,
   UpdateCustomerRequest,
   UpdateCustomerResponse,
-} from '../utils/openapi-types.js'
+} from '../utils/openapi-types'
 
 // バリデーションスキーマ
 const customerIdSchema = z.string().uuid()
@@ -87,32 +78,48 @@ export const createCustomerRoutes = (deps: CustomerRouteDeps): Router => {
           offset?: string
         }
 
-        // UseCase実行
-        const result = await listCustomersUseCase(
-          {
-            search: query.search,
-            tags: query.tags,
-            limit: paginationResult.data.limit,
-            offset: paginationResult.data.offset,
-          },
-          { customerRepository }
-        )
+        // Repository call - use findAll with empty criteria for now
+        const result = await customerRepository.findAll({})
 
         // レスポンス処理
         return match(result)
           .with({ type: 'ok' }, ({ value }) => {
+            // Filter based on query parameters if provided
+            let customers = value
+            if (query.search) {
+              const searchLower = query.search.toLowerCase()
+              customers = customers.filter(
+                (c) =>
+                  c.name.toLowerCase().includes(searchLower) ||
+                  c.contactInfo.email.toLowerCase().includes(searchLower)
+              )
+            }
+            if (query.tags && query.tags.length > 0) {
+              customers = customers.filter((c) =>
+                query.tags?.some((tag) => c.tags.includes(tag))
+              )
+            }
+
+            // Apply pagination
+            const startIndex = paginationResult.data.offset
+            const endIndex = startIndex + paginationResult.data.limit
+            const paginatedCustomers = customers.slice(startIndex, endIndex)
+
             const response: ListCustomersResponse =
-              mapCustomerListToResponse(value)
+              mapCustomersToPaginatedResponse(
+                paginatedCustomers,
+                customers.length,
+                paginationResult.data.limit,
+                paginationResult.data.offset
+              )
             res.json(response)
           })
-          .with({ type: 'err' }, ({ error }) => {
-            const statusCode = error.type === 'databaseError' ? 500 : 400
+          .with({ type: 'err' }, () => {
             const errorResponse: ErrorResponse = {
-              code: error.type.toUpperCase(),
-              message:
-                error.type === 'databaseError' ? error.message : 'Bad request',
+              code: 'DATABASE_ERROR',
+              message: 'Failed to fetch customers',
             }
-            res.status(statusCode).json(errorResponse)
+            res.status(500).json(errorResponse)
           })
           .exhaustive()
       } catch (error) {
@@ -147,37 +154,48 @@ export const createCustomerRoutes = (deps: CustomerRouteDeps): Router => {
           return res.status(400).json(errorResponse)
         }
 
-        // UseCase実行
-        const input = mapCreateCustomerRequest(requestData)
-        const result = await createCustomerUseCase(input, {
-          customerRepository,
-        })
+        // Map request to domain model - the mapper expects CreateCustomerRequest which matches the API type
+        const customerData = mapCreateCustomerRequestToDomain(requestData)
+
+        // Generate a new ID
+        const idResult = createCustomerId(crypto.randomUUID())
+        if (idResult.type === 'err') {
+          const errorResponse: ErrorResponse = {
+            code: 'INTERNAL_ERROR',
+            message: 'Failed to generate customer ID',
+          }
+          return res.status(500).json(errorResponse)
+        }
+
+        // Create full customer object
+        const newCustomer: Customer = {
+          ...customerData,
+          id: idResult.value,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          createdBy: 'system', // TODO: Get from auth context
+          updatedBy: 'system', // TODO: Get from auth context
+        }
+
+        // Save through repository
+        const result = await customerRepository.save(newCustomer)
 
         // レスポンス処理
         return match(result)
           .with({ type: 'ok' }, ({ value }) => {
             const response: CreateCustomerResponse =
-              mapCustomerToResponse(value)
+              mapCustomerToApiResponse(value)
             res
               .status(201)
-              .header('Location', `/customers/${value.data.id}`)
+              .header('Location', `/customers/${value.id}`)
               .json(response)
           })
-          .with({ type: 'err' }, ({ error }) => {
-            const statusCode = match(error.type)
-              .with('duplicateEmail', () => 409)
-              .with(
-                'invalidEmail',
-                'invalidPhoneNumber',
-                'invalidName',
-                () => 400
-              )
-              .with('databaseError', () => 500)
-              .otherwise(() => 400)
-
-            const errorResponse: ErrorResponse =
-              mapCreateCustomerUseCaseErrorToResponse(error)
-            res.status(statusCode).json(errorResponse)
+          .with({ type: 'err' }, () => {
+            const errorResponse: ErrorResponse = {
+              code: 'DATABASE_ERROR',
+              message: 'Failed to create customer',
+            }
+            res.status(500).json(errorResponse)
           })
           .exhaustive()
       } catch (error) {
@@ -208,7 +226,7 @@ export const createCustomerRoutes = (deps: CustomerRouteDeps): Router => {
           return res.status(400).json(errorResponse)
         }
 
-        const customerIdResult = createCustomerIdSafe(idResult.data)
+        const customerIdResult = createCustomerId(idResult.data)
         if (customerIdResult.type === 'err') {
           const errorResponse: ErrorResponse = {
             code: 'INVALID_ID',
@@ -217,24 +235,23 @@ export const createCustomerRoutes = (deps: CustomerRouteDeps): Router => {
           return res.status(400).json(errorResponse)
         }
 
-        // UseCase実行
-        const result = await getCustomerByIdUseCase(
-          { id: customerIdResult.value },
-          { customerRepository }
-        )
+        // Fetch from repository
+        const result = await customerRepository.findById(customerIdResult.value)
 
         // レスポンス処理
         return match(result)
           .with({ type: 'ok' }, ({ value }) => {
-            const response: GetCustomerResponse = mapCustomerToResponse(value)
-            res.json(response)
-          })
-          .with({ type: 'err', error: { type: 'notFound' } }, () => {
-            const errorResponse: ErrorResponse = {
-              code: 'NOT_FOUND',
-              message: 'Customer not found',
+            if (value == null) {
+              const errorResponse: ErrorResponse = {
+                code: 'NOT_FOUND',
+                message: 'Customer not found',
+              }
+              res.status(404).json(errorResponse)
+            } else {
+              const response: GetCustomerResponse =
+                mapCustomerToApiResponse(value)
+              res.json(response)
             }
-            res.status(404).json(errorResponse)
           })
           .with({ type: 'err' }, () => {
             const errorResponse: ErrorResponse = {
@@ -275,7 +292,7 @@ export const createCustomerRoutes = (deps: CustomerRouteDeps): Router => {
           return res.status(400).json(errorResponse)
         }
 
-        const customerIdResult = createCustomerIdSafe(idResult.data)
+        const customerIdResult = createCustomerId(idResult.data)
         if (customerIdResult.type === 'err') {
           const errorResponse: ErrorResponse = {
             code: 'INVALID_ID',
@@ -284,25 +301,30 @@ export const createCustomerRoutes = (deps: CustomerRouteDeps): Router => {
           return res.status(400).json(errorResponse)
         }
 
-        // UseCase実行
-        const result = await getCustomerProfileUseCase(
-          { id: customerIdResult.value },
-          { customerRepository }
-        )
+        // Fetch customer from repository
+        const result = await customerRepository.findById(customerIdResult.value)
 
         // レスポンス処理
         return match(result)
           .with({ type: 'ok' }, ({ value }) => {
-            const response: GetCustomerProfileResponse =
-              mapCustomerProfileToResponse(value)
-            res.json(response)
-          })
-          .with({ type: 'err', error: { type: 'notFound' } }, () => {
-            const errorResponse: ErrorResponse = {
-              code: 'NOT_FOUND',
-              message: 'Customer not found',
+            if (value == null) {
+              const errorResponse: ErrorResponse = {
+                code: 'NOT_FOUND',
+                message: 'Customer not found',
+              }
+              res.status(404).json(errorResponse)
+            } else {
+              // TODO: Get stats from other repositories/services
+              const stats = {
+                totalBookings: 0,
+                totalSpent: 0,
+                lastVisit: undefined,
+                favoriteServices: [],
+              }
+              const response: GetCustomerProfileResponse =
+                mapCustomerToProfileResponse(value, stats)
+              res.json(response)
             }
-            res.status(404).json(errorResponse)
           })
           .with({ type: 'err' }, () => {
             const errorResponse: ErrorResponse = {
@@ -344,7 +366,7 @@ export const createCustomerRoutes = (deps: CustomerRouteDeps): Router => {
           return res.status(400).json(errorResponse)
         }
 
-        const customerIdResult = createCustomerIdSafe(idResult.data)
+        const customerIdResult = createCustomerId(idResult.data)
         if (customerIdResult.type === 'err') {
           const errorResponse: ErrorResponse = {
             code: 'INVALID_ID',
@@ -353,59 +375,65 @@ export const createCustomerRoutes = (deps: CustomerRouteDeps): Router => {
           return res.status(400).json(errorResponse)
         }
 
-        // UseCase実行
-        const requestData: UpdateCustomerRequest = req.body
-        const input = mapUpdateCustomerRequest(
-          customerIdResult.value,
-          requestData
+        // First, fetch the existing customer
+        const existingResult = await customerRepository.findById(
+          customerIdResult.value
         )
-        const result = await updateCustomerUseCase(input, {
-          customerRepository,
-        })
+        if (existingResult.type === 'err') {
+          const errorResponse: ErrorResponse = {
+            code: 'DATABASE_ERROR',
+            message: 'Failed to fetch customer',
+          }
+          return res.status(500).json(errorResponse)
+        }
+
+        if (existingResult.value == null) {
+          const errorResponse: ErrorResponse = {
+            code: 'NOT_FOUND',
+            message: 'Customer not found',
+          }
+          return res.status(404).json(errorResponse)
+        }
+
+        // Map request to partial domain model
+        const requestData: UpdateCustomerRequest = req.body
+        const updates = mapUpdateCustomerRequestToDomain(requestData)
+
+        // Merge with existing customer
+        const updatedCustomer: Customer = {
+          ...existingResult.value,
+          ...updates,
+          updatedAt: new Date().toISOString(),
+          updatedBy: 'system', // TODO: Get from auth context
+        }
+
+        // Update through repository
+        const result = await customerRepository.update(
+          customerIdResult.value,
+          updatedCustomer
+        )
 
         // レスポンス処理
         return match(result)
           .with({ type: 'ok' }, ({ value }) => {
-            const response: UpdateCustomerResponse =
-              mapCustomerToResponse(value)
-            res.json(response)
-          })
-          .with({ type: 'err', error: { type: 'notFound' } }, () => {
-            const errorResponse: ErrorResponse = {
-              code: 'NOT_FOUND',
-              message: 'Customer not found',
+            if (value == null) {
+              const errorResponse: ErrorResponse = {
+                code: 'NOT_FOUND',
+                message: 'Customer not found',
+              }
+              res.status(404).json(errorResponse)
+            } else {
+              const response: UpdateCustomerResponse =
+                mapCustomerToApiResponse(value)
+              res.json(response)
             }
-            res.status(404).json(errorResponse)
           })
-          .with({ type: 'err', error: { type: 'customerSuspended' } }, () => {
+          .with({ type: 'err' }, () => {
             const errorResponse: ErrorResponse = {
-              code: 'CUSTOMER_SUSPENDED',
-              message: 'Cannot update suspended customer',
+              code: 'DATABASE_ERROR',
+              message: 'Failed to update customer',
             }
-            res.status(409).json(errorResponse)
-          })
-          .with({ type: 'err' }, ({ error }) => {
-            const statusCode = match(error.type)
-              .with('notFound', 'customerNotFound', () => 404)
-              .with('customerSuspended', () => 409)
-              .with('duplicateEmail', () => 409)
-              .with(
-                'invalidEmail',
-                'invalidPhoneNumber',
-                'invalidName',
-                () => 400
-              )
-              .with(
-                'databaseError',
-                'connectionError',
-                'constraintViolation',
-                () => 500
-              )
-              .otherwise(() => 400)
-
-            const errorResponse: ErrorResponse =
-              mapUpdateCustomerUseCaseErrorToResponse(error)
-            res.status(statusCode).json(errorResponse)
+            res.status(500).json(errorResponse)
           })
           .exhaustive()
       } catch (error) {
@@ -431,7 +459,7 @@ export const createCustomerRoutes = (deps: CustomerRouteDeps): Router => {
           })
         }
 
-        const customerIdResult = createCustomerIdSafe(idResult.data)
+        const customerIdResult = createCustomerId(idResult.data)
         if (customerIdResult.type === 'err') {
           return res.status(400).json({
             code: 'INVALID_ID',
@@ -439,22 +467,13 @@ export const createCustomerRoutes = (deps: CustomerRouteDeps): Router => {
           })
         }
 
-        // UseCase実行（論理削除）
-        const result = await deleteCustomerUseCase(
-          { id: customerIdResult.value },
-          { customerRepository }
-        )
+        // Delete through repository (logical deletion)
+        const result = await customerRepository.delete(customerIdResult.value)
 
         // レスポンス処理
         return match(result)
           .with({ type: 'ok' }, () => {
             res.status(204).send()
-          })
-          .with({ type: 'err', error: { type: 'notFound' } }, () => {
-            res.status(404).json({
-              code: 'NOT_FOUND',
-              message: 'Customer not found',
-            })
           })
           .with({ type: 'err' }, () => {
             res.status(500).json({

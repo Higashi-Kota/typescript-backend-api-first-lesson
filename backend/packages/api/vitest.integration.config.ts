@@ -24,7 +24,7 @@ export default defineConfig({
         __dirname,
         '../infrastructure/src'
       ),
-      '@beauty-salon-backend/types': path.resolve(__dirname, '../types/src'),
+      '@beauty-salon-backend/api': path.resolve(__dirname, 'src'),
     },
   },
 })

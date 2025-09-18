@@ -34,7 +34,7 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, 'src'),
       '@beauty-salon-backend/domain': path.resolve(__dirname, '../domain/src'),
-      '@beauty-salon-backend/types': path.resolve(__dirname, '../types/src'),
+      '@beauty-salon-backend/api': path.resolve(__dirname, '../api/src'),
       '@beauty-salon-backend/config': path.resolve(__dirname, '../config/src'),
       '@beauty-salon-backend/mappers/db-to-domain': path.resolve(
         __dirname,

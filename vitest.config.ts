@@ -50,10 +50,6 @@ export default defineConfig({
         __dirname,
         'backend/packages/test-utils/src'
       ),
-      '@beauty-salon-backend/migration': path.resolve(
-        __dirname,
-        'backend/apps/migration/src'
-      ),
     },
   },
 })

@@ -102,7 +102,7 @@ namespace BeautySalon.Operations {
     @get
     op getBookings(
       @path id: CustomerId,
-      @query status?: BookingStatus,
+      @query status?: BookingStatusCode,
       ...PaginationParams,
     ): {
       @statusCode statusCode: 200;

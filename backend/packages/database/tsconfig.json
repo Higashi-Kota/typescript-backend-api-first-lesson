@@ -1,5 +1,5 @@
 {
-  "extends": "../../../tsconfig.json",
+  "extends": "../../../shared-config/tsconfig/backend.json",
   "compilerOptions": {
     "tsBuildInfoFile": "./tsconfig.tsbuildinfo",
     "rootDir": "./src",

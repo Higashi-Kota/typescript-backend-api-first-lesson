@@ -18,13 +18,13 @@ import {
   logoutAll,
   refreshToken,
   revokeSession,
-} from '@beauty-salon-backend/usecase'
+} from '@beauty-salon-backend/domain/business-logic'
+import type { JwtService } from '@beauty-salon-backend/infrastructure/services'
 import { Router } from 'express'
 import { match } from 'ts-pattern'
-import type { AuthConfig } from '../middleware/auth.middleware.js'
-import { authenticate } from '../middleware/auth.middleware.js'
-import { generalRateLimiter } from '../middleware/rate-limit.js'
-import type { JwtService } from '../services/jwt.service.js'
+import type { AuthConfig } from '../middleware/auth.middleware'
+import { authenticate } from '../middleware/auth.middleware'
+import { generalRateLimiter } from '../middleware/rate-limit'
 
 export type SessionRouteDeps = {
   userRepository: UserRepository

@@ -20,11 +20,14 @@
   },
   "devDependencies": {
     "@beauty-salon-shared/config": "workspace:*",
+    "@types/bcryptjs": "^3.0.0",
     "@types/qrcode": "^1.5.5",
     "@types/speakeasy": "^2.0.10"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.2",
     "qrcode": "^1.5.4",
-    "speakeasy": "^2.0.0"
+    "speakeasy": "^2.0.0",
+    "ts-pattern": "^5.7.1"
   }
 }

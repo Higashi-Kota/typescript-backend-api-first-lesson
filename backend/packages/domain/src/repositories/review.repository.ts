@@ -3,22 +3,41 @@
  * CLAUDEガイドラインに準拠した例外フリーなリポジトリインターフェース
  */
 
-import type { CustomerId } from '../models/customer.js'
-import type { ReservationId } from '../models/reservation.js'
+import type { BookingId } from '../models/booking'
+import type { CustomerId } from '../models/customer'
+import type { ReservationId } from '../models/reservation'
 import type {
-  CreateReviewRequest,
   Review,
-  ReviewDetail,
   ReviewId,
-  ReviewSearchCriteria,
   ReviewSummary,
   UpdateReviewRequest,
-} from '../models/review.js'
-import type { SalonId } from '../models/salon.js'
-import type { StaffId } from '../models/staff.js'
-import type { RepositoryError } from '../shared/errors.js'
-import type { PaginatedResult, PaginationParams } from '../shared/pagination.js'
-import type { Result } from '../shared/result.js'
+} from '../models/review'
+import type { SalonId } from '../models/salon'
+import type { StaffId } from '../models/staff'
+import type { RepositoryError } from '../shared/errors'
+import type { PaginatedResult, PaginationParams } from '../shared/pagination'
+import type { Result } from '../shared/result'
+
+// Search criteria for reviews
+export interface ReviewSearchCriteria {
+  salonId?: SalonId
+  staffId?: StaffId
+  customerId?: CustomerId
+  minRating?: number
+  maxRating?: number
+  isVerified?: boolean
+  isPublished?: boolean
+  startDate?: Date
+  endDate?: Date
+}
+
+// ReviewDetail type (extended Review with additional info)
+export interface ReviewDetail extends Review {
+  customerName?: string
+  salonName?: string
+  staffName?: string
+  serviceName?: string
+}
 
 export interface ReviewRepository {
   /**
@@ -39,14 +58,23 @@ export interface ReviewRepository {
   ): Promise<Result<Review | null, RepositoryError>>
 
   /**
+   * BookingIdでReviewを取得
+   */
+  findByBookingId(
+    bookingId: BookingId
+  ): Promise<Result<Review | null, RepositoryError>>
+
+  /**
    * 新しいReviewを作成
    */
-  create(data: CreateReviewRequest): Promise<Result<Review, RepositoryError>>
+  create(data: any): Promise<Result<any, RepositoryError>>
 
   /**
    * Reviewを更新
    */
-  update(data: UpdateReviewRequest): Promise<Result<Review, RepositoryError>>
+  update(
+    data: UpdateReviewRequest & { id: ReviewId }
+  ): Promise<Result<Review, RepositoryError>>
 
   /**
    * Reviewを公開

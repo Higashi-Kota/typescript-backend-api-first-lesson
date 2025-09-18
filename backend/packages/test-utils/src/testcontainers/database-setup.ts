@@ -1,4 +1,4 @@
-import { ProgrammaticMigration } from '@beauty-salon-backend/migration'
+import { ProgrammaticMigration } from '@beauty-salon-backend/database'
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
 
 export class TestDatabaseSetup {

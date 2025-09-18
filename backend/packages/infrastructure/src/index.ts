@@ -7,15 +7,12 @@ export {
   users,
   customers,
   salons,
-  reservations,
   bookings,
   services,
   staff,
   reviews,
-  attachments,
-  share_links,
   sessions,
-  opening_hours,
+  openingHours,
 } from '@beauty-salon-backend/database'
 
 // Repository implementations

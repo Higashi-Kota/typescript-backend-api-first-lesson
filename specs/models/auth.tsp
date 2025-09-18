@@ -6,8 +6,94 @@ using TypeSpec.Http;
 using TypeSpec.Rest;
 
 namespace BeautySalon.Models {
+  // ============================================================================
+  // Staff Level Enums
+  // ============================================================================
+
+  enum StaffLevel {
+    junior,
+    stylist,
+    senior,
+    expert,
+    director,
+  }
+
+  // ============================================================================
+  // Authentication State Types
+  // ============================================================================
+
+  enum AuthenticationStateType {
+    unauthenticated,
+    authenticated,
+    pending_two_factor,
+    locked,
+  }
+
+  model AuthenticationState {
+    type: AuthenticationStateType;
+    sessionId?: SessionId;
+    expiresAt?: utcDateTime;
+    tempToken?: string;
+    until?: utcDateTime;
+    attempts?: int32;
+    reason?: string;
+  }
+
+  // ============================================================================
+  // Email Verification State
+  // ============================================================================
+
+  enum EmailVerificationStateType {
+    verified,
+    unverified,
+    pending,
+  }
+
+  model EmailVerificationState {
+    type: EmailVerificationStateType;
+    verifiedAt?: utcDateTime;
+    token?: string;
+    expiresAt?: utcDateTime;
+    sentAt?: utcDateTime;
+  }
+
+  // ============================================================================
+  // Password Reset State
+  // ============================================================================
+
+  enum PasswordResetStateType {
+    none,
+    requested,
+    completed,
+  }
+
+  model PasswordResetState {
+    type: PasswordResetStateType;
+    token?: string;
+    expiresAt?: utcDateTime;
+    requestedAt?: utcDateTime;
+    completedAt?: utcDateTime;
+  }
+
+  // ============================================================================
+  // Extended User Role Types
+  // ============================================================================
+
+  enum UserRoleType {
+    customer,
+    staff,
+    manager,
+    admin,
+    owner,
+  }
+
+  model UserRoleDetail {
+    type: UserRoleType;
+    salonId?: SalonId;
+    level?: StaffLevel;
+  }
   @doc("User roles in the system")
-  enum UserRole {
+  enum AuthUserRole {
     @doc("Customer role - can book services")
     customer: "customer",
 
@@ -61,7 +147,7 @@ namespace BeautySalon.Models {
     name: string;
 
     @doc("User's role in the system")
-    role: UserRole;
+    role: AuthUserRole;
 
     @doc("Account status")
     status: UserAccountStatus;
@@ -106,10 +192,22 @@ namespace BeautySalon.Models {
     trustedIpAddresses?: string[];
 
     @doc("Reference to customer profile if user is a customer")
-    customerId?: string;
+    customerId?: CustomerId;
 
     @doc("Reference to staff profile if user is staff")
-    staffId?: string;
+    staffId?: StaffId;
+
+    @doc("Extended role information")
+    roleDetail?: UserRoleDetail;
+
+    @doc("Authentication state")
+    authState?: AuthenticationState;
+
+    @doc("Email verification state")
+    emailVerificationState?: EmailVerificationState;
+
+    @doc("Password reset state")
+    passwordResetState?: PasswordResetState;
 
     @doc("Timestamp when the user was created")
     createdAt: utcDateTime;
@@ -131,7 +229,7 @@ namespace BeautySalon.Models {
     id: string;
 
     @doc("User ID associated with this session")
-    userId: string;
+    userId: UserId;
 
     @doc("Refresh token for this session")
     refreshToken: string;
@@ -200,7 +298,7 @@ namespace BeautySalon.Models {
     name: string;
 
     @doc("User's role (defaults to customer)")
-    role?: UserRole = UserRole.customer;
+    role?: AuthUserRole = AuthUserRole.customer;
   }
 
   @doc("Password reset request")

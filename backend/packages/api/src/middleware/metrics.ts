@@ -1,6 +1,6 @@
+import { createMetricsService } from '@beauty-salon-backend/infrastructure/services'
 import type { NextFunction, Request, Response } from 'express'
 import { match } from 'ts-pattern'
-import { createMetricsService } from '../services/metrics.service.js'
 
 const metricsService = createMetricsService()
 metricsService.init()

@@ -4,7 +4,7 @@
  */
 
 import type { NextFunction, Request, Response } from 'express'
-import { createStructuredLogger } from '../utils/structured-logger.js'
+import { createStructuredLogger } from '../utils/structured-logger'
 
 const logger = createStructuredLogger('http')
 

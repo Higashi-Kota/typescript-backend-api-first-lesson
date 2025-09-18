@@ -1,295 +1,406 @@
 /**
  * Reservation Domain Model
- * CLAUDEガイドラインに準拠したSum型によるモデリング
+ * Implements state management and business logic for reservations
  */
 
-import type { Brand } from '../shared/brand.js'
-import { createBrand, createBrandSafe } from '../shared/brand.js'
-import type { Result } from '../shared/result.js'
-import { err, ok } from '../shared/result.js'
-import type { CustomerId } from './customer.js'
-import type { SalonId } from './salon.js'
-import type { ServiceId } from './service.js'
-import type { StaffId } from './staff.js'
+import type { components } from '@beauty-salon-backend/generated'
+import { match } from 'ts-pattern'
+import type { Brand } from '../shared/brand'
+import type { DomainError, ValidationError } from '../shared/errors'
+import type { Result } from '../shared/result'
+import { err, ok } from '../shared/result'
 
-// Reservation固有のID型
-export type ReservationId = Brand<string, 'ReservationId'>
+// Brand the ID types for type safety
+export type ReservationId = Brand<
+  components['schemas']['Models.ReservationId'],
+  'ReservationId'
+>
+export type BookingId = Brand<
+  components['schemas']['Models.BookingId'],
+  'BookingId'
+>
+export type SalonId = Brand<components['schemas']['Models.SalonId'], 'SalonId'>
+export type CustomerId = Brand<
+  components['schemas']['Models.CustomerId'],
+  'CustomerId'
+>
+export type StaffId = Brand<components['schemas']['Models.StaffId'], 'StaffId'>
+export type ServiceId = Brand<
+  components['schemas']['Models.ServiceId'],
+  'ServiceId'
+>
 
-// ReservationID作成関数
-export const createReservationId = (value: string) =>
-  createBrand(value, 'ReservationId')
-export const createReservationIdSafe = (value: string) =>
-  createBrandSafe(value, 'ReservationId')
-
-// 監査情報（Salonと共通）
-import type { AuditInfo } from './salon.js'
-import type { ServiceCategory } from './service.js'
-
-// 予約ステータス
-export type ReservationStatus =
-  | 'pending'
-  | 'confirmed'
-  | 'cancelled'
-  | 'completed'
-  | 'no_show'
-
-// Reservationベースデータ
-export type ReservationData = {
+// Domain Reservation Model - extends generated type
+export interface Reservation
+  extends Omit<
+    components['schemas']['Models.Reservation'],
+    'id' | 'salonId' | 'customerId' | 'staffId' | 'serviceId'
+  > {
   id: ReservationId
   salonId: SalonId
   customerId: CustomerId
   staffId: StaffId
   serviceId: ServiceId
-  startTime: Date
-  endTime: Date
-  notes?: string
-  totalAmount: number
-  depositAmount?: number
-  isPaid: boolean
-} & AuditInfo
+  // Additional fields that exist in DB but not in API
+  bookingId?: BookingId
+  duration?: number
+  paymentMethod?: string
+  reminderSent?: boolean
+}
 
-// Reservation Sum型（ステータスベース）
-export type Reservation =
-  | {
-      type: 'pending'
-      data: ReservationData
-    }
-  | {
-      type: 'confirmed'
-      data: ReservationData
-      confirmedAt: Date
-      confirmedBy: string
-    }
+// Reservation State Management (Sum Type)
+export type ReservationState =
+  | { type: 'pending'; reservation: Reservation }
+  | { type: 'confirmed'; reservation: Reservation; confirmedAt: string }
+  | { type: 'in_progress'; reservation: Reservation; startedAt: string }
+  | { type: 'completed'; reservation: Reservation; completedAt: string }
   | {
       type: 'cancelled'
-      data: ReservationData
-      cancelledAt: Date
-      cancelledBy: string
-      cancellationReason: string
+      reservation: Reservation
+      cancelledAt: string
+      reason: string
     }
-  | {
-      type: 'completed'
-      data: ReservationData
-      completedAt: Date
-      completedBy: string
-    }
-  | {
-      type: 'no_show'
-      data: ReservationData
-      markedNoShowAt: Date
-      markedNoShowBy: string
-    }
+  | { type: 'no_show'; reservation: Reservation; markedAt: string }
 
-// Reservation作成リクエスト
-export type CreateReservationRequest = {
-  salonId: SalonId
-  customerId: CustomerId
-  staffId: StaffId
-  serviceId: ServiceId
-  startTime: Date
-  endTime: Date
-  notes?: string
-  totalAmount: number
-  depositAmount?: number
-  createdBy?: string
-}
+// Reservation Operation Results (Sum Type)
+export type ReservationOperationResult =
+  | { type: 'created'; reservation: Reservation }
+  | { type: 'updated'; reservation: Reservation; changes: string[] }
+  | { type: 'confirmed'; reservation: Reservation }
+  | { type: 'started'; reservation: Reservation }
+  | { type: 'completed'; reservation: Reservation }
+  | { type: 'cancelled'; reservation: Reservation; reason: string }
+  | { type: 'marked_no_show'; reservation: Reservation }
+  | { type: 'validation_failed'; errors: ValidationError[] }
+  | { type: 'not_found'; reservationId: ReservationId }
+  | { type: 'conflict'; message: string }
+  | { type: 'time_slot_unavailable'; startTime: string; endTime: string }
+  | { type: 'staff_unavailable'; staffId: StaffId; time: string }
+  | { type: 'error'; error: DomainError }
 
-// Reservation更新リクエスト
-export type UpdateReservationRequest = {
-  id: ReservationId
-  startTime?: Date
-  endTime?: Date
-  staffId?: StaffId
-  notes?: string
-  updatedBy?: string
-}
+// Reservation Search Result
+export type ReservationSearchResult =
+  | { type: 'found'; reservations: Reservation[]; totalCount: number }
+  | { type: 'empty'; query: ReservationSearchQuery }
+  | { type: 'error'; error: DomainError }
 
-// Reservation詳細情報
-export type ReservationDetail = {
-  reservation: Reservation
-  customerName: string
-  staffName: string
-  serviceName: string
-  serviceCategory: ServiceCategory
-  serviceDuration: number
-}
-
-// 空きスロット
-export type AvailableSlot = {
-  staffId: StaffId
-  startTime: Date
-  endTime: Date
-}
-
-// Reservation検索条件
-export type ReservationSearchCriteria = {
+export interface ReservationSearchQuery {
   salonId?: SalonId
   customerId?: CustomerId
   staffId?: StaffId
   serviceId?: ServiceId
-  status?: ReservationStatus
-  startDate?: Date
-  endDate?: Date
+  status?: string
+  dateFrom?: string
+  dateTo?: string
   isPaid?: boolean
 }
 
-// エラー型の定義
-export type ReservationError =
-  | { type: 'invalidTimeRange'; message: string }
-  | { type: 'slotNotAvailable'; message: string }
-  | { type: 'invalidAmount'; message: string }
-  | { type: 'pastTimeNotAllowed'; message: string }
-  | { type: 'cannotCancel'; message: string }
+// Reservation Events for audit/tracking
+export type ReservationEvent =
+  | {
+      type: 'reservation_created'
+      reservation: Reservation
+      createdBy: string
+      timestamp: string
+    }
+  | {
+      type: 'reservation_updated'
+      reservationId: ReservationId
+      changes: ReservationChanges
+      updatedBy: string
+      timestamp: string
+    }
+  | {
+      type: 'reservation_confirmed'
+      reservationId: ReservationId
+      confirmedBy: string
+      timestamp: string
+    }
+  | {
+      type: 'reservation_started'
+      reservationId: ReservationId
+      startedBy: string
+      timestamp: string
+    }
+  | {
+      type: 'reservation_completed'
+      reservationId: ReservationId
+      completedBy: string
+      timestamp: string
+    }
+  | {
+      type: 'reservation_cancelled'
+      reservationId: ReservationId
+      reason: string
+      cancelledBy: string
+      timestamp: string
+    }
+  | {
+      type: 'reservation_no_show'
+      reservationId: ReservationId
+      markedBy: string
+      timestamp: string
+    }
+  | {
+      type: 'payment_received'
+      reservationId: ReservationId
+      amount: number
+      paymentMethod: string
+      timestamp: string
+    }
 
-// バリデーション関数
-export const validateTimeRange = (
-  startTime: Date,
-  endTime: Date
-): Result<{ startTime: Date; endTime: Date }, ReservationError> => {
-  if (startTime >= endTime) {
-    return err({
-      type: 'invalidTimeRange',
-      message: 'Start time must be before end time',
+export interface ReservationChanges {
+  startTime?: { from: string; to: string }
+  endTime?: { from: string; to: string }
+  staffId?: { from: StaffId; to: StaffId }
+  serviceId?: { from: ServiceId; to: ServiceId }
+  status?: { from: string; to: string }
+  notes?: { from: string | undefined; to: string | undefined }
+  totalAmount?: { from: number; to: number }
+}
+
+// Re-export related types from generated schemas
+export type ReservationStatus =
+  components['schemas']['Models.ReservationStatus']
+export type ReservationDetail =
+  components['schemas']['Models.ReservationDetail']
+export type CreateReservationRequest =
+  components['schemas']['Models.CreateReservationRequest']
+export type UpdateReservationRequest =
+  components['schemas']['Models.UpdateReservationRequest']
+export type UpdateReservationRequestWithReset =
+  components['schemas']['Models.UpdateReservationRequestWithReset']
+
+// Business Logic Functions
+
+/**
+ * Validate reservation data
+ */
+export const validateReservation = (
+  reservation: Partial<Reservation>
+): Result<Reservation, ValidationError[]> => {
+  const errors: ValidationError[] = []
+
+  if (!reservation.salonId) {
+    errors.push({ field: 'salonId', message: 'Salon ID is required' })
+  }
+
+  if (!reservation.customerId) {
+    errors.push({ field: 'customerId', message: 'Customer ID is required' })
+  }
+
+  if (!reservation.staffId) {
+    errors.push({ field: 'staffId', message: 'Staff ID is required' })
+  }
+
+  if (!reservation.serviceId) {
+    errors.push({ field: 'serviceId', message: 'Service ID is required' })
+  }
+
+  if (!reservation.startTime) {
+    errors.push({ field: 'startTime', message: 'Start time is required' })
+  }
+
+  if (!reservation.endTime) {
+    errors.push({ field: 'endTime', message: 'End time is required' })
+  }
+
+  // Validate time logic
+  if (reservation.startTime && reservation.endTime) {
+    const start = new Date(reservation.startTime)
+    const end = new Date(reservation.endTime)
+
+    if (start >= end) {
+      errors.push({
+        field: 'endTime',
+        message: 'End time must be after start time',
+      })
+    }
+
+    if (start < new Date()) {
+      errors.push({
+        field: 'startTime',
+        message: 'Cannot create reservation in the past',
+      })
+    }
+  }
+
+  if (reservation.totalAmount !== undefined && reservation.totalAmount < 0) {
+    errors.push({
+      field: 'totalAmount',
+      message: 'Total amount cannot be negative',
     })
   }
 
+  if (errors.length > 0) {
+    return err(errors)
+  }
+
+  return ok(reservation as Reservation)
+}
+
+/**
+ * Check if reservation can be cancelled
+ */
+export const canCancelReservation = (
+  reservation: Reservation,
+  cancellationDeadlineHours = 24
+): boolean => {
   const now = new Date()
-  if (startTime < now) {
-    return err({
-      type: 'pastTimeNotAllowed',
-      message: 'Cannot create reservation for past time',
-    })
-  }
+  const startTime = new Date(reservation.startTime)
+  const hoursUntilStart =
+    (startTime.getTime() - now.getTime()) / (1000 * 60 * 60)
 
-  // 最大予約期間（3ヶ月先まで）
-  const maxFutureDate = new Date()
-  maxFutureDate.setMonth(maxFutureDate.getMonth() + 3)
-  if (startTime > maxFutureDate) {
-    return err({
-      type: 'invalidTimeRange',
-      message: 'Cannot create reservation more than 3 months in advance',
-    })
-  }
-
-  return ok({ startTime, endTime })
+  // Can cancel if more than deadline hours before start
+  return hoursUntilStart > cancellationDeadlineHours
 }
 
-export const validateAmount = (
-  amount: number
-): Result<number, ReservationError> => {
-  if (amount < 0) {
-    return err({
-      type: 'invalidAmount',
-      message: 'Amount cannot be negative',
+/**
+ * Check if reservation can be modified
+ */
+export const canModifyReservation = (
+  state: ReservationState,
+  modificationDeadlineHours = 12
+): boolean => {
+  return match(state)
+    .with({ type: 'pending' }, ({ reservation }) => {
+      const now = new Date()
+      const startTime = new Date(reservation.startTime)
+      const hoursUntilStart =
+        (startTime.getTime() - now.getTime()) / (1000 * 60 * 60)
+      return hoursUntilStart > modificationDeadlineHours
     })
-  }
-  if (amount > 10000000) {
-    // 1000万円以上は非現実的
-    return err({
-      type: 'invalidAmount',
-      message: 'Amount is too high',
+    .with({ type: 'confirmed' }, ({ reservation }) => {
+      const now = new Date()
+      const startTime = new Date(reservation.startTime)
+      const hoursUntilStart =
+        (startTime.getTime() - now.getTime()) / (1000 * 60 * 60)
+      return hoursUntilStart > modificationDeadlineHours
     })
-  }
-  return ok(amount)
+    .otherwise(() => false)
 }
 
-export const validateDepositAmount = (
-  depositAmount: number | undefined,
-  totalAmount: number
-): Result<number | undefined, ReservationError> => {
-  if (depositAmount === undefined) {
-    return ok(undefined)
-  }
+/**
+ * Calculate cancellation fee
+ */
+export const calculateCancellationFee = (
+  reservation: Reservation,
+  hoursBeforeStart: number
+): number => {
+  const totalAmount = reservation.totalAmount
 
-  if (depositAmount < 0) {
-    return err({
-      type: 'invalidAmount',
-      message: 'Deposit amount cannot be negative',
-    })
+  if (hoursBeforeStart >= 48) {
+    return 0 // No fee if cancelled 48+ hours in advance
   }
-
-  if (depositAmount > totalAmount) {
-    return err({
-      type: 'invalidAmount',
-      message: 'Deposit amount cannot exceed total amount',
-    })
+  if (hoursBeforeStart >= 24) {
+    return Math.floor(totalAmount * 0.3) // 30% fee
   }
-
-  return ok(depositAmount)
+  if (hoursBeforeStart >= 12) {
+    return Math.floor(totalAmount * 0.5) // 50% fee
+  }
+  return totalAmount // 100% fee for last-minute cancellations
 }
 
-// 便利なヘルパー関数
-export const isPendingReservation = (
-  reservation: Reservation
-): reservation is Extract<Reservation, { type: 'pending' }> =>
-  reservation.type === 'pending'
+/**
+ * Get reservation status display
+ */
+export const getReservationDisplayInfo = (state: ReservationState) => {
+  return match(state)
+    .with({ type: 'pending' }, ({ reservation }) => ({
+      ...reservation,
+      status: 'Pending Confirmation',
+      statusColor: 'yellow',
+    }))
+    .with({ type: 'confirmed' }, ({ reservation, confirmedAt }) => ({
+      ...reservation,
+      status: `Confirmed at ${confirmedAt}`,
+      statusColor: 'green',
+    }))
+    .with({ type: 'in_progress' }, ({ reservation, startedAt }) => ({
+      ...reservation,
+      status: `In Progress since ${startedAt}`,
+      statusColor: 'blue',
+    }))
+    .with({ type: 'completed' }, ({ reservation, completedAt }) => ({
+      ...reservation,
+      status: `Completed at ${completedAt}`,
+      statusColor: 'gray',
+    }))
+    .with({ type: 'cancelled' }, ({ reservation, reason }) => ({
+      ...reservation,
+      status: `Cancelled: ${reason}`,
+      statusColor: 'red',
+    }))
+    .with({ type: 'no_show' }, ({ reservation, markedAt }) => ({
+      ...reservation,
+      status: `No Show (${markedAt})`,
+      statusColor: 'orange',
+    }))
+    .exhaustive()
+}
 
-export const isConfirmedReservation = (
-  reservation: Reservation
-): reservation is Extract<Reservation, { type: 'confirmed' }> =>
-  reservation.type === 'confirmed'
-
-export const isCancelledReservation = (
-  reservation: Reservation
-): reservation is Extract<Reservation, { type: 'cancelled' }> =>
-  reservation.type === 'cancelled'
-
-export const isCompletedReservation = (
-  reservation: Reservation
-): reservation is Extract<Reservation, { type: 'completed' }> =>
-  reservation.type === 'completed'
-
-export const isNoShowReservation = (
-  reservation: Reservation
-): reservation is Extract<Reservation, { type: 'no_show' }> =>
-  reservation.type === 'no_show'
-
-export const canBeCancelled = (reservation: Reservation): boolean => {
+/**
+ * Check for time slot conflicts
+ */
+export const hasTimeConflict = (
+  reservation1: Partial<Reservation>,
+  reservation2: Partial<Reservation>
+): boolean => {
   if (
-    reservation.type === 'cancelled' ||
-    reservation.type === 'completed' ||
-    reservation.type === 'no_show'
+    !(
+      reservation1.startTime &&
+      reservation1.endTime &&
+      reservation2.startTime &&
+      reservation2.endTime
+    )
   ) {
     return false
   }
 
-  // 開始時間の1時間前まではキャンセル可能
-  const oneHourBefore = new Date(reservation.data.startTime)
-  oneHourBefore.setHours(oneHourBefore.getHours() - 1)
+  const start1 = new Date(reservation1.startTime)
+  const end1 = new Date(reservation1.endTime)
+  const start2 = new Date(reservation2.startTime)
+  const end2 = new Date(reservation2.endTime)
 
-  return new Date() < oneHourBefore
+  // Check if times overlap
+  return !(end1 <= start2 || end2 <= start1)
 }
 
-export const canBeModified = (reservation: Reservation): boolean => {
-  return reservation.type === 'pending' || reservation.type === 'confirmed'
+/**
+ * Calculate reservation duration in minutes
+ */
+export const calculateDuration = (reservation: Reservation): number => {
+  const start = new Date(reservation.startTime)
+  const end = new Date(reservation.endTime)
+  return Math.floor((end.getTime() - start.getTime()) / (1000 * 60))
 }
 
-export const getReservationStatus = (
-  reservation: Reservation
-): ReservationStatus => {
-  return reservation.type
-}
+/**
+ * Format reservation time slot for display
+ */
+export const formatTimeSlot = (reservation: Reservation): string => {
+  const start = new Date(reservation.startTime)
+  const end = new Date(reservation.endTime)
 
-export const calculateRefundAmount = (
-  reservation: Reservation,
-  cancellationDate: Date
-): number => {
-  if (!isCancelledReservation(reservation)) {
-    return 0
+  const formatTime = (date: Date) => {
+    const hours = date.getHours().toString().padStart(2, '0')
+    const minutes = date.getMinutes().toString().padStart(2, '0')
+    return `${hours}:${minutes}`
   }
 
-  const hoursBeforeStart =
-    (reservation.data.startTime.getTime() - cancellationDate.getTime()) /
-    (1000 * 60 * 60)
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('ja-JP', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    })
+  }
 
-  // 24時間以上前：全額返金
-  if (hoursBeforeStart >= 24) {
-    return reservation.data.depositAmount ?? 0
+  // Same day
+  if (start.toDateString() === end.toDateString()) {
+    return `${formatDate(start)} ${formatTime(start)}-${formatTime(end)}`
   }
-  // 12時間以上前：50%返金
-  if (hoursBeforeStart >= 12) {
-    return Math.floor((reservation.data.depositAmount ?? 0) * 0.5)
-  }
-  // それ以外：返金なし
-  return 0
+
+  // Different days (shouldn't happen for reservations, but handle it)
+  return `${formatDate(start)} ${formatTime(start)} - ${formatDate(end)} ${formatTime(end)}`
 }

@@ -273,17 +273,14 @@ curl -X POST http://localhost:3000/api/v1/staff \
 ### 手順
 
 ```bash
-# 1. スキーマファイルを編集
-vim backend/packages/infrastructure/src/database/schema.ts
+# 1. SQLマイグレーションファイルを作成
+echo "ALTER TABLE users ADD COLUMN age INT;" > backend/packages/database/sql/migrations/$(date +%Y%m%d%H%M)_add_age.sql
 
-# 2. マイグレーションを生成
-pnpm db:generate
+# 2. マイグレーションを実行
+pnpm db:migrate:sql backend/packages/database/sql/migrations/$(date +%Y%m%d%H%M)_add_age.sql
 
-# 3. 生成されたマイグレーションを確認
-ls backend/apps/migration/migrations/
-
-# 4. マイグレーションを実行
-make db-migrate
+# 3. TypeScript型を生成
+pnpm db:introspect
 
 # 5. 関連するRepository実装を更新
 vim backend/packages/infrastructure/src/repositories/*.impl.ts

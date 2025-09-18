@@ -7,8 +7,8 @@
 import { Router } from 'express'
 import { match } from 'ts-pattern'
 import { z } from 'zod'
-import { authenticate, authorize } from '../middleware/auth.middleware.js'
-import type { AuthConfig } from '../middleware/auth.middleware.js'
+import { authenticate, authorize } from '../middleware/auth.middleware'
+import type { AuthConfig } from '../middleware/auth.middleware'
 
 import type { SalonRepository } from '@beauty-salon-backend/domain'
 import {
@@ -31,7 +31,7 @@ import {
   reactivateSalonUseCase,
   suspendSalonUseCase,
   updateSalonUseCase,
-} from '@beauty-salon-backend/usecase'
+} from '@beauty-salon-backend/domain/business-logic'
 
 // バリデーションスキーマ
 const salonIdSchema = z.string().uuid()

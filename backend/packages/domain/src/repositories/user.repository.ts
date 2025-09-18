@@ -1,6 +1,10 @@
-import type { Session, SessionId, User, UserId } from '../models/user.js'
-import type { PaginatedResult, PaginationParams } from '../shared/pagination.js'
-import type { Result } from '../shared/result.js'
+import type { Session, User, UserId } from '../models/user'
+import type { Brand } from '../shared/brand'
+import type { PaginatedResult, PaginationParams } from '../shared/pagination'
+import type { Result } from '../shared/result'
+
+// SessionId is not in generated types, define it locally
+export type SessionId = Brand<string, 'SessionId'>
 
 // Repository errors
 export type UserRepositoryError =

@@ -1,10 +1,9 @@
-import type { Brand } from '../shared/brand.js'
-import type { Result } from '../shared/result.js'
-
-// Branded types
-export type AttachmentId = Brand<string, 'AttachmentId'>
-export type ShareLinkId = Brand<string, 'ShareLinkId'>
-export type ShareToken = Brand<string, 'ShareToken'>
+import type { AttachmentId } from '../models/attachment'
+import type {
+  ShareLinkId,
+  ShareToken,
+} from '../repositories/attachment.repository'
+import type { Result } from '../shared/result'
 
 // File types
 export type FileType = 'image' | 'document' | 'other'

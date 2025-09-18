@@ -7,18 +7,26 @@ import type {
   CreateSalonRequest,
   Salon,
   SalonId,
-  SalonSearchCriteria,
+  SearchSalonRequest,
   UpdateSalonRequest,
-} from '../models/salon.js'
-import type { RepositoryError } from '../shared/errors.js'
-import type { PaginatedResult, PaginationParams } from '../shared/pagination.js'
-import type { Result } from '../shared/result.js'
+} from '../models/salon'
+import type { RepositoryError } from '../shared/errors'
+import type { PaginatedResult, PaginationParams } from '../shared/pagination'
+import type { Result } from '../shared/result'
+
+// Use SearchSalonRequest as search criteria
+export type SalonSearchCriteria = SearchSalonRequest
 
 export interface SalonRepository {
   /**
    * IDでSalonを取得
    */
   findById(id: SalonId): Promise<Result<Salon, RepositoryError>>
+
+  /**
+   * 名前でSalonを取得
+   */
+  findByName(name: string): Promise<Result<Salon | null, RepositoryError>>
 
   /**
    * 新しいSalonを作成

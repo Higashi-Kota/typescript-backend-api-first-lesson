@@ -1,2 +1,2 @@
-export * from './email.service.js'
-export * from './storage.service.js'
+export * from './email.service'
+export * from './storage.service'

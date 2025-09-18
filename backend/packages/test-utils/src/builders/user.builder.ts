@@ -1,13 +1,10 @@
 import { randomUUID } from 'node:crypto'
 import { err, ok } from '@beauty-salon-backend/domain'
 import type {
-  PasswordResetStatus,
+  AuthUserRole,
   Result,
-  TwoFactorStatus,
   User,
-  UserAccountStatus,
   UserId,
-  UserRole,
 } from '@beauty-salon-backend/domain'
 import { match } from 'ts-pattern'
 
@@ -23,21 +20,15 @@ export class UserBuilder {
 
   static create(): UserBuilder {
     const defaultUser: Partial<TestUser> = {
-      status: { type: 'active' },
-      data: {
-        id: randomUUID() as UserId,
-        email: `test-${randomUUID()}@example.com`,
-        name: 'Test User',
-        passwordHash: '$2b$10$YourHashedPasswordHere',
-        role: 'customer' as UserRole,
-        emailVerified: true,
-        twoFactorStatus: { type: 'disabled' },
-        passwordResetStatus: { type: 'none' },
-        passwordHistory: [],
-        trustedIpAddresses: [],
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
+      id: randomUUID() as UserId,
+      email: `test-${randomUUID()}@example.com`,
+      name: 'Test User',
+      role: 'customer',
+      accountStatus: 'active',
+      emailVerified: true,
+      twoFactorEnabled: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     }
 
     return new UserBuilder({
@@ -49,17 +40,11 @@ export class UserBuilder {
   withId(id: UserId): UserBuilder {
     return match(this.state)
       .with({ type: 'building' }, ({ partial }) => {
-        if (partial.data == null) {
-          return new UserBuilder({
-            type: 'error',
-            error: 'User data not initialized',
-          })
-        }
         return new UserBuilder({
           type: 'building',
           partial: {
             ...partial,
-            data: { ...partial.data, id },
+            id,
           },
         })
       })
@@ -69,17 +54,11 @@ export class UserBuilder {
   withEmail(email: string): UserBuilder {
     return match(this.state)
       .with({ type: 'building' }, ({ partial }) => {
-        if (partial.data == null) {
-          return new UserBuilder({
-            type: 'error',
-            error: 'User data not initialized',
-          })
-        }
         return new UserBuilder({
           type: 'building',
           partial: {
             ...partial,
-            data: { ...partial.data, email },
+            email,
           },
         })
       })
@@ -89,44 +68,32 @@ export class UserBuilder {
   withName(name: string): UserBuilder {
     return match(this.state)
       .with({ type: 'building' }, ({ partial }) => {
-        if (partial.data == null) {
-          return new UserBuilder({
-            type: 'error',
-            error: 'User data not initialized',
-          })
-        }
         return new UserBuilder({
           type: 'building',
           partial: {
             ...partial,
-            data: { ...partial.data, name },
+            name,
           },
         })
       })
       .otherwise(() => this)
   }
 
-  withRole(role: UserRole): UserBuilder {
+  withRole(role: AuthUserRole): UserBuilder {
     return match(this.state)
       .with({ type: 'building' }, ({ partial }) => {
-        if (partial.data == null) {
-          return new UserBuilder({
-            type: 'error',
-            error: 'User data not initialized',
-          })
-        }
         return new UserBuilder({
           type: 'building',
           partial: {
             ...partial,
-            data: { ...partial.data, role },
+            role,
           },
         })
       })
       .otherwise(() => this)
   }
 
-  withStatus(status: UserAccountStatus): UserBuilder {
+  withAccountStatus(status: 'active' | 'suspended' | 'locked'): UserBuilder {
     return match(this.state)
       .with(
         { type: 'building' },
@@ -135,160 +102,112 @@ export class UserBuilder {
             type: 'building',
             partial: {
               ...partial,
-              status,
+              accountStatus: status,
             },
           })
       )
       .otherwise(() => this)
   }
 
-  with2FAEnabled(secret?: string, backupCodes?: string[]): UserBuilder {
-    return this.withTwoFactorEnabled(secret, backupCodes)
-  }
-
-  withTwoFactorEnabled(secret?: string, backupCodes?: string[]): UserBuilder {
-    const twoFactorStatus: TwoFactorStatus = {
-      type: 'enabled',
-      secret: secret ?? `test_secret_${randomUUID()}`,
-      backupCodes: backupCodes ?? ['CODE1', 'CODE2', 'CODE3', 'CODE4'],
-    }
-
+  withTwoFactorEnabled(enabled = true): UserBuilder {
     return match(this.state)
       .with({ type: 'building' }, ({ partial }) => {
-        if (partial.data == null) {
-          return new UserBuilder({
-            type: 'error',
-            error: 'User data not initialized',
-          })
-        }
         return new UserBuilder({
           type: 'building',
           partial: {
             ...partial,
-            data: { ...partial.data, twoFactorStatus },
+            twoFactorEnabled: enabled,
           },
         })
       })
       .otherwise(() => this)
   }
 
-  withUnverifiedEmail(token?: string): UserBuilder {
-    const status: UserAccountStatus = {
-      type: 'unverified',
-      emailVerificationToken: token || `token_${randomUUID()}`,
-      tokenExpiry: new Date(Date.now() + 24 * 60 * 60 * 1000),
-    }
-
+  withEmailVerified(verified: boolean): UserBuilder {
     return match(this.state)
       .with({ type: 'building' }, ({ partial }) => {
-        if (partial.data == null) {
-          return new UserBuilder({
-            type: 'error',
-            error: 'User data not initialized',
-          })
-        }
         return new UserBuilder({
           type: 'building',
           partial: {
             ...partial,
-            status,
-            data: { ...partial.data, emailVerified: false },
+            emailVerified: verified,
           },
         })
       })
       .otherwise(() => this)
   }
 
-  withLockedAccount(reason?: string, failedAttempts?: number): UserBuilder {
-    const status: UserAccountStatus = {
-      type: 'locked',
-      reason: reason ?? 'Too many failed login attempts',
-      lockedAt: new Date(),
-      failedAttempts: failedAttempts ?? 5,
-    }
-
-    return match(this.state)
-      .with(
-        { type: 'building' },
-        ({ partial }) =>
-          new UserBuilder({
-            type: 'building',
-            partial: {
-              ...partial,
-              status,
-            },
-          })
-      )
-      .otherwise(() => this)
-  }
-
-  withPasswordResetToken(token?: string): UserBuilder {
-    return this.withPasswordResetRequested(token)
-  }
-
-  withPasswordResetRequested(token?: string): UserBuilder {
-    const passwordResetStatus: PasswordResetStatus = {
-      type: 'requested',
-      token: token || `reset_${randomUUID()}`,
-      tokenExpiry: new Date(Date.now() + 15 * 60 * 1000),
-    }
-
+  withPasswordHash(passwordHash: string): UserBuilder {
     return match(this.state)
       .with({ type: 'building' }, ({ partial }) => {
-        if (partial.data == null) {
-          return new UserBuilder({
-            type: 'error',
-            error: 'User data not initialized',
-          })
-        }
         return new UserBuilder({
           type: 'building',
           partial: {
             ...partial,
-            data: { ...partial.data, passwordResetStatus },
+            passwordHash,
           },
         })
       })
       .otherwise(() => this)
   }
 
-  build(): User {
+  withLastLoginAt(lastLoginAt: string): UserBuilder {
     return match(this.state)
       .with({ type: 'building' }, ({ partial }) => {
-        if (partial.status == null || partial.data == null) {
-          throw new Error('User data is incomplete')
-        }
-
-        const user: User = {
-          status: partial.status,
-          data: partial.data,
-        }
-
-        return user
+        return new UserBuilder({
+          type: 'building',
+          partial: {
+            ...partial,
+            lastLoginAt,
+          },
+        })
       })
-      .with({ type: 'built' }, ({ data }) => data)
-      .with({ type: 'error' }, ({ error }) => {
-        throw new Error(error)
-      })
-      .exhaustive()
+      .otherwise(() => this)
   }
 
-  async buildAsync(): Promise<Result<User, string>> {
+  build(): Result<TestUser, string> {
     return match(this.state)
       .with({ type: 'building' }, ({ partial }) => {
-        if (partial.status == null || partial.data == null) {
-          return err('User data is incomplete')
+        // Validate required fields
+        if (!partial.id) {
+          return err('Missing required field: id')
+        }
+        if (!partial.email) {
+          return err('Missing required field: email')
+        }
+        if (!partial.role) {
+          return err('Missing required field: role')
+        }
+        if (!partial.accountStatus) {
+          return err('Missing required field: accountStatus')
+        }
+        if (partial.emailVerified === undefined) {
+          return err('Missing required field: emailVerified')
+        }
+        if (partial.twoFactorEnabled === undefined) {
+          return err('Missing required field: twoFactorEnabled')
+        }
+        if (!partial.createdAt) {
+          return err('Missing required field: createdAt')
+        }
+        if (!partial.updatedAt) {
+          return err('Missing required field: updatedAt')
         }
 
-        const user: User = {
-          status: partial.status,
-          data: partial.data,
-        }
-
-        return ok(user)
+        return ok(partial as TestUser)
       })
       .with({ type: 'built' }, ({ data }) => ok(data))
       .with({ type: 'error' }, ({ error }) => err(error))
+      .exhaustive()
+  }
+
+  buildOrThrow(): TestUser {
+    const result = this.build()
+    return match(result)
+      .with({ type: 'ok' }, ({ value }) => value)
+      .with({ type: 'err' }, ({ error }) => {
+        throw new Error(`Failed to build user: ${error}`)
+      })
       .exhaustive()
   }
 }

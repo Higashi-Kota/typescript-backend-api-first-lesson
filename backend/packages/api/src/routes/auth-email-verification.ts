@@ -5,16 +5,16 @@
  */
 
 import type { UserId, UserRepository } from '@beauty-salon-backend/domain'
-import type { components } from '@beauty-salon-backend/types/api'
-import type { SendEmailVerificationDeps } from '@beauty-salon-backend/usecase'
-import { sendEmailVerificationUseCase } from '@beauty-salon-backend/usecase'
-import { confirmEmailVerificationUseCase } from '@beauty-salon-backend/usecase'
+import type { SendEmailVerificationDeps } from '@beauty-salon-backend/domain/business-logic'
+import { sendEmailVerificationUseCase } from '@beauty-salon-backend/domain/business-logic'
+import { confirmEmailVerificationUseCase } from '@beauty-salon-backend/domain/business-logic'
+import type { components } from '@beauty-salon-backend/generated'
 import { Router } from 'express'
 import { match } from 'ts-pattern'
 import { z } from 'zod'
-import { authenticate } from '../middleware/auth.middleware.js'
-import type { AuthConfig } from '../middleware/auth.middleware.js'
-import { authRateLimiter } from '../middleware/rate-limit.js'
+import { authenticate } from '../middleware/auth.middleware'
+import type { AuthConfig } from '../middleware/auth.middleware'
+import { authRateLimiter } from '../middleware/rate-limit'
 
 // バリデーションスキーマ
 const emailVerificationRequestSchema = z.object({

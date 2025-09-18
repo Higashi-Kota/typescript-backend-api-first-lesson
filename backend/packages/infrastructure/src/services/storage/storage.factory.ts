@@ -1,7 +1,7 @@
 import type { StorageService } from '@beauty-salon-backend/domain'
-import { storageConfig } from '../../config/index.js'
-import { MinioStorageProvider } from './providers/minio.provider.js'
-import { R2StorageProvider } from './providers/r2.provider.js'
+import { storageConfig } from '../../config/index'
+import { MinioStorageProvider } from './providers/minio.provider'
+import { R2StorageProvider } from './providers/r2.provider'
 
 export type StorageProvider = 'minio' | 'r2'
 

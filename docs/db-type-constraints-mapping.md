@@ -897,13 +897,17 @@ export * from '@beauty-salon-backend/database'
 #### Step 1: データベーススキーマの変更確認
 
 ```bash
-# 1. データベーススキーマを変更
-# 例: ALTER TABLE customers ADD COLUMN preferred_stylist_id VARCHAR(36);
+# 1. SQLマイグレーションファイルを作成
+echo "ALTER TABLE customers ADD COLUMN preferred_stylist_id VARCHAR(36);" > \
+  backend/packages/database/sql/migrations/$(date +%Y%m%d%H%M)_add_preferred_stylist.sql
 
-# 2. Drizzle ORMスキーマをデータベースから自動生成
-pnpm db:pull
+# 2. マイグレーションを実行
+pnpm db:migrate:sql backend/packages/database/sql/migrations/*_add_preferred_stylist.sql
 
-# 3. 生成されたスキーマファイルの確認
+# 3. Drizzle ORMスキーマをデータベースから自動生成
+pnpm db:introspect
+
+# 4. 生成されたスキーマファイルの確認
 cat backend/packages/database/src/schema.ts
 ```
 
@@ -1249,7 +1253,9 @@ describe('CustomerRepository', () => {
 - [ ] 生成された型定義を確認
 
 **データベースフェーズ**
-- [ ] `pnpm db:pull`を実行してDrizzleスキーマを更新
+- [ ] SQLマイグレーションファイルを作成（`YYYYMMDDHHMM_description.sql`形式）
+- [ ] `pnpm db:migrate:sql`でマイグレーションを実行
+- [ ] `pnpm db:introspect`を実行してDrizzleスキーマを更新
 - [ ] databaseパッケージをビルド（`cd backend/packages/database && pnpm build`）
 - [ ] 生成された型定義ファイル（.d.ts）を確認
 

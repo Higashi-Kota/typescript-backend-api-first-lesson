@@ -42,11 +42,17 @@ docker-compose ps
 ### 2.2 データベースの初期化
 
 ```bash
-# データベースのリセット（既存のデータを削除）
+# データベースを完全リセットして再構築（推奨）
+pnpm run db:fresh
+```
+
+または個別に実行:
+```bash
+# データベースのリセット
 pnpm run db:reset
 
-# マイグレーションの実行
-pnpm run db:migrate
+# スキーマの作成
+pnpm run db:setup
 
 # シードデータの投入
 pnpm run db:seed

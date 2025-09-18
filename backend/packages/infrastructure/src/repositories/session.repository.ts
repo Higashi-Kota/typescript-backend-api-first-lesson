@@ -52,7 +52,7 @@ export class DrizzleSessionRepository implements SessionRepository {
       const results = await this.db
         .select()
         .from(sessions)
-        .where(eq(sessions.refresh_token, token))
+        .where(eq(sessions.refreshToken, token))
         .limit(1)
 
       if (results.length === 0) {
@@ -82,8 +82,8 @@ export class DrizzleSessionRepository implements SessionRepository {
       const results = await this.db
         .select()
         .from(sessions)
-        .where(eq(sessions.user_id, userId))
-        .orderBy(desc(sessions.last_activity_at))
+        .where(eq(sessions.userId, userId))
+        .orderBy(desc(sessions.lastActivityAt))
 
       const sessionList = results.map(this.mapToSession)
       return ok(sessionList)
@@ -135,8 +135,8 @@ export class DrizzleSessionRepository implements SessionRepository {
       const updatedRows = await this.db
         .update(sessions)
         .set({
-          last_activity_at: dbSession.last_activity_at,
-          expires_at: dbSession.expires_at,
+          lastActivityAt: dbSession.lastActivityAt,
+          expiresAt: dbSession.expiresAt,
         })
         .where(eq(sessions.id, session.id))
         .returning()
@@ -195,7 +195,7 @@ export class DrizzleSessionRepository implements SessionRepository {
       const now = new Date()
       await this.db
         .delete(sessions)
-        .where(lt(sessions.expires_at, now.toISOString()))
+        .where(lt(sessions.expiresAt, now.toISOString()))
 
       // Get the number of deleted rows
       const deletedCount = 0 // drizzle-orm doesn't provide rowCount directly
@@ -217,7 +217,7 @@ export class DrizzleSessionRepository implements SessionRepository {
       const results = await this.db
         .select({ count: sessions.id })
         .from(sessions)
-        .where(eq(sessions.user_id, userId))
+        .where(eq(sessions.userId, userId))
 
       const count = results.length
       return ok(count)
@@ -233,28 +233,28 @@ export class DrizzleSessionRepository implements SessionRepository {
   private mapToSession(dbSession: typeof sessions.$inferSelect): Session {
     return {
       id: dbSession.id as SessionId,
-      userId: dbSession.user_id as UserId,
-      refreshToken: dbSession.refresh_token,
-      ipAddress: dbSession.ip_address,
-      userAgent: dbSession.user_agent,
-      expiresAt: new Date(dbSession.expires_at),
-      rememberMe: dbSession.remember_me,
-      createdAt: new Date(dbSession.created_at),
-      lastActivityAt: new Date(dbSession.last_activity_at),
+      userId: dbSession.userId as UserId,
+      refreshToken: dbSession.refreshToken,
+      ipAddress: dbSession.ipAddress,
+      userAgent: dbSession.userAgent,
+      expiresAt: new Date(dbSession.expiresAt),
+      rememberMe: dbSession.rememberMe,
+      createdAt: new Date(dbSession.createdAt),
+      lastActivityAt: new Date(dbSession.lastActivityAt),
     }
   }
 
   private mapToDbSession(session: Session): typeof sessions.$inferInsert {
     return {
       id: session.id ?? uuidv4(),
-      user_id: session.userId,
-      refresh_token: session.refreshToken,
-      ip_address: session.ipAddress,
-      user_agent: session.userAgent,
-      expires_at: session.expiresAt.toISOString(),
-      remember_me: session.rememberMe,
-      created_at: session.createdAt.toISOString(),
-      last_activity_at: session.lastActivityAt.toISOString(),
+      userId: session.userId,
+      refreshToken: session.refreshToken,
+      ipAddress: session.ipAddress,
+      userAgent: session.userAgent,
+      expiresAt: session.expiresAt.toISOString(),
+      rememberMe: session.rememberMe,
+      createdAt: session.createdAt.toISOString(),
+      lastActivityAt: session.lastActivityAt.toISOString(),
     }
   }
 }

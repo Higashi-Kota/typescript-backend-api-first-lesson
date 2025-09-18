@@ -5,18 +5,369 @@ using TypeSpec.Http;
 using BeautySalon.Models;
 
 namespace BeautySalon.Models {
+  // ============================================================================
+  // Service Sub-Categories
+  // ============================================================================
+
+  enum CutSubCategory {
+    mens_cut,
+    womens_cut,
+    kids_cut,
+    bang_trim,
+    beard_trim,
+  }
+
+  enum ColorSubCategory {
+    full_color,
+    root_touch,
+    highlights,
+    lowlights,
+    balayage,
+    ombre,
+    bleach,
+    color_correction,
+  }
+
+  enum PermSubCategory {
+    regular_perm,
+    digital_perm,
+    spiral_perm,
+    body_wave,
+    straightening,
+  }
+
+  enum TreatmentSubCategory {
+    deep_conditioning,
+    protein_treatment,
+    scalp_treatment,
+    keratin_treatment,
+    olaplex,
+  }
+
+  enum StylingSubCategory {
+    blowout,
+    updo,
+    braiding,
+    extensions,
+    event_styling,
+  }
+
+  enum SpaSubCategory {
+    head_spa,
+    scalp_massage,
+    aromatherapy,
+    relaxation,
+  }
+
+  enum MakeupSubCategory {
+    everyday_makeup,
+    event_makeup,
+    bridal_makeup,
+    photoshoot_makeup,
+  }
+
+  enum NailSubCategory {
+    manicure,
+    pedicure,
+    gel_nail,
+    nail_art,
+    nail_removal,
+  }
+
+  // ============================================================================
+  // Service Pricing Types
+  // ============================================================================
+
+  enum PricingStrategyType {
+    fixed,
+    tiered,
+    dynamic,
+    package,
+    membership,
+    custom,
+  }
+
+  model PriceTier {
+    name: string;
+    description?: string;
+    price: int32;
+    duration?: int32;
+    conditions?: string[];
+  }
+
+  model PricingFactor {
+    type: "day_of_week" | "time_of_day" | "staff_level" | "demand" | "season";
+    multipliers?: Record<decimal>;
+    peakHours?: string[];
+    peakMultiplier?: decimal;
+    threshold?: int32;
+    seasons?: Season[];
+  }
+
+  model Season {
+    name: string;
+    startMonth: int32;
+    endMonth: int32;
+    multiplier: decimal;
+  }
+
+  model PricingStrategy {
+    type: PricingStrategyType;
+    amount?: int32;
+    tiers?: PriceTier[];
+    basePrice?: int32;
+    factors?: PricingFactor[];
+    services?: ServiceId[];
+    discountRate?: decimal;
+    memberPrice?: int32;
+    nonMemberPrice?: int32;
+    description?: string;
+  }
+
+  model ServicePricing {
+    strategy: PricingStrategy;
+    taxIncluded: boolean;
+    currency: CurrencyCode;
+    minimumPrice?: int32;
+    maximumPrice?: int32;
+    depositRequired: boolean;
+    depositAmount?: int32;
+    cancellationFee?: CancellationFee;
+  }
+
+  model CancellationFee {
+    hours: int32;
+    percentage: int32;
+    fixedAmount?: int32;
+  }
+
+  // ============================================================================
+  // Service Options and Requirements
+  // ============================================================================
+
+  enum ServiceOptionType {
+    addon,
+    upgrade,
+    duration,
+    product,
+    combo,
+  }
+
+  model ServiceOption {
+    type: ServiceOptionType;
+    name?: string;
+    price?: int32;
+    duration?: int32;
+    description?: string;
+    fromLevel?: string;
+    toLevel?: string;
+    additionalPrice?: int32;
+    extension?: int32;
+    productId?: string;
+    required?: boolean;
+    withService?: ServiceId;
+    discountAmount?: int32;
+  }
+
+  enum BookingRequirementType {
+    deposit,
+    consultation,
+    patch_test,
+    age_restriction,
+    gender_restriction,
+    membership,
+    preparation,
+  }
+
+  model BookingRequirement {
+    type: BookingRequirementType;
+    amount?: int32;
+    percentage?: int32;
+    required?: boolean;
+    duration?: int32;
+    daysInAdvance?: int32;
+    minAge?: int32;
+    maxAge?: int32;
+    allowedGenders?: string[];
+    requiredTier?: string;
+    instructions?: string[];
+  }
+
+  // ============================================================================
+  // Service Availability
+  // ============================================================================
+
+  enum ServiceAvailabilityType {
+    always,
+    scheduled,
+    by_appointment,
+    seasonal,
+    limited,
+  }
+
+  model ServiceSchedule {
+    dayOfWeek: DayOfWeek;
+    startTime: string;
+    endTime: string;
+    maxBookings?: int32;
+  }
+
+  model ServiceAvailability {
+    type: ServiceAvailabilityType;
+    schedule?: ServiceSchedule[];
+    requiresApproval?: boolean;
+    seasons?: Season[];
+    maxPerDay?: int32;
+    maxPerWeek?: int32;
+  }
+
+  // ============================================================================
+  // Service Status
+  // ============================================================================
+
+  enum ServiceStatusType {
+    active,
+    inactive,
+    seasonal,
+    limited,
+    discontinued,
+    coming_soon,
+  }
+
+  model ServiceStatusDetail {
+    type: ServiceStatusType;
+    reason?: string;
+    since?: utcDateTime;
+    availableMonths?: int32[];
+    availableUntil?: utcDateTime;
+    remainingSlots?: int32;
+    discontinuedAt?: utcDateTime;
+    replacementId?: ServiceId;
+    launchDate?: utcDateTime;
+  }
+
+  // ============================================================================
+  // Service Model Components
+  // ============================================================================
+
+  model ServiceInfo {
+    name: string;
+    nameKana?: string;
+    description: string;
+    shortDescription?: string;
+    benefits?: string[];
+    targetCustomer?: string;
+    imageUrls?: string[];
+    videoUrl?: string;
+  }
+
+  model ServiceDuration {
+    standard: int32;
+    minimum?: int32;
+    maximum?: int32;
+    bufferBefore?: int32;
+    bufferAfter?: int32;
+    includesConsultation: boolean;
+  }
+
+  model ServiceRestrictions {
+    requiredStaffLevel?: StaffLevel;
+    requiredCertifications?: string[];
+    maxConcurrent?: int32;
+    minIntervalDays?: int32;
+    maxBookingsPerCustomer?: BookingLimit;
+    blackoutDates?: utcDateTime[];
+  }
+
+  model BookingLimit {
+    period: "day" | "week" | "month";
+    count: int32;
+  }
+
+  model ServicePerformance {
+    bookingCount: int32;
+    completionRate: decimal;
+    averageRating?: decimal;
+    reviewCount: int32;
+    revenue: int64;
+    popularityScore?: decimal;
+    repeatRate?: decimal;
+  }
+
+  model ServiceAssociations {
+    categoryId: CategoryId;
+    parentServiceId?: ServiceId;
+    childServiceIds?: ServiceId[];
+    requiredServiceIds?: ServiceId[];
+    recommendedServiceIds?: ServiceId[];
+    qualifiedStaffIds?: StaffId[];
+    preferredStaffIds?: StaffId[];
+  }
+
+  model ServiceMetadata {
+    tags?: string[];
+    keywords?: string[];
+    seoTitle?: string;
+    seoDescription?: string;
+    internalNotes?: string;
+    sortOrder?: int32;
+    featured?: boolean;
+    hideFromMenu?: boolean;
+  }
+
+  // ============================================================================
+  // Main Service Model
+  // ============================================================================
+
   model Service {
     id: ServiceId;
     salonId: SalonId;
-    name: string;
-    description: string;
-    duration: int32;
-    price: int32;
+
+    @doc("Service basic information")
+    info: ServiceInfo;
+
+    @doc("Service category and sub-category")
     category: ServiceCategory;
     categoryId?: CategoryId;
+
+    @doc("Pricing information")
+    pricing: ServicePricing;
+
+    @doc("Duration settings")
+    duration: ServiceDuration;
+
+    @doc("Availability settings")
+    availability?: ServiceAvailability;
+
+    @doc("Booking requirements")
+    requirements?: BookingRequirement[];
+
+    @doc("Service options and addons")
+    options?: ServiceOption[];
+
+    @doc("Service restrictions")
+    restrictions?: ServiceRestrictions;
+
+    @doc("Performance metrics")
+    performance?: ServicePerformance;
+
+    @doc("Service associations")
+    associations?: ServiceAssociations;
+
+    @doc("Service metadata")
+    metadata?: ServiceMetadata;
+
+    @doc("Service status")
+    status: ServiceStatusDetail;
+
+    @doc("Legacy fields for compatibility")
+    name: string;
+    description: string;
+    price: int32;
     imageUrl?: string;
     requiredStaffLevel?: int32;
     isActive: boolean;
+
     ...AuditInfo;
   }
 
@@ -30,6 +381,10 @@ namespace BeautySalon.Models {
     categoryId?: CategoryId;
     imageUrl?: string;
     requiredStaffLevel?: int32;
+    depositAmount?: int32;
+    isActive?: boolean;
+    maxAdvanceBookingDays?: int32;
+    minAdvanceBookingHours?: int32;
   }
 
   @doc("Service update request with optional fields for partial updates")
@@ -42,7 +397,10 @@ namespace BeautySalon.Models {
     categoryId?: CategoryId;
     imageUrl?: string;
     requiredStaffLevel?: int32;
+    depositAmount?: int32;
     isActive?: boolean;
+    maxAdvanceBookingDays?: int32;
+    minAdvanceBookingHours?: int32;
   }
 
   @doc("Service update request with reset capability")
@@ -55,7 +413,10 @@ namespace BeautySalon.Models {
     categoryId?: CategoryId | null;
     imageUrl?: string | null;
     requiredStaffLevel?: int32 | null;
+    depositAmount?: int32 | null;
     isActive?: boolean;
+    maxAdvanceBookingDays?: int32 | null;
+    minAdvanceBookingHours?: int32 | null;
   }
 
   model ServiceCategoryModel {

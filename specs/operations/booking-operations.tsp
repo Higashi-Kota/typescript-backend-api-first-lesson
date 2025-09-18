@@ -3,6 +3,7 @@ import "@typespec/rest";
 import "@typespec/openapi3";
 import "../models/booking.tsp";
 import "../models/common.tsp";
+import "../models/payment.tsp";
 
 using TypeSpec.Http;
 using TypeSpec.Rest;
@@ -18,7 +19,7 @@ namespace BeautySalon.Operations {
     op list(
       @query salonId?: SalonId,
       @query customerId?: CustomerId,
-      @query status?: BookingStatus,
+      @query status?: BookingStatusCode,
       @query from?: utcDateTime,
       @query to?: utcDateTime,
       ...PaginationParams,
@@ -116,15 +117,15 @@ namespace BeautySalon.Operations {
     op processPayment(
       @path id: BookingId,
       @body request: {
-        paymentMethod: string;
-        amount: int32;
+        paymentMethod: PaymentMethod;
+        amount: Money;
         transactionId?: string;
       },
     ): {
       @statusCode statusCode: 200;
       @body response: {
         booking: Booking;
-        paymentId: string;
+        paymentId: PaymentId;
       };
     } | {
       @statusCode statusCode: 404;

@@ -5,38 +5,35 @@
 
 import { and, desc, eq, inArray, or, sql } from 'drizzle-orm'
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
-import { getEncryptionService } from '../services/encryption.service.js'
+import { getEncryptionService } from '../services/encryption.service'
 import { safeJsonbContains, safeLike } from './security-patches'
 
 import type {
   Customer,
+  CustomerId,
   CustomerRepository,
   CustomerSearchCriteria,
   PaginatedResult,
   PaginationParams,
+  RepositoryError,
+  Result,
 } from '@beauty-salon-backend/domain'
 import {
-  type CustomerId,
-  type RepositoryError,
-  type Result,
   err,
+  mapCustomerToDbInsert,
+  mapDbCustomerToDomain,
   ok,
 } from '@beauty-salon-backend/domain'
 
-import {
-  type DbCustomer,
-  mapDecryptedDbCustomerToDomain,
-} from '@beauty-salon-backend/mappers/db-to-domain'
-import {
-  type DbNewCustomer,
-  mapDomainCustomerToDbInsert,
-} from '@beauty-salon-backend/mappers/domain-to-db'
-
 import { customers } from '@beauty-salon-backend/database'
+import type { InferInsertModel, InferSelectModel } from 'drizzle-orm'
+
+type DbCustomer = InferSelectModel<typeof customers>
+type DbNewCustomer = InferInsertModel<typeof customers>
 
 export class DrizzleCustomerRepository implements CustomerRepository {
   private encryptionService?: ReturnType<typeof getEncryptionService>
-  private encryptedFields: (keyof DbCustomer)[] = ['phone_number']
+  private encryptedFields: (keyof DbCustomer)[] = ['phoneNumber']
 
   constructor(private db: PostgresJsDatabase) {
     try {
@@ -50,9 +47,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
   }
 
   // DBモデルからドメインモデルへの変換
-  private async mapDbToDomain(
-    dbCustomer: DbCustomer
-  ): Promise<Customer | null> {
+  private async mapDbToDomain(dbCustomer: DbCustomer): Promise<Customer> {
     // 暗号化されたフィールドを復号化
     let decryptedCustomer = dbCustomer
     if (this.encryptionService) {
@@ -68,12 +63,24 @@ export class DrizzleCustomerRepository implements CustomerRepository {
     }
 
     // マッパーを使用して変換
-    return mapDecryptedDbCustomerToDomain(decryptedCustomer)
+    return mapDbCustomerToDomain(decryptedCustomer)
   }
 
   // ドメインモデルからDBモデルへの変換
-  private async mapDomainToDb(customer: Customer): Promise<DbNewCustomer> {
-    const dbCustomer = mapDomainCustomerToDbInsert(customer)
+  private async mapDomainToDb(
+    customer:
+      | Customer
+      | Omit<
+          Customer,
+          'id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'updatedBy'
+        >
+  ): Promise<DbNewCustomer> {
+    const dbCustomer = mapCustomerToDbInsert(
+      customer as Omit<
+        Customer,
+        'id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'updatedBy'
+      >
+    ) as DbNewCustomer
 
     // 暗号化が必要なフィールドを暗号化
     if (this.encryptionService) {
@@ -111,12 +118,6 @@ export class DrizzleCustomerRepository implements CustomerRepository {
         })
       }
       const customer = await this.mapDbToDomain(firstRow)
-      if (customer == null) {
-        return err({
-          type: 'databaseError' as const,
-          message: 'Failed to map customer from database',
-        })
-      }
 
       return ok(customer)
     } catch (error) {
@@ -147,12 +148,6 @@ export class DrizzleCustomerRepository implements CustomerRepository {
         return ok(null)
       }
       const customer = await this.mapDbToDomain(firstRow)
-      if (customer == null) {
-        return err({
-          type: 'databaseError' as const,
-          message: 'Failed to map customer from database',
-        })
-      }
 
       return ok(customer)
     } catch (error) {
@@ -175,17 +170,18 @@ export class DrizzleCustomerRepository implements CustomerRepository {
         .onConflictDoUpdate({
           target: customers.id,
           set: {
-            name: dbCustomer.name,
+            firstName: dbCustomer.firstName,
+            lastName: dbCustomer.lastName,
             email: dbCustomer.email,
-            phone_number: dbCustomer.phone_number,
-            alternative_phone: dbCustomer.alternative_phone,
+            phoneNumber: dbCustomer.phoneNumber,
+            alternativePhone: dbCustomer.alternativePhone,
             preferences: dbCustomer.preferences,
             notes: dbCustomer.notes,
             tags: dbCustomer.tags,
-            loyalty_points: dbCustomer.loyalty_points,
-            membership_level: dbCustomer.membership_level,
-            birth_date: dbCustomer.birth_date,
-            updated_at: new Date().toISOString(),
+            loyaltyPoints: dbCustomer.loyaltyPoints,
+            membershipTier: dbCustomer.membershipTier,
+            birthDate: dbCustomer.birthDate,
+            updatedAt: new Date().toISOString(),
           },
         })
         .returning()
@@ -198,12 +194,6 @@ export class DrizzleCustomerRepository implements CustomerRepository {
         })
       }
       const savedCustomer = await this.mapDbToDomain(firstRow)
-      if (savedCustomer == null) {
-        return err({
-          type: 'databaseError' as const,
-          message: 'Failed to map saved customer',
-        })
-      }
 
       return ok(savedCustomer)
     } catch (error) {
@@ -219,7 +209,7 @@ export class DrizzleCustomerRepository implements CustomerRepository {
         return err({
           type: 'constraintViolation' as const,
           constraint: 'unique_email',
-          message: `Customer with email ${customer.data.contactInfo.email} already exists`,
+          message: `Customer with email ${customer.contact.email} already exists`,
         })
       }
 
@@ -267,9 +257,10 @@ export class DrizzleCustomerRepository implements CustomerRepository {
       if (criteria.search) {
         conditions.push(
           or(
-            safeLike(customers.name, criteria.search),
+            safeLike(customers.firstName, criteria.search),
+            safeLike(customers.lastName, criteria.search),
             safeLike(customers.email, criteria.search),
-            safeLike(customers.phone_number, criteria.search)
+            safeLike(customers.phoneNumber, criteria.search)
           )
         )
       }
@@ -280,9 +271,26 @@ export class DrizzleCustomerRepository implements CustomerRepository {
       }
 
       if (criteria.membershipLevel) {
-        conditions.push(
-          eq(customers.membership_level, criteria.membershipLevel)
-        )
+        // Validate that membershipLevel is one of the valid enum values
+        const validTiers = [
+          'regular',
+          'silver',
+          'gold',
+          'platinum',
+          'vip',
+        ] as const
+        if (
+          validTiers.includes(
+            criteria.membershipLevel as (typeof validTiers)[number]
+          )
+        ) {
+          conditions.push(
+            eq(
+              customers.membershipTier,
+              criteria.membershipLevel as (typeof validTiers)[number]
+            )
+          )
+        }
       }
 
       // activeな顧客のみを取得（現在のDBスキーマでは全てactive扱い）
@@ -305,19 +313,16 @@ export class DrizzleCustomerRepository implements CustomerRepository {
         .select()
         .from(customers)
         .where(whereClause)
-        .orderBy(desc(customers.created_at))
+        .orderBy(desc(customers.createdAt))
         .limit(pagination.limit)
         .offset(pagination.offset)
 
       const mappedCustomers = await Promise.all(
         results.map((r) => this.mapDbToDomain(r))
       )
-      const filteredCustomers = mappedCustomers.filter(
-        (c): c is Customer => c !== null
-      )
 
       return ok({
-        data: filteredCustomers,
+        data: mappedCustomers,
         total,
         limit: pagination.limit,
         offset: pagination.offset,
@@ -353,11 +358,8 @@ export class DrizzleCustomerRepository implements CustomerRepository {
       const mappedCustomers = await Promise.all(
         results.map((r) => this.mapDbToDomain(r))
       )
-      const filteredCustomers = mappedCustomers.filter(
-        (c): c is Customer => c !== null
-      )
 
-      return ok(filteredCustomers)
+      return ok(mappedCustomers)
     } catch (error) {
       return err({
         type: 'databaseError' as const,
@@ -398,11 +400,11 @@ export class DrizzleCustomerRepository implements CustomerRepository {
     try {
       const results = await this.db
         .select({
-          level: customers.membership_level,
+          level: customers.membershipTier,
           count: sql<number>`count(*)::int`,
         })
         .from(customers)
-        .groupBy(customers.membership_level)
+        .groupBy(customers.membershipTier)
 
       const counts: Record<string, number> = {
         regular: 0,

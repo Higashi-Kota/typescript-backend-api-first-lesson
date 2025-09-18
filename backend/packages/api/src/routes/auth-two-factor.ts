@@ -9,13 +9,13 @@ import {
   regenerateBackupCodes,
   setupTwoFactor,
   verifyTwoFactor,
-} from '@beauty-salon-backend/usecase'
+} from '@beauty-salon-backend/domain/business-logic'
 import bcrypt from 'bcrypt'
 import { Router } from 'express'
 import { match } from 'ts-pattern'
-import type { AuthConfig } from '../middleware/auth.middleware.js'
-import { authenticate } from '../middleware/auth.middleware.js'
-import { authRateLimiter } from '../middleware/rate-limit.js'
+import type { AuthConfig } from '../middleware/auth.middleware'
+import { authenticate } from '../middleware/auth.middleware'
+import { authRateLimiter } from '../middleware/rate-limit'
 
 export type TwoFactorRouteDeps = {
   userRepository: UserRepository

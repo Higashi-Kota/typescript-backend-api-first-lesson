@@ -7,9 +7,9 @@ import type {
   SendEmailInput,
 } from '@beauty-salon-backend/domain'
 import { ok } from '@beauty-salon-backend/domain'
-import { emailConfig } from '../../config/index.js'
-import { DefaultEmailTemplateService } from './email-template.service.js'
-import { createEmailServiceWithFallback } from './email.factory.js'
+import { emailConfig } from '../../config/index'
+import { DefaultEmailTemplateService } from './email-template.service'
+import { createEmailServiceWithFallback } from './email.factory'
 
 /**
  * Email service wrapper that provides non-blocking email sending

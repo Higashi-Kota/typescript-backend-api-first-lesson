@@ -5,7 +5,7 @@
  * This follows the API-first development pattern from the architecture guidelines.
  */
 
-import type { components, operations } from '@beauty-salon-backend/types/api'
+import type { components, operations } from '@beauty-salon-backend/generated'
 
 /**
  * Extract request body type from an operation

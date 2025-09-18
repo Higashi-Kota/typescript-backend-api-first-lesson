@@ -16,7 +16,9 @@ export default defineConfig({
       },
     },
     // CI reporter
-    reporters: process.env.GITHUB_ACTIONS ? ['github-actions', 'json'] : ['verbose'],
+    reporters: process.env.GITHUB_ACTIONS
+      ? ['github-actions', 'json']
+      : ['verbose'],
     // Output test results for CI
     outputFile: {
       json: './test-results/results.json',

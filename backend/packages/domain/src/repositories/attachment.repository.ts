@@ -2,105 +2,36 @@
  * Attachment Repository Interface
  */
 
-import type { UserId } from '../models/user.js'
 import type {
+  AttachmentData,
   AttachmentId,
+  CreateAttachmentInput,
+  CreateDownloadLogInput,
+  CreateShareLinkInput,
+  DownloadLogData,
+  ShareLinkData,
   ShareLinkId,
   ShareToken,
-} from '../shared/branded-types.js'
-import type { RepositoryError } from '../shared/errors.js'
-import type { PaginatedResult, PaginationParams } from '../shared/pagination.js'
-import type { Result } from '../shared/result.js'
+  UpdateAttachmentInput,
+} from '../models/attachment'
+import type { RepositoryError } from '../shared/errors'
+import type { PaginatedResult, PaginationParams } from '../shared/pagination'
+import type { Result } from '../shared/result'
 
-export type AttachmentStatus =
-  | 'active'
-  | 'soft_deleted'
-  | 'hard_deleted'
-  | 'virus_detected'
-
-export type AttachmentData = {
-  id: AttachmentId
-  key: string
-  filename: string
-  contentType: string
-  size: number
-  uploadedBy: UserId
-  status: AttachmentStatus
-  scanStatus: 'pending' | 'clean' | 'infected' | 'error'
-  scanMessage: string | null
-  deletedAt: Date | null
-  expiresAt: Date | null
-  createdAt: Date
-  updatedAt: Date
-}
-
-export type CreateAttachmentInput = {
-  key: string
-  filename: string
-  contentType: string
-  size: number
-  uploadedBy: UserId
-  expiresAt?: Date
-}
-
-export type UpdateAttachmentInput = {
-  id: AttachmentId
-  status?: AttachmentStatus
-  scanStatus?: 'pending' | 'clean' | 'infected' | 'error'
-  scanMessage?: string | null
-  deletedAt?: Date | null
-}
-
-export type ShareLinkData = {
-  id: ShareLinkId
-  attachmentId: AttachmentId
-  token: ShareToken
-  password: string | null
-  maxDownloads: number | null
-  downloadCount: number
-  expiresAt: Date | null
-  createdBy: UserId
-  createdAt: Date
-  updatedAt: Date
-}
-
-export type CreateShareLinkInput = {
-  attachmentId: AttachmentId
-  token: ShareToken
-  password?: string
-  maxDownloads?: number
-  expiresAt?: Date
-  createdBy: UserId
-}
-
-export type DownloadLogData = {
-  id: string
-  attachmentId: AttachmentId
-  downloadedBy: UserId | null
-  ipAddress: string
-  userAgent: string | null
-  shareToken: ShareToken | null
-  downloadedAt: Date
-}
-
-export type CreateDownloadLogInput = {
-  attachmentId: AttachmentId
-  downloadedBy?: UserId
-  ipAddress: string
-  userAgent?: string
-  shareToken?: ShareToken
-}
+// Re-export for convenience
+export type { ShareLinkId, ShareToken }
 
 export type AttachmentSearchCriteria = {
-  uploadedBy?: UserId
-  status?: AttachmentStatus
-  scanStatus?: 'pending' | 'clean' | 'infected' | 'error'
+  uploadedBy?: string
+  salonId?: string
   filename?: string
   contentType?: string
+  fileType?: string
   minSize?: number
   maxSize?: number
   uploadedAfter?: Date
   uploadedBefore?: Date
+  tags?: string[]
 }
 
 export interface AttachmentRepository {
@@ -128,12 +59,12 @@ export interface AttachmentRepository {
 
   // User's attachments
   findByUser(
-    userId: UserId,
+    userId: string,
     pagination: PaginationParams
   ): Promise<Result<PaginatedResult<AttachmentData>, RepositoryError>>
 
   // Storage quota
-  getUserStorageUsage(userId: UserId): Promise<Result<number, RepositoryError>>
+  getUserStorageUsage(userId: string): Promise<Result<number, RepositoryError>>
 
   // Share links
   createShareLink(

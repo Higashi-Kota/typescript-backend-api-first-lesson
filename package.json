@@ -38,10 +38,12 @@
     "generate:backend": "pnpm --filter '@beauty-salon/specs' run generate:backend",
     "generate": "pnpm run generate:spec && pnpm run generate:api && pnpm run generate:backend",
     "generate:watch": "pnpm --filter '@beauty-salon/specs' run watch",
-    "db:generate": "pnpm --filter '@beauty-salon-backend/migration' run generate",
-    "db:migrate": "pnpm --filter '@beauty-salon-backend/migration' run migrate",
-    "db:seed": "pnpm --filter '@beauty-salon-backend/migration' run seed",
-    "db:reset": "pnpm --filter '@beauty-salon-backend/migration' run reset"
+    "db:fresh": "pnpm --filter '@beauty-salon-backend/database' run db:fresh",
+    "db:setup": "pnpm --filter '@beauty-salon-backend/database' run db:setup",
+    "db:reset": "pnpm --filter '@beauty-salon-backend/database' run db:reset",
+    "db:migrate:sql": "pnpm --filter '@beauty-salon-backend/database' run db:migrate:sql",
+    "db:seed": "pnpm --filter '@beauty-salon-backend/database' run db:seed",
+    "db:introspect": "pnpm --filter '@beauty-salon-backend/database' run db:introspect"
   },
   "devDependencies": {
     "@beauty-salon-shared/config": "workspace:*",

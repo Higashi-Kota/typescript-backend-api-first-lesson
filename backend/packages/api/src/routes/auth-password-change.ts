@@ -5,15 +5,15 @@
  */
 
 import type { UserId, UserRepository } from '@beauty-salon-backend/domain'
-import type { components } from '@beauty-salon-backend/types/api'
-import type { ChangePasswordDeps } from '@beauty-salon-backend/usecase'
-import { changePasswordUseCase } from '@beauty-salon-backend/usecase'
+import type { ChangePasswordDeps } from '@beauty-salon-backend/domain/business-logic'
+import { changePasswordUseCase } from '@beauty-salon-backend/domain/business-logic'
+import type { components } from '@beauty-salon-backend/generated'
 import { Router } from 'express'
 import { match } from 'ts-pattern'
 import { z } from 'zod'
-import { authenticate } from '../middleware/auth.middleware.js'
-import type { AuthConfig } from '../middleware/auth.middleware.js'
-import { authRateLimiter } from '../middleware/rate-limit.js'
+import { authenticate } from '../middleware/auth.middleware'
+import type { AuthConfig } from '../middleware/auth.middleware'
+import { authRateLimiter } from '../middleware/rate-limit'
 
 // バリデーションスキーマ
 const passwordChangeSchema = z.object({

@@ -3,21 +3,35 @@
  * CLAUDEガイドラインに準拠した例外フリーなリポジトリインターフェース
  */
 
-import type { CustomerId } from '../models/customer.js'
+import type { Components } from '@beauty-salon-backend/generated'
+import type { CustomerId } from '../models/customer'
 import type {
-  AvailableSlot,
   CreateReservationRequest,
   Reservation,
   ReservationDetail,
   ReservationId,
-  ReservationSearchCriteria,
+  ReservationStatus,
   UpdateReservationRequest,
-} from '../models/reservation.js'
-import type { SalonId } from '../models/salon.js'
-import type { StaffId } from '../models/staff.js'
-import type { RepositoryError } from '../shared/errors.js'
-import type { PaginatedResult, PaginationParams } from '../shared/pagination.js'
-import type { Result } from '../shared/result.js'
+} from '../models/reservation'
+import type { SalonId } from '../models/salon'
+import type { StaffId } from '../models/staff'
+import type { RepositoryError } from '../shared/errors'
+import type { PaginatedResult, PaginationParams } from '../shared/pagination'
+import type { Result } from '../shared/result'
+
+// Types not exported from models
+export type AvailableSlot = Components['Models.AvailableSlot']
+
+// Search criteria for reservations
+export interface ReservationSearchCriteria {
+  customerId?: CustomerId
+  salonId?: SalonId
+  staffId?: StaffId
+  status?: ReservationStatus
+  startDate?: Date
+  endDate?: Date
+  serviceId?: string
+}
 
 export interface ReservationRepository {
   /**
@@ -43,7 +57,7 @@ export interface ReservationRepository {
    * Reservationを更新
    */
   update(
-    data: UpdateReservationRequest
+    data: UpdateReservationRequest & { id: ReservationId }
   ): Promise<Result<Reservation, RepositoryError>>
 
   /**

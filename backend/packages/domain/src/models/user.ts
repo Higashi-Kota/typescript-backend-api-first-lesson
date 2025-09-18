@@ -1,185 +1,355 @@
-import type { Brand } from '../shared/brand.js'
-import { createBrand, createBrandSafe } from '../shared/brand.js'
-import type { Result } from '../shared/result.js'
-import { err, ok } from '../shared/result.js'
+/**
+ * User Domain Model
+ * User authentication and authorization
+ */
 
-// Brand types for User IDs
+import type { components } from '@beauty-salon-backend/generated'
+import { match } from 'ts-pattern'
+import type { Brand } from '../shared/brand'
+import type { DomainError, ValidationError } from '../shared/errors'
+import type { Result } from '../shared/result'
+import { err, ok } from '../shared/result'
+
+// Brand the ID types for type safety
 export type UserId = Brand<string, 'UserId'>
-export type SessionId = Brand<string, 'SessionId'>
 
-// UserID作成関数
-export const createUserId = (value: string) => createBrand(value, 'UserId')
-export const createUserIdSafe = (value: string) =>
-  createBrandSafe(value, 'UserId')
-
-// SessionID作成関数
-export const createSessionId = (value: string) =>
-  createBrand(value, 'SessionId')
-export const createSessionIdSafe = (value: string) =>
-  createBrandSafe(value, 'SessionId')
-
-// User role type matching TypeSpec
-export type UserRole = 'customer' | 'staff' | 'admin'
-
-// User account status Sum type
-export type UserAccountStatus =
-  | { type: 'active' }
-  | { type: 'unverified'; emailVerificationToken: string; tokenExpiry: Date }
-  | { type: 'locked'; reason: string; lockedAt: Date; failedAttempts: number }
-  | { type: 'suspended'; reason: string; suspendedAt: Date }
-  | { type: 'deleted'; deletedAt: Date }
-
-// Two-factor authentication status Sum type
-export type TwoFactorStatus =
-  | { type: 'disabled' }
-  | { type: 'pending'; secret: string; qrCodeUrl: string }
-  | { type: 'enabled'; secret: string; backupCodes: string[] }
-
-// Password reset status Sum type
-export type PasswordResetStatus =
-  | { type: 'none' }
-  | { type: 'requested'; token: string; tokenExpiry: Date }
-
-// User data structure
-export interface UserData {
+// Domain User Model - TODO: extend from generated type when available
+export interface User extends Omit<components['schemas']['Models.User'], 'id'> {
   id: UserId
-  email: string
-  name: string
-  passwordHash: string
-  role: UserRole
-  emailVerified: boolean
-  twoFactorStatus: TwoFactorStatus
-  passwordResetStatus: PasswordResetStatus
-  lastPasswordChangeAt?: Date
-  passwordHistory: string[]
-  trustedIpAddresses: string[]
-  customerId?: string
-  staffId?: string
-  createdAt: Date
-  updatedAt: Date
-  lastLoginAt?: Date
-  lastLoginIp?: string
+  // Additional fields from DB not in API
+  passwordHash?: string
+  refreshToken?: string
+  refreshTokenExpiry?: string
 }
 
-// User Sum type with status
-export type User = {
-  status: UserAccountStatus
-  data: UserData
-}
-
-// Session data
+// Session type for auth
 export interface Session {
-  id: SessionId
+  id: string
   userId: UserId
-  refreshToken: string
-  ipAddress: string
-  userAgent: string
-  expiresAt: Date
-  rememberMe: boolean
-  createdAt: Date
-  lastActivityAt: Date
+  token: string
+  expiresAt: string
 }
 
-// User errors
-export type UserError =
-  | { type: 'invalidEmail'; email: string }
-  | { type: 'weakPassword'; reason: string }
-  | { type: 'duplicateEmail'; email: string }
-  | { type: 'userNotFound'; userId: UserId }
-  | { type: 'invalidCredentials' }
-  | { type: 'accountLocked'; until?: Date }
-  | { type: 'emailNotVerified' }
-  | { type: 'invalidToken' }
-  | { type: 'tokenExpired' }
-  | { type: 'passwordReused' }
-  | { type: 'twoFactorRequired' }
-  | { type: 'invalidTwoFactorCode' }
-  | { type: 'tooManyRequests' }
+// Placeholder types for repositories
+export type UserState =
+  | { type: 'active'; user: User }
+  | { type: 'inactive'; user: User; deactivatedAt: string; reason: string }
+  | {
+      type: 'suspended'
+      user: User
+      suspendedAt: string
+      suspendedUntil: string
+      reason: string
+    }
+  | { type: 'locked'; user: User; lockedAt: string; failedAttempts: number }
+  | { type: 'pending_verification'; user: User; verificationToken: string }
+  | { type: 'deleted'; userId: UserId; deletedAt: string; deletedBy: string }
+export type UserOperationResult =
+  | { type: 'created'; user: User }
+  | { type: 'updated'; user: User; changes: string[] }
+  | { type: 'activated'; user: User }
+  | { type: 'deactivated'; user: User; reason: string }
+  | { type: 'suspended'; user: User; until: string; reason: string }
+  | { type: 'locked'; user: User; reason: string }
+  | { type: 'unlocked'; user: User }
+  | { type: 'deleted'; userId: UserId }
+  | { type: 'email_verified'; user: User }
+  | { type: 'password_changed'; user: User }
+  | { type: 'two_factor_enabled'; user: User; backupCodes: string[] }
+  | { type: 'two_factor_disabled'; user: User }
+  | { type: 'validation_failed'; errors: ValidationError[] }
+  | { type: 'not_found'; userId: UserId }
+  | { type: 'duplicate_email'; email: string }
+  | { type: 'invalid_credentials' }
+  | { type: 'unauthorized'; action: string }
+  | { type: 'error'; error: DomainError }
+export type UserSearchResult =
+  | { type: 'found'; users: User[]; totalCount: number }
+  | { type: 'empty'; query: UserSearchQuery }
+  | { type: 'error'; error: DomainError }
+export type UserEvent =
+  | {
+      type: 'user_created'
+      user: User
+      createdBy: string
+      timestamp: string
+    }
+  | {
+      type: 'user_updated'
+      userId: UserId
+      changes: UserChanges
+      updatedBy: string
+      timestamp: string
+    }
+  | {
+      type: 'user_logged_in'
+      userId: UserId
+      ipAddress: string
+      userAgent: string
+      timestamp: string
+    }
+  | {
+      type: 'user_logged_out'
+      userId: UserId
+      timestamp: string
+    }
+  | {
+      type: 'user_password_changed'
+      userId: UserId
+      changedBy: string
+      timestamp: string
+    }
+  | {
+      type: 'user_email_verified'
+      userId: UserId
+      timestamp: string
+    }
+  | {
+      type: 'user_locked'
+      userId: UserId
+      reason: string
+      timestamp: string
+    }
+  | {
+      type: 'user_unlocked'
+      userId: UserId
+      unlockedBy: string
+      timestamp: string
+    }
+  | {
+      type: 'two_factor_enabled'
+      userId: UserId
+      timestamp: string
+    }
+  | {
+      type: 'two_factor_disabled'
+      userId: UserId
+      timestamp: string
+    }
+  | {
+      type: 'failed_login_attempt'
+      email: string
+      ipAddress: string
+      timestamp: string
+    }
 
-// Password validation
-export const validatePassword = (password: string): Result<void, UserError> => {
-  if (password.length < 12) {
-    return err({
-      type: 'weakPassword',
-      reason: 'Password must be at least 12 characters long',
-    })
-  }
-
-  const hasUpperCase = /[A-Z]/.test(password)
-  const hasLowerCase = /[a-z]/.test(password)
-  const hasNumbers = /\d/.test(password)
-  const hasSpecialChar = /[^A-Za-z0-9]/.test(password)
-
-  if (!(hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChar)) {
-    return err({
-      type: 'weakPassword',
-      reason:
-        'Password must contain uppercase, lowercase, numbers, and special characters',
-    })
-  }
-
-  return ok(undefined)
+export interface UserSearchQuery {
+  email?: string
+  name?: string
+  role?: string
+  isActive?: boolean
+  createdFrom?: string
+  createdTo?: string
 }
 
-// Email validation
-export const validateEmail = (email: string): Result<void, UserError> => {
+export interface UserChanges {
+  email?: { from: string; to: string }
+  name?: { from: string | undefined; to: string | undefined }
+  role?: { from: string; to: string }
+  isActive?: { from: boolean; to: boolean }
+}
+
+// Re-export related types from generated schemas
+export type UserRole = components['schemas']['Models.UserRole']
+export type UserAccountStatus =
+  components['schemas']['Models.UserAccountStatus']
+
+// Business Logic Functions
+
+/**
+ * Validate user data
+ */
+export const validateUser = (
+  user: Partial<User>
+): Result<User, ValidationError[]> => {
+  const errors: ValidationError[] = []
+
+  if (!user.email) {
+    errors.push({ field: 'email', message: 'Email is required' })
+  } else if (!isValidEmail(user.email)) {
+    errors.push({ field: 'email', message: 'Invalid email format' })
+  }
+
+  if (user.role && !isValidRole(user.role)) {
+    errors.push({ field: 'role', message: 'Invalid role' })
+  }
+
+  if (errors.length > 0) {
+    return err(errors)
+  }
+
+  return ok(user as User)
+}
+
+/**
+ * Check if email is valid
+ */
+export const isValidEmail = (email: string): boolean => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!emailRegex.test(email)) {
-    return err({ type: 'invalidEmail', email })
-  }
-  return ok(undefined)
+  return emailRegex.test(email)
 }
 
-// Check if password has been used before
-export const isPasswordReused = (
-  passwordHash: string,
-  passwordHistory: string[]
+/**
+ * Check if role is valid
+ */
+export const isValidRole = (role: string): boolean => {
+  const validRoles = [
+    'super_admin',
+    'admin',
+    'salon_owner',
+    'staff',
+    'customer',
+  ]
+  return validRoles.includes(role)
+}
+
+/**
+ * Check if user can perform action based on role
+ */
+export const canPerformAction = (
+  userRole: string,
+  action: string,
+  resource: string
 ): boolean => {
-  return passwordHistory.includes(passwordHash)
+  // Super admins can do everything
+  if (userRole === 'super_admin') {
+    return true
+  }
+
+  // Define permission matrix
+  const permissions: Record<string, Record<string, string[]>> = {
+    admin: {
+      users: ['create', 'read', 'update', 'delete'],
+      salons: ['create', 'read', 'update', 'delete'],
+      customers: ['read', 'update'],
+      bookings: ['read', 'update', 'cancel'],
+    },
+    salon_owner: {
+      salons: ['read', 'update'],
+      staff: ['create', 'read', 'update', 'delete'],
+      customers: ['read', 'update'],
+      bookings: ['read', 'update', 'cancel'],
+      services: ['create', 'read', 'update', 'delete'],
+    },
+    staff: {
+      customers: ['read', 'update'],
+      bookings: ['read', 'update'],
+      services: ['read'],
+    },
+    customer: {
+      bookings: ['create', 'read', 'cancel'],
+      reviews: ['create', 'read', 'update', 'delete'],
+    },
+  }
+
+  const rolePermissions = permissions[userRole]
+  if (!rolePermissions) {
+    return false
+  }
+
+  const resourcePermissions = rolePermissions[resource]
+  if (!resourcePermissions) {
+    return false
+  }
+
+  return resourcePermissions.includes(action)
 }
 
-// Check if account is locked
-export const isAccountLocked = (status: UserAccountStatus): boolean => {
-  return status.type === 'locked'
+/**
+ * Check if user account is locked
+ */
+export const isAccountLocked = (user: User): boolean => {
+  // Check if status is locked
+  return user.status === 'locked'
 }
 
-// Check if email is verified
-export const isEmailVerified = (user: User): boolean => {
-  return user.data.emailVerified
+/**
+ * Calculate account lock duration based on failed attempts
+ */
+export const calculateLockDuration = (failedAttempts: number): number => {
+  // Progressive lockout: 5 min, 15 min, 30 min, 1 hour, 24 hours
+  const durations = [5, 15, 30, 60, 1440]
+  const index = Math.min(failedAttempts - 3, durations.length - 1)
+
+  if (failedAttempts < 3) {
+    return 0
+  }
+
+  const duration = durations[Math.max(0, index)]
+  return (duration ?? 5) * 60 * 1000 // Return in milliseconds
 }
 
-// Check if 2FA is enabled
-export const isTwoFactorEnabled = (user: User): boolean => {
-  return user.data.twoFactorStatus.type === 'enabled'
+/**
+ * Check if password meets requirements
+ */
+export const isValidPassword = (password: string): boolean => {
+  // At least 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+  return passwordRegex.test(password)
 }
 
-// Get account lock duration (30 minutes)
-export const getAccountLockDuration = (): number => {
-  return 30 * 60 * 1000 // 30 minutes in milliseconds
+/**
+ * Get user display info
+ */
+export const getUserDisplayInfo = (state: UserState) => {
+  return match(state)
+    .with({ type: 'active' }, ({ user }) => ({
+      ...user,
+      status: 'Active',
+      statusColor: 'green',
+    }))
+    .with({ type: 'inactive' }, ({ user, deactivatedAt, reason }) => ({
+      ...user,
+      status: `Inactive since ${deactivatedAt}: ${reason}`,
+      statusColor: 'gray',
+    }))
+    .with({ type: 'suspended' }, ({ user, suspendedUntil, reason }) => ({
+      ...user,
+      status: `Suspended until ${suspendedUntil}: ${reason}`,
+      statusColor: 'orange',
+    }))
+    .with({ type: 'locked' }, ({ user, failedAttempts }) => ({
+      ...user,
+      status: `Locked (${failedAttempts} failed attempts)`,
+      statusColor: 'red',
+    }))
+    .with({ type: 'pending_verification' }, ({ user }) => ({
+      ...user,
+      status: 'Pending email verification',
+      statusColor: 'yellow',
+    }))
+    .with({ type: 'deleted' }, ({ userId, deletedAt }) => ({
+      id: userId,
+      status: `Deleted ${deletedAt}`,
+      statusColor: 'black',
+    }))
+    .exhaustive()
 }
 
-// Get password reset token expiry (15 minutes)
-export const getPasswordResetTokenExpiry = (): number => {
-  return 15 * 60 * 1000 // 15 minutes in milliseconds
+/**
+ * Generate verification token
+ */
+export const generateVerificationToken = (): string => {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  let token = ''
+  for (let i = 0; i < 32; i++) {
+    token += chars.charAt(Math.floor(Math.random() * chars.length))
+  }
+  return token
 }
 
-// Get email verification token expiry (24 hours)
-export const getEmailVerificationTokenExpiry = (): number => {
-  return 24 * 60 * 60 * 1000 // 24 hours in milliseconds
-}
-
-// Generate backup codes
-export const generateBackupCodes = (count = 8): string[] => {
+/**
+ * Generate backup codes for 2FA
+ */
+export const generateBackupCodes = (count = 10): string[] => {
   const codes: string[] = []
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-
   for (let i = 0; i < count; i++) {
     let code = ''
     for (let j = 0; j < 8; j++) {
-      code += chars.charAt(Math.floor(Math.random() * chars.length))
+      code += Math.floor(Math.random() * 10).toString()
     }
     codes.push(code)
   }
-
   return codes
 }

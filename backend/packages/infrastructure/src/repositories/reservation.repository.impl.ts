@@ -25,7 +25,7 @@ import type {
   StaffId,
   UpdateReservationRequest,
 } from '@beauty-salon-backend/domain'
-import { createReservationId, err, ok } from '@beauty-salon-backend/domain'
+import { err, ok } from '@beauty-salon-backend/domain'
 
 import {
   customers,
@@ -43,45 +43,34 @@ export class DrizzleReservationRepository implements ReservationRepository {
 
   // DBモデルからドメインモデルへの変換
   private mapDbToDomain(dbReservation: DbReservation): Reservation | null {
-    const id = createReservationId(dbReservation.id)
-    if (id === null) {
+    const id = dbReservation.id as ReservationId
+    if (!id) {
       return null
     }
 
-    const reservationData = {
-      id,
-      salonId: dbReservation.salon_id as SalonId,
-      customerId: dbReservation.customer_id as CustomerId,
-      staffId: dbReservation.staff_id as StaffId,
-      serviceId: dbReservation.service_id as ServiceId,
-      startTime: new Date(dbReservation.start_time),
-      endTime: new Date(dbReservation.end_time),
-      notes: dbReservation.notes ?? undefined,
-      totalAmount: dbReservation.total_amount,
-      depositAmount: dbReservation.deposit_amount ?? undefined,
-      isPaid: dbReservation.is_paid,
-      createdAt: new Date(dbReservation.created_at),
-      createdBy: dbReservation.created_by ?? undefined,
-      updatedAt: new Date(dbReservation.updated_at),
-      updatedBy: dbReservation.updated_by ?? undefined,
-    }
-
-    // Since the database doesn't have a status column, we default to 'pending'
-    // This is a temporary workaround until the database schema is updated
-    if (dbReservation.cancellation_reason) {
-      return {
-        type: 'cancelled' as const,
-        data: reservationData,
-        cancelledAt: new Date(dbReservation.updated_at),
-        cancelledBy: dbReservation.updated_by ?? 'system',
-        cancellationReason: dbReservation.cancellation_reason,
-      }
-    }
-
-    // Default to pending status
     return {
-      type: 'pending' as const,
-      data: reservationData,
+      id,
+      salonId: dbReservation.salonId as SalonId,
+      customerId: dbReservation.customerId as CustomerId,
+      staffId: dbReservation.staffId as StaffId,
+      serviceId: dbReservation.serviceId as ServiceId,
+      startTime: dbReservation.startTime,
+      endTime: dbReservation.endTime,
+      status: dbReservation.status as
+        | 'pending'
+        | 'confirmed'
+        | 'cancelled'
+        | 'completed'
+        | 'no_show',
+      notes: dbReservation.notes ?? undefined,
+      totalAmount: Number(dbReservation.amount),
+      depositAmount: undefined,
+      isPaid: false,
+      cancellationReason: dbReservation.cancellationReason ?? undefined,
+      createdAt: dbReservation.createdAt,
+      createdBy: undefined,
+      updatedAt: dbReservation.updatedAt,
+      updatedBy: undefined,
     }
   }
 
@@ -134,9 +123,9 @@ export class DrizzleReservationRepository implements ReservationRepository {
           service: services,
         })
         .from(reservations)
-        .innerJoin(customers, eq(reservations.customer_id, customers.id))
-        .innerJoin(staff, eq(reservations.staff_id, staff.id))
-        .innerJoin(services, eq(reservations.service_id, services.id))
+        .innerJoin(customers, eq(reservations.customerId, customers.id))
+        .innerJoin(staff, eq(reservations.staffId, staff.id))
+        .innerJoin(services, eq(reservations.serviceId, services.id))
         .where(eq(reservations.id, id))
         .limit(1)
 
@@ -158,13 +147,19 @@ export class DrizzleReservationRepository implements ReservationRepository {
       }
 
       const detail: ReservationDetail = {
-        reservation,
-        customerName: firstRow.customer.name,
-        staffName: firstRow.staff.name,
+        ...reservation,
+        customerName:
+          `${firstRow.customer.firstName} ${firstRow.customer.lastName}`.trim(),
+        staffName:
+          `${firstRow.staff.firstName} ${firstRow.staff.lastName}`.trim(),
         serviceName: firstRow.service.name,
-        serviceCategory: 'hair' as import(
-          '@beauty-salon-backend/domain'
-        ).ServiceCategory, // Default category as it doesn't exist in DB
+        serviceCategory: (firstRow.service.categoryId || 'other') as
+          | 'cut'
+          | 'color'
+          | 'perm'
+          | 'treatment'
+          | 'spa'
+          | 'other',
         serviceDuration: firstRow.service.duration,
       }
 
@@ -182,20 +177,37 @@ export class DrizzleReservationRepository implements ReservationRepository {
     data: CreateReservationRequest
   ): Promise<Result<Reservation, RepositoryError>> {
     try {
+      // Get service details to calculate duration and price
+      const serviceResult = await this.db
+        .select()
+        .from(services)
+        .where(eq(services.id, data.serviceId))
+        .limit(1)
+
+      const service = serviceResult[0]
+      if (!service) {
+        return err({
+          type: 'notFound' as const,
+          entity: 'Service',
+          id: data.serviceId,
+        })
+      }
+
+      // Calculate end time based on service duration
+      const startTime = new Date(data.startTime)
+      const endTime = new Date(startTime.getTime() + service.duration * 60000) // duration is in minutes
+
       const newReservation: DbNewReservation = {
-        salon_id: data.salonId,
-        customer_id: data.customerId,
-        staff_id: data.staffId,
-        service_id: data.serviceId,
-        start_time: data.startTime.toISOString(),
-        end_time: data.endTime.toISOString(),
-        // Note: status column doesn't exist in the database
+        salonId: data.salonId,
+        customerId: data.customerId,
+        staffId: data.staffId,
+        serviceId: data.serviceId,
+        startTime: data.startTime,
+        endTime: endTime.toISOString(),
+        duration: service.duration,
+        status: 'pending',
+        amount: service.price.toString(),
         notes: data.notes,
-        total_amount: data.totalAmount,
-        deposit_amount: data.depositAmount,
-        is_paid: false,
-        created_by: data.createdBy,
-        updated_by: data.createdBy,
       }
 
       const insertedReservations = await this.db
@@ -230,7 +242,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
   }
 
   async update(
-    data: UpdateReservationRequest
+    data: UpdateReservationRequest & { id: ReservationId }
   ): Promise<Result<Reservation, RepositoryError>> {
     try {
       // 既存のreservationを確認
@@ -251,21 +263,20 @@ export class DrizzleReservationRepository implements ReservationRepository {
 
       // 更新データを準備
       const updateData: Partial<DbReservation> = {
-        updated_at: new Date().toISOString(),
-        updated_by: data.updatedBy,
+        updatedAt: new Date().toISOString(),
       }
 
       if (data.startTime !== undefined) {
-        updateData.start_time = data.startTime.toISOString()
-      }
-      if (data.endTime !== undefined) {
-        updateData.end_time = data.endTime.toISOString()
+        updateData.startTime = data.startTime
       }
       if (data.staffId !== undefined) {
-        updateData.staff_id = data.staffId
+        updateData.staffId = data.staffId
       }
       if (data.notes !== undefined) {
         updateData.notes = data.notes
+      }
+      if (data.status !== undefined) {
+        updateData.status = data.status
       }
 
       const updatedReservations = await this.db
@@ -302,14 +313,14 @@ export class DrizzleReservationRepository implements ReservationRepository {
 
   async confirm(
     id: ReservationId,
-    confirmedBy: string
+    _confirmedBy: string
   ): Promise<Result<Reservation, RepositoryError>> {
     try {
       const result = await this.db
         .update(reservations)
         .set({
-          updated_at: new Date().toISOString(),
-          updated_by: confirmedBy,
+          status: 'confirmed',
+          updatedAt: new Date().toISOString(),
         })
         .where(eq(reservations.id, id))
         .returning()
@@ -350,9 +361,11 @@ export class DrizzleReservationRepository implements ReservationRepository {
       const result = await this.db
         .update(reservations)
         .set({
-          cancellation_reason: reason,
-          updated_at: new Date().toISOString(),
-          updated_by: cancelledBy,
+          status: 'cancelled',
+          cancellationReason: reason,
+          cancelledAt: new Date().toISOString(),
+          cancelledBy,
+          updatedAt: new Date().toISOString(),
         })
         .where(eq(reservations.id, id))
         .returning()
@@ -386,14 +399,14 @@ export class DrizzleReservationRepository implements ReservationRepository {
 
   async complete(
     id: ReservationId,
-    completedBy: string
+    _completedBy: string
   ): Promise<Result<Reservation, RepositoryError>> {
     try {
       const result = await this.db
         .update(reservations)
         .set({
-          updated_at: new Date().toISOString(),
-          updated_by: completedBy,
+          status: 'completed',
+          updatedAt: new Date().toISOString(),
         })
         .where(eq(reservations.id, id))
         .returning()
@@ -427,14 +440,14 @@ export class DrizzleReservationRepository implements ReservationRepository {
 
   async markAsNoShow(
     id: ReservationId,
-    markedBy: string
+    _markedBy: string
   ): Promise<Result<Reservation, RepositoryError>> {
     try {
       const result = await this.db
         .update(reservations)
         .set({
-          updated_at: new Date().toISOString(),
-          updated_by: markedBy,
+          status: 'no_show',
+          updatedAt: new Date().toISOString(),
         })
         .where(eq(reservations.id, id))
         .returning()
@@ -468,16 +481,15 @@ export class DrizzleReservationRepository implements ReservationRepository {
 
   async updatePaymentStatus(
     id: ReservationId,
-    isPaid: boolean,
-    updatedBy: string
+    _isPaid: boolean,
+    _updatedBy: string
   ): Promise<Result<Reservation, RepositoryError>> {
     try {
+      // Note: Payment status is tracked in a different way - this method may need refactoring
       const result = await this.db
         .update(reservations)
         .set({
-          is_paid: isPaid,
-          updated_at: new Date().toISOString(),
-          updated_by: updatedBy,
+          updatedAt: new Date().toISOString(),
         })
         .where(eq(reservations.id, id))
         .returning()
@@ -517,39 +529,40 @@ export class DrizzleReservationRepository implements ReservationRepository {
       const conditions = []
 
       if (criteria.salonId) {
-        conditions.push(eq(reservations.salon_id, criteria.salonId))
+        conditions.push(eq(reservations.salonId, criteria.salonId))
       }
       if (criteria.customerId) {
-        conditions.push(eq(reservations.customer_id, criteria.customerId))
+        conditions.push(eq(reservations.customerId, criteria.customerId))
       }
       if (criteria.staffId) {
-        conditions.push(eq(reservations.staff_id, criteria.staffId))
+        conditions.push(eq(reservations.staffId, criteria.staffId))
       }
       if (criteria.serviceId) {
-        conditions.push(eq(reservations.service_id, criteria.serviceId))
+        conditions.push(eq(reservations.serviceId, criteria.serviceId))
       }
       // Note: status column doesn't exist in reservations table
       // if (criteria.status) {
       //   conditions.push(eq(reservations.status, criteria.status))
       // }
-      if (criteria.isPaid !== undefined) {
-        conditions.push(eq(reservations.is_paid, criteria.isPaid))
-      }
+      // Note: isPaid filter not supported in current schema
+      // if (criteria.isPaid !== undefined) {
+      //   conditions.push(eq(reservations.is_paid, criteria.isPaid))
+      // }
       if (criteria.startDate && criteria.endDate) {
         conditions.push(
           between(
-            reservations.start_time,
+            reservations.startTime,
             criteria.startDate.toISOString(),
             criteria.endDate.toISOString()
           )
         )
       } else if (criteria.startDate) {
         conditions.push(
-          gte(reservations.start_time, criteria.startDate.toISOString())
+          gte(reservations.startTime, criteria.startDate.toISOString())
         )
       } else if (criteria.endDate) {
         conditions.push(
-          lte(reservations.end_time, criteria.endDate.toISOString())
+          lte(reservations.endTime, criteria.endDate.toISOString())
         )
       }
 
@@ -568,7 +581,7 @@ export class DrizzleReservationRepository implements ReservationRepository {
         .select()
         .from(reservations)
         .where(whereClause)
-        .orderBy(desc(reservations.start_time))
+        .orderBy(desc(reservations.startTime))
         .limit(pagination.limit)
         .offset(pagination.offset)
 
@@ -606,15 +619,15 @@ export class DrizzleReservationRepository implements ReservationRepository {
         .from(reservations)
         .where(
           and(
-            eq(reservations.staff_id, staffId),
+            eq(reservations.staffId, staffId),
             between(
-              reservations.start_time,
+              reservations.startTime,
               startDate.toISOString(),
               endDate.toISOString()
             )
           )
         )
-        .orderBy(reservations.start_time)
+        .orderBy(reservations.startTime)
 
       const items: Reservation[] = []
       for (const result of results) {
@@ -670,8 +683,8 @@ export class DrizzleReservationRepository implements ReservationRepository {
         // TODO: スタッフごとの空き状況を確認
         slots.push({
           staffId: 'dummy-staff-id' as StaffId,
-          startTime: new Date(time),
-          endTime: new Date(endTime),
+          startTime: new Date(time).toISOString(),
+          endTime: new Date(endTime).toISOString(),
         })
       }
 
@@ -693,22 +706,22 @@ export class DrizzleReservationRepository implements ReservationRepository {
   ): Promise<Result<boolean, RepositoryError>> {
     try {
       const conditions = [
-        eq(reservations.staff_id, staffId),
+        eq(reservations.staffId, staffId),
         // Note: status column doesn't exist, assuming all reservations are valid for conflict checking
         or(
           // 新しい予約が既存の予約と重なる場合
           and(
-            lte(reservations.start_time, startTime.toISOString()),
-            gte(reservations.end_time, startTime.toISOString())
+            lte(reservations.startTime, startTime.toISOString()),
+            gte(reservations.endTime, startTime.toISOString())
           ),
           and(
-            lte(reservations.start_time, endTime.toISOString()),
-            gte(reservations.end_time, endTime.toISOString())
+            lte(reservations.startTime, endTime.toISOString()),
+            gte(reservations.endTime, endTime.toISOString())
           ),
           // 新しい予約が既存の予約を完全に含む場合
           and(
-            gte(reservations.start_time, startTime.toISOString()),
-            lte(reservations.end_time, endTime.toISOString())
+            gte(reservations.startTime, startTime.toISOString()),
+            lte(reservations.endTime, endTime.toISOString())
           )
         ) ?? sql`1=1`,
       ]
@@ -742,21 +755,21 @@ export class DrizzleReservationRepository implements ReservationRepository {
     try {
       const results = await this.db
         .select({
-          date: sql<string>`DATE(${reservations.start_time})`,
+          date: sql<string>`DATE(${reservations.startTime})`,
           count: sql<number>`count(*)`,
         })
         .from(reservations)
         .where(
           and(
-            eq(reservations.salon_id, salonId),
+            eq(reservations.salonId, salonId),
             between(
-              reservations.start_time,
+              reservations.startTime,
               startDate.toISOString(),
               endDate.toISOString()
             )
           )
         )
-        .groupBy(sql`DATE(${reservations.start_time})`)
+        .groupBy(sql`DATE(${reservations.startTime})`)
 
       const countMap = new Map<string, number>()
       for (const result of results) {

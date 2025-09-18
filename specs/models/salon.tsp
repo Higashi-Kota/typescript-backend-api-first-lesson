@@ -13,6 +13,7 @@ namespace BeautySalon.Models {
     address: Address;
     contactInfo: ContactInfo;
     openingHours: OpeningHours[];
+    businessHours?: BusinessHours[];
     imageUrls?: string[];
     features?: string[];
     ...AuditInfo;
@@ -27,6 +28,7 @@ namespace BeautySalon.Models {
     address: Address;
     contactInfo: ContactInfo;
     openingHours: OpeningHours[];
+    businessHours?: BusinessHours[];
 
     // Optional fields
     imageUrls?: string[];
@@ -41,6 +43,7 @@ namespace BeautySalon.Models {
     address?: Address;
     contactInfo?: ContactInfo;
     openingHours?: OpeningHours[];
+    businessHours?: BusinessHours[];
     imageUrls?: string[];
     features?: string[];
   }
@@ -52,6 +55,7 @@ namespace BeautySalon.Models {
     address?: Address;
     contactInfo?: ContactInfo;
     openingHours?: OpeningHours[];
+    businessHours?: BusinessHours[] | null;
     imageUrls?: string[] | null;
     features?: string[] | null;
   }
