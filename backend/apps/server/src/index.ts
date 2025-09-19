@@ -4,14 +4,6 @@ import { getDb } from '@beauty-salon-backend/infrastructure'
 
 async function startServer() {
   try {
-    // stdout/stderrのバッファリングを無効化
-    if (process.stdout) {
-      process.stdout.setEncoding('utf8')
-    }
-    if (process.stderr) {
-      process.stderr.setEncoding('utf8')
-    }
-
     // データベース接続の取得
     const database = getDb()
     console.log('Database connection obtained')
@@ -25,7 +17,7 @@ async function startServer() {
       throw dbError
     }
 
-    // Expressアプリの作成（一時的な互換性のため）
+    // Expressアプリの作成
     const app = createApp({ database })
     console.log('Express app created')
 
@@ -34,15 +26,7 @@ async function startServer() {
     const server = app.listen(port, () => {
       console.log(`API server is running on http://localhost:${port}`)
       console.log(`Health check available at: http://localhost:${port}/health`)
-      console.log('Server is ready to accept connections')
     })
-
-    // 起動完了後に再度ヘルスチェックURLを表示
-    setTimeout(() => {
-      console.log(
-        `Server is listening. Test with: curl http://localhost:${port}/health`
-      )
-    }, 1000)
 
     // グレースフルシャットダウン
     const shutdown = () => {

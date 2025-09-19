@@ -179,7 +179,7 @@ backend/packages/types/src/generated/
 │                     # - paths: APIエンドポイントの型
 │                     # - components: コンポーネント型（モデル、リクエスト、レスポンス）
 │                     # - operations: 操作型
-├── schemas.ts        # Zodスキーマ（バリデーション用）
+├── schema.ts         # Zodスキーマ（バリデーション用）
 └── index.ts          # エクスポート用インデックス
 ```
 

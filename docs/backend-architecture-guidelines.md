@@ -224,7 +224,7 @@ backend/packages/types/
   ├── src/
   │   ├── generated/              # 自動生成された型
   │   │   ├── api-types.ts       # OpenAPI型定義
-  │   │   ├── schemas.ts         # Zodスキーマ
+  │   │   ├── schema.ts          # Zodスキーマ
   │   │   └── index.ts           # エクスポート
   │   ├── api.ts                  # API型のRemap
   │   └── index.ts                # 型のエクスポート
@@ -600,7 +600,7 @@ pnpm typecheck:all  # 全パッケージの型チェック
 ```
 
 #### 3. **破壊的変更の管理**
-- APIバージョニング（`/api/v1/`, `/api/v2/`）で後方互換性を維持
+- APIバージョニング（`/api/v1/`, `/api/v2/`）で変更を管理
 - 非推奨（deprecated）フラグの活用
 - 段階的な移行パス
 
@@ -641,7 +641,7 @@ const { mutate, error } = useCustomerOperationsCreate({
 
 #### 1. **バージョン戦略**
 - メジャーバージョン: URLパス（`/api/v1/`, `/api/v2/`）
-- マイナーバージョン: 後方互換性のある追加
+- マイナーバージョン: 機能追加
 - パッチバージョン: バグ修正のみ
 
 #### 2. **移行サポート**

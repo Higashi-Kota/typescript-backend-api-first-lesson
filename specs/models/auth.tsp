@@ -10,7 +10,7 @@ namespace BeautySalon.Models {
   // Staff Level Enums
   // ============================================================================
 
-  enum StaffLevel {
+  enum StaffLevelType {
     junior,
     stylist,
     senior,
@@ -29,7 +29,7 @@ namespace BeautySalon.Models {
     locked,
   }
 
-  model AuthenticationState {
+  model AuthenticationStateDetail {
     type: AuthenticationStateType;
     sessionId?: SessionId;
     expiresAt?: utcDateTime;
@@ -49,7 +49,7 @@ namespace BeautySalon.Models {
     pending,
   }
 
-  model EmailVerificationState {
+  model EmailVerificationStateDetail {
     type: EmailVerificationStateType;
     verifiedAt?: utcDateTime;
     token?: string;
@@ -67,7 +67,7 @@ namespace BeautySalon.Models {
     completed,
   }
 
-  model PasswordResetState {
+  model PasswordResetStateDetail {
     type: PasswordResetStateType;
     token?: string;
     expiresAt?: utcDateTime;
@@ -90,10 +90,10 @@ namespace BeautySalon.Models {
   model UserRoleDetail {
     type: UserRoleType;
     salonId?: SalonId;
-    level?: StaffLevel;
+    level?: StaffLevelType;
   }
   @doc("User roles in the system")
-  enum AuthUserRole {
+  enum AuthUserRoleType {
     @doc("Customer role - can book services")
     customer: "customer",
 
@@ -105,7 +105,7 @@ namespace BeautySalon.Models {
   }
 
   @doc("User account status")
-  enum UserAccountStatus {
+  enum UserAccountStatusType {
     @doc("Active account")
     active: "active",
 
@@ -123,7 +123,7 @@ namespace BeautySalon.Models {
   }
 
   @doc("Two-factor authentication status")
-  enum TwoFactorStatus {
+  enum TwoFactorStatusType {
     @doc("2FA not enabled")
     disabled: "disabled",
 
@@ -147,10 +147,10 @@ namespace BeautySalon.Models {
     name: string;
 
     @doc("User's role in the system")
-    role: AuthUserRole;
+    role: AuthUserRoleType;
 
     @doc("Account status")
-    status: UserAccountStatus;
+    status: UserAccountStatusType;
 
     @doc("Email verification status")
     emailVerified: boolean;
@@ -162,7 +162,7 @@ namespace BeautySalon.Models {
     emailVerificationTokenExpiry?: utcDateTime;
 
     @doc("Two-factor authentication status")
-    twoFactorStatus: TwoFactorStatus;
+    twoFactorStatus: TwoFactorStatusType;
 
     @doc("Two-factor authentication secret (encrypted)")
     twoFactorSecret?: string;
@@ -201,13 +201,13 @@ namespace BeautySalon.Models {
     roleDetail?: UserRoleDetail;
 
     @doc("Authentication state")
-    authState?: AuthenticationState;
+    authState?: AuthenticationStateType;
 
     @doc("Email verification state")
-    emailVerificationState?: EmailVerificationState;
+    emailVerificationState?: EmailVerificationStateType;
 
     @doc("Password reset state")
-    passwordResetState?: PasswordResetState;
+    passwordResetState?: PasswordResetStateType;
 
     @doc("Timestamp when the user was created")
     createdAt: utcDateTime;
@@ -277,7 +277,7 @@ namespace BeautySalon.Models {
     refreshToken: string;
 
     @doc("Token type (always 'Bearer')")
-    tokenType: string = "Bearer";
+    token: string = "Bearer";
 
     @doc("Access token expiry in seconds")
     expiresIn: int32;
@@ -298,7 +298,7 @@ namespace BeautySalon.Models {
     name: string;
 
     @doc("User's role (defaults to customer)")
-    role?: AuthUserRole = AuthUserRole.customer;
+    role?: AuthUserRoleType = AuthUserRoleType.customer;
   }
 
   @doc("Password reset request")

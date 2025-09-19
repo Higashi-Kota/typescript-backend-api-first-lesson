@@ -14,7 +14,7 @@ const CONFIG = {
     __dirname,
     '../../../../specs/tsp-output/@typespec/openapi3/generated/openapi.yaml'
   ),
-  outputDir: resolve(__dirname, '../src/generated'),
+  outputDir: resolve(__dirname, '../src'),
   tempFile: 'api-types-temp.ts',
 }
 
@@ -51,17 +51,18 @@ async function generateTypesFromOpenAPI(): Promise<void> {
   }
 
   // Read and enhance generated types
-  let baseTypes = readFileSync(tempOutput, 'utf-8')
+  const baseTypes = readFileSync(tempOutput, 'utf-8')
 
-  // Transform string types to branded types in the generated code
-  baseTypes = transformBrandedTypes(baseTypes)
+  // DO NOT transform string types to branded types
+  // Domain package has its own brand type definitions
+  // baseTypes = transformBrandedTypes(baseTypes)
 
   // Generate additional type utilities
   const brandTypes = generateBrandTypes()
   const helperTypes = generateHelperTypes()
   const extractorTypes = generateExtractorTypes()
 
-  // Create final api-types.ts
+  // Create final api-types.ts directly in src/
   const apiTypesContent = createApiTypesFile(
     baseTypes,
     brandTypes,
@@ -86,40 +87,20 @@ async function generateTypesFromOpenAPI(): Promise<void> {
 
   console.log('✅ Type generation complete!')
   console.log(`📦 Generated files in: ${outputDir}`)
+  console.log('  - api-types.ts')
+  console.log('  - schema.ts')
+  console.log('  - index.ts')
 }
 
 /**
  * Generate Brand type utilities and type declarations
- * These will be used to transform OpenAPI string types to branded types
+ * DEPRECATED: Domain package now owns all brand type definitions
+ * This function returns empty string to prevent duplicate brand types
  */
 function generateBrandTypes(): string {
-  // Define the Brand utility type inline (matching domain package)
-  return `// Brand type utility (matches domain package implementation)
-const brand = Symbol('brand');
-export type Brand<T, B> = T & { [brand]: B };
-
-// Branded ID types
-export type UserId = Brand<string, 'UserId'>;
-export type SessionId = Brand<string, 'SessionId'>;
-export type SalonId = Brand<string, 'SalonId'>;
-export type StaffId = Brand<string, 'StaffId'>;
-export type ServiceId = Brand<string, 'ServiceId'>;
-export type CustomerId = Brand<string, 'CustomerId'>;
-export type ReservationId = Brand<string, 'ReservationId'>;
-export type BookingId = Brand<string, 'BookingId'>;
-export type ReviewId = Brand<string, 'ReviewId'>;
-export type CategoryId = Brand<string, 'CategoryId'>;
-export type InventoryId = Brand<string, 'InventoryId'>;
-export type OrderId = Brand<string, 'OrderId'>;
-export type PaymentId = Brand<string, 'PaymentId'>;
-export type TreatmentRecordId = Brand<string, 'TreatmentRecordId'>;
-export type MedicalChartId = Brand<string, 'MedicalChartId'>;
-export type AttachmentId = Brand<string, 'AttachmentId'>;
-export type RoleId = Brand<string, 'RoleId'>;
-export type PermissionId = Brand<string, 'PermissionId'>;
-export type PointTransactionId = Brand<string, 'PointTransactionId'>;
-export type MembershipLevelId = Brand<string, 'MembershipLevelId'>;
-export type RefundId = Brand<string, 'RefundId'>;`
+  return `// Brand types are defined in domain package
+// Import from @beauty-salon-backend/domain/shared/brand-types
+// DO NOT define brand types here to avoid conflicts`
 }
 
 /**
@@ -183,9 +164,9 @@ async function generateAdditionalFiles(
   const openApiContent = readFileSync(openApiPath, 'utf-8')
   const openApi = parse(openApiContent)
 
-  // Generate Zod schemas for validation
+  // Generate Zod schemas for validation - output as schema.ts
   const zodSchemas = generateZodSchemas(openApi)
-  writeFileSync(join(outputDir, 'schemas.ts'), zodSchemas)
+  writeFileSync(join(outputDir, 'schema.ts'), zodSchemas)
 
   // NOTE: Removed brand-helpers.ts generation - completely unused
   // Domain package has its own brand implementation
@@ -236,7 +217,7 @@ function createIndexFile(outputDir: string): void {
 export * from './api-types';
 
 // Zod validation schemas
-export * from './schemas';
+export * from './schema';
 
 // Re-export commonly used types for convenience
 export type {
@@ -249,57 +230,6 @@ export type {
 `
 
   writeFileSync(join(outputDir, 'index.ts'), indexContent)
-}
-
-/**
- * Transform plain string types to branded types in generated TypeScript
- */
-function transformBrandedTypes(content: string): string {
-  // List of branded ID types to transform
-  const brandedTypes = [
-    'UserId',
-    'SessionId',
-    'SalonId',
-    'StaffId',
-    'ServiceId',
-    'CustomerId',
-    'ReservationId',
-    'BookingId',
-    'ReviewId',
-    'CategoryId',
-    'InventoryId',
-    'OrderId',
-    'PaymentId',
-    'TreatmentRecordId',
-    'MedicalChartId',
-    'AttachmentId',
-    'RoleId',
-    'PermissionId',
-    'PointTransactionId',
-    'MembershipLevelId',
-    'RefundId',
-  ]
-
-  let transformed = content
-
-  // Transform schema definitions like "Models.SalonId": string to use branded types
-  for (const typeName of brandedTypes) {
-    // Pattern 1: Direct type definitions in schemas
-    const schemaPattern = new RegExp(`"Models\\.${typeName}":\\s*string`, 'g')
-    transformed = transformed.replace(
-      schemaPattern,
-      `"Models.${typeName}": ${typeName}`
-    )
-
-    // Pattern 2: References to components["schemas"]["Models.TypeId"]
-    const _componentPattern = new RegExp(
-      `components\\["schemas"\\]\\["Models\\.${typeName}"\\]`,
-      'g'
-    )
-    // Keep the reference as is since it will resolve to the branded type
-  }
-
-  return transformed
 }
 
 // Main execution

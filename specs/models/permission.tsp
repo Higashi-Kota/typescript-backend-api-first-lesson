@@ -7,66 +7,66 @@ namespace BeautySalon.Models {
   @doc("Role definition for access control")
   model Role {
     id: RoleId;
-    
+
     @doc("Role name")
     name: string;
-    
+
     @doc("Role display name")
     displayName: string;
-    
+
     @doc("Role description")
     description?: string;
-    
+
     @doc("Permissions assigned to this role")
     permissions: Permission[];
-    
+
     @doc("Is this a system role")
     isSystem: boolean;
-    
+
     @doc("Is role active")
     isActive: boolean;
-    
+
     ...AuditInfo;
   }
 
   @doc("Permission definition")
   model Permission {
     id: PermissionId;
-    
+
     @doc("Permission key (e.g., 'booking.create')")
     key: string;
-    
+
     @doc("Permission name")
     name: string;
-    
+
     @doc("Permission description")
     description?: string;
-    
+
     @doc("Resource type")
     resource: string;
-    
+
     @doc("Action type")
     action: string;
-    
+
     @doc("Scope (own, salon, all)")
     scope?: "own" | "salon" | "all";
   }
 
   @doc("User role assignment")
-  model UserRole {
+  model UserRoleAssignment {
     userId: string; // Can be StaffId or CustomerId
     roleId: RoleId;
     salonId?: SalonId; // For salon-specific roles
-    
+
     @doc("Assignment date")
     assignedAt: utcDateTime;
-    
+
     @doc("Assigned by")
     assignedBy: string;
-    
+
     @doc("Expiration date")
     expiresAt?: utcDateTime;
-    
+
     @doc("Is active")
     isActive: boolean;
   }
@@ -89,15 +89,15 @@ namespace BeautySalon.Models {
   }
 
   // Predefined system roles
-  enum SystemRole {
-    super_admin,     // Full system access
-    salon_owner,     // Full salon access
-    salon_manager,   // Salon management
-    senior_staff,    // Senior stylist/therapist
-    staff,          // Regular staff
-    receptionist,   // Front desk operations
-    customer,       // Customer self-service
-    guest,          // Limited guest access
+  enum SystemRoleType {
+    super_admin, // Full system access
+    salon_owner, // Full salon access
+    salon_manager, // Salon management
+    senior_staff, // Senior stylist/therapist
+    staff, // Regular staff
+    receptionist, // Front desk operations
+    customer, // Customer self-service
+    guest, // Limited guest access
   }
 
   // Input/Output models

@@ -9,7 +9,7 @@ namespace BeautySalon.Models {
   // Service Sub-Categories
   // ============================================================================
 
-  enum CutSubCategory {
+  enum CutSubCategoryType {
     mens_cut,
     womens_cut,
     kids_cut,
@@ -17,7 +17,7 @@ namespace BeautySalon.Models {
     beard_trim,
   }
 
-  enum ColorSubCategory {
+  enum ColorSubCategoryType {
     full_color,
     root_touch,
     highlights,
@@ -28,7 +28,7 @@ namespace BeautySalon.Models {
     color_correction,
   }
 
-  enum PermSubCategory {
+  enum PermSubCategoryType {
     regular_perm,
     digital_perm,
     spiral_perm,
@@ -36,7 +36,7 @@ namespace BeautySalon.Models {
     straightening,
   }
 
-  enum TreatmentSubCategory {
+  enum TreatmentSubCategoryType {
     deep_conditioning,
     protein_treatment,
     scalp_treatment,
@@ -44,7 +44,7 @@ namespace BeautySalon.Models {
     olaplex,
   }
 
-  enum StylingSubCategory {
+  enum StylingSubCategoryType {
     blowout,
     updo,
     braiding,
@@ -52,21 +52,21 @@ namespace BeautySalon.Models {
     event_styling,
   }
 
-  enum SpaSubCategory {
+  enum SpaSubCategoryType {
     head_spa,
     scalp_massage,
     aromatherapy,
     relaxation,
   }
 
-  enum MakeupSubCategory {
+  enum MakeupSubCategoryType {
     everyday_makeup,
     event_makeup,
     bridal_makeup,
     photoshoot_makeup,
   }
 
-  enum NailSubCategory {
+  enum NailSubCategoryType {
     manicure,
     pedicure,
     gel_nail,
@@ -111,7 +111,7 @@ namespace BeautySalon.Models {
     multiplier: decimal;
   }
 
-  model PricingStrategy {
+  model PricingStrategyDetail {
     type: PricingStrategyType;
     amount?: int32;
     tiers?: PriceTier[];
@@ -125,9 +125,9 @@ namespace BeautySalon.Models {
   }
 
   model ServicePricing {
-    strategy: PricingStrategy;
+    strategy: PricingStrategyDetail;
     taxIncluded: boolean;
-    currency: CurrencyCode;
+    currency: CurrencyCodeType;
     minimumPrice?: int32;
     maximumPrice?: int32;
     depositRequired: boolean;
@@ -153,7 +153,7 @@ namespace BeautySalon.Models {
     combo,
   }
 
-  model ServiceOption {
+  model ServiceOptionDetail {
     type: ServiceOptionType;
     name?: string;
     price?: int32;
@@ -179,7 +179,7 @@ namespace BeautySalon.Models {
     preparation,
   }
 
-  model BookingRequirement {
+  model BookingRequirementDetail {
     type: BookingRequirementType;
     amount?: int32;
     percentage?: int32;
@@ -206,13 +206,13 @@ namespace BeautySalon.Models {
   }
 
   model ServiceSchedule {
-    dayOfWeek: DayOfWeek;
+    dayOfWeek: DayOfWeekType;
     startTime: string;
     endTime: string;
     maxBookings?: int32;
   }
 
-  model ServiceAvailability {
+  model ServiceAvailabilityDetail {
     type: ServiceAvailabilityType;
     schedule?: ServiceSchedule[];
     requiresApproval?: boolean;
@@ -271,7 +271,7 @@ namespace BeautySalon.Models {
   }
 
   model ServiceRestrictions {
-    requiredStaffLevel?: StaffLevel;
+    requiredStaffLevel?: StaffLevelType;
     requiredCertifications?: string[];
     maxConcurrent?: int32;
     minIntervalDays?: int32;
@@ -327,7 +327,8 @@ namespace BeautySalon.Models {
     info: ServiceInfo;
 
     @doc("Service category and sub-category")
-    category: ServiceCategory;
+    category: ServiceCategoryType;
+
     categoryId?: CategoryId;
 
     @doc("Pricing information")
@@ -337,13 +338,13 @@ namespace BeautySalon.Models {
     duration: ServiceDuration;
 
     @doc("Availability settings")
-    availability?: ServiceAvailability;
+    availability?: ServiceAvailabilityDetail;
 
     @doc("Booking requirements")
-    requirements?: BookingRequirement[];
+    requirements?: BookingRequirementDetail[];
 
     @doc("Service options and addons")
-    options?: ServiceOption[];
+    options?: ServiceOptionDetail[];
 
     @doc("Service restrictions")
     restrictions?: ServiceRestrictions;
@@ -362,12 +363,12 @@ namespace BeautySalon.Models {
 
     @doc("Legacy fields for compatibility")
     name: string;
+
     description: string;
     price: int32;
     imageUrl?: string;
     requiredStaffLevel?: int32;
     isActive: boolean;
-
     ...AuditInfo;
   }
 
@@ -377,7 +378,7 @@ namespace BeautySalon.Models {
     description: string;
     duration: int32;
     price: int32;
-    category: ServiceCategory;
+    category: ServiceCategoryType;
     categoryId?: CategoryId;
     imageUrl?: string;
     requiredStaffLevel?: int32;
@@ -393,7 +394,7 @@ namespace BeautySalon.Models {
     description?: string;
     duration?: int32;
     price?: int32;
-    category?: ServiceCategory;
+    category?: ServiceCategoryType;
     categoryId?: CategoryId;
     imageUrl?: string;
     requiredStaffLevel?: int32;
@@ -409,7 +410,7 @@ namespace BeautySalon.Models {
     description?: string;
     duration?: int32;
     price?: int32;
-    category?: ServiceCategory;
+    category?: ServiceCategoryType;
     categoryId?: CategoryId | null;
     imageUrl?: string | null;
     requiredStaffLevel?: int32 | null;
@@ -419,7 +420,7 @@ namespace BeautySalon.Models {
     minAdvanceBookingHours?: int32 | null;
   }
 
-  model ServiceCategoryModel {
+  model CategoryModel {
     id: CategoryId;
     name: string;
     description: string;

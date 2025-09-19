@@ -28,13 +28,13 @@ model Attachment {
   filename: string;
 
   /** Content-Type */
-  contentType: string;
+  content: string;
 
   /** ファイルサイズ（バイト） */
   size: int32;
 
   /** ファイルタイプ */
-  fileType: FileType;
+  file: File;
 
   /** アップロードしたユーザーID */
   uploadedBy: string;
@@ -66,7 +66,7 @@ model UploadAttachmentRequest {
   filename: string;
 
   /** Content-Type */
-  contentType: string;
+  content: string;
 
   /** サロンID（オプション） */
   salonId?: string;
@@ -83,7 +83,7 @@ model GetUploadUrlRequest {
   filename: string;
 
   /** Content-Type */
-  contentType: string;
+  content: string;
 
   /** ファイルサイズ（バイト） */
   size: int32;

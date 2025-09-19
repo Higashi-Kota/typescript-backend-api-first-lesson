@@ -1,10 +1,11 @@
 import "@typespec/http";
 import "@typespec/rest";
 import "@typespec/openapi3";
+import "@typespec/versioning";
 
 // Import all models
-import "./models/common.tsp";
-import "./models/api-patterns.tsp";
+// common.tsp is imported by each model file, so we don't need to import it here
+import "./models/_shared/common-api-patterns.tsp";
 import "./models/auth.tsp";
 import "./models/salon.tsp";
 import "./models/staff.tsp";
@@ -37,11 +38,26 @@ import "./operations/permission-operations.tsp";
 using TypeSpec.Http;
 using TypeSpec.Rest;
 using TypeSpec.OpenAPI;
+using TypeSpec.Versioning;
 
-@service
+/**
+ * API versions for the Beauty Salon service
+ */
+enum VersionType {
+  @doc("Version 1.0.0 - Initial release")
+  v1: "1.0",
+  @doc("Version 2.0.0 - Added enhanced features")
+  v2: "2.0",
+}
+
+@service(#{
+  title: "Beauty Salon API"
+})
 @server("https://api.beauty-salon.com", "Production API Server")
 @server("https://staging-api.beauty-salon.com", "Staging API Server")
 @server("http://localhost:3000", "Local Development Server")
+@versioned(VersionType)
+@useAuth(BearerAuth)
 @doc("Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.")
 namespace BeautySalon {
   // All models and operations are imported from separate files

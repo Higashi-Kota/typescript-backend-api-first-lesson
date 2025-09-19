@@ -29,12 +29,9 @@ namespace BeautySalon.Operations {
     createRole(@body role: RoleCreateInput): Result<Role>;
 
     @doc("Update role")
-    @patch
+    @patch(#{ implicitOptionality: true })
     @route("/{id}")
-    updateRole(
-      @path id: RoleId,
-      @body updates: RoleUpdateInput,
-    ): Result<Role>;
+    updateRole(@path id: RoleId, @body updates: RoleUpdateInput): Result<Role>;
 
     @doc("Delete role")
     @delete
@@ -51,7 +48,10 @@ namespace BeautySalon.Operations {
     @route("/{id}/clone")
     cloneRole(
       @path id: RoleId,
-      @body request: { name: string, displayName: string },
+      @body request: {
+        name: string;
+        displayName: string;
+      },
     ): Result<Role>;
   }
 
@@ -74,43 +74,46 @@ namespace BeautySalon.Operations {
     @get
     @route("/groups")
     getPermissionGroups(): Result<Array<{
-      resource: string,
-      permissions: Permission[],
+      resource: string;
+      permissions: Permission[];
     }>>;
   }
 
   @route("/user-roles")
   @tag("User Roles")
-  interface UserRoleOperations {
+  interface UserRoleTypeOperations {
     @doc("Get user roles")
     @get
     @route("/user/{userId}")
-    getUserRoles(
+    getUserRoleTypes(
       @path userId: string,
       @query salonId?: SalonId,
-    ): Result<UserRole[]>;
+    ): Result<UserRoleType[]>;
 
     @doc("Assign role to user")
     @post
-    assignUserRole(@body assignment: UserRoleAssignInput): Result<UserRole>;
+    assignUserRoleType(@body assignment: UserRoleAssignInput): Result<UserRoleType>;
 
     @doc("Revoke user role")
     @delete
     @route("/user/{userId}/role/{roleId}")
-    revokeUserRole(
+    revokeUserRoleType(
       @path userId: string,
       @path roleId: RoleId,
       @query salonId?: SalonId,
     ): Result<{}>;
 
     @doc("Update user role")
-    @patch
+    @patch(#{ implicitOptionality: true })
     @route("/user/{userId}/role/{roleId}")
-    updateUserRole(
+    updateUserRoleType(
       @path userId: string,
       @path roleId: RoleId,
-      @body updates: { expiresAt?: utcDateTime, isActive?: boolean },
-    ): Result<UserRole>;
+      @body updates: {
+        expiresAt?: utcDateTime;
+        isActive?: boolean;
+      },
+    ): Result<UserRoleType>;
 
     @doc("Get users by role")
     @get
@@ -120,23 +123,25 @@ namespace BeautySalon.Operations {
       @query salonId?: SalonId,
       ...PaginationParams,
     ): Result<PaginationResponse<{
-      userId: string,
-      userName?: string,
-      assignedAt: utcDateTime,
-      expiresAt?: utcDateTime,
+      userId: string;
+      userName?: string;
+      assignedAt: utcDateTime;
+      expiresAt?: utcDateTime;
     }>>;
 
     @doc("Bulk assign roles")
     @post
     @route("/bulk-assign")
-    bulkAssignRoles(@body request: {
-      userIds: string[],
-      roleIds: RoleId[],
-      salonId?: SalonId,
-    }): Result<{
-      assigned: int32,
-      failed: int32,
-      errors?: string[],
+    bulkAssignRoles(
+      @body request: {
+        userIds: string[];
+        roleIds: RoleId[];
+        salonId?: SalonId;
+      },
+    ): Result<{
+      assigned: int32;
+      failed: int32;
+      errors?: string[];
     }>;
   }
 
@@ -151,22 +156,21 @@ namespace BeautySalon.Operations {
     @doc("Check multiple permissions")
     @post
     @route("/check-permissions")
-    checkPermissions(@body check: PermissionCheckInput): Result<PermissionCheckResult>;
+    checkPermissions(
+      @body check: PermissionCheckInput,
+    ): Result<PermissionCheckResult>;
 
     @doc("Get user effective permissions")
     @get
     @route("/user/{userId}/permissions")
-    getUserPermissions(
-      @path userId: string,
-      @query salonId?: SalonId,
-    ): Result<{
-      userId: string,
-      permissions: string[],
+    getUserPermissions(@path userId: string, @query salonId?: SalonId): Result<{
+      userId: string;
+      permissions: string[];
       roles: Array<{
-        roleId: RoleId,
-        roleName: string,
-        permissions: string[],
-      }>,
+        roleId: RoleId;
+        roleName: string;
+        permissions: string[];
+      }>;
     }>;
 
     @doc("Get resource access list")
@@ -177,22 +181,24 @@ namespace BeautySalon.Operations {
       @query action?: string,
       @query salonId?: SalonId,
     ): Result<Array<{
-      userId: string,
-      userName?: string,
-      hasAccess: boolean,
-      grantedBy: string[],
+      userId: string;
+      userName?: string;
+      hasAccess: boolean;
+      grantedBy: string[];
     }>>;
 
     @doc("Validate role permissions")
     @post
     @route("/validate")
-    validatePermissions(@body request: {
-      roleId: RoleId,
-      requiredPermissions: string[],
-    }): Result<{
-      isValid: boolean,
-      missingPermissions: string[],
-      extraPermissions: string[],
+    validatePermissions(
+      @body request: {
+        roleId: RoleId;
+        requiredPermissions: string[];
+      },
+    ): Result<{
+      isValid: boolean;
+      missingPermissions: string[];
+      extraPermissions: string[];
     }>;
   }
 }

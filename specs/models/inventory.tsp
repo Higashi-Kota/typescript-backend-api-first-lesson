@@ -8,58 +8,58 @@ namespace BeautySalon.Models {
   model InventoryItem {
     id: InventoryId;
     salonId: SalonId;
-    
+
     @doc("Product code/SKU")
     productCode: string;
-    
+
     @doc("Product name")
     productName: string;
-    
+
     @doc("Product description")
     description?: string;
-    
+
     @doc("Category")
     category: string;
-    
+
     @doc("Brand")
     brand?: string;
-    
+
     @doc("Supplier information")
     supplier?: string;
-    
+
     @doc("Current stock quantity")
     currentStock: float32;
-    
+
     @doc("Minimum stock level")
     minimumStock: float32;
-    
+
     @doc("Maximum stock level")
     maximumStock?: float32;
-    
+
     @doc("Unit of measurement")
     unit: string;
-    
+
     @doc("Unit cost")
     unitCost: float32;
-    
+
     @doc("Selling price (if sold to customers)")
     sellingPrice?: float32;
-    
+
     @doc("Stock status")
-    status: InventoryStatus;
-    
+    status: InventoryStatusType;
+
     @doc("Location in salon")
     location?: string;
-    
+
     @doc("Expiration date")
     expirationDate?: utcDateTime;
-    
+
     @doc("Last restocked date")
     lastRestocked?: utcDateTime;
-    
+
     @doc("Notes")
     notes?: string;
-    
+
     ...AuditInfo;
   }
 
@@ -81,16 +81,16 @@ namespace BeautySalon.Models {
   model StockMovement {
     ...InventoryTransaction;
     inventoryId: InventoryId;
-    
+
     @doc("Stock level after movement")
     stockAfter: float32;
-    
+
     @doc("Reason for movement")
     orderId?: OrderId;
-    
+
     @doc("Related treatment")
     treatmentRecordId?: TreatmentRecordId;
-    
+
     @doc("Movement timestamp")
     movedAt: utcDateTime;
 
@@ -101,55 +101,55 @@ namespace BeautySalon.Models {
   model PurchaseOrder {
     id: OrderId;
     salonId: SalonId;
-    
+
     @doc("Order number")
     orderNumber: string;
-    
+
     @doc("Supplier name")
     supplier: string;
-    
+
     @doc("Order status")
-    status: OrderStatus;
-    
+    status: OrderStatusType;
+
     @doc("Order items")
     items: OrderItem[];
-    
+
     @doc("Subtotal amount")
     subtotal: float32;
-    
+
     @doc("Tax amount")
     taxAmount: float32;
-    
+
     @doc("Shipping cost")
     shippingCost?: float32;
-    
+
     @doc("Total amount")
     totalAmount: float32;
-    
+
     @doc("Order date")
     orderDate: utcDateTime;
-    
+
     @doc("Expected delivery date")
     expectedDelivery?: utcDateTime;
-    
+
     @doc("Actual delivery date")
     actualDelivery?: utcDateTime;
-    
+
     @doc("Delivery notes")
     deliveryNotes?: string;
-    
+
     @doc("Payment terms")
     paymentTerms?: string;
-    
+
     @doc("Order notes")
     notes?: string;
-    
+
     @doc("Approved by")
     approvedBy?: StaffId;
-    
+
     @doc("Approved date")
     approvedAt?: utcDateTime;
-    
+
     ...AuditInfo;
   }
 
@@ -176,7 +176,7 @@ namespace BeautySalon.Models {
   model InventoryAlert {
     ...StockAlert;
     inventoryId: InventoryId;
-    alertType: "low_stock" | "expiring" | "expired" | "overstock";
+    alert: "low_stock" | "expiring" | "expired" | "overstock";
     message: string;
     severity: "info" | "warning" | "critical";
     acknowledged?: boolean;
@@ -216,7 +216,7 @@ namespace BeautySalon.Models {
     sellingPrice?: float32;
     location?: string;
     expirationDate?: utcDateTime;
-    status?: InventoryStatus;
+    status?: InventoryStatusType;
     notes?: string;
   }
 
@@ -241,7 +241,7 @@ namespace BeautySalon.Models {
   }
 
   model PurchaseOrderUpdateInput {
-    status?: OrderStatus;
+    status?: OrderStatusType;
     expectedDelivery?: utcDateTime;
     actualDelivery?: utcDateTime;
     deliveryNotes?: string;
@@ -251,7 +251,7 @@ namespace BeautySalon.Models {
   model InventorySearchParams {
     @query salonId: SalonId;
     @query category?: string;
-    @query status?: InventoryStatus;
+    @query status?: InventoryStatusType;
     @query lowStock?: boolean;
     @query expiringSoon?: boolean;
     ...SearchParams;

@@ -1,6 +1,5 @@
 import "@typespec/http";
 import "./common.tsp";
-import "./api-patterns.tsp";
 import "./booking.tsp";
 
 using TypeSpec.Http;
@@ -28,11 +27,11 @@ namespace BeautySalon.Models {
     exclusive_access,
   }
 
-  model MembershipBenefit {
+  model MembershipBenefitDetail {
     type: MembershipBenefitType;
     percentage?: int32;
     multiplier?: decimal;
-    serviceType?: string;
+    service?: string;
     frequency?: "monthly" | "quarterly" | "yearly";
     value?: int32;
     description?: string;
@@ -41,7 +40,7 @@ namespace BeautySalon.Models {
   model MembershipInfo {
     tier: MembershipTierType;
     since: utcDateTime;
-    benefits: MembershipBenefit[];
+    benefits: MembershipBenefitDetail[];
     dedicatedManager?: string;
     points: int32;
     totalPointsEarned: int32;
@@ -84,7 +83,7 @@ namespace BeautySalon.Models {
     other,
   }
 
-  enum AllergySeverity {
+  enum AllergySeverityType {
     mild,
     moderate,
     severe,
@@ -97,7 +96,7 @@ namespace BeautySalon.Models {
     metals?: string[];
     plants?: string[];
     description?: string;
-    severity: AllergySeverity;
+    severity: AllergySeverityType;
   }
 
   enum HairType {
@@ -107,13 +106,13 @@ namespace BeautySalon.Models {
     coily,
   }
 
-  enum HairThickness {
+  enum HairThicknessType {
     fine,
     medium,
     thick,
   }
 
-  enum ScalpCondition {
+  enum ScalpConditionType {
     normal,
     dry,
     oily,
@@ -123,14 +122,14 @@ namespace BeautySalon.Models {
 
   model HairInfo {
     type: HairType;
-    thickness: HairThickness;
+    thickness: HairThicknessType;
     condition: string[];
     chemicalHistory: string[];
     notes?: string;
   }
 
   model ScalpInfo {
-    condition: ScalpCondition;
+    condition: ScalpConditionType;
     sensitivities: string[];
     notes?: string;
   }
@@ -169,7 +168,7 @@ namespace BeautySalon.Models {
     communicationPreferences?: NotificationSettings;
     preferredStaff?: StaffId[];
     avoidStaff?: StaffId[];
-    preferredDayOfWeek?: DayOfWeek[];
+    preferredDayOfWeek?: DayOfWeekType[];
     preferredTimeSlots?: TimeSlot[];
     specialRequests?: string;
     language?: string;
@@ -214,7 +213,13 @@ namespace BeautySalon.Models {
   // ============================================================================
 
   model CustomerMetadata {
-    source?: "walk_in" | "online" | "phone" | "referral" | "social_media" | "advertisement";
+    source?:
+      | "walk_in"
+      | "online"
+      | "phone"
+      | "referral"
+      | "social_media"
+      | "advertisement";
     campaign?: string;
     tags?: string[];
     customFields?: Record<unknown>;
@@ -231,34 +236,34 @@ namespace BeautySalon.Models {
     id: CustomerId;
     name: string;
     contactInfo: ContactInfo;
-    
+
     @doc("Customer gender")
-    gender?: CustomerGender;
-    
+    gender?: CustomerGenderType;
+
     @doc("Birth date")
     birthDate?: plainDate;
-    
+
     @doc("Address")
     address?: Address;
-    
+
     @doc("Preferences and requirements")
     preferences?: string;
-    
+
     @doc("Internal notes")
     notes?: string;
-    
+
     @doc("Tags for categorization")
     tags?: string[];
-    
+
     @doc("Current loyalty points")
     loyaltyPoints?: int32;
-    
+
     @doc("Membership information")
     membership?: MembershipInfo;
-    
-    @doc("Notification settings")
+
+    @doc("NotificationType settings")
     notificationSettings?: NotificationSettings;
-    
+
     @doc("Health information")
     health?: CustomerHealth;
 
@@ -279,16 +284,16 @@ namespace BeautySalon.Models {
 
     @doc("Medical chart ID")
     medicalChartId?: MedicalChartId;
-    
+
     @doc("Is active customer")
     isActive: boolean = true;
-    
+
     @doc("Registration source")
     registrationSource?: "walk_in" | "online" | "phone" | "referral";
-    
+
     @doc("Referrer customer ID")
     referredBy?: CustomerId;
-    
+
     ...AuditInfo;
   }
 
@@ -343,13 +348,13 @@ namespace BeautySalon.Models {
 
   @doc("Customer reservations filter parameters")
   model GetCustomerReservationsRequest {
-    @query status?: ReservationStatus;
+    @query status?: ReservationStatusType;
     @query from?: utcDateTime;
     @query to?: utcDateTime;
   }
 
   @doc("Customer bookings filter parameters")
   model GetCustomerBookingsRequest {
-    @query status?: BookingStatusCode;
+    @query status?: BookingStatusCodeType;
   }
 }

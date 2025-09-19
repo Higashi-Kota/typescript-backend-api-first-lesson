@@ -18,7 +18,7 @@ namespace BeautySalon.Operations {
     op list(
       @query salonId?: SalonId,
       @query customerId?: CustomerId,
-      @query bookingId?: BookingId,  // Added to support filtering by booking
+      @query bookingId?: BookingId, // Added to support filtering by booking
       @query staffId?: StaffId,
       @query minRating?: int32,
       @query isVerified?: boolean,

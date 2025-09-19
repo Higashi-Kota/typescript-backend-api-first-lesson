@@ -1,6 +1,10 @@
 // Generated from TypeSpec/OpenAPI using openapi-typescript
 // DO NOT EDIT MANUALLY
-// Last generated: 2025-09-14T14:22:07.210Z
+// Last generated: 2025-09-19T10:57:26.660Z
+
+// Brand types are defined in domain package
+// Import from @beauty-salon-backend/domain/shared/brand-types
+// DO NOT define brand types here to avoid conflicts
 
 // Base types from OpenAPI
 /**
@@ -2379,6 +2383,25 @@ export interface components {
       /** @default Japan */
       country: string
     }
+    'Models.AllergyInfo': {
+      type: components['schemas']['Models.AllergyType']
+      substances?: string[]
+      fragrances?: string[]
+      metals?: string[]
+      plants?: string[]
+      description?: string
+      severity: components['schemas']['Models.AllergySeverity']
+    }
+    /** @enum {string} */
+    'Models.AllergySeverity': 'mild' | 'moderate' | 'severe'
+    /** @enum {string} */
+    'Models.AllergyType':
+      | 'chemical'
+      | 'fragrance'
+      | 'metal'
+      | 'latex'
+      | 'plant'
+      | 'other'
     /** @description 添付ファイル情報 */
     'Models.Attachment': {
       /** @description 添付ファイルID (UUID) */
@@ -2419,6 +2442,10 @@ export interface components {
        */
       updatedAt: string
     }
+    /**
+     * Format: uuid
+     * @description Branded UUID type for Attachment ID
+     */
     'Models.AttachmentId': string
     'Models.AuditInfo': {
       /** Format: date-time */
@@ -2438,6 +2465,24 @@ export interface components {
      * @enum {string}
      */
     'Models.AuthUserRole': 'customer' | 'staff' | 'admin'
+    'Models.AuthenticationState': {
+      type: components['schemas']['Models.AuthenticationStateType']
+      sessionId?: components['schemas']['Models.SessionId']
+      /** Format: date-time */
+      expiresAt?: string
+      tempToken?: string
+      /** Format: date-time */
+      until?: string
+      /** Format: int32 */
+      attempts?: number
+      reason?: string
+    }
+    /** @enum {string} */
+    'Models.AuthenticationStateType':
+      | 'unauthenticated'
+      | 'authenticated'
+      | 'pending_two_factor'
+      | 'locked'
     'Models.AvailableSlot': {
       staffId: components['schemas']['Models.StaffId']
       /** Format: date-time */
@@ -2451,14 +2496,15 @@ export interface components {
       customerId: components['schemas']['Models.CustomerId']
       reservationIds: components['schemas']['Models.ReservationId'][]
       status: components['schemas']['Models.BookingStatus']
-      /** Format: int32 */
-      totalAmount: number
-      /** Format: int32 */
-      discountAmount?: number
-      /** Format: int32 */
-      finalAmount: number
-      paymentMethod?: string
-      paymentStatus: string
+      statusCode: components['schemas']['Models.BookingStatusCode']
+      waitlistEntry?: components['schemas']['Models.WaitlistEntry']
+      deposit?: components['schemas']['Models.BookingDeposit']
+      totalAmount: components['schemas']['Models.Money']
+      discountAmount?: components['schemas']['Models.Money']
+      finalAmount: components['schemas']['Models.Money']
+      balanceDue?: components['schemas']['Models.Money']
+      paymentMethod?: components['schemas']['Models.PaymentMethod']
+      paymentStatus?: components['schemas']['Models.PaymentStatusCode']
       notes?: string
       /** Format: date-time */
       createdAt: string
@@ -2467,14 +2513,88 @@ export interface components {
       updatedAt: string
       updatedBy?: string
     }
+    'Models.BookingDeposit': {
+      amount: components['schemas']['Models.Money']
+      /** @enum {string} */
+      status: 'pending' | 'paid' | 'refunded' | 'forfeited'
+      /** Format: date-time */
+      dueDate?: string
+      /** Format: date-time */
+      paidAt?: string
+      /** Format: date-time */
+      refundedAt?: string
+      paymentId?: components['schemas']['Models.PaymentId']
+      notes?: string
+    }
+    'Models.BookingDepositUpdate': {
+      amount?: components['schemas']['Models.MoneyUpdate']
+      /** @enum {string} */
+      status?: 'pending' | 'paid' | 'refunded' | 'forfeited'
+      /** Format: date-time */
+      dueDate?: string
+      /** Format: date-time */
+      paidAt?: string
+      /** Format: date-time */
+      refundedAt?: string
+      paymentId?: components['schemas']['Models.PaymentId']
+      notes?: string
+    }
     'Models.BookingDetail': {
       reservations: components['schemas']['Models.ReservationDetail'][]
       customerName: string
       salonName: string
+      paymentHistory?: components['schemas']['Models.PaymentHistory'][]
+      waitlistHistory?: components['schemas']['Models.WaitlistEntry'][]
     } & components['schemas']['Models.Booking']
+    /**
+     * Format: uuid
+     * @description Branded UUID type for Booking ID
+     */
     'Models.BookingId': string
+    'Models.BookingLimit': {
+      /** @enum {string} */
+      period: 'day' | 'week' | 'month'
+      /** Format: int32 */
+      count: number
+    }
+    'Models.BookingRequirement': {
+      type: components['schemas']['Models.BookingRequirementType']
+      /** Format: int32 */
+      amount?: number
+      /** Format: int32 */
+      percentage?: number
+      required?: boolean
+      /** Format: int32 */
+      duration?: number
+      /** Format: int32 */
+      daysInAdvance?: number
+      /** Format: int32 */
+      minAge?: number
+      /** Format: int32 */
+      maxAge?: number
+      allowedGenders?: string[]
+      requiredTier?: string
+      instructions?: string[]
+    }
     /** @enum {string} */
+    'Models.BookingRequirementType':
+      | 'deposit'
+      | 'consultation'
+      | 'patch_test'
+      | 'age_restriction'
+      | 'gender_restriction'
+      | 'membership'
+      | 'preparation'
     'Models.BookingStatus':
+      | components['schemas']['Models.DraftBookingStatus']
+      | components['schemas']['Models.PendingBookingStatus']
+      | components['schemas']['Models.ConfirmedBookingStatus']
+      | components['schemas']['Models.InProgressBookingStatus']
+      | components['schemas']['Models.CompletedBookingStatus']
+      | components['schemas']['Models.CancelledBookingStatus']
+      | components['schemas']['Models.NoShowBookingStatus']
+    /** @enum {string} */
+    'Models.BookingStatusCode':
       | 'draft'
       | 'pending'
       | 'confirmed'
@@ -2482,7 +2602,106 @@ export interface components {
       | 'completed'
       | 'cancelled'
       | 'no_show'
+    'Models.BookingStatusUpdate':
+      | components['schemas']['Models.DraftBookingStatusUpdate']
+      | components['schemas']['Models.PendingBookingStatusUpdate']
+      | components['schemas']['Models.ConfirmedBookingStatusUpdate']
+      | components['schemas']['Models.InProgressBookingStatusUpdate']
+      | components['schemas']['Models.CompletedBookingStatusUpdate']
+      | components['schemas']['Models.CancelledBookingStatusUpdate']
+      | components['schemas']['Models.NoShowBookingStatusUpdate']
+    'Models.BusinessHours': {
+      dayOfWeek: components['schemas']['Models.DayOfWeek']
+      operatingSlots: components['schemas']['Models.TimeSlot'][]
+      breakSlots?: components['schemas']['Models.TimeSlot'][]
+      /** @default false */
+      isClosed: boolean
+      effectivePeriod?: components['schemas']['Models.DateRange']
+      timezone?: string
+    }
+    'Models.CancellationFee': {
+      /** Format: int32 */
+      hours: number
+      /** Format: int32 */
+      percentage: number
+      /** Format: int32 */
+      fixedAmount?: number
+    }
+    'Models.CancelledBookingStatus': {
+      /** @enum {string} */
+      type: 'cancelled'
+      /** Format: date-time */
+      cancelledAt: string
+      reason?: string
+      /** @enum {string} */
+      cancelledBy: 'customer' | 'salon' | 'system'
+    }
+    'Models.CancelledBookingStatusUpdate': {
+      /** @enum {string} */
+      type?: 'cancelled'
+      /** Format: date-time */
+      cancelledAt?: string
+      reason?: string
+      /** @enum {string} */
+      cancelledBy?: 'customer' | 'salon' | 'system'
+    }
+    /**
+     * Format: uuid
+     * @description Branded UUID type for Category ID
+     */
     'Models.CategoryId': string
+    /** @enum {string} */
+    'Models.ColorSubCategory':
+      | 'full_color'
+      | 'root_touch'
+      | 'highlights'
+      | 'lowlights'
+      | 'balayage'
+      | 'ombre'
+      | 'bleach'
+      | 'color_correction'
+    'Models.CompletedBookingStatus': {
+      /** @enum {string} */
+      type: 'completed'
+      /** Format: date-time */
+      completedAt: string
+      paymentId?: components['schemas']['Models.PaymentId']
+      serviceSummary?: string
+    }
+    'Models.CompletedBookingStatusUpdate': {
+      /** @enum {string} */
+      type?: 'completed'
+      /** Format: date-time */
+      completedAt?: string
+      paymentId?: components['schemas']['Models.PaymentId']
+      serviceSummary?: string
+    }
+    'Models.CompletedPaymentStatus': {
+      /** @enum {string} */
+      type: 'completed'
+      /** Format: date-time */
+      completedAt: string
+      paidAmount: components['schemas']['Models.Money']
+      receiptNumber?: string
+    }
+    'Models.ConfirmedBookingStatus': {
+      /** @enum {string} */
+      type: 'confirmed'
+      /** Format: date-time */
+      confirmedAt: string
+      staffId: components['schemas']['Models.StaffId']
+      /** Format: date-time */
+      expectedStart: string
+    }
+    'Models.ConfirmedBookingStatusUpdate': {
+      /** @enum {string} */
+      type?: 'confirmed'
+      /** Format: date-time */
+      confirmedAt?: string
+      staffId?: components['schemas']['Models.StaffId']
+      /** Format: date-time */
+      expectedStart?: string
+    }
     'Models.ContactInfo': {
       email: string
       phoneNumber: string
@@ -2492,10 +2711,14 @@ export interface components {
       salonId: components['schemas']['Models.SalonId']
       customerId: components['schemas']['Models.CustomerId']
       reservationIds: components['schemas']['Models.ReservationId'][]
-      /** Format: int32 */
-      discountAmount?: number
-      paymentMethod?: string
+      waitlistEntry?: components['schemas']['Models.WaitlistEntry']
+      deposit?: components['schemas']['Models.BookingDeposit']
+      discountAmount?: components['schemas']['Models.Money']
+      paymentMethod?: components['schemas']['Models.PaymentMethod']
       notes?: string
+      metadata?: {
+        [key: string]: unknown
+      }
     }
     /** @description Customer creation request with required and optional fields */
     'Models.CreateCustomerRequest': {
@@ -2519,18 +2742,21 @@ export interface components {
     'Models.CreateReviewRequest': {
       salonId: components['schemas']['Models.SalonId']
       customerId: components['schemas']['Models.CustomerId']
-      reservationId: components['schemas']['Models.ReservationId']
+      bookingId: components['schemas']['Models.BookingId']
       staffId?: components['schemas']['Models.StaffId']
       /** Format: int32 */
-      rating: number
+      overallRating: number
       comment?: string
+      title?: string
       /** Format: int32 */
       serviceRating?: number
       /** Format: int32 */
       staffRating?: number
       /** Format: int32 */
-      atmosphereRating?: number
-      images?: string[]
+      cleanlinessRating?: number
+      /** Format: int32 */
+      valueRating?: number
+      imageUrls?: string[]
     }
     /** @description Salon creation request with required and optional fields */
     'Models.CreateSalonRequest': {
@@ -2539,6 +2765,7 @@ export interface components {
       address: components['schemas']['Models.Address']
       contactInfo: components['schemas']['Models.ContactInfo']
       openingHours: components['schemas']['Models.OpeningHours'][]
+      businessHours?: components['schemas']['Models.BusinessHours'][]
       imageUrls?: string[]
       features?: string[]
     }
@@ -2555,6 +2782,13 @@ export interface components {
       imageUrl?: string
       /** Format: int32 */
       requiredStaffLevel?: number
+      /** Format: int32 */
+      depositAmount?: number
+      isActive?: boolean
+      /** Format: int32 */
+      maxAdvanceBookingDays?: number
+      /** Format: int32 */
+      minAdvanceBookingHours?: number
     }
     /** @description 共有リンク作成リクエスト */
     'Models.CreateShareLinkRequest': {
@@ -2583,7 +2817,22 @@ export interface components {
       /** Format: int32 */
       yearsOfExperience?: number
       certifications?: string[]
+      qualifications?: components['schemas']['Models.StaffQualification'][]
+      schedules?: components['schemas']['Models.StaffSchedule'][]
+      permissions?: components['schemas']['Models.StaffPermission'][]
     }
+    /** @enum {string} */
+    'Models.CurrencyCode':
+      | 'JPY'
+      | 'USD'
+      | 'EUR'
+      | 'GBP'
+      | 'AUD'
+      | 'CAD'
+      | 'CNY'
+      | 'KRW'
+      | 'SGD'
+      | 'TWD'
     'Models.Customer': {
       id: components['schemas']['Models.CustomerId']
       name: string
@@ -2608,12 +2857,22 @@ export interface components {
        * @description Current loyalty points
        */
       loyaltyPoints?: number
-      /** @description Membership level */
-      membershipLevel?: components['schemas']['Models.MembershipLevel']
-      /** @description Membership level ID if custom levels are used */
-      membershipLevelId?: components['schemas']['Models.MembershipLevelId']
+      /** @description Membership information */
+      membership?: components['schemas']['Models.MembershipInfo']
       /** @description Notification settings */
       notificationSettings?: components['schemas']['Models.NotificationSettings']
+      /** @description Health information */
+      health?: components['schemas']['Models.CustomerHealth']
+      /** @description Customer preferences */
+      customerPreferences?: components['schemas']['Models.CustomerPreferences']
+      /** @description Visit history */
+      history?: components['schemas']['Models.CustomerHistory']
+      /** @description Customer associations */
+      associations?: components['schemas']['Models.CustomerAssociations']
+      /** @description Customer status */
+      status?: components['schemas']['Models.CustomerStatusDetail']
+      /** @description Customer metadata */
+      metadata?: components['schemas']['Models.CustomerMetadata']
       /** @description Medical chart ID */
       medicalChartId?: components['schemas']['Models.MedicalChartId']
       /**
@@ -2635,9 +2894,71 @@ export interface components {
       updatedAt: string
       updatedBy?: string
     }
+    'Models.CustomerAssociations': {
+      primarySalonId?: components['schemas']['Models.SalonId']
+      visitedSalonIds: components['schemas']['Models.SalonId'][]
+      familyMemberIds?: components['schemas']['Models.CustomerId'][]
+      referredBy?: components['schemas']['Models.CustomerId']
+      referredCustomerIds?: components['schemas']['Models.CustomerId'][]
+      groupId?: string
+    }
     /** @enum {string} */
     'Models.CustomerGender': 'male' | 'female' | 'other' | 'prefer_not_to_say'
+    'Models.CustomerHealth': {
+      allergies: components['schemas']['Models.AllergyInfo'][]
+      hairInfo?: components['schemas']['Models.HairInfo']
+      scalpInfo?: components['schemas']['Models.ScalpInfo']
+      medicalConditions?: string[]
+      medications?: string[]
+      pregnancyStatus?: boolean
+      specialNeeds?: string
+    }
+    'Models.CustomerHistory': {
+      visits: components['schemas']['Models.VisitHistory']
+      lastServiceId?: components['schemas']['Models.ServiceId']
+      lastStaffId?: components['schemas']['Models.StaffId']
+      favoriteServiceIds: components['schemas']['Models.ServiceId'][]
+      favoriteStaffIds: components['schemas']['Models.StaffId'][]
+      pastTreatments?: string[]
+      notes?: string[]
+    }
+    /**
+     * Format: uuid
+     * @description Branded UUID type for Customer ID
+     */
     'Models.CustomerId': string
+    'Models.CustomerMetadata': {
+      /** @enum {string} */
+      source?:
+        | 'walk_in'
+        | 'online'
+        | 'phone'
+        | 'referral'
+        | 'social_media'
+        | 'advertisement'
+      campaign?: string
+      tags?: string[]
+      customFields?: {
+        [key: string]: unknown
+      }
+      internalNotes?: string[]
+      /** Format: int32 */
+      riskScore?: number
+      /** Format: int32 */
+      lifetimeValue?: number
+      lastUpdatedBy?: string
+    }
+    'Models.CustomerPreferences': {
+      stylePreferences?: components['schemas']['Models.StylePreference']
+      servicePreferences?: components['schemas']['Models.ServicePreference']
+      communicationPreferences?: components['schemas']['Models.NotificationSettings']
+      preferredStaff?: components['schemas']['Models.StaffId'][]
+      avoidStaff?: components['schemas']['Models.StaffId'][]
+      preferredDayOfWeek?: components['schemas']['Models.DayOfWeek'][]
+      preferredTimeSlots?: components['schemas']['Models.TimeSlot'][]
+      specialRequests?: string
+      language?: string
+    }
     'Models.CustomerProfile': {
       /** Format: int32 */
       visitCount: number
@@ -2648,6 +2969,37 @@ export interface components {
       /** Format: int32 */
       totalSpent: number
     } & components['schemas']['Models.Customer']
+    'Models.CustomerStatusDetail': {
+      type: components['schemas']['Models.CustomerStatusType']
+      reason?: string
+      /** Format: date-time */
+      since?: string
+      /** Format: date-time */
+      until?: string
+      by?: string
+      /** Format: date-time */
+      deletedAt?: string
+    }
+    /** @enum {string} */
+    'Models.CustomerStatusType':
+      | 'active'
+      | 'inactive'
+      | 'suspended'
+      | 'deleted'
+      | 'blacklisted'
+    /** @enum {string} */
+    'Models.CutSubCategory':
+      | 'mens_cut'
+      | 'womens_cut'
+      | 'kids_cut'
+      | 'bang_trim'
+      | 'beard_trim'
+    'Models.DateRange': {
+      /** Format: date-time */
+      startDate: string
+      /** Format: date-time */
+      endDate: string
+    }
     /** @enum {string} */
     'Models.DayOfWeek':
       | 'monday'
@@ -2667,17 +3019,54 @@ export interface components {
        */
       expiresAt: string
     }
+    'Models.DraftBookingStatus': {
+      /** @enum {string} */
+      type: 'draft'
+      /** Format: date-time */
+      createdAt: string
+      /** Format: date-time */
+      expiresAt?: string
+    }
+    'Models.DraftBookingStatusUpdate': {
+      /** @enum {string} */
+      type?: 'draft'
+      /** Format: date-time */
+      createdAt?: string
+      /** Format: date-time */
+      expiresAt?: string
+    }
     /** @description Email verification request */
     'Models.EmailVerificationRequest': {
       /** @description Email verification token */
       token: string
     }
+    'Models.EmailVerificationState': {
+      type: components['schemas']['Models.EmailVerificationStateType']
+      /** Format: date-time */
+      verifiedAt?: string
+      token?: string
+      /** Format: date-time */
+      expiresAt?: string
+      /** Format: date-time */
+      sentAt?: string
+    }
+    /** @enum {string} */
+    'Models.EmailVerificationStateType': 'verified' | 'unverified' | 'pending'
     'Models.Error': {
       code: string
       message: string
       details?: {
         [key: string]: unknown
       }
+    }
+    'Models.FailedPaymentStatus': {
+      /** @enum {string} */
+      type: 'failed'
+      /** Format: date-time */
+      failedAt: string
+      reason: string
+      /** @default false */
+      retryable: boolean
     }
     /**
      * @description ファイルタイプ
@@ -2686,7 +3075,7 @@ export interface components {
     'Models.FileType': 'image' | 'document' | 'other'
     /** @description Customer bookings filter parameters */
     'Models.GetCustomerBookingsRequest': {
-      status?: components['schemas']['Models.BookingStatus']
+      status?: components['schemas']['Models.BookingStatusCode']
     }
     /** @description Customer reservations filter parameters */
     'Models.GetCustomerReservationsRequest': {
@@ -2710,21 +3099,55 @@ export interface components {
       /** @description サロンID（オプション） */
       salonId?: string
     }
+    'Models.HairInfo': {
+      type: components['schemas']['Models.HairType']
+      thickness: components['schemas']['Models.HairThickness']
+      condition: string[]
+      chemicalHistory: string[]
+      notes?: string
+    }
+    /** @enum {string} */
+    'Models.HairThickness': 'fine' | 'medium' | 'thick'
+    /** @enum {string} */
+    'Models.HairType': 'straight' | 'wavy' | 'curly' | 'coily'
+    'Models.InProgressBookingStatus': {
+      /** @enum {string} */
+      type: 'in_progress'
+      /** Format: date-time */
+      startedAt: string
+      stationName?: string
+    }
+    'Models.InProgressBookingStatusUpdate': {
+      /** @enum {string} */
+      type?: 'in_progress'
+      /** Format: date-time */
+      startedAt?: string
+      stationName?: string
+    }
     /** @description Inventory alert */
     'Models.InventoryAlert': {
+      itemId: components['schemas']['Models.InventoryId']
+      /** Format: float */
+      threshold: number
+      /** Format: float */
+      currentStock: number
+      /** Format: date-time */
+      triggeredAt: string
       inventoryId: components['schemas']['Models.InventoryId']
       /** @enum {string} */
       alertType: 'low_stock' | 'expiring' | 'expired' | 'overstock'
       message: string
       /** @enum {string} */
       severity: 'info' | 'warning' | 'critical'
-      /** Format: date-time */
-      triggeredAt: string
       acknowledged?: boolean
       acknowledgedBy?: components['schemas']['Models.StaffId']
       /** Format: date-time */
       acknowledgedAt?: string
     }
+    /**
+     * Format: uuid
+     * @description Branded UUID type for Inventory ID
+     */
     'Models.InventoryId': string
     /** @description Inventory item */
     'Models.InventoryItem': {
@@ -2843,6 +3266,24 @@ export interface components {
       | 'out_of_stock'
       | 'ordered'
       | 'discontinued'
+    'Models.InventoryTransaction': {
+      id: string
+      itemId: components['schemas']['Models.InventoryId']
+      salonId: components['schemas']['Models.SalonId']
+      /** @enum {string} */
+      type: 'in' | 'out' | 'adjustment' | 'transfer'
+      /** Format: float */
+      quantity: number
+      reason: string
+      performedBy: components['schemas']['Models.StaffId']
+      /** Format: date-time */
+      occurredAt: string
+      referenceId?: string
+      notes?: string
+      metadata?: {
+        [key: string]: unknown
+      }
+    }
     /** @description Login request */
     'Models.LoginRequest': {
       /** @description User's email address */
@@ -2876,6 +3317,12 @@ export interface components {
       /** @description Logged in user information */
       user: components['schemas']['Models.User']
     }
+    /** @enum {string} */
+    'Models.MakeupSubCategory':
+      | 'everyday_makeup'
+      | 'event_makeup'
+      | 'bridal_makeup'
+      | 'photoshoot_makeup'
     /** @description Material usage record */
     'Models.MaterialUsage': {
       inventoryId: components['schemas']['Models.InventoryId']
@@ -2928,6 +3375,10 @@ export interface components {
       avoidProducts?: string[]
       notes?: string
     }
+    /**
+     * Format: uuid
+     * @description Branded UUID type for Medical Chart ID
+     */
     'Models.MedicalChartId': string
     'Models.MedicalChartUpdateInput': {
       allergies?: string[]
@@ -2939,9 +3390,92 @@ export interface components {
       avoidProducts?: string[]
       notes?: string
     }
+    'Models.MembershipBenefit': {
+      type: components['schemas']['Models.MembershipBenefitType']
+      /** Format: int32 */
+      percentage?: number
+      multiplier?: components['schemas']['Models.decimal']
+      serviceType?: string
+      /** @enum {string} */
+      frequency?: 'monthly' | 'quarterly' | 'yearly'
+      /** Format: int32 */
+      value?: number
+      description?: string
+    }
+    /** @enum {string} */
+    'Models.MembershipBenefitType':
+      | 'discount_rate'
+      | 'point_multiplier'
+      | 'priority_booking'
+      | 'free_service'
+      | 'birthday_special'
+      | 'exclusive_access'
+    'Models.MembershipInfo': {
+      tier: components['schemas']['Models.MembershipTierType']
+      /** Format: date-time */
+      since: string
+      benefits: components['schemas']['Models.MembershipBenefit'][]
+      dedicatedManager?: string
+      /** Format: int32 */
+      points: number
+      /** Format: int32 */
+      totalPointsEarned: number
+      /** Format: int32 */
+      totalPointsUsed: number
+      /** Format: int32 */
+      expiringPoints?: number
+      /** Format: date-time */
+      pointsExpireAt?: string
+    }
     /** @enum {string} */
     'Models.MembershipLevel': 'bronze' | 'silver' | 'gold' | 'platinum' | 'vip'
+    /**
+     * Format: uuid
+     * @description Branded UUID type for Membership Level ID
+     */
     'Models.MembershipLevelId': string
+    /** @enum {string} */
+    'Models.MembershipTierType':
+      | 'regular'
+      | 'silver'
+      | 'gold'
+      | 'platinum'
+      | 'vip'
+    'Models.Money': {
+      /** Format: int64 */
+      value: number
+      currency: components['schemas']['Models.CurrencyCode']
+      taxRate?: components['schemas']['Models.decimal']
+    }
+    'Models.MoneyUpdate': {
+      /** Format: int64 */
+      value?: number
+      currency?: components['schemas']['Models.CurrencyCode']
+      taxRate?: components['schemas']['Models.decimal']
+    }
+    /** @enum {string} */
+    'Models.NailSubCategory':
+      | 'manicure'
+      | 'pedicure'
+      | 'gel_nail'
+      | 'nail_art'
+      | 'nail_removal'
+    'Models.NoShowBookingStatus': {
+      /** @enum {string} */
+      type: 'no_show'
+      /** Format: date-time */
+      recordedAt: string
+      /** @default false */
+      penaltyApplied: boolean
+    }
+    'Models.NoShowBookingStatusUpdate': {
+      /** @enum {string} */
+      type?: 'no_show'
+      /** Format: date-time */
+      recordedAt?: string
+      /** @default false */
+      penaltyApplied: boolean
+    }
     'Models.NotificationSettings': {
       types: components['schemas']['Models.NotificationType'][]
       reminderTimings: components['schemas']['Models.ReminderTiming'][]
@@ -2955,6 +3489,10 @@ export interface components {
       closeTime: string
       isHoliday: boolean
     }
+    /**
+     * Format: uuid
+     * @description Branded UUID type for Order ID
+     */
     'Models.OrderId': string
     /** @description Order item detail */
     'Models.OrderItem': {
@@ -3004,6 +3542,15 @@ export interface components {
        */
       totalPages: number
     }
+    'Models.PartialRefundPaymentStatus': {
+      /** @enum {string} */
+      type: 'partial_refund'
+      /** Format: date-time */
+      refundedAt: string
+      refundAmount: components['schemas']['Models.Money']
+      remainingAmount: components['schemas']['Models.Money']
+      refundId: components['schemas']['Models.RefundId']
+    }
     /** @description Password change request */
     'Models.PasswordChangeRequest': {
       /** @description Current password for verification */
@@ -3023,54 +3570,39 @@ export interface components {
       /** @description Email address of the account */
       email: string
     }
+    'Models.PasswordResetState': {
+      type: components['schemas']['Models.PasswordResetStateType']
+      token?: string
+      /** Format: date-time */
+      expiresAt?: string
+      /** Format: date-time */
+      requestedAt?: string
+      /** Format: date-time */
+      completedAt?: string
+    }
+    /** @enum {string} */
+    'Models.PasswordResetStateType': 'none' | 'requested' | 'completed'
     /** @description Payment record for services */
     'Models.Payment': {
       id: components['schemas']['Models.PaymentId']
+      salonId: components['schemas']['Models.SalonId']
+      customerId: components['schemas']['Models.CustomerId']
       bookingId?: components['schemas']['Models.BookingId']
       treatmentRecordId?: components['schemas']['Models.TreatmentRecordId']
-      customerId: components['schemas']['Models.CustomerId']
-      salonId: components['schemas']['Models.SalonId']
-      /**
-       * Format: float
-       * @description Payment amount
-       */
-      amount: number
-      /**
-       * Format: float
-       * @description Tax amount
-       */
-      taxAmount: number
-      /**
-       * Format: float
-       * @description Discount amount
-       */
-      discountAmount?: number
-      /**
-       * Format: int32
-       * @description Points used for payment
-       */
-      pointsUsed?: number
-      /**
-       * Format: float
-       * @description Final amount after all adjustments
-       */
-      finalAmount: number
-      /** @description Payment method */
       method: components['schemas']['Models.PaymentMethod']
-      /** @description Payment status */
       status: components['schemas']['Models.PaymentStatus']
-      /** @description External payment reference (for card/online payments) */
+      amounts: components['schemas']['Models.PaymentAmounts']
+      /** Format: int32 */
+      pointsUsed?: number
+      depositApplied?: components['schemas']['Models.Money']
+      outstandingAmount?: components['schemas']['Models.Money']
       externalReference?: string
-      /**
-       * Format: date-time
-       * @description Payment processed at
-       */
-      processedAt?: string
-      /** @description Receipt number */
       receiptNumber?: string
-      /** @description Refund information if applicable */
-      refundInfo?: components['schemas']['Models.RefundInfo']
-      /** @description Payment notes */
+      history: components['schemas']['Models.PaymentHistory'][]
+      refunds?: components['schemas']['Models.Refund'][]
+      metadata?: {
+        [key: string]: unknown
+      }
       notes?: string
       /** Format: date-time */
       createdAt: string
@@ -3079,22 +3611,54 @@ export interface components {
       updatedAt: string
       updatedBy?: string
     }
+    'Models.PaymentAmounts': {
+      billed: components['schemas']['Models.Money']
+      tax?: components['schemas']['Models.Money']
+      discount?: components['schemas']['Models.Money']
+      tip?: components['schemas']['Models.Money']
+      totalPayable: components['schemas']['Models.Money']
+    }
+    'Models.PaymentBreakdown': {
+      subtotal: components['schemas']['Models.Money']
+      tax: components['schemas']['Models.Money']
+      discount: components['schemas']['Models.Money']
+      pointsDiscount?: components['schemas']['Models.Money']
+      total: components['schemas']['Models.Money']
+    }
     'Models.PaymentCreateInput': {
+      salonId: components['schemas']['Models.SalonId']
+      customerId: components['schemas']['Models.CustomerId']
       bookingId?: components['schemas']['Models.BookingId']
       treatmentRecordId?: components['schemas']['Models.TreatmentRecordId']
-      customerId: components['schemas']['Models.CustomerId']
-      /** Format: float */
-      amount: number
-      /** Format: float */
-      taxAmount: number
-      /** Format: float */
-      discountAmount?: number
+      method: components['schemas']['Models.PaymentMethod']
+      amounts: components['schemas']['Models.PaymentAmounts']
       /** Format: int32 */
       pointsUsed?: number
-      method: components['schemas']['Models.PaymentMethod']
+      depositApplied?: components['schemas']['Models.Money']
       externalReference?: string
       notes?: string
+      metadata?: {
+        [key: string]: unknown
+      }
     }
+    'Models.PaymentHistory': {
+      eventId: string
+      paymentId: components['schemas']['Models.PaymentId']
+      status: components['schemas']['Models.PaymentStatus']
+      /** Format: date-time */
+      occurredAt: string
+      /** @enum {string} */
+      actorType?: 'system' | 'staff' | 'customer'
+      actorId?: string
+      note?: string
+      metadata?: {
+        [key: string]: unknown
+      }
+    }
+    /**
+     * Format: uuid
+     * @description Branded UUID type for Payment ID
+     */
     'Models.PaymentId': string
     /** @enum {string} */
     'Models.PaymentMethod':
@@ -3102,22 +3666,75 @@ export interface components {
       | 'credit_card'
       | 'debit_card'
       | 'e_money'
-      | 'qr_code'
+      | 'qr_payment'
       | 'bank_transfer'
-      | 'other'
-    /** @enum {string} */
+      | 'point'
+    'Models.PaymentPreview': {
+      salonId: components['schemas']['Models.SalonId']
+      customerId?: components['schemas']['Models.CustomerId']
+      bookingId?: components['schemas']['Models.BookingId']
+      breakdown: components['schemas']['Models.PaymentBreakdown']
+      recommendedMethods: components['schemas']['Models.PaymentMethod'][]
+      notes?: string
+    }
     'Models.PaymentStatus':
+      | components['schemas']['Models.PendingPaymentStatus']
+      | components['schemas']['Models.ProcessingPaymentStatus']
+      | components['schemas']['Models.CompletedPaymentStatus']
+      | components['schemas']['Models.FailedPaymentStatus']
+      | components['schemas']['Models.RefundedPaymentStatus']
+      | components['schemas']['Models.PartialRefundPaymentStatus']
+    /** @enum {string} */
+    'Models.PaymentStatusCode':
       | 'pending'
       | 'processing'
       | 'completed'
       | 'failed'
       | 'refunded'
-      | 'partially_refunded'
+      | 'partial_refund'
     'Models.PaymentUpdateInput': {
+      method?: components['schemas']['Models.PaymentMethod']
       status?: components['schemas']['Models.PaymentStatus']
-      externalReference?: string
-      notes?: string
+      outstandingAmount?: components['schemas']['Models.Money']
+      depositApplied?: components['schemas']['Models.Money'] | null
+      externalReference?: string | null
+      receiptNumber?: string | null
+      notes?: string | null
+      metadata?: {
+        [key: string]: unknown
+      } | null
     }
+    'Models.PendingBookingStatus': {
+      /** @enum {string} */
+      type: 'pending'
+      /** Format: date-time */
+      requestedAt: string
+      /** Format: date-time */
+      holdExpiresAt?: string
+      assignedStaffId?: components['schemas']['Models.StaffId']
+    }
+    'Models.PendingBookingStatusUpdate': {
+      /** @enum {string} */
+      type?: 'pending'
+      /** Format: date-time */
+      requestedAt?: string
+      /** Format: date-time */
+      holdExpiresAt?: string
+      assignedStaffId?: components['schemas']['Models.StaffId']
+    }
+    'Models.PendingPaymentStatus': {
+      /** @enum {string} */
+      type: 'pending'
+      /** Format: date-time */
+      createdAt: string
+    }
+    /** @enum {string} */
+    'Models.PermSubCategory':
+      | 'regular_perm'
+      | 'digital_perm'
+      | 'spiral_perm'
+      | 'body_wave'
+      | 'straightening'
     /** @description Permission definition */
     'Models.Permission': {
       id: components['schemas']['Models.PermissionId']
@@ -3146,6 +3763,10 @@ export interface components {
       userId: string
       permissions: components['schemas']['Models.PermissionStatus'][]
     }
+    /**
+     * Format: uuid
+     * @description Branded UUID type for Permission ID
+     */
     'Models.PermissionId': string
     'Models.PermissionStatus': {
       permission: string
@@ -3217,6 +3838,10 @@ export interface components {
       /** Format: date-time */
       expiresAt?: string
     }
+    /**
+     * Format: uuid
+     * @description Branded UUID type for Point Transaction ID
+     */
     'Models.PointTransactionId': string
     /** @description Previous treatment history */
     'Models.PreviousTreatment': {
@@ -3231,6 +3856,58 @@ export interface components {
       minPrice?: number
       /** Format: float */
       maxPrice?: number
+    }
+    'Models.PriceTier': {
+      name: string
+      description?: string
+      /** Format: int32 */
+      price: number
+      /** Format: int32 */
+      duration?: number
+      conditions?: string[]
+    }
+    'Models.PricingFactor': {
+      /** @enum {string} */
+      type: 'day_of_week' | 'time_of_day' | 'staff_level' | 'demand' | 'season'
+      multipliers?: {
+        [key: string]: components['schemas']['Models.decimal']
+      }
+      peakHours?: string[]
+      peakMultiplier?: components['schemas']['Models.decimal']
+      /** Format: int32 */
+      threshold?: number
+      seasons?: components['schemas']['Models.Season'][]
+    }
+    'Models.PricingStrategy': {
+      type: components['schemas']['Models.PricingStrategyType']
+      /** Format: int32 */
+      amount?: number
+      tiers?: components['schemas']['Models.PriceTier'][]
+      /** Format: int32 */
+      basePrice?: number
+      factors?: components['schemas']['Models.PricingFactor'][]
+      services?: components['schemas']['Models.ServiceId'][]
+      discountRate?: components['schemas']['Models.decimal']
+      /** Format: int32 */
+      memberPrice?: number
+      /** Format: int32 */
+      nonMemberPrice?: number
+      description?: string
+    }
+    /** @enum {string} */
+    'Models.PricingStrategyType':
+      | 'fixed'
+      | 'tiered'
+      | 'dynamic'
+      | 'package'
+      | 'membership'
+      | 'custom'
+    'Models.ProcessingPaymentStatus': {
+      /** @enum {string} */
+      type: 'processing'
+      /** Format: date-time */
+      startedAt: string
+      processorId?: components['schemas']['Models.StaffId']
     }
     /** @description Purchase order */
     'Models.PurchaseOrder': {
@@ -3320,22 +3997,40 @@ export interface components {
       deliveryNotes?: string
       notes?: string
     }
-    /** @description Refund information */
-    'Models.RefundInfo': {
-      /** Format: float */
-      refundedAmount: number
-      refundReason: string
+    'Models.Refund': {
+      id: components['schemas']['Models.RefundId']
+      paymentId: components['schemas']['Models.PaymentId']
+      amount: components['schemas']['Models.Money']
+      reason: string
       /** Format: date-time */
       refundedAt: string
-      refundedBy: string
-      refundReference?: string
+      /** @enum {string} */
+      status: 'requested' | 'processing' | 'completed' | 'failed'
+      processedBy?: components['schemas']['Models.StaffId']
+      method?: components['schemas']['Models.PaymentMethod']
+      referenceCode?: string
+      notes?: string
     }
+    /**
+     * Format: uuid
+     * @description Branded UUID type for Refund ID
+     */
+    'Models.RefundId': string
     'Models.RefundInput': {
       paymentId: components['schemas']['Models.PaymentId']
-      /** Format: float */
-      amount: number
+      amount: components['schemas']['Models.Money']
       reason: string
-      reference?: string
+      referenceCode?: string
+      processedBy?: components['schemas']['Models.StaffId']
+      notes?: string
+    }
+    'Models.RefundedPaymentStatus': {
+      /** @enum {string} */
+      type: 'refunded'
+      /** Format: date-time */
+      refundedAt: string
+      refundAmount: components['schemas']['Models.Money']
+      refundId?: components['schemas']['Models.RefundId']
     }
     /** @description Registration request */
     'Models.RegisterRequest': {
@@ -3390,6 +4085,10 @@ export interface components {
       /** Format: int32 */
       serviceDuration: number
     } & components['schemas']['Models.Reservation']
+    /**
+     * Format: uuid
+     * @description Branded UUID type for Reservation ID
+     */
     'Models.ReservationId': string
     /** @enum {string} */
     'Models.ReservationStatus':
@@ -3402,24 +4101,35 @@ export interface components {
       id: components['schemas']['Models.ReviewId']
       salonId: components['schemas']['Models.SalonId']
       customerId: components['schemas']['Models.CustomerId']
-      reservationId: components['schemas']['Models.ReservationId']
+      bookingId: components['schemas']['Models.BookingId']
       staffId?: components['schemas']['Models.StaffId']
       /** Format: int32 */
-      rating: number
+      overallRating: number
       comment?: string
+      title?: string
       /** Format: int32 */
       serviceRating?: number
       /** Format: int32 */
       staffRating?: number
       /** Format: int32 */
-      atmosphereRating?: number
-      images?: string[]
+      cleanlinessRating?: number
+      /** Format: int32 */
+      valueRating?: number
+      imageUrls?: string[]
       isVerified: boolean
       /**
        * Format: int32
        * @default 0
        */
       helpfulCount: number
+      /**
+       * Format: int32
+       * @default 0
+       */
+      reportCount: number
+      ownerResponse?: string
+      /** Format: date-time */
+      ownerRespondedAt?: string
       /** Format: date-time */
       createdAt: string
       createdBy?: string
@@ -3427,6 +4137,10 @@ export interface components {
       updatedAt: string
       updatedBy?: string
     }
+    /**
+     * Format: uuid
+     * @description Branded UUID type for Review ID
+     */
     'Models.ReviewId': string
     'Models.ReviewSummary': {
       /** Format: float */
@@ -3465,6 +4179,10 @@ export interface components {
       description?: string
       permissions: components['schemas']['Models.PermissionId'][]
     }
+    /**
+     * Format: uuid
+     * @description Branded UUID type for Role ID
+     */
     'Models.RoleId': string
     'Models.RoleUpdateInput': {
       displayName?: string
@@ -3475,8 +4193,7 @@ export interface components {
     /** @description Sales breakdown by category */
     'Models.SalesByCategory': {
       category: components['schemas']['Models.ServiceCategory']
-      /** Format: float */
-      amount: number
+      amount: components['schemas']['Models.Money']
       /** Format: int32 */
       count: number
       /** Format: float */
@@ -3485,8 +4202,7 @@ export interface components {
     /** @description Sales breakdown by payment method */
     'Models.SalesByMethod': {
       method: components['schemas']['Models.PaymentMethod']
-      /** Format: float */
-      amount: number
+      amount: components['schemas']['Models.Money']
       /** Format: int32 */
       count: number
       /** Format: float */
@@ -3499,46 +4215,16 @@ export interface components {
       periodStart: string
       /** Format: date-time */
       periodEnd: string
-      /**
-       * Format: float
-       * @description Total sales amount
-       */
-      totalSales: number
-      /**
-       * Format: float
-       * @description Total tax collected
-       */
-      totalTax: number
-      /**
-       * Format: float
-       * @description Total discounts given
-       */
-      totalDiscounts: number
-      /**
-       * Format: float
-       * @description Total refunds processed
-       */
-      totalRefunds: number
-      /**
-       * Format: float
-       * @description Net sales
-       */
-      netSales: number
-      /**
-       * Format: int32
-       * @description Number of transactions
-       */
+      totalSales: components['schemas']['Models.Money']
+      totalTax: components['schemas']['Models.Money']
+      totalDiscounts: components['schemas']['Models.Money']
+      totalRefunds: components['schemas']['Models.Money']
+      netSales: components['schemas']['Models.Money']
+      /** Format: int32 */
       transactionCount: number
-      /**
-       * Format: float
-       * @description Average transaction value
-       */
-      averageTransactionValue: number
-      /** @description Sales by payment method */
+      averageTransactionValue: components['schemas']['Models.Money']
       salesByMethod: components['schemas']['Models.SalesByMethod'][]
-      /** @description Sales by service category */
       salesByCategory: components['schemas']['Models.SalesByCategory'][]
-      /** @description Top performing staff */
       topStaff: components['schemas']['Models.StaffPerformance'][]
     }
     'Models.SalesReportQuery': {
@@ -3551,6 +4237,7 @@ export interface components {
       address: components['schemas']['Models.Address']
       contactInfo: components['schemas']['Models.ContactInfo']
       openingHours: components['schemas']['Models.OpeningHours'][]
+      businessHours?: components['schemas']['Models.BusinessHours'][]
       imageUrls?: string[]
       features?: string[]
       /** Format: date-time */
@@ -3560,6 +4247,10 @@ export interface components {
       updatedAt: string
       updatedBy?: string
     }
+    /**
+     * Format: uuid
+     * @description Branded UUID type for Salon ID
+     */
     'Models.SalonId': string
     'Models.SalonSummary': {
       id: components['schemas']['Models.SalonId']
@@ -3569,6 +4260,18 @@ export interface components {
       rating?: number
       /** Format: int32 */
       reviewCount?: number
+    }
+    /** @enum {string} */
+    'Models.ScalpCondition':
+      | 'normal'
+      | 'dry'
+      | 'oily'
+      | 'sensitive'
+      | 'dandruff'
+    'Models.ScalpInfo': {
+      condition: components['schemas']['Models.ScalpCondition']
+      sensitivities: string[]
+      notes?: string
     }
     /** @description Customer search parameters - all fields are optional */
     'Models.SearchCustomerRequest': {
@@ -3581,17 +4284,47 @@ export interface components {
       city?: string
       category?: components['schemas']['Models.ServiceCategory']
     }
+    'Models.Season': {
+      name: string
+      /** Format: int32 */
+      startMonth: number
+      /** Format: int32 */
+      endMonth: number
+      multiplier: components['schemas']['Models.decimal']
+    }
     'Models.Service': {
       id: components['schemas']['Models.ServiceId']
       salonId: components['schemas']['Models.SalonId']
+      /** @description Service basic information */
+      info: components['schemas']['Models.ServiceInfo']
+      /** @description Service category and sub-category */
+      category: components['schemas']['Models.ServiceCategory']
+      categoryId?: components['schemas']['Models.CategoryId']
+      /** @description Pricing information */
+      pricing: components['schemas']['Models.ServicePricing']
+      /** @description Duration settings */
+      duration: components['schemas']['Models.ServiceDuration']
+      /** @description Availability settings */
+      availability?: components['schemas']['Models.ServiceAvailability']
+      /** @description Booking requirements */
+      requirements?: components['schemas']['Models.BookingRequirement'][]
+      /** @description Service options and addons */
+      options?: components['schemas']['Models.ServiceOption'][]
+      /** @description Service restrictions */
+      restrictions?: components['schemas']['Models.ServiceRestrictions']
+      /** @description Performance metrics */
+      performance?: components['schemas']['Models.ServicePerformance']
+      /** @description Service associations */
+      associations?: components['schemas']['Models.ServiceAssociations']
+      /** @description Service metadata */
+      metadata?: components['schemas']['Models.ServiceMetadata']
+      /** @description Service status */
+      status: components['schemas']['Models.ServiceStatusDetail']
+      /** @description Legacy fields for compatibility */
       name: string
       description: string
       /** Format: int32 */
-      duration: number
-      /** Format: int32 */
       price: number
-      category: components['schemas']['Models.ServiceCategory']
-      categoryId?: components['schemas']['Models.CategoryId']
       imageUrl?: string
       /** Format: int32 */
       requiredStaffLevel?: number
@@ -3603,6 +4336,32 @@ export interface components {
       updatedAt: string
       updatedBy?: string
     }
+    'Models.ServiceAssociations': {
+      categoryId: components['schemas']['Models.CategoryId']
+      parentServiceId?: components['schemas']['Models.ServiceId']
+      childServiceIds?: components['schemas']['Models.ServiceId'][]
+      requiredServiceIds?: components['schemas']['Models.ServiceId'][]
+      recommendedServiceIds?: components['schemas']['Models.ServiceId'][]
+      qualifiedStaffIds?: components['schemas']['Models.StaffId'][]
+      preferredStaffIds?: components['schemas']['Models.StaffId'][]
+    }
+    'Models.ServiceAvailability': {
+      type: components['schemas']['Models.ServiceAvailabilityType']
+      schedule?: components['schemas']['Models.ServiceSchedule'][]
+      requiresApproval?: boolean
+      seasons?: components['schemas']['Models.Season'][]
+      /** Format: int32 */
+      maxPerDay?: number
+      /** Format: int32 */
+      maxPerWeek?: number
+    }
+    /** @enum {string} */
+    'Models.ServiceAvailabilityType':
+      | 'always'
+      | 'scheduled'
+      | 'by_appointment'
+      | 'seasonal'
+      | 'limited'
     /** @enum {string} */
     'Models.ServiceCategory':
       | 'cut'
@@ -3626,13 +4385,151 @@ export interface components {
       updatedAt: string
       updatedBy?: string
     }
+    'Models.ServiceDuration': {
+      /** Format: int32 */
+      standard: number
+      /** Format: int32 */
+      minimum?: number
+      /** Format: int32 */
+      maximum?: number
+      /** Format: int32 */
+      bufferBefore?: number
+      /** Format: int32 */
+      bufferAfter?: number
+      includesConsultation: boolean
+    }
+    /**
+     * Format: uuid
+     * @description Branded UUID type for Service ID
+     */
     'Models.ServiceId': string
+    'Models.ServiceInfo': {
+      name: string
+      nameKana?: string
+      description: string
+      shortDescription?: string
+      benefits?: string[]
+      targetCustomer?: string
+      imageUrls?: string[]
+      videoUrl?: string
+    }
+    'Models.ServiceMetadata': {
+      tags?: string[]
+      keywords?: string[]
+      seoTitle?: string
+      seoDescription?: string
+      internalNotes?: string
+      /** Format: int32 */
+      sortOrder?: number
+      featured?: boolean
+      hideFromMenu?: boolean
+    }
+    'Models.ServiceOption': {
+      type: components['schemas']['Models.ServiceOptionType']
+      name?: string
+      /** Format: int32 */
+      price?: number
+      /** Format: int32 */
+      duration?: number
+      description?: string
+      fromLevel?: string
+      toLevel?: string
+      /** Format: int32 */
+      additionalPrice?: number
+      /** Format: int32 */
+      extension?: number
+      productId?: string
+      required?: boolean
+      withService?: components['schemas']['Models.ServiceId']
+      /** Format: int32 */
+      discountAmount?: number
+    }
+    /** @enum {string} */
+    'Models.ServiceOptionType':
+      | 'addon'
+      | 'upgrade'
+      | 'duration'
+      | 'product'
+      | 'combo'
+    'Models.ServicePerformance': {
+      /** Format: int32 */
+      bookingCount: number
+      completionRate: components['schemas']['Models.decimal']
+      averageRating?: components['schemas']['Models.decimal']
+      /** Format: int32 */
+      reviewCount: number
+      /** Format: int64 */
+      revenue: number
+      popularityScore?: components['schemas']['Models.decimal']
+      repeatRate?: components['schemas']['Models.decimal']
+    }
+    'Models.ServicePreference': {
+      favoriteServices?: components['schemas']['Models.ServiceId'][]
+      avoidServices?: components['schemas']['Models.ServiceId'][]
+      /** Format: int32 */
+      preferredDuration?: number
+      preferredPriceRange?: components['schemas']['Models.PriceRangeFilter']
+    }
+    'Models.ServicePricing': {
+      strategy: components['schemas']['Models.PricingStrategy']
+      taxIncluded: boolean
+      currency: components['schemas']['Models.CurrencyCode']
+      /** Format: int32 */
+      minimumPrice?: number
+      /** Format: int32 */
+      maximumPrice?: number
+      depositRequired: boolean
+      /** Format: int32 */
+      depositAmount?: number
+      cancellationFee?: components['schemas']['Models.CancellationFee']
+    }
+    'Models.ServiceRestrictions': {
+      requiredStaffLevel?: components['schemas']['Models.StaffLevel']
+      requiredCertifications?: string[]
+      /** Format: int32 */
+      maxConcurrent?: number
+      /** Format: int32 */
+      minIntervalDays?: number
+      maxBookingsPerCustomer?: components['schemas']['Models.BookingLimit']
+      blackoutDates?: string[]
+    }
+    'Models.ServiceSchedule': {
+      dayOfWeek: components['schemas']['Models.DayOfWeek']
+      startTime: string
+      endTime: string
+      /** Format: int32 */
+      maxBookings?: number
+    }
+    'Models.ServiceStatusDetail': {
+      type: components['schemas']['Models.ServiceStatusType']
+      reason?: string
+      /** Format: date-time */
+      since?: string
+      availableMonths?: number[]
+      /** Format: date-time */
+      availableUntil?: string
+      /** Format: int32 */
+      remainingSlots?: number
+      /** Format: date-time */
+      discontinuedAt?: string
+      replacementId?: components['schemas']['Models.ServiceId']
+      /** Format: date-time */
+      launchDate?: string
+    }
+    /** @enum {string} */
+    'Models.ServiceStatusType':
+      | 'active'
+      | 'inactive'
+      | 'seasonal'
+      | 'limited'
+      | 'discontinued'
+      | 'coming_soon'
     /** @description Session information */
     'Models.Session': {
       /** @description Unique session identifier */
       id: string
       /** @description User ID associated with this session */
-      userId: string
+      userId: components['schemas']['Models.UserId']
       /** @description Refresh token for this session */
       refreshToken: string
       /** @description IP address from which the session was created */
@@ -3660,6 +4557,11 @@ export interface components {
        */
       lastActivityAt: string
     }
+    /**
+     * Format: uuid
+     * @description Branded UUID type for Session ID
+     */
+    'Models.SessionId': string
     /** @description Session list response */
     'Models.SessionListResponse': {
       /** @description Active sessions */
@@ -3705,6 +4607,12 @@ export interface components {
        */
       createdAt: string
     }
+    /** @enum {string} */
+    'Models.SpaSubCategory':
+      | 'head_spa'
+      | 'scalp_massage'
+      | 'aromatherapy'
+      | 'relaxation'
     'Models.Staff': {
       id: components['schemas']['Models.StaffId']
       salonId: components['schemas']['Models.SalonId']
@@ -3716,7 +4624,10 @@ export interface components {
       /** Format: int32 */
       yearsOfExperience?: number
       certifications?: string[]
+      qualifications?: components['schemas']['Models.StaffQualification'][]
+      schedules?: components['schemas']['Models.StaffSchedule'][]
       isActive: boolean
+      permissions?: components['schemas']['Models.StaffPermission'][]
       /** Format: date-time */
       createdAt: string
       createdBy?: string
@@ -3732,55 +4643,89 @@ export interface components {
       breakStart?: string
       breakEnd?: string
     }
+    /**
+     * Format: uuid
+     * @description Branded UUID type for Staff ID
+     */
     'Models.StaffId': string
+    /** @enum {string} */
+    'Models.StaffLevel': 'junior' | 'stylist' | 'senior' | 'expert' | 'director'
     /** @description Staff performance metrics */
     'Models.StaffPerformance': {
       staffId: components['schemas']['Models.StaffId']
       staffName: string
-      /** Format: float */
-      totalSales: number
+      totalSales: components['schemas']['Models.Money']
       /** Format: int32 */
       serviceCount: number
-      /** Format: float */
-      averageServiceValue: number
+      averageServiceValue: components['schemas']['Models.Money']
       /** Format: float */
       customerSatisfaction?: number
+    }
+    'Models.StaffPermission': {
+      resource: string
+      actions: string[]
+      scope?: string
+      /** Format: date-time */
+      expiresAt?: string
+    }
+    'Models.StaffQualification': {
+      name: string
+      /** Format: date */
+      certificationDate: string
+      /** Format: date */
+      expiryDate?: string
+      issuer?: string
+      credentialId?: string
+    }
+    'Models.StaffSchedule': {
+      dayOfWeek: components['schemas']['Models.DayOfWeek']
+      startTime: string
+      endTime: string
+      breakTime?: components['schemas']['Models.TimeSlot'][]
+      effectivePeriod?: components['schemas']['Models.DateRange']
+    }
+    'Models.StockAlert': {
+      itemId: components['schemas']['Models.InventoryId']
+      /** Format: float */
+      threshold: number
+      /** Format: float */
+      currentStock: number
+      /** Format: date-time */
+      triggeredAt: string
     }
     /** @description Stock movement record */
     'Models.StockMovement': {
       id: string
-      inventoryId: components['schemas']['Models.InventoryId']
+      itemId: components['schemas']['Models.InventoryId']
       salonId: components['schemas']['Models.SalonId']
-      /**
-       * @description Movement type
-       * @enum {string}
-       */
+      /** @enum {string} */
       type: 'in' | 'out' | 'adjustment' | 'transfer'
-      /**
-       * Format: float
-       * @description Quantity (positive for in, negative for out)
-       */
+      /** Format: float */
       quantity: number
+      reason: string
+      performedBy: components['schemas']['Models.StaffId']
+      /** Format: date-time */
+      occurredAt: string
+      referenceId?: string
+      notes?: string
+      metadata?: {
+        [key: string]: unknown
+      }
+      inventoryId: components['schemas']['Models.InventoryId']
       /**
        * Format: float
        * @description Stock level after movement
        */
       stockAfter: number
       /** @description Reason for movement */
-      reason: string
-      /** @description Related order */
       orderId?: components['schemas']['Models.OrderId']
       /** @description Related treatment */
       treatmentRecordId?: components['schemas']['Models.TreatmentRecordId']
-      /** @description Performed by */
-      performedBy: components['schemas']['Models.StaffId']
       /**
        * Format: date-time
        * @description Movement timestamp
        */
       movedAt: string
-      /** @description Notes */
-      notes?: string
       /** Format: date-time */
       createdAt: string
       createdBy?: string
@@ -3799,6 +4744,19 @@ export interface components {
       treatmentRecordId?: components['schemas']['Models.TreatmentRecordId']
       notes?: string
     }
+    'Models.StylePreference': {
+      preferredLength?: string
+      preferredColors?: string[]
+      avoidStyles?: string[]
+      inspirationImages?: string[]
+    }
+    /** @enum {string} */
+    'Models.StylingSubCategory':
+      | 'blowout'
+      | 'updo'
+      | 'braiding'
+      | 'extensions'
+      | 'event_styling'
     /** @enum {string} */
     'Models.SystemRole':
       | 'super_admin'
@@ -3812,8 +4770,6 @@ export interface components {
     'Models.TimeSlot': {
       startTime: string
       endTime: string
-      available: boolean
-      staffId?: components['schemas']['Models.StaffId']
     }
     /** @description Token refresh request */
     'Models.TokenRefreshRequest': {
@@ -3894,6 +4850,10 @@ export interface components {
       /** Format: int32 */
       pointsEarned?: number
     }
+    /**
+     * Format: uuid
+     * @description Branded UUID type for Treatment Record ID
+     */
     'Models.TreatmentRecordId': string
     'Models.TreatmentRecordUpdateInput': {
       notes?: string
@@ -3902,6 +4862,13 @@ export interface components {
       nextRecommendations?: string
       photos?: components['schemas']['Models.AttachmentId'][]
     }
+    /** @enum {string} */
+    'Models.TreatmentSubCategory':
+      | 'deep_conditioning'
+      | 'protein_treatment'
+      | 'scalp_treatment'
+      | 'keratin_treatment'
+      | 'olaplex'
     /** @enum {string} */
     'Models.TreatmentType':
       | 'cut'
@@ -3947,17 +4914,35 @@ export interface components {
     }
     /** @description Booking update request with optional fields for partial updates */
     'Models.UpdateBookingRequest': {
-      status?: components['schemas']['Models.BookingStatus']
-      paymentMethod?: string
-      paymentStatus?: string
+      status?: components['schemas']['Models.BookingStatusUpdate']
+      statusCode?: components['schemas']['Models.BookingStatusCode']
+      waitlistEntry?: components['schemas']['Models.WaitlistEntryUpdate']
+      deposit?: components['schemas']['Models.BookingDepositUpdate']
+      paymentMethod?: components['schemas']['Models.PaymentMethod']
+      paymentStatus?: components['schemas']['Models.PaymentStatusCode']
+      discountAmount?: components['schemas']['Models.MoneyUpdate']
+      finalAmount?: components['schemas']['Models.MoneyUpdate']
+      balanceDue?: components['schemas']['Models.MoneyUpdate']
       notes?: string
+      metadata?: {
+        [key: string]: unknown
+      }
     }
     /** @description Booking update request with reset capability */
     'Models.UpdateBookingRequestWithReset': {
       status?: components['schemas']['Models.BookingStatus']
-      paymentMethod?: string | null
-      paymentStatus?: string
+      statusCode?: components['schemas']['Models.BookingStatusCode']
+      waitlistEntry?: components['schemas']['Models.WaitlistEntry'] | null
+      deposit?: components['schemas']['Models.BookingDeposit'] | null
+      paymentMethod?: components['schemas']['Models.PaymentMethod'] | null
+      paymentStatus?: components['schemas']['Models.PaymentStatusCode'] | null
+      discountAmount?: components['schemas']['Models.Money'] | null
+      finalAmount?: components['schemas']['Models.Money'] | null
+      balanceDue?: components['schemas']['Models.Money'] | null
       notes?: string | null
+      metadata?: {
+        [key: string]: unknown
+      } | null
     }
     /** @description Customer update request with optional fields for partial updates */
     'Models.UpdateCustomerRequest': {
@@ -3998,28 +4983,34 @@ export interface components {
     /** @description Review update request with optional fields for partial updates */
     'Models.UpdateReviewRequest': {
       /** Format: int32 */
-      rating?: number
+      overallRating?: number
       comment?: string
+      title?: string
       /** Format: int32 */
       serviceRating?: number
       /** Format: int32 */
       staffRating?: number
       /** Format: int32 */
-      atmosphereRating?: number
-      images?: string[]
+      cleanlinessRating?: number
+      /** Format: int32 */
+      valueRating?: number
+      imageUrls?: string[]
     }
     /** @description Review update request with reset capability */
     'Models.UpdateReviewRequestWithReset': {
       /** Format: int32 */
-      rating?: number
+      overallRating?: number
       comment?: string | null
+      title?: string | null
       /** Format: int32 */
       serviceRating?: number | null
       /** Format: int32 */
       staffRating?: number | null
       /** Format: int32 */
-      atmosphereRating?: number | null
-      images?: string[] | null
+      cleanlinessRating?: number | null
+      /** Format: int32 */
+      valueRating?: number | null
+      imageUrls?: string[] | null
     }
     /** @description Salon update request with optional fields for partial updates */
     'Models.UpdateSalonRequest': {
@@ -4028,6 +5019,7 @@ export interface components {
       address?: components['schemas']['Models.Address']
       contactInfo?: components['schemas']['Models.ContactInfo']
       openingHours?: components['schemas']['Models.OpeningHours'][]
+      businessHours?: components['schemas']['Models.BusinessHours'][]
       imageUrls?: string[]
       features?: string[]
     }
@@ -4038,6 +5030,7 @@ export interface components {
       address?: components['schemas']['Models.Address']
       contactInfo?: components['schemas']['Models.ContactInfo']
       openingHours?: components['schemas']['Models.OpeningHours'][]
+      businessHours?: components['schemas']['Models.BusinessHours'][] | null
       imageUrls?: string[] | null
       features?: string[] | null
     }
@@ -4054,7 +5047,13 @@ export interface components {
       imageUrl?: string
       /** Format: int32 */
       requiredStaffLevel?: number
+      /** Format: int32 */
+      depositAmount?: number
       isActive?: boolean
+      /** Format: int32 */
+      maxAdvanceBookingDays?: number
+      /** Format: int32 */
+      minAdvanceBookingHours?: number
     }
     /** @description Service update request with reset capability */
     'Models.UpdateServiceRequestWithReset': {
@@ -4069,7 +5068,13 @@ export interface components {
       imageUrl?: string | null
       /** Format: int32 */
       requiredStaffLevel?: number | null
+      /** Format: int32 */
+      depositAmount?: number | null
       isActive?: boolean
+      /** Format: int32 */
+      maxAdvanceBookingDays?: number | null
+      /** Format: int32 */
+      minAdvanceBookingHours?: number | null
     }
     /** @description Staff update request with optional fields for partial updates */
     'Models.UpdateStaffRequest': {
@@ -4081,6 +5086,9 @@ export interface components {
       /** Format: int32 */
       yearsOfExperience?: number
       certifications?: string[]
+      qualifications?: components['schemas']['Models.StaffQualification'][]
+      schedules?: components['schemas']['Models.StaffSchedule'][]
+      permissions?: components['schemas']['Models.StaffPermission'][]
       isActive?: boolean
     }
     /** @description Staff update request with reset capability */
@@ -4093,6 +5101,11 @@ export interface components {
       /** Format: int32 */
       yearsOfExperience?: number | null
       certifications?: string[] | null
+      qualifications?:
+        | components['schemas']['Models.StaffQualification'][]
+        | null
+      schedules?: components['schemas']['Models.StaffSchedule'][] | null
+      permissions?: components['schemas']['Models.StaffPermission'][] | null
       isActive?: boolean
     }
     /** @description ファイルアップロードリクエスト（マルチパート） */
@@ -4178,9 +5191,17 @@ export interface components {
       /** @description Trusted IP addresses for this user */
       trustedIpAddresses?: string[]
       /** @description Reference to customer profile if user is a customer */
-      customerId?: string
+      customerId?: components['schemas']['Models.CustomerId']
       /** @description Reference to staff profile if user is staff */
-      staffId?: string
+      staffId?: components['schemas']['Models.StaffId']
+      /** @description Extended role information */
+      roleDetail?: components['schemas']['Models.UserRoleDetail']
+      /** @description Authentication state */
+      authState?: components['schemas']['Models.AuthenticationState']
+      /** @description Email verification state */
+      emailVerificationState?: components['schemas']['Models.EmailVerificationState']
+      /** @description Password reset state */
+      passwordResetState?: components['schemas']['Models.PasswordResetState']
       /**
        * Format: date-time
        * @description Timestamp when the user was created
@@ -4209,6 +5230,11 @@ export interface components {
       | 'locked'
       | 'suspended'
       | 'deleted'
+    /**
+     * Format: uuid
+     * @description Branded UUID type for User ID
+     */
+    'Models.UserId': string
     /** @description User role assignment */
     'Models.UserRole': {
       userId: string
@@ -4236,6 +5262,63 @@ export interface components {
       /** Format: date-time */
       expiresAt?: string
     }
+    'Models.UserRoleDetail': {
+      type: components['schemas']['Models.UserRoleType']
+      salonId?: components['schemas']['Models.SalonId']
+      level?: components['schemas']['Models.StaffLevel']
+    }
+    /** @enum {string} */
+    'Models.UserRoleType': 'customer' | 'staff' | 'manager' | 'admin' | 'owner'
+    'Models.VisitHistory': {
+      /** Format: int32 */
+      visitCount: number
+      /** Format: date-time */
+      firstVisitDate?: string
+      /** Format: date-time */
+      lastVisitDate?: string
+      /** Format: int32 */
+      averageSpendPerVisit?: number
+      /** Format: int32 */
+      totalSpent: number
+      /** Format: int32 */
+      cancelCount: number
+      /** Format: int32 */
+      noShowCount: number
+      /** Format: int32 */
+      completedServices: number
+    }
+    'Models.WaitlistEntry': {
+      /** Format: int32 */
+      position: number
+      /** Format: date-time */
+      estimatedTime?: string
+      /** Format: date-time */
+      joinedAt: string
+      /** Format: date-time */
+      expiresAt?: string
+      /** Format: date-time */
+      notifiedAt?: string
+      preferredStaffId?: components['schemas']['Models.StaffId']
+      preferredServiceId?: components['schemas']['Models.ServiceId']
+      notes?: string
+    }
+    'Models.WaitlistEntryUpdate': {
+      /** Format: int32 */
+      position?: number
+      /** Format: date-time */
+      estimatedTime?: string
+      /** Format: date-time */
+      joinedAt?: string
+      /** Format: date-time */
+      expiresAt?: string
+      /** Format: date-time */
+      notifiedAt?: string
+      preferredStaffId?: components['schemas']['Models.StaffId']
+      preferredServiceId?: components['schemas']['Models.ServiceId']
+      notes?: string
+    }
+    /** Format: double */
+    'Models.decimal': number
   }
   responses: never
   parameters: {
@@ -5656,7 +6739,7 @@ export interface operations {
       query?: {
         salonId?: components['schemas']['Models.SalonId']
         customerId?: components['schemas']['Models.CustomerId']
-        status?: components['schemas']['Models.BookingStatus']
+        status?: components['schemas']['Models.BookingStatusCode']
         from?: string
         to?: string
         limit?: components['parameters']['Models.PaginationParams.limit']
@@ -5942,9 +7025,8 @@ export interface operations {
     requestBody: {
       content: {
         'application/json': {
-          paymentMethod: string
-          /** Format: int32 */
-          amount: number
+          paymentMethod: components['schemas']['Models.PaymentMethod']
+          amount: components['schemas']['Models.Money']
           transactionId?: string
         }
       }
@@ -5958,7 +7040,7 @@ export interface operations {
         content: {
           'application/json': {
             booking: components['schemas']['Models.Booking']
-            paymentId: string
+            paymentId: components['schemas']['Models.PaymentId']
           }
         }
       }
@@ -6288,7 +7370,7 @@ export interface operations {
   CustomerOperations_getBookings: {
     parameters: {
       query?: {
-        status?: components['schemas']['Models.BookingStatus']
+        status?: components['schemas']['Models.BookingStatusCode']
         limit?: components['parameters']['Models.PaginationParams.limit']
         offset?: components['parameters']['Models.PaginationParams.offset']
       }
@@ -6689,6 +7771,7 @@ export interface operations {
       query?: {
         salonId?: components['schemas']['Models.SalonId']
         customerId?: components['schemas']['Models.CustomerId']
+        bookingId?: components['schemas']['Models.BookingId']
         staffId?: components['schemas']['Models.StaffId']
         minRating?: number
         isVerified?: boolean
@@ -8752,7 +9835,7 @@ export interface operations {
       query?: {
         salonId?: components['schemas']['Models.SalonId']
         customerId?: components['schemas']['Models.CustomerId']
-        status?: components['schemas']['Models.PaymentStatus']
+        status?: components['schemas']['Models.PaymentStatusCode']
         method?: components['schemas']['Models.PaymentMethod']
         startDate?: components['parameters']['Models.DateRangeFilter.startDate']
         endDate?: components['parameters']['Models.DateRangeFilter.endDate']
@@ -8843,6 +9926,7 @@ export interface operations {
           /** Format: int32 */
           pointsToUse?: number
           customerId?: components['schemas']['Models.CustomerId']
+          bookingId?: components['schemas']['Models.BookingId']
         }
       }
     }
@@ -8857,18 +9941,7 @@ export interface operations {
             | {
                 /** @enum {string} */
                 status: 'success'
-                data: {
-                  /** Format: float */
-                  subtotal: number
-                  /** Format: float */
-                  tax: number
-                  /** Format: float */
-                  discount: number
-                  /** Format: float */
-                  pointsDiscount: number
-                  /** Format: float */
-                  total: number
-                }
+                data: components['schemas']['Models.PaymentPreview']
               }
             | {
                 /** @enum {string} */
@@ -10190,14 +11263,11 @@ export interface operations {
                 data: {
                   /** Format: date */
                   date: string
-                  /** Format: float */
-                  sales: number
+                  sales: components['schemas']['Models.Money']
                   /** Format: int32 */
                   transactions: number
-                  /** Format: float */
-                  refunds: number
-                  /** Format: float */
-                  net: number
+                  refunds: components['schemas']['Models.Money']
+                  net: components['schemas']['Models.Money']
                 }
               }
             | {
@@ -10279,9 +11349,9 @@ export interface operations {
                 status: 'success'
                 data: {
                   labels: string[]
-                  sales: number[]
+                  sales: components['schemas']['Models.Money'][]
                   transactions: number[]
-                  average: number[]
+                  average: components['schemas']['Models.Money'][]
                 }
               }
             | {
@@ -10885,8 +11955,8 @@ export interface operations {
 }
 
 // Type extractors for API operations
-export type Components = components['schemas']
-export type Schemas = components
+export type Components = components extends { schemas: infer S } ? S : never
+export type Schemas = Components
 export type Paths = paths
 export type Operations = operations
 

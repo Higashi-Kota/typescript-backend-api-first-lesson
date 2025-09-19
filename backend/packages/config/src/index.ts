@@ -167,14 +167,14 @@ export const env = createEnv({
     REDIS_DB: z.coerce.number().int().min(0).default(0),
     REDIS_KEY_PREFIX: z.string().default('beauty_salon:'),
 
-    // Legacy SMTP (for backward compatibility)
+    // SMTP Configuration
     SMTP_HOST: z.string().optional(),
     SMTP_PORT: z.coerce.number().int().positive().optional(),
     SMTP_USER: z.string().optional(),
     SMTP_PASSWORD: z.string().optional(),
     SMTP_FROM: z.string().email().optional(),
 
-    // Legacy S3 (for backward compatibility)
+    // S3 Storage Configuration
     S3_ENDPOINT: z.string().url().optional(),
     S3_ACCESS_KEY_ID: z.string().optional(),
     S3_SECRET_ACCESS_KEY: z.string().optional(),

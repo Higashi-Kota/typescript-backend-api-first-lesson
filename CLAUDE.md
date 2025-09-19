@@ -141,9 +141,10 @@ TypeSpecからOpenAPIを経由してTypeScript型を自動生成するシステ�
 
 ### 型生成スクリプトの場所
 
-- **スクリプト**: `backend/packages/types/scripts/generate-types.ts`
-- **パッケージ**: `@beauty-salon-backend/types`
+- **スクリプト**: `backend/packages/generated/scripts/generate-types.ts`
+- **パッケージ**: `@beauty-salon-backend/generated`
 - **使用ツール**: `openapi-typescript`
+- **TypeSpec構成**: `specs/`ディレクトリに`models/_shared`と`operations/_shared`を配置
 
 ### 実行方法
 
@@ -166,6 +167,7 @@ make backend-build
 4. **ビルド**: 生成された型を使用してビルド
 
 **[→ 型生成システムの詳細](./docs/type-generation-system.md)**
+**[→ TypeSpecディレクトリ構成](./docs/typespec-directory-structure.md)**
 
 ## 🚀 クイックスタート
 
@@ -267,8 +269,12 @@ TypeSpecからOpenAPI仕様を生成し、型安全なAPI開発を実現する�
 - 型定義の自動生成とマッピング
 - APIファーストな開発フロー
 
-**[→ OpenAPI-TypeScript利用ガイド](./docs/openapi-typescript-usage.md)**  
-**[→ TypeSpec API型定義ルール](./docs/typespec-api-type-rules.md)**  
+#### ⚠️ TypeSpec Enum命名規則
+**標準規則**: すべてのEnum型名の末尾に`Type`サフィックスを付ける（例：`ServiceCategoryType`、`PaymentMethodType`）
+**既知の警告**: TypeSpecコンパイル時に重複型名の警告が出ますが、これは無視してください。CIビルドは正常に動作します。
+
+**[→ OpenAPI-TypeScript利用ガイド](./docs/openapi-typescript-usage.md)**
+**[→ TypeSpec API型定義ルール](./docs/typespec-api-type-rules.md)**
 **[→ 型生成システムガイド](./docs/type-generation-system.md)**
 
 ## 🔄 開発ワークフロー

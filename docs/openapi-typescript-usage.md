@@ -44,7 +44,7 @@ backend/packages/types/
 └── src/
     └── generated/
         ├── api-types.ts      # OpenAPI型定義（paths, operations, components）
-        ├── schemas.ts        # Zodスキーマ（後方互換性）
+        ├── schema.ts         # Zodスキーマ
         └── index.ts          # エクスポート
 ```
 

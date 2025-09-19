@@ -1,6 +1,0 @@
-export * from './email-wrapper.service'
-export * from './email.factory'
-export * from './email-template.service'
-export * from './providers/development.provider'
-export * from './providers/mailhog.provider'
-export * from './providers/mailgun.provider'

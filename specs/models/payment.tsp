@@ -4,7 +4,7 @@ import "./common.tsp";
 using TypeSpec.Http;
 
 namespace BeautySalon.Models {
-  enum PaymentMethod {
+  enum PaymentMethodType {
     cash,
     credit_card,
     debit_card,
@@ -14,7 +14,7 @@ namespace BeautySalon.Models {
     point,
   }
 
-  enum PaymentStatusCode {
+  enum PaymentStatusCodeType {
     pending,
     processing,
     completed,
@@ -87,7 +87,7 @@ namespace BeautySalon.Models {
     customerId: CustomerId;
     bookingId?: BookingId;
     treatmentRecordId?: TreatmentRecordId;
-    method: PaymentMethod;
+    method: PaymentMethodType;
     status: PaymentStatus;
     amounts: PaymentAmounts;
     pointsUsed?: int32;
@@ -107,7 +107,7 @@ namespace BeautySalon.Models {
     paymentId: PaymentId;
     status: PaymentStatus;
     occurredAt: utcDateTime;
-    actorType?: "system" | "staff" | "customer";
+    actor?: "system" | "staff" | "customer";
     actorId?: string;
     note?: string;
     metadata?: Record<unknown>;
@@ -121,7 +121,7 @@ namespace BeautySalon.Models {
     refundedAt: utcDateTime;
     status: "requested" | "processing" | "completed" | "failed";
     processedBy?: StaffId;
-    method?: PaymentMethod;
+    method?: PaymentMethodType;
     referenceCode?: string;
     notes?: string;
   }
@@ -139,7 +139,7 @@ namespace BeautySalon.Models {
     customerId?: CustomerId;
     bookingId?: BookingId;
     breakdown: PaymentBreakdown;
-    recommendedMethods: PaymentMethod[];
+    recommendedMethods: PaymentMethodType[];
     notes?: string;
   }
 
@@ -162,7 +162,7 @@ namespace BeautySalon.Models {
 
   @doc("Sales breakdown by payment method")
   model SalesByMethod {
-    method: PaymentMethod;
+    method: PaymentMethodType;
     amount: Money;
     count: int32;
     percentage: float32;
@@ -170,7 +170,7 @@ namespace BeautySalon.Models {
 
   @doc("Sales breakdown by category")
   model SalesByCategory {
-    category: ServiceCategory;
+    category: ServiceCategoryType;
     amount: Money;
     count: int32;
     percentage: float32;
@@ -190,29 +190,30 @@ namespace BeautySalon.Models {
   model PointTransaction {
     id: PointTransactionId;
     customerId: CustomerId;
-    
+
     @doc("Transaction type: earn or use")
     type: "earn" | "use" | "expire" | "adjust";
-    
+
     @doc("Points amount (positive for earn, negative for use)")
     points: int32;
-    
+
     @doc("Balance after transaction")
     balanceAfter: int32;
-    
+
     @doc("Related payment or booking")
     paymentId?: PaymentId;
+
     bookingId?: BookingId;
-    
+
     @doc("Transaction description")
     description: string;
-    
+
     @doc("Expiration date for earned points")
     expiresAt?: utcDateTime;
-    
+
     @doc("Transaction timestamp")
     transactedAt: utcDateTime;
-    
+
     ...AuditInfo;
   }
 
@@ -222,7 +223,7 @@ namespace BeautySalon.Models {
     customerId: CustomerId;
     bookingId?: BookingId;
     treatmentRecordId?: TreatmentRecordId;
-    method: PaymentMethod;
+    method: PaymentMethodType;
     amounts: PaymentAmounts;
     pointsUsed?: int32;
     depositApplied?: Money;
@@ -232,7 +233,7 @@ namespace BeautySalon.Models {
   }
 
   model PaymentUpdateInput {
-    method?: PaymentMethod;
+    method?: PaymentMethodType;
     status?: PaymentStatus;
     outstandingAmount?: Money;
     depositApplied?: Money | null;

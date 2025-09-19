@@ -17,7 +17,7 @@ namespace BeautySalon.Operations {
     @get
     op list(
       @path salonId: SalonId,
-      @query category?: ServiceCategory,
+      @query category?: ServiceCategoryType,
       ...PaginationParams,
     ): {
       @statusCode statusCode: 200;
@@ -94,12 +94,12 @@ namespace BeautySalon.Operations {
 
   @route("/api/v1/service-categories")
   @tag("Services")
-  namespace ServiceCategoryOperations {
+  namespace CategoryOperations {
     @summary("List service categories")
     @get
     op listCategories(...PaginationParams): {
       @statusCode statusCode: 200;
-      @body response: PaginationResponse<ServiceCategoryModel>;
+      @body response: PaginationResponse<CategoryModel>;
     };
 
     @summary("Create service category")
@@ -113,7 +113,7 @@ namespace BeautySalon.Operations {
       },
     ): {
       @statusCode statusCode: 201;
-      @body category: ServiceCategoryModel;
+      @body category: CategoryModel;
     } | {
       @statusCode statusCode: 400;
       @body error: Error;
@@ -132,7 +132,7 @@ namespace BeautySalon.Operations {
       },
     ): {
       @statusCode statusCode: 200;
-      @body category: ServiceCategoryModel;
+      @body category: CategoryModel;
     } | {
       @statusCode statusCode: 404;
       @body error: Error;

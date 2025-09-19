@@ -278,6 +278,41 @@ async function getCustomer(id: string): Promise<CustomerResponse> {
 - リクエスト/レスポンスの形状が予測可能
 - ログ出力時にすべてのフィールドが確認可能
 
+## TypeSpec特有の制約事項
+
+### Enum命名規則
+
+プロジェクトでは、すべてのEnum型名の末尾に`Type`サフィックスを付けることを標準規則としています。
+
+#### 標準命名パターン
+```typespec
+// すべてのEnumに Type サフィックスを付ける
+enum ServiceCategoryType { ... }
+enum CustomerStatusType { ... }
+enum PaymentMethodType { ... }
+enum ReservationStatusType { ... }
+enum LoyaltyTierType { ... }
+```
+
+#### 既知の問題と対処
+TypeSpec v1.2.1およびv1.4.0では、OpenAPI生成時にEnum名の末尾に`Type`を付けると重複エラーの警告が発生します：
+
+```
+error @typespec/openapi/duplicate-type-name: Duplicate type name: 'Models.ServiceCategoryType'.
+```
+
+これはTypeSpecのOpenAPIジェネレータの既知の問題ですが、実際の型生成とCIビルドには影響しません。
+
+#### プロジェクトの方針
+1. **一貫性を優先**: すべてのEnumに`Type`サフィックスを付けることで、コードベース全体の一貫性を保つ
+2. **警告は許容**: TypeSpecのコンパイル警告は無視し、CIが正常に通ることを確認
+3. **型安全性を維持**: 生成される型は正しく動作し、型安全性は保証される
+
+#### 理由
+- 区分値を表す型であることを明確にする
+- 他の型（Model、Interface等）と区別しやすい
+- TypeScript/JavaScriptのコードレビュー時に型の種類が一目で分かる
+
 ## アンチパターン
 
 ### ❌ 避けるべきパターン

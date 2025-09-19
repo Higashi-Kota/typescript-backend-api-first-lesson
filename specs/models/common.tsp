@@ -3,6 +3,7 @@ import "@typespec/http";
 using TypeSpec.Http;
 
 namespace BeautySalon.Models {
+  using TypeSpec.OpenAPI;
   // ID Types (Brand型)
   // These are branded types that will be transformed during TypeScript generation
   // The format annotation helps identify them as branded types
@@ -59,7 +60,7 @@ namespace BeautySalon.Models {
   scalar PaymentId extends string;
 
   @format("uuid")
-  @doc("Branded UUID type for Treatment Record ID")
+  @doc("Branded UUID type for TreatmentType Record ID")
   scalar TreatmentRecordId extends string;
 
   @format("uuid")
@@ -83,15 +84,15 @@ namespace BeautySalon.Models {
   scalar PointTransactionId extends string;
 
   @format("uuid")
-  @doc("Branded UUID type for Membership Level ID")
-  scalar MembershipLevelId extends string;
+  @doc("Branded UUID type for Loyalty Tier ID")
+  scalar LoyaltyTierId extends string;
 
   @format("uuid")
   @doc("Branded UUID type for Refund ID")
   scalar RefundId extends string;
   scalar decimal extends float64;
 
-  enum DayOfWeek {
+  enum DayOfWeekType {
     monday,
     tuesday,
     wednesday,
@@ -101,7 +102,8 @@ namespace BeautySalon.Models {
     sunday,
   }
 
-  enum ServiceCategory {
+  @doc("Service category types")
+  enum ServiceCategoryType {
     cut,
     color,
     perm,
@@ -110,7 +112,7 @@ namespace BeautySalon.Models {
     other,
   }
 
-  enum ReservationStatus {
+  enum ReservationStatusType {
     pending,
     confirmed,
     cancelled,
@@ -118,7 +120,7 @@ namespace BeautySalon.Models {
     no_show,
   }
 
-  enum CurrencyCode {
+  enum CurrencyCodeType {
     JPY,
     USD,
     EUR,
@@ -131,7 +133,7 @@ namespace BeautySalon.Models {
     TWD,
   }
 
-  enum InventoryStatus {
+  enum InventoryStatusType {
     in_stock,
     low_stock,
     out_of_stock,
@@ -139,7 +141,7 @@ namespace BeautySalon.Models {
     discontinued,
   }
 
-  enum OrderStatus {
+  enum OrderStatusType {
     draft,
     pending,
     approved,
@@ -149,19 +151,11 @@ namespace BeautySalon.Models {
     cancelled,
   }
 
-  enum CustomerGender {
+  enum CustomerGenderType {
     male,
     female,
     other,
     prefer_not_to_say,
-  }
-
-  enum MembershipLevel {
-    bronze,
-    silver,
-    gold,
-    platinum,
-    vip,
   }
 
   enum TreatmentType {
@@ -184,7 +178,7 @@ namespace BeautySalon.Models {
     line,
   }
 
-  enum ReminderTiming {
+  enum ReminderTimingType {
     one_day_before,
     three_hours_before,
     one_hour_before,
@@ -195,6 +189,12 @@ namespace BeautySalon.Models {
     code: string;
     message: string;
     details?: Record<unknown>;
+  }
+
+  @error
+  model UnauthorizedError {
+    code: "UNAUTHORIZED";
+    message: string;
   }
 
   model PaginationParams {
@@ -210,7 +210,7 @@ namespace BeautySalon.Models {
   }
 
   model OpeningHours {
-    dayOfWeek: DayOfWeek;
+    dayOfWeek: DayOfWeekType;
     openTime: string;
     closeTime: string;
     isHoliday: boolean;
@@ -269,7 +269,7 @@ namespace BeautySalon.Models {
 
   model Money {
     value: int64;
-    currency: CurrencyCode;
+    currency: CurrencyCodeType;
     taxRate?: decimal;
   }
 
@@ -288,11 +288,11 @@ namespace BeautySalon.Models {
   // 時間スロット
   model TimeSlot {
     startTime: string; // HH:mm format
-    endTime: string;   // HH:mm format
+    endTime: string; // HH:mm format
   }
 
   model BusinessHours {
-    dayOfWeek: DayOfWeek;
+    dayOfWeek: DayOfWeekType;
     operatingSlots: TimeSlot[];
     breakSlots?: TimeSlot[];
     isClosed: boolean = false;
@@ -303,7 +303,7 @@ namespace BeautySalon.Models {
   // 通知設定
   model NotificationSettings {
     types: NotificationType[];
-    reminderTimings: ReminderTiming[];
+    reminderTimings: ReminderTimingType[];
     enabled: boolean;
   }
 
@@ -314,5 +314,44 @@ namespace BeautySalon.Models {
     totalUsedPoints: int32;
     expiringPoints?: int32;
     expirationDate?: utcDateTime;
+  }
+
+  /**
+   * Service summary for various contexts
+   */
+  model ServiceSummary {
+    id: ServiceId;
+    name: string;
+    bookingCount?: int32;
+  }
+
+  /**
+   * Staff summary for various contexts
+   */
+  model StaffSummary {
+    id: StaffId;
+    name: string;
+    rating?: float32;
+    bookingCount?: int32;
+  }
+
+  /**
+   * Loyalty tier enum
+   */
+  enum LoyaltyTierType {
+    bronze: "bronze",
+    silver: "silver",
+    gold: "gold",
+    platinum: "platinum",
+  }
+
+  /**
+   * Contact method enum
+   */
+  enum ContactMethodType {
+    email: "email",
+    sms: "sms",
+    phone: "phone",
+    push: "push",
   }
 }

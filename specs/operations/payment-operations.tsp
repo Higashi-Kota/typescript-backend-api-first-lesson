@@ -16,8 +16,8 @@ namespace BeautySalon.Operations {
     listPayments(
       @query salonId?: SalonId,
       @query customerId?: CustomerId,
-      @query status?: PaymentStatusCode,
-      @query method?: PaymentMethod,
+      @query status?: PaymentStatusCodeType,
+      @query method?: PaymentMethodType,
       ...DateRangeFilter,
       ...PaginationParams,
     ): Result<PaginationResponse<Payment>>;
@@ -32,7 +32,7 @@ namespace BeautySalon.Operations {
     createPayment(@body payment: PaymentCreateInput): Result<Payment>;
 
     @doc("Update payment status")
-    @patch
+    @patch(#{ implicitOptionality: true })
     @route("/{id}")
     updatePayment(
       @path id: PaymentId,
@@ -47,21 +47,29 @@ namespace BeautySalon.Operations {
     @doc("Cancel payment")
     @post
     @route("/{id}/cancel")
-    cancelPayment(@path id: PaymentId, @body reason: { reason: string }): Result<Payment>;
+    cancelPayment(
+      @path id: PaymentId,
+      @body reason: {
+        reason: string;
+      },
+    ): Result<Payment>;
 
     @doc("Process refund")
     @post
     @route("/{id}/refund")
-    processRefund(@path id: PaymentId, @body refund: RefundInput): Result<Payment>;
+    processRefund(
+      @path id: PaymentId,
+      @body refund: RefundInput,
+    ): Result<Payment>;
 
     @doc("Get payment receipt")
     @get
     @route("/{id}/receipt")
     getReceipt(@path id: PaymentId): Result<{
-      receiptNumber: string,
-      payment: Payment,
-      items: Record<unknown>[],
-      issuedAt: utcDateTime,
+      receiptNumber: string;
+      payment: Payment;
+      items: Record<unknown>[];
+      issuedAt: utcDateTime;
     }>;
 
     @doc("Get customer payment history")
@@ -78,11 +86,11 @@ namespace BeautySalon.Operations {
     @route("/calculate")
     calculatePayment(
       @body request: {
-        services: ServiceId[],
-        discountCode?: string,
-        pointsToUse?: int32,
-        customerId?: CustomerId,
-        bookingId?: BookingId,
+        services: ServiceId[];
+        discountCode?: string;
+        pointsToUse?: int32;
+        customerId?: CustomerId;
+        bookingId?: BookingId;
       },
     ): Result<PaymentPreview>;
   }
@@ -97,15 +105,12 @@ namespace BeautySalon.Operations {
     @doc("Get daily sales summary")
     @get
     @route("/daily")
-    getDailySales(
-      @query salonId: SalonId,
-      @query date: plainDate,
-    ): Result<{
-      date: plainDate,
-      sales: Money,
-      transactions: int32,
-      refunds: Money,
-      net: Money,
+    getDailySales(@query salonId: SalonId, @query date: plainDate): Result<{
+      date: plainDate;
+      sales: Money;
+      transactions: int32;
+      refunds: Money;
+      net: Money;
     }>;
 
     @doc("Get sales by staff")
@@ -132,21 +137,25 @@ namespace BeautySalon.Operations {
       @query period: "daily" | "weekly" | "monthly",
       ...DateRangeFilter,
     ): Result<{
-      labels: string[],
-      sales: Money[],
-      transactions: int32[],
-      average: Money[],
+      labels: string[];
+      sales: Money[];
+      transactions: int32[];
+      average: Money[];
     }>;
 
     @doc("Export sales report")
     @post
     @route("/export")
-    exportSalesReport(@body request: {
-      salonId: SalonId,
-      startDate: utcDateTime,
-      endDate: utcDateTime,
-      format: "csv" | "excel" | "pdf",
-    }): Result<{ downloadUrl: string }>;
+    exportSalesReport(
+      @body request: {
+        salonId: SalonId;
+        startDate: utcDateTime;
+        endDate: utcDateTime;
+        format: "csv" | "excel" | "pdf";
+      },
+    ): Result<{
+      downloadUrl: string;
+    }>;
   }
 
   @route("/points")
@@ -169,17 +178,23 @@ namespace BeautySalon.Operations {
     @doc("Add points to customer")
     @post
     @route("/earn")
-    earnPoints(@body transaction: PointTransactionCreateInput): Result<PointTransaction>;
+    earnPoints(
+      @body transaction: PointTransactionCreateInput,
+    ): Result<PointTransaction>;
 
     @doc("Use customer points")
     @post
     @route("/use")
-    usePoints(@body transaction: PointTransactionCreateInput): Result<PointTransaction>;
+    usePoints(
+      @body transaction: PointTransactionCreateInput,
+    ): Result<PointTransaction>;
 
     @doc("Adjust customer points")
     @post
     @route("/adjust")
-    adjustPoints(@body transaction: PointTransactionCreateInput): Result<PointTransaction>;
+    adjustPoints(
+      @body transaction: PointTransactionCreateInput,
+    ): Result<PointTransaction>;
 
     @doc("Get expiring points")
     @get
@@ -188,21 +203,23 @@ namespace BeautySalon.Operations {
       @path customerId: CustomerId,
       @query days?: int32 = 30,
     ): Result<{
-      customerId: CustomerId,
-      expiringPoints: int32,
-      expirationDate: utcDateTime,
-      transactions: PointTransaction[],
+      customerId: CustomerId;
+      expiringPoints: int32;
+      expirationDate: utcDateTime;
+      transactions: PointTransaction[];
     }>;
 
     @doc("Process expired points")
     @post
     @route("/expire")
-    processExpiredPoints(@body request: {
-      customerId?: CustomerId,
-      processBefore?: utcDateTime,
-    }): Result<{
-      processedCount: int32,
-      totalPoints: int32,
+    processExpiredPoints(
+      @body request: {
+        customerId?: CustomerId;
+        processBefore?: utcDateTime;
+      },
+    ): Result<{
+      processedCount: int32;
+      totalPoints: int32;
     }>;
   }
 }

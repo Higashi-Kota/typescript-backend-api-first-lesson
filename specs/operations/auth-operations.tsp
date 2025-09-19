@@ -14,6 +14,7 @@ namespace BeautySalon.Operations {
     @doc("Register a new user account")
     @post
     @route("/register")
+    @useAuth(NoAuth)
     op register(@body request: RegisterRequest): {
       @statusCode statusCode: 201;
       @body response: User;
@@ -28,6 +29,7 @@ namespace BeautySalon.Operations {
     @doc("Login with email and password")
     @post
     @route("/login")
+    @useAuth(NoAuth)
     op login(@body request: LoginRequest):
       | {
           @statusCode statusCode: 200;
@@ -53,6 +55,7 @@ namespace BeautySalon.Operations {
     @doc("Refresh access token")
     @post
     @route("/refresh")
+    @useAuth(NoAuth)
     op refreshToken(@body request: TokenRefreshRequest): {
       @statusCode statusCode: 200;
       @body response: LoginResponse;
@@ -86,6 +89,7 @@ namespace BeautySalon.Operations {
     @doc("Request password reset")
     @post
     @route("/forgot-password")
+    @useAuth(NoAuth)
     op forgotPassword(@body request: PasswordResetRequest): {
       @statusCode statusCode: 200;
       @body response: AuthSuccessResponse;
@@ -100,6 +104,7 @@ namespace BeautySalon.Operations {
     @doc("Verify password reset token")
     @get
     @route("/reset-password/verify")
+    @useAuth(NoAuth)
     op verifyResetToken(@query token: string): {
       @statusCode statusCode: 200;
       @body response: AuthSuccessResponse;
@@ -111,6 +116,7 @@ namespace BeautySalon.Operations {
     @doc("Reset password with token")
     @post
     @route("/reset-password")
+    @useAuth(NoAuth)
     op resetPassword(@body request: PasswordResetConfirmRequest):
       | {
           @statusCode statusCode: 200;
@@ -153,6 +159,7 @@ namespace BeautySalon.Operations {
     @doc("Confirm email verification")
     @post
     @route("/verify-email/confirm")
+    @useAuth(NoAuth)
     op confirmEmailVerification(@body request: EmailVerificationRequest): {
       @statusCode statusCode: 200;
       @body response: AuthSuccessResponse;

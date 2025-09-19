@@ -13,7 +13,7 @@ namespace BeautySalon.Models {
     serviceId: ServiceId;
     startTime: utcDateTime;
     endTime: utcDateTime;
-    status: ReservationStatus;
+    status: ReservationStatusType;
     notes?: string;
     totalAmount: int32;
     depositAmount?: int32;
@@ -33,7 +33,7 @@ namespace BeautySalon.Models {
 
   @doc("Reservation update request with optional fields for partial updates")
   model UpdateReservationRequest {
-    status?: ReservationStatus;
+    status?: ReservationStatusType;
     notes?: string;
     startTime?: utcDateTime;
     staffId?: StaffId;
@@ -41,7 +41,7 @@ namespace BeautySalon.Models {
 
   @doc("Reservation update request with reset capability")
   model UpdateReservationRequestWithReset {
-    status?: ReservationStatus;
+    status?: ReservationStatusType;
     notes?: string | null;
     startTime?: utcDateTime;
     staffId?: StaffId;
@@ -57,7 +57,7 @@ namespace BeautySalon.Models {
     customerName: string;
     staffName: string;
     serviceName: string;
-    serviceCategory: ServiceCategory;
+    serviceCategory: ServiceCategoryType;
     serviceDuration: int32;
   }
 }

@@ -4,50 +4,50 @@ import "./common.tsp";
 using TypeSpec.Http;
 
 namespace BeautySalon.Models {
-  @doc("Treatment record for customer visit")
+  @doc("TreatmentType record for customer visit")
   model TreatmentRecord {
     id: TreatmentRecordId;
     bookingId: BookingId;
     customerId: CustomerId;
     staffId: StaffId;
     salonId: SalonId;
-    
+
     @doc("Type of treatment performed")
-    treatmentType: TreatmentType;
-    
+    treatment: TreatmentType;
+
     @doc("Services performed during this treatment")
     serviceIds: ServiceId[];
-    
-    @doc("Treatment start time")
+
+    @doc("TreatmentType start time")
     startTime: utcDateTime;
-    
-    @doc("Treatment end time")
+
+    @doc("TreatmentType end time")
     endTime: utcDateTime;
-    
+
     @doc("Detailed notes about the treatment")
     notes?: string;
-    
+
     @doc("Materials and products used")
     usedMaterials?: MaterialUsage[];
-    
+
     @doc("Before/after photos")
     photos?: AttachmentId[];
-    
+
     @doc("Customer feedback and notes")
     customerFeedback?: string;
-    
+
     @doc("Recommendations for next visit")
     nextRecommendations?: string;
-    
+
     @doc("Total amount charged")
     totalAmount: float32;
-    
+
     @doc("Discount applied")
     discountAmount?: float32;
-    
+
     @doc("Points earned")
     pointsEarned?: int32;
-    
+
     ...AuditInfo;
   }
 
@@ -64,40 +64,40 @@ namespace BeautySalon.Models {
   model MedicalChart {
     id: MedicalChartId;
     customerId: CustomerId;
-    
+
     @doc("Allergies and sensitivities")
     allergies?: string[];
-    
+
     @doc("Scalp condition")
     scalpCondition?: string;
-    
+
     @doc("Hair condition")
     hairCondition?: string;
-    
+
     @doc("Previous chemical treatments")
     previousTreatments?: PreviousTreatment[];
-    
+
     @doc("Medical conditions to be aware of")
     medicalConditions?: string;
-    
+
     @doc("Preferred products")
     preferredProducts?: string[];
-    
+
     @doc("Products to avoid")
     avoidProducts?: string[];
-    
+
     @doc("General notes")
     notes?: string;
-    
+
     @doc("Last updated date")
     lastUpdated: utcDateTime;
-    
+
     ...AuditInfo;
   }
 
   @doc("Previous treatment history")
   model PreviousTreatment {
-    treatmentType: TreatmentType;
+    treatment: TreatmentType;
     date: utcDateTime;
     salonName?: string;
     notes?: string;
@@ -108,7 +108,7 @@ namespace BeautySalon.Models {
     bookingId: BookingId;
     customerId: CustomerId;
     staffId: StaffId;
-    treatmentType: TreatmentType;
+    treatment: TreatmentType;
     serviceIds: ServiceId[];
     startTime: utcDateTime;
     endTime: utcDateTime;

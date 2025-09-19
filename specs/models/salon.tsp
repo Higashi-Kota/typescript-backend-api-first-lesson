@@ -1,6 +1,5 @@
 import "@typespec/http";
 import "./common.tsp";
-import "./api-patterns.tsp";
 
 using TypeSpec.Http;
 using BeautySalon.Models;
@@ -72,6 +71,6 @@ namespace BeautySalon.Models {
   model SearchSalonRequest {
     @query keyword?: string;
     @query city?: string;
-    @query category?: ServiceCategory;
+    @query category?: ServiceCategoryType;
   }
 }

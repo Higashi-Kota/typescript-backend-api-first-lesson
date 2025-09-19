@@ -19,7 +19,7 @@ namespace BeautySalon.Operations {
     op list(
       @query salonId?: SalonId,
       @query customerId?: CustomerId,
-      @query status?: BookingStatusCode,
+      @query status?: BookingStatusCodeType,
       @query from?: utcDateTime,
       @query to?: utcDateTime,
       ...PaginationParams,
@@ -117,7 +117,7 @@ namespace BeautySalon.Operations {
     op processPayment(
       @path id: BookingId,
       @body request: {
-        paymentMethod: PaymentMethod;
+        paymentMethod: PaymentMethodType;
         amount: Money;
         transactionId?: string;
       },

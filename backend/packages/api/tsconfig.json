@@ -15,13 +15,6 @@
     { "path": "../generated" },
     { "path": "../infrastructure" }
   ],
-  "include": [
-    "src/**/*",
-    "../infrastructure/src/services/sentry.service.ts",
-    "../infrastructure/src/services/metrics.service.ts",
-    "../infrastructure/src/services/jwt.service.ts",
-    "../infrastructure/src/services/error-context.service.ts",
-    "../infrastructure/src/services/email-adapter.service.ts"
-  ],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
 }

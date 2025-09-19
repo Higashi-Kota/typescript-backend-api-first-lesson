@@ -6,7 +6,7 @@ using BeautySalon.Models;
 
 namespace BeautySalon.Models {
   model StaffSchedule {
-    dayOfWeek: DayOfWeek;
+    dayOfWeek: DayOfWeekType;
     startTime: string;
     endTime: string;
     breakTime?: TimeSlot[];
@@ -91,7 +91,7 @@ namespace BeautySalon.Models {
 
   model StaffAvailability {
     staffId: StaffId;
-    dayOfWeek: DayOfWeek;
+    dayOfWeek: DayOfWeekType;
     startTime: string;
     endTime: string;
     breakStart?: string;

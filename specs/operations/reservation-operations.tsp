@@ -19,7 +19,7 @@ namespace BeautySalon.Operations {
       @query salonId?: SalonId,
       @query customerId?: CustomerId,
       @query staffId?: StaffId,
-      @query status?: ReservationStatus,
+      @query status?: ReservationStatusType,
       @query from?: utcDateTime,
       @query to?: utcDateTime,
       ...PaginationParams,

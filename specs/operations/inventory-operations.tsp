@@ -13,7 +13,9 @@ namespace BeautySalon.Operations {
   interface InventoryOperations {
     @doc("List inventory items with filters")
     @get
-    listInventoryItems(...InventorySearchParams): Result<PaginationResponse<InventoryItem>>;
+    listInventoryItems(
+      ...InventorySearchParams,
+    ): Result<PaginationResponse<InventoryItem>>;
 
     @doc("Get inventory item by ID")
     @get
@@ -22,10 +24,12 @@ namespace BeautySalon.Operations {
 
     @doc("Create new inventory item")
     @post
-    createInventoryItem(@body item: InventoryItemCreateInput): Result<InventoryItem>;
+    createInventoryItem(
+      @body item: InventoryItemCreateInput,
+    ): Result<InventoryItem>;
 
     @doc("Update inventory item")
-    @patch
+    @patch(#{ implicitOptionality: true })
     @route("/{id}")
     updateInventoryItem(
       @path id: InventoryId,
@@ -56,7 +60,9 @@ namespace BeautySalon.Operations {
     @doc("Record stock movement")
     @post
     @route("/movement")
-    recordStockMovement(@body movement: StockMovementInput): Result<StockMovement>;
+    recordStockMovement(
+      @body movement: StockMovementInput,
+    ): Result<StockMovement>;
 
     @doc("Get stock movement history")
     @get
@@ -70,21 +76,23 @@ namespace BeautySalon.Operations {
     @doc("Perform stock count")
     @post
     @route("/stock-count")
-    performStockCount(@body request: {
-      salonId: SalonId,
-      items: Array<{
-        inventoryId: InventoryId,
-        countedQuantity: float32,
-      }>,
-      notes?: string,
-    }): Result<{
-      adjustments: StockMovement[],
+    performStockCount(
+      @body request: {
+        salonId: SalonId;
+        items: Array<{
+          inventoryId: InventoryId;
+          countedQuantity: float32;
+        }>;
+        notes?: string;
+      },
+    ): Result<{
+      adjustments: StockMovement[];
       discrepancies: Array<{
-        inventoryId: InventoryId,
-        expected: float32,
-        counted: float32,
-        difference: float32,
-      }>,
+        inventoryId: InventoryId;
+        expected: float32;
+        counted: float32;
+        difference: float32;
+      }>;
     }>;
 
     @doc("Get inventory value report")
@@ -94,13 +102,13 @@ namespace BeautySalon.Operations {
       @query salonId: SalonId,
       @query category?: string,
     ): Result<{
-      totalValue: float32,
-      totalItems: int32,
+      totalValue: float32;
+      totalItems: int32;
       categories: Array<{
-        category: string,
-        value: float32,
-        itemCount: int32,
-      }>,
+        category: string;
+        value: float32;
+        itemCount: int32;
+      }>;
     }>;
   }
 
@@ -111,7 +119,7 @@ namespace BeautySalon.Operations {
     @get
     listPurchaseOrders(
       @query salonId: SalonId,
-      @query status?: OrderStatus,
+      @query status?: OrderStatusType,
       @query supplier?: string,
       ...DateRangeFilter,
       ...PaginationParams,
@@ -124,10 +132,12 @@ namespace BeautySalon.Operations {
 
     @doc("Create purchase order")
     @post
-    createPurchaseOrder(@body order: PurchaseOrderCreateInput): Result<PurchaseOrder>;
+    createPurchaseOrder(
+      @body order: PurchaseOrderCreateInput,
+    ): Result<PurchaseOrder>;
 
     @doc("Update purchase order")
-    @patch
+    @patch(#{ implicitOptionality: true })
     @route("/{id}")
     updatePurchaseOrder(
       @path id: OrderId,
@@ -139,7 +149,10 @@ namespace BeautySalon.Operations {
     @route("/{id}/approve")
     approvePurchaseOrder(
       @path id: OrderId,
-      @body approval: { approvedBy: StaffId, notes?: string },
+      @body approval: {
+        approvedBy: StaffId;
+        notes?: string;
+      },
     ): Result<PurchaseOrder>;
 
     @doc("Cancel purchase order")
@@ -147,7 +160,9 @@ namespace BeautySalon.Operations {
     @route("/{id}/cancel")
     cancelPurchaseOrder(
       @path id: OrderId,
-      @body cancellation: { reason: string },
+      @body cancellation: {
+        reason: string;
+      },
     ): Result<PurchaseOrder>;
 
     @doc("Receive purchase order")
@@ -157,11 +172,11 @@ namespace BeautySalon.Operations {
       @path id: OrderId,
       @body receipt: {
         receivedItems: Array<{
-          inventoryId: InventoryId,
-          receivedQuantity: float32,
-          notes?: string,
-        }>,
-        deliveryNotes?: string,
+          inventoryId: InventoryId;
+          receivedQuantity: float32;
+          notes?: string;
+        }>;
+        deliveryNotes?: string;
       },
     ): Result<PurchaseOrder>;
 
@@ -169,13 +184,13 @@ namespace BeautySalon.Operations {
     @get
     @route("/reorder-suggestions")
     getReorderSuggestions(@query salonId: SalonId): Result<Array<{
-      inventoryId: InventoryId,
-      productName: string,
-      currentStock: float32,
-      minimumStock: float32,
-      suggestedQuantity: float32,
-      supplier?: string,
-      lastOrderDate?: utcDateTime,
+      inventoryId: InventoryId;
+      productName: string;
+      currentStock: float32;
+      minimumStock: float32;
+      suggestedQuantity: float32;
+      supplier?: string;
+      lastOrderDate?: utcDateTime;
     }>>;
   }
 
@@ -195,18 +210,21 @@ namespace BeautySalon.Operations {
     @route("/{inventoryId}/acknowledge")
     acknowledgeAlert(
       @path inventoryId: InventoryId,
-      @body acknowledgment: { acknowledgedBy: StaffId, notes?: string },
+      @body acknowledgment: {
+        acknowledgedBy: StaffId;
+        notes?: string;
+      },
     ): Result<InventoryAlert>;
 
     @doc("Get alert summary")
     @get
     @route("/summary")
     getAlertSummary(@query salonId: SalonId): Result<{
-      totalAlerts: int32,
-      criticalAlerts: int32,
-      warningAlerts: int32,
-      infoAlerts: int32,
-      unacknowledged: int32,
+      totalAlerts: int32;
+      criticalAlerts: int32;
+      warningAlerts: int32;
+      infoAlerts: int32;
+      unacknowledged: int32;
     }>;
   }
 }

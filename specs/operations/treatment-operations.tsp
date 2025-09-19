@@ -17,7 +17,7 @@ namespace BeautySalon.Operations {
       @query salonId?: SalonId,
       @query customerId?: CustomerId,
       @query staffId?: StaffId,
-      @query treatmentType?: TreatmentType,
+      @query treatment?: TreatmentType,
       ...DateRangeFilter,
       ...PaginationParams,
     ): Result<PaginationResponse<TreatmentRecord>>;
@@ -29,10 +29,12 @@ namespace BeautySalon.Operations {
 
     @doc("Create new treatment record")
     @post
-    createTreatment(@body treatment: TreatmentRecordCreateInput): Result<TreatmentRecord>;
+    createTreatment(
+      @body treatment: TreatmentRecordCreateInput,
+    ): Result<TreatmentRecord>;
 
     @doc("Update treatment record")
-    @patch
+    @patch(#{ implicitOptionality: true })
     @route("/{id}")
     updateTreatment(
       @path id: TreatmentRecordId,
@@ -77,10 +79,10 @@ namespace BeautySalon.Operations {
       @query salonId: SalonId,
       ...DateRangeFilter,
     ): Result<{
-      totalTreatments: int32,
-      treatmentsByType: Record<int32>,
-      averageDuration: float32,
-      topServices: ServiceId[],
+      totalTreatments: int32;
+      treatmentsBy: Record<int32>;
+      averageDuration: float32;
+      topServices: ServiceId[];
     }>;
   }
 
@@ -94,10 +96,12 @@ namespace BeautySalon.Operations {
 
     @doc("Create medical chart for customer")
     @post
-    createMedicalChart(@body chart: MedicalChartCreateInput): Result<MedicalChart>;
+    createMedicalChart(
+      @body chart: MedicalChartCreateInput,
+    ): Result<MedicalChart>;
 
     @doc("Update medical chart")
-    @patch
+    @patch(#{ implicitOptionality: true })
     @route("/{id}")
     updateMedicalChart(
       @path id: MedicalChartId,
@@ -108,10 +112,10 @@ namespace BeautySalon.Operations {
     @get
     @route("/customer/{customerId}/allergies")
     getCustomerAllergies(@path customerId: CustomerId): Result<{
-      customerId: CustomerId,
-      allergies: string[],
-      avoidProducts: string[],
-      lastUpdated: utcDateTime,
+      customerId: CustomerId;
+      allergies: string[];
+      avoidProducts: string[];
+      lastUpdated: utcDateTime;
     }>;
 
     @doc("Search medical charts")

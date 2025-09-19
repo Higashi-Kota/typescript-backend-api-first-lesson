@@ -31,8 +31,8 @@ graph TD
 
 ### バックエンド型生成スクリプト
 
-- **場所**: `backend/packages/types/scripts/generate-types.ts`
-- **パッケージ**: `@beauty-salon-backend/types`
+- **場所**: `backend/packages/generated/scripts/generate-types.ts`
+- **パッケージ**: `@beauty-salon-backend/generated`
 - **役割**: OpenAPI仕様からTypeScript型定義を生成
 - **使用ツール**: `openapi-typescript`
 
@@ -97,7 +97,7 @@ pnpm generate:backend
 実行される処理:
 1. `specs/package.json`の`generate:backend`スクリプトが実行
 2. TypeSpecコンパイル（`tsp compile .`）
-3. `@beauty-salon-backend/types`パッケージの`generate`スクリプトが実行
+3. `@beauty-salon-backend/generated`パッケージの`generate`スクリプトが実行
 4. `scripts/generate-types.ts`がOpenAPI仕様を読み込み、型を生成
 
 ### 4. 生成されるファイル
@@ -105,12 +105,12 @@ pnpm generate:backend
 #### バックエンド側
 
 ```
-backend/packages/types/src/generated/
+backend/packages/generated/src/
 ├── api-types.ts      # メインの型定義ファイル
 │                     # - paths: APIエンドポイントの型
 │                     # - components: モデル、リクエスト、レスポンスの型
 │                     # - operations: 操作の型
-├── schemas.ts        # Zodスキーマ（バリデーション用）
+├── schema.ts         # Zodスキーマ（バリデーション用）
 └── index.ts          # エクスポート用インデックス
 ```
 
@@ -343,7 +343,7 @@ export interface components {
 }
 ```
 
-### schemas.ts
+### schema.ts
 
 ```typescript
 // Zodスキーマの例
@@ -390,7 +390,7 @@ export type CustomerStatus = z.infer<typeof CustomerStatusSchema>;
 ### 型生成に必要なパッケージ
 
 ```json
-// backend/packages/types/package.json
+// backend/packages/generated/package.json
 {
   "devDependencies": {
     "openapi-typescript": "^7.8.0",  // OpenAPIからTypeScript型を生成
@@ -468,8 +468,8 @@ pnpm generate  # すべての型を一括生成
 生成された型を使いやすくするため、`api.ts`でリマップ:
 
 ```typescript
-// backend/packages/types/src/api.ts
-import type { components } from './generated/api-types';
+// backend/packages/generated/src/api.ts
+import type { components } from './api-types';
 
 // 使いやすい名前でエクスポート
 export type Customer = components['schemas']['Models.Customer'];

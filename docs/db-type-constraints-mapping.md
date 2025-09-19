@@ -116,7 +116,7 @@ backend/packages/
 │   └── src/
 │       └── generated/
 │           ├── api-types.ts    # OpenAPI型定義
-│           └── schemas.ts      # Zodスキーマ
+│           └── schema.ts       # Zodスキーマ
 ├── mappers/          # 型変換レイヤー（4つのマッピング層）
 │   └── src/
 │       ├── db-to-domain/      # DB → ドメインモデル
@@ -208,23 +208,6 @@ import { customers } from '@beauty-salon-backend/database'
 // Drizzle ORMから自動推論された型
 export type DbCustomer = InferSelectModel<typeof customers>
 
-// 以下は後方互換性のための型定義（移行期間中のみ）
-// TODO: 全てのコードがdatabaseパッケージを使用したら削除
-export type DbCustomerLegacy = {
-  id: string
-  name: string
-  email: string
-  phone_number: string
-  alternative_phone: string | null
-  preferences: string | null
-  notes: string | null
-  tags: unknown | null
-  birth_date: string | null
-  loyalty_points: number | null
-  membership_level: string | null
-  created_at: string
-  updated_at: string
-}
 
 // DBモデルからドメインモデルへの変換
 export const mapDbCustomerToDomain = (

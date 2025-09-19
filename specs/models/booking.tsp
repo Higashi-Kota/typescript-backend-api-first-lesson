@@ -6,7 +6,7 @@ using TypeSpec.Http;
 using BeautySalon.Models;
 
 namespace BeautySalon.Models {
-  enum BookingStatusCode {
+  enum BookingStatusCodeType {
     draft,
     pending,
     confirmed,
@@ -99,15 +99,15 @@ namespace BeautySalon.Models {
     customerId: CustomerId;
     reservationIds: ReservationId[];
     status: BookingStatus;
-    statusCode: BookingStatusCode;
+    statusCode: BookingStatusCodeType;
     waitlistEntry?: WaitlistEntry;
     deposit?: BookingDeposit;
     totalAmount: Money;
     discountAmount?: Money;
     finalAmount: Money;
     balanceDue?: Money;
-    paymentMethod?: PaymentMethod;
-    paymentStatus?: PaymentStatusCode;
+    paymentMethod?: PaymentMethodType;
+    paymentStatus?: PaymentStatusCodeType;
     notes?: string;
     ...AuditInfo;
   }
@@ -119,7 +119,7 @@ namespace BeautySalon.Models {
     waitlistEntry?: WaitlistEntry;
     deposit?: BookingDeposit;
     discountAmount?: Money;
-    paymentMethod?: PaymentMethod;
+    paymentMethod?: PaymentMethodType;
     notes?: string;
     metadata?: Record<unknown>;
   }
@@ -127,11 +127,11 @@ namespace BeautySalon.Models {
   @doc("Booking update request with optional fields for partial updates")
   model UpdateBookingRequest {
     status?: BookingStatus;
-    statusCode?: BookingStatusCode;
+    statusCode?: BookingStatusCodeType;
     waitlistEntry?: WaitlistEntry;
     deposit?: BookingDeposit;
-    paymentMethod?: PaymentMethod;
-    paymentStatus?: PaymentStatusCode;
+    paymentMethod?: PaymentMethodType;
+    paymentStatus?: PaymentStatusCodeType;
     discountAmount?: Money;
     finalAmount?: Money;
     balanceDue?: Money;
@@ -142,11 +142,11 @@ namespace BeautySalon.Models {
   @doc("Booking update request with reset capability")
   model UpdateBookingRequestWithReset {
     status?: BookingStatus;
-    statusCode?: BookingStatusCode;
+    statusCode?: BookingStatusCodeType;
     waitlistEntry?: WaitlistEntry | null;
     deposit?: BookingDeposit | null;
-    paymentMethod?: PaymentMethod | null;
-    paymentStatus?: PaymentStatusCode | null;
+    paymentMethod?: PaymentMethodType | null;
+    paymentStatus?: PaymentStatusCodeType | null;
     discountAmount?: Money | null;
     finalAmount?: Money | null;
     balanceDue?: Money | null;

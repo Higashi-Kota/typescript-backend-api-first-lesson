@@ -15,7 +15,8 @@ export default defineConfig({
         singleFork: true,
       },
     },
-    globalSetup: './tests/setup/global-setup.ts',
+    // Commented out global setup for placeholder tests - uncomment when Docker is available
+    // globalSetup: './tests/setup/global-setup.ts',
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
