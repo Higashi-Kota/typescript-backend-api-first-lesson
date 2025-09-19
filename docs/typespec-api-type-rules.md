@@ -247,13 +247,13 @@ async function getCustomer(id: string): Promise<CustomerResponse> {
   return {
     id: customer.id,
     name: customer.name,
-    email: customer.email || null,        // undefinedをnullに変換
-    phoneNumber: customer.phoneNumber || null,
+    email: customer.email ?? null,        // undefinedをnullに変換
+    phoneNumber: customer.phoneNumber ?? null,
     contactInfo: customer.contactInfo,
-    preferences: customer.preferences || null,
-    notes: customer.notes || null,
+    preferences: customer.preferences ?? null,
+    notes: customer.notes ?? null,
     tags: customer.tags || [],
-    birthDate: customer.birthDate || null,
+    birthDate: customer.birthDate ?? null,
     createdAt: customer.createdAt,
     updatedAt: customer.updatedAt
   };

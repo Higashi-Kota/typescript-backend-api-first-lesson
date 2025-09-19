@@ -7,14 +7,18 @@
     "baseUrl": ".",
     "types": [],
     "paths": {
-      "@beauty-salon/core": ["./packages/core/src"],
-      "@beauty-salon/core/*": ["./packages/core/src/*"],
-      "@beauty-salon/infrastructure": ["./packages/infrastructure/src"],
-      "@beauty-salon/infrastructure/*": ["./packages/infrastructure/src/*"],
-      "@beauty-salon/api": ["./packages/api/src"],
-      "@beauty-salon/api/*": ["./packages/api/src/*"],
-      "@beauty-salon/config": ["./packages/config/src"],
-      "@beauty-salon/config/*": ["./packages/config/src/*"]
+      "@beauty-salon-backend/domain": ["./packages/domain/src"],
+      "@beauty-salon-backend/domain/*": ["./packages/domain/src/*"],
+      "@beauty-salon-backend/infrastructure": ["./packages/infrastructure/src"],
+      "@beauty-salon-backend/infrastructure/*": ["./packages/infrastructure/src/*"],
+      "@beauty-salon-backend/api": ["./packages/api/src"],
+      "@beauty-salon-backend/api/*": ["./packages/api/src/*"],
+      "@beauty-salon-backend/config": ["./packages/config/src"],
+      "@beauty-salon-backend/config/*": ["./packages/config/src/*"],
+      "@beauty-salon-backend/database": ["./packages/database/src"],
+      "@beauty-salon-backend/database/*": ["./packages/database/src/*"],
+      "@beauty-salon-backend/generated": ["./packages/generated/src"],
+      "@beauty-salon-backend/generated/*": ["./packages/generated/src/*"]
     }
   },
   "references": [

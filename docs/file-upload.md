@@ -132,20 +132,33 @@ await fetch(uploadUrl, {
 })
 ```
 
-### 3. Brand型を使用した型安全性
+### 3. 型安全性の確保
 
 ```typescript
-// Attachment IDのBrand型
-export const AttachmentId = createBrand('AttachmentId', z.string().uuid())
-export type AttachmentId = z.infer<typeof AttachmentId.schema>
+// Attachment IDの型定義（UUID形式）
+export type AttachmentId = string
 
-// Share Link TokenのBrand型
-export const ShareLinkToken = createBrand('ShareLinkToken', z.string().length(32))
-export type ShareLinkToken = z.infer<typeof ShareLinkToken.schema>
+// Share Link Tokenの型定義（32文字のトークン）
+export type ShareLinkToken = string
+
+// バリデーション関数
+export const validateAttachmentId = (id: string): Result<AttachmentId, ValidationError> => {
+  if (!z.string().uuid().safeParse(id).success) {
+    return err({ field: 'id', message: 'Invalid attachment ID format' })
+  }
+  return ok(id)
+}
+
+export const validateShareToken = (token: string): Result<ShareLinkToken, ValidationError> => {
+  if (token.length !== 32) {
+    return err({ field: 'token', message: 'Invalid share token length' })
+  }
+  return ok(token)
+}
 
 // 使用例
-const attachmentId = AttachmentId.create(randomUUID())
-const shareToken = ShareLinkToken.create(generateSecureToken())
+const attachmentIdResult = validateAttachmentId(randomUUID())
+const shareTokenResult = validateShareToken(generateSecureToken())
 ```
 
 ## データベーススキーマ

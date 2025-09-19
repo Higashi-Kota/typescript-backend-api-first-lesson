@@ -4,7 +4,7 @@ import type {
   ResponseAuthedUserSessionData,
 } from '../../factory/retrieveAuthedUserSession'
 
-import type { ShallowNullish } from '@beauty-salon-frontend/utils/typeUtil'
+import type { ShallowNullish } from '@beauty-salon-frontend/utils'
 import { factory } from '../../factory'
 import { useAuthedQuery } from '../../hocs'
 import { SESSION_KEY } from '../../types/session'

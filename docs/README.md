@@ -2,12 +2,12 @@
 
 ## 📚 Architecture & Design
 - [**Architecture Overview**](./architecture-overview.md) - Complete system architecture, layers, data flow, and directory structure
-- [Backend Architecture Guidelines](./backend-architecture-guidelines.md) - 日本語版アーキテクチャガイドライン (legacy)
+- [Backend Architecture Guidelines](./backend-architecture-guidelines.md) - 日本語版アーキテクチャガイドライン
 
 ## 🎯 Core Concepts
 - [Type Safety Principles](./type-safety-principles.md) - TypeScript type safety guidelines
 - [Sum Types & Pattern Matching](./sum-types-pattern-matching.md) - Discriminated unions and ts-pattern
-- [Branded Types & ID Management](./branded-types-id-management.md) - Type-safe ID handling
+- [DB-Driven Domain Model](./db-driven-domain-model.md) - Database-first type architecture
 - [Uniform Implementation Guide](./uniform-implementation-guide.md) - Consistent implementation patterns
 
 ## 🔧 Development
@@ -23,7 +23,7 @@
 - [Frontend API Integration](./frontend-api-integration.md) - Frontend integration guide
 
 ## 🗄️ Database
-- [Database Type Constraints Mapping](./db-type-constraints-mapping.md) - DB schema and type mapping
+- [API-DB Type Constraints Mapping](./api-db-type-constraints-mapping.md) - API to DB type mapping
 
 ## ✅ Testing & Quality
 - [API Testing Guide](./api-testing-guide.md) - API testing strategies

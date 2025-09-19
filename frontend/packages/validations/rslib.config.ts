@@ -11,18 +11,6 @@ export default defineConfig({
       source: {
         entry: {
           index: 'src/index.ts',
-          'validateBirthday/index': 'src/validateBirthday/index.ts',
-          'validateEmail/index': 'src/validateEmail/index.ts',
-          'validateEndDate/index': 'src/validateEndDate/index.ts',
-          'validateFullWidthKatakana/index':
-            'src/validateFullWidthKatakana/index.ts',
-          'validateHalfWidthKatakana/index':
-            'src/validateHalfWidthKatakana/index.ts',
-          'validateMaxLength/index': 'src/validateMaxLength/index.ts',
-          'validateMinLength/index': 'src/validateMinLength/index.ts',
-          'validatePassword/index': 'src/validatePassword/index.ts',
-          'validateStartDate/index': 'src/validateStartDate/index.ts',
-          'validateURL/index': 'src/validateURL/index.ts',
         },
         tsconfigPath: './tsconfig.json',
       },
@@ -34,7 +22,7 @@ export default defineConfig({
         minify: isProduction,
         sourceMap: isDevelopment || isTest || isStaging,
         target: 'web',
-        externals: [/^@beauty-salon\//],
+        externals: [/^@beauty-salon-frontend\//],
       },
     },
   ],

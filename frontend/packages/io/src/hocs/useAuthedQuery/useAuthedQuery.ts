@@ -4,7 +4,7 @@ import {
   type Omit,
   isEmpty,
   isNullOrUndefined,
-} from '@beauty-salon-frontend/utils/typeUtil'
+} from '@beauty-salon-frontend/utils'
 import type {
   QueryFunction,
   QueryKey,

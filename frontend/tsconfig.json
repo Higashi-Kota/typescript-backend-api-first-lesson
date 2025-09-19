@@ -7,11 +7,26 @@
     "baseUrl": ".",
     "types": [],
     "paths": {
-      "@beauty-salon/ui": ["./packages/ui/src"],
-      "@beauty-salon/ui/*": ["./packages/ui/src/*"],
-      "@beauty-salon/types/*": ["./packages/types/src/*"],
-      "@beauty-salon/api-client": ["./packages/api-client/src"],
-      "@beauty-salon/api-client/*": ["./packages/api-client/src/*"]
+      "@beauty-salon-frontend/ui": ["./packages/ui/src"],
+      "@beauty-salon-frontend/ui/*": ["./packages/ui/src/*"],
+      "@beauty-salon-frontend/types": ["./packages/types/src"],
+      "@beauty-salon-frontend/types/*": ["./packages/types/src/*"],
+      "@beauty-salon-frontend/api-client": ["./packages/api-client/src"],
+      "@beauty-salon-frontend/api-client/*": ["./packages/api-client/src/*"],
+      "@beauty-salon-frontend/utils": ["./packages/utils/src"],
+      "@beauty-salon-frontend/utils/*": ["./packages/utils/src/*"],
+      "@beauty-salon-frontend/assets": ["./packages/assets/src"],
+      "@beauty-salon-frontend/assets/*": ["./packages/assets/src/*"],
+      "@beauty-salon-frontend/config": ["./packages/config/src"],
+      "@beauty-salon-frontend/config/*": ["./packages/config/src/*"],
+      "@beauty-salon-frontend/io": ["./packages/io/src"],
+      "@beauty-salon-frontend/io/*": ["./packages/io/src/*"],
+      "@beauty-salon-frontend/message": ["./packages/message/src"],
+      "@beauty-salon-frontend/message/*": ["./packages/message/src/*"],
+      "@beauty-salon-frontend/stores": ["./packages/stores/src"],
+      "@beauty-salon-frontend/stores/*": ["./packages/stores/src/*"],
+      "@beauty-salon-frontend/validations": ["./packages/validations/src"],
+      "@beauty-salon-frontend/validations/*": ["./packages/validations/src/*"]
     }
   },
   "references": [

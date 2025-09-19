@@ -33,10 +33,10 @@
 ```
 
 ### 3. Type Safety Patterns
+- **DB-Driven Models**: Database schemas as source of truth
 - **Sum Types**: Discriminated unions for state management
 - **Pattern Matching**: ts-pattern for exhaustive handling
 - **Result Types**: No exceptions, all errors as data
-- **Brand Types**: Type-safe IDs prevent mixing
 
 ### 4. Dependency Rules
 - Dependencies point inward (outer layers depend on inner)
@@ -86,7 +86,7 @@ domain/
 │   │   └── [entity].repository.ts
 │   └── shared/             # Shared utilities
 │       ├── result.ts       # Result type for error handling
-│       ├── brand.ts        # Brand type utility
+│       ├── validators.ts   # Business validation logic
 │       └── index.ts
 ```
 
@@ -330,23 +330,31 @@ pnpm generate:backend
 ### 4. Use in Domain Model
 ```typescript
 // backend/packages/domain/src/models/customer.ts
+import type { Customer as DbCustomer } from '@beauty-salon-backend/database'
 import type { components } from '@beauty-salon-backend/generated'
-import type { Brand } from '../shared/brand'
 
-// Brand the ID for type safety
-export type CustomerId = Brand<components['schemas']['Models.CustomerId'], 'CustomerId'>
-
-// Extend generated type
-export interface Customer extends Omit<components['schemas']['Models.Customer'], 'id'> {
-  id: CustomerId
+// DB-driven domain model with computed properties
+export type Customer = DbCustomer & {
+  readonly fullName: string
+  readonly isActive: boolean
+  readonly canReserve: boolean
 }
 
-// Sum types for state management
-export type CustomerState =
-  | { type: 'active'; customer: Customer }
-  | { type: 'inactive'; customer: Customer; reason: string }
-  | { type: 'suspended'; customer: Customer; until: string }
-  | { type: 'deleted'; customerId: CustomerId; deletedAt: string }
+// Factory to create domain model from DB
+export const createCustomerModel = (dbCustomer: DbCustomer): Customer => {
+  return {
+    ...dbCustomer,
+    get fullName() {
+      return `${dbCustomer.firstName} ${dbCustomer.lastName}`.trim()
+    },
+    get isActive() {
+      return dbCustomer.state === 'active'
+    },
+    get canReserve() {
+      return dbCustomer.state === 'active' && dbCustomer.loyaltyPoints >= 0
+    }
+  }
+}
 ```
 
 ## Implementation Patterns

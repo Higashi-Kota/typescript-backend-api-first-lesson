@@ -1,4 +1,4 @@
-import { isNullOrUndefined } from '@beauty-salon-frontend/utils/typeUtil'
+import { isNullOrUndefined } from '@beauty-salon-frontend/utils'
 import { type Result, err, ok } from 'neverthrow'
 import { z } from 'zod'
 

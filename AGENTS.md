@@ -1,34 +1,193 @@
-# Repository Guidelines
+# AI Agent Guidelines
 
-## プロジェクト構成とモジュール
-- 形態: pnpm ワークスペースのモノレポ。
-- 主要ディレクトリ: `backend/apps`（`server`, `migration`）、`backend/packages`（`domain`, `infrastructure`, `mappers`, `config`, `database`, `test-utils`）、`frontend/packages`、`specs`（TypeSpec 定義）、`docs`（設計/運用資料）。
-- 代表エントリ: `backend/apps/server/src/index.ts`（API 起動）、`specs/main.tsp`（API 仕様）。
+This document describes the specialized AI agents available for the Beauty Salon Reservation System development.
 
-## ビルド・開発・テスト
-- 開発起動: `pnpm dev:backend`（バックエンドのみ並列起動）。
-- 依存サービス起動: `docker-compose up -d`（Postgres / Mailhog / Minio ほか）。
-- ビルド: `pnpm build:backend`（バックエンド全体）/ `pnpm build`（全パッケージ）。
-- テスト: `pnpm test:backend`（単体）/ `pnpm test:integration`（統合）/ `pnpm test`（全体）。
-- 型/整形: `pnpm typecheck` / `pnpm format`（Biome）。
-- 生成物: `pnpm generate`（TypeSpec→OpenAPI/コード）/ `pnpm db:migrate`（マイグレーション）。
-- 本番起動例: `pnpm start:backend:prod`。
+## 🤖 Available Agents
 
-## コーディングスタイル・命名
-- ツール: Biome（`biome.json`）。インデント2スペース、シングルクォート、セミコロンは必要時のみ、ES5 互換のトレーリングカンマ、インポート自動整列。
-- ルール例: 未使用 import/変数禁止、`any` 明示禁止、`const` 推奨。
-- 命名: ファイル名は`kebab-case`、型/クラスは`PascalCase`、変数/関数は`camelCase`、定数は`UPPER_SNAKE_CASE`。
+### 1. Backend TypeScript Architect
 
-## テスト指針
-- フレームワーク: Vitest（`vitest.config.ts`）。カバレッジは V8 レポーター（text/json/html）、`dist` 等は除外。
-- 命名: ユニット `*.test.ts`、統合 `*.integration.test.ts`、例: `backend/packages/infrastructure/tests/repositories/*.test.ts`。
-- 実行例: `pnpm test:backend` / `pnpm test:integration`。閾値は現状固定なし。重要ロジックの網羅と失敗時の再現手順明記を推奨。
+**Specialization**: Backend development with TypeScript and Node.js
 
-## コミット・PR ガイドライン
-- コミット: 履歴は短い命令形が中心（例: "Fix deps"）。範囲は任意。可能なら Conventional Commits を推奨（例: `feat:`, `fix:`）。
-- PR 要件: 目的/背景/変更点、関連 Issue、テスト計画（コマンド/結果）、スクリーンショット（UI 変更時）。`pnpm format && pnpm typecheck && pnpm test` での事前確認を必須化。
+**Use Cases**:
+- API endpoint implementation
+- Business logic development
+- Database integration
+- Server architecture decisions
+- Performance optimization
 
-## セキュリティ・設定
-- 機密情報はコミットしない。`.env.example` をコピーして `.env` を作成（テストは `.env.test`）。
-- Node/Pnpm バージョンは Volta で固定（`package.json#volta`）。
-- ローカル DB/ストレージを使う統合テストは `docker-compose up -d` 後に実施。
+**Key Expertise**:
+- TypeScript best practices
+- Express.js API development
+- Clean Architecture implementation
+- Sum types and pattern matching
+- Result-based error handling
+
+See [.claude/agents/backend-typescript-architect.md](.claude/agents/backend-typescript-architect.md) for detailed guidelines.
+
+### 2. Database Schema Architect
+
+**Specialization**: Database design and optimization
+
+**Use Cases**:
+- Schema design and normalization
+- Migration planning
+- Query optimization
+- Index strategy
+- Data integrity constraints
+
+**Key Expertise**:
+- PostgreSQL optimization
+- Drizzle ORM patterns
+- Database normalization
+- Performance tuning
+- Migration strategies
+
+See [.claude/agents/database-schema-architect.md](.claude/agents/database-schema-architect.md) for detailed guidelines.
+
+### 3. TypeSpec API Architect
+
+**Specialization**: API design using TypeSpec
+
+**Use Cases**:
+- API contract definition
+- OpenAPI specification
+- Request/response schemas
+- Validation rules
+- API versioning
+
+**Key Expertise**:
+- TypeSpec syntax and decorators
+- OpenAPI 3.x specification
+- REST API design patterns
+- Schema validation
+- API documentation
+
+See [.claude/agents/typespec-api-architect.md](.claude/agents/typespec-api-architect.md) for detailed guidelines.
+
+### 4. Salon Business Expert
+
+**Specialization**: Beauty salon domain expertise
+
+**Use Cases**:
+- Business requirement analysis
+- Feature specification
+- Workflow design
+- Customer experience optimization
+- Industry best practices
+
+**Key Expertise**:
+- Salon operations
+- Booking workflows
+- Customer management
+- Service scheduling
+- Staff management
+
+See [.claude/agents/salon-business-expert.md](.claude/agents/salon-business-expert.md) for detailed guidelines.
+
+## 📋 Agent Selection Guidelines
+
+### When to Use Each Agent
+
+| Task Type | Recommended Agent |
+|-----------|------------------|
+| API endpoint implementation | Backend TypeScript Architect |
+| Database schema design | Database Schema Architect |
+| API contract definition | TypeSpec API Architect |
+| Business logic implementation | Backend TypeScript Architect |
+| Feature requirements | Salon Business Expert |
+| Query optimization | Database Schema Architect |
+| Type generation setup | TypeSpec API Architect |
+| Customer workflow design | Salon Business Expert |
+
+### Collaboration Patterns
+
+**Feature Implementation Flow**:
+1. **Salon Business Expert**: Define requirements and workflows
+2. **TypeSpec API Architect**: Design API contracts
+3. **Database Schema Architect**: Design data models
+4. **Backend TypeScript Architect**: Implement business logic
+
+**Performance Optimization Flow**:
+1. **Database Schema Architect**: Analyze query performance
+2. **Backend TypeScript Architect**: Optimize application code
+3. **TypeSpec API Architect**: Adjust API contracts if needed
+
+## 🎯 Common Tasks
+
+### Creating a New Feature
+```
+1. Consult Salon Business Expert for requirements
+2. Use TypeSpec API Architect to define API
+3. Use Database Schema Architect for schema changes
+4. Use Backend TypeScript Architect for implementation
+```
+
+### Optimizing Performance
+```
+1. Use Database Schema Architect for query analysis
+2. Use Backend TypeScript Architect for code optimization
+3. Review with TypeSpec API Architect for API adjustments
+```
+
+### Debugging Issues
+```
+1. Use Backend TypeScript Architect for code issues
+2. Use Database Schema Architect for data issues
+3. Use Salon Business Expert for business logic validation
+```
+
+## 🔧 Agent Configuration
+
+All agents follow these core principles:
+- **Type Safety**: Strict TypeScript with no `any` types
+- **Sum Types**: Use discriminated unions for state
+- **Pattern Matching**: Exhaustive handling with ts-pattern
+- **Result Types**: No exceptions, use Result for errors
+- **Clean Architecture**: Separation of concerns
+- **YAGNI**: No code "for the future"
+
+## 📚 Agent Documentation
+
+Detailed documentation for each agent is available in:
+- [Backend TypeScript Architect](.claude/agents/backend-typescript-architect.md)
+- [Database Schema Architect](.claude/agents/database-schema-architect.md)
+- [TypeSpec API Architect](.claude/agents/typespec-api-architect.md)
+- [Salon Business Expert](.claude/agents/salon-business-expert.md)
+
+## ⚡ Quick Reference
+
+### Backend Development
+```bash
+# Use Backend TypeScript Architect for:
+- Implementing use cases
+- Creating repositories
+- Building API routes
+- Writing mappers
+```
+
+### Database Design
+```bash
+# Use Database Schema Architect for:
+- Creating tables
+- Defining relationships
+- Writing migrations
+- Optimizing queries
+```
+
+### API Design
+```bash
+# Use TypeSpec API Architect for:
+- Defining models
+- Creating operations
+- Setting validation rules
+- Generating types
+```
+
+### Business Logic
+```bash
+# Use Salon Business Expert for:
+- Understanding workflows
+- Defining requirements
+- Validating features
+- Industry best practices
+```

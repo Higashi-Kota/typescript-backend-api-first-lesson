@@ -35,46 +35,6 @@
     ".": {
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
-    },
-    "./booleanUtil": {
-      "import": "./dist/booleanUtil/index.js",
-      "types": "./dist/booleanUtil/index.d.ts"
-    },
-    "./dateUtil": {
-      "import": "./dist/dateUtil/index.js",
-      "types": "./dist/dateUtil/index.d.ts"
-    },
-    "./fileUtil": {
-      "import": "./dist/fileUtil/index.js",
-      "types": "./dist/fileUtil/index.d.ts"
-    },
-    "./formatUtil": {
-      "import": "./dist/formatUtil/index.js",
-      "types": "./dist/formatUtil/index.d.ts"
-    },
-    "./mimeUtil": {
-      "import": "./dist/mimeUtil/index.js",
-      "types": "./dist/mimeUtil/index.d.ts"
-    },
-    "./queryParamUtil": {
-      "import": "./dist/queryParamUtil/index.js",
-      "types": "./dist/queryParamUtil/index.d.ts"
-    },
-    "./randUtil": {
-      "import": "./dist/randUtil/index.js",
-      "types": "./dist/randUtil/index.d.ts"
-    },
-    "./transformUtil": {
-      "import": "./dist/transformUtil/index.js",
-      "types": "./dist/transformUtil/index.d.ts"
-    },
-    "./typeUtil": {
-      "import": "./dist/typeUtil/index.js",
-      "types": "./dist/typeUtil/index.d.ts"
-    },
-    "./validationUtil": {
-      "import": "./dist/validationUtil/index.js",
-      "types": "./dist/validationUtil/index.d.ts"
     }
   },
   "files": ["dist"],

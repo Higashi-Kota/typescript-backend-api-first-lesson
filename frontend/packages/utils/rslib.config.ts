@@ -11,16 +11,6 @@ export default defineConfig({
       source: {
         entry: {
           index: 'src/index.ts',
-          'booleanUtil/index': 'src/booleanUtil/index.ts',
-          'dateUtil/index': 'src/dateUtil/index.ts',
-          'fileUtil/index': 'src/fileUtil/index.ts',
-          'formatUtil/index': 'src/formatUtil/index.ts',
-          'mimeUtil/index': 'src/mimeUtil/index.ts',
-          'queryParamUtil/index': 'src/queryParamUtil/index.ts',
-          'randUtil/index': 'src/randUtil/index.ts',
-          'transformUtil/index': 'src/transformUtil/index.ts',
-          'typeUtil/index': 'src/typeUtil/index.ts',
-          'validationUtil/index': 'src/validationUtil/index.ts',
         },
         tsconfigPath: './tsconfig.json',
       },

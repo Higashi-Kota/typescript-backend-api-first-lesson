@@ -26,46 +26,6 @@
     ".": {
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
-    },
-    "./validateBirthday": {
-      "import": "./dist/validateBirthday/index.js",
-      "types": "./dist/validateBirthday/index.d.ts"
-    },
-    "./validateEmail": {
-      "import": "./dist/validateEmail/index.js",
-      "types": "./dist/validateEmail/index.d.ts"
-    },
-    "./validateEndDate": {
-      "import": "./dist/validateEndDate/index.js",
-      "types": "./dist/validateEndDate/index.d.ts"
-    },
-    "./validateFullWidthKatakana": {
-      "import": "./dist/validateFullWidthKatakana/index.js",
-      "types": "./dist/validateFullWidthKatakana/index.d.ts"
-    },
-    "./validateHalfWidthKatakana": {
-      "import": "./dist/validateHalfWidthKatakana/index.js",
-      "types": "./dist/validateHalfWidthKatakana/index.d.ts"
-    },
-    "./validateMaxLength": {
-      "import": "./dist/validateMaxLength/index.js",
-      "types": "./dist/validateMaxLength/index.d.ts"
-    },
-    "./validatePassword": {
-      "import": "./dist/validatePassword/index.js",
-      "types": "./dist/validatePassword/index.d.ts"
-    },
-    "./validateMinLength": {
-      "import": "./dist/validateMinLength/index.js",
-      "types": "./dist/validateMinLength/index.d.ts"
-    },
-    "./validateStartDate": {
-      "import": "./dist/validateStartDate/index.js",
-      "types": "./dist/validateStartDate/index.d.ts"
-    },
-    "./validateURL": {
-      "import": "./dist/validateURL/index.js",
-      "types": "./dist/validateURL/index.d.ts"
     }
   },
   "files": ["dist"],

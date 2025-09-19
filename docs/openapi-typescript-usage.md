@@ -27,9 +27,9 @@ pnpm run generate
 
 ## 型生成スクリプトの場所
 
-型生成スクリプトは `@beauty-salon-backend/types` パッケージ内に配置されています：
+型生成スクリプトは `@beauty-salon-backend/generated` パッケージ内に配置されています：
 
-- **場所**: `backend/packages/types/scripts/generate-types.ts`
+- **場所**: `backend/packages/generated/scripts/generate-types.ts`
 - **実行方法**: 
   - ルートから: `pnpm generate:backend`
   - typesパッケージから: `pnpm generate` または `pnpm generate:types`
@@ -38,7 +38,7 @@ pnpm run generate
 ## 生成される型ファイル
 
 ```
-backend/packages/types/
+backend/packages/generated/
 ├── scripts/
 │   └── generate-types.ts     # 型生成スクリプト（openapi-typescriptを使用）
 └── src/
@@ -50,7 +50,7 @@ backend/packages/types/
 
 ### 注意事項
 
-- `brand-helpers.ts`は生成されなくなりました（ドメインパッケージに独自のBrand実装があるため）
+- 型安全性はDB駆動モデルとResult型で保証されます
 - 型生成前にTypeSpec仕様のコンパイル（`pnpm generate:spec`）が必要です
 
 ## 使用例

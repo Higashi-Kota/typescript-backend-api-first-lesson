@@ -23,34 +23,6 @@
     ".": {
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
-    },
-    "./domains": {
-      "import": "./dist/domains/index.js",
-      "types": "./dist/domains/index.d.ts"
-    },
-    "./factory": {
-      "import": "./dist/factory/index.js",
-      "types": "./dist/factory/index.d.ts"
-    },
-    "./hocs": {
-      "import": "./dist/hocs/index.js",
-      "types": "./dist/hocs/index.d.ts"
-    },
-    "./hooks": {
-      "import": "./dist/hooks/index.js",
-      "types": "./dist/hooks/index.d.ts"
-    },
-    "./manager": {
-      "import": "./dist/manager/index.js",
-      "types": "./dist/manager/index.d.ts"
-    },
-    "./repositories": {
-      "import": "./dist/repositories/index.js",
-      "types": "./dist/repositories/index.d.ts"
-    },
-    "./types": {
-      "import": "./dist/types/index.js",
-      "types": "./dist/types/index.d.ts"
     }
   },
   "files": ["dist"],

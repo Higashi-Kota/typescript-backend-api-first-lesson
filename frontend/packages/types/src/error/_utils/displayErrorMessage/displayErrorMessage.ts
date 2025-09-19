@@ -3,7 +3,7 @@ import {
   isApplicationError,
 } from '../../_types/applicationError'
 
-import { isNullOrUndefined } from '@beauty-salon-frontend/utils/typeUtil'
+import { isNullOrUndefined } from '@beauty-salon-frontend/utils'
 
 const defaultErrorMessage = 'Something went wrong...'
 

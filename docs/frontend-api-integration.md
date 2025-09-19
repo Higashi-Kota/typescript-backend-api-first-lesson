@@ -883,7 +883,7 @@ on:
     paths:
       - 'specs/**/*.tsp'
       - 'frontend/packages/api-client/**'
-      - 'backend/packages/types/**'
+      - 'backend/packages/generated/**'
 
 jobs:
   type-sync:
@@ -981,7 +981,7 @@ graph TD
 
 ```typescript
 // shared/contracts/customer.contract.ts
-import type { paths as BackendPaths } from '@beauty-salon-backend/types/generated'
+import type { paths as BackendPaths } from '@beauty-salon-backend/generated'
 import type { paths as FrontendPaths } from '@beauty-salon-frontend/api-client/generated'
 
 // コンパイル時に型の一致を保証

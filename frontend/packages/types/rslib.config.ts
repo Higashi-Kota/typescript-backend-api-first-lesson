@@ -11,8 +11,6 @@ export default defineConfig({
       source: {
         entry: {
           index: 'src/index.ts',
-          'error/index': 'src/error/index.ts',
-          'pagination/index': 'src/pagination/index.ts',
         },
         tsconfigPath: './tsconfig.json',
       },
@@ -24,7 +22,7 @@ export default defineConfig({
         minify: isProduction,
         sourceMap: isDevelopment || isTest || isStaging,
         target: 'web',
-        externals: [/^@beauty-salon\//],
+        externals: [/^@beauty-salon-frontend\//],
       },
     },
   ],

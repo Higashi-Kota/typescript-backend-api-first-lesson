@@ -1,333 +1,207 @@
-# TypeScriptバックエンド開発ガイドライン
+# Development Guidelines
 
-このドキュメントは、TypeScriptを使用した新規バックエンド開発における徹底準拠指標の概要です。型安全性を最大限に活用し、Sum型とts-patternを駆使した堅牢なアーキテクチャを実現します。
+This document defines the core development principles and coding standards for the Beauty Salon Reservation System.
 
-## 📋 目次
+## 🏗️ Architecture
 
-### コア開発原則
-1. [型安全性の原則](#型安全性の原則)
-2. [Sum型とパターンマッチング](#sum型とパターンマッチング)
-3. [ユニフォーム実装ガイド](#ユニフォーム実装ガイド)
-4. [テスト要件](#テスト要件)
-5. [クリーンアップ方針](#クリーンアップ方針)
+The system follows Clean Architecture with API-First development. See [docs/architecture-overview.md](docs/architecture-overview.md) for detailed architecture documentation.
 
-### アーキテクチャ設計
-6. [バックエンドアーキテクチャガイドライン](#バックエンドアーキテクチャガイドライン)
-7. [TypeScript設定](#typescript設定)
-8. [Brand型を利用したID管理](#brand型を利用したid管理)
+### Key Principles
 
-### API開発
-9. [API開発ガイド](#api開発ガイド)
-10. [TypeSpec/OpenAPI利用ガイド](#typespecopenapi利用ガイド)
-11. [型生成システム](#型生成システム)
+1. **API-First**: TypeSpec → OpenAPI → TypeScript types
+2. **Clean Architecture**: Domain/UseCase/Infrastructure/API layers
+3. **Type Safety**: Sum types with exhaustive pattern matching
+4. **Exception-Free**: Result types for all error handling
+5. **YAGNI**: No code "for the future"
 
-### 開発フロー
-12. [開発ワークフロー](#開発ワークフロー)
-13. [リリースワークフロー](#リリースワークフロー)
+## 🔒 Type Safety Requirements
 
-### 追加リソース
-14. [その他のドキュメント](#その他のドキュメント)
+### Absolute Rules
+- ❌ **NO** `any` types
+- ❌ **NO** type assertions (`as`)
+- ❌ **NO** type guards
+- ❌ **NO** throwing exceptions
+- ✅ **USE** Sum types for all state
+- ✅ **USE** ts-pattern for exhaustive matching
+- ✅ **USE** Result types for errors
 
-## 🔒 型安全性の原則
-
-TypeScriptの型システムを最大限活用し、実行時エラーをコンパイル時に検出します。
-
-### 主要原則
-- `any`型の使用は絶対禁止
-- 型アサーションと型ガードの禁止
-- ネストした型オブジェクトを避け、フラットな判別共用体を使用
-- 配列アクセスは直接行い、undefinedチェックで型情報を保持
-
-**[→ 詳細を読む](./docs/type-safety-principles.md)**
-
-## 🎨 Sum型とパターンマッチング
-
-判別共用体（Sum型）とts-patternによる網羅的パターンマッチングで、型安全な処理を実現します。
-
-### 特徴
-- すべての状態をSum型で表現
-- `match()`と`exhaustive()`で全ケースの処理を保証
-- Result型による例外フリーなエラーハンドリング
-- 複雑なビジネスロジックの明確な表現
-
-**[→ 詳細を読む](./docs/sum-types-pattern-matching.md)**
-
-## 🎯 ユニフォーム実装ガイド
-
-一貫性のある実装パターンを定義し、保守性の高いコードベースを実現します。
-
-### 統一パターン
-- ページネーション実装
-- レスポンスフォーマット
-- エラーハンドリング
-- 日時処理（date-fns使用）
-- クエリパラメータ処理
-- 権限チェック
-- 構造化ログ
-- UUID/ID検証
-
-**[→ 詳細を読む](./docs/uniform-implementation-guide.md)**
-
-
-## 🧪 テスト要件
-
-品質を保証するためのテスト要件と実装パターンです。
-
-### テスト方針
-- AAA（Arrange-Act-Assert）パターンの採用
-- Sum型を活用したテストシナリオ管理
-- 実データによる動的な検証
-- 最低5パターンのエラーケーステスト
-
-**[→ 詳細を読む](./docs/testing-requirements.md)**
-
-## 🔥 クリーンアップ方針
-
-YAGNI原則に基づいた、クリーンなコードベースの維持方針です。
-
-### 基本方針
-- 未使用コードの徹底削除
-- 「将来のため」のコードを残さない
-- 継続的なコードベースの整理
-- 自動化ツールの活用
-
-**[→ 詳細を読む](./docs/cleanup-policy.md)**
-
-## 🔧 TypeScript設定
-
-厳格なTypeScript設定で型安全性を最大化します。
-
-### 主要設定
-- すべての厳格チェックを有効化
-- `noUncheckedIndexedAccess`: true
-- `exactOptionalPropertyTypes`: true
-- ESNEXT機能の活用
-
-**[→ 詳細を読む](./docs/typescript-configuration.md)**
-
-## 🆔 Brand型を利用したID管理
-
-Brand型（Nominal型）を使用して、異なるエンティティのIDを型レベルで区別します。
-
-### 特徴
-- `UserId`、`SalonId`などの専用ID型
-- Zodスキーマとの統合
-- UUID形式の自動検証
-- コンパイル時のID混同防止
-
-**[→ 詳細を読む](./docs/branded-types-id-management.md)**
-
-## 🏗️ バックエンドアーキテクチャガイドライン
-
-TypeScriptバックエンド開発における包括的なアーキテクチャガイドラインです。API First開発、クリーンアーキテクチャ、testcontainersを活用した堅牢な設計を実現します。
-
-### 主要内容
-- レイヤードアーキテクチャ（Domain/UseCase/Infrastructure/API）
-- TypeSpec/OpenAPIからの型定義自動生成とRemapping
-- DB ↔ Repository ↔ UseCase ↔ API ↔ Frontend の命名規則
-- 依存性逆転の原則（DIP）による疎結合設計
-- testcontainersによる統合テスト
-- 循環依存の完全排除
-- Result型による例外フリーなエラーハンドリング
-- データベース設計規則とマイグレーション
-- APIセキュリティとルーティング規則
-- 機能追加の原則と優先順位付け
-
-**[→ 詳細を読む](./docs/backend-architecture-guidelines.md)**
-
-## 🔄 型生成システム
-
-TypeSpecからOpenAPIを経由してTypeScript型を自動生成するシステムです。
-
-### 型生成スクリプトの場所
-
-- **スクリプト**: `backend/packages/generated/scripts/generate-types.ts`
-- **パッケージ**: `@beauty-salon-backend/generated`
-- **使用ツール**: `openapi-typescript`
-- **TypeSpec構成**: `specs/`ディレクトリに`models/_shared`と`operations/_shared`を配置
-
-### 実行方法
-
-```bash
-# 全体の型生成（推奨）
-pnpm generate
-
-# バックエンド型のみ生成
-pnpm generate:backend
-
-# Makefile経由（ビルドプロセスに統合）
-make backend-build
-```
-
-### 型生成のフロー
-
-1. **TypeSpec定義**: `specs/*.tsp`ファイルを編集
-2. **OpenAPI生成**: `pnpm generate:spec`でOpenAPI仕様を生成
-3. **TypeScript型生成**: `pnpm generate:backend`で型を生成
-4. **ビルド**: 生成された型を使用してビルド
-
-**[→ 型生成システムの詳細](./docs/type-generation-system.md)**
-**[→ TypeSpecディレクトリ構成](./docs/typespec-directory-structure.md)**
-
-## 🚀 クイックスタート
-
-### 必須の設定
-
-#### TypeScript設定（tsconfig.json）
-
-このプロジェクトでは、フロントエンド・バックエンド共通で最も厳格なTypeScript設定を使用しています。
-
-詳細は[「TypeScript設定ガイド」](./docs/typescript-configuration.md)を参照してください。
-
-#### Biome設定（biome.json）
+### TypeScript Configuration
 ```json
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "correctness": {
-        "noUnusedImports": "error",
-        "noUnusedVariables": "error",
-        "useExhaustiveDependencies": "error"
-      },
-      "recommended": true,
-      "style": {
-        "noVar": "error",
-        "useAsConstAssertion": "error",
-        "useConst": "error"
-      },
-      "suspicious": {
-        "noExplicitAny": "error",
-        "noImplicitAnyLet": "error"
-      }
-    }
+  "compilerOptions": {
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noPropertyAccessFromIndexSignature": true
   }
 }
 ```
 
-**[→ TypeScript設定の詳細](./docs/typescript-configuration.md)**
+See [docs/typescript-configuration.md](docs/typescript-configuration.md) for complete configuration.
 
-### 必須の依存関係
+## 🎨 Sum Types & Pattern Matching
 
-```bash
-# 型安全なパターンマッチング
-pnpm add ts-pattern
+All state management uses discriminated unions (Sum types) with ts-pattern:
 
-# 日時処理
-pnpm add date-fns
+```typescript
+// State definition
+type EntityState =
+  | { type: 'active'; entity: Entity }
+  | { type: 'inactive'; reason: string }
+  | { type: 'deleted'; deletedAt: string }
 
-# バリデーション
-pnpm add zod
-
-# UUID
-pnpm add uuid
-pnpm add -D @types/uuid
+// Exhaustive handling
+const handleState = (state: EntityState) =>
+  match(state)
+    .with({ type: 'active' }, ({ entity }) => processActive(entity))
+    .with({ type: 'inactive' }, ({ reason }) => processInactive(reason))
+    .with({ type: 'deleted' }, ({ deletedAt }) => processDeleted(deletedAt))
+    .exhaustive()
 ```
 
-## 📊 実装優先順位
+See [docs/sum-types-pattern-matching.md](docs/sum-types-pattern-matching.md) for patterns.
 
-### 1. 即座に実装すべき（高優先度）
-- Sum型による型定義の統一
-- ts-patternによる網羅的パターンマッチング
-- レスポンスフォーマットの統一
-- エラーハンドリングパターンの統一
-- 権限チェックパターンの統一
+## 🎯 Implementation Standards
 
-### 2. 段階的に実装（中優先度）
-- Result型によるエラーハンドリング
-- クエリパラメータパターンの統一
-- 日時処理の統一（date-fns使用）
-- テストパターンの統一
+### Uniform Patterns
+All implementations must follow standardized patterns for:
+- Pagination
+- Response formatting
+- Error handling
+- Date/time processing (date-fns)
+- Query parameters
+- Authorization
+- Logging
+- ID validation
 
-### 3. 機会があれば実装（低優先度）
-- 構造化ログの高度化
-- カスタムID型の導入
+See [docs/uniform-implementation-guide.md](docs/uniform-implementation-guide.md) for implementation patterns.
 
-## ✅ 実装完了後の期待される状態
+## 🧪 Testing Requirements
 
-1. **`pnpm lint`で警告ゼロ**（未使用変数の警告を含む）
-2. **`pnpm test`ですべてのテストがグリーン**
-3. **APIドキュメントと実装が一致**
-4. **テストが実装の実際の動作を検証**
-5. **プロダクションコードがクリーンで保守しやすい**
+### Minimum Coverage
+- Unit tests for all domain logic
+- Integration tests with testcontainers
+- E2E tests for critical paths
+- Minimum 5 error scenarios per endpoint
 
-## 📚 API開発ガイド
+### Test Structure
+```typescript
+describe('Feature', () => {
+  it('should handle success case', async () => {
+    // Arrange
+    const input = createTestInput()
 
-### APIテストガイド
+    // Act
+    const result = await executeFeature(input)
 
-API開発における網羅的なテスト戦略とベストプラクティスです。
+    // Assert
+    expect(result).toMatchObject({ type: 'success' })
+  })
+})
+```
 
-**[→ 詳細を読む](./docs/api-testing-guide.md)**
+See [docs/testing-requirements.md](docs/testing-requirements.md) for testing patterns.
 
-### TypeSpec/OpenAPI利用ガイド
+## 📁 Package Structure
 
-TypeSpecからOpenAPI仕様を生成し、型安全なAPI開発を実現するためのガイドです。
+### Backend Packages
+```
+backend/packages/
+├── domain/           # Pure business logic
+├── infrastructure/   # External services
+├── api/             # HTTP layer
+├── database/        # DB schemas
+├── generated/       # Auto-generated types
+└── config/          # Configuration
+```
 
-#### 主要トピック
-- OpenAPI-TypeScriptの活用方法
-- 型定義の自動生成とマッピング
-- APIファーストな開発フロー
+### Namespace Convention
+- Backend: `@beauty-salon-backend/*`
+- Frontend: `@beauty-salon-frontend/*`
+- Specs: `@beauty-salon/specs`
+- Shared: `@beauty-salon-shared/*`
 
-#### ⚠️ TypeSpec Enum命名規則
-**標準規則**: すべてのEnum型名の末尾に`Type`サフィックスを付ける（例：`ServiceCategoryType`、`PaymentMethodType`）
-**既知の警告**: TypeSpecコンパイル時に重複型名の警告が出ますが、これは無視してください。CIビルドは正常に動作します。
+## 🔄 Development Workflow
 
-**[→ OpenAPI-TypeScript利用ガイド](./docs/openapi-typescript-usage.md)**
-**[→ TypeSpec API型定義ルール](./docs/typespec-api-type-rules.md)**
-**[→ 型生成システムガイド](./docs/type-generation-system.md)**
+### Type Generation Pipeline
+1. Define models in TypeSpec (`specs/`)
+2. Generate OpenAPI: `pnpm generate:spec`
+3. Generate types: `pnpm generate:backend`
+4. Implement with generated types
 
-## 🔄 開発ワークフロー
+### Code Quality Checks
+```bash
+pnpm lint        # Linting
+pnpm typecheck   # Type checking
+pnpm test        # Unit tests
+pnpm format:fix  # Auto-format
+```
 
-プロジェクトにおける効率的な開発とリリースのプロセスです。
+## 🚀 Quick Commands
 
-### 開発ワークフロー
-- ブランチ戦略
-- コードレビュープロセス
-- CI/CDパイプライン
+```bash
+# Development
+pnpm dev              # Start all services
+pnpm generate         # Generate all types
 
-**[→ 詳細を読む](./docs/development-workflow.md)**
+# Database
+pnpm db:setup         # Initial setup
+pnpm db:migrate       # Run migrations
+pnpm db:seed          # Seed data
 
-### リリースワークフロー
-- セマンティックバージョニング
-- リリースノートの自動生成
-- デプロイメントプロセス
+# Testing
+pnpm test             # Unit tests
+pnpm test:integration # Integration tests
+pnpm test:e2e        # End-to-end tests
 
-**[→ 詳細を読む](./docs/release-workflow.md)**
+# Build
+pnpm build           # Development build
+pnpm build:prod      # Production build
+```
 
-## 🛠️ その他のドキュメント
+## 📚 Documentation References
 
-### データベース設計
-- 型制約とマッピング規則
-- マイグレーション戦略
+### Core Concepts
+- [Architecture Overview](docs/architecture-overview.md)
+- [Type Safety Principles](docs/type-safety-principles.md)
+- [Sum Types & Pattern Matching](docs/sum-types-pattern-matching.md)
 
-**[→ DB型制約マッピング](./docs/db-type-constraints-mapping.md)**
+### Implementation Guides
+- [Backend Architecture](docs/backend-architecture-guidelines.md)
+- [Uniform Implementation](docs/uniform-implementation-guide.md)
+- [Testing Requirements](docs/testing-requirements.md)
 
-### 環境設定
-- 環境変数の管理
-- 設定の優先順位
+### API Development
+- [TypeSpec API Rules](docs/typespec-api-type-rules.md)
+- [Type Generation System](docs/type-generation-system.md)
+- [API Testing Guide](docs/api-testing-guide.md)
 
-**[→ 環境設定ガイド](./docs/env-configuration.md)**
+## ⚠️ Important Notes
 
-### 外部サービス統合
+### TypeSpec Enum Naming
+All Enum types must end with `Type` suffix (e.g., `ServiceCategoryType`, `PaymentMethodType`)
 
-#### メール送信
-- メールプロバイダーの選定と統合
-- 送信処理の実装パターン
+### DB-Driven Models
+Database schemas are the source of truth for domain models:
+```typescript
+// Types are inferred from Drizzle ORM schemas
+type Customer = typeof customers.$inferSelect
+type NewCustomer = typeof customers.$inferInsert
+```
 
-**[→ メールプロバイダー](./docs/email-providers.md)**  
-**[→ メール送信実装](./docs/email-send.md)**
+### Clean Code Policy
+- Remove unused code immediately
+- No commented-out code
+- No "TODO" comments without tickets
+- Use YAGNI principle strictly
 
-#### ファイルストレージ
-- ファイルアップロード処理
-- ストレージプロバイダーの統合
+## 🎯 Definition of Done
 
-**[→ ファイルアップロード](./docs/file-upload.md)**  
-**[→ ストレージプロバイダー](./docs/storage-providers.md)**
-
-### モニタリング・監視
-- エラートラッキング
-- パフォーマンス監視
-- ログ収集と分析
-
-**[→ エラートラッキングとモニタリング](./docs/error-tracking-and-monitoring.md)**
+✅ All TypeScript strict checks pass
+✅ No linting warnings
+✅ All tests green
+✅ API documentation updated
+✅ Code follows Sum type patterns
+✅ No exceptions thrown
+✅ Result types used for errors
+✅ Pattern matching is exhaustive

@@ -1,8 +1,5 @@
 import { localStorage } from '@beauty-salon-frontend/stores'
-import {
-  isEmpty,
-  isNullOrUndefined,
-} from '@beauty-salon-frontend/utils/typeUtil'
+import { isEmpty, isNullOrUndefined } from '@beauty-salon-frontend/utils'
 
 interface CacheItem {
   id: string

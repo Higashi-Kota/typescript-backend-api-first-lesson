@@ -27,7 +27,7 @@ pnpm generate  # または個別に実行：
 # - pnpm generate:api      # OrvalでフロントエンドAPIクライアントを生成
 
 # 3. バックエンドの実装を更新
-# - backend/packages/types/src/generated/ に新しい型が生成される
+# - backend/packages/generated/src/generated/ に新しい型が生成される
 # - 必要に応じて以下を更新：
 #   - Domain層のモデル
 #   - Repository実装
@@ -51,13 +51,13 @@ make frontend-dev    # 開発サーバーを起動
 
 ### 型生成スクリプトの場所
 
-型生成スクリプトは `@beauty-salon-backend/types` パッケージ内に配置されています：
+型生成スクリプトは `@beauty-salon-backend/generated` パッケージ内に配置されています：
 
-- **スクリプトの場所**: `backend/packages/types/scripts/generate-types.ts`
+- **スクリプトの場所**: `backend/packages/generated/scripts/generate-types.ts`
 - **実行方法**:
   - ルートから: `pnpm generate:backend`
   - specsパッケージから: `cd specs && pnpm generate:backend`
-  - typesパッケージから: `cd backend/packages/types && pnpm generate`
+  - typesパッケージから: `cd backend/packages/generated && pnpm generate`
 
 ### 注意点
 
@@ -139,7 +139,7 @@ graph TD
     B -->|openapi-typescript| C[バックエンド型]
     B -->|openapi-typescript-codegen| D[フロントエンドAPIクライアント]
     
-    C --> E[backend/packages/types/src/generated/]
+    C --> E[backend/packages/generated/src/generated/]
     D --> F[frontend/packages/api-client/src/generated/]
 ```
 
@@ -150,7 +150,7 @@ graph TD
 | スクリプト | 場所 | 役割 |
 |------------|------|------|
 | TypeSpecコンパイラ | `specs/package.json` | TypeSpecからOpenAPIを生成 |
-| バックエンド型生成 | `backend/packages/types/scripts/generate-types.ts` | OpenAPIからTypeScript型を生成 |
+| バックエンド型生成 | `backend/packages/generated/scripts/generate-types.ts` | OpenAPIからTypeScript型を生成 |
 | フロントエンドクライアント生成 | `frontend/packages/api-client/scripts/` | OpenAPIからAPIクライアントを生成 |
 
 #### 実行コマンド
@@ -174,7 +174,7 @@ make frontend-build     # 型生成を含むフロントエンドビルド
 #### バックエンド型ファイル
 
 ```
-backend/packages/types/src/generated/
+backend/packages/generated/src/generated/
 ├── api-types.ts      # OpenAPIから生成された型定義
 │                     # - paths: APIエンドポイントの型
 │                     # - components: コンポーネント型（モデル、リクエスト、レスポンス）
@@ -202,10 +202,10 @@ frontend/packages/api-client/src/generated/
 pnpm generate:spec  # まずTypeSpecをコンパイル
 
 # 型生成スクリプトのパスを確認
-ls backend/packages/types/scripts/generate-types.ts
+ls backend/packages/generated/scripts/generate-types.ts
 
 # 手動で実行してエラーを確認
-cd backend/packages/types
+cd backend/packages/generated
 pnpm tsx scripts/generate-types.ts
 ```
 

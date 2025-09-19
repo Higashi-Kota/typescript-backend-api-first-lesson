@@ -26,14 +26,6 @@
     ".": {
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
-    },
-    "./error": {
-      "import": "./dist/error/index.js",
-      "types": "./dist/error/index.d.ts"
-    },
-    "./pagination": {
-      "import": "./dist/pagination/index.js",
-      "types": "./dist/pagination/index.d.ts"
     }
   },
   "files": ["dist"],

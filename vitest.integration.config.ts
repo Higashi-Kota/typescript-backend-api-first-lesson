@@ -22,10 +22,6 @@ export default defineConfig({
         __dirname,
         'backend/packages/domain/src'
       ),
-      '@beauty-salon-backend/types': path.resolve(
-        __dirname,
-        'backend/packages/types/src'
-      ),
       '@beauty-salon-backend/infrastructure': path.resolve(
         __dirname,
         'backend/packages/infrastructure/src'
@@ -37,10 +33,6 @@ export default defineConfig({
       '@beauty-salon-backend/config': path.resolve(
         __dirname,
         'backend/packages/config/src'
-      ),
-      '@beauty-salon-backend/mappers': path.resolve(
-        __dirname,
-        'backend/packages/mappers/src'
       ),
       '@beauty-salon-backend/test-utils': path.resolve(
         __dirname,

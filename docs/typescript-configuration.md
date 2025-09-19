@@ -180,7 +180,7 @@ backend/packages/
 ├── types/
 │   └── src/          # 共有型定義
 │       ├── generated/    # 自動生成された型
-│       ├── branded.ts    # Brand型
+│       ├── validators.ts # バリデーション関数
 │       └── index.ts      # 型のエクスポート
 └── usecase/
     └── src/

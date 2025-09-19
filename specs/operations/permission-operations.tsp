@@ -92,7 +92,9 @@ namespace BeautySalon.Operations {
 
     @doc("Assign role to user")
     @post
-    assignUserRoleType(@body assignment: UserRoleAssignInput): Result<UserRoleType>;
+    assignUserRoleType(
+      @body assignment: UserRoleAssignInput,
+    ): Result<UserRoleType>;
 
     @doc("Revoke user role")
     @delete
