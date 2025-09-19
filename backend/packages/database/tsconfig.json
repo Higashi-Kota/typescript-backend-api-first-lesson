@@ -1,14 +1,14 @@
 {
-  "extends": "../../../shared-config/tsconfig/backend.json",
+  "extends": "@beauty-salon-shared/config/base.json",
   "compilerOptions": {
-    "tsBuildInfoFile": "./tsconfig.tsbuildinfo",
+    "composite": true,
     "rootDir": "./src",
     "outDir": "./dist",
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
     "declaration": true,
     "declarationMap": true,
-    "noEmit": false,
-    "composite": true
+    "noEmit": false
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]
 }

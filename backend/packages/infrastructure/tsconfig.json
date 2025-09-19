@@ -7,7 +7,7 @@
     "declarationMap": true,
     "rootDir": "./src",
     "outDir": "./dist",
-    "tsBuildInfoFile": "./tsconfig.tsbuildinfo",
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
     "types": ["vitest/globals", "node"],
     "preserveConstEnums": true
   },

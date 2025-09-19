@@ -16,7 +16,7 @@ export default defineConfig({
       },
       format: 'esm',
       syntax: 'esnext',
-      dts: true,
+      dts: false,
       bundle: true,
       output: {
         minify: isProduction,

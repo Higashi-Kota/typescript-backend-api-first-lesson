@@ -2,14 +2,15 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "composite": true,
-    "rootDir": "src",
+    "rootDir": "./src",
     "outDir": "dist",
     "noEmit": false,
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "tsBuildInfoFile": "./tsconfig.tsbuildinfo"
+    "tsBuildInfoFile": "./dist/.tsbuildinfo"
   },
+  "references": [{ "path": "../database" }, { "path": "../domain" }],
   "include": ["src/**/*"],
   "exclude": [
     "node_modules",
