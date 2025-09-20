@@ -3,6 +3,7 @@
 ## 📚 Architecture & Design
 - [**Architecture Overview**](./architecture-overview.md) - Complete system architecture, layers, data flow, and directory structure
 - [Backend Architecture Guidelines](./backend-architecture-guidelines.md) - 日本語版アーキテクチャガイドライン
+- [Multi-Agent Collaboration Framework](./multi-agent-collaboration-framework.md) - AI agent design validation protocol
 
 ## 🎯 Core Concepts
 - [Type Safety Principles](./type-safety-principles.md) - TypeScript type safety guidelines
@@ -19,6 +20,7 @@
 ## 🏗️ Type Generation & API
 - [Type Generation System](./type-generation-system.md) - TypeSpec → OpenAPI → TypeScript pipeline
 - [TypeSpec API Type Rules](./typespec-api-type-rules.md) - API type definition rules
+- [TypeSpec Directory Structure](./typespec-directory-structure.md) - TypeSpec project organization
 - [OpenAPI TypeScript Usage](./openapi-typescript-usage.md) - Using generated types
 - [Frontend API Integration](./frontend-api-integration.md) - Frontend integration guide
 

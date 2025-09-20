@@ -84,6 +84,66 @@ See [.claude/agents/typespec-api-architect.md](.claude/agents/typespec-api-archi
 
 See [.claude/agents/salon-business-expert.md](.claude/agents/salon-business-expert.md) for detailed guidelines.
 
+### 5. Senior Frontend Architect
+
+**Specialization**: Frontend architecture and React development
+
+**Use Cases**:
+- React component architecture
+- State management design
+- TypeScript type safety for UI
+- API integration patterns
+- Frontend performance optimization
+
+**Key Expertise**:
+- React/Next.js architecture
+- TypeScript for frontend
+- API type synchronization
+- Component composition patterns
+- Frontend testing strategies
+
+See [.claude/agents/senior-frontend-architect.md](.claude/agents/senior-frontend-architect.md) for detailed guidelines.
+
+### 6. Senior UI Designer
+
+**Specialization**: UI/UX design and user experience
+
+**Use Cases**:
+- User interface design
+- Interaction patterns
+- Visual hierarchy
+- Accessibility standards
+- Design system architecture
+
+**Key Expertise**:
+- UI component design
+- Responsive design
+- WCAG accessibility
+- Design systems
+- User experience optimization
+
+See [.claude/agents/senior-ui-designer.md](.claude/agents/senior-ui-designer.md) for detailed guidelines.
+
+### 7. Design Review Architect
+
+**Specialization**: Cross-layer design validation
+
+**Use Cases**:
+- Type synchronization validation
+- Architecture compliance review
+- Design consistency checking
+- Integration point validation
+- Cross-layer type alignment
+
+**Key Expertise**:
+- Type system validation
+- Enum synchronization
+- API-DB alignment
+- Architectural patterns
+- Design review protocols
+
+See [.claude/agents/design-review-architect.md](.claude/agents/design-review-architect.md) for detailed guidelines.
+
 ## 📋 Agent Selection Guidelines
 
 ### When to Use Each Agent
@@ -111,6 +171,8 @@ See [.claude/agents/salon-business-expert.md](.claude/agents/salon-business-expe
 1. **Database Schema Architect**: Analyze query performance
 2. **Backend TypeScript Architect**: Optimize application code
 3. **TypeSpec API Architect**: Adjust API contracts if needed
+
+For detailed agent collaboration protocols and design validation, see [docs/multi-agent-collaboration-framework.md](docs/multi-agent-collaboration-framework.md).
 
 ## 🎯 Common Tasks
 
@@ -153,6 +215,9 @@ Detailed documentation for each agent is available in:
 - [Database Schema Architect](.claude/agents/database-schema-architect.md)
 - [TypeSpec API Architect](.claude/agents/typespec-api-architect.md)
 - [Salon Business Expert](.claude/agents/salon-business-expert.md)
+- [Senior Frontend Architect](.claude/agents/senior-frontend-architect.md)
+- [Senior UI Designer](.claude/agents/senior-ui-designer.md)
+- [Design Review Architect](.claude/agents/design-review-architect.md)
 
 ## ⚡ Quick Reference
 

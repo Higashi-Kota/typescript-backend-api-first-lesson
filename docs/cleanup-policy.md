@@ -25,7 +25,7 @@ it('should calculate metric correctly', () => {
 });
 
 // ✅ 良い例: 実装でも活用
-// backend/packages/usecase/src/analytics/metricsService.ts
+// backend/packages/domain/src/business-logic/analytics/metrics.service.ts
 export class MetricsService {
   async getTaskMetrics(taskId: string): Promise<TaskMetrics> {
     const data = await this.repository.getTaskData(taskId);

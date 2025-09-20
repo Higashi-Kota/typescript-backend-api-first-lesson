@@ -170,6 +170,7 @@ pnpm build:prod      # Production build
 - [Backend Architecture](docs/backend-architecture-guidelines.md)
 - [Uniform Implementation](docs/uniform-implementation-guide.md)
 - [Testing Requirements](docs/testing-requirements.md)
+- [Multi-Agent Collaboration](docs/multi-agent-collaboration-framework.md)
 
 ### API Development
 - [TypeSpec API Rules](docs/typespec-api-type-rules.md)

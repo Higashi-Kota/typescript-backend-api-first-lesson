@@ -149,6 +149,7 @@ See [docs/testing-requirements.md](docs/testing-requirements.md) for testing gui
 - [Type Safety Principles](docs/type-safety-principles.md)
 - [Sum Types & Pattern Matching](docs/sum-types-pattern-matching.md)
 - [Backend Architecture](docs/backend-architecture-guidelines.md)
+- [Multi-Agent Collaboration](docs/multi-agent-collaboration-framework.md) - AI agent design validation protocol
 
 ### Implementation Guides
 
@@ -180,7 +181,7 @@ Private - All rights reserved
 
 ## 🤝 Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
+Please refer to the development guidelines in [CLAUDE.md](CLAUDE.md).
 
 ## 🛟 Support
 

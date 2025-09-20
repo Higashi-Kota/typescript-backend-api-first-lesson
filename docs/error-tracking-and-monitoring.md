@@ -43,9 +43,11 @@
 
 ## エラートラッキング（Sentry）
 
+> **アーキテクチャノート**: Clean Architectureに従い、すべての外部サービス（Sentry、Prometheus、ロギング等）は`infrastructure`層に配置されます。`api`層にはHTTPに関連するミドルウェアのみが配置されます。
+
 ### Sentryサービスの実装
 
-`packages/api/src/services/sentry.service.ts`
+`backend/packages/infrastructure/src/services/sentry.service.ts`
 
 #### エラーイベントの型定義（Sum型）
 
@@ -86,7 +88,7 @@ const determineSeverityLevel = (event: SentryErrorEvent): Sentry.SeverityLevel =
 
 ### エラーコンテキスト収集サービス
 
-`packages/api/src/services/error-context.service.ts`
+`backend/packages/infrastructure/src/services/error-context.service.ts`
 
 #### セキュリティに配慮した情報収集
 
@@ -109,7 +111,7 @@ const sanitizeData = (data: Record<string, unknown>): Record<string, unknown> =>
 
 ### エラーハンドラーミドルウェアの拡張
 
-`packages/api/src/middleware/error-handler.ts`
+`backend/packages/api/src/middleware/error-handler.ts`
 
 ```typescript
 export const errorHandler = (
@@ -145,7 +147,7 @@ export const errorHandler = (
 
 ### メトリクスサービスの実装
 
-`packages/api/src/services/metrics.service.ts`
+`backend/packages/infrastructure/src/services/metrics.service.ts`
 
 #### メトリクス定義（Sum型）
 
@@ -188,7 +190,7 @@ export type BusinessMetrics = {
 
 ### APIメトリクスミドルウェア
 
-`packages/api/src/middleware/metrics.ts`
+`backend/packages/api/src/middleware/metrics.ts`
 
 ```typescript
 export const metricsMiddleware = (req: Request, res: Response, next: NextFunction): void => {
@@ -219,7 +221,7 @@ export const metricsMiddleware = (req: Request, res: Response, next: NextFunctio
 
 ### ビジネスメトリクスサービス
 
-`packages/api/src/services/business-metrics.service.ts`
+`backend/packages/infrastructure/src/services/business-metrics.service.ts`
 
 ```typescript
 export type BusinessEvent =
@@ -250,7 +252,7 @@ const recordBusinessEvent = (event: BusinessEvent): void => {
 
 ### 相関IDによるトレーサビリティ
 
-`packages/api/src/utils/structured-logger.ts`
+`backend/packages/infrastructure/src/services/structured-logger.ts`
 
 ```typescript
 export class StructuredLogger {

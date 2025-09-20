@@ -172,20 +172,34 @@ const firstItem = items[0]!; // 確実に存在する場合のみ
 ```
 backend/packages/
 ├── database/
-│   └── src/          # DBスキーマ定義
+│   └── src/
+│       └── schema/       # DBスキーマ定義（Drizzle ORM）
 ├── domain/
-│   └── src/          # ドメイン固有の型
-├── mappers/
-│   └── src/          # 型変換レイヤー
-├── types/
-│   └── src/          # 共有型定義
-│       ├── generated/    # 自動生成された型
-│       ├── validators.ts # バリデーション関数
-│       └── index.ts      # 型のエクスポート
-└── usecase/
+│   └── src/
+│       ├── models/               # Sum型エンティティ／値オブジェクト
+│       ├── business-logic/       # UseCase（Result型）
+│       │   └── {entity}/
+│       │       └── *.use-case.ts
+│       ├── mappers/
+│       │   ├── write/            # API → Domain → DB変換
+│       │   └── read/             # DB → Domain → API変換
+│       ├── repositories/         # Repository Interface定義
+│       └── shared/               # result.ts / validators.ts / guards.ts
+├── infrastructure/
+│   └── src/
+│       ├── repositories/         # Repository実装
+│       ├── services/             # Email / Storage / Monitoring
+│       └── adapters/             # 3rd party adapters
+├── generated/
+│   └── src/                      # OpenAPI由来の型定義
+│       └── generated/
+│           └── api-types.ts      # 自動生成されたAPI型
+└── api/
     └── src/
-        └── {entity}/
-            └── types.ts  # エンティティ固有の型
+        ├── routes/               # エンドポイント定義
+        ├── middleware/           # 共通ミドルウェア
+        ├── presenters/           # Domain Result → HTTP レスポンス
+        └── bootstrap/            # DI・サーバー初期化
 ```
 
 ## 型安全性のベストプラクティス
@@ -287,8 +301,17 @@ class ApiClient {
   "references": [
     { "path": "../database" },
     { "path": "../domain" },
-    { "path": "../mappers" },
-    { "path": "../types" }
+    { "path": "../generated" }
+  ]
+}
+
+// packages/api/tsconfig.json
+{
+  "extends": "../../tsconfig.json",
+  "references": [
+    { "path": "../domain" },
+    { "path": "../infrastructure" },
+    { "path": "../generated" }
   ]
 }
 ```

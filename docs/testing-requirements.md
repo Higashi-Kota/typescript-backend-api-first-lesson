@@ -662,7 +662,7 @@ export class TestEnvironmentWithIsolation {
 #### 実際の使用例
 
 ```typescript
-// backend/packages/usecase/src/reservation/__tests__/reservation.isolation.test.ts
+// backend/packages/domain/src/business-logic/reservation/__tests__/reservation.isolation.test.ts
 import { TestEnvironmentWithIsolation } from '../../setup/test-environment';
 
 describe('Reservation API with Schema Isolation', () => {

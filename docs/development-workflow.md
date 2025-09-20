@@ -239,7 +239,7 @@ vim backend/packages/domain/src/repositories/staff.repository.ts
 vim backend/packages/infrastructure/src/repositories/staff.repository.impl.ts
 
 # 5. UseCase層にビジネスロジックを追加
-vim backend/packages/usecase/src/staff/create-staff.usecase.ts
+vim backend/packages/domain/src/business-logic/staff/create-staff.use-case.ts
 
 # 6. API層にルートを追加
 vim backend/packages/api/src/routes/staff.ts
@@ -302,13 +302,13 @@ make backend-start
 
 ```bash
 # 1. 問題を再現するテストを書く
-vim backend/packages/usecase/src/customer/__tests__/get-customer.test.ts
+vim backend/packages/domain/src/business-logic/customer/__tests__/get-customer.test.ts
 
 # 2. テストが失敗することを確認
 pnpm test
 
 # 3. バグを修正
-vim backend/packages/usecase/src/customer/get-customer.usecase.ts
+vim backend/packages/domain/src/business-logic/customer/get-customer.use-case.ts
 
 # 4. テストが成功することを確認
 pnpm test
