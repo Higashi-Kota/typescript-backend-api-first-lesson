@@ -198,7 +198,9 @@ namespace BeautySalon.Models {
   }
 
   model PaginationParams {
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query limit?: int32 = 20;
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query offset?: int32 = 0;
   }
 
@@ -255,8 +257,11 @@ namespace BeautySalon.Models {
 
   // 検索パラメータ
   model SearchParams {
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query q?: string;
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query sortBy?: string;
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query sortOrder?: "asc" | "desc";
     ...PaginationParams;
   }
@@ -275,13 +280,17 @@ namespace BeautySalon.Models {
 
   // 日付範囲フィルタ
   model DateRangeFilter {
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query startDate?: utcDateTime;
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query endDate?: utcDateTime;
   }
 
   // 価格範囲フィルタ
   model PriceRangeFilter {
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query minPrice?: float32;
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query maxPrice?: float32;
   }
 

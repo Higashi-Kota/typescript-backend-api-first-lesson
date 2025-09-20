@@ -102,20 +102,24 @@ namespace BeautySalon.Models {
    */
   @doc("Cursor-based pagination parameters")
   model CursorPaginationParams {
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Maximum number of items to return (1-100)")
     @minValue(1)
     @maxValue(100)
     limit?: int32 = 20;
 
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Cursor for the next page")
     cursor?: string;
 
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Field to sort by")
     sortBy?: string;
 
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Sort order")
     sortOrder?: "asc" | "desc" = "asc";
@@ -126,21 +130,25 @@ namespace BeautySalon.Models {
    */
   @doc("Offset-based pagination parameters")
   model OffsetPaginationParams {
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Maximum number of items to return (1-100)")
     @minValue(1)
     @maxValue(100)
     limit?: int32 = 20;
 
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Number of items to skip")
     @minValue(0)
     offset?: int32 = 0;
 
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Field to sort by")
     sortBy?: string;
 
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Sort order")
     sortOrder?: "asc" | "desc" = "asc";
@@ -337,6 +345,7 @@ namespace BeautySalon.Models {
   @doc("Field mask for selective updates")
   model FieldMask {
     @doc("Comma-separated list of field paths to update")
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @example("name,address.street,contactInfo.email")
     updateMask?: string;
@@ -352,6 +361,7 @@ namespace BeautySalon.Models {
     @maxItems(100)
     ids: string[];
 
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @doc("Fields to include in response")
     @query
     fields?: string;
@@ -400,26 +410,32 @@ namespace BeautySalon.Models {
    */
   @doc("Advanced search and filter parameters")
   model AdvancedSearchParams {
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Full-text search query")
     q?: string;
 
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Filter expression (e.g., 'status:active AND category:premium')")
     filter?: string;
 
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Fields to include in response")
     fields?: string;
 
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Fields to exclude from response")
     exclude?: string;
 
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Enable faceted search results")
     facets?: boolean = false;
 
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Facet fields to aggregate")
     facetFields?: string[];

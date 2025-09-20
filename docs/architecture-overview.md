@@ -678,25 +678,6 @@ pnpm --filter ./backend/packages/* \
 - Transaction support
 - Migration flexibility
 
-## Migration Path
-
-### From Old Architecture
-1. **Models**: Previously hand-written → Now generated from TypeSpec
-2. **Use Cases**: Previously in separate package → Now in domain/business-logic
-3. **Mappers**: Previously mixed → Now split into Write/Read
-4. **Services**: Previously scattered → Now in infrastructure/services
-5. **Types**: Previously duplicated → Now single source in generated
-
-### Migration Steps
-1. ✅ Define all models in TypeSpec
-2. ✅ Generate OpenAPI and TypeScript types
-3. ✅ Implement Customer model as template
-4. ✅ Create mappers for Customer operations
-5. 🔄 Implement remaining models (Salon, Staff, Service, etc.)
-6. ⏳ Refactor infrastructure package
-7. ⏳ Refactor API package
-8. ⏳ Final verification and cleanup
-
 ## Testing Strategy
 
 ### Unit Tests

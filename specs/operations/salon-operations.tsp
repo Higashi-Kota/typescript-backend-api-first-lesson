@@ -17,41 +17,50 @@ namespace BeautySalon.Operations {
    * Extended search parameters for salon queries
    */
   model SalonSearchParams extends AdvancedSearchParams {
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Filter by city name")
     city?: string;
 
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Filter by service category")
     category?: ServiceCategoryType;
 
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Filter by minimum rating")
     @minValue(0)
     @maxValue(5)
     minRating?: float32;
 
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Maximum distance in kilometers")
     @minValue(0)
     maxDistance?: float32;
 
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Reference latitude for distance calculation")
     lat?: float64;
 
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Reference longitude for distance calculation")
     lon?: float64;
 
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Filter by features (comma-separated)")
     features?: string;
 
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Filter by opening hours")
     openNow?: boolean;
 
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Filter by specific day and time")
     openAt?: utcDateTime;

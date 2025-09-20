@@ -19,26 +19,32 @@ namespace BeautySalon.Operations {
    * Extended search parameters for customer queries
    */
   model CustomerSearchParams extends AdvancedSearchParams {
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Search in customer name, email, or phone")
     search?: string;
 
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Filter by customer tags")
     tags?: string[];
 
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Filter by registration date from")
     registeredFrom?: utcDateTime;
 
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Filter by registration date to")
     registeredTo?: utcDateTime;
 
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Filter by customer status")
     status?: CustomerStatusType;
 
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Filter by loyalty tier")
     loyaltyTier?: LoyaltyTierType;
