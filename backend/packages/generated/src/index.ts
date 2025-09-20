@@ -1,12 +1,12 @@
 // Generated from TypeSpec/OpenAPI
 // DO NOT EDIT MANUALLY
-// Last generated: 2025-09-19T10:57:26.787Z
+// Last generated: 2025-09-20T14:46:25.314Z
 
 // Main API types and utilities
-export * from './api-types'
+export * from './api-types';
 
 // Zod validation schemas
-export * from './schema'
+export * from './schema';
 
 // Re-export commonly used types for convenience
 export type {
@@ -15,4 +15,4 @@ export type {
   Schemas,
   Paths,
   Operations,
-} from './api-types'
+} from './api-types';
