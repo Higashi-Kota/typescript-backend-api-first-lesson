@@ -278,6 +278,93 @@ export class DrizzleReservationRepository implements ReservationRepository {
 
 ---
 
+## APIバリデーション戦略
+
+### Zod v4によるリクエスト検証
+
+API層では、Zod v4の`z.custom<T>().check()`パターンを使用して、OpenAPIから生成された型に対する完全な型安全性を保証します。
+
+#### バリデーション原則
+
+1. **型の単一ソース**: TypeSpec → OpenAPI → TypeScript型 → `z.custom<T>()`
+2. **検証の階層化**: PathParams → QueryParams → Body の順で検証
+3. **Result型での統一**: すべての検証結果を`Result<T, ValidationError[]>`で返す
+4. **エラーの詳細化**: フィールドごとに具体的なエラーメッセージを提供
+
+#### 実装場所
+
+```
+backend/packages/api/src/
+├── validators/
+│   ├── request-validators.ts    # 共通バリデーションロジック
+│   ├── path-validators.ts       # PathParams検証
+│   ├── query-validators.ts      # QueryParams検証
+│   └── body-validators.ts       # RequestBody検証
+└── middleware/
+    └── validation.middleware.ts  # バリデーションミドルウェア
+```
+
+#### バリデーションフロー
+
+```typescript
+// API層でのバリデーションフロー
+HTTP Request
+    ↓
+バリデーションミドルウェア (z.custom<T>().check())
+    ↓
+Result<ValidatedRequest, ValidationError[]>
+    ↓ match()
+[OK] → UseCase呼び出し
+[Error] → 400 Bad Request レスポンス
+```
+
+#### 実装例
+
+```typescript
+// backend/packages/api/src/validators/customer-validators.ts
+import { z } from 'zod';
+import type { components } from '@beauty-salon-backend/generated';
+
+export const customerPathSchema = z.custom<
+  components['schemas']['CustomerPathParams']
+>().check((ctx) => {
+  const { customerId } = ctx.value;
+
+  // UUID v4形式の検証
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+  if (!uuidRegex.test(customerId)) {
+    ctx.issues.push({
+      code: 'custom',
+      message: 'customerId must be a valid UUID v4',
+      path: ['customerId']
+    });
+  }
+});
+
+// バリデーション結果をResult型に変換
+export function validateCustomerPath(
+  params: unknown
+): Result<components['schemas']['CustomerPathParams'], ValidationError[]> {
+  const result = customerPathSchema.safeParse(params);
+
+  return match(result)
+    .with({ success: true }, ({ data }) => ok(data))
+    .with({ success: false }, ({ error }) =>
+      err(error.issues.map(issue => ({
+        field: issue.path.join('.'),
+        message: issue.message,
+        code: 'VALIDATION_ERROR'
+      })))
+    )
+    .exhaustive();
+}
+```
+
+詳細な実装パターンは [`docs/uniform-implementation-guide.md#APIリクエストバリデーション`](./uniform-implementation-guide.md#apiリクエストバリデーション) を参照。
+
+---
+
 ## テスト戦略
 
 | テスト種別 | 対象レイヤー | ポイント |

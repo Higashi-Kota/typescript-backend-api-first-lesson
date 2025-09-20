@@ -126,9 +126,10 @@ infrastructure/
 
 **Components**:
 - **Routes**: Express route definitions
+- **Validation**: Zod v4 with `z.custom<T>().check()` for type-safe validation
 - **Middleware**: Auth, validation, rate limiting
-- **Error Handling**: Global error handler
-- **OpenAPI**: Documentation generation
+- **Error Handling**: Global error handler with Result types
+- **OpenAPI**: Documentation generation from TypeSpec
 
 **Key Files**:
 ```
@@ -139,9 +140,14 @@ api/
 │   │   ├── salons.ts      # Salon endpoints
 │   │   ├── auth.ts        # Authentication endpoints
 │   │   └── [entity].ts
+│   ├── validators/         # Request validation (Zod v4)
+│   │   ├── request-validators.ts    # Common validation logic
+│   │   ├── path-validators.ts       # PathParams validation
+│   │   ├── query-validators.ts      # QueryParams validation
+│   │   └── body-validators.ts       # RequestBody validation
 │   ├── middleware/
 │   │   ├── auth.middleware.ts
-│   │   ├── validation.middleware.ts
+│   │   ├── validation.middleware.ts  # Validation orchestration
 │   │   ├── error-handler.ts
 │   │   └── rate-limiter.ts
 │   ├── utils/
@@ -158,7 +164,12 @@ HTTP Request
     ↓
 [API Layer]
   - Route Handler
-  - Validation Middleware
+  - Validation Middleware (Zod v4)
+    - PathParams: z.custom<T>().check()
+    - QueryParams: z.custom<T>().check()
+    - Body: z.custom<T>().check()
+    ↓
+  Result<ValidatedRequest, ValidationError[]>
     ↓
 [Domain Layer]
   - Use Case (business-logic/)
@@ -716,8 +727,11 @@ pnpm --filter ./backend/packages/* \
 ## Security Measures
 
 ### Input Validation
-- TypeSpec schema validation
-- Zod runtime validation
+- TypeSpec schema validation at compile time
+- Zod v4 runtime validation with `z.custom<T>().check()` pattern
+- Type-safe validation for PathParams, QueryParams, and Body
+- Result types for all validation errors
+- Exhaustive error handling with ts-pattern
 - SQL injection prevention
 - XSS protection
 

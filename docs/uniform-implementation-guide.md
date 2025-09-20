@@ -590,6 +590,488 @@ export function extractParams<T extends Record<string, unknown>>(
 }
 ```
 
+## APIリクエストバリデーション
+
+### Zod v4を使用した型安全なバリデーション
+
+APIのリクエストデータ（PathParams、QueryParams、Body）の検証には、Zod v4の`z.custom<T>().check()`パターンを使用します。これにより、自動生成された型との完全な型安全性を保証します。
+
+#### 基本原則
+
+1. **自動生成型の活用**: OpenAPIから生成された型を`z.custom<T>()`で使用
+2. **カスタムバリデーション**: `.check()`メソッドで詳細な検証ロジックを実装
+3. **Result型での統一**: バリデーション結果は必ずResult型で返す
+4. **エラーメッセージの明確化**: フィールドごとに具体的なエラーメッセージを提供
+
+#### 実装パターン
+
+```typescript
+// src/api/validators/request-validators.ts
+import { z } from 'zod';
+import type { components } from '@beauty-salon-backend/generated';
+import { match } from 'ts-pattern';
+import type { Result } from '@beauty-salon-backend/domain';
+
+// 1. PathParamsのバリデーション
+export function validatePathParams<T extends components['schemas']['PathParams']>(
+  params: unknown
+): Result<T, ValidationError[]> {
+  const schema = z.custom<T>()
+    .check((ctx) => {
+      const value = ctx.value as Record<string, unknown>;
+
+      // UUID形式の検証
+      if ('customerId' in value && typeof value.customerId === 'string') {
+        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+        if (!uuidRegex.test(value.customerId)) {
+          ctx.issues.push({
+            code: 'custom',
+            message: 'customerId must be a valid UUID v4',
+            path: ['customerId']
+          });
+        }
+      }
+
+      // その他のID検証も同様に実装
+      if ('reservationId' in value) {
+        // 予約IDの検証ロジック
+      }
+    });
+
+  const result = schema.safeParse(params);
+
+  return match(result)
+    .with({ success: true }, ({ data }) => ({ type: 'ok', value: data }))
+    .with({ success: false }, ({ error }) => ({
+      type: 'err',
+      error: error.issues.map(issue => ({
+        field: issue.path.join('.'),
+        message: issue.message,
+        code: 'VALIDATION_ERROR'
+      }))
+    }))
+    .exhaustive();
+}
+
+// 2. QueryParamsのバリデーション
+export function validateQueryParams<T extends components['schemas']['QueryParams']>(
+  query: unknown
+): Result<T, ValidationError[]> {
+  const schema = z.custom<T>()
+    .check((ctx) => {
+      const value = ctx.value as Record<string, unknown>;
+
+      // ページネーションパラメータの検証
+      if ('page' in value) {
+        const page = Number(value.page);
+        if (isNaN(page) || page < 1) {
+          ctx.issues.push({
+            code: 'custom',
+            message: 'page must be a positive integer',
+            path: ['page']
+          });
+        }
+      }
+
+      if ('limit' in value) {
+        const limit = Number(value.limit);
+        if (isNaN(limit) || limit < 1 || limit > 100) {
+          ctx.issues.push({
+            code: 'custom',
+            message: 'limit must be between 1 and 100',
+            path: ['limit']
+          });
+        }
+      }
+
+      // 日付範囲の検証
+      if ('startDate' in value && 'endDate' in value) {
+        const startDate = new Date(value.startDate as string);
+        const endDate = new Date(value.endDate as string);
+
+        if (startDate > endDate) {
+          ctx.issues.push({
+            code: 'custom',
+            message: 'startDate must be before endDate',
+            path: ['startDate', 'endDate']
+          });
+        }
+      }
+    });
+
+  return validateWithSchema(schema, query);
+}
+
+// 3. Request Bodyのバリデーション
+export function validateRequestBody<T extends components['schemas']['RequestBody']>(
+  body: unknown
+): Result<T, ValidationError[]> {
+  const schema = z.custom<T>()
+    .check((ctx) => {
+      const value = ctx.value as Record<string, unknown>;
+
+      // 必須フィールドの検証
+      const requiredFields = ['name', 'email', 'phone']; // 型定義から取得
+
+      for (const field of requiredFields) {
+        if (!(field in value) || value[field] === null || value[field] === undefined) {
+          ctx.issues.push({
+            code: 'custom',
+            message: `${field} is required`,
+            path: [field]
+          });
+        }
+      }
+
+      // メールフォーマットの検証
+      if ('email' in value && typeof value.email === 'string') {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value.email)) {
+          ctx.issues.push({
+            code: 'custom',
+            message: 'Invalid email format',
+            path: ['email']
+          });
+        }
+      }
+
+      // 電話番号フォーマットの検証
+      if ('phone' in value && typeof value.phone === 'string') {
+        const phoneRegex = /^0\d{1,4}-?\d{1,4}-?\d{4}$/;
+        if (!phoneRegex.test(value.phone.replace(/-/g, ''))) {
+          ctx.issues.push({
+            code: 'custom',
+            message: 'Invalid Japanese phone number format',
+            path: ['phone']
+          });
+        }
+      }
+
+      // ネストされたオブジェクトの検証
+      if ('address' in value && typeof value.address === 'object') {
+        validateAddress(ctx, value.address as Record<string, unknown>);
+      }
+    });
+
+  return validateWithSchema(schema, body);
+}
+
+// 4. 複合バリデーション（Read/Write操作）
+export interface ValidatedRequest<P = unknown, Q = unknown, B = unknown> {
+  params?: P;
+  query?: Q;
+  body?: B;
+}
+
+export function validateRequest<
+  P extends components['schemas']['PathParams'],
+  Q extends components['schemas']['QueryParams'],
+  B extends components['schemas']['RequestBody']
+>(
+  request: {
+    params?: unknown;
+    query?: unknown;
+    body?: unknown;
+  },
+  validators: {
+    params?: () => Result<P, ValidationError[]>;
+    query?: () => Result<Q, ValidationError[]>;
+    body?: () => Result<B, ValidationError[]>;
+  }
+): Result<ValidatedRequest<P, Q, B>, ValidationError[]> {
+  const errors: ValidationError[] = [];
+  const validated: ValidatedRequest<P, Q, B> = {};
+
+  // 各部分のバリデーション実行
+  if (validators.params && request.params) {
+    const result = validators.params();
+    if (result.type === 'err') {
+      errors.push(...result.error);
+    } else {
+      validated.params = result.value;
+    }
+  }
+
+  if (validators.query && request.query) {
+    const result = validators.query();
+    if (result.type === 'err') {
+      errors.push(...result.error);
+    } else {
+      validated.query = result.value;
+    }
+  }
+
+  if (validators.body && request.body) {
+    const result = validators.body();
+    if (result.type === 'err') {
+      errors.push(...result.error);
+    } else {
+      validated.body = result.value;
+    }
+  }
+
+  return errors.length > 0
+    ? { type: 'err', error: errors }
+    : { type: 'ok', value: validated };
+}
+
+// 5. ミドルウェアでの使用例
+export function validationMiddleware<P, Q, B>(
+  validators: {
+    params?: (data: unknown) => Result<P, ValidationError[]>;
+    query?: (data: unknown) => Result<Q, ValidationError[]>;
+    body?: (data: unknown) => Result<B, ValidationError[]>;
+  }
+) {
+  return (req: Request, res: Response, next: NextFunction): void => {
+    const result = validateRequest(
+      {
+        params: req.params,
+        query: req.query,
+        body: req.body
+      },
+      {
+        params: validators.params ? () => validators.params!(req.params) : undefined,
+        query: validators.query ? () => validators.query!(req.query) : undefined,
+        body: validators.body ? () => validators.body!(req.body) : undefined
+      }
+    );
+
+    match(result)
+      .with({ type: 'ok' }, ({ value }) => {
+        // 検証済みデータをリクエストに追加
+        (req as any).validated = value;
+        next();
+      })
+      .with({ type: 'err' }, ({ error }) => {
+        res.status(400).json({
+          type: 'validationError',
+          errors: error,
+          meta: {
+            requestId: req.id,
+            timestamp: new Date()
+          }
+        });
+      })
+      .exhaustive();
+  };
+}
+
+// 6. ヘルパー関数
+function validateWithSchema<T>(
+  schema: z.ZodSchema<T>,
+  data: unknown
+): Result<T, ValidationError[]> {
+  const result = schema.safeParse(data);
+
+  if (result.success) {
+    return { type: 'ok', value: result.data };
+  }
+
+  return {
+    type: 'err',
+    error: result.error.issues.map(issue => ({
+      field: issue.path.join('.'),
+      message: issue.message,
+      code: 'VALIDATION_ERROR'
+    }))
+  };
+}
+
+function validateAddress(
+  ctx: any,
+  address: Record<string, unknown>
+): void {
+  // 郵便番号の検証
+  if ('postalCode' in address && typeof address.postalCode === 'string') {
+    const postalCodeRegex = /^\d{3}-?\d{4}$/;
+    if (!postalCodeRegex.test(address.postalCode.replace(/-/g, ''))) {
+      ctx.issues.push({
+        code: 'custom',
+        message: 'Invalid Japanese postal code format',
+        path: ['address', 'postalCode']
+      });
+    }
+  }
+
+  // 都道府県の検証
+  if ('prefecture' in address && typeof address.prefecture === 'string') {
+    const validPrefectures = [
+      '北海道', '青森県', '岩手県', '宮城県', '秋田県', '山形県', '福島県',
+      '茨城県', '栃木県', '群馬県', '埼玉県', '千葉県', '東京都', '神奈川県',
+      // ... 省略
+    ];
+
+    if (!validPrefectures.includes(address.prefecture)) {
+      ctx.issues.push({
+        code: 'custom',
+        message: 'Invalid prefecture name',
+        path: ['address', 'prefecture']
+      });
+    }
+  }
+}
+```
+
+#### 使用例
+
+```typescript
+// src/api/routes/customers.ts
+import { Router } from 'express';
+import { validationMiddleware, validatePathParams, validateQueryParams, validateRequestBody } from '../validators';
+import type { components } from '@beauty-salon-backend/generated';
+
+const router = Router();
+
+// GET /customers/:customerId
+router.get(
+  '/:customerId',
+  validationMiddleware({
+    params: (data) => validatePathParams<components['schemas']['GetCustomerPathParams']>(data)
+  }),
+  async (req, res) => {
+    const { params } = req.validated!;
+    // params.customerIdは型安全かつ検証済み
+  }
+);
+
+// GET /customers (with query params)
+router.get(
+  '/',
+  validationMiddleware({
+    query: (data) => validateQueryParams<components['schemas']['ListCustomersQueryParams']>(data)
+  }),
+  async (req, res) => {
+    const { query } = req.validated!;
+    // query.page, query.limit等は型安全かつ検証済み
+  }
+);
+
+// POST /customers
+router.post(
+  '/',
+  validationMiddleware({
+    body: (data) => validateRequestBody<components['schemas']['CreateCustomerRequest']>(data)
+  }),
+  async (req, res) => {
+    const { body } = req.validated!;
+    // bodyは完全に型安全かつ検証済み
+  }
+);
+
+// PUT /customers/:customerId (複合バリデーション)
+router.put(
+  '/:customerId',
+  validationMiddleware({
+    params: (data) => validatePathParams<components['schemas']['UpdateCustomerPathParams']>(data),
+    body: (data) => validateRequestBody<components['schemas']['UpdateCustomerRequest']>(data)
+  }),
+  async (req, res) => {
+    const { params, body } = req.validated!;
+    // paramsとbodyの両方が型安全かつ検証済み
+  }
+);
+```
+
+#### テスト例
+
+```typescript
+// src/api/validators/__tests__/request-validators.test.ts
+import { describe, it, expect } from 'vitest';
+import { validatePathParams, validateQueryParams, validateRequestBody } from '../request-validators';
+
+describe('Request Validators', () => {
+  describe('validatePathParams', () => {
+    it('should validate UUID format for customerId', () => {
+      const validUuid = '550e8400-e29b-41d4-a716-446655440001';
+      const result = validatePathParams({ customerId: validUuid });
+
+      expect(result).toEqual({
+        type: 'ok',
+        value: { customerId: validUuid }
+      });
+    });
+
+    it('should reject invalid UUID format', () => {
+      const invalidUuid = 'not-a-uuid';
+      const result = validatePathParams({ customerId: invalidUuid });
+
+      expect(result).toEqual({
+        type: 'err',
+        error: [{
+          field: 'customerId',
+          message: 'customerId must be a valid UUID v4',
+          code: 'VALIDATION_ERROR'
+        }]
+      });
+    });
+  });
+
+  describe('validateQueryParams', () => {
+    it('should validate pagination parameters', () => {
+      const result = validateQueryParams({ page: '1', limit: '10' });
+
+      expect(result).toEqual({
+        type: 'ok',
+        value: { page: 1, limit: 10 }
+      });
+    });
+
+    it('should reject invalid pagination values', () => {
+      const result = validateQueryParams({ page: '0', limit: '101' });
+
+      expect(result.type).toBe('err');
+      if (result.type === 'err') {
+        expect(result.error).toContainEqual(
+          expect.objectContaining({
+            field: 'page',
+            message: 'page must be a positive integer'
+          })
+        );
+        expect(result.error).toContainEqual(
+          expect.objectContaining({
+            field: 'limit',
+            message: 'limit must be between 1 and 100'
+          })
+        );
+      }
+    });
+  });
+
+  describe('validateRequestBody', () => {
+    it('should validate required fields', () => {
+      const body = {
+        name: '田中 太郎',
+        email: 'tanaka@example.com',
+        phone: '090-1234-5678'
+      };
+
+      const result = validateRequestBody(body);
+      expect(result.type).toBe('ok');
+    });
+
+    it('should validate email format', () => {
+      const body = {
+        name: '田中 太郎',
+        email: 'invalid-email',
+        phone: '090-1234-5678'
+      };
+
+      const result = validateRequestBody(body);
+      expect(result.type).toBe('err');
+      if (result.type === 'err') {
+        expect(result.error).toContainEqual(
+          expect.objectContaining({
+            field: 'email',
+            message: 'Invalid email format'
+          })
+        );
+      }
+    });
+  });
+});
+```
+
 ## トランザクション管理
 
 ### Drizzle ORM トランザクションパターン

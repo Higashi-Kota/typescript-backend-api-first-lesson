@@ -70,6 +70,7 @@ All implementations must follow standardized patterns for:
 - Error handling
 - Date/time processing (date-fns)
 - Query parameters
+- Request validation (Zod v4 with `z.custom<T>().check()`)
 - Authorization
 - Logging
 - ID validation

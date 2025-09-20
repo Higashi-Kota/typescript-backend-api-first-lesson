@@ -214,41 +214,193 @@ curl -X PUT http://localhost:3000/api/v1/customers/550e8400-e29b-41d4-a716-44665
 curl -X DELETE http://localhost:3000/api/v1/customers/550e8400-e29b-41d4-a716-446655440001
 ```
 
-## 5. エラーレスポンスの例
+## 5. バリデーションテスト（Zod v4使用）
 
-### 5.1 バリデーションエラー
+### 5.1 PathParamsのバリデーション
 
 ```bash
-# 必須フィールドが不足している場合
-curl -X POST http://localhost:3000/api/v1/customers \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "invalid-email"
-  }'
+# 有効なUUID形式でのアクセス
+curl -X GET http://localhost:3000/api/v1/customers/550e8400-e29b-41d4-a716-446655440001
+
+# 無効なUUID形式でのアクセス
+curl -X GET http://localhost:3000/api/v1/customers/invalid-uuid
 ```
 
-期待されるレスポンス：
+無効なUUIDの期待されるレスポンス：
 ```json
 {
-  "status": "error",
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "Validation failed",
-    "details": [
-      {
-        "field": "email",
-        "message": "Invalid email format"
-      },
-      {
-        "field": "name",
-        "message": "Required field"
-      }
-    ]
+  "type": "validationError",
+  "errors": [
+    {
+      "field": "customerId",
+      "message": "customerId must be a valid UUID v4",
+      "code": "VALIDATION_ERROR"
+    }
+  ],
+  "meta": {
+    "requestId": "req_xyz123",
+    "timestamp": "2024-01-17T10:00:00.000Z"
   }
 }
 ```
 
-### 5.2 リソースが見つからない
+### 5.2 QueryParamsのバリデーション
+
+```bash
+# ページネーション - 有効な値
+curl -X GET "http://localhost:3000/api/v1/customers?page=1&limit=10"
+
+# ページネーション - pageが0（無効）
+curl -X GET "http://localhost:3000/api/v1/customers?page=0&limit=10"
+
+# ページネーション - limitが範囲外（101は無効）
+curl -X GET "http://localhost:3000/api/v1/customers?page=1&limit=101"
+```
+
+無効なページネーションの期待されるレスポンス：
+```json
+{
+  "type": "validationError",
+  "errors": [
+    {
+      "field": "page",
+      "message": "page must be a positive integer",
+      "code": "VALIDATION_ERROR"
+    },
+    {
+      "field": "limit",
+      "message": "limit must be between 1 and 100",
+      "code": "VALIDATION_ERROR"
+    }
+  ]
+}
+```
+
+### 5.3 Request Bodyのバリデーション
+
+```bash
+# 必須フィールド欠落のテスト
+curl -X POST http://localhost:3000/api/v1/customers \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "田中 太郎"
+  }'
+
+# メール形式が無効
+curl -X POST http://localhost:3000/api/v1/customers \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "田中 太郎",
+    "email": "invalid-email",
+    "phone": "090-1234-5678"
+  }'
+
+# 電話番号形式が無効
+curl -X POST http://localhost:3000/api/v1/customers \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "田中 太郎",
+    "email": "tanaka@example.com",
+    "phone": "123-456"
+  }'
+```
+
+バリデーションエラーの統一レスポンス形式：
+```json
+{
+  "type": "validationError",
+  "errors": [
+    {
+      "field": "email",
+      "message": "email is required",
+      "code": "VALIDATION_ERROR"
+    },
+    {
+      "field": "phone",
+      "message": "phone is required",
+      "code": "VALIDATION_ERROR"
+    }
+  ],
+  "meta": {
+    "requestId": "req_abc123",
+    "timestamp": "2024-01-17T10:00:00.000Z"
+  }
+}
+```
+
+### 5.4 住所情報のバリデーション
+
+```bash
+# 郵便番号形式の検証
+curl -X POST http://localhost:3000/api/v1/customers \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "田中 太郎",
+    "email": "tanaka@example.com",
+    "phone": "090-1234-5678",
+    "postalCode": "invalid",
+    "prefecture": "無効な都道府県"
+  }'
+```
+
+住所関連のエラーレスポンス：
+```json
+{
+  "type": "validationError",
+  "errors": [
+    {
+      "field": "postalCode",
+      "message": "Invalid Japanese postal code format",
+      "code": "VALIDATION_ERROR"
+    },
+    {
+      "field": "prefecture",
+      "message": "Invalid prefecture name",
+      "code": "VALIDATION_ERROR"
+    }
+  ]
+}
+```
+
+### 5.5 複合バリデーション（PathParams + Body）
+
+```bash
+# PUTリクエストで複数の検証エラー
+curl -X PUT http://localhost:3000/api/v1/customers/invalid-uuid \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "invalid-email",
+    "phone": "invalid-phone"
+  }'
+```
+
+複合エラーのレスポンス：
+```json
+{
+  "type": "validationError",
+  "errors": [
+    {
+      "field": "customerId",
+      "message": "customerId must be a valid UUID v4",
+      "code": "VALIDATION_ERROR"
+    },
+    {
+      "field": "email",
+      "message": "Invalid email format",
+      "code": "VALIDATION_ERROR"
+    },
+    {
+      "field": "phone",
+      "message": "Invalid Japanese phone number format",
+      "code": "VALIDATION_ERROR"
+    }
+  ]
+}
+```
+
+## 6. エラーレスポンスの例
+
+### 6.1 リソースが見つからない
 
 ```bash
 curl -X GET http://localhost:3000/api/v1/customers/non-existent-id
@@ -265,7 +417,7 @@ curl -X GET http://localhost:3000/api/v1/customers/non-existent-id
 }
 ```
 
-## 6. 便利なcurlオプション
+## 7. 便利なcurlオプション
 
 ```bash
 # レスポンスをフォーマットして表示
@@ -281,9 +433,9 @@ curl -w "\n\nTotal time: %{time_total}s\n" -X GET http://localhost:3000/api/v1/c
 curl -X GET http://localhost:3000/api/v1/customers -o customers.json
 ```
 
-## 7. トラブルシューティング
+## 8. トラブルシューティング
 
-### 7.1 データベース接続エラー
+### 8.1 データベース接続エラー
 
 ```bash
 # PostgreSQLが起動しているか確認
@@ -296,7 +448,7 @@ docker-compose logs postgres
 docker-compose restart postgres
 ```
 
-### 7.2 ポートが使用中
+### 8.2 ポートが使用中
 
 ```bash
 # 3000番ポートを使用しているプロセスを確認
@@ -306,7 +458,7 @@ lsof -i :3000
 kill -9 <PID>
 ```
 
-### 7.3 依存関係のエラー
+### 8.3 依存関係のエラー
 
 ```bash
 # node_modulesを削除して再インストール
@@ -314,14 +466,14 @@ rm -rf node_modules pnpm-lock.yaml
 pnpm install
 ```
 
-## 8. 開発のヒント
+## 9. 開発のヒント
 
 1. **ログの確認**: サーバーコンソールに詳細なログが出力されます
 2. **Pretty Print**: `jq`コマンドを使用してJSONを整形表示
 3. **Request ID**: 各リクエストには一意のIDが付与され、ログ追跡に使用できます
 4. **開発ツール**: Postman、Insomnia、Thunder Clientなどを使用するとより快適にテストできます
 
-## 9. 次のステップ
+## 10. 次のステップ
 
 現在は顧客APIのみが実装されています。他のリソース（サロン、サービス、予約など）のAPIは今後実装予定です。
 
