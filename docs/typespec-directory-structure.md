@@ -45,6 +45,8 @@ specs/
 ├── main.tsp                    # メインエントリーポイント
 ├── package.json
 ├── tspconfig.yaml              # TypeSpec設定
+├── scripts/                    # TypeSpec生成物のポストプロセス
+│   └── postprocess-openapi.ts  # OpenAPIのEnumを共通スキーマ参照に差し替え
 └── tsp-output/                 # 生成されたOpenAPI仕様
     └── @typespec/
         └── openapi3/
@@ -215,3 +217,13 @@ Duplicate type name: 'Models.SomeType'
 - [型生成システムガイド](./type-generation-system.md)
 - [TypeSpec API型定義ルール](./typespec-api-type-rules.md)
 - [バックエンドアーキテクチャガイドライン](./backend-architecture-guidelines.md)
+## ビルド後フック
+
+`specs/package.json` の `compile` スクリプトは `tsp compile .` 実行後に `scripts/postprocess-openapi.ts` を呼び出し、既知の `duplicate-type-name` 問題を回避するためにOpenAPI出力の対象列挙型を `#/components/schemas/Models.*` へ自動置換します。手動で再実行したい場合は以下を利用します。
+
+```bash
+cd specs
+pnpm run postprocess-openapi
+```
+
+`postprocess-openapi.ts` は列挙値の集合が一致した場合のみ置換するため、意図しないスキーマへの干渉を防ぎつつ、共通Enumの再利用を保証します。

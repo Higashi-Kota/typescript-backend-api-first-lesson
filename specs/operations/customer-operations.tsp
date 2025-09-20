@@ -42,12 +42,12 @@ namespace BeautySalon.Operations {
     #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Filter by customer status")
-    status?: CustomerStatusType;
+    status?: "active" | "inactive" | "suspended" | "deleted" | "blacklisted";
 
     #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Filter by loyalty tier")
-    loyaltyTier?: LoyaltyTierType;
+    loyaltyTier?: "bronze" | "silver" | "gold" | "platinum";
   }
 
   /**

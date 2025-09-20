@@ -71,6 +71,6 @@ namespace BeautySalon.Models {
   model SearchSalonRequest {
     @query keyword?: string;
     @query city?: string;
-    @query category?: ServiceCategoryType;
+    @query category?: "cut" | "color" | "perm" | "treatment" | "spa" | "other";
   }
 }

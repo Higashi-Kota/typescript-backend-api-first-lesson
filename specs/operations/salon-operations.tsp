@@ -25,7 +25,7 @@ namespace BeautySalon.Operations {
     #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("Filter by service category")
-    category?: ServiceCategoryType;
+    category?: "cut" | "color" | "perm" | "treatment" | "spa" | "other";
 
     #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
@@ -229,7 +229,7 @@ namespace BeautySalon.Operations {
 
       @query
       @doc("Service category filter")
-      category?: ServiceCategoryType,
+      category?: "cut" | "color" | "perm" | "treatment" | "spa" | "other",
 
       ...CursorPaginationParams,
       @header("Authorization") authorization?: string,
@@ -274,7 +274,7 @@ namespace BeautySalon.Operations {
 
       @query
       @doc("Service categories of interest")
-      categories?: ServiceCategoryType[],
+      categories?: ("cut" | "color" | "perm" | "treatment" | "spa" | "other")[],
 
       @query
       @doc("Price range preference")
@@ -301,7 +301,7 @@ namespace BeautySalon.Operations {
       @body request: {
         customerId: CustomerId;
         notificationTypes: NotificationType[];
-        categories?: ServiceCategoryType[];
+        categories?: ("cut" | "color" | "perm" | "treatment" | "spa" | "other")[];
       },
       @header("Authorization") authorization?: string,
     ):

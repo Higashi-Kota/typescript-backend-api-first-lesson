@@ -303,6 +303,14 @@ error @typespec/openapi/duplicate-type-name: Duplicate type name: 'Models.Servic
 
 これはTypeSpecのOpenAPIジェネレータの既知の問題ですが、実際の型生成とCIビルドには影響しません。
 
+そのため、クエリパラメータなど一部のEnumはTypeSpec上では文字列リテラルの合併型を記述し、OpenAPI生成後に以下のポストプロセスで共通Enumへの`$ref`に差し替えます。
+
+```bash
+pnpm generate:spec  # specs側でtsp compile . → postprocess-openapiが順に実行される
+```
+
+`specs/scripts/postprocess-openapi.ts`は、生成された`openapi.yaml`内の既知Enumセット（サービスカテゴリ、顧客ステータス、ロイヤリティティア）を検出し、`#/components/schemas/Models.*`へ`$ref`を付与します。列挙値を直書きする TypeSpec 側のメンテナンスコストを抑えつつ、OpenAPIでは共通スキーマを再利用できるようにするためのワークアラウンドです。
+
 #### プロジェクトの方針
 1. **一貫性を優先**: すべてのEnumに`Type`サフィックスを付けることで、コードベース全体の一貫性を保つ
 2. **警告は許容**: TypeSpecのコンパイル警告は無視し、CIが正常に通ることを確認

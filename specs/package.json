@@ -4,12 +4,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "compile": "tsp compile .",
+    "compile": "tsp compile . && pnpm run postprocess-openapi",
     "watch": "tsp compile . --watch",
     "format": "tsp format **/*.tsp",
-    "generate:backend": "tsp compile . && pnpm --filter '@beauty-salon-backend/generated' run generate"
+    "generate:backend": "pnpm run compile && pnpm --filter '@beauty-salon-backend/generated' run generate",
+    "postprocess-openapi": "tsc --project scripts/tsconfig.json && node ./scripts/dist/postprocess-openapi.js"
   },
   "devDependencies": {
+    "@types/node": "^24.0.13",
+    "typescript": "^5.8.3",
     "@typespec/compiler": "1.4.0",
     "@typespec/http": "1.4.0",
     "@typespec/openapi": "1.4.0",

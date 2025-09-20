@@ -16,6 +16,7 @@ out/
 
 # Shared config should not have dist
 shared-config/**/dist/
+specs/scripts/dist/
 
 # Environment variables
 .env
