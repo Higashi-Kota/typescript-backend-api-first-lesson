@@ -54,7 +54,7 @@ For detailed architecture documentation, see [docs/architecture-overview.md](doc
 pnpm install
 
 # Setup database
-pnpm db:setup
+pnpm db:fresh
 
 # Generate types from TypeSpec
 pnpm generate
@@ -122,7 +122,9 @@ pnpm format:fix         # Auto-format code
 # Database
 pnpm db:migrate         # Run migrations
 pnpm db:seed           # Seed database
-pnpm db:reset          # Reset database
+pnpm db:fresh          # Complete reset with schema and seed
+pnpm db:truncate       # Clear all table data
+pnpm db:introspect     # Generate TypeScript schema from DB
 ```
 
 ## 🧪 Testing

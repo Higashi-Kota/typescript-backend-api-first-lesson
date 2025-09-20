@@ -145,9 +145,11 @@ pnpm dev              # Start all services
 pnpm generate         # Generate all types
 
 # Database
-pnpm db:setup         # Initial setup
-pnpm db:migrate       # Run migrations
-pnpm db:seed          # Seed data
+pnpm db:fresh         # Complete reset with schema and seed
+pnpm db:migrate       # Run migrations (Drizzle + SQL files)
+pnpm db:seed          # Seed data with statistics
+pnpm db:truncate      # Clear all table data
+pnpm db:introspect    # Generate TypeScript schema from DB
 
 # Testing
 pnpm test             # Unit tests

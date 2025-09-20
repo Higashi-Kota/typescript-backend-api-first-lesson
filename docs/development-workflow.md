@@ -277,7 +277,7 @@ curl -X POST http://localhost:3000/api/v1/staff \
 echo "ALTER TABLE users ADD COLUMN age INT;" > backend/packages/database/sql/migrations/$(date +%Y%m%d%H%M)_add_age.sql
 
 # 2. マイグレーションを実行
-pnpm db:migrate:sql backend/packages/database/sql/migrations/$(date +%Y%m%d%H%M)_add_age.sql
+pnpm db:migrate
 
 # 3. TypeScript型を生成
 pnpm db:introspect

@@ -48,13 +48,14 @@ pnpm run db:fresh
 
 または個別に実行:
 ```bash
-# データベースのリセット
-pnpm run db:reset
+# データベースの完全リセット（テーブル削除・再作成）
+pnpm run db:fresh
 
-# スキーマの作成
-pnpm run db:setup
+# または、データのみクリアしてシードデータ投入
+pnpm run db:truncate
+pnpm run db:seed
 
-# シードデータの投入
+# マイグレーションのみ実行する場合
 pnpm run db:seed
 ```
 
