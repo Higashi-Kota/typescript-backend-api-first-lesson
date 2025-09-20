@@ -850,7 +850,211 @@ const result = await cleanupOldData(app, 90);
 expect(result.deletedCount).toBe(1);
 ```
 
-#### 4. エラーパスの網羅
+#### 4. トランザクションのテスト
+
+Drizzleトランザクションの動作を確実に検証するテストパターン：
+
+```typescript
+// backend/packages/domain/src/business-logic/__tests__/transaction.test.ts
+import { describe, it, expect, beforeEach } from 'vitest';
+import { TestEnvironmentWithIsolation } from '../../setup/test-environment';
+
+describe('Transaction behavior tests', () => {
+  let testContext: TestContext;
+  let useCase: CreateReservationUseCase;
+
+  beforeEach(async () => {
+    testContext = await TestEnvironmentWithIsolation.setupTest();
+    useCase = new CreateReservationUseCase(testContext.db);
+  });
+
+  describe('悲観的ロックのテスト', () => {
+    it('should prevent concurrent slot booking with pessimistic lock', async () => {
+      // 同じスロットに対する並行予約をシミュレート
+      const slot = await createAvailableSlot(testContext.db);
+
+      const command1 = createReservationCommand({ slotId: slot.id });
+      const command2 = createReservationCommand({ slotId: slot.id });
+
+      // 並行実行
+      const [result1, result2] = await Promise.all([
+        useCase.execute(command1),
+        useCase.execute(command2)
+      ]);
+
+      // 1つは成功、もう1つは失敗
+      const results = [result1, result2];
+      const successes = results.filter(r => r.type === 'ok');
+      const failures = results.filter(r => r.type === 'err');
+
+      expect(successes).toHaveLength(1);
+      expect(failures).toHaveLength(1);
+      expect(failures[0].error.type).toBe('slotUnavailable');
+    });
+
+    it('should handle deadlock with retry', async () => {
+      // デッドロックをシミュレート
+      const resource1 = await createResource(testContext.db, 'A');
+      const resource2 = await createResource(testContext.db, 'B');
+
+      // 逆順でリソースをロックする2つのトランザクション
+      const tx1Promise = testContext.db.transaction(async (tx) => {  // 仮引数名: tx（トランザクション専用）
+        await lockResource(tx, resource1.id);
+        await sleep(50); // デッドロックを誘発
+        await lockResource(tx, resource2.id);
+      });
+
+      const tx2Promise = testContext.db.transaction(async (tx) => {  // 仮引数名: tx（トランザクション専用）
+        await lockResource(tx, resource2.id);
+        await sleep(50);
+        await lockResource(tx, resource1.id);
+      });
+
+      // リトライマネージャーでラップ
+      const retryManager = new TransactionRetryManager();
+
+      const [result1, result2] = await Promise.all([
+        retryManager.executeWithRetry(() => tx1),
+        retryManager.executeWithRetry(() => tx2)
+      ]);
+
+      // 両方とも最終的に成功
+      expect(result1.type).toBe('ok');
+      expect(result2.type).toBe('ok');
+    });
+  });
+
+  describe('楽観的ロックのテスト', () => {
+    it('should detect concurrent updates with optimistic lock', async () => {
+      const customer = await createCustomer(testContext.db);
+
+      // 同じバージョンから2つの更新を試行
+      const update1 = updateCustomerWithOptimisticLock(
+        testContext.db,
+        customer.id,
+        customer.version,
+        { name: 'Alice' }
+      );
+
+      const update2 = updateCustomerWithOptimisticLock(
+        testContext.db,
+        customer.id,
+        customer.version,
+        { name: 'Bob' }
+      );
+
+      const [result1, result2] = await Promise.all([update1, update2]);
+
+      // 1つは成功、もう1つは楽観的ロック失敗
+      const successes = [result1, result2].filter(r => r.type === 'ok');
+      const failures = [result1, result2].filter(r => r.type === 'err');
+
+      expect(successes).toHaveLength(1);
+      expect(failures).toHaveLength(1);
+      expect(failures[0].error.type).toBe('optimisticLockFailure');
+    });
+  });
+
+  describe('分離レベルのテスト', () => {
+    it('should prevent phantom reads with serializable isolation', async () => {
+      const results: number[] = [];
+
+      // SERIALIZABLE分離レベルでファントムリードを防ぐ
+      await testContext.db.transaction(async (tx) => {
+        // 初回カウント
+        const count1 = await tx.select().from(reservations).count();
+        results.push(count1);
+
+        // 別のトランザクションが新規レコードを挿入しようとする
+        const insertPromise = testContext.db.insert(reservations).values(newReservation);
+
+        // 再度カウント
+        const count2 = await tx.select().from(reservations).count();
+        results.push(count2);
+
+        await insertPromise.catch(() => {}); // エラーを無視
+      }, {
+        isolationLevel: 'serializable'
+      });
+
+      // SERIALIZABLEなので、カウントは同じ
+      expect(results[0]).toBe(results[1]);
+    });
+
+    it('should allow non-repeatable reads with read committed', async () => {
+      let value1: number;
+      let value2: number;
+
+      await testContext.db.transaction(async (tx) => {
+        // 初回読み込み
+        const [row1] = await tx.select().from(inventory).where(eq(inventory.id, itemId));
+        value1 = row1.quantity;
+
+        // 別のトランザクションで更新
+        await testContext.db.update(inventory)
+          .set({ quantity: value1 + 10 })
+          .where(eq(inventory.id, itemId));
+
+        // 再度読み込み（READ COMMITTEDなので新しい値が見える）
+        const [row2] = await tx.select().from(inventory).where(eq(inventory.id, itemId));
+        value2 = row2.quantity;
+      }, {
+        isolationLevel: 'read committed'
+      });
+
+      expect(value2).toBe(value1 + 10);
+    });
+  });
+
+  describe('セーブポイントのテスト', () => {
+    it('should rollback to savepoint on partial failure', async () => {
+      const result = await testContext.db.transaction(async (tx) => {
+        const savepointManager = new SavepointTransactionManager();
+
+        // メイン操作
+        const mainResult = await tx.insert(bookings).values(mainBooking).returning();
+
+        // セーブポイントでオプション処理
+        const optionResult = await savepointManager.withSavepoint(
+          tx,
+          'option_processing',
+          async () => {
+            // これは失敗する
+            return err({ type: 'optionUnavailable' });
+          }
+        );
+
+        // オプションは失敗したが、メイン予約は維持
+        const finalCount = await tx.select().from(bookings).count();
+
+        return {
+          mainBooking: mainResult[0],
+          optionResult,
+          finalCount
+        };
+      });
+
+      expect(result.mainBooking).toBeDefined();
+      expect(result.optionResult.type).toBe('err');
+      expect(result.finalCount).toBe(1); // メイン予約のみ
+    });
+  });
+});
+
+// ヘルパー関数
+async function lockResource(tx: PgTransaction, resourceId: string) {
+  return tx.select()
+    .from(resources)
+    .where(eq(resources.id, resourceId))
+    .for('update');
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+```
+
+#### 5. エラーパスの網羅
 
 各APIエンドポイントに対して最低限以下のケースをテスト：
 

@@ -282,19 +282,38 @@ export const mapDbPageToApiResponse = (
 
 ```typescript
 // backend/packages/infrastructure/src/repositories/customer.repository.ts
-import { db } from '../database'
+import type { NodePgDatabase } from 'drizzle-orm/node-postgres'
+import type { PgTransaction } from 'drizzle-orm/pg-core'
 import { customers, type Customer, type NewCustomer } from '@beauty-salon-backend/database'
 import { eq } from 'drizzle-orm'
 import { ok, err, type Result } from '@beauty-salon-backend/domain'
 
+// 統一型定義（命名規則）
+type DatabaseConnection = NodePgDatabase
+type Transaction = PgTransaction
+type DbOrTx = DatabaseConnection | Transaction
+
 export class CustomerRepository {
+  constructor(private readonly db: DatabaseConnection) {}
+
   /**
-   * 新規顧客作成
-   * DB型をそのまま受け取り、DB型を返す
+   * 新規顧客作成（通常版）
+   * 内部でトランザクション対応版を呼び出す
    */
   async create(data: NewCustomer): Promise<Result<Customer, RepositoryError>> {
+    return this.createWithTx(this.db, data)
+  }
+
+  /**
+   * 新規顧客作成（トランザクション対応版）
+   * 仮引数名 dbOrTx: DB接続またはトランザクションを受け入れる
+   */
+  async createWithTx(
+    dbOrTx: DbOrTx,  // 命名規則: dbOrTx
+    data: NewCustomer
+  ): Promise<Result<Customer, RepositoryError>> {
     try {
-      const [customer] = await db
+      const [customer] = await dbOrTx
         .insert(customers)
         .values(data)
         .returning()
@@ -310,12 +329,21 @@ export class CustomerRepository {
   }
 
   /**
-   * ID検索
-   * DB型をそのまま返す
+   * ID検索（通常版）
    */
   async findById(id: string): Promise<Result<Customer | null, RepositoryError>> {
+    return this.findByIdWithTx(this.db, id)
+  }
+
+  /**
+   * ID検索（トランザクション対応版）
+   */
+  async findByIdWithTx(
+    dbOrTx: DbOrTx,
+    id: string
+  ): Promise<Result<Customer | null, RepositoryError>> {
     try {
-      const customer = await db
+      const customer = await dbOrTx
         .select()
         .from(customers)
         .where(eq(customers.id, id))

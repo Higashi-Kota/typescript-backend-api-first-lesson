@@ -362,11 +362,24 @@ export class CreateCustomerUseCase {
 ### 1. トランザクション管理
 
 ```typescript
+import type { NodePgDatabase } from 'drizzle-orm/node-postgres'
+import type { PgTransaction } from 'drizzle-orm/pg-core'
+
+// 統一型定義（命名規則）
+type DatabaseConnection = NodePgDatabase
+type Transaction = PgTransaction
+
 export class ReservationUseCase {
+  constructor(private readonly db: DatabaseConnection) {}
+
   async createReservation(request: CreateReservationRequest) {
-    return await db.transaction(async (tx) => {
-      // 1. スロットの空き確認
-      const slot = await tx.select().from(slots).where(/* ... */)
+    return await this.db.transaction(async (tx) => {  // 仮引数名: tx（トランザクション専用）
+      // 1. スロットの空き確認（悲観的ロック）
+      const slot = await tx
+        .select()
+        .from(slots)
+        .where(/* ... */)
+        .for('update')  // 排他ロック
 
       // 2. 予約作成
       const reservation = await tx.insert(reservations).values(/* ... */)

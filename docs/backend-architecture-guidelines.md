@@ -181,9 +181,29 @@ export const mapCreateRequestToDomain = (
 
 ```typescript
 // backend/packages/domain/src/repositories/customer.repository.ts
+import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
+import type { PgTransaction } from 'drizzle-orm/pg-core';
+
+// 型エイリアス（統一命名規則）
+type DatabaseConnection = NodePgDatabase;
+type Transaction = PgTransaction;
+type DbOrTx = DatabaseConnection | Transaction;
+
 export interface CustomerRepository {
+  // 通常版（トランザクション非対応）
   save(command: CreateCustomerCommand): Promise<Result<Customer, RepositoryError>>;
   findById(id: CustomerId): Promise<Result<Customer | null, RepositoryError>>;
+
+  // トランザクション対応版（WithTxサフィックス）
+  saveWithTx(dbOrTx: DbOrTx, command: CreateCustomerCommand): Promise<Result<Customer, RepositoryError>>;
+  findByIdWithTx(dbOrTx: DbOrTx, id: CustomerId): Promise<Result<Customer | null, RepositoryError>>;
+}
+
+// トランザクション必須のRepository
+export interface ReservationRepository {
+  // トランザクション必須（排他制御が必要）
+  createWithLock(tx: Transaction, command: CreateReservationCommand): Promise<Result<Reservation, RepositoryError>>;
+  updateSlotStatus(tx: Transaction, slotId: SlotId, status: SlotStatus): Promise<Result<void, RepositoryError>>;
 }
 ```
 
@@ -192,16 +212,69 @@ export interface CustomerRepository {
 ```typescript
 // backend/packages/infrastructure/src/repositories/customer.repository.impl.ts
 export class DrizzleCustomerRepository implements CustomerRepository {
+  constructor(private readonly db: DatabaseConnection) {}
+
+  // 通常版（内部でトランザクション対応版を呼び出し）
   async save(command: CreateCustomerCommand) {
+    return this.saveWithTx(this.db, command);
+  }
+
+  // トランザクション対応版
+  async saveWithTx(dbOrTx: DbOrTx, command: CreateCustomerCommand) {
     try {
-      const [record] = await this.db.insert(customers).values(mapCommandToRow(command)).returning();
+      const [record] = await dbOrTx.insert(customers).values(mapCommandToRow(command)).returning();
       return ok(mapRowToDomain(record));
     } catch (error) {
       return err({ type: 'database', message: 'Failed to save customer', cause: error });
     }
   }
+
+  async findById(id: CustomerId) {
+    return this.findByIdWithTx(this.db, id);
+  }
+
+  async findByIdWithTx(dbOrTx: DbOrTx, id: CustomerId) {
+    try {
+      const [record] = await dbOrTx
+        .select()
+        .from(customers)
+        .where(eq(customers.id, id))
+        .limit(1);
+
+      return ok(record ? mapRowToDomain(record) : null);
+    } catch (error) {
+      return err({ type: 'database', message: 'Failed to find customer', cause: error });
+    }
+  }
+}
+
+// トランザクション必須Repository実装
+export class DrizzleReservationRepository implements ReservationRepository {
+  // txパラメータ必須（排他制御）
+  async createWithLock(tx: Transaction, command: CreateReservationCommand) {
+    try {
+      // FOR UPDATE で排他ロック
+      const [slot] = await tx
+        .select()
+        .from(timeSlots)
+        .where(eq(timeSlots.id, command.slotId))
+        .for('update')
+        .limit(1);
+
+      if (!slot || slot.status !== 'available') {
+        return err({ type: 'slotUnavailable', message: 'Slot is not available' });
+      }
+
+      const [reservation] = await tx.insert(reservations).values(command).returning();
+      return ok(mapRowToDomain(reservation));
+    } catch (error) {
+      return err({ type: 'database', message: 'Failed to create reservation', cause: error });
+    }
+  }
 }
 ```
+
+> **トランザクション管理**: UseCase層でのトランザクション、楽観的/悲観的ロック、リトライメカニズムの詳細は [`docs/uniform-implementation-guide.md#トランザクション管理`](./uniform-implementation-guide.md#トランザクション管理) を参照
 
 ---
 
