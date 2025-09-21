@@ -8,5 +8,8 @@ export * from './migrations/index'
 // Export seeding utilities
 export * from './seeds/index'
 
+// Export SQL script utilities
+export * from './scripts/index'
+
 // Re-export commonly used types from drizzle-orm for convenience
 export type { InferSelectModel, InferInsertModel } from 'drizzle-orm'

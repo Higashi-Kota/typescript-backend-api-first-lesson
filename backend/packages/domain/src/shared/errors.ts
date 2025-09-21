@@ -177,7 +177,7 @@ export function toProblemDetails(
   const httpStatus = HTTP_STATUS_MAP[error.type] || 500
 
   return {
-    type: `https://api.beauty-salon.com/errors/${error.type.toLowerCase()}`,
+    type: `https://example.com/probs/${error.type.toLowerCase().replace(/_/g, '-')}`,
     title: error.type.replace(/_/g, ' ').toLowerCase(),
     status: httpStatus,
     detail: error.message,

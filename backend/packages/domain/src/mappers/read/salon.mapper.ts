@@ -74,6 +74,15 @@ export const SalonReadMapper = {
     }
   },
 
+  toApiSalonFullList(
+    dbSalons: DbSalon[],
+    openingHoursMap: Map<string, DbOpeningHours[]> = new Map()
+  ): ApiSalon[] {
+    return dbSalons.map((salon) =>
+      this.toApiSalon(salon, openingHoursMap.get(salon.id) || [])
+    )
+  },
+
   toApiSalonList(dbSalons: DbSalon[]): ApiSalonSummary[] {
     return dbSalons.map((salon) => this.toApiSalonSummary(salon))
   },

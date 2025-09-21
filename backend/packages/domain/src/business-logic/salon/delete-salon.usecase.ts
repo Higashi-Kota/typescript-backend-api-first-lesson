@@ -5,14 +5,14 @@ import type { DomainError } from '../../shared'
 import { BaseSalonUseCase } from './_shared/base-salon.usecase'
 
 export class DeleteSalonUseCase extends BaseSalonUseCase {
-  async execute(id: string): Promise<Result<boolean, DomainError>> {
+  async execute(id: SalonId): Promise<Result<boolean, DomainError>> {
     if (!this.isValidUuid(id)) {
       return Result.error(
         DomainErrors.validation('Invalid salon ID format', 'INVALID_SALON_ID')
       )
     }
 
-    const exists = await this.repository.exists(id as SalonId)
+    const exists = await this.repository.exists(id)
     if (Result.isError(exists)) {
       return exists
     }
@@ -21,7 +21,7 @@ export class DeleteSalonUseCase extends BaseSalonUseCase {
       return Result.error(DomainErrors.notFound('Salon', id))
     }
 
-    const deleteResult = await this.repository.delete(id as SalonId)
+    const deleteResult = await this.repository.delete(id)
     return deleteResult
   }
 }

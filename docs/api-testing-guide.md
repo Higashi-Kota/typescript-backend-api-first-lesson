@@ -1,480 +1,459 @@
-# API動作確認ガイド
+# API Testing Guide - Salon Domain Reference Implementation
 
-このガイドでは、開発環境でAPIサーバーを起動し、curlコマンドでAPIの動作を確認する手順を説明します。
+このガイドでは、Salonドメインの実装を完全なリファレンスとして、他のドメインを実装する際のテスト戦略とパターンを詳細に説明します。
 
-## 前提条件
+## 📋 Overview
 
-- Node.js 18以上
-- pnpm
-- Docker（PostgreSQL用）
-- curl
+Salonドメインは、以下の重要な実装パターンを確立しています：
+- **Type-First Development**: TypeSpec → OpenAPI → TypeScript
+- **Clean Architecture**: Domain/UseCase/Infrastructure/API layers
+- **Test Isolation**: Schema-per-test approach
+- **No Exceptions**: Result type pattern
+- **Type Safety**: No type casting, exhaustive pattern matching
 
-## 1. 環境のセットアップ
+## 🏗️ Test Infrastructure
 
-### 1.1 依存関係のインストール
-
-```bash
-# プロジェクトルートで実行
-pnpm install
+### Directory Structure
+```
+backend/packages/api/
+├── src/
+│   ├── routes/
+│   │   └── salon.routes.ts         # Reference API implementation
+│   └── __tests__/
+│       ├── _shared/
+│       │   ├── setup.ts            # Global test setup
+│       │   ├── test-helpers.ts     # Test utilities
+│       │   ├── test-schema-manager.ts  # Schema isolation
+│       │   └── app.ts              # Express app factory
+│       └── salon.test.ts           # Reference test suite
 ```
 
-### 1.2 環境変数の設定
+### Test Setup with Schema Isolation
 
-```bash
-# .env.exampleをコピー
-cp .env.example .env
+```typescript
+// backend/packages/api/src/__tests__/_shared/setup.ts
+import { PostgreSqlContainer } from '@testcontainers/postgresql'
+import { afterAll, afterEach, beforeAll, beforeEach } from 'vitest'
 
-# 必要に応じて.envを編集（デフォルト値で動作可能）
+beforeAll(async () => {
+  // Single container for all tests
+  const container = await new PostgreSqlContainer('postgres:15-alpine')
+    .withDatabase('testdb')
+    .start()
+
+  // Initialize schema manager
+  const schemaManager = new TestSchemaManager(container.getConnectionUri())
+  await schemaManager.initializeEnums() // Shared enum types
+
+  globalThis.__TEST_CONTAINER__ = container
+  globalThis.__SCHEMA_MANAGER__ = schemaManager
+})
+
+beforeEach(async () => {
+  // Create isolated schema for each test
+  const testSchema = await schemaManager.createTestSchema(true)
+  globalThis.__TEST_DB__ = testSchema.db
+  globalThis.__TEST_SCHEMA__ = testSchema
+})
+
+afterEach(async () => {
+  // Clean up test schema
+  await globalThis.__TEST_SCHEMA__?.cleanup()
+})
 ```
 
-## 2. データベースのセットアップ
+## 🎯 API Route Implementation Pattern
 
-### 2.1 PostgreSQLの起動
+### Key Principles from Salon Routes
 
-```bash
-# Docker Composeでデータベースを起動
-docker-compose up -d postgres
+```typescript
+// backend/packages/api/src/routes/salon.routes.ts
 
-# 起動確認
-docker-compose ps
-```
+// 1. Type Remapping from Auto-generated Types
+type Salon = components['schemas']['Models.Salon']
+type CreateSalonRequest = components['schemas']['Models.CreateSalonRequest']
+type ErrorResponse = components['schemas']['Models.ProblemDetails']
 
-### 2.2 データベースの初期化
+// 2. Response Type Definitions
+type CursorPaginationResponse<T> = {
+  data: T[]
+  meta: components['schemas']['Models.PaginationMeta']
+  links: components['schemas']['Models.PaginationLinks']
+}
 
-```bash
-# データベースを完全リセットして再構築（推奨）
-pnpm run db:fresh
-```
+// 3. Standardized Error Handler
+const handleDomainError = (
+  res: Response<ErrorResponse>,
+  error: DomainError
+): Response<ErrorResponse> => {
+  const problemDetails = toProblemDetails(error)
+  return res.status(problemDetails.status).json(problemDetails)
+}
 
-または個別に実行:
-```bash
-# データベースの完全リセット（テーブル削除・再作成）
-pnpm run db:fresh
+// 4. Handler Pattern - Delegate ALL Logic to Use Cases
+const createSalonHandler: RequestHandler<
+  Record<string, never>,
+  CreateSalonResponse | ErrorResponse,
+  CreateSalonRequest
+> = async (req, res, next) => {
+  try {
+    const db = req.app.locals.database as Database
+    const repository = new SalonRepository(db)
+    const useCase = new CreateSalonUseCase(repository)
 
-# または、データのみクリアしてシードデータ投入
-pnpm run db:truncate
-pnpm run db:seed
+    // No validation here - use case handles everything
+    const result = await useCase.execute(req.body)
 
-# マイグレーションのみ実行する場合
-pnpm run db:seed
-```
-
-## 3. APIサーバーの起動
-
-### 3.1 開発モードでの起動
-
-```bash
-# バックエンド全体を起動（推奨）
-pnpm dev:backend
-
-# または、APIサーバーのみを起動
-pnpm --filter @beauty-salon-backend/server dev
-```
-
-サーバーは `http://localhost:3000` で起動します。
-
-### 3.2 起動確認
-
-```bash
-# ヘルスチェック
-curl http://localhost:3000/health
-```
-
-期待されるレスポンス：
-```json
-{
-  "status": "ok",
-  "timestamp": "2024-01-17T10:00:00.000Z"
+    // Pattern matching for response
+    match(result)
+      .with({ type: 'success' }, ({ data }) => {
+        const response: CreateSalonResponse = {
+          data,
+          meta: {
+            correlationId: `req-${Date.now()}`,
+            timestamp: new Date().toISOString(),
+            version: '1.0.0',
+          },
+          links: {
+            self: `/salons/${data.id}`,
+            list: '/salons',
+          },
+        }
+        res.status(201).json(response)
+      })
+      .with({ type: 'error' }, ({ error }) =>
+        handleDomainError(res as Response<ErrorResponse>, error)
+      )
+      .exhaustive()
+  } catch (error) {
+    next(error)
+  }
 }
 ```
 
-## 4. APIエンドポイントのテスト
+## 🧪 Test Implementation Patterns
 
-現在実装されているのは顧客（Customer）APIのみです。
+### 1. Basic CRUD Operations
 
-### 4.1 顧客一覧の取得
+```typescript
+// backend/packages/api/src/__tests__/salon.test.ts
+describe('Salon API Integration Tests', () => {
+  let app: Express
+  let db: ReturnType<typeof getTestDb>
 
-```bash
-# 基本的な一覧取得
-curl -X GET http://localhost:3000/api/v1/customers
+  beforeEach(() => {
+    app = createTestApp()
+    db = getTestDb()
+  })
 
-# ページネーション付き
-curl -X GET "http://localhost:3000/api/v1/customers?page=1&limit=10"
-
-# 検索条件付き
-curl -X GET "http://localhost:3000/api/v1/customers?email=example@test.com"
-```
-
-期待されるレスポンス：
-```json
-{
-  "status": "success",
-  "data": {
-    "items": [
-      {
-        "id": "550e8400-e29b-41d4-a716-446655440001",
-        "email": "customer1@example.com",
-        "name": "田中 太郎",
-        "nameKana": "タナカ タロウ",
-        "phone": "090-1234-5678",
-        "dateOfBirth": "1990-01-01",
-        "gender": "male",
-        "postalCode": "100-0001",
-        "prefecture": "東京都",
-        "city": "千代田区",
-        "addressLine1": "千代田1-1-1",
-        "addressLine2": null,
-        "notes": null,
-        "createdAt": "2024-01-17T10:00:00.000Z",
-        "updatedAt": "2024-01-17T10:00:00.000Z"
+  describe('POST /api/v1/salons', () => {
+    it('should create a salon with valid data', async () => {
+      const salonData = {
+        name: 'Test Salon',
+        description: 'A test salon',
+        address: {
+          street: '千代田1-1-1 テストビル2F',
+          city: '千代田区',
+          prefecture: '東京都',
+          postalCode: '100-0001',
+          country: 'Japan',
+        },
+        contactInfo: {
+          email: 'test@salon.com',
+          phoneNumber: '03-1234-5678',
+          alternativePhone: null,
+          websiteUrl: 'https://test-salon.com',
+        },
+        openingHours: [...],
+        businessHours: null,
+        imageUrls: null,
+        features: null,
       }
-    ],
-    "pagination": {
-      "page": 1,
-      "limit": 10,
-      "total": 1,
-      "totalPages": 1
+
+      const response = await request(app)
+        .post('/api/v1/salons')
+        .send(salonData)
+
+      expect(response.status).toBe(201)
+      expect(response.body.data).toBeDefined()
+      expect(response.body.data.name).toBe(salonData.name)
+
+      // Verify database state
+      const result = await db.execute(sql`SELECT * FROM salons`)
+      expect(result.length).toBe(1)
+    })
+  })
+})
+```
+
+### 2. Pagination Testing
+
+```typescript
+describe('GET /api/v1/salons', () => {
+  it('should support pagination', async () => {
+    // Create test data directly in DB
+    const testSalons = Array.from({ length: 5 }, (_, i) => ({
+      id: createId(),
+      name: `Salon ${i + 1}`,
+      nameKana: `サロン${i + 1}`,
+      postalCode: '100-0001',
+      prefecture: '東京都',
+      city: '千代田区',
+      address: `千代田${i + 1}-1-1`,
+      phoneNumber: `03-1111-${String(i).padStart(4, '0')}`,
+      email: `salon${i + 1}@test.com`,
+    }))
+
+    for (const salon of testSalons) {
+      await db.execute(sql`
+        INSERT INTO salons (id, name, "nameKana", "postalCode",
+                           prefecture, city, address, "phoneNumber", email)
+        VALUES (${salon.id}, ${salon.name}, ${salon.nameKana},
+                ${salon.postalCode}, ${salon.prefecture}, ${salon.city},
+                ${salon.address}, ${salon.phoneNumber}, ${salon.email})
+      `)
     }
+
+    const response = await request(app)
+      .get('/api/v1/salons?limit=2')
+      .expect(200)
+
+    // CursorPaginationResponse structure
+    expect(response.body).toMatchObject({
+      data: expect.arrayContaining([]),
+      meta: {
+        total: 5,
+        limit: 2,
+        hasMore: true,
+      },
+      links: expect.any(Object),
+    })
+    expect(response.body.data).toHaveLength(2)
+  })
+})
+```
+
+### 3. Error Handling
+
+```typescript
+describe('Error Cases', () => {
+  it('should return validation error for invalid email', async () => {
+    const invalidData = {
+      name: 'Test Salon',
+      contactInfo: {
+        email: 'invalid-email', // Invalid
+        phoneNumber: '03-1234-5678',
+      },
+      // ...other fields
+    }
+
+    const response = await request(app)
+      .post('/api/v1/salons')
+      .send(invalidData)
+      .expect(400)
+
+    expect(response.body).toMatchObject({
+      type: 'https://example.com/probs/validation-error',
+      title: 'Validation failed',
+      status: 400,
+      detail: expect.stringContaining('Invalid email format'),
+    })
+  })
+
+  it('should return 404 for non-existent salon', async () => {
+    const nonExistentId = createId()
+
+    const response = await request(app)
+      .get(`/api/v1/salons/${nonExistentId}`)
+      .expect(404)
+
+    expect(response.body).toMatchObject({
+      type: 'https://example.com/probs/not-found',
+      title: 'Resource not found',
+      status: 404,
+    })
+  })
+})
+```
+
+## 🔄 Use Case and Mapper Pattern
+
+### Use Case Implementation
+
+```typescript
+// backend/packages/domain/src/business-logic/salon/list-salons.usecase.ts
+export class ListSalonsUseCase extends BaseSalonUseCase {
+  async execute(
+    page = 1,
+    limit = 20
+  ): Promise<Result<PaginatedResult<ApiSalon>, DomainError>> {
+    const paginationParams = Pagination.create(page, limit)
+
+    const salonsResult = await this.repository.findAll(paginationParams)
+    if (Result.isError(salonsResult)) {
+      return salonsResult
+    }
+
+    // Use mapper to convert DB → API types
+    const apiSalons = SalonReadMapper.toApiSalonFullList(
+      salonsResult.data.data,
+      new Map() // Opening hours map
+    )
+
+    const paginatedResult: PaginatedResult<ApiSalon> = {
+      data: apiSalons,
+      meta: salonsResult.data.meta,
+      links: salonsResult.data.links,
+    }
+
+    return Result.success(paginatedResult)
   }
 }
 ```
 
-### 4.2 顧客の作成
+### Mapper Implementation
 
-```bash
-curl -X POST http://localhost:3000/api/v1/customers \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "new.customer@example.com",
-    "name": "山田 花子",
-    "nameKana": "ヤマダ ハナコ",
-    "phone": "090-9876-5432",
-    "dateOfBirth": "1995-05-15",
-    "gender": "female",
-    "postalCode": "150-0001",
-    "prefecture": "東京都",
-    "city": "渋谷区",
-    "addressLine1": "渋谷1-1-1"
-  }'
-```
-
-期待されるレスポンス：
-```json
-{
-  "status": "success",
-  "data": {
-    "id": "550e8400-e29b-41d4-a716-446655440002",
-    "email": "new.customer@example.com",
-    "name": "山田 花子",
-    "nameKana": "ヤマダ ハナコ",
-    "phone": "090-9876-5432",
-    "dateOfBirth": "1995-05-15",
-    "gender": "female",
-    "postalCode": "150-0001",
-    "prefecture": "東京都",
-    "city": "渋谷区",
-    "addressLine1": "渋谷1-1-1",
-    "addressLine2": null,
-    "notes": null,
-    "createdAt": "2024-01-17T10:00:00.000Z",
-    "updatedAt": "2024-01-17T10:00:00.000Z"
-  }
-}
-```
-
-### 4.3 特定の顧客の取得
-
-```bash
-# IDを指定して取得（実際のIDに置き換えてください）
-curl -X GET http://localhost:3000/api/v1/customers/550e8400-e29b-41d4-a716-446655440001
-```
-
-### 4.4 顧客プロフィールの取得
-
-```bash
-# プロフィール情報を取得（予約履歴など含む）
-curl -X GET http://localhost:3000/api/v1/customers/550e8400-e29b-41d4-a716-446655440001/profile
-```
-
-### 4.5 顧客情報の更新
-
-```bash
-curl -X PUT http://localhost:3000/api/v1/customers/550e8400-e29b-41d4-a716-446655440001 \
-  -H "Content-Type: application/json" \
-  -d '{
-    "phone": "090-1111-2222",
-    "addressLine2": "マンション101号室",
-    "notes": "VIP顧客"
-  }'
-```
-
-### 4.6 顧客の削除（ソフトデリート）
-
-```bash
-curl -X DELETE http://localhost:3000/api/v1/customers/550e8400-e29b-41d4-a716-446655440001
-```
-
-## 5. バリデーションテスト（Zod v4使用）
-
-### 5.1 PathParamsのバリデーション
-
-```bash
-# 有効なUUID形式でのアクセス
-curl -X GET http://localhost:3000/api/v1/customers/550e8400-e29b-41d4-a716-446655440001
-
-# 無効なUUID形式でのアクセス
-curl -X GET http://localhost:3000/api/v1/customers/invalid-uuid
-```
-
-無効なUUIDの期待されるレスポンス：
-```json
-{
-  "type": "validationError",
-  "errors": [
-    {
-      "field": "customerId",
-      "message": "customerId must be a valid UUID v4",
-      "code": "VALIDATION_ERROR"
+```typescript
+// backend/packages/domain/src/mappers/read/salon.mapper.ts
+export const SalonReadMapper = {
+  toApiSalon(dbSalon: DbSalon, openingHours: DbOpeningHours[] = []): ApiSalon {
+    return {
+      id: dbSalon.id,
+      name: dbSalon.name,
+      description: dbSalon.description,
+      address: this.toApiAddress(dbSalon),
+      contactInfo: this.toApiContactInfo(dbSalon),
+      openingHours: openingHours.map((oh) => this.toApiOpeningHours(oh)),
+      // ... other fields
     }
-  ],
-  "meta": {
-    "requestId": "req_xyz123",
-    "timestamp": "2024-01-17T10:00:00.000Z"
-  }
-}
-```
+  },
 
-### 5.2 QueryParamsのバリデーション
+  toApiSalonFullList(
+    dbSalons: DbSalon[],
+    openingHoursMap: Map<string, DbOpeningHours[]> = new Map()
+  ): ApiSalon[] {
+    return dbSalons.map((salon) =>
+      this.toApiSalon(salon, openingHoursMap.get(salon.id) || [])
+    )
+  },
 
-```bash
-# ページネーション - 有効な値
-curl -X GET "http://localhost:3000/api/v1/customers?page=1&limit=10"
-
-# ページネーション - pageが0（無効）
-curl -X GET "http://localhost:3000/api/v1/customers?page=0&limit=10"
-
-# ページネーション - limitが範囲外（101は無効）
-curl -X GET "http://localhost:3000/api/v1/customers?page=1&limit=101"
-```
-
-無効なページネーションの期待されるレスポンス：
-```json
-{
-  "type": "validationError",
-  "errors": [
-    {
-      "field": "page",
-      "message": "page must be a positive integer",
-      "code": "VALIDATION_ERROR"
-    },
-    {
-      "field": "limit",
-      "message": "limit must be between 1 and 100",
-      "code": "VALIDATION_ERROR"
+  toApiSalonSummary(dbSalon: DbSalon): ApiSalonSummary {
+    return {
+      id: dbSalon.id,
+      name: dbSalon.name,
+      address: this.toApiAddress(dbSalon),
+      rating: dbSalon.rating ? Number.parseFloat(dbSalon.rating) : null,
+      reviewCount: dbSalon.reviewCount,
     }
-  ]
+  },
 }
 ```
 
-### 5.3 Request Bodyのバリデーション
+## 📝 Implementation Checklist
+
+### For New Domain Implementation
+
+#### 1. Route Handler Setup
+- [ ] Import types from `@beauty-salon-backend/generated`
+- [ ] Create type remapping (no `unknown`, no type casting)
+- [ ] Define RequestHandler with explicit type parameters
+- [ ] Implement handleDomainError function
+- [ ] Delegate ALL logic to use cases (no validation in routes)
+- [ ] Use pattern matching for Result handling
+
+#### 2. Use Case Implementation
+- [ ] Extend base use case class
+- [ ] Accept API types as input
+- [ ] Return Result<ApiType, DomainError>
+- [ ] Handle validation in use case
+- [ ] Use repository pattern for DB access
+- [ ] Apply mappers for type conversion
+
+#### 3. Mapper Pattern
+- [ ] Create read mapper for DB → API conversion
+- [ ] Create write mapper for API → DB conversion
+- [ ] Implement toApiXxx methods for full objects
+- [ ] Implement toApiXxxList methods for collections
+- [ ] Handle nullable fields correctly (match DB nullability)
+
+#### 4. Test Implementation
+- [ ] Create test file in `__tests__/[domain].test.ts`
+- [ ] Test all CRUD operations
+- [ ] Test pagination with CursorPaginationResponse
+- [ ] Test error cases (validation, 404, invalid UUID)
+- [ ] Verify database state after operations
+- [ ] Use direct DB inserts for test data setup
+
+## 🚀 Running Tests
 
 ```bash
-# 必須フィールド欠落のテスト
-curl -X POST http://localhost:3000/api/v1/customers \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "田中 太郎"
-  }'
+# Run specific domain tests
+pnpm test salon.test.ts
 
-# メール形式が無効
-curl -X POST http://localhost:3000/api/v1/customers \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "田中 太郎",
-    "email": "invalid-email",
-    "phone": "090-1234-5678"
-  }'
+# Run all API tests
+cd backend/packages/api && pnpm test
 
-# 電話番号形式が無効
-curl -X POST http://localhost:3000/api/v1/customers \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "田中 太郎",
-    "email": "tanaka@example.com",
-    "phone": "123-456"
-  }'
+# Run with coverage
+pnpm test --coverage
+
+# Watch mode for development
+pnpm test --watch
 ```
 
-バリデーションエラーの統一レスポンス形式：
-```json
-{
-  "type": "validationError",
-  "errors": [
-    {
-      "field": "email",
-      "message": "email is required",
-      "code": "VALIDATION_ERROR"
-    },
-    {
-      "field": "phone",
-      "message": "phone is required",
-      "code": "VALIDATION_ERROR"
-    }
-  ],
-  "meta": {
-    "requestId": "req_abc123",
-    "timestamp": "2024-01-17T10:00:00.000Z"
-  }
-}
+## ⚡ Key Architectural Decisions
+
+### 1. Schema-per-test Isolation
+- Each test runs in its own PostgreSQL schema
+- No test data conflicts
+- Parallel test execution capability
+- Automatic cleanup
+
+### 2. No Validation in Routes
+- Routes are thin HTTP adapters
+- All business logic in use cases
+- Consistent error handling via Result type
+- Single responsibility principle
+
+### 3. Type-safe Without Casting
+- Use mapper methods that return correct types
+- Adjust use case return types as needed
+- Never use `as` type assertions
+- Maintain type flow from DB to API
+
+### 4. Problem Details Standard
+- RFC 7807 compliant error responses
+- Consistent error structure across all endpoints
+- Machine-readable error types
+- Human-readable error details
+
+## 📊 Test Output Example
+
+```
+✓ src/__tests__/salon.test.ts (15 tests) 4.89s
+  ✓ Salon API Integration Tests
+    ✓ POST /api/v1/salons
+      ✓ should create a salon with valid data 111ms
+      ✓ should return validation error for invalid email 82ms
+      ✓ should return validation error for missing required fields 79ms
+    ✓ GET /api/v1/salons
+      ✓ should list all salons 95ms
+      ✓ should return empty list when no salons exist 87ms
+      ✓ should support pagination 102ms
+    ✓ GET /api/v1/salons/:id
+      ✓ should get a salon by ID 84ms
+      ✓ should return 404 for non-existent salon 83ms
+      ✓ should return 400 for invalid UUID 78ms
+
+Test Files  1 passed (1)
+     Tests  15 passed (15)
 ```
 
-### 5.4 住所情報のバリデーション
+## 🔍 Summary
 
-```bash
-# 郵便番号形式の検証
-curl -X POST http://localhost:3000/api/v1/customers \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "田中 太郎",
-    "email": "tanaka@example.com",
-    "phone": "090-1234-5678",
-    "postalCode": "invalid",
-    "prefecture": "無効な都道府県"
-  }'
-```
+The Salon domain implementation establishes:
+1. **Complete type safety** without type casting
+2. **Clean separation** between HTTP and business logic
+3. **Comprehensive test coverage** with real database
+4. **Consistent patterns** for all operations
 
-住所関連のエラーレスポンス：
-```json
-{
-  "type": "validationError",
-  "errors": [
-    {
-      "field": "postalCode",
-      "message": "Invalid Japanese postal code format",
-      "code": "VALIDATION_ERROR"
-    },
-    {
-      "field": "prefecture",
-      "message": "Invalid prefecture name",
-      "code": "VALIDATION_ERROR"
-    }
-  ]
-}
-```
-
-### 5.5 複合バリデーション（PathParams + Body）
-
-```bash
-# PUTリクエストで複数の検証エラー
-curl -X PUT http://localhost:3000/api/v1/customers/invalid-uuid \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "invalid-email",
-    "phone": "invalid-phone"
-  }'
-```
-
-複合エラーのレスポンス：
-```json
-{
-  "type": "validationError",
-  "errors": [
-    {
-      "field": "customerId",
-      "message": "customerId must be a valid UUID v4",
-      "code": "VALIDATION_ERROR"
-    },
-    {
-      "field": "email",
-      "message": "Invalid email format",
-      "code": "VALIDATION_ERROR"
-    },
-    {
-      "field": "phone",
-      "message": "Invalid Japanese phone number format",
-      "code": "VALIDATION_ERROR"
-    }
-  ]
-}
-```
-
-## 6. エラーレスポンスの例
-
-### 6.1 リソースが見つからない
-
-```bash
-curl -X GET http://localhost:3000/api/v1/customers/non-existent-id
-```
-
-期待されるレスポンス：
-```json
-{
-  "status": "error",
-  "error": {
-    "code": "NOT_FOUND",
-    "message": "Customer not found"
-  }
-}
-```
-
-## 7. 便利なcurlオプション
-
-```bash
-# レスポンスをフォーマットして表示
-curl -X GET http://localhost:3000/api/v1/customers | jq .
-
-# ヘッダー情報も表示
-curl -v -X GET http://localhost:3000/api/v1/customers
-
-# レスポンス時間を測定
-curl -w "\n\nTotal time: %{time_total}s\n" -X GET http://localhost:3000/api/v1/customers
-
-# 出力をファイルに保存
-curl -X GET http://localhost:3000/api/v1/customers -o customers.json
-```
-
-## 8. トラブルシューティング
-
-### 8.1 データベース接続エラー
-
-```bash
-# PostgreSQLが起動しているか確認
-docker-compose ps
-
-# ログを確認
-docker-compose logs postgres
-
-# 再起動
-docker-compose restart postgres
-```
-
-### 8.2 ポートが使用中
-
-```bash
-# 3000番ポートを使用しているプロセスを確認
-lsof -i :3000
-
-# 必要に応じてプロセスを終了
-kill -9 <PID>
-```
-
-### 8.3 依存関係のエラー
-
-```bash
-# node_modulesを削除して再インストール
-rm -rf node_modules pnpm-lock.yaml
-pnpm install
-```
-
-## 9. 開発のヒント
-
-1. **ログの確認**: サーバーコンソールに詳細なログが出力されます
-2. **Pretty Print**: `jq`コマンドを使用してJSONを整形表示
-3. **Request ID**: 各リクエストには一意のIDが付与され、ログ追跡に使用できます
-4. **開発ツール**: Postman、Insomnia、Thunder Clientなどを使用するとより快適にテストできます
-
-## 10. 次のステップ
-
-現在は顧客APIのみが実装されています。他のリソース（サロン、サービス、予約など）のAPIは今後実装予定です。
-
-実装パターンは顧客APIと同様になるため、`/backend/packages/api/src/routes/customer.routes.ts`を参考にしてください。
+Use this implementation as the reference when implementing Customer, Staff, Service, and other domains.

@@ -217,8 +217,7 @@ typescript-backend-api-first-lesson/
 │   │   ├── generated/        # Auto-generated types
 │   │   ├── domain/           # Business logic
 │   │   ├── infrastructure/   # External services
-│   │   ├── api/              # HTTP layer
-│   │   └── test-utils/       # Testing utilities
+│   │   └── api/              # HTTP layer
 │   └── apps/
 │       └── server/           # Express server
 │

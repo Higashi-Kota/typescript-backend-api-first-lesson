@@ -49,7 +49,6 @@
   "devDependencies": {
     "@beauty-salon-backend/database": "workspace:*",
     "@beauty-salon-shared/config": "workspace:*",
-    "@beauty-salon-backend/test-utils": "workspace:*",
     "@biomejs/biome": "^1.9.4",
     "@rslib/core": "^0.10.5",
     "@types/node": "^24.0.13",

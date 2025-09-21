@@ -12,13 +12,7 @@
     "lib": ["ESNEXT", "DOM", "DOM.Iterable"]
   },
   "include": ["src/**/*"],
-  "exclude": [
-    "dist",
-    "node_modules",
-    "**/*.test.ts",
-    "**/*.spec.ts",
-    "**/__tests__/**"
-  ],
+  "exclude": ["dist", "node_modules"],
   "references": [
     { "path": "../types" },
     { "path": "../utils" },

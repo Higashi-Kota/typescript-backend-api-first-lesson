@@ -6,14 +6,14 @@ import type { DomainError } from '../../shared'
 import { BaseSalonUseCase } from './_shared/base-salon.usecase'
 
 export class GetSalonUseCase extends BaseSalonUseCase {
-  async execute(id: string): Promise<Result<ApiSalon, DomainError>> {
+  async execute(id: SalonId): Promise<Result<ApiSalon, DomainError>> {
     if (!this.isValidUuid(id)) {
       return Result.error(
         DomainErrors.validation('Invalid salon ID format', 'INVALID_SALON_ID')
       )
     }
 
-    const salonResult = await this.repository.findById(id as SalonId)
+    const salonResult = await this.repository.findById(id)
     if (Result.isError(salonResult)) {
       return salonResult
     }
@@ -22,9 +22,7 @@ export class GetSalonUseCase extends BaseSalonUseCase {
       return Result.error(DomainErrors.notFound('Salon', id))
     }
 
-    const openingHoursResult = await this.repository.findOpeningHours(
-      id as SalonId
-    )
+    const openingHoursResult = await this.repository.findOpeningHours(id)
     const openingHours = Result.isSuccess(openingHoursResult)
       ? openingHoursResult.data
       : []

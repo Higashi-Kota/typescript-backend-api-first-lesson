@@ -14,9 +14,9 @@
 
 ```
 ┌─────────────────────────────────────────┐
-│           API Layer (Express)           │ ← HTTPルーティング、Zod検証、ts-pattern
+│           API Layer (Express)           │ ← HTTPルーティング、NO検証、ts-pattern
 ├─────────────────────────────────────────┤
-│        Domain Layer (Business Logic)    │ ← UseCase、マッパー、リポジトリIF
+│        Domain Layer (Business Logic)    │ ← UseCase（検証実行）、マッパー、リポジトリIF
 ├─────────────────────────────────────────┤
 │   Infrastructure Layer (External I/O)   │ ← Drizzle Repository実装
 ├─────────────────────────────────────────┤
@@ -28,13 +28,18 @@
 
 | レイヤー | パッケージ | 実装例 | 説明 |
 |----------|------------|--------|------|
-| API | `@beauty-salon-backend/api` | `salon.routes.ts` | Express ハンドラー、Zod `z.custom<T>()`、ts-pattern |
-| Domain | `@beauty-salon-backend/domain` | `create-salon.usecase.ts`, `salon.mapper.ts` | UseCase + 分離マッパー、Repository IF |
+| API | `@beauty-salon-backend/api` | `salon.routes.ts` | Express ハンドラー、型抽出、ts-pattern、**検証なし** |
+| Domain | `@beauty-salon-backend/domain` | `create-salon.usecase.ts`, `salon.mapper.ts` | UseCase（**検証実行**）、分離マッパー、Repository IF |
 | Infrastructure | `@beauty-salon-backend/infrastructure` | `salon.repository.impl.ts` | Drizzle 実装、Result型、トランザクション |
 | Database | `@beauty-salon-backend/database` | `schema.ts` | Drizzle schemas (`$inferSelect` の源泉) |
+| Generated | `@beauty-salon-backend/generated` | `api-types.ts` | TypeSpec生成型（operations, components） |
 | Utility | `@beauty-salon-backend/utility` | `result.ts` | Result型、ブランド型、共通ユーティリティ |
 
-> **原則**: DomainはInfrastructureを知らない。InfrastructureがDomainのインターフェースを実装。API層で依存注入。
+> **重要原則**:
+> - **APIルートで検証しない** - すべての検証はUseCaseで実行
+> - DomainはInfrastructureを知らない
+> - InfrastructureがDomainのインターフェースを実装
+> - API層で依存注入
 
 ---
 
@@ -46,7 +51,7 @@ backend/
 │   ├── api/
 │   │   └── src/
 │   │       ├── routes/
-│   │       │   └── salon.routes.ts       # 完全なCRUD、型安全ハンドラー
+│   │       │   └── salon.routes.ts       # CRUDルート、型抽出、検証なし
 │   │       └── index.ts                  # Express アプリ設定
 │   ├── domain/
 │   │   └── src/
@@ -77,8 +82,7 @@ backend/
 │   │           └── index.ts
 │   ├── utility/                        # Result型、ブランド型
 │   ├── generated/                      # TypeSpec→TypeScript型
-│   ├── database/                       # Drizzleスキーマ（源泉）
-│   └── test-utils/                     # テスト用helpers
+│   └── database/                       # Drizzleスキーマ（源泉）
 └── apps/
     └── server/                         # Express アプリ
 ```
@@ -99,15 +103,15 @@ backend/
 
 ### 書き込み（Create/Update）
 ```
-HTTP Request → API (検証) → UseCase (orchestrate) →
+HTTP Request → API (型抽出のみ) → UseCase (検証+orchestrate) →
 Domain Write Mapper → Infrastructure Repository → DB →
-Domain Read Mapper → API Presenter → HTTP Response
+Domain Read Mapper → API Response → HTTP Response
 ```
 
 ### 読み取り（Get/List）
 ```
-HTTP Request → API → UseCase → Infrastructure Repository →
-Domain Read Mapper → API Presenter → HTTP Response
+HTTP Request → API (型抽出) → UseCase (検証) → Infrastructure Repository →
+Domain Read Mapper → API Response → HTTP Response
 ```
 
 Domain層は純粋ロジックを維持し、Infrastructureに例外を閉じ込めます。Infrastructureで捕捉した`Error`は`Result`へ変換し、UseCaseで網羅的に処理します。
@@ -279,16 +283,16 @@ export const SalonReadMapper = {
 }
 ```
 
-#### 3. UseCase (Result型パターン)
+#### 3. UseCase (検証実行 + Result型パターン)
 
 ```typescript
 // backend/packages/domain/src/business-logic/salon/create-salon.usecase.ts
-export class CreateSalonUseCase {
+export class CreateSalonUseCase extends BaseSalonUseCase {
   async execute(
     request: ApiCreateSalonRequest
   ): Promise<Result<ApiSalon, DomainError>> {
 
-    // 1. バリデーション
+    // 1. バリデーション（UseCaseで実行）
     const validation = this.validate(request)
     if (Result.isError(validation)) {
       return validation
@@ -432,90 +436,223 @@ export class DrizzleReservationRepository implements ReservationRepository {
 
 ---
 
-## APIバリデーション戦略
+## APIルート実装パターン （重要）
 
-### Zod v4によるリクエスト検証
+### APIルートの責任
 
-API層では、Zod v4の`z.custom<T>().check()`パターンを使用して、OpenAPIから生成された型に対する完全な型安全性を保証します。
+APIルートは**型抽出とUseCase呼び出しのみ**を行います。**検証はUseCaseで実行**されます。
 
-#### バリデーション原則
+#### 実装原則
 
-1. **型の単一ソース**: TypeSpec → OpenAPI → TypeScript型 → `z.custom<T>()`
-2. **検証の階層化**: PathParams → QueryParams → Body の順で検証
-3. **Result型での統一**: すべての検証結果を`Result<T, ValidationError[]>`で返す
-4. **エラーの詳細化**: フィールドごとに具体的なエラーメッセージを提供
+1. **型抽出**: operations/componentsから直接型を抽出
+2. **検証なし**: ルートハンドラでバリデーションを行わない
+3. **UseCase委譲**: すべてのビジネスロジックをUseCaseに委譲
+4. **Resultハンドリング**: ts-patternでexhaustiveにmatch
 
-#### 実装場所
+#### APIルート構造
 
 ```
 backend/packages/api/src/
-├── validators/
-│   ├── request-validators.ts    # 共通バリデーションロジック
-│   ├── path-validators.ts       # PathParams検証
-│   ├── query-validators.ts      # QueryParams検証
-│   └── body-validators.ts       # RequestBody検証
-└── middleware/
-    └── validation.middleware.ts  # バリデーションミドルウェア
+├── routes/
+│   ├── salon.routes.ts          # Salon CRUDルート
+│   ├── customer.routes.ts       # Customer CRUDルート
+│   └── reservation.routes.ts    # Reservation CRUDルート
+└── index.ts                      # Expressアプリ設定
 ```
 
-#### バリデーションフロー
+#### APIルートフロー
 
 ```typescript
-// API層でのバリデーションフロー
+// APIルートでの処理フロー
 HTTP Request
     ↓
-バリデーションミドルウェア (z.custom<T>().check())
+型抽出 (operations/componentsから直接)
     ↓
-Result<ValidatedRequest, ValidationError[]>
+UseCase呼び出し (検証はUseCase内で実行)
+    ↓
+Result<T, DomainError>
     ↓ match()
-[OK] → UseCase呼び出し
-[Error] → 400 Bad Request レスポンス
+[success] → HTTP Response生成
+[error] → Problem Details変換
 ```
 
 #### 実装例
 
 ```typescript
-// backend/packages/api/src/validators/customer-validators.ts
-import { z } from 'zod';
-import type { components } from '@beauty-salon-backend/generated';
+// backend/packages/api/src/routes/salon.routes.ts
+import type { components, operations } from '@beauty-salon-backend/generated';
+import { match } from 'ts-pattern';
 
-export const customerPathSchema = z.custom<
-  components['schemas']['CustomerPathParams']
->().check((ctx) => {
-  const { customerId } = ctx.value;
+// 型抽出（生成型から直接）
+type CreateSalonOperation = operations['SalonCrud_create']
+type CreateSalonRequest = components['schemas']['Models.CreateSalonRequest']
+type CreateSalonResponse = Extract<
+  CreateSalonOperation['responses']['201']['content']['application/json'],
+  { data: unknown }
+>
 
-  // UUID v4形式の検証
-  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+// ルートハンドラー（検証なし）
+const createSalonHandler: RequestHandler<
+  Record<string, never>,
+  CreateSalonResponse | ErrorResponse,
+  CreateSalonRequest
+> = async (req, res, next) => {
+  try {
+    // 1. 依存取得
+    const db = req.app.locals.database as Database
+    const repository = new SalonRepository(db)
+    const useCase = new CreateSalonUseCase(repository)
 
-  if (!uuidRegex.test(customerId)) {
-    ctx.issues.push({
-      code: 'custom',
-      message: 'customerId must be a valid UUID v4',
-      path: ['customerId']
-    });
+    // 2. UseCase実行（検証はUseCase内で）
+    const result = await useCase.execute(req.body)
+
+    // 3. Resultハンドリング
+    match(result)
+      .with({ type: 'success' }, ({ data }) => {
+        const response: CreateSalonResponse = {
+          data,
+          meta: {
+            correlationId: `req-${Date.now()}`,
+            timestamp: new Date().toISOString(),
+            version: '1.0.0',
+          },
+          links: {
+            self: `/salons/${data.id}`,
+            list: '/salons',
+          },
+        }
+        res.status(201).json(response)
+      })
+      .with({ type: 'error' }, ({ error }) =>
+        handleDomainError(res as Response<ErrorResponse>, error)
+      )
+      .exhaustive()
+  } catch (error) {
+    next(error)
   }
-});
-
-// バリデーション結果をResult型に変換
-export function validateCustomerPath(
-  params: unknown
-): Result<components['schemas']['CustomerPathParams'], ValidationError[]> {
-  const result = customerPathSchema.safeParse(params);
-
-  return match(result)
-    .with({ success: true }, ({ data }) => ok(data))
-    .with({ success: false }, ({ error }) =>
-      err(error.issues.map(issue => ({
-        field: issue.path.join('.'),
-        message: issue.message,
-        code: 'VALIDATION_ERROR'
-      })))
-    )
-    .exhaustive();
 }
 ```
 
-詳細な実装パターンは [`docs/uniform-implementation-guide.md#APIリクエストバリデーション`](./uniform-implementation-guide.md#apiリクエストバリデーション) を参照。
+詳細な実装パターンは [`docs/domain-implementation-reference.md`](./domain-implementation-reference.md) を参照。
+
+---
+
+## UseCaseバリデーションパターン
+
+### バリデーションの実装場所
+
+すべてのバリデーションは**UseCase層で実行**されます。APIルートではバリデーションを行いません。
+
+#### Base UseCaseパターン
+
+```typescript
+// backend/packages/domain/src/business-logic/salon/_shared/base-salon.usecase.ts
+export abstract class BaseSalonUseCase {
+  constructor(protected readonly repository: ISalonRepository) {}
+
+  // 共通バリデーションメソッド
+  protected validateName(name: string | undefined): string[] {
+    const errors: string[] = []
+
+    if (!name || name.trim().length === 0) {
+      errors.push('Name is required')
+    } else if (name.length > 255) {
+      errors.push('Name must be less than 255 characters')
+    }
+
+    return errors
+  }
+
+  // Optionalフィールドのハンドリング
+  protected validateDescription(
+    _description: string | undefined | null
+  ): string[] {
+    const errors: string[] = []
+    // Description is optional/nullable - no validation required
+    return errors
+  }
+
+  // Update用の部分バリデーション
+  protected validateUpdateAddress(address: ApiAddress | undefined): string[] {
+    const errors: string[] = []
+
+    if (address !== undefined) {
+      if (address.street !== undefined && !address.street) {
+        errors.push('Street address cannot be empty')
+      }
+      // Only validate fields that are provided
+    }
+
+    return errors
+  }
+}
+```
+
+#### Create UseCaseでのバリデーション
+
+```typescript
+export class CreateSalonUseCase extends BaseSalonUseCase {
+  async execute(
+    request: ApiCreateSalonRequest
+  ): Promise<Result<ApiSalon, DomainError>> {
+    // バリデーションはUseCaseで実行
+    const validation = this.validate(request)
+    if (Result.isError(validation)) {
+      return validation
+    }
+
+    // ビジネスルール検証
+    const emailExists = await this.repository.existsByEmail(
+      request.contactInfo.email
+    )
+    if (Result.isError(emailExists)) {
+      return emailExists
+    }
+
+    if (emailExists.data) {
+      return Result.error(
+        DomainErrors.alreadyExists('Salon', 'email', request.contactInfo.email)
+      )
+    }
+
+    // 以下、ビジネスロジック実行
+  }
+
+  private validate(request: ApiCreateSalonRequest): Result<true, DomainError> {
+    const errors: string[] = []
+
+    // すべてのエラーを収集
+    errors.push(...this.validateName(request.name))
+    errors.push(...this.validateDescription(request.description))
+    errors.push(...this.validateAddress(request.address))
+    errors.push(...this.validateContactInfo(request.contactInfo))
+
+    if (!request.openingHours || request.openingHours.length === 0) {
+      errors.push('Opening hours are required')
+    }
+
+    // エラーを集約して返す
+    if (errors.length > 0) {
+      return Result.error(
+        DomainErrors.validation(
+          'Validation failed',
+          'SALON_VALIDATION_ERROR',
+          errors
+        )
+      )
+    }
+
+    return Result.success(true)
+  }
+}
+```
+
+### バリデーションパターンのポイント
+
+1. **エラー収集パターン**: すべてのエラーを収集して一度に返す
+2. **部分バリデーション**: Updateでは提供されたフィールドのみ検証
+3. **ビジネスルール**: バリデーション後にビジネスルール検証
+4. **Result型返却**: 常にResult型でエラーを返す
 
 ---
 
@@ -535,18 +672,22 @@ Testcontainersを使用してInfrastructure挙動を検証し、モックはDoma
 ## 運用チェックリスト
 
 - [ ] TypeSpecの変更後に`pnpm generate`で型を再生成した
+- [ ] **APIルートでバリデーションを行っていない**
+- [ ] **すべてのバリデーションはUseCaseで実行されている**
 - [ ] DomainモデルはSum型で表現し、ts-patternで網羅チェックした
 - [ ] Result型で例外を封じ、API層まで`throw`が流れていない
 - [ ] マッパーは Write / Read に分離されている
 - [ ] 新規パッケージ名は `@beauty-salon-backend/*` / `@beauty-salon-frontend/*` に統一されている
-- [ ] APIハンドラーはUseCase戻り値をPresenterでHTTPに変換している
+- [ ] APIハンドラーはUseCase戻り値を直接HTTPに変換している
 - [ ] InfrastructureがDomainのIF以外に依存していない
 
 ---
 
 ## 参考資料
 
-- [`docs/architecture-overview.md`](./architecture-overview.md)
-- [`docs/type-generation-system.md`](./type-generation-system.md)
-- [`docs/sum-types-pattern-matching.md`](./sum-types-pattern-matching.md)
+- [`docs/architecture-overview.md`](./architecture-overview.md) - アーキテクチャ全体像
+- [`docs/domain-implementation-reference.md`](./domain-implementation-reference.md) - **ドメイン実装リファレンス（重要）**
+- [`docs/type-generation-system.md`](./type-generation-system.md) - 型生成システム
+- [`docs/sum-types-pattern-matching.md`](./sum-types-pattern-matching.md) - Sum型とパターンマッチング
+- [`docs/uniform-implementation-guide.md`](./uniform-implementation-guide.md) - 統一実装パターン
 - [`docs/type-safety-principles.md`](./type-safety-principles.md)

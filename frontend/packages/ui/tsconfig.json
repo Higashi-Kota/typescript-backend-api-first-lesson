@@ -11,5 +11,5 @@
     "jsx": "react-jsx"
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "**/*.stories.tsx", "**/__tests__/**"]
+  "exclude": ["node_modules", "dist"]
 }

@@ -1,3 +1,5 @@
+import { cpSync } from 'node:fs'
+import { join } from 'node:path'
 import { defineConfig } from '@rslib/core'
 
 const isProduction = process.env.NODE_ENV === 'production'
@@ -40,6 +42,18 @@ export default defineConfig({
   },
 
   plugins: [
+    {
+      name: 'copy-sql-files',
+      setup(api) {
+        api.onAfterBuild(() => {
+          // Copy SQL files to dist directory
+          const sqlSrc = join(process.cwd(), 'sql')
+          const sqlDest = join(process.cwd(), 'dist', 'sql')
+          cpSync(sqlSrc, sqlDest, { recursive: true })
+          console.log('✅ SQL files copied to dist/sql')
+        })
+      },
+    },
     {
       name: 'build-success',
       setup(api) {

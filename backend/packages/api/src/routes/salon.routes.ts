@@ -9,11 +9,11 @@ import {
 } from '@beauty-salon-backend/domain'
 import type { DomainError, SalonId } from '@beauty-salon-backend/domain'
 import type { components, operations } from '@beauty-salon-backend/generated'
-import { SalonRepository, getDb } from '@beauty-salon-backend/infrastructure'
+import { SalonRepository } from '@beauty-salon-backend/infrastructure'
+import type { Database } from '@beauty-salon-backend/infrastructure'
 import { Router } from 'express'
 import type { RequestHandler, Response } from 'express'
 import { match } from 'ts-pattern'
-import { z } from 'zod'
 
 // ============================================================================
 // Type remapping from auto-generated types for type safety
@@ -21,7 +21,10 @@ import { z } from 'zod'
 
 // Request/Response type extraction from operations
 type ListSalonsOperation = operations['SalonCrud_list']
+type GetSalonOperation = operations['SalonCrud_get']
+type DeleteSalonOperation = operations['SalonCrud_delete']
 type CreateSalonOperation = operations['SalonCrud_create']
+type UpdateSalonOperation = operations['SalonCrud_update']
 type SearchSalonsOperation = operations['SalonCrud_search']
 
 // Model type remapping
@@ -29,17 +32,27 @@ type Salon = components['schemas']['Models.Salon']
 type CreateSalonRequest = components['schemas']['Models.CreateSalonRequest']
 type UpdateSalonRequest = components['schemas']['Models.UpdateSalonRequest']
 type ServiceCategoryType = components['schemas']['Models.ServiceCategoryType']
-type SearchMeta = components['schemas']['Models.SearchMeta']
 
 // Response type remapping from operations
-type ListSalonsResponse = Extract<
-  ListSalonsOperation['responses']['200']['content']['application/json'],
+type CursorPaginationResponse<T> = {
+  data: T[]
+  meta: components['schemas']['Models.PaginationMeta']
+  links: components['schemas']['Models.PaginationLinks']
+}
+
+type GetSalonResponse = Extract<
+  GetSalonOperation['responses']['200']['content']['application/json'],
   { data: unknown }
 >
 type CreateSalonResponse = Extract<
   CreateSalonOperation['responses']['201']['content']['application/json'],
   { data: unknown }
 >
+type UpdateSalonResponse = Extract<
+  UpdateSalonOperation['responses']['200']['content']['application/json'],
+  { data: unknown }
+>
+type DeleteSalonResponse = DeleteSalonOperation['responses']['204']['content']
 type SearchSalonsResponse = Extract<
   SearchSalonsOperation['responses']['200']['content']['application/json'],
   { results: unknown }
@@ -53,13 +66,6 @@ type SearchSalonsQuery = NonNullable<
 
 // Error response type
 type ErrorResponse = components['schemas']['Models.ProblemDetails']
-
-// ============================================================================
-// Validation schemas using remapped types
-// ============================================================================
-
-const createSalonRequestSchema = z.custom<CreateSalonRequest>()
-const updateSalonRequestSchema = z.custom<UpdateSalonRequest>()
 
 // ============================================================================
 // Router and handlers
@@ -76,10 +82,10 @@ const handleDomainError = (
   return res.status(problemDetails.status).json(problemDetails)
 }
 
-// GET /salons - List all salons with type safety
+// GET /salons - List all salons with flexible response format for test compatibility
 const listSalonsHandler: RequestHandler<
   Record<string, never>,
-  ListSalonsResponse | ErrorResponse,
+  CursorPaginationResponse<Salon> | ErrorResponse,
   unknown,
   Partial<ListSalonsQuery>
 > = async (req, res, next) => {
@@ -95,7 +101,7 @@ const listSalonsHandler: RequestHandler<
       page = Math.floor(offset / limit) + 1
     }
 
-    const db = getDb()
+    const db = req.app.locals.database as Database
     const repository = new SalonRepository(db)
     const useCase = new ListSalonsUseCase(repository)
 
@@ -103,8 +109,9 @@ const listSalonsHandler: RequestHandler<
 
     match(result)
       .with({ type: 'success' }, ({ data }) => {
-        const response: ListSalonsResponse = {
-          data: data.data as Salon[], // Cast from SalonSummary[] to Salon[]
+        // Return proper CursorPaginationResponse structure
+        const response: CursorPaginationResponse<Salon> = {
+          data: data.data,
           meta: data.meta,
           links: data.links,
         }
@@ -128,22 +135,7 @@ const createSalonHandler: RequestHandler<
   CreateSalonRequest
 > = async (req, res, next) => {
   try {
-    const validation = createSalonRequestSchema.safeParse(req.body)
-    if (!validation.success) {
-      const errorRes = res as Response<ErrorResponse>
-      const problemDetails: ErrorResponse = {
-        type: 'https://example.com/probs/validation-error',
-        title: 'validation error',
-        status: 400,
-        detail: 'Invalid request body',
-        instance: `urn:error:${Date.now()}`,
-        code: '1001',
-        timestamp: new Date().toISOString(),
-      }
-      return errorRes.status(400).json(problemDetails)
-    }
-
-    const db = getDb()
+    const db = req.app.locals.database as Database
     const repository = new SalonRepository(db)
     const useCase = new CreateSalonUseCase(repository)
 
@@ -195,7 +187,7 @@ const searchSalonsHandler: RequestHandler<
       page = Math.floor(offset / limit) + 1
     }
 
-    const db = getDb()
+    const db = req.app.locals.database as Database
     const repository = new SalonRepository(db)
     const useCase = new SearchSalonsUseCase(repository)
 
@@ -204,22 +196,15 @@ const searchSalonsHandler: RequestHandler<
 
     match(result)
       .with({ type: 'success' }, ({ data }) => {
-        const searchMeta: SearchMeta = {
-          total: data.meta.total || 0,
-          query: keyword,
-          filters:
-            city || categories
-              ? [
-                  ...(city ? [`city:${city}`] : []),
-                  ...(categories ? categories.map((c) => `category:${c}`) : []),
-                ]
-              : undefined,
-          duration: 0,
-        }
-
         const response: SearchSalonsResponse = {
-          results: data.data as Salon[], // Cast from SalonSummary[] to Salon[]
-          meta: searchMeta,
+          results: data.data,
+          meta: {
+            total: data.meta?.total ?? 0,
+            query: keyword,
+            filters: [city, category].filter(Boolean) as string[],
+            duration: 0,
+          },
+          facets: undefined,
         }
         res.json(response)
       })
@@ -237,25 +222,12 @@ router.get('/salons/search', searchSalonsHandler)
 // GET /salons/:id - Get single salon with type safety
 const getSalonHandler: RequestHandler<
   { id: SalonId },
-  CreateSalonResponse | ErrorResponse
+  GetSalonResponse | ErrorResponse
 > = async (req, res, next) => {
   try {
     const { id } = req.params
-    if (!id) {
-      const errorRes = res as Response<ErrorResponse>
-      const problemDetails: ErrorResponse = {
-        type: 'https://example.com/probs/validation-error',
-        title: 'validation error',
-        status: 400,
-        detail: 'ID is required',
-        instance: `urn:error:${Date.now()}`,
-        code: '1001',
-        timestamp: new Date().toISOString(),
-      }
-      return errorRes.status(400).json(problemDetails)
-    }
 
-    const db = getDb()
+    const db = req.app.locals.database as Database
     const repository = new SalonRepository(db)
     const useCase = new GetSalonUseCase(repository)
 
@@ -263,7 +235,7 @@ const getSalonHandler: RequestHandler<
 
     match(result)
       .with({ type: 'success' }, ({ data }) => {
-        const response: CreateSalonResponse = {
+        const response: GetSalonResponse = {
           data,
           meta: {
             correlationId: `req-${Date.now()}`,
@@ -292,41 +264,13 @@ router.get('/salons/:id', getSalonHandler)
 // PUT /salons/:id - Update salon with type safety
 const updateSalonHandler: RequestHandler<
   { id: SalonId },
-  CreateSalonResponse | ErrorResponse,
+  UpdateSalonResponse | ErrorResponse,
   UpdateSalonRequest
 > = async (req, res, next) => {
   try {
     const { id } = req.params
-    if (!id) {
-      const errorRes = res as Response<ErrorResponse>
-      const problemDetails: ErrorResponse = {
-        type: 'https://example.com/probs/validation-error',
-        title: 'validation error',
-        status: 400,
-        detail: 'ID is required',
-        instance: `urn:error:${Date.now()}`,
-        code: '1001',
-        timestamp: new Date().toISOString(),
-      }
-      return errorRes.status(400).json(problemDetails)
-    }
 
-    const validation = updateSalonRequestSchema.safeParse(req.body)
-    if (!validation.success) {
-      const errorRes = res as Response<ErrorResponse>
-      const problemDetails: ErrorResponse = {
-        type: 'https://example.com/probs/validation-error',
-        title: 'validation error',
-        status: 400,
-        detail: 'Invalid request body',
-        instance: `urn:error:${Date.now()}`,
-        code: '1001',
-        timestamp: new Date().toISOString(),
-      }
-      return errorRes.status(400).json(problemDetails)
-    }
-
-    const db = getDb()
+    const db = req.app.locals.database as Database
     const repository = new SalonRepository(db)
     const useCase = new UpdateSalonUseCase(repository)
 
@@ -334,7 +278,7 @@ const updateSalonHandler: RequestHandler<
 
     match(result)
       .with({ type: 'success' }, ({ data }) => {
-        const response: CreateSalonResponse = {
+        const response: UpdateSalonResponse = {
           data,
           meta: {
             correlationId: `req-${Date.now()}`,
@@ -362,25 +306,12 @@ router.put('/salons/:id', updateSalonHandler)
 // DELETE /salons/:id - Delete salon with type safety
 const deleteSalonHandler: RequestHandler<
   { id: SalonId },
-  null | ErrorResponse
+  DeleteSalonResponse | ErrorResponse
 > = async (req, res, next) => {
   try {
     const { id } = req.params
-    if (!id) {
-      const errorRes = res as Response<ErrorResponse>
-      const problemDetails: ErrorResponse = {
-        type: 'https://example.com/probs/validation-error',
-        title: 'validation error',
-        status: 400,
-        detail: 'ID is required',
-        instance: `urn:error:${Date.now()}`,
-        code: '1001',
-        timestamp: new Date().toISOString(),
-      }
-      return errorRes.status(400).json(problemDetails)
-    }
 
-    const db = getDb()
+    const db = req.app.locals.database as Database
     const repository = new SalonRepository(db)
     const useCase = new DeleteSalonUseCase(repository)
 
@@ -388,7 +319,7 @@ const deleteSalonHandler: RequestHandler<
 
     match(result)
       .with({ type: 'success' }, () => {
-        res.status(204).send(null)
+        res.status(204).send()
       })
       .with({ type: 'error' }, ({ error }) =>
         handleDomainError(res as Response<ErrorResponse>, error)
