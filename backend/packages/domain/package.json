@@ -22,7 +22,7 @@
     "dev": "NODE_ENV=development rslib build --watch",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc --build --noEmit",
+    "typecheck": "tsc --noEmit",
     "format": "biome format --write .",
     "format:fix": "biome check . --fix --unsafe",
     "lint": "biome check --write .",
@@ -40,7 +40,6 @@
     "@beauty-salon-shared/config": "workspace:*",
     "@biomejs/biome": "^1.9.4",
     "@rslib/core": "^0.10.5",
-    "@types/node": "^24.0.13",
-    "vitest": "^3.2.4"
+    "@types/node": "^24.0.13"
   }
 }

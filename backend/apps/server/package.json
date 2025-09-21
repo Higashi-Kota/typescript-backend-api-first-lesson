@@ -23,6 +23,7 @@
     "@beauty-salon-shared/config": "workspace:*",
     "@biomejs/biome": "^1.9.4",
     "@types/node": "^24.0.13",
-    "tsx": "^4.20.3"
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
   }
 }

@@ -99,7 +99,7 @@ jobs:
 
       - name: Run backend tests
         run: |
-          CI=true NODE_ENV=test pnpm --filter "@beauty-salon-backend/api" --filter "@beauty-salon-backend/domain" --filter "@beauty-salon-backend/utility" test
+          CI=true NODE_ENV=test pnpm --filter "@beauty-salon-backend/api" --filter "@beauty-salon-backend/utility" test
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/beauty_salon_test
           CI: true

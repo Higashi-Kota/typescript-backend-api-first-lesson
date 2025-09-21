@@ -20,7 +20,7 @@
     "build": "NODE_ENV=production rslib build && tsc --emitDeclarationOnly",
     "build:watch": "NODE_ENV=development rslib build --watch",
     "dev": "NODE_ENV=development rslib build --watch",
-    "typecheck": "tsc --build --noEmit",
+    "typecheck": "tsc --noEmit",
     "lint": "biome check --write .",
     "lint:check": "biome check ."
   },

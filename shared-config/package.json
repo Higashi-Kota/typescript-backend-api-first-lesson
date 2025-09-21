@@ -14,5 +14,9 @@
     "./biome": "./biome.json",
     "./tailwind.css": "./tailwind.css",
     "./postcss": "./postcss.config.base.cjs"
+  },
+  "dependencies": {
+    "tailwindcss": "^3.4.17",
+    "autoprefixer": "^10.4.20"
   }
 }

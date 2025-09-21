@@ -1,10 +1,9 @@
-@import "tailwindcss";
-
-/* Layer imports */
-@layer base, components, utilities;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Theme configuration using CSS variables */
-@theme {
+:root {
   /* Custom color palette */
   --color-primary-50: #fdf2f8;
   --color-primary-100: #fce7f3;

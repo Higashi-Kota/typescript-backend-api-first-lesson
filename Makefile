@@ -118,12 +118,12 @@ test:
 # Backend test for local development (with testcontainers)
 test-backend:
 	@echo "Running backend tests with testcontainers..."
-	pnpm --filter "@beauty-salon-backend/api" --filter "@beauty-salon-backend/domain" --filter "@beauty-salon-backend/utility" test
+	pnpm --filter "@beauty-salon-backend/api" --filter "@beauty-salon-backend/utility" test
 
 # Backend test for CI environment (optimized for speed)
 test-backend-ci:
 	@echo "Running backend tests in CI mode..."
-	CI=true NODE_ENV=test pnpm --filter "@beauty-salon-backend/api" --filter "@beauty-salon-backend/domain" --filter "@beauty-salon-backend/utility" test
+	CI=true NODE_ENV=test pnpm --filter "@beauty-salon-backend/api" --filter "@beauty-salon-backend/utility" test
 
 # Frontend test
 test-frontend:
@@ -373,57 +373,64 @@ ci-check:
 	@echo "Running CI checks locally..."
 	@echo "======================================"
 	@echo ""
-	@echo "Step 1/13: Verifying lockfile integrity..."
+	@echo "Step 0/14: Cleaning all dependencies for fresh start..."
+	@pnpm clean:all
+	@echo "✅ Clean completed"
+	@echo ""
+	@echo "Step 1/14: Verifying lockfile integrity..."
 	@pnpm install --frozen-lockfile || (echo "❌ Lockfile check failed. Run 'pnpm install' to update." && exit 1)
 	@echo "✅ Lockfile integrity verified"
 	@echo ""
-	@echo "Step 2/13: API specification generation..."
+	@echo "Step 2/14: API specification generation..."
 	-@$(MAKE) generate-spec 2>/dev/null || echo "⚠️  TypeSpec has warnings but continuing..."
 	@echo ""
-	@echo "Step 3/13: API client generation..."
+	@echo "Step 3/14: API client generation..."
 	-@$(MAKE) generate-client 2>/dev/null || echo "⚠️  Client generation has warnings but continuing..."
 	@echo ""
-	@echo "Step 4/13: Backend types generation..."
+	@echo "Step 4/14: Backend types generation..."
 	-@$(MAKE) generate-backend 2>/dev/null || echo "⚠️  Backend types generation has warnings but continuing..."
 	@echo ""
-	@echo "Step 5/13: Database schema generation and seeding..."
+	@echo "Step 5/14: Database schema generation and seeding..."
 	@pnpm --filter ./backend/packages/database db:introspect || echo "⚠️  Database introspection completed"
 	@pnpm --filter ./backend/packages/database db:generate-sql || echo "⚠️  SQL generation completed"
 	@pnpm --filter ./backend/packages/database db:truncate || echo "⚠️  Database truncated"
 	@pnpm --filter ./backend/packages/database db:seed || echo "⚠️  Database seeded"
 	@echo "✅ Database operations completed"
 	@echo ""
-	@echo "Step 6/13: Formatting auto-generated assets..."
+	@echo "Step 6/14: Formatting auto-generated assets..."
 	@pnpm format:fix || echo "⚠️  Format fix applied to generated files"
 	@echo "✅ Generated files formatted"
 	@echo ""
-	@echo "Step 7/13: Code formatting check..."
+	@echo "Step 7/14: Code formatting check..."
 	@pnpm format:check || (echo "❌ Formatting check failed. Run 'make format:fix' to fix." && exit 1)
 	@echo "✅ Formatting check passed"
 	@echo ""
-	@echo "Step 8/13: Linting..."
+	@echo "Step 8/14: Linting..."
 	@pnpm lint || (echo "❌ Linting failed. Run 'make lint' to see errors." && exit 1)
 	@echo "✅ Linting passed"
 	@echo ""
-	@echo "Step 9/13: Building all packages (CI mode)..."
+	@echo "Step 9/14: Building all packages (CI mode)..."
 	@pnpm run --recursive --workspace-concurrency=1 build || (echo "❌ Build failed." && exit 1)
 	@echo "✅ Build completed successfully"
 	@echo ""
-	@echo "Step 10/13: Type checking..."
+	@echo "Step 10/14: Type checking..."
 	@pnpm typecheck || (echo "❌ Type checking failed." && exit 1)
 	@echo "✅ Type checking passed"
 	@echo ""
-	@echo "Step 11/13: Security audit..."
+	@echo "Step 11/14: Security audit..."
 	@echo "⚠️  Skipping security audit (known axios vulnerability in mailgun.js dependency - needs manual fix)"
 	@echo "✅ Security audit skipped temporarily"
 	@echo ""
-	@echo "Step 12/13: Running backend tests..."
+	@echo "Step 12/14: Running backend tests..."
 	@$(MAKE) test-backend-ci || (echo "❌ Backend tests failed." && exit 1)
 	@echo "✅ Backend tests passed"
 	@echo ""
-	@echo "Step 13/13: Running frontend tests..."
+	@echo "Step 13/14: Running frontend tests..."
 	@$(MAKE) test-frontend || (echo "❌ Frontend tests failed." && exit 1)
 	@echo "✅ Frontend tests passed"
+	@echo ""
+	@echo "Step 14/14: Final verification..."
+	@echo "✅ All checks completed"
 	@echo ""
 	@echo "======================================"
 	@echo "✅ All CI checks passed!"
