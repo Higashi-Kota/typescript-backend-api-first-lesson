@@ -32,63 +32,160 @@ Generated Types      Domain Models   DB Types   Database
 
 ## API Route Implementation
 
-### Type Extraction Pattern
+### Modular Route Structure
+
+Since the refactoring, routes follow a modular structure with single responsibility principle:
+
+```
+backend/packages/api/src/routes/
+└── [domain]/                      # Domain folder (e.g., salon)
+    ├── _shared/                   # Shared types and utilities
+    │   ├── types.ts               # Type definitions from generated code
+    │   ├── utils.ts               # Error handling, pagination utilities
+    │   └── index.ts               # Re-exports for convenience
+    ├── list-[domain].handler.ts   # GET /api/v1/[domain]
+    ├── create-[domain].handler.ts # POST /api/v1/[domain]
+    ├── get-[domain].handler.ts    # GET /api/v1/[domain]/:id
+    ├── update-[domain].handler.ts # PUT /api/v1/[domain]/:id
+    ├── delete-[domain].handler.ts # DELETE /api/v1/[domain]/:id
+    ├── search-[domain].handler.ts # GET /api/v1/[domain]/search
+    └── index.ts                    # Route aggregation and registration
+```
+
+### Type Extraction Pattern (_shared/types.ts)
 
 Always extract types from auto-generated operations for type safety:
 
 ```typescript
+import type { components, operations } from '@beauty-salon-backend/generated'
+
 // ============================================================================
-// Type remapping from auto-generated types for type safety
+// Operation Types - Maps to API endpoints
 // ============================================================================
+export type ListSalonsOperation = operations['SalonCrud_list']
+export type GetSalonOperation = operations['SalonCrud_get']
+export type DeleteSalonOperation = operations['SalonCrud_delete']
+export type CreateSalonOperation = operations['SalonCrud_create']
+export type UpdateSalonOperation = operations['SalonCrud_update']
+export type SearchSalonsOperation = operations['SalonCrud_search']
 
-// Request/Response type extraction from operations
-type ListSalonsOperation = operations['SalonCrud_list']
-type GetSalonOperation = operations['SalonCrud_get']
-type DeleteSalonOperation = operations['SalonCrud_delete']
-type CreateSalonOperation = operations['SalonCrud_create']
-type UpdateSalonOperation = operations['SalonCrud_update']
-type SearchSalonsOperation = operations['SalonCrud_search']
+// ============================================================================
+// Model Types - Core domain models
+// ============================================================================
+export type Salon = components['schemas']['Models.Salon']
+export type CreateSalonRequest = components['schemas']['Models.CreateSalonRequest']
+export type UpdateSalonRequest = components['schemas']['Models.UpdateSalonRequest']
 
-// Model type remapping
-type Salon = components['schemas']['Models.Salon']
-type CreateSalonRequest = components['schemas']['Models.CreateSalonRequest']
-type UpdateSalonRequest = components['schemas']['Models.UpdateSalonRequest']
+// ============================================================================
+// Response Types - API response structures
+// ============================================================================
+export type CursorPaginationResponse<T> = {
+  data: T[]
+  meta: components['schemas']['Models.PaginationMeta']
+  links: components['schemas']['Models.PaginationLinks']
+}
 
-// Response type extraction using Extract utility
-type GetSalonResponse = Extract<
+export type GetSalonResponse = Extract<
   GetSalonOperation['responses']['200']['content']['application/json'],
   { data: unknown }
 >
 
-// Query parameter type remapping with NonNullable
-type ListSalonsQuery = NonNullable<ListSalonsOperation['parameters']['query']>
+export type CreateSalonResponse = GetSalonResponse
+export type UpdateSalonResponse = GetSalonResponse
+export type ListSalonsResponse = CursorPaginationResponse<Salon>
+export type SearchSalonsResponse = CursorPaginationResponse<Salon>
 
-// Error response type
-type ErrorResponse = components['schemas']['Models.ProblemDetails']
+// ============================================================================
+// Query Parameter Types
+// ============================================================================
+export type ListSalonsQuery = NonNullable<ListSalonsOperation['parameters']['query']>
+export type SearchSalonsQuery = NonNullable<SearchSalonsOperation['parameters']['query']>
+
+// ============================================================================
+// Error Types
+// ============================================================================
+export type ErrorResponse = components['schemas']['Models.ProblemDetails']
 ```
 
-### Route Handler Pattern
+### Shared Utilities (_shared/utils.ts)
 
-Standard pattern for all route handlers:
+Common utilities used across all handlers:
 
 ```typescript
-// Standard handler signature with proper types
-const createSalonHandler: RequestHandler<
+import { toProblemDetails } from '@beauty-salon-backend/domain'
+import type { DomainError } from '@beauty-salon-backend/domain'
+import type { Response } from 'express'
+import type { ErrorResponse } from './types'
+
+/**
+ * Standard error handler for domain errors
+ * Converts domain errors to Problem Details format (RFC 7807)
+ */
+export const handleDomainError = (
+  res: Response<ErrorResponse>,
+  error: DomainError
+): Response<ErrorResponse> => {
+  const problemDetails = toProblemDetails(error)
+  return res.status(problemDetails.status).json(problemDetails)
+}
+
+/**
+ * Convert cursor to page number for backward compatibility
+ */
+export const cursorToPage = (
+  cursor: string | undefined,
+  limit: number
+): number => {
+  if (!cursor) return 1
+
+  if (cursor.startsWith('offset:')) {
+    const offset = Number(cursor.replace('offset:', ''))
+    return Math.floor(offset / limit) + 1
+  }
+
+  return 1
+}
+```
+
+### Individual Handler Pattern
+
+Each handler is in its own file with focused responsibility. Example `create-salon.handler.ts`:
+
+```typescript
+import { CreateSalonUseCase } from '@beauty-salon-backend/domain'
+import { SalonRepository } from '@beauty-salon-backend/infrastructure'
+import type { Database } from '@beauty-salon-backend/infrastructure'
+import type { RequestHandler, Response } from 'express'
+import { match } from 'ts-pattern'
+import type {
+  CreateSalonRequest,
+  CreateSalonResponse,
+  ErrorResponse,
+} from './_shared'
+import { handleDomainError } from './_shared'
+
+/**
+ * POST /api/v1/salons - Create a new salon
+ *
+ * Features:
+ * - Validates all required fields in use case
+ * - Creates salon with opening hours
+ * - Returns created salon with metadata and links
+ */
+export const createSalonHandler: RequestHandler<
   Record<string, never>,                    // Path params (empty for POST)
   CreateSalonResponse | ErrorResponse,      // Response body types
-  CreateSalonRequest,                       // Request body type
-  Partial<QueryParams>                      // Query params (optional)
+  CreateSalonRequest                        // Request body type
 > = async (req, res, next) => {
   try {
-    // 1. Get dependencies from app.locals
+    // Get dependencies and execute use case
     const db = req.app.locals.database as Database
     const repository = new SalonRepository(db)
     const useCase = new CreateSalonUseCase(repository)
 
-    // 2. Execute use case (NO validation here!)
     const result = await useCase.execute(req.body)
 
-    // 3. Handle result with exhaustive pattern matching
+    // Handle result with pattern matching
     match(result)
       .with({ type: 'success' }, ({ data }) => {
         const response: CreateSalonResponse = {
@@ -110,57 +207,110 @@ const createSalonHandler: RequestHandler<
       )
       .exhaustive()
   } catch (error) {
-    next(error)  // Pass to Express error handler
+    next(error)
   }
 }
 ```
 
-### Error Handler Helper
+### Route Aggregation (index.ts)
 
-Centralized error handling with proper type casting:
+The index.ts file aggregates all handlers and registers routes:
 
 ```typescript
-const handleDomainError = (
-  res: Response<ErrorResponse>,
-  error: DomainError
-): Response<ErrorResponse> => {
-  const problemDetails = toProblemDetails(error)
-  return res.status(problemDetails.status).json(problemDetails)
-}
+import { Router } from 'express'
+
+// Import all handlers
+import { createSalonHandler } from './create-salon.handler'
+import { deleteSalonHandler } from './delete-salon.handler'
+import { getSalonHandler } from './get-salon.handler'
+import { listSalonsHandler } from './list-salons.handler'
+import { searchSalonsHandler } from './search-salons.handler'
+import { updateSalonHandler } from './update-salon.handler'
+
+/**
+ * Salon Routes Configuration
+ *
+ * Routes:
+ * - GET    /api/v1/salons          → listSalonsHandler
+ * - POST   /api/v1/salons          → createSalonHandler
+ * - GET    /api/v1/salons/search   → searchSalonsHandler
+ * - GET    /api/v1/salons/:id      → getSalonHandler
+ * - PUT    /api/v1/salons/:id      → updateSalonHandler
+ * - DELETE /api/v1/salons/:id      → deleteSalonHandler
+ */
+const router = Router()
+
+// List and Create operations
+router.get('/salons', listSalonsHandler)
+router.post('/salons', createSalonHandler)
+
+// Search operation (before :id to avoid route conflicts)
+router.get('/salons/search', searchSalonsHandler)
+
+// Single resource operations
+router.get('/salons/:id', getSalonHandler)
+router.put('/salons/:id', updateSalonHandler)
+router.delete('/salons/:id', deleteSalonHandler)
+
+export default router
 ```
 
-### Pagination Handling
+### Pagination Handler Example
 
-Convert between cursor-based and page-based pagination:
+Example from `list-salons.handler.ts` showing pagination handling:
 
 ```typescript
-const listSalonsHandler: RequestHandler<
+import { ListSalonsUseCase } from '@beauty-salon-backend/domain'
+import { SalonRepository } from '@beauty-salon-backend/infrastructure'
+import type { Database } from '@beauty-salon-backend/infrastructure'
+import type { RequestHandler, Response } from 'express'
+import { match } from 'ts-pattern'
+import type { ErrorResponse, ListSalonsQuery, ListSalonsResponse } from './_shared'
+import { cursorToPage, handleDomainError } from './_shared'
+
+/**
+ * GET /api/v1/salons - List all salons with pagination
+ *
+ * Features:
+ * - Cursor-based pagination
+ * - Configurable page size via limit parameter
+ * - Returns summary data for list views
+ */
+export const listSalonsHandler: RequestHandler<
   Record<string, never>,
-  CursorPaginationResponse<Salon> | ErrorResponse,
+  ListSalonsResponse | ErrorResponse,
   unknown,
   Partial<ListSalonsQuery>
 > = async (req, res, next) => {
   try {
-    // Extract pagination from cursor-based params
+    // Extract pagination from query params
     const limit = Number(req.query.limit) || 20
-    const cursor = req.query.cursor || undefined
+    const cursor = req.query.cursor
 
-    // Convert cursor to page number for backward compatibility
-    let page = 1
-    if (cursor?.startsWith('offset:')) {
-      const offset = Number(cursor.replace('offset:', ''))
-      page = Math.floor(offset / limit) + 1
-    }
+    // Convert cursor to page using utility
+    const page = cursorToPage(cursor, limit)
 
-    // ... execute use case ...
+    // Get dependencies and execute use case
+    const db = req.app.locals.database as Database
+    const repository = new SalonRepository(db)
+    const useCase = new ListSalonsUseCase(repository)
 
-    // Return proper CursorPaginationResponse structure
-    const response: CursorPaginationResponse<Salon> = {
-      data: data.data,
-      meta: data.meta,
-      links: data.links,
-    }
-    res.json(response)
+    const result = await useCase.execute({ page, limit })
+
+    // Handle result with pattern matching
+    match(result)
+      .with({ type: 'success' }, ({ data }) => {
+        const response: ListSalonsResponse = {
+          data: data.data,
+          meta: data.meta,
+          links: data.links,
+        }
+        res.json(response)
+      })
+      .with({ type: 'error' }, ({ error }) =>
+        handleDomainError(res as Response<ErrorResponse>, error)
+      )
+      .exhaustive()
   } catch (error) {
     next(error)
   }
@@ -764,11 +914,21 @@ it('should soft delete a salon', async () => {
 
 ### For Each New Domain
 
-#### 1. API Layer Setup
-- [ ] Extract types from generated operations
-- [ ] Create route handlers with proper type signatures
-- [ ] Implement error handler helper
-- [ ] Set up router with all CRUD endpoints
+#### 1. API Layer Setup (Modular Structure)
+- [ ] Create domain folder: `src/routes/[domain]/`
+- [ ] Create `_shared/` subfolder for common code
+- [ ] Extract types to `_shared/types.ts` from generated operations
+- [ ] Create utilities in `_shared/utils.ts` (handleDomainError, cursorToPage)
+- [ ] Create `_shared/index.ts` with re-exports
+- [ ] Create individual handler files:
+  - [ ] `list-[domain].handler.ts` - GET /api/v1/[domain]
+  - [ ] `create-[domain].handler.ts` - POST /api/v1/[domain]
+  - [ ] `get-[domain].handler.ts` - GET /api/v1/[domain]/:id
+  - [ ] `update-[domain].handler.ts` - PUT /api/v1/[domain]/:id
+  - [ ] `delete-[domain].handler.ts` - DELETE /api/v1/[domain]/:id
+  - [ ] `search-[domain].handler.ts` - GET /api/v1/[domain]/search (if needed)
+- [ ] Create `index.ts` for route aggregation
+- [ ] Update main app router import
 - [ ] NO validation in routes (delegate to use cases)
 
 #### 2. Use Case Layer
@@ -838,6 +998,19 @@ it('should soft delete a salon', async () => {
 
 ## Migration Guide from Other Patterns
 
+### From Monolithic Routes to Modular Structure
+
+If migrating from a monolithic route file:
+
+1. **Create domain folder structure** with `_shared/` subfolder
+2. **Extract types to `_shared/types.ts`** from the monolithic file
+3. **Move utilities to `_shared/utils.ts`** (handleDomainError, etc.)
+4. **Split handlers into individual files** - one per endpoint
+5. **Create `index.ts`** for route aggregation
+6. **Update app router import** to use the new modular structure
+
+### From Other Architectural Patterns
+
 If migrating from a different pattern:
 
 1. **Move validation from routes to use cases**
@@ -847,5 +1020,17 @@ If migrating from a different pattern:
 5. **Add exhaustive pattern matching**
 6. **Update tests to verify database state**
 7. **Implement proper error handling with Problem Details**
+
+### Benefits of Modular Structure
+
+The modular route structure provides:
+
+- **Single Responsibility**: Each handler focuses on one endpoint
+- **Better Maintainability**: Changes to one endpoint don't affect others
+- **Easier Testing**: Individual handlers can be tested in isolation
+- **Clear Documentation**: Each handler has its own JSDoc comments
+- **Reduced Merge Conflicts**: Multiple developers can work on different endpoints
+- **Explicit Route Mapping**: The index.ts clearly shows all routes
+- **Type Safety**: Centralized type definitions in `_shared/`
 
 This reference guide represents the proven patterns from the Salon domain implementation and should be followed for all new domain implementations to ensure consistency and maintainability.

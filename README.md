@@ -155,6 +155,8 @@ See [docs/testing-requirements.md](docs/testing-requirements.md) for testing gui
 
 ### Implementation Guides
 
+- [Domain Implementation Reference](docs/domain-implementation-reference.md) - Complete reference for implementing new domains
+- [API Route Modular Structure](docs/api-route-modular-structure.md) - Guide for modular route organization
 - [Uniform Implementation](docs/uniform-implementation-guide.md)
 - [Testing Requirements](docs/testing-requirements.md)
 - [Type Generation System](docs/type-generation-system.md)

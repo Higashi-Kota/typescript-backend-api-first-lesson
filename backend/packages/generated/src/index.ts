@@ -1,6 +1,6 @@
 // Generated from TypeSpec/OpenAPI
 // DO NOT EDIT MANUALLY
-// Last generated: 2025-09-21T16:04:06.110Z
+// Last generated: 2025-09-21T16:33:00.280Z
 
 // Main API types and utilities
 export * from './api-types'

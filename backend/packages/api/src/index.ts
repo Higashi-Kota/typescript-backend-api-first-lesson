@@ -6,7 +6,7 @@ import compression from 'compression'
 import cors from 'cors'
 import express, { type Express } from 'express'
 import helmet from 'helmet'
-import salonRoutes from './routes/salon.routes'
+import salonRoutes from './routes/salon'
 
 // 依存関係の型
 export type AppDependencies = {
