@@ -24,7 +24,7 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:integration": "vitest run --config vitest.integration.config.ts",
-    "typecheck": "tsc --build --noEmit",
+    "typecheck": "tsc --noEmit",
     "format": "biome format --write .",
     "format:fix": "biome check . --fix --unsafe",
     "lint": "biome lint .",

@@ -21,7 +21,7 @@
     "build:watch": "NODE_ENV=development rslib build --watch",
     "dev": "NODE_ENV=development rslib build --watch",
     "dev:tsc": "tsc --build --watch",
-    "typecheck": "tsc --build --noEmit",
+    "typecheck": "tsc --noEmit",
     "format": "biome format --write .",
     "format:fix": "biome check . --fix --unsafe",
     "lint": "biome lint .",
