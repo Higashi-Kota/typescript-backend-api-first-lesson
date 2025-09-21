@@ -20,27 +20,24 @@
     "build": "NODE_ENV=production rslib build && tsc --emitDeclarationOnly",
     "build:watch": "NODE_ENV=development rslib build --watch",
     "dev": "NODE_ENV=development rslib build --watch",
-    "test": "vitest run",
-    "test:watch": "vitest",
     "typecheck": "tsc --build --noEmit",
     "lint": "biome check --write .",
     "lint:check": "biome check ."
   },
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
+    "@beauty-salon-shared/config": "workspace:*",
+    "@biomejs/biome": "^1.9.4",
     "@beauty-salon-backend/domain": "workspace:*",
     "@beauty-salon-backend/database": "workspace:*",
+    "@beauty-salon-backend/utility": "workspace:*",
     "@testcontainers/postgresql": "^10.20.3",
     "testcontainers": "^10.20.3",
     "drizzle-orm": "^0.44.2",
     "postgres": "^3.4.7",
     "ts-pattern": "^5.7.1",
-    "uuid": "^11.0.6",
-    "dotenv": "^16.5.0"
-  },
-  "devDependencies": {
+    "dotenv": "^16.5.0",
     "@rslib/core": "^0.10.5",
-    "@types/node": "^24.0.13",
-    "@types/uuid": "^10.0.0",
-    "vitest": "^3.2.4"
+    "@types/node": "^24.0.13"
   }
 }

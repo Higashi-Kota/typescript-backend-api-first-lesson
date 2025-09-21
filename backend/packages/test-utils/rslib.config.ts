@@ -29,7 +29,6 @@ export default defineConfig({
           'drizzle-orm',
           'postgres',
           'ts-pattern',
-          'uuid',
         ],
       },
     },

@@ -9,10 +9,15 @@ import type { ModelsSalonId } from './modelsSalonId'
 import type { ModelsCustomerId } from './modelsCustomerId'
 
 export interface ModelsCustomerAssociations {
-  primarySalonId?: ModelsSalonId
+  /** @nullable */
+  primarySalonId: string | null
   visitedSalonIds: ModelsSalonId[]
-  familyMemberIds?: ModelsCustomerId[]
-  referredBy?: ModelsCustomerId
-  referredCustomerIds?: ModelsCustomerId[]
-  groupId?: string
+  /** @nullable */
+  familyMemberIds: ModelsCustomerId[] | null
+  /** @nullable */
+  referredBy: string | null
+  /** @nullable */
+  referredCustomerIds: ModelsCustomerId[] | null
+  /** @nullable */
+  groupId: string | null
 }

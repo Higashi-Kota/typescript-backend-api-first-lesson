@@ -27,9 +27,9 @@ export type SalonOperationsGetNearbyParams = {
    */
   radius?: number
   /**
-   * Service category filter
+   * Filter by service categories
    */
-  category?: ModelsServiceCategoryType
+  categories?: ModelsServiceCategoryType[]
   /**
    * Maximum number of items to return (1-100)
    * @minimum 1

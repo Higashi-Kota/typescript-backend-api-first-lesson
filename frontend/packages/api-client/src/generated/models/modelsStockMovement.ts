@@ -38,7 +38,9 @@ export interface ModelsStockMovement {
   /** Movement timestamp */
   movedAt: string
   createdAt: string
-  createdBy?: string
+  /** @nullable */
+  createdBy: string | null
   updatedAt: string
-  updatedBy?: string
+  /** @nullable */
+  updatedBy: string | null
 }

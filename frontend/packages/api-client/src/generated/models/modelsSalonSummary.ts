@@ -12,6 +12,8 @@ export interface ModelsSalonSummary {
   id: ModelsSalonId
   name: string
   address: ModelsAddress
-  rating?: number
-  reviewCount?: number
+  /** @nullable */
+  rating: number | null
+  /** @nullable */
+  reviewCount: number | null
 }

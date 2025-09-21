@@ -5,21 +5,30 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsStylePreference } from './modelsStylePreference'
-import type { ModelsServicePreference } from './modelsServicePreference'
-import type { ModelsNotificationSettings } from './modelsNotificationSettings'
+import type { ModelsCustomerPreferencesStylePreferences } from './modelsCustomerPreferencesStylePreferences'
+import type { ModelsCustomerPreferencesServicePreferences } from './modelsCustomerPreferencesServicePreferences'
+import type { ModelsCustomerPreferencesCommunicationPreferences } from './modelsCustomerPreferencesCommunicationPreferences'
 import type { ModelsStaffId } from './modelsStaffId'
 import type { ModelsDayOfWeekType } from './modelsDayOfWeekType'
 import type { ModelsTimeSlot } from './modelsTimeSlot'
 
 export interface ModelsCustomerPreferences {
-  stylePreferences?: ModelsStylePreference
-  servicePreferences?: ModelsServicePreference
-  communicationPreferences?: ModelsNotificationSettings
-  preferredStaff?: ModelsStaffId[]
-  avoidStaff?: ModelsStaffId[]
-  preferredDayOfWeek?: ModelsDayOfWeekType[]
-  preferredTimeSlots?: ModelsTimeSlot[]
-  specialRequests?: string
-  language?: string
+  /** @nullable */
+  stylePreferences: ModelsCustomerPreferencesStylePreferences
+  /** @nullable */
+  servicePreferences: ModelsCustomerPreferencesServicePreferences
+  /** @nullable */
+  communicationPreferences: ModelsCustomerPreferencesCommunicationPreferences
+  /** @nullable */
+  preferredStaff: ModelsStaffId[] | null
+  /** @nullable */
+  avoidStaff: ModelsStaffId[] | null
+  /** @nullable */
+  preferredDayOfWeek: ModelsDayOfWeekType[] | null
+  /** @nullable */
+  preferredTimeSlots: ModelsTimeSlot[] | null
+  /** @nullable */
+  specialRequests: string | null
+  /** @nullable */
+  language: string | null
 }

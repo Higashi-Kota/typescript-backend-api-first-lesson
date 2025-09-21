@@ -11,10 +11,14 @@ import type { ModelsStaffId } from './modelsStaffId'
 
 export interface ModelsCustomerHistory {
   visits: ModelsVisitHistory
-  lastServiceId?: ModelsServiceId
-  lastStaffId?: ModelsStaffId
+  /** @nullable */
+  lastServiceId: string | null
+  /** @nullable */
+  lastStaffId: string | null
   favoriteServiceIds: ModelsServiceId[]
   favoriteStaffIds: ModelsStaffId[]
-  pastTreatments?: string[]
-  notes?: string[]
+  /** @nullable */
+  pastTreatments: string[] | null
+  /** @nullable */
+  notes: string[] | null
 }

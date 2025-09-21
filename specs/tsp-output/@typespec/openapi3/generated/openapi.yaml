@@ -1886,12 +1886,12 @@ paths:
       summary: List {Name} resources
       description: List resources with pagination and filtering
       parameters:
-        - $ref: "#/components/parameters/Operations.CustomerSearchParams.search"
-        - $ref: "#/components/parameters/Operations.CustomerSearchParams.tags"
-        - $ref: "#/components/parameters/Operations.CustomerSearchParams.registeredFrom"
-        - $ref: "#/components/parameters/Operations.CustomerSearchParams.registeredTo"
-        - $ref: "#/components/parameters/Operations.CustomerSearchParams.status"
-        - $ref: "#/components/parameters/Operations.CustomerSearchParams.loyaltyTier"
+        - $ref: "#/components/parameters/Models.SearchCustomerRequest.search"
+        - $ref: "#/components/parameters/Models.SearchCustomerRequest.tags"
+        - $ref: "#/components/parameters/Models.SearchCustomerRequest.registeredFrom"
+        - $ref: "#/components/parameters/Models.SearchCustomerRequest.registeredTo"
+        - $ref: "#/components/parameters/Models.SearchCustomerRequest.status"
+        - $ref: "#/components/parameters/Models.SearchCustomerRequest.loyaltyTier"
         - $ref: "#/components/parameters/Models.AdvancedSearchParams.q"
         - $ref: "#/components/parameters/Models.AdvancedSearchParams.filter"
         - $ref: "#/components/parameters/Models.AdvancedSearchParams.fields"
@@ -2693,12 +2693,12 @@ paths:
       summary: Search {Name} resources
       description: Advanced search with facets
       parameters:
-        - $ref: "#/components/parameters/Operations.CustomerSearchParams.search"
-        - $ref: "#/components/parameters/Operations.CustomerSearchParams.tags"
-        - $ref: "#/components/parameters/Operations.CustomerSearchParams.registeredFrom"
-        - $ref: "#/components/parameters/Operations.CustomerSearchParams.registeredTo"
-        - $ref: "#/components/parameters/Operations.CustomerSearchParams.status"
-        - $ref: "#/components/parameters/Operations.CustomerSearchParams.loyaltyTier"
+        - $ref: "#/components/parameters/Models.SearchCustomerRequest.search"
+        - $ref: "#/components/parameters/Models.SearchCustomerRequest.tags"
+        - $ref: "#/components/parameters/Models.SearchCustomerRequest.registeredFrom"
+        - $ref: "#/components/parameters/Models.SearchCustomerRequest.registeredTo"
+        - $ref: "#/components/parameters/Models.SearchCustomerRequest.status"
+        - $ref: "#/components/parameters/Models.SearchCustomerRequest.loyaltyTier"
         - $ref: "#/components/parameters/Models.AdvancedSearchParams.q"
         - $ref: "#/components/parameters/Models.AdvancedSearchParams.filter"
         - $ref: "#/components/parameters/Models.AdvancedSearchParams.fields"
@@ -3462,7 +3462,7 @@ paths:
                 properties:
                   data:
                     allOf:
-                      - $ref: "#/components/schemas/Operations.CustomerPreferences"
+                      - $ref: "#/components/schemas/Models.CustomerPreferences"
                     description: Response data
                   meta:
                     allOf:
@@ -3499,7 +3499,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Operations.CustomerPreferences"
+              $ref: "#/components/schemas/Models.CustomerPreferencesUpdate"
   /api/v1/customers/{id}/profile:
     get:
       operationId: CustomerOperations_getProfile
@@ -3730,7 +3730,7 @@ paths:
                 properties:
                   data:
                     allOf:
-                      - $ref: "#/components/schemas/Operations.CustomerStatistics"
+                      - $ref: "#/components/schemas/Models.CustomerStatistics"
                     description: Response data
                   meta:
                     allOf:
@@ -4383,15 +4383,18 @@ paths:
       summary: List {Name} resources
       description: List resources with pagination and filtering
       parameters:
-        - $ref: "#/components/parameters/Operations.SalonSearchParams.city"
-        - $ref: "#/components/parameters/Operations.SalonSearchParams.category"
-        - $ref: "#/components/parameters/Operations.SalonSearchParams.minRating"
-        - $ref: "#/components/parameters/Operations.SalonSearchParams.maxDistance"
-        - $ref: "#/components/parameters/Operations.SalonSearchParams.lat"
-        - $ref: "#/components/parameters/Operations.SalonSearchParams.lon"
-        - $ref: "#/components/parameters/Operations.SalonSearchParams.features"
-        - $ref: "#/components/parameters/Operations.SalonSearchParams.openNow"
-        - $ref: "#/components/parameters/Operations.SalonSearchParams.openAt"
+        - $ref: "#/components/parameters/Models.SearchSalonRequest.keyword"
+        - $ref: "#/components/parameters/Models.SearchSalonRequest.city"
+        - $ref: "#/components/parameters/Models.SearchSalonRequest.prefecture"
+        - $ref: "#/components/parameters/Models.SearchSalonRequest.categories"
+        - $ref: "#/components/parameters/Models.SearchSalonRequest.features"
+        - $ref: "#/components/parameters/Models.SearchSalonRequest.isActive"
+        - $ref: "#/components/parameters/Models.SearchSalonRequest.minRating"
+        - $ref: "#/components/parameters/Models.SearchSalonRequest.maxDistance"
+        - $ref: "#/components/parameters/Models.SearchSalonRequest.lat"
+        - $ref: "#/components/parameters/Models.SearchSalonRequest.lon"
+        - $ref: "#/components/parameters/Models.SearchSalonRequest.openNow"
+        - $ref: "#/components/parameters/Models.SearchSalonRequest.openAt"
         - $ref: "#/components/parameters/Models.AdvancedSearchParams.q"
         - $ref: "#/components/parameters/Models.AdvancedSearchParams.filter"
         - $ref: "#/components/parameters/Models.AdvancedSearchParams.fields"
@@ -5024,19 +5027,28 @@ paths:
             schema:
               type: object
               properties:
+                keyword:
+                  type: string
+                  description: Search keyword (alias for q)
                 city:
                   type: string
                   description: Filter by city name
-                category:
+                prefecture:
                   type: string
-                  enum:
-                    - cut
-                    - color
-                    - perm
-                    - treatment
-                    - spa
-                    - other
-                  description: Filter by service category
+                  description: Filter by prefecture name
+                categories:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/Models.ServiceCategoryType"
+                  description: Filter by service categories
+                features:
+                  type: array
+                  items:
+                    type: string
+                  description: Filter by features (array)
+                isActive:
+                  type: boolean
+                  description: Filter by active status
                 minRating:
                   type: number
                   format: float
@@ -5056,9 +5068,6 @@ paths:
                   type: number
                   format: double
                   description: Reference longitude for distance calculation
-                features:
-                  type: string
-                  description: Filter by features (comma-separated)
                 openNow:
                   type: boolean
                   description: Filter by opening hours
@@ -5152,12 +5161,14 @@ paths:
             maximum: 100
             default: 5
           explode: false
-        - name: category
+        - name: categories
           in: query
           required: false
-          description: Service category filter
+          description: Filter by service categories
           schema:
-            $ref: "#/components/schemas/Models.ServiceCategoryType"
+            type: array
+            items:
+              $ref: "#/components/schemas/Models.ServiceCategoryType"
           explode: false
         - $ref: "#/components/parameters/Models.CursorPaginationParams.limit"
         - $ref: "#/components/parameters/Models.CursorPaginationParams.cursor"
@@ -5183,7 +5194,7 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: "#/components/schemas/Operations.SalonWithDistance"
+                      $ref: "#/components/schemas/Models.SalonWithDistance"
                     description: Array of items for current page
                   meta:
                     allOf:
@@ -5259,7 +5270,7 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: "#/components/schemas/Operations.SalonRecommendation"
+                      $ref: "#/components/schemas/Models.SalonRecommendation"
                     description: Array of items for current page
                   meta:
                     allOf:
@@ -5284,15 +5295,18 @@ paths:
       summary: Search {Name} resources
       description: Advanced search with facets
       parameters:
-        - $ref: "#/components/parameters/Operations.SalonSearchParams.city"
-        - $ref: "#/components/parameters/Operations.SalonSearchParams.category"
-        - $ref: "#/components/parameters/Operations.SalonSearchParams.minRating"
-        - $ref: "#/components/parameters/Operations.SalonSearchParams.maxDistance"
-        - $ref: "#/components/parameters/Operations.SalonSearchParams.lat"
-        - $ref: "#/components/parameters/Operations.SalonSearchParams.lon"
-        - $ref: "#/components/parameters/Operations.SalonSearchParams.features"
-        - $ref: "#/components/parameters/Operations.SalonSearchParams.openNow"
-        - $ref: "#/components/parameters/Operations.SalonSearchParams.openAt"
+        - $ref: "#/components/parameters/Models.SearchSalonRequest.keyword"
+        - $ref: "#/components/parameters/Models.SearchSalonRequest.city"
+        - $ref: "#/components/parameters/Models.SearchSalonRequest.prefecture"
+        - $ref: "#/components/parameters/Models.SearchSalonRequest.categories"
+        - $ref: "#/components/parameters/Models.SearchSalonRequest.features"
+        - $ref: "#/components/parameters/Models.SearchSalonRequest.isActive"
+        - $ref: "#/components/parameters/Models.SearchSalonRequest.minRating"
+        - $ref: "#/components/parameters/Models.SearchSalonRequest.maxDistance"
+        - $ref: "#/components/parameters/Models.SearchSalonRequest.lat"
+        - $ref: "#/components/parameters/Models.SearchSalonRequest.lon"
+        - $ref: "#/components/parameters/Models.SearchSalonRequest.openNow"
+        - $ref: "#/components/parameters/Models.SearchSalonRequest.openAt"
         - $ref: "#/components/parameters/Models.AdvancedSearchParams.q"
         - $ref: "#/components/parameters/Models.AdvancedSearchParams.filter"
         - $ref: "#/components/parameters/Models.AdvancedSearchParams.fields"
@@ -5679,7 +5693,7 @@ paths:
                 properties:
                   data:
                     allOf:
-                      - $ref: "#/components/schemas/Operations.SalonAvailabilityResponse"
+                      - $ref: "#/components/schemas/Models.SalonAvailabilityResponse"
                     description: Response data
                   meta:
                     allOf:
@@ -5710,7 +5724,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Operations.SalonAvailabilityRequest"
+              $ref: "#/components/schemas/Models.SalonAvailabilityRequest"
   /api/v1/salons/{id}/history:
     get:
       operationId: SalonCrud_getHistory
@@ -5902,7 +5916,7 @@ paths:
                 properties:
                   data:
                     allOf:
-                      - $ref: "#/components/schemas/Operations.StaffSchedule"
+                      - $ref: "#/components/schemas/Models.StaffScheduleManagement"
                     description: Response data
                   meta:
                     allOf:
@@ -5945,25 +5959,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                regularHours:
-                  type: array
-                  items:
-                    $ref: "#/components/schemas/Models.BusinessHours"
-                exceptions:
-                  type: array
-                  items:
-                    $ref: "#/components/schemas/Operations.ScheduleException"
-                effectiveFrom:
-                  type: string
-                  format: date-time
-                effectiveTo:
-                  type: string
-                  format: date-time
-              required:
-                - regularHours
-                - effectiveFrom
+              $ref: "#/components/schemas/Models.StaffScheduleUpdateRequest"
   /api/v1/salons/{id}/statistics:
     get:
       operationId: SalonOperations_getStatistics
@@ -6000,7 +5996,7 @@ paths:
                 properties:
                   data:
                     allOf:
-                      - $ref: "#/components/schemas/Operations.SalonStatistics"
+                      - $ref: "#/components/schemas/Models.SalonStatistics"
                     description: Response data
                   meta:
                     allOf:
@@ -6053,20 +6049,8 @@ paths:
                   - data
                 properties:
                   data:
-                    type: object
-                    properties:
-                      subscriptionId:
-                        type: string
-                      status:
-                        type: string
-                        enum:
-                          - active
-                      expiresAt:
-                        type: string
-                        format: date-time
-                    required:
-                      - subscriptionId
-                      - status
+                    allOf:
+                      - $ref: "#/components/schemas/Models.SalonSubscriptionResponse"
                     description: Response data
                   meta:
                     allOf:
@@ -6109,21 +6093,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                customerId:
-                  $ref: "#/components/schemas/Models.CustomerId"
-                notificationTypes:
-                  type: array
-                  items:
-                    $ref: "#/components/schemas/Models.NotificationType"
-                categories:
-                  type: array
-                  items:
-                    $ref: "#/components/schemas/Models.ServiceCategoryType"
-              required:
-                - customerId
-                - notificationTypes
+              $ref: "#/components/schemas/Models.SalonSubscriptionRequest"
   /api/v1/salons/{id}/versions/{version}:
     get:
       operationId: SalonCrud_getVersion
@@ -7136,11 +7106,11 @@ paths:
       operationId: InventoryOperations_listInventoryItems
       description: List inventory items with filters
       parameters:
-        - $ref: "#/components/parameters/Models.InventorySearchParams.salonId"
-        - $ref: "#/components/parameters/Models.InventorySearchParams.category"
-        - $ref: "#/components/parameters/Models.InventorySearchParams.status"
-        - $ref: "#/components/parameters/Models.InventorySearchParams.lowStock"
-        - $ref: "#/components/parameters/Models.InventorySearchParams.expiringSoon"
+        - $ref: "#/components/parameters/Models.SearchInventoryRequest.salonId"
+        - $ref: "#/components/parameters/Models.SearchInventoryRequest.category"
+        - $ref: "#/components/parameters/Models.SearchInventoryRequest.status"
+        - $ref: "#/components/parameters/Models.SearchInventoryRequest.lowStock"
+        - $ref: "#/components/parameters/Models.SearchInventoryRequest.expiringSoon"
         - $ref: "#/components/parameters/Models.SearchParams.q"
         - $ref: "#/components/parameters/Models.SearchParams.sortBy"
         - $ref: "#/components/parameters/Models.SearchParams.sortOrder"
@@ -11302,41 +11272,6 @@ components:
       schema:
         type: string
       explode: false
-    Models.InventorySearchParams.category:
-      name: category
-      in: query
-      required: false
-      schema:
-        type: string
-      explode: false
-    Models.InventorySearchParams.expiringSoon:
-      name: expiringSoon
-      in: query
-      required: false
-      schema:
-        type: boolean
-      explode: false
-    Models.InventorySearchParams.lowStock:
-      name: lowStock
-      in: query
-      required: false
-      schema:
-        type: boolean
-      explode: false
-    Models.InventorySearchParams.salonId:
-      name: salonId
-      in: query
-      required: true
-      schema:
-        $ref: "#/components/schemas/Models.SalonId"
-      explode: false
-    Models.InventorySearchParams.status:
-      name: status
-      in: query
-      required: false
-      schema:
-        $ref: "#/components/schemas/Models.InventoryStatusType"
-      explode: false
     Models.PaginationParams.limit:
       name: limit
       in: query
@@ -11374,6 +11309,93 @@ components:
         type: boolean
         default: true
       explode: false
+    Models.SearchCustomerRequest.loyaltyTier:
+      name: loyaltyTier
+      in: query
+      required: false
+      description: Filter by loyalty tier
+      schema:
+        $ref: "#/components/schemas/Models.LoyaltyTierType"
+      explode: false
+    Models.SearchCustomerRequest.registeredFrom:
+      name: registeredFrom
+      in: query
+      required: false
+      description: Filter by registration date from
+      schema:
+        type: string
+        format: date-time
+      explode: false
+    Models.SearchCustomerRequest.registeredTo:
+      name: registeredTo
+      in: query
+      required: false
+      description: Filter by registration date to
+      schema:
+        type: string
+        format: date-time
+      explode: false
+    Models.SearchCustomerRequest.search:
+      name: search
+      in: query
+      required: false
+      description: Search in customer name, email, or phone
+      schema:
+        type: string
+      explode: false
+    Models.SearchCustomerRequest.status:
+      name: status
+      in: query
+      required: false
+      description: Filter by customer status
+      schema:
+        $ref: "#/components/schemas/Models.CustomerStatusType"
+      explode: false
+    Models.SearchCustomerRequest.tags:
+      name: tags
+      in: query
+      required: false
+      description: Filter by customer tags
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    Models.SearchInventoryRequest.category:
+      name: category
+      in: query
+      required: false
+      schema:
+        type: string
+      explode: false
+    Models.SearchInventoryRequest.expiringSoon:
+      name: expiringSoon
+      in: query
+      required: false
+      schema:
+        type: boolean
+      explode: false
+    Models.SearchInventoryRequest.lowStock:
+      name: lowStock
+      in: query
+      required: false
+      schema:
+        type: boolean
+      explode: false
+    Models.SearchInventoryRequest.salonId:
+      name: salonId
+      in: query
+      required: true
+      schema:
+        $ref: "#/components/schemas/Models.SalonId"
+      explode: false
+    Models.SearchInventoryRequest.status:
+      name: status
+      in: query
+      required: false
+      schema:
+        $ref: "#/components/schemas/Models.InventoryStatusType"
+      explode: false
     Models.SearchParams.q:
       name: q
       in: query
@@ -11398,67 +11420,17 @@ components:
           - asc
           - desc
       explode: false
-    Operations.CustomerSearchParams.loyaltyTier:
-      name: loyaltyTier
+    Models.SearchSalonRequest.categories:
+      name: categories
       in: query
       required: false
-      description: Filter by loyalty tier
-      schema:
-        $ref: "#/components/schemas/Models.LoyaltyTierType"
-      explode: false
-    Operations.CustomerSearchParams.registeredFrom:
-      name: registeredFrom
-      in: query
-      required: false
-      description: Filter by registration date from
-      schema:
-        type: string
-        format: date-time
-      explode: false
-    Operations.CustomerSearchParams.registeredTo:
-      name: registeredTo
-      in: query
-      required: false
-      description: Filter by registration date to
-      schema:
-        type: string
-        format: date-time
-      explode: false
-    Operations.CustomerSearchParams.search:
-      name: search
-      in: query
-      required: false
-      description: Search in customer name, email, or phone
-      schema:
-        type: string
-      explode: false
-    Operations.CustomerSearchParams.status:
-      name: status
-      in: query
-      required: false
-      description: Filter by customer status
-      schema:
-        $ref: "#/components/schemas/Models.CustomerStatusType"
-      explode: false
-    Operations.CustomerSearchParams.tags:
-      name: tags
-      in: query
-      required: false
-      description: Filter by customer tags
+      description: Filter by service categories
       schema:
         type: array
         items:
-          type: string
+          $ref: "#/components/schemas/Models.ServiceCategoryType"
       explode: false
-    Operations.SalonSearchParams.category:
-      name: category
-      in: query
-      required: false
-      description: Filter by service category
-      schema:
-        $ref: "#/components/schemas/Models.ServiceCategoryType"
-      explode: false
-    Operations.SalonSearchParams.city:
+    Models.SearchSalonRequest.city:
       name: city
       in: query
       required: false
@@ -11466,15 +11438,33 @@ components:
       schema:
         type: string
       explode: false
-    Operations.SalonSearchParams.features:
+    Models.SearchSalonRequest.features:
       name: features
       in: query
       required: false
-      description: Filter by features (comma-separated)
+      description: Filter by features (array)
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    Models.SearchSalonRequest.isActive:
+      name: isActive
+      in: query
+      required: false
+      description: Filter by active status
+      schema:
+        type: boolean
+      explode: false
+    Models.SearchSalonRequest.keyword:
+      name: keyword
+      in: query
+      required: false
+      description: Search keyword (alias for q)
       schema:
         type: string
       explode: false
-    Operations.SalonSearchParams.lat:
+    Models.SearchSalonRequest.lat:
       name: lat
       in: query
       required: false
@@ -11483,7 +11473,7 @@ components:
         type: number
         format: double
       explode: false
-    Operations.SalonSearchParams.lon:
+    Models.SearchSalonRequest.lon:
       name: lon
       in: query
       required: false
@@ -11492,7 +11482,7 @@ components:
         type: number
         format: double
       explode: false
-    Operations.SalonSearchParams.maxDistance:
+    Models.SearchSalonRequest.maxDistance:
       name: maxDistance
       in: query
       required: false
@@ -11502,7 +11492,7 @@ components:
         format: float
         minimum: 0
       explode: false
-    Operations.SalonSearchParams.minRating:
+    Models.SearchSalonRequest.minRating:
       name: minRating
       in: query
       required: false
@@ -11513,7 +11503,7 @@ components:
         minimum: 0
         maximum: 5
       explode: false
-    Operations.SalonSearchParams.openAt:
+    Models.SearchSalonRequest.openAt:
       name: openAt
       in: query
       required: false
@@ -11522,13 +11512,21 @@ components:
         type: string
         format: date-time
       explode: false
-    Operations.SalonSearchParams.openNow:
+    Models.SearchSalonRequest.openNow:
       name: openNow
       in: query
       required: false
       description: Filter by opening hours
       schema:
         type: boolean
+      explode: false
+    Models.SearchSalonRequest.prefecture:
+      name: prefecture
+      in: query
+      required: false
+      description: Filter by prefecture name
+      schema:
+        type: string
       explode: false
   schemas:
     Models.AccessCheck:
@@ -11579,7 +11577,7 @@ components:
       required:
         - street
         - city
-        - state
+        - prefecture
         - postalCode
         - country
       properties:
@@ -11587,10 +11585,11 @@ components:
           type: string
         city:
           type: string
-        state:
+        prefecture:
           type: string
         postalCode:
           type: string
+          nullable: true
         country:
           type: string
           default: Japan
@@ -11601,10 +11600,11 @@ components:
           type: string
         city:
           type: string
-        state:
+        prefecture:
           type: string
         postalCode:
           type: string
+          nullable: true
         country:
           type: string
           default: Japan
@@ -11612,6 +11612,11 @@ components:
       type: object
       required:
         - type
+        - substances
+        - fragrances
+        - metals
+        - plants
+        - description
         - severity
       properties:
         type:
@@ -11620,20 +11625,25 @@ components:
           type: array
           items:
             type: string
+          nullable: true
         fragrances:
           type: array
           items:
             type: string
+          nullable: true
         metals:
           type: array
           items:
             type: string
+          nullable: true
         plants:
           type: array
           items:
             type: string
+          nullable: true
         description:
           type: string
+          nullable: true
         severity:
           $ref: "#/components/schemas/Models.AllergySeverityType"
     Models.AllergySeverityType:
@@ -11753,18 +11763,22 @@ components:
       type: object
       required:
         - createdAt
+        - createdBy
         - updatedAt
+        - updatedBy
       properties:
         createdAt:
           type: string
           format: date-time
         createdBy:
           type: string
+          nullable: true
         updatedAt:
           type: string
           format: date-time
         updatedBy:
           type: string
+          nullable: true
     Models.AuditTrail:
       type: object
       required:
@@ -11868,6 +11882,32 @@ components:
         endTime:
           type: string
           format: date-time
+    Models.AvailableTimeSlot:
+      type: object
+      required:
+        - startTime
+        - endTime
+        - availableStaff
+        - availability
+      properties:
+        startTime:
+          type: string
+          format: date-time
+          description: Start time
+        endTime:
+          type: string
+          format: date-time
+          description: End time
+        availableStaff:
+          type: array
+          items:
+            $ref: "#/components/schemas/Models.StaffSummary"
+          description: Available staff members
+        availability:
+          type: integer
+          format: int32
+          description: Availability percentage
+      description: Available time slot details
     Models.BatchGetRequest:
       type: object
       required:
@@ -11896,7 +11936,9 @@ components:
         - totalAmount
         - finalAmount
         - createdAt
+        - createdBy
         - updatedAt
+        - updatedBy
       properties:
         id:
           $ref: "#/components/schemas/Models.BookingId"
@@ -11935,11 +11977,13 @@ components:
           format: date-time
         createdBy:
           type: string
+          nullable: true
         updatedAt:
           type: string
           format: date-time
         updatedBy:
           type: string
+          nullable: true
     Models.BookingDeposit:
       type: object
       required:
@@ -12141,7 +12185,10 @@ components:
       required:
         - dayOfWeek
         - operatingSlots
+        - breakSlots
         - isClosed
+        - effectivePeriod
+        - timezone
       properties:
         dayOfWeek:
           $ref: "#/components/schemas/Models.DayOfWeekType"
@@ -12153,13 +12200,18 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Models.TimeSlot"
+          nullable: true
         isClosed:
           type: boolean
           default: false
         effectivePeriod:
-          $ref: "#/components/schemas/Models.DateRange"
+          type: object
+          allOf:
+            - $ref: "#/components/schemas/Models.DateRange"
+          nullable: true
         timezone:
           type: string
+          nullable: true
     Models.CancellationFee:
       type: object
       required:
@@ -12228,7 +12280,9 @@ components:
         - displayOrder
         - isActive
         - createdAt
+        - createdBy
         - updatedAt
+        - updatedBy
       properties:
         id:
           $ref: "#/components/schemas/Models.CategoryId"
@@ -12248,11 +12302,13 @@ components:
           format: date-time
         createdBy:
           type: string
+          nullable: true
         updatedAt:
           type: string
           format: date-time
         updatedBy:
           type: string
+          nullable: true
     Models.ColorSubCategoryType:
       type: string
       enum:
@@ -12367,6 +12423,8 @@ components:
       required:
         - email
         - phoneNumber
+        - alternativePhone
+        - websiteUrl
       properties:
         email:
           type: string
@@ -12374,6 +12432,10 @@ components:
           type: string
         alternativePhone:
           type: string
+          nullable: true
+        websiteUrl:
+          type: string
+          nullable: true
     Models.ContactInfoUpdate:
       type: object
       properties:
@@ -12383,6 +12445,10 @@ components:
           type: string
         alternativePhone:
           type: string
+          nullable: true
+        websiteUrl:
+          type: string
+          nullable: true
     Models.ContactMethodType:
       type: string
       enum:
@@ -12510,11 +12576,15 @@ components:
         - address
         - contactInfo
         - openingHours
+        - businessHours
+        - imageUrls
+        - features
       properties:
         name:
           type: string
         description:
           type: string
+          nullable: true
         address:
           $ref: "#/components/schemas/Models.Address"
         contactInfo:
@@ -12527,15 +12597,18 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Models.BusinessHours"
+          nullable: true
         imageUrls:
           type: array
           items:
             type: string
+          nullable: true
         features:
           type: array
           items:
             type: string
-      description: Salon creation request with required and optional fields
+          nullable: true
+      description: Salon creation request - all keys required, values nullable where appropriate
     Models.CreateServiceRequest:
       type: object
       required:
@@ -12658,9 +12731,29 @@ components:
         - id
         - name
         - contactInfo
+        - gender
+        - birthDate
+        - address
+        - preferences
+        - notes
+        - tags
+        - loyaltyPoints
+        - membership
+        - notificationSettings
+        - health
+        - customerPreferences
+        - history
+        - associations
+        - status
+        - metadata
+        - medicalChartId
         - isActive
+        - registrationSource
+        - referredBy
         - createdAt
+        - createdBy
         - updatedAt
+        - updatedBy
       properties:
         id:
           $ref: "#/components/schemas/Models.CustomerId"
@@ -12671,65 +12764,91 @@ components:
         gender:
           allOf:
             - $ref: "#/components/schemas/Models.CustomerGenderType"
+          nullable: true
           description: Customer gender
         birthDate:
           type: string
           format: date
+          nullable: true
           description: Birth date
         address:
+          type: object
           allOf:
             - $ref: "#/components/schemas/Models.Address"
+          nullable: true
           description: Address
         preferences:
           type: string
+          nullable: true
           description: Preferences and requirements
         notes:
           type: string
+          nullable: true
           description: Internal notes
         tags:
           type: array
           items:
             type: string
+          nullable: true
           description: Tags for categorization
         loyaltyPoints:
           type: integer
           format: int32
+          nullable: true
           description: Current loyalty points
         membership:
+          type: object
           allOf:
             - $ref: "#/components/schemas/Models.MembershipInfo"
+          nullable: true
           description: Membership information
         notificationSettings:
+          type: object
           allOf:
             - $ref: "#/components/schemas/Models.NotificationSettings"
+          nullable: true
           description: NotificationType settings
         health:
+          type: object
           allOf:
             - $ref: "#/components/schemas/Models.CustomerHealth"
+          nullable: true
           description: Health information
         customerPreferences:
+          type: object
           allOf:
             - $ref: "#/components/schemas/Models.CustomerPreferences"
+          nullable: true
           description: Customer preferences
         history:
+          type: object
           allOf:
             - $ref: "#/components/schemas/Models.CustomerHistory"
+          nullable: true
           description: Visit history
         associations:
+          type: object
           allOf:
             - $ref: "#/components/schemas/Models.CustomerAssociations"
+          nullable: true
           description: Customer associations
         status:
+          type: object
           allOf:
             - $ref: "#/components/schemas/Models.CustomerStatusDetail"
+          nullable: true
           description: Customer status
         metadata:
+          type: object
           allOf:
             - $ref: "#/components/schemas/Models.CustomerMetadata"
+          nullable: true
           description: Customer metadata
         medicalChartId:
+          type: string
           allOf:
             - $ref: "#/components/schemas/Models.MedicalChartId"
+          nullable: true
           description: Medical chart ID
         isActive:
           type: boolean
@@ -12742,28 +12861,41 @@ components:
             - online
             - phone
             - referral
+          nullable: true
           description: Registration source
         referredBy:
+          type: string
           allOf:
             - $ref: "#/components/schemas/Models.CustomerId"
+          nullable: true
           description: Referrer customer ID
         createdAt:
           type: string
           format: date-time
         createdBy:
           type: string
+          nullable: true
         updatedAt:
           type: string
           format: date-time
         updatedBy:
           type: string
+          nullable: true
     Models.CustomerAssociations:
       type: object
       required:
+        - primarySalonId
         - visitedSalonIds
+        - familyMemberIds
+        - referredBy
+        - referredCustomerIds
+        - groupId
       properties:
         primarySalonId:
-          $ref: "#/components/schemas/Models.SalonId"
+          type: string
+          allOf:
+            - $ref: "#/components/schemas/Models.SalonId"
+          nullable: true
         visitedSalonIds:
           type: array
           items:
@@ -12772,14 +12904,20 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Models.CustomerId"
+          nullable: true
         referredBy:
-          $ref: "#/components/schemas/Models.CustomerId"
+          type: string
+          allOf:
+            - $ref: "#/components/schemas/Models.CustomerId"
+          nullable: true
         referredCustomerIds:
           type: array
           items:
             $ref: "#/components/schemas/Models.CustomerId"
+          nullable: true
         groupId:
           type: string
+          nullable: true
     Models.CustomerGenderType:
       type: string
       enum:
@@ -12791,40 +12929,66 @@ components:
       type: object
       required:
         - allergies
+        - hairInfo
+        - scalpInfo
+        - medicalConditions
+        - medications
+        - pregnancyStatus
+        - specialNeeds
       properties:
         allergies:
           type: array
           items:
             $ref: "#/components/schemas/Models.AllergyInfo"
         hairInfo:
-          $ref: "#/components/schemas/Models.HairInfo"
+          type: object
+          allOf:
+            - $ref: "#/components/schemas/Models.HairInfo"
+          nullable: true
         scalpInfo:
-          $ref: "#/components/schemas/Models.ScalpInfo"
+          type: object
+          allOf:
+            - $ref: "#/components/schemas/Models.ScalpInfo"
+          nullable: true
         medicalConditions:
           type: array
           items:
             type: string
+          nullable: true
         medications:
           type: array
           items:
             type: string
+          nullable: true
         pregnancyStatus:
           type: boolean
+          nullable: true
         specialNeeds:
           type: string
+          nullable: true
     Models.CustomerHistory:
       type: object
       required:
         - visits
+        - lastServiceId
+        - lastStaffId
         - favoriteServiceIds
         - favoriteStaffIds
+        - pastTreatments
+        - notes
       properties:
         visits:
           $ref: "#/components/schemas/Models.VisitHistory"
         lastServiceId:
-          $ref: "#/components/schemas/Models.ServiceId"
+          type: string
+          allOf:
+            - $ref: "#/components/schemas/Models.ServiceId"
+          nullable: true
         lastStaffId:
-          $ref: "#/components/schemas/Models.StaffId"
+          type: string
+          allOf:
+            - $ref: "#/components/schemas/Models.StaffId"
+          nullable: true
         favoriteServiceIds:
           type: array
           items:
@@ -12837,16 +13001,27 @@ components:
           type: array
           items:
             type: string
+          nullable: true
         notes:
           type: array
           items:
             type: string
+          nullable: true
     Models.CustomerId:
       type: string
       format: uuid
       description: Branded UUID type for Customer ID
     Models.CustomerMetadata:
       type: object
+      required:
+        - source
+        - campaign
+        - tags
+        - customFields
+        - internalNotes
+        - riskScore
+        - lifetimeValue
+        - lastUpdatedBy
       properties:
         source:
           type: string
@@ -12857,60 +13032,133 @@ components:
             - referral
             - social_media
             - advertisement
+          nullable: true
         campaign:
           type: string
+          nullable: true
         tags:
           type: array
           items:
             type: string
+          nullable: true
         customFields:
           type: object
           additionalProperties: {}
+          nullable: true
         internalNotes:
           type: array
           items:
             type: string
+          nullable: true
         riskScore:
           type: integer
           format: int32
+          nullable: true
         lifetimeValue:
           type: integer
           format: int32
+          nullable: true
         lastUpdatedBy:
           type: string
+          nullable: true
     Models.CustomerPreferences:
       type: object
+      required:
+        - stylePreferences
+        - servicePreferences
+        - communicationPreferences
+        - preferredStaff
+        - avoidStaff
+        - preferredDayOfWeek
+        - preferredTimeSlots
+        - specialRequests
+        - language
       properties:
         stylePreferences:
-          $ref: "#/components/schemas/Models.StylePreference"
+          type: object
+          allOf:
+            - $ref: "#/components/schemas/Models.StylePreference"
+          nullable: true
         servicePreferences:
-          $ref: "#/components/schemas/Models.ServicePreference"
+          type: object
+          allOf:
+            - $ref: "#/components/schemas/Models.ServicePreference"
+          nullable: true
         communicationPreferences:
-          $ref: "#/components/schemas/Models.NotificationSettings"
+          type: object
+          allOf:
+            - $ref: "#/components/schemas/Models.NotificationSettings"
+          nullable: true
         preferredStaff:
           type: array
           items:
             $ref: "#/components/schemas/Models.StaffId"
+          nullable: true
         avoidStaff:
           type: array
           items:
             $ref: "#/components/schemas/Models.StaffId"
+          nullable: true
         preferredDayOfWeek:
           type: array
           items:
             $ref: "#/components/schemas/Models.DayOfWeekType"
+          nullable: true
         preferredTimeSlots:
           type: array
           items:
             $ref: "#/components/schemas/Models.TimeSlot"
+          nullable: true
         specialRequests:
           type: string
+          nullable: true
         language:
           type: string
+          nullable: true
+    Models.CustomerPreferencesUpdate:
+      type: object
+      required:
+        - contactMethod
+        - notifications
+        - marketingOptIn
+      properties:
+        contactMethod:
+          allOf:
+            - $ref: "#/components/schemas/Models.ContactMethodType"
+          description: Preferred contact method
+        notifications:
+          allOf:
+            - $ref: "#/components/schemas/Models.NotificationPreferences"
+          description: NotificationType preferences
+        marketingOptIn:
+          type: boolean
+          description: Marketing opt-in status
+        preferredLanguage:
+          type: string
+          description: Preferred language
+        accessibilityRequirements:
+          type: array
+          items:
+            type: string
+          description: Accessibility requirements
+        allergies:
+          type: array
+          items:
+            type: string
+          description: Allergies or sensitivities
+        preferredTimes:
+          type: array
+          items:
+            $ref: "#/components/schemas/Models.TimePreference"
+          description: Preferred appointment times
+      description: Customer preferences update model
     Models.CustomerProfile:
       type: object
       required:
         - visitCount
+        - lastVisitDate
+        - favoriteStaffIds
+        - favoriteServiceIds
         - totalSpent
       properties:
         visitCount:
@@ -12919,39 +13167,108 @@ components:
         lastVisitDate:
           type: string
           format: date-time
+          nullable: true
         favoriteStaffIds:
           type: array
           items:
             $ref: "#/components/schemas/Models.StaffId"
+          nullable: true
         favoriteServiceIds:
           type: array
           items:
             $ref: "#/components/schemas/Models.ServiceId"
+          nullable: true
         totalSpent:
           type: integer
           format: int32
       allOf:
         - $ref: "#/components/schemas/Models.Customer"
+    Models.CustomerStatistics:
+      type: object
+      required:
+        - totalBookings
+        - totalSpent
+        - averageBookingValue
+        - favoriteServices
+        - favoriteStaff
+        - loyaltyPoints
+        - customerSince
+        - cancellationRate
+        - noShowRate
+      properties:
+        totalBookings:
+          type: integer
+          format: int32
+          description: Total bookings
+        totalSpent:
+          allOf:
+            - $ref: "#/components/schemas/Models.Money"
+          description: Total spent
+        averageBookingValue:
+          allOf:
+            - $ref: "#/components/schemas/Models.Money"
+          description: Average booking value
+        lastVisit:
+          type: string
+          format: date-time
+          description: Last visit date
+        favoriteServices:
+          type: array
+          items:
+            $ref: "#/components/schemas/Models.ServiceSummary"
+          description: Favorite services
+        favoriteStaff:
+          type: array
+          items:
+            $ref: "#/components/schemas/Models.StaffSummary"
+          description: Favorite staff
+        loyaltyPoints:
+          type: integer
+          format: int32
+          description: Loyalty points
+        customerSince:
+          type: string
+          format: date-time
+          description: Customer since
+        cancellationRate:
+          type: number
+          format: float
+          description: Cancellation rate
+        noShowRate:
+          type: number
+          format: float
+          description: No-show rate
+      description: Customer statistics response
     Models.CustomerStatusDetail:
       type: object
       required:
         - type
+        - reason
+        - since
+        - until
+        - by
+        - deletedAt
       properties:
         type:
           $ref: "#/components/schemas/Models.CustomerStatusType"
         reason:
           type: string
+          nullable: true
         since:
           type: string
           format: date-time
+          nullable: true
         until:
           type: string
           format: date-time
+          nullable: true
         by:
           type: string
+          nullable: true
         deletedAt:
           type: string
           format: date-time
+          nullable: true
     Models.CustomerStatusType:
       type: string
       enum:
@@ -12990,6 +13307,293 @@ components:
         - friday
         - saturday
         - sunday
+    Models.DomainErrorDetails:
+      type: object
+      required:
+        - type
+        - message
+        - code
+      properties:
+        type:
+          allOf:
+            - $ref: "#/components/schemas/Models.DomainErrorType"
+          description: Error classification type
+        message:
+          type: string
+          description: Human-readable error message
+        code:
+          type: string
+          description: Machine-readable error code
+        details:
+          type: object
+          additionalProperties: {}
+          description: Additional error context
+        entity:
+          type: string
+          description: Related entity information
+        field:
+          type: string
+          description: Related field information
+        value:
+          type: string
+          description: Related value information
+        service:
+          type: string
+          description: Service name for external service errors
+      description: Domain error details for internal error handling
+    Models.DomainErrorFactory:
+      type: object
+      required:
+        - validation
+        - notFound
+        - alreadyExists
+        - businessRule
+        - unauthorized
+        - forbidden
+        - internal
+        - database
+        - externalService
+      properties:
+        validation:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - VALIDATION_ERROR
+            defaultCode:
+              type: string
+              enum:
+                - VALIDATION_FAILED
+            httpStatus:
+              type: number
+              enum:
+                - 400
+          required:
+            - type
+            - defaultCode
+            - httpStatus
+          description: Validation error factory
+        notFound:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - NOT_FOUND
+            defaultCode:
+              type: string
+              enum:
+                - RESOURCE_NOT_FOUND
+            httpStatus:
+              type: number
+              enum:
+                - 404
+          required:
+            - type
+            - defaultCode
+            - httpStatus
+          description: Not found error factory
+        alreadyExists:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - ALREADY_EXISTS
+            defaultCode:
+              type: string
+              enum:
+                - RESOURCE_ALREADY_EXISTS
+            httpStatus:
+              type: number
+              enum:
+                - 409
+          required:
+            - type
+            - defaultCode
+            - httpStatus
+          description: Already exists error factory
+        businessRule:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - BUSINESS_RULE_VIOLATION
+            defaultCode:
+              type: string
+              enum:
+                - BUSINESS_RULE_VIOLATION
+            httpStatus:
+              type: number
+              enum:
+                - 422
+          required:
+            - type
+            - defaultCode
+            - httpStatus
+          description: Business rule violation factory
+        unauthorized:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - UNAUTHORIZED
+            defaultCode:
+              type: string
+              enum:
+                - AUTHENTICATION_REQUIRED
+            httpStatus:
+              type: number
+              enum:
+                - 401
+          required:
+            - type
+            - defaultCode
+            - httpStatus
+          description: Unauthorized error factory
+        forbidden:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - FORBIDDEN
+            defaultCode:
+              type: string
+              enum:
+                - INSUFFICIENT_PERMISSIONS
+            httpStatus:
+              type: number
+              enum:
+                - 403
+          required:
+            - type
+            - defaultCode
+            - httpStatus
+          description: Forbidden error factory
+        internal:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - INTERNAL_ERROR
+            defaultCode:
+              type: string
+              enum:
+                - INTERNAL_SERVER_ERROR
+            httpStatus:
+              type: number
+              enum:
+                - 500
+          required:
+            - type
+            - defaultCode
+            - httpStatus
+          description: Internal error factory
+        database:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - DATABASE_ERROR
+            defaultCode:
+              type: string
+              enum:
+                - DATABASE_ERROR
+            httpStatus:
+              type: number
+              enum:
+                - 500
+          required:
+            - type
+            - defaultCode
+            - httpStatus
+          description: Database error factory
+        externalService:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - EXTERNAL_SERVICE_ERROR
+            defaultCode:
+              type: string
+              enum:
+                - EXTERNAL_SERVICE_ERROR
+            httpStatus:
+              type: number
+              enum:
+                - 502
+          required:
+            - type
+            - defaultCode
+            - httpStatus
+          description: External service error factory
+      description: Standard domain error factory configuration
+    Models.DomainErrorMapping:
+      type: object
+      required:
+        - domainType
+        - errorCode
+        - httpStatus
+      properties:
+        domainType:
+          allOf:
+            - $ref: "#/components/schemas/Models.DomainErrorType"
+          description: Domain error type
+        errorCode:
+          allOf:
+            - $ref: "#/components/schemas/Models.ErrorCodeType"
+          description: Corresponding error code
+        httpStatus:
+          type: integer
+          format: int32
+          description: HTTP status code
+      description: Mapping between domain error types and error codes
+    Models.DomainErrorType:
+      type: string
+      enum:
+        - VALIDATION_ERROR
+        - NOT_FOUND
+        - ALREADY_EXISTS
+        - BUSINESS_RULE_VIOLATION
+        - UNAUTHORIZED
+        - FORBIDDEN
+        - INTERNAL_ERROR
+        - DATABASE_ERROR
+        - EXTERNAL_SERVICE_ERROR
+      description: Domain error type classification
+    Models.DomainOperationError:
+      type: object
+      required:
+        - domainError
+        - problemDetails
+        - occurredAt
+      properties:
+        domainError:
+          allOf:
+            - $ref: "#/components/schemas/Models.DomainErrorDetails"
+          description: Domain error details
+        problemDetails:
+          allOf:
+            - $ref: "#/components/schemas/Models.ProblemDetails"
+          description: Problem details for HTTP response
+        occurredAt:
+          type: string
+          format: date-time
+          description: Occurred at timestamp
+        operation:
+          type: string
+          description: Operation context
+        stackTrace:
+          type: string
+          description: Stack trace for debugging (only in development)
+      description: Error context for domain operations
     Models.DownloadUrlResponse:
       type: object
       required:
@@ -13207,6 +13811,7 @@ components:
         - thickness
         - condition
         - chemicalHistory
+        - notes
       properties:
         type:
           $ref: "#/components/schemas/Models.HairType"
@@ -13222,6 +13827,7 @@ components:
             type: string
         notes:
           type: string
+          nullable: true
     Models.HairThicknessType:
       type: string
       enum:
@@ -13387,7 +13993,9 @@ components:
         - unitCost
         - status
         - createdAt
+        - createdBy
         - updatedAt
+        - updatedBy
       properties:
         id:
           $ref: "#/components/schemas/Models.InventoryId"
@@ -13457,11 +14065,13 @@ components:
           format: date-time
         createdBy:
           type: string
+          nullable: true
         updatedAt:
           type: string
           format: date-time
         updatedBy:
           type: string
+          nullable: true
       description: Inventory item
     Models.InventoryItemCreateInput:
       type: object
@@ -13691,7 +14301,9 @@ components:
         - customerId
         - lastUpdated
         - createdAt
+        - createdBy
         - updatedAt
+        - updatedBy
       properties:
         id:
           $ref: "#/components/schemas/Models.MedicalChartId"
@@ -13738,11 +14350,13 @@ components:
           format: date-time
         createdBy:
           type: string
+          nullable: true
         updatedAt:
           type: string
           format: date-time
         updatedBy:
           type: string
+          nullable: true
       description: Medical chart for customer
     Models.MedicalChartCreateInput:
       type: object
@@ -13810,27 +14424,41 @@ components:
       type: object
       required:
         - type
+        - percentage
+        - multiplier
+        - service
+        - frequency
+        - value
+        - description
       properties:
         type:
           $ref: "#/components/schemas/Models.MembershipBenefitType"
         percentage:
           type: integer
           format: int32
+          nullable: true
         multiplier:
-          $ref: "#/components/schemas/Models.decimal"
+          type: number
+          allOf:
+            - $ref: "#/components/schemas/Models.decimal"
+          nullable: true
         service:
           type: string
+          nullable: true
         frequency:
           type: string
           enum:
             - monthly
             - quarterly
             - yearly
+          nullable: true
         value:
           type: integer
           format: int32
+          nullable: true
         description:
           type: string
+          nullable: true
     Models.MembershipBenefitType:
       type: string
       enum:
@@ -13846,9 +14474,12 @@ components:
         - tier
         - since
         - benefits
+        - dedicatedManager
         - points
         - totalPointsEarned
         - totalPointsUsed
+        - expiringPoints
+        - pointsExpireAt
       properties:
         tier:
           $ref: "#/components/schemas/Models.MembershipTierType"
@@ -13861,6 +14492,7 @@ components:
             $ref: "#/components/schemas/Models.MembershipBenefitDetail"
         dedicatedManager:
           type: string
+          nullable: true
         points:
           type: integer
           format: int32
@@ -13873,9 +14505,11 @@ components:
         expiringPoints:
           type: integer
           format: int32
+          nullable: true
         pointsExpireAt:
           type: string
           format: date-time
+          nullable: true
     Models.MembershipTierType:
       type: string
       enum:
@@ -13944,6 +14578,28 @@ components:
         penaltyApplied:
           type: boolean
           default: false
+    Models.NotificationPreferences:
+      type: object
+      required:
+        - email
+        - sms
+        - push
+        - reminderHours
+      properties:
+        email:
+          type: boolean
+          description: Email notifications enabled
+        sms:
+          type: boolean
+          description: SMS notifications enabled
+        push:
+          type: boolean
+          description: Push notifications enabled
+        reminderHours:
+          type: integer
+          format: int32
+          description: Reminder timing (hours before appointment)
+      description: Notification preferences model
     Models.NotificationSettings:
       type: object
       required:
@@ -13999,18 +14655,35 @@ components:
       type: object
       required:
         - dayOfWeek
+        - date
         - openTime
         - closeTime
         - isHoliday
+        - holidayName
+        - notes
       properties:
         dayOfWeek:
-          $ref: "#/components/schemas/Models.DayOfWeekType"
+          allOf:
+            - $ref: "#/components/schemas/Models.DayOfWeekType"
+          nullable: true
+        date:
+          type: string
+          format: date
+          nullable: true
         openTime:
           type: string
+          nullable: true
         closeTime:
           type: string
+          nullable: true
         isHoliday:
           type: boolean
+        holidayName:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
     Models.OrderId:
       type: string
       format: uuid
@@ -14091,31 +14764,44 @@ components:
       type: object
       required:
         - self
+        - first
+        - last
+        - next
+        - prev
       properties:
         self:
           type: string
           description: Link to current page
         first:
           type: string
+          nullable: true
           description: Link to first page
         last:
           type: string
+          nullable: true
           description: Link to last page
         next:
           type: string
+          nullable: true
           description: Link to next page
         prev:
           type: string
+          nullable: true
           description: Link to previous page
     Models.PaginationMeta:
       type: object
       required:
+        - total
         - limit
         - hasMore
+        - cursor
+        - nextCursor
+        - prevCursor
       properties:
         total:
           type: integer
           format: int32
+          nullable: true
           description: Total number of items
         limit:
           type: integer
@@ -14126,12 +14812,15 @@ components:
           description: Whether there are more pages
         cursor:
           type: string
+          nullable: true
           description: Current cursor position
         nextCursor:
           type: string
+          nullable: true
           description: Next cursor for pagination
         prevCursor:
           type: string
+          nullable: true
           description: Previous cursor for pagination
     Models.PartialRefundPaymentStatus:
       type: object
@@ -14241,7 +14930,9 @@ components:
         - amounts
         - history
         - createdAt
+        - createdBy
         - updatedAt
+        - updatedBy
       properties:
         id:
           $ref: "#/components/schemas/Models.PaymentId"
@@ -14288,11 +14979,13 @@ components:
           format: date-time
         createdBy:
           type: string
+          nullable: true
         updatedAt:
           type: string
           format: date-time
         updatedBy:
           type: string
+          nullable: true
       description: Payment record for services
     Models.PaymentAmounts:
       type: object
@@ -14623,6 +15316,8 @@ components:
         - currentPoints
         - totalEarnedPoints
         - totalUsedPoints
+        - expiringPoints
+        - expirationDate
       properties:
         currentPoints:
           type: integer
@@ -14636,9 +15331,11 @@ components:
         expiringPoints:
           type: integer
           format: int32
+          nullable: true
         expirationDate:
           type: string
           format: date-time
+          nullable: true
     Models.PointTransaction:
       type: object
       required:
@@ -14650,7 +15347,9 @@ components:
         - description
         - transactedAt
         - createdAt
+        - createdBy
         - updatedAt
+        - updatedBy
       properties:
         id:
           $ref: "#/components/schemas/Models.PointTransactionId"
@@ -14694,11 +15393,13 @@ components:
           format: date-time
         createdBy:
           type: string
+          nullable: true
         updatedAt:
           type: string
           format: date-time
         updatedBy:
           type: string
+          nullable: true
       description: Point transaction record
     Models.PointTransactionCreateInput:
       type: object
@@ -14935,7 +15636,9 @@ components:
         - totalAmount
         - orderDate
         - createdAt
+        - createdBy
         - updatedAt
+        - updatedBy
       properties:
         id:
           $ref: "#/components/schemas/Models.OrderId"
@@ -15006,11 +15709,13 @@ components:
           format: date-time
         createdBy:
           type: string
+          nullable: true
         updatedAt:
           type: string
           format: date-time
         updatedBy:
           type: string
+          nullable: true
       description: Purchase order
     Models.PurchaseOrderCreateInput:
       type: object
@@ -15190,7 +15895,9 @@ components:
         - totalAmount
         - isPaid
         - createdAt
+        - createdBy
         - updatedAt
+        - updatedBy
       properties:
         id:
           $ref: "#/components/schemas/Models.ReservationId"
@@ -15227,11 +15934,13 @@ components:
           format: date-time
         createdBy:
           type: string
+          nullable: true
         updatedAt:
           type: string
           format: date-time
         updatedBy:
           type: string
+          nullable: true
     Models.ReservationDetail:
       type: object
       required:
@@ -15296,7 +16005,9 @@ components:
         - helpfulCount
         - reportCount
         - createdAt
+        - createdBy
         - updatedAt
+        - updatedBy
       properties:
         id:
           $ref: "#/components/schemas/Models.ReviewId"
@@ -15351,11 +16062,13 @@ components:
           format: date-time
         createdBy:
           type: string
+          nullable: true
         updatedAt:
           type: string
           format: date-time
         updatedBy:
           type: string
+          nullable: true
     Models.ReviewId:
       type: string
       format: uuid
@@ -15388,7 +16101,9 @@ components:
         - isSystem
         - isActive
         - createdAt
+        - createdBy
         - updatedAt
+        - updatedBy
       properties:
         id:
           $ref: "#/components/schemas/Models.RoleId"
@@ -15417,11 +16132,13 @@ components:
           format: date-time
         createdBy:
           type: string
+          nullable: true
         updatedAt:
           type: string
           format: date-time
         updatedBy:
           type: string
+          nullable: true
       description: Role definition for access control
     Models.RoleCreateInput:
       type: object
@@ -15564,8 +16281,15 @@ components:
         - address
         - contactInfo
         - openingHours
+        - businessHours
+        - imageUrls
+        - features
+        - rating
+        - reviewCount
         - createdAt
+        - createdBy
         - updatedAt
+        - updatedBy
       properties:
         id:
           $ref: "#/components/schemas/Models.SalonId"
@@ -15573,6 +16297,7 @@ components:
           type: string
         description:
           type: string
+          nullable: true
         address:
           $ref: "#/components/schemas/Models.Address"
         contactInfo:
@@ -15585,34 +16310,199 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Models.BusinessHours"
+          nullable: true
         imageUrls:
           type: array
           items:
             type: string
+          nullable: true
         features:
           type: array
           items:
             type: string
+          nullable: true
+        rating:
+          type: number
+          format: float
+          nullable: true
+        reviewCount:
+          type: integer
+          format: int32
+          nullable: true
         createdAt:
           type: string
           format: date-time
         createdBy:
           type: string
+          nullable: true
         updatedAt:
           type: string
           format: date-time
         updatedBy:
           type: string
+          nullable: true
+    Models.SalonAvailabilityRequest:
+      type: object
+      required:
+        - serviceId
+        - date
+      properties:
+        serviceId:
+          allOf:
+            - $ref: "#/components/schemas/Models.ServiceId"
+          description: Service ID to check availability for
+        date:
+          type: string
+          format: date
+          description: Preferred date
+        timeSlot:
+          allOf:
+            - $ref: "#/components/schemas/Models.TimeSlot"
+          description: Preferred time slot
+        staffId:
+          allOf:
+            - $ref: "#/components/schemas/Models.StaffId"
+          description: Preferred staff ID
+        slots:
+          type: integer
+          format: int32
+          minimum: 1
+          description: Number of slots needed
+          default: 1
+      description: Salon availability check request
+    Models.SalonAvailabilityResponse:
+      type: object
+      required:
+        - availableSlots
+        - waitlistAvailable
+      properties:
+        availableSlots:
+          type: array
+          items:
+            $ref: "#/components/schemas/Models.AvailableTimeSlot"
+          description: Available time slots
+        nextAvailableDate:
+          type: string
+          format: date
+          description: Next available date if requested date is full
+        waitlistAvailable:
+          type: boolean
+          description: Waitlist available
+      description: Salon availability check response
     Models.SalonId:
       type: string
       format: uuid
       description: Branded UUID type for Salon ID
+    Models.SalonRecommendation:
+      type: object
+      required:
+        - score
+        - reasons
+        - matchingServices
+      properties:
+        score:
+          type: integer
+          format: int32
+          description: Recommendation score (0-100)
+        reasons:
+          type: array
+          items:
+            type: string
+          description: Reasons for recommendation
+        matchingServices:
+          type: array
+          items:
+            $ref: "#/components/schemas/Models.ServiceSummary"
+          description: Matching services
+      allOf:
+        - $ref: "#/components/schemas/Models.SalonSummary"
+      description: Salon recommendation with scoring
+    Models.SalonStatistics:
+      type: object
+      required:
+        - totalServices
+        - totalStaff
+        - totalReviews
+        - monthlyBookings
+        - popularServices
+        - busyHours
+      properties:
+        totalServices:
+          type: integer
+          format: int32
+          description: Total number of services
+        totalStaff:
+          type: integer
+          format: int32
+          description: Total number of staff
+        averageRating:
+          type: number
+          format: float
+          description: Average rating
+        totalReviews:
+          type: integer
+          format: int32
+          description: Total reviews
+        monthlyBookings:
+          type: integer
+          format: int32
+          description: Total bookings this month
+        monthlyRevenue:
+          allOf:
+            - $ref: "#/components/schemas/Models.Money"
+          description: Revenue this month
+        popularServices:
+          type: array
+          items:
+            $ref: "#/components/schemas/Models.ServiceSummary"
+          description: Popular services
+        busyHours:
+          type: array
+          items:
+            $ref: "#/components/schemas/Models.TimeSlot"
+          description: Busy hours
+      description: Salon statistics response
+    Models.SalonSubscriptionRequest:
+      type: object
+      required:
+        - customerId
+        - notificationTypes
+      properties:
+        customerId:
+          $ref: "#/components/schemas/Models.CustomerId"
+        notificationTypes:
+          type: array
+          items:
+            $ref: "#/components/schemas/Models.NotificationType"
+        categories:
+          type: array
+          items:
+            $ref: "#/components/schemas/Models.ServiceCategoryType"
+      description: Subscription request for salon updates
+    Models.SalonSubscriptionResponse:
+      type: object
+      required:
+        - subscriptionId
+        - status
+      properties:
+        subscriptionId:
+          type: string
+        status:
+          type: string
+          enum:
+            - active
+        expiresAt:
+          type: string
+          format: date-time
+      description: Subscription response
     Models.SalonSummary:
       type: object
       required:
         - id
         - name
         - address
+        - rating
+        - reviewCount
       properties:
         id:
           $ref: "#/components/schemas/Models.SalonId"
@@ -15623,9 +16513,27 @@ components:
         rating:
           type: number
           format: float
+          nullable: true
         reviewCount:
           type: integer
           format: int32
+          nullable: true
+    Models.SalonWithDistance:
+      type: object
+      required:
+        - distance
+      properties:
+        distance:
+          type: number
+          format: float
+          description: Distance from reference point in kilometers
+        travelTime:
+          type: integer
+          format: int32
+          description: Estimated travel time in minutes
+      allOf:
+        - $ref: "#/components/schemas/Models.Salon"
+      description: Salon with distance information
     Models.ScalpConditionType:
       type: string
       enum:
@@ -15639,6 +16547,7 @@ components:
       required:
         - condition
         - sensitivities
+        - notes
       properties:
         condition:
           $ref: "#/components/schemas/Models.ScalpConditionType"
@@ -15648,6 +16557,29 @@ components:
             type: string
         notes:
           type: string
+          nullable: true
+    Models.ScheduleException:
+      type: object
+      required:
+        - date
+        - type
+      properties:
+        date:
+          type: string
+          format: date
+        type:
+          type: string
+          enum:
+            - holiday
+            - sick_leave
+            - vacation
+            - training
+            - other
+        description:
+          type: string
+        alternativeStaffId:
+          $ref: "#/components/schemas/Models.StaffId"
+      description: Schedule exception for staff
     Models.ScoreRange:
       type: object
       required:
@@ -15662,16 +16594,6 @@ components:
           type: number
           format: float
           description: Maximum relevance score
-    Models.SearchCustomerRequest:
-      type: object
-      properties:
-        search:
-          type: string
-        tags:
-          type: array
-          items:
-            type: string
-      description: Customer search parameters - all fields are optional
     Models.SearchMeta:
       type: object
       required:
@@ -15698,16 +16620,6 @@ components:
           allOf:
             - $ref: "#/components/schemas/Models.ScoreRange"
           description: Search relevance score range
-    Models.SearchSalonRequest:
-      type: object
-      properties:
-        keyword:
-          type: string
-        city:
-          type: string
-        category:
-          $ref: "#/components/schemas/Models.ServiceCategoryType"
-      description: Salon search parameters - all fields are optional
     Models.Season:
       type: object
       required:
@@ -15741,7 +16653,9 @@ components:
         - price
         - isActive
         - createdAt
+        - createdBy
         - updatedAt
+        - updatedBy
       properties:
         id:
           $ref: "#/components/schemas/Models.ServiceId"
@@ -15819,11 +16733,13 @@ components:
           format: date-time
         createdBy:
           type: string
+          nullable: true
         updatedAt:
           type: string
           format: date-time
         updatedBy:
           type: string
+          nullable: true
     Models.ServiceAssociations:
       type: object
       required:
@@ -16042,20 +16958,31 @@ components:
           $ref: "#/components/schemas/Models.decimal"
     Models.ServicePreference:
       type: object
+      required:
+        - favoriteServices
+        - avoidServices
+        - preferredDuration
+        - preferredPriceRange
       properties:
         favoriteServices:
           type: array
           items:
             $ref: "#/components/schemas/Models.ServiceId"
+          nullable: true
         avoidServices:
           type: array
           items:
             $ref: "#/components/schemas/Models.ServiceId"
+          nullable: true
         preferredDuration:
           type: integer
           format: int32
+          nullable: true
         preferredPriceRange:
-          $ref: "#/components/schemas/Models.PriceRangeFilter"
+          type: object
+          allOf:
+            - $ref: "#/components/schemas/Models.PriceRangeFilter"
+          nullable: true
     Models.ServicePricing:
       type: object
       required:
@@ -16166,6 +17093,7 @@ components:
       required:
         - id
         - name
+        - bookingCount
       properties:
         id:
           $ref: "#/components/schemas/Models.ServiceId"
@@ -16174,6 +17102,7 @@ components:
         bookingCount:
           type: integer
           format: int32
+          nullable: true
       description: Service summary for various contexts
     Models.Session:
       type: object
@@ -16326,7 +17255,9 @@ components:
         - specialties
         - isActive
         - createdAt
+        - createdBy
         - updatedAt
+        - updatedBy
       properties:
         id:
           $ref: "#/components/schemas/Models.StaffId"
@@ -16370,11 +17301,13 @@ components:
           format: date-time
         createdBy:
           type: string
+          nullable: true
         updatedAt:
           type: string
           format: date-time
         updatedBy:
           type: string
+          nullable: true
     Models.StaffAvailability:
       type: object
       required:
@@ -16485,11 +17418,100 @@ components:
             $ref: "#/components/schemas/Models.TimeSlot"
         effectivePeriod:
           $ref: "#/components/schemas/Models.DateRange"
+    Models.StaffScheduleManagement:
+      type: object
+      required:
+        - staffId
+        - salonId
+        - regularHours
+        - exceptions
+        - effectiveFrom
+        - createdAt
+        - createdBy
+        - updatedAt
+        - updatedBy
+        - version
+        - isDeleted
+      properties:
+        staffId:
+          $ref: "#/components/schemas/Models.StaffId"
+        salonId:
+          $ref: "#/components/schemas/Models.SalonId"
+        regularHours:
+          type: array
+          items:
+            $ref: "#/components/schemas/Models.BusinessHours"
+        exceptions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Models.ScheduleException"
+        effectiveFrom:
+          type: string
+          format: date-time
+        effectiveTo:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+          description: Record creation timestamp
+        createdBy:
+          type: string
+          description: User who created the record
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        updatedBy:
+          type: string
+          description: User who last updated the record
+        version:
+          type: integer
+          format: int32
+          description: Version number for optimistic locking
+        isDeleted:
+          type: boolean
+          description: Whether the record is deleted
+          default: false
+        deletedAt:
+          type: string
+          format: date-time
+          description: Deletion timestamp
+        deletedBy:
+          type: string
+          description: User who deleted the record
+        deletionReason:
+          type: string
+          description: Deletion reason
+      description: Staff schedule management information
+    Models.StaffScheduleUpdateRequest:
+      type: object
+      required:
+        - regularHours
+        - effectiveFrom
+      properties:
+        regularHours:
+          type: array
+          items:
+            $ref: "#/components/schemas/Models.BusinessHours"
+        exceptions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Models.ScheduleException"
+        effectiveFrom:
+          type: string
+          format: date-time
+        effectiveTo:
+          type: string
+          format: date-time
+      description: Staff schedule update request
     Models.StaffSummary:
       type: object
       required:
         - id
         - name
+        - rating
+        - bookingCount
       properties:
         id:
           $ref: "#/components/schemas/Models.StaffId"
@@ -16498,9 +17520,11 @@ components:
         rating:
           type: number
           format: float
+          nullable: true
         bookingCount:
           type: integer
           format: int32
+          nullable: true
       description: Staff summary for various contexts
     Models.StockAlert:
       type: object
@@ -16536,7 +17560,9 @@ components:
         - stockAfter
         - movedAt
         - createdAt
+        - createdBy
         - updatedAt
+        - updatedBy
       properties:
         id:
           type: string
@@ -16591,11 +17617,13 @@ components:
           format: date-time
         createdBy:
           type: string
+          nullable: true
         updatedAt:
           type: string
           format: date-time
         updatedBy:
           type: string
+          nullable: true
       description: Stock movement record
     Models.StockMovementInput:
       type: object
@@ -16627,21 +17655,30 @@ components:
           type: string
     Models.StylePreference:
       type: object
+      required:
+        - preferredLength
+        - preferredColors
+        - avoidStyles
+        - inspirationImages
       properties:
         preferredLength:
           type: string
+          nullable: true
         preferredColors:
           type: array
           items:
             type: string
+          nullable: true
         avoidStyles:
           type: array
           items:
             type: string
+          nullable: true
         inspirationImages:
           type: array
           items:
             type: string
+          nullable: true
     Models.StylingSubCategoryType:
       type: string
       enum:
@@ -16661,6 +17698,22 @@ components:
         - receptionist
         - customer
         - guest
+    Models.TimePreference:
+      type: object
+      required:
+        - dayOfWeek
+        - timeSlots
+      properties:
+        dayOfWeek:
+          allOf:
+            - $ref: "#/components/schemas/Models.DayOfWeekType"
+          description: Day of week
+        timeSlots:
+          type: array
+          items:
+            $ref: "#/components/schemas/Models.TimeSlot"
+          description: Preferred time slots
+      description: Time preference model
     Models.TimeSlot:
       type: object
       required:
@@ -16694,7 +17747,9 @@ components:
         - endTime
         - totalAmount
         - createdAt
+        - createdBy
         - updatedAt
+        - updatedBy
       properties:
         id:
           $ref: "#/components/schemas/Models.TreatmentRecordId"
@@ -16759,11 +17814,13 @@ components:
           format: date-time
         createdBy:
           type: string
+          nullable: true
         updatedAt:
           type: string
           format: date-time
         updatedBy:
           type: string
+          nullable: true
       description: TreatmentType record for customer visit
     Models.TreatmentRecordCreateInput:
       type: object
@@ -17210,16 +18267,25 @@ components:
       properties:
         name:
           type: string
+          nullable: true
         description:
           type: string
+          nullable: true
         address:
-          $ref: "#/components/schemas/Models.Address"
+          type: object
+          allOf:
+            - $ref: "#/components/schemas/Models.Address"
+          nullable: true
         contactInfo:
-          $ref: "#/components/schemas/Models.ContactInfo"
+          type: object
+          allOf:
+            - $ref: "#/components/schemas/Models.ContactInfo"
+          nullable: true
         openingHours:
           type: array
           items:
             $ref: "#/components/schemas/Models.OpeningHours"
+          nullable: true
         businessHours:
           type: array
           items:
@@ -17675,6 +18741,9 @@ components:
       type: object
       required:
         - visitCount
+        - firstVisitDate
+        - lastVisitDate
+        - averageSpendPerVisit
         - totalSpent
         - cancelCount
         - noShowCount
@@ -17686,12 +18755,15 @@ components:
         firstVisitDate:
           type: string
           format: date-time
+          nullable: true
         lastVisitDate:
           type: string
           format: date-time
+          nullable: true
         averageSpendPerVisit:
           type: integer
           format: int32
+          nullable: true
         totalSpent:
           type: integer
           format: int32
@@ -17815,31 +18887,6 @@ components:
           additionalProperties: {}
           description: Additional metadata
       description: Audit entry model
-    Operations.AvailableTimeSlot:
-      type: object
-      required:
-        - startTime
-        - endTime
-        - availableStaff
-        - availability
-      properties:
-        startTime:
-          type: string
-          format: date-time
-          description: Start time
-        endTime:
-          type: string
-          format: date-time
-          description: End time
-        availableStaff:
-          type: array
-          items:
-            $ref: "#/components/schemas/Models.StaffSummary"
-          description: Available staff members
-        availability:
-          type: integer
-          format: int32
-          description: Availability percentage
     Operations.ChangeSet:
       type: object
       required:
@@ -17852,352 +18899,6 @@ components:
           description: Previous value
         newValue:
           description: New value
-    Operations.CustomerPreferences:
-      type: object
-      required:
-        - contactMethod
-        - notifications
-        - marketingOptIn
-      properties:
-        contactMethod:
-          allOf:
-            - $ref: "#/components/schemas/Models.ContactMethodType"
-          description: Preferred contact method
-        notifications:
-          allOf:
-            - $ref: "#/components/schemas/Operations.NotificationPreferences"
-          description: NotificationType preferences
-        marketingOptIn:
-          type: boolean
-          description: Marketing opt-in status
-        preferredLanguage:
-          type: string
-          description: Preferred language
-        accessibilityRequirements:
-          type: array
-          items:
-            type: string
-          description: Accessibility requirements
-        allergies:
-          type: array
-          items:
-            type: string
-          description: Allergies or sensitivities
-        preferredTimes:
-          type: array
-          items:
-            $ref: "#/components/schemas/Operations.TimePreference"
-          description: Preferred appointment times
-      description: Customer preferences model
-    Operations.CustomerStatistics:
-      type: object
-      required:
-        - totalBookings
-        - totalSpent
-        - averageBookingValue
-        - favoriteServices
-        - favoriteStaff
-        - loyaltyPoints
-        - customerSince
-        - cancellationRate
-        - noShowRate
-      properties:
-        totalBookings:
-          type: integer
-          format: int32
-          description: Total bookings
-        totalSpent:
-          allOf:
-            - $ref: "#/components/schemas/Models.Money"
-          description: Total spent
-        averageBookingValue:
-          allOf:
-            - $ref: "#/components/schemas/Models.Money"
-          description: Average booking value
-        lastVisit:
-          type: string
-          format: date-time
-          description: Last visit date
-        favoriteServices:
-          type: array
-          items:
-            $ref: "#/components/schemas/Models.ServiceSummary"
-          description: Favorite services
-        favoriteStaff:
-          type: array
-          items:
-            $ref: "#/components/schemas/Models.StaffSummary"
-          description: Favorite staff
-        loyaltyPoints:
-          type: integer
-          format: int32
-          description: Loyalty points
-        customerSince:
-          type: string
-          format: date-time
-          description: Customer since
-        cancellationRate:
-          type: number
-          format: float
-          description: Cancellation rate
-        noShowRate:
-          type: number
-          format: float
-          description: No-show rate
-      description: Customer statistics response
-    Operations.NotificationPreferences:
-      type: object
-      required:
-        - email
-        - sms
-        - push
-        - reminderHours
-      properties:
-        email:
-          type: boolean
-          description: Email notifications enabled
-        sms:
-          type: boolean
-          description: SMS notifications enabled
-        push:
-          type: boolean
-          description: Push notifications enabled
-        reminderHours:
-          type: integer
-          format: int32
-          description: Reminder timing (hours before appointment)
-    Operations.SalonAvailabilityRequest:
-      type: object
-      required:
-        - serviceId
-        - date
-      properties:
-        serviceId:
-          allOf:
-            - $ref: "#/components/schemas/Models.ServiceId"
-          description: Service ID to check availability for
-        date:
-          type: string
-          format: date
-          description: Preferred date
-        timeSlot:
-          allOf:
-            - $ref: "#/components/schemas/Models.TimeSlot"
-          description: Preferred time slot
-        staffId:
-          allOf:
-            - $ref: "#/components/schemas/Models.StaffId"
-          description: Preferred staff ID
-        slots:
-          type: integer
-          format: int32
-          minimum: 1
-          description: Number of slots needed
-          default: 1
-      description: Salon availability check
-    Operations.SalonAvailabilityResponse:
-      type: object
-      required:
-        - availableSlots
-        - waitlistAvailable
-      properties:
-        availableSlots:
-          type: array
-          items:
-            $ref: "#/components/schemas/Operations.AvailableTimeSlot"
-          description: Available time slots
-        nextAvailableDate:
-          type: string
-          format: date
-          description: Next available date if requested date is full
-        waitlistAvailable:
-          type: boolean
-          description: Waitlist available
-    Operations.SalonRecommendation:
-      type: object
-      required:
-        - score
-        - reasons
-        - matchingServices
-      properties:
-        score:
-          type: integer
-          format: int32
-          description: Recommendation score (0-100)
-        reasons:
-          type: array
-          items:
-            type: string
-          description: Reasons for recommendation
-        matchingServices:
-          type: array
-          items:
-            $ref: "#/components/schemas/Models.ServiceSummary"
-          description: Matching services
-      allOf:
-        - $ref: "#/components/schemas/Models.SalonSummary"
-    Operations.SalonStatistics:
-      type: object
-      required:
-        - totalServices
-        - totalStaff
-        - totalReviews
-        - monthlyBookings
-        - popularServices
-        - busyHours
-      properties:
-        totalServices:
-          type: integer
-          format: int32
-          description: Total number of services
-        totalStaff:
-          type: integer
-          format: int32
-          description: Total number of staff
-        averageRating:
-          type: number
-          format: float
-          description: Average rating
-        totalReviews:
-          type: integer
-          format: int32
-          description: Total reviews
-        monthlyBookings:
-          type: integer
-          format: int32
-          description: Total bookings this month
-        monthlyRevenue:
-          allOf:
-            - $ref: "#/components/schemas/Models.Money"
-          description: Revenue this month
-        popularServices:
-          type: array
-          items:
-            $ref: "#/components/schemas/Models.ServiceSummary"
-          description: Popular services
-        busyHours:
-          type: array
-          items:
-            $ref: "#/components/schemas/Models.TimeSlot"
-          description: Busy hours
-      description: Salon statistics response
-    Operations.SalonWithDistance:
-      type: object
-      required:
-        - distance
-      properties:
-        distance:
-          type: number
-          format: float
-          description: Distance from reference point in kilometers
-        travelTime:
-          type: integer
-          format: int32
-          description: Estimated travel time in minutes
-      allOf:
-        - $ref: "#/components/schemas/Models.Salon"
-      description: Extended models for improved operations
-    Operations.ScheduleException:
-      type: object
-      required:
-        - date
-        - type
-      properties:
-        date:
-          type: string
-          format: date
-        type:
-          type: string
-          enum:
-            - holiday
-            - sick_leave
-            - vacation
-            - training
-            - other
-        description:
-          type: string
-        alternativeStaffId:
-          $ref: "#/components/schemas/Models.StaffId"
-    Operations.StaffSchedule:
-      type: object
-      required:
-        - staffId
-        - salonId
-        - regularHours
-        - exceptions
-        - effectiveFrom
-        - createdAt
-        - createdBy
-        - updatedAt
-        - updatedBy
-        - version
-        - isDeleted
-      properties:
-        staffId:
-          $ref: "#/components/schemas/Models.StaffId"
-        salonId:
-          $ref: "#/components/schemas/Models.SalonId"
-        regularHours:
-          type: array
-          items:
-            $ref: "#/components/schemas/Models.BusinessHours"
-        exceptions:
-          type: array
-          items:
-            $ref: "#/components/schemas/Operations.ScheduleException"
-        effectiveFrom:
-          type: string
-          format: date-time
-        effectiveTo:
-          type: string
-          format: date-time
-        createdAt:
-          type: string
-          format: date-time
-          description: Record creation timestamp
-        createdBy:
-          type: string
-          description: User who created the record
-        updatedAt:
-          type: string
-          format: date-time
-          description: Last update timestamp
-        updatedBy:
-          type: string
-          description: User who last updated the record
-        version:
-          type: integer
-          format: int32
-          description: Version number for optimistic locking
-        isDeleted:
-          type: boolean
-          description: Whether the record is deleted
-          default: false
-        deletedAt:
-          type: string
-          format: date-time
-          description: Deletion timestamp
-        deletedBy:
-          type: string
-          description: User who deleted the record
-        deletionReason:
-          type: string
-          description: Deletion reason
-    Operations.TimePreference:
-      type: object
-      required:
-        - dayOfWeek
-        - timeSlots
-      properties:
-        dayOfWeek:
-          allOf:
-            - $ref: "#/components/schemas/Models.DayOfWeekType"
-          description: Day of week
-        timeSlots:
-          type: array
-          items:
-            $ref: "#/components/schemas/Models.TimeSlot"
-          description: Preferred time slots
   securitySchemes:
     BearerAuth:
       type: http

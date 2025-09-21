@@ -14,15 +14,25 @@ import type { ModelsBusinessHours } from './modelsBusinessHours'
 export interface ModelsSalon {
   id: ModelsSalonId
   name: string
-  description: string
+  /** @nullable */
+  description: string | null
   address: ModelsAddress
   contactInfo: ModelsContactInfo
   openingHours: ModelsOpeningHours[]
-  businessHours?: ModelsBusinessHours[]
-  imageUrls?: string[]
-  features?: string[]
+  /** @nullable */
+  businessHours: ModelsBusinessHours[] | null
+  /** @nullable */
+  imageUrls: string[] | null
+  /** @nullable */
+  features: string[] | null
+  /** @nullable */
+  rating: number | null
+  /** @nullable */
+  reviewCount: number | null
   createdAt: string
-  createdBy?: string
+  /** @nullable */
+  createdBy: string | null
   updatedAt: string
-  updatedBy?: string
+  /** @nullable */
+  updatedBy: string | null
 }

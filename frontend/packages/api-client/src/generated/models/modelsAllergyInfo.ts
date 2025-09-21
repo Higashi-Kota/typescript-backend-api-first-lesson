@@ -10,10 +10,15 @@ import type { ModelsAllergySeverityType } from './modelsAllergySeverityType'
 
 export interface ModelsAllergyInfo {
   type: ModelsAllergyType
-  substances?: string[]
-  fragrances?: string[]
-  metals?: string[]
-  plants?: string[]
-  description?: string
+  /** @nullable */
+  substances: string[] | null
+  /** @nullable */
+  fragrances: string[] | null
+  /** @nullable */
+  metals: string[] | null
+  /** @nullable */
+  plants: string[] | null
+  /** @nullable */
+  description: string | null
   severity: ModelsAllergySeverityType
 }

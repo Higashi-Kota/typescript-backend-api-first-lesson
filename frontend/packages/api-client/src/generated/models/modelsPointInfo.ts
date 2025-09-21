@@ -10,6 +10,8 @@ export interface ModelsPointInfo {
   currentPoints: number
   totalEarnedPoints: number
   totalUsedPoints: number
-  expiringPoints?: number
-  expirationDate?: string
+  /** @nullable */
+  expiringPoints: number | null
+  /** @nullable */
+  expirationDate: string | null
 }

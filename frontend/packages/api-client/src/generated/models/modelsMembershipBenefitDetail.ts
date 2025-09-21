@@ -6,15 +6,20 @@
  * OpenAPI spec version: 2.0
  */
 import type { ModelsMembershipBenefitType } from './modelsMembershipBenefitType'
-import type { ModelsDecimal } from './modelsDecimal'
 import type { ModelsMembershipBenefitDetailFrequency } from './modelsMembershipBenefitDetailFrequency'
 
 export interface ModelsMembershipBenefitDetail {
   type: ModelsMembershipBenefitType
-  percentage?: number
-  multiplier?: ModelsDecimal
-  service?: string
-  frequency?: ModelsMembershipBenefitDetailFrequency
-  value?: number
-  description?: string
+  /** @nullable */
+  percentage: number | null
+  /** @nullable */
+  multiplier: number | null
+  /** @nullable */
+  service: string | null
+  /** @nullable */
+  frequency: ModelsMembershipBenefitDetailFrequency
+  /** @nullable */
+  value: number | null
+  /** @nullable */
+  description: string | null
 }

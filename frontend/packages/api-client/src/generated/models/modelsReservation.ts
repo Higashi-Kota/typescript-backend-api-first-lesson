@@ -27,7 +27,9 @@ export interface ModelsReservation {
   isPaid: boolean
   cancellationReason?: string
   createdAt: string
-  createdBy?: string
+  /** @nullable */
+  createdBy: string | null
   updatedAt: string
-  updatedBy?: string
+  /** @nullable */
+  updatedBy: string | null
 }

@@ -116,6 +116,19 @@ export const DayOfWeekTypeSchema = z.enum([
 ])
 export type DayOfWeekType = z.infer<typeof DayOfWeekTypeSchema>
 
+export const DomainErrorTypeSchema = z.enum([
+  'VALIDATION_ERROR',
+  'NOT_FOUND',
+  'ALREADY_EXISTS',
+  'BUSINESS_RULE_VIOLATION',
+  'UNAUTHORIZED',
+  'FORBIDDEN',
+  'INTERNAL_ERROR',
+  'DATABASE_ERROR',
+  'EXTERNAL_SERVICE_ERROR',
+])
+export type DomainErrorType = z.infer<typeof DomainErrorTypeSchema>
+
 export const EmailVerificationStateTypeSchema = z.enum([
   'verified',
   'unverified',

@@ -5,8 +5,8 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsAddress } from './modelsAddress'
-import type { ModelsContactInfo } from './modelsContactInfo'
+import type { ModelsUpdateSalonRequestWithResetAddress } from './modelsUpdateSalonRequestWithResetAddress'
+import type { ModelsUpdateSalonRequestWithResetContactInfo } from './modelsUpdateSalonRequestWithResetContactInfo'
 import type { ModelsOpeningHours } from './modelsOpeningHours'
 import type { ModelsBusinessHours } from './modelsBusinessHours'
 
@@ -14,11 +14,16 @@ import type { ModelsBusinessHours } from './modelsBusinessHours'
  * Salon update request with reset capability
  */
 export interface ModelsUpdateSalonRequestWithReset {
-  name?: string
-  description?: string
-  address?: ModelsAddress
-  contactInfo?: ModelsContactInfo
-  openingHours?: ModelsOpeningHours[]
+  /** @nullable */
+  name?: string | null
+  /** @nullable */
+  description?: string | null
+  /** @nullable */
+  address?: ModelsUpdateSalonRequestWithResetAddress
+  /** @nullable */
+  contactInfo?: ModelsUpdateSalonRequestWithResetContactInfo
+  /** @nullable */
+  openingHours?: ModelsOpeningHours[] | null
   /** @nullable */
   businessHours?: ModelsBusinessHours[] | null
   /** @nullable */

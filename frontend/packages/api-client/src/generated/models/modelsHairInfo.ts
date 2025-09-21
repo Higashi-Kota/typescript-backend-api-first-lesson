@@ -13,5 +13,6 @@ export interface ModelsHairInfo {
   thickness: ModelsHairThicknessType
   condition: string[]
   chemicalHistory: string[]
-  notes?: string
+  /** @nullable */
+  notes: string | null
 }

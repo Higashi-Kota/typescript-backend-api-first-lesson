@@ -26,8 +26,6 @@
     "format:fix": "biome check . --fix --unsafe",
     "lint": "biome lint .",
     "lint:fix": "biome lint . --write",
-    "test": "vitest",
-    "test:ui": "vitest --ui",
     "knip": "knip --include dependencies,optionalPeerDependencies,unlisted,binaries,unresolved",
     "package:check": "taze -r"
   },
@@ -42,8 +40,6 @@
     "@types/node": "^24.0.13",
     "knip": "^5.61.3",
     "taze": "^19.1.0",
-    "typescript": "^5.8.3",
-    "vite": "^7.0.4",
-    "vite-plugin-dts": "^4.5.4"
+    "typescript": "^5.8.3"
   }
 }

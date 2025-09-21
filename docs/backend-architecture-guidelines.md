@@ -3,9 +3,10 @@
 このガイドは、`docs/architecture-overview.md`で定義された最新アーキテクチャを日本語で補足し、開発判断に必要な実装パターンを整理します。すべての選択は次の柱に従ってください。
 
 - **APIファースト開発**: TypeSpec → OpenAPI → TypeScript の単一ソース運用
-- **クリーンアーキテクチャ**: API / UseCase / Domain / Infrastructure の責務分離
-- **型安全性の徹底**: Sum型 + ts-pattern + Result型 + DB駆動型
-- **パッケージ境界の明確化**: `@beauty-salon-backend/*` と `@beauty-salon-frontend/*`
+- **DB駆動モデル**: Drizzle `$inferSelect` / `$inferInsert` をドメインモデルの源泉とする
+- **Result型パターン**: 例外禁止、`Result<T, E>` + ts-pattern による網羅的エラーハンドリング
+- **分離マッパー**: Write (API→DB) と Read (DB→API) の明確な分離
+- **ブランド型**: エンティティID用の型安全性強化 (`SalonId`, `CustomerId` など)
 
 ---
 
@@ -13,26 +14,27 @@
 
 ```
 ┌─────────────────────────────────────────┐
-│           API Layer (Express)           │ ← HTTPルーティング・入出力境界
+│           API Layer (Express)           │ ← HTTPルーティング、Zod検証、ts-pattern
 ├─────────────────────────────────────────┤
-│      Use Case Layer (Business Flow)     │ ← ドメインサービスのオーケストレーション
+│        Domain Layer (Business Logic)    │ ← UseCase、マッパー、リポジトリIF
 ├─────────────────────────────────────────┤
-│        Domain Layer (Pure Logic)        │ ← ルール/モデル/マッパー/リポジトリIF
+│   Infrastructure Layer (External I/O)   │ ← Drizzle Repository実装
 ├─────────────────────────────────────────┤
-│   Infrastructure Layer (External I/O)   │ ← DB・メール・ストレージなどの実装
+│        Database Layer (Schemas)         │ ← Drizzle スキーマ (真実の源)
 └─────────────────────────────────────────┘
 ```
 
-### レイヤーとパッケージ
+### レイヤーとパッケージ (実装版)
 
-| レイヤー | 主ディレクトリ | 主なエクスポート | 説明 |
-|----------|----------------|------------------|------|
-| API | `backend/packages/api` | `@beauty-salon-backend/api` | Expressエントリポイント、リクエスト検証、レスポンス変換、OpenAPI同期 |
-| UseCase | `backend/packages/domain/src/business-logic` | `@beauty-salon-backend/domain/business-logic` | ユースケース（アプリケーションサービス）。Result型でDomainとInfrastructureを調停 |
-| Domain | `backend/packages/domain` | `@beauty-salon-backend/domain` | DB駆動モデル、Write/Readマッパー、Repositoryインターフェース、Resultユーティリティ |
-| Infrastructure | `backend/packages/infrastructure` | `@beauty-salon-backend/infrastructure` | Repository実装、メール・ストレージ・監視など外部接続 |
+| レイヤー | パッケージ | 実装例 | 説明 |
+|----------|------------|--------|------|
+| API | `@beauty-salon-backend/api` | `salon.routes.ts` | Express ハンドラー、Zod `z.custom<T>()`、ts-pattern |
+| Domain | `@beauty-salon-backend/domain` | `create-salon.usecase.ts`, `salon.mapper.ts` | UseCase + 分離マッパー、Repository IF |
+| Infrastructure | `@beauty-salon-backend/infrastructure` | `salon.repository.impl.ts` | Drizzle 実装、Result型、トランザクション |
+| Database | `@beauty-salon-backend/database` | `schema.ts` | Drizzle schemas (`$inferSelect` の源泉) |
+| Utility | `@beauty-salon-backend/utility` | `result.ts` | Result型、ブランド型、共通ユーティリティ |
 
-> **原則**: 依存は外側→内側のみ。`api → domain → infrastructure` は禁止。InfrastructureはDomainのIFを実装し、依存解決はAPI層または`apps/server`で行う。
+> **原則**: DomainはInfrastructureを知らない。InfrastructureがDomainのインターフェースを実装。API層で依存注入。
 
 ---
 
@@ -44,28 +46,41 @@ backend/
 │   ├── api/
 │   │   └── src/
 │   │       ├── routes/
-│   │       ├── middleware/
-│   │       ├── presenters/           # Domain Result → HTTP レスポンス
-│   │       └── bootstrap/            # DI・サーバー初期化
+│   │       │   └── salon.routes.ts       # 完全なCRUD、型安全ハンドラー
+│   │       └── index.ts                  # Express アプリ設定
 │   ├── domain/
 │   │   └── src/
-│   │       ├── models/               # Sum型エンティティ／値オブジェクト
-│   │       ├── business-logic/       # UseCase（Result型）
+│   │       ├── models/
+│   │       │   └── salon.ts             # ブランド型、API/DB型インポート
+│   │       ├── business-logic/
+│   │       │   ├── salon/               # Salon UseCase群
+│   │       │   │   ├── create-salon.usecase.ts
+│   │       │   │   ├── get-salon.usecase.ts
+│   │       │   │   └── ...usecase.ts
+│   │       │   └── _shared/validators/  # 共通バリデーション
 │   │       ├── mappers/
-│   │       │   ├── write/            # API → Domain → DB
-│   │       │   └── read/             # DB → Domain → API
-│   │       ├── repositories/         # IF（実装なし）
-│   │       └── shared/               # result.ts / validators.ts / guards.ts
+│   │       │   ├── write/
+│   │       │   │   └── salon.mapper.ts  # API→DB変換
+│   │       │   └── read/
+│   │       │       └── salon.mapper.ts  # DB→API変換
+│   │       ├── repositories/
+│   │       │   └── salon.repository.ts  # ISalonRepository IF
+│   │       └── shared/
+│   │           ├── errors.ts           # DomainErrors ファクトリー
+│   │           └── pagination.ts       # ページネーション
 │   ├── infrastructure/
 │   │   └── src/
-│   │       ├── repositories/         # Repository implementations
-│   │       ├── services/             # Email / Storage / Monitoring
-│   │       └── adapters/             # 3rd party adapters
-│   ├── generated/                    # OpenAPI由来の型
-│   ├── database/                     # Drizzleスキーマ・マイグレーション
-│   └── test-utils/                   # テスト用helpers
+│   │       ├── repositories/
+│   │       │   └── salon.repository.impl.ts  # Drizzle実装
+│   │       └── database/
+│   │           ├── connection.ts            # DB接続管理
+│   │           └── index.ts
+│   ├── utility/                        # Result型、ブランド型
+│   ├── generated/                      # TypeSpec→TypeScript型
+│   ├── database/                       # Drizzleスキーマ（源泉）
+│   └── test-utils/                     # テスト用helpers
 └── apps/
-    └── server/                       # Expressアプリ (API層を実行)
+    └── server/                         # Express アプリ
 ```
 
 ---
@@ -147,34 +162,173 @@ export const transitionToConfirmed = (
 };
 ```
 
-### Result型（例外禁止）
+### Result型（例外禁止）- 実装版
 
 ```typescript
-// backend/packages/domain/src/shared/result.ts
-export type Result<T, E> = { type: 'ok'; value: T } | { type: 'err'; error: E };
-export const ok = <T>(value: T): Result<T, never> => ({ type: 'ok', value });
-export const err = <E>(error: E): Result<never, E> => ({ type: 'err', error });
+// backend/packages/utility/src/result/result.ts
+export type Result<T, E> =
+  | { type: 'success'; data: T }
+  | { type: 'error'; error: E }
+
+export const Result = {
+  success<T>(data: T): Result<T, never> {
+    return { type: 'success', data }
+  },
+
+  error<E>(error: E): Result<never, E> {
+    return { type: 'error', error }
+  },
+
+  isSuccess<T, E>(result: Result<T, E>): result is { type: 'success'; data: T } {
+    return result.type === 'success'
+  },
+
+  isError<T, E>(result: Result<T, E>): result is { type: 'error'; error: E } {
+    return result.type === 'error'
+  },
+
+  map<T, E, U>(result: Result<T, E>, fn: (data: T) => U): Result<U, E> {
+    return match(result)
+      .with({ type: 'success' }, ({ data }) => Result.success(fn(data)))
+      .with({ type: 'error' }, ({ error }) => Result.error(error))
+      .exhaustive()
+  }
+}
 ```
 
-### Write/Readマッパー
+### 実装例: Salon ドメイン
+
+#### 1. ブランド型モデル
 
 ```typescript
-// backend/packages/domain/src/mappers/write/create-customer.mapper.ts
-import type { components } from '@beauty-salon-backend/generated';
+// backend/packages/domain/src/models/salon.ts
+import type { openingHours, salons } from '@beauty-salon-backend/database'
+import type { components } from '@beauty-salon-backend/generated'
+import type { Brand, DeepRequired } from '@beauty-salon-backend/utility'
 
-export const mapCreateRequestToDomain = (
-  request: components['schemas']['Models.CreateCustomerRequest']
-): Result<CreateCustomerCommand, ValidationError[]> => {
-  const trimmedName = request.name?.trim();
-  if (!trimmedName) {
-    return err([{ field: 'name', message: 'Name is required' }]);
+// ブランド型でID型安全性
+export const salonIdBrand: unique symbol = Symbol('SalonId')
+export type SalonId = Brand<string, typeof salonIdBrand>
+
+// DB駆動型（Drizzle がソース）
+export type DbSalon = DeepRequired<typeof salons.$inferSelect>
+export type DbNewSalon = DeepRequired<Omit<typeof salons.$inferInsert, 'id'>>
+
+// API型（TypeSpec がソース）
+export type ApiSalon = components['schemas']['Models.Salon']
+export type ApiCreateSalonRequest = components['schemas']['Models.CreateSalonRequest']
+```
+
+#### 2. Write/Read マッパー（分離）
+
+```typescript
+// backend/packages/domain/src/mappers/write/salon.mapper.ts
+export const SalonWriteMapper = {
+  fromCreateRequest(request: ApiCreateSalonRequest): {
+    salon: DbNewSalon
+    openingHours: DbNewOpeningHours[]
+  } {
+    // API → DB 正確な変換（プロパティ名一致）
+    const salon: DbNewSalon = {
+      name: request.name,
+      description: request.description,
+      postalCode: request.address.postalCode,  // address.postalCode → postalCode
+      prefecture: request.address.prefecture,
+      city: request.address.city,
+      address: request.address.street,         // address.street → address
+      phoneNumber: request.contactInfo.phoneNumber,
+      email: request.contactInfo.email,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+
+    const openingHours = request.openingHours.map(oh =>
+      this.mapOpeningHours(oh, '')
+    )
+
+    return { salon, openingHours }
   }
-  return ok({
-    name: trimmedName,
-    email: request.email,
-    contactInfo: request.contactInfo,
-  });
-};
+}
+
+// backend/packages/domain/src/mappers/read/salon.mapper.ts
+export const SalonReadMapper = {
+  toApiSalon(dbSalon: DbSalon, openingHours: DbOpeningHours[]): ApiSalon {
+    // DB → API 変換
+    return {
+      id: dbSalon.id,
+      name: dbSalon.name,
+      description: dbSalon.description,
+      address: {
+        street: dbSalon.address,               // address → address.street
+        city: dbSalon.city,
+        prefecture: dbSalon.prefecture,
+        postalCode: dbSalon.postalCode,        // postalCode → address.postalCode
+        country: 'Japan',
+      },
+      contactInfo: {
+        phoneNumber: dbSalon.phoneNumber,
+        email: dbSalon.email,
+        websiteUrl: dbSalon.websiteUrl,
+      },
+      openingHours: openingHours.map(oh => this.toApiOpeningHours(oh)),
+      rating: dbSalon.rating ? Number.parseFloat(dbSalon.rating) : null,
+      createdAt: dbSalon.createdAt,
+      updatedAt: dbSalon.updatedAt,
+    }
+  }
+}
+```
+
+#### 3. UseCase (Result型パターン)
+
+```typescript
+// backend/packages/domain/src/business-logic/salon/create-salon.usecase.ts
+export class CreateSalonUseCase {
+  async execute(
+    request: ApiCreateSalonRequest
+  ): Promise<Result<ApiSalon, DomainError>> {
+
+    // 1. バリデーション
+    const validation = this.validate(request)
+    if (Result.isError(validation)) {
+      return validation
+    }
+
+    // 2. ビジネスルール（メール重複チェック）
+    const emailExists = await this.repository.existsByEmail(request.contactInfo.email)
+    if (Result.isError(emailExists)) {
+      return emailExists
+    }
+    if (emailExists.data) {
+      return Result.error(
+        DomainErrors.alreadyExists('Salon', 'email', request.contactInfo.email)
+      )
+    }
+
+    // 3. Write Mapper でDB形式に変換
+    const { salon, openingHours } = SalonWriteMapper.fromCreateRequest(request)
+
+    // 4. Repository でトランザクション実行
+    const createResult = await this.repository.create(
+      { ...salon, id: toSalonID(createId()) },
+      openingHours
+    )
+    if (Result.isError(createResult)) {
+      return createResult
+    }
+
+    // 5. Read Mapper でAPI形式に変換
+    const openingHoursResult = await this.repository.findOpeningHours(
+      toSalonID(createResult.data.id)
+    )
+    const apiSalon = SalonReadMapper.toApiSalon(
+      createResult.data,
+      Result.isSuccess(openingHoursResult) ? openingHoursResult.data : []
+    )
+
+    return Result.success(apiSalon)
+  }
+}
 ```
 
 ### Repositoryインターフェース

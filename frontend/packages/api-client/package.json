@@ -19,12 +19,9 @@
     "typecheck": "tsc --noEmit",
     "format": "biome format --write .",
     "format:fix": "biome check . --fix --unsafe",
-    "generate": "orval",
-    "test": "vitest",
-    "test:ui": "vitest --ui"
+    "generate": "orval"
   },
   "dependencies": {
-    "@beauty-salon-frontend/config": "workspace:*",
     "@beauty-salon-frontend/io": "workspace:*",
     "@beauty-salon-frontend/types": "workspace:*",
     "@biomejs/biome": "^1.9.4",
@@ -32,6 +29,8 @@
     "@tanstack/react-query": "^5.83.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@beauty-salon-shared/config": "workspace:*",
     "@types/node": "^24.0.13",
     "orval": "^7.10.0"
   }

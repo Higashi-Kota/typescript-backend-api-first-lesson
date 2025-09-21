@@ -8,7 +8,7 @@
 5. [Package Dependencies](#package-dependencies)
 6. [Type Generation Pipeline](#type-generation-pipeline)
 7. [Implementation Patterns](#implementation-patterns)
-8. [Domain Models](#domain-models)
+8. [Current Implementation Examples](#current-implementation-examples)
 9. [Build and Development](#build-and-development)
 
 ## Architecture Principles
@@ -22,27 +22,28 @@
 ### 2. Clean Architecture Layers
 ```
 ┌─────────────────────────────────────────┐
-│           API Layer (Express)           │ ← HTTP handlers, routing
+│           API Layer (Express)           │ ← HTTP handlers, routing, Zod validation
 ├─────────────────────────────────────────┤
-│      Use Case Layer (Business Logic)    │ ← Orchestration, workflows
+│      Domain Layer (Business Logic)      │ ← Use cases, mappers, business rules
 ├─────────────────────────────────────────┤
-│        Domain Layer (Pure Logic)        │ ← Business rules, entities
+│   Infrastructure Layer (External I/O)   │ ← Repository implementations, Drizzle
 ├─────────────────────────────────────────┤
-│   Infrastructure Layer (External I/O)   │ ← Database, email, storage
+│        Database Layer (Schemas)         │ ← Drizzle schemas as source of truth
 └─────────────────────────────────────────┘
 ```
 
 ### 3. Type Safety Patterns
-- **DB-Driven Models**: Database schemas as source of truth
-- **Sum Types**: Discriminated unions for state management
-- **Pattern Matching**: ts-pattern for exhaustive handling
-- **Result Types**: No exceptions, all errors as data
+- **DB-Driven Models**: Drizzle `$inferSelect` and `$inferInsert` as source of truth
+- **Branded Types**: For entity IDs (e.g., `SalonId`, `CustomerId`)
+- **Result Types**: `Result<T, E>` for all error handling (no exceptions)
+- **Pattern Matching**: ts-pattern for exhaustive handling of Results and sum types
+- **Separate Mappers**: Write (API→DB) and Read (DB→API) transformations
 
 ### 4. Dependency Rules
 - Dependencies point inward (outer layers depend on inner)
-- Domain layer has no external dependencies
-- Use interfaces for dependency inversion
-- Repository pattern for data access abstraction
+- Domain layer defines repository interfaces
+- Infrastructure layer implements repositories
+- API layer orchestrates use cases with pattern matching
 
 ## System Layers
 
@@ -50,161 +51,143 @@
 **Purpose**: Core business logic and rules
 
 **Components**:
-- **Models**: Sum type domain entities
-- **Business Logic**: Use cases and workflows
-- **Mappers**: Type transformation (Write/Read)
-- **Repositories**: Interface definitions only
+- **Models**: Branded types and API/DB type definitions
+- **Business Logic**: Use cases with Result type patterns
+- **Mappers**: Separate Write (API→DB) and Read (DB→API) mappers
+- **Repositories**: Interface definitions only (implemented in infrastructure)
+- **Shared**: Errors, pagination, and validators
 
-**Key Files**:
+**Key Files** (Salon Implementation):
 ```
 domain/
 ├── src/
-│   ├── models/              # Domain entities
-│   │   ├── customer.ts     # Customer model with sum types
-│   │   ├── salon.ts        # Salon model with business rules
-│   │   ├── staff.ts        # Staff model
-│   │   ├── service.ts      # Service model
-│   │   ├── reservation.ts  # Reservation model
-│   │   ├── booking.ts      # Booking aggregate
-│   │   └── review.ts       # Review model
-│   ├── business-logic/      # Use case implementations
-│   │   ├── create-customer.usecase.ts
-│   │   ├── update-customer.usecase.ts
-│   │   └── [entity]-[action].usecase.ts
+│   ├── models/
+│   │   └── salon.ts        # Branded SalonId, API/DB type imports
+│   ├── business-logic/
+│   │   ├── salon/          # Salon use cases
+│   │   │   ├── create-salon.usecase.ts
+│   │   │   ├── get-salon.usecase.ts
+│   │   │   ├── update-salon.usecase.ts
+│   │   │   ├── delete-salon.usecase.ts
+│   │   │   ├── list-salons.usecase.ts
+│   │   │   ├── search-salons.usecase.ts
+│   │   │   └── _shared/base-salon.usecase.ts
+│   │   └── _shared/validators/  # Shared validation logic
 │   ├── mappers/
-│   │   ├── write/          # API → Domain → DB transformations
-│   │   │   ├── create-customer.mapper.ts
-│   │   │   ├── update-customer.mapper.ts
-│   │   │   └── create-salon.mapper.ts
-│   │   └── read/           # DB → Domain → API transformations
-│   │       ├── get-customer.mapper.ts
-│   │       ├── list-customers.mapper.ts
-│   │       └── get-salon.mapper.ts
-│   ├── repositories/       # Repository interfaces
-│   │   ├── customer.repository.ts
-│   │   ├── salon.repository.ts
-│   │   └── [entity].repository.ts
-│   └── shared/             # Shared utilities
-│       ├── result.ts       # Result type for error handling
-│       ├── validators.ts   # Business validation logic
+│   │   ├── write/
+│   │   │   └── salon.mapper.ts  # API requests → DB inserts
+│   │   └── read/
+│   │       └── salon.mapper.ts  # DB selects → API responses
+│   ├── repositories/
+│   │   └── salon.repository.ts  # ISalonRepository interface
+│   └── shared/
+│       ├── errors.ts       # DomainErrors factory
+│       ├── pagination.ts   # Pagination utilities
 │       └── index.ts
 ```
 
 ### Infrastructure Layer (`/backend/packages/infrastructure`)
-**Purpose**: External service integrations
+**Purpose**: External service integrations and repository implementations
 
 **Components**:
-- **Repository Implementations**: Database access
-- **Services**: Email, storage, monitoring
-- **Adapters**: Third-party integrations
+- **Repository Implementations**: Drizzle-based database access with Result types
+- **Database Connection**: Centralized database connection management
+- **Services**: Email, storage, monitoring (planned)
 
-**Key Files**:
+**Key Files** (Current Implementation):
 ```
 infrastructure/
 ├── src/
-│   ├── repositories/       # Concrete implementations
-│   │   ├── customer.repository.impl.ts
-│   │   ├── salon.repository.impl.ts
-│   │   └── [entity].repository.impl.ts
-│   ├── services/
-│   │   ├── email/         # Email service
-│   │   │   ├── email.factory.ts
-│   │   │   ├── email-wrapper.service.ts
-│   │   │   └── providers/
-│   │   ├── storage/       # File storage
-│   │   │   ├── storage.factory.ts
-│   │   │   └── providers/
-│   │   ├── jwt.service.ts
-│   │   ├── metrics.service.ts
-│   │   └── sentry.service.ts
-│   └── config/
-│       └── index.ts
+│   ├── repositories/
+│   │   └── salon.repository.impl.ts  # SalonRepository with Drizzle + Result types
+│   ├── database/
+│   │   ├── connection.ts            # Database connection setup
+│   │   └── index.ts                # Export database client
+│   └── index.ts                    # Export all implementations
 ```
+
+**Repository Pattern Example**:
+- Implements domain repository interfaces
+- Uses Drizzle ORM for database operations
+- Returns `Result<T, DomainError>` types (no exceptions)
+- Supports transactions for related data operations
 
 ### API Layer (`/backend/packages/api`)
 **Purpose**: HTTP interface and request handling
 
 **Components**:
-- **Routes**: Express route definitions
-- **Validation**: Zod v4 with `z.custom<T>().check()` for type-safe validation
-- **Middleware**: Auth, validation, rate limiting
-- **Error Handling**: Global error handler with Result types
-- **OpenAPI**: Documentation generation from TypeSpec
+- **Routes**: Express route definitions with typed handlers
+- **Validation**: Zod `z.custom<T>()` for TypeSpec-generated types
+- **Pattern Matching**: ts-pattern for exhaustive Result handling
+- **Error Handling**: Problem Details format for standardized errors
 
-**Key Files**:
+**Key Files** (Current Implementation):
 ```
 api/
 ├── src/
-│   ├── routes/             # API endpoint handlers
-│   │   ├── customers.ts   # Customer endpoints
-│   │   ├── salons.ts      # Salon endpoints
-│   │   ├── auth.ts        # Authentication endpoints
-│   │   └── [entity].ts
-│   ├── validators/         # Request validation (Zod v4)
-│   │   ├── request-validators.ts    # Common validation logic
-│   │   ├── path-validators.ts       # PathParams validation
-│   │   ├── query-validators.ts      # QueryParams validation
-│   │   └── body-validators.ts       # RequestBody validation
-│   ├── middleware/
-│   │   ├── auth.middleware.ts
-│   │   ├── validation.middleware.ts  # Validation orchestration
-│   │   ├── error-handler.ts
-│   │   └── rate-limiter.ts
-│   ├── utils/
-│   │   ├── openapi-types.ts
-│   │   └── structured-logger.ts
-│   └── index.ts           # Express app setup
+│   ├── routes/
+│   │   └── salon.routes.ts         # Complete CRUD operations
+│   └── index.ts                   # Express app setup
 ```
+
+**Route Handler Pattern**:
+- Type-safe request/response handlers using generated types
+- Zod validation with `z.custom<T>()` pattern
+- ts-pattern for exhaustive Result matching
+- Problem Details format for all errors
+- Standardized response structure with meta/links
 
 ## Data Flow
 
-### Write Operations (Create/Update)
+### Write Operations (Create/Update) - Actual Implementation
 ```
-HTTP Request
+HTTP POST /salons
     ↓
-[API Layer]
-  - Route Handler
-  - Validation Middleware (Zod v4)
-    - PathParams: z.custom<T>().check()
-    - QueryParams: z.custom<T>().check()
-    - Body: z.custom<T>().check()
+[API Layer: salon.routes.ts]
+  - Express RequestHandler with typed parameters
+  - Zod validation: z.custom<CreateSalonRequest>().safeParse()
+  - Pattern matching on validation result
     ↓
-  Result<ValidatedRequest, ValidationError[]>
+  Result<CreateSalonRequest, ValidationError>
     ↓
-[Domain Layer]
-  - Use Case (business-logic/)
-  - Write Mapper: API → Domain
-  - Business Rules Validation
-  - Write Mapper: Domain → DB
+[Domain Layer: CreateSalonUseCase]
+  - Business validation (email uniqueness, etc.)
+  - Write Mapper: API request → DB insert data
+  - Repository.create() with transaction for related data
     ↓
-[Infrastructure Layer]
-  - Repository Implementation
-  - Database Transaction
+[Infrastructure Layer: SalonRepository]
+  - Drizzle transaction for salon + opening hours
+  - Returns Result<DbSalon, DomainError>
     ↓
-[Domain Layer]
-  - Read Mapper: DB → Domain → API
+[Domain Layer: Read Mapper]
+  - DB entity → API response (SalonReadMapper.toApiSalon)
+  - Add metadata and links
     ↓
-HTTP Response
+[API Layer: Response]
+  - ts-pattern exhaustive matching on Result
+  - Problem Details for errors, structured response for success
 ```
 
-### Read Operations (Get/List)
+### Read Operations (Get/List) - Actual Implementation
 ```
-HTTP Request
+HTTP GET /salons/:id
     ↓
-[API Layer]
-  - Route Handler
+[API Layer: salon.routes.ts]
+  - Extract typed path parameters
+  - No validation needed for simple get
     ↓
-[Domain Layer]
-  - Use Case
+[Domain Layer: GetSalonUseCase]
+  - Repository.findById() call
     ↓
-[Infrastructure Layer]
-  - Repository Implementation
-  - Database Query
+[Infrastructure Layer: SalonRepository]
+  - Drizzle query with soft delete check
+  - Returns Result<DbSalon | null, DomainError>
     ↓
-[Domain Layer]
-  - Read Mapper: DB → Domain → API
+[Domain Layer: Read Mapper]
+  - DB entity → API response if found
     ↓
-HTTP Response
+[API Layer: Response]
+  - ts-pattern matching: success → 200, error → Problem Details
 ```
 
 ## Directory Structure
@@ -364,6 +347,218 @@ export const createCustomerModel = (dbCustomer: DbCustomer): Customer => {
     get canReserve() {
       return dbCustomer.state === 'active' && dbCustomer.loyaltyPoints >= 0
     }
+  }
+}
+```
+
+## Current Implementation Examples
+
+### 1. Salon Domain - Complete CRUD Implementation
+
+The salon domain demonstrates all established patterns working together. Here are the key implementation examples:
+
+#### Model Definition (Domain Models)
+```typescript
+// backend/packages/domain/src/models/salon.ts
+import type { openingHours, salons } from '@beauty-salon-backend/database'
+import type { components, operations } from '@beauty-salon-backend/generated'
+import type { Brand, DeepRequired } from '@beauty-salon-backend/utility'
+
+// Branded type for type safety
+export const salonIdBrand: unique symbol = Symbol('SalonId')
+export type SalonId = Brand<string, typeof salonIdBrand>
+export function toSalonID(raw: string): SalonId {
+  return raw as SalonId
+}
+
+// DB-driven types from Drizzle schemas
+export type DbSalon = DeepRequired<typeof salons.$inferSelect>
+export type DbNewSalon = DeepRequired<Omit<typeof salons.$inferInsert, 'id'>>
+
+// API types from TypeSpec generation
+export type ApiSalon = components['schemas']['Models.Salon']
+export type ApiCreateSalonRequest = components['schemas']['Models.CreateSalonRequest']
+```
+
+#### Write Mapper (API → DB)
+```typescript
+// backend/packages/domain/src/mappers/write/salon.mapper.ts
+export const SalonWriteMapper = {
+  fromCreateRequest(request: ApiCreateSalonRequest): {
+    salon: DbNewSalon
+    openingHours: DbNewOpeningHours[]
+  } {
+    const salon: DbNewSalon = {
+      name: request.name,
+      description: request.description,
+      postalCode: request.address.postalCode,
+      prefecture: request.address.prefecture,
+      city: request.address.city,
+      address: request.address.street,
+      phoneNumber: request.contactInfo.phoneNumber,
+      email: request.contactInfo.email,
+      websiteUrl: request.contactInfo.websiteUrl,
+      // ... all required fields mapped exactly to DB columns
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+
+    const openingHours = request.openingHours.map(oh =>
+      this.mapOpeningHours(oh, '')
+    )
+
+    return { salon, openingHours }
+  }
+}
+```
+
+#### Read Mapper (DB → API)
+```typescript
+// backend/packages/domain/src/mappers/read/salon.mapper.ts
+export const SalonReadMapper = {
+  toApiSalon(dbSalon: DbSalon, openingHours: DbOpeningHours[] = []): ApiSalon {
+    return {
+      id: dbSalon.id,
+      name: dbSalon.name,
+      description: dbSalon.description,
+      address: this.toApiAddress(dbSalon),
+      contactInfo: this.toApiContactInfo(dbSalon),
+      openingHours: openingHours.map(oh => this.toApiOpeningHours(oh)),
+      businessHours: dbSalon.businessHours as ApiSalon['businessHours'],
+      imageUrls: Array.isArray(dbSalon.imageUrls) ? dbSalon.imageUrls as string[] : [],
+      rating: dbSalon.rating ? Number.parseFloat(dbSalon.rating) : null,
+      createdAt: dbSalon.createdAt,
+      updatedAt: dbSalon.updatedAt,
+    }
+  }
+}
+```
+
+#### Use Case with Result Types
+```typescript
+// backend/packages/domain/src/business-logic/salon/create-salon.usecase.ts
+export class CreateSalonUseCase extends BaseSalonUseCase {
+  async execute(
+    request: ApiCreateSalonRequest
+  ): Promise<Result<ApiSalon, DomainError>> {
+
+    // 1. Validate request
+    const validation = this.validate(request)
+    if (Result.isError(validation)) {
+      return validation
+    }
+
+    // 2. Check business rules (email uniqueness)
+    const emailExists = await this.repository.existsByEmail(request.contactInfo.email)
+    if (Result.isError(emailExists)) {
+      return emailExists
+    }
+    if (emailExists.data) {
+      return Result.error(
+        DomainErrors.alreadyExists('Salon', 'email', request.contactInfo.email)
+      )
+    }
+
+    // 3. Map and create
+    const { salon, openingHours } = SalonWriteMapper.fromCreateRequest(request)
+    const createResult = await this.repository.create(
+      { ...salon, id: toSalonID(createId()) },
+      openingHours
+    )
+    if (Result.isError(createResult)) {
+      return createResult
+    }
+
+    // 4. Get related data and return mapped result
+    const openingHoursResult = await this.repository.findOpeningHours(
+      toSalonID(createResult.data.id)
+    )
+    const apiSalon = SalonReadMapper.toApiSalon(
+      createResult.data,
+      Result.isSuccess(openingHoursResult) ? openingHoursResult.data : []
+    )
+
+    return Result.success(apiSalon)
+  }
+}
+```
+
+#### Repository Implementation with Drizzle
+```typescript
+// backend/packages/infrastructure/src/repositories/salon.repository.impl.ts
+export class SalonRepository implements ISalonRepository {
+  constructor(private readonly db: Database) {}
+
+  async create(
+    salon: DbSalon,
+    openingHoursData?: DbNewOpeningHours[]
+  ): Promise<Result<DbSalon, DomainError>> {
+    try {
+      const result = await this.db.transaction(async (tx) => {
+        const inserted = await tx.insert(salons).values(salon).returning()
+        const insertedSalon = inserted[0]
+
+        if (openingHoursData && openingHoursData.length > 0) {
+          const openingHoursWithSalonId = openingHoursData.map(oh => ({
+            ...oh,
+            salonId: insertedSalon.id,
+          }))
+          await tx.insert(openingHours).values(openingHoursWithSalonId)
+        }
+
+        return insertedSalon
+      })
+
+      return Result.success(result)
+    } catch (error) {
+      return Result.error(
+        DomainErrors.database(
+          'Failed to create salon',
+          error instanceof Error ? error.message : error
+        )
+      )
+    }
+  }
+}
+```
+
+#### API Route with Pattern Matching
+```typescript
+// backend/packages/api/src/routes/salon.routes.ts
+const createSalonHandler: RequestHandler<
+  Record<string, never>,
+  CreateSalonResponse | ErrorResponse,
+  CreateSalonRequest
+> = async (req, res, next) => {
+  try {
+    // 1. Validate with Zod
+    const validation = createSalonRequestSchema.safeParse(req.body)
+    if (!validation.success) {
+      return res.status(400).json(problemDetailsFromValidation(validation.error))
+    }
+
+    // 2. Execute use case
+    const db = getDb()
+    const repository = new SalonRepository(db)
+    const useCase = new CreateSalonUseCase(repository)
+    const result = await useCase.execute(req.body)
+
+    // 3. Pattern match on Result
+    match(result)
+      .with({ type: 'success' }, ({ data }) => {
+        const response: CreateSalonResponse = {
+          data,
+          meta: { correlationId: `req-${Date.now()}`, timestamp: new Date().toISOString() },
+          links: { self: `/salons/${data.id}`, list: '/salons' }
+        }
+        res.status(201).json(response)
+      })
+      .with({ type: 'error' }, ({ error }) =>
+        handleDomainError(res as Response<ErrorResponse>, error)
+      )
+      .exhaustive()
+  } catch (error) {
+    next(error)
   }
 }
 ```

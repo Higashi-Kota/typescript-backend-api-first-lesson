@@ -5,15 +5,18 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { OperationsSalonSearchParamsCityParameter } from './operationsSalonSearchParamsCityParameter'
-import type { OperationsSalonSearchParamsCategoryParameter } from './operationsSalonSearchParamsCategoryParameter'
-import type { OperationsSalonSearchParamsMinRatingParameter } from './operationsSalonSearchParamsMinRatingParameter'
-import type { OperationsSalonSearchParamsMaxDistanceParameter } from './operationsSalonSearchParamsMaxDistanceParameter'
-import type { OperationsSalonSearchParamsLatParameter } from './operationsSalonSearchParamsLatParameter'
-import type { OperationsSalonSearchParamsLonParameter } from './operationsSalonSearchParamsLonParameter'
-import type { OperationsSalonSearchParamsFeaturesParameter } from './operationsSalonSearchParamsFeaturesParameter'
-import type { OperationsSalonSearchParamsOpenNowParameter } from './operationsSalonSearchParamsOpenNowParameter'
-import type { OperationsSalonSearchParamsOpenAtParameter } from './operationsSalonSearchParamsOpenAtParameter'
+import type { ModelsSearchSalonRequestKeywordParameter } from './modelsSearchSalonRequestKeywordParameter'
+import type { ModelsSearchSalonRequestCityParameter } from './modelsSearchSalonRequestCityParameter'
+import type { ModelsSearchSalonRequestPrefectureParameter } from './modelsSearchSalonRequestPrefectureParameter'
+import type { ModelsSearchSalonRequestCategoriesParameter } from './modelsSearchSalonRequestCategoriesParameter'
+import type { ModelsSearchSalonRequestFeaturesParameter } from './modelsSearchSalonRequestFeaturesParameter'
+import type { ModelsSearchSalonRequestIsActiveParameter } from './modelsSearchSalonRequestIsActiveParameter'
+import type { ModelsSearchSalonRequestMinRatingParameter } from './modelsSearchSalonRequestMinRatingParameter'
+import type { ModelsSearchSalonRequestMaxDistanceParameter } from './modelsSearchSalonRequestMaxDistanceParameter'
+import type { ModelsSearchSalonRequestLatParameter } from './modelsSearchSalonRequestLatParameter'
+import type { ModelsSearchSalonRequestLonParameter } from './modelsSearchSalonRequestLonParameter'
+import type { ModelsSearchSalonRequestOpenNowParameter } from './modelsSearchSalonRequestOpenNowParameter'
+import type { ModelsSearchSalonRequestOpenAtParameter } from './modelsSearchSalonRequestOpenAtParameter'
 import type { ModelsAdvancedSearchParamsQParameter } from './modelsAdvancedSearchParamsQParameter'
 import type { ModelsAdvancedSearchParamsFilterParameter } from './modelsAdvancedSearchParamsFilterParameter'
 import type { ModelsAdvancedSearchParamsFieldsParameter } from './modelsAdvancedSearchParamsFieldsParameter'
@@ -27,44 +30,56 @@ import type { ModelsCursorPaginationParamsSortOrderParameter } from './modelsCur
 
 export type SalonCrudListParams = {
   /**
+   * Search keyword (alias for q)
+   */
+  keyword?: ModelsSearchSalonRequestKeywordParameter
+  /**
    * Filter by city name
    */
-  city?: OperationsSalonSearchParamsCityParameter
+  city?: ModelsSearchSalonRequestCityParameter
   /**
-   * Service category types
+   * Filter by prefecture name
    */
-  category?: OperationsSalonSearchParamsCategoryParameter
+  prefecture?: ModelsSearchSalonRequestPrefectureParameter
+  /**
+   * Filter by service categories
+   */
+  categories?: ModelsSearchSalonRequestCategoriesParameter
+  /**
+   * Filter by features (array)
+   */
+  features?: ModelsSearchSalonRequestFeaturesParameter
+  /**
+   * Filter by active status
+   */
+  isActive?: ModelsSearchSalonRequestIsActiveParameter
   /**
    * Filter by minimum rating
    * @minimum 0
    * @maximum 5
    */
-  minRating?: OperationsSalonSearchParamsMinRatingParameter
+  minRating?: ModelsSearchSalonRequestMinRatingParameter
   /**
    * Maximum distance in kilometers
    * @minimum 0
    */
-  maxDistance?: OperationsSalonSearchParamsMaxDistanceParameter
+  maxDistance?: ModelsSearchSalonRequestMaxDistanceParameter
   /**
    * Reference latitude for distance calculation
    */
-  lat?: OperationsSalonSearchParamsLatParameter
+  lat?: ModelsSearchSalonRequestLatParameter
   /**
    * Reference longitude for distance calculation
    */
-  lon?: OperationsSalonSearchParamsLonParameter
-  /**
-   * Filter by features (comma-separated)
-   */
-  features?: OperationsSalonSearchParamsFeaturesParameter
+  lon?: ModelsSearchSalonRequestLonParameter
   /**
    * Filter by opening hours
    */
-  openNow?: OperationsSalonSearchParamsOpenNowParameter
+  openNow?: ModelsSearchSalonRequestOpenNowParameter
   /**
    * Filter by specific day and time
    */
-  openAt?: OperationsSalonSearchParamsOpenAtParameter
+  openAt?: ModelsSearchSalonRequestOpenAtParameter
   /**
    * Full-text search query
    */

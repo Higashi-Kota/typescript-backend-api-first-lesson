@@ -27,7 +27,9 @@ export interface ModelsStaff {
   isActive: boolean
   permissions?: ModelsStaffPermission[]
   createdAt: string
-  createdBy?: string
+  /** @nullable */
+  createdBy: string | null
   updatedAt: string
-  updatedBy?: string
+  /** @nullable */
+  updatedBy: string | null
 }

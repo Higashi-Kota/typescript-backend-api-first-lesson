@@ -8,7 +8,9 @@
 
 export interface ModelsAuditInfo {
   createdAt: string
-  createdBy?: string
+  /** @nullable */
+  createdBy: string | null
   updatedAt: string
-  updatedBy?: string
+  /** @nullable */
+  updatedBy: string | null
 }

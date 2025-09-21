@@ -11,7 +11,6 @@ export default defineConfig({
       source: {
         entry: {
           index: 'src/index.ts',
-          'database/index': 'src/database/index.ts',
         },
         tsconfigPath: './tsconfig.json',
       },
@@ -24,13 +23,7 @@ export default defineConfig({
         minify: isProduction,
         sourceMap: isDevelopment || isTest || isStaging,
         target: 'node',
-        externals: [
-          /^@beauty-salon\//,
-          'drizzle-orm',
-          'postgres',
-          '@testcontainers/postgresql',
-          'testcontainers',
-        ],
+        externals: [/^@beauty-salon\//, 'drizzle-orm', 'postgres'],
       },
     },
   ],

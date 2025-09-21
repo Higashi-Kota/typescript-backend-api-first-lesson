@@ -9,9 +9,14 @@ import type { ModelsCustomerStatusType } from './modelsCustomerStatusType'
 
 export interface ModelsCustomerStatusDetail {
   type: ModelsCustomerStatusType
-  reason?: string
-  since?: string
-  until?: string
-  by?: string
-  deletedAt?: string
+  /** @nullable */
+  reason: string | null
+  /** @nullable */
+  since: string | null
+  /** @nullable */
+  until: string | null
+  /** @nullable */
+  by: string | null
+  /** @nullable */
+  deletedAt: string | null
 }

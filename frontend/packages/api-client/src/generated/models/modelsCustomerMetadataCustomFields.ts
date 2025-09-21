@@ -6,4 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
-export type ModelsCustomerMetadataCustomFields = { [key: string]: unknown }
+/**
+ * @nullable
+ */
+export type ModelsCustomerMetadataCustomFields = {
+  [key: string]: unknown
+} | null

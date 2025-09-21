@@ -34,7 +34,9 @@ export interface ModelsMedicalChart {
   /** Last updated date */
   lastUpdated: string
   createdAt: string
-  createdBy?: string
+  /** @nullable */
+  createdBy: string | null
   updatedAt: string
-  updatedBy?: string
+  /** @nullable */
+  updatedBy: string | null
 }

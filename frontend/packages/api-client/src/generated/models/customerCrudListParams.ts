@@ -5,12 +5,12 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { OperationsCustomerSearchParamsSearchParameter } from './operationsCustomerSearchParamsSearchParameter'
-import type { OperationsCustomerSearchParamsTagsParameter } from './operationsCustomerSearchParamsTagsParameter'
-import type { OperationsCustomerSearchParamsRegisteredFromParameter } from './operationsCustomerSearchParamsRegisteredFromParameter'
-import type { OperationsCustomerSearchParamsRegisteredToParameter } from './operationsCustomerSearchParamsRegisteredToParameter'
-import type { OperationsCustomerSearchParamsStatusParameter } from './operationsCustomerSearchParamsStatusParameter'
-import type { OperationsCustomerSearchParamsLoyaltyTierParameter } from './operationsCustomerSearchParamsLoyaltyTierParameter'
+import type { ModelsSearchCustomerRequestSearchParameter } from './modelsSearchCustomerRequestSearchParameter'
+import type { ModelsSearchCustomerRequestTagsParameter } from './modelsSearchCustomerRequestTagsParameter'
+import type { ModelsSearchCustomerRequestRegisteredFromParameter } from './modelsSearchCustomerRequestRegisteredFromParameter'
+import type { ModelsSearchCustomerRequestRegisteredToParameter } from './modelsSearchCustomerRequestRegisteredToParameter'
+import type { ModelsSearchCustomerRequestStatusParameter } from './modelsSearchCustomerRequestStatusParameter'
+import type { ModelsSearchCustomerRequestLoyaltyTierParameter } from './modelsSearchCustomerRequestLoyaltyTierParameter'
 import type { ModelsAdvancedSearchParamsQParameter } from './modelsAdvancedSearchParamsQParameter'
 import type { ModelsAdvancedSearchParamsFilterParameter } from './modelsAdvancedSearchParamsFilterParameter'
 import type { ModelsAdvancedSearchParamsFieldsParameter } from './modelsAdvancedSearchParamsFieldsParameter'
@@ -26,27 +26,27 @@ export type CustomerCrudListParams = {
   /**
    * Search in customer name, email, or phone
    */
-  search?: OperationsCustomerSearchParamsSearchParameter
+  search?: ModelsSearchCustomerRequestSearchParameter
   /**
    * Filter by customer tags
    */
-  tags?: OperationsCustomerSearchParamsTagsParameter
+  tags?: ModelsSearchCustomerRequestTagsParameter
   /**
    * Filter by registration date from
    */
-  registeredFrom?: OperationsCustomerSearchParamsRegisteredFromParameter
+  registeredFrom?: ModelsSearchCustomerRequestRegisteredFromParameter
   /**
    * Filter by registration date to
    */
-  registeredTo?: OperationsCustomerSearchParamsRegisteredToParameter
+  registeredTo?: ModelsSearchCustomerRequestRegisteredToParameter
   /**
    * Filter by customer status
    */
-  status?: OperationsCustomerSearchParamsStatusParameter
+  status?: ModelsSearchCustomerRequestStatusParameter
   /**
    * Loyalty tier enum
    */
-  loyaltyTier?: OperationsCustomerSearchParamsLoyaltyTierParameter
+  loyaltyTier?: ModelsSearchCustomerRequestLoyaltyTierParameter
   /**
    * Full-text search query
    */

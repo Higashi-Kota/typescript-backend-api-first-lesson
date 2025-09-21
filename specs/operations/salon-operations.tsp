@@ -13,134 +13,6 @@ using BeautySalon.Models;
 using BeautySalon.Operations;
 
 namespace BeautySalon.Operations {
-  /**
-   * Extended search parameters for salon queries
-   */
-  model SalonSearchParams extends AdvancedSearchParams {
-    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
-    @query
-    @doc("Filter by city name")
-    city?: string;
-
-    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
-    @query
-    @doc("Filter by service category")
-    category?: "cut" | "color" | "perm" | "treatment" | "spa" | "other";
-
-    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
-    @query
-    @doc("Filter by minimum rating")
-    @minValue(0)
-    @maxValue(5)
-    minRating?: float32;
-
-    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
-    @query
-    @doc("Maximum distance in kilometers")
-    @minValue(0)
-    maxDistance?: float32;
-
-    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
-    @query
-    @doc("Reference latitude for distance calculation")
-    lat?: float64;
-
-    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
-    @query
-    @doc("Reference longitude for distance calculation")
-    lon?: float64;
-
-    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
-    @query
-    @doc("Filter by features (comma-separated)")
-    features?: string;
-
-    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
-    @query
-    @doc("Filter by opening hours")
-    openNow?: boolean;
-
-    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
-    @query
-    @doc("Filter by specific day and time")
-    openAt?: utcDateTime;
-  }
-
-  /**
-   * Salon statistics response
-   */
-  model SalonStatistics {
-    @doc("Total number of services")
-    totalServices: int32;
-
-    @doc("Total number of staff")
-    totalStaff: int32;
-
-    @doc("Average rating")
-    averageRating?: float32;
-
-    @doc("Total reviews")
-    totalReviews: int32;
-
-    @doc("Total bookings this month")
-    monthlyBookings: int32;
-
-    @doc("Revenue this month")
-    monthlyRevenue?: Money;
-
-    @doc("Popular services")
-    popularServices: ServiceSummary[];
-
-    @doc("Busy hours")
-    busyHours: TimeSlot[];
-  }
-
-  /**
-   * Salon availability check
-   */
-  model SalonAvailabilityRequest {
-    @doc("Service ID to check availability for")
-    serviceId: ServiceId;
-
-    @doc("Preferred date")
-    date: plainDate;
-
-    @doc("Preferred time slot")
-    timeSlot?: TimeSlot;
-
-    @doc("Preferred staff ID")
-    staffId?: StaffId;
-
-    @doc("Number of slots needed")
-    @minValue(1)
-    slots?: int32 = 1;
-  }
-
-  model SalonAvailabilityResponse {
-    @doc("Available time slots")
-    availableSlots: AvailableTimeSlot[];
-
-    @doc("Next available date if requested date is full")
-    nextAvailableDate?: plainDate;
-
-    @doc("Waitlist available")
-    waitlistAvailable: boolean;
-  }
-
-  model AvailableTimeSlot {
-    @doc("Start time")
-    startTime: utcDateTime;
-
-    @doc("End time")
-    endTime: utcDateTime;
-
-    @doc("Available staff members")
-    availableStaff: StaffSummary[];
-
-    @doc("Availability percentage")
-    availability: int32;
-  }
-
   @route("/api/v1/salons")
   @tag("Salons")
   namespace SalonOperations {
@@ -153,11 +25,11 @@ namespace BeautySalon.Operations {
           Salon,
           CreateSalonRequest,
           UpdateSalonRequest,
-          SalonSearchParams,
+          SearchSalonRequest,
           SalonId
         >,
         BulkOperations<Salon, CreateSalonRequest, UpdateSalonRequest, SalonId>,
-        SearchOperations<Salon, SalonSearchParams>,
+        SearchOperations<Salon, SearchSalonRequest>,
         AuditOperations<Salon, SalonId> {}
 
     /**
@@ -228,8 +100,8 @@ namespace BeautySalon.Operations {
       radius?: float32 = 5,
 
       @query
-      @doc("Service category filter")
-      category?: "cut" | "color" | "perm" | "treatment" | "spa" | "other",
+      @doc("Filter by service categories")
+      categories?: ("cut" | "color" | "perm" | "treatment" | "spa" | "other")[],
 
       ...CursorPaginationParams,
       @header("Authorization") authorization?: string,
@@ -298,20 +170,12 @@ namespace BeautySalon.Operations {
     @route("{id}/subscribe")
     op subscribe(
       @path id: SalonId,
-      @body request: {
-        customerId: CustomerId;
-        notificationTypes: NotificationType[];
-        categories?: ("cut" | "color" | "perm" | "treatment" | "spa" | "other")[];
-      },
+      @body request: SalonSubscriptionRequest,
       @header("Authorization") authorization?: string,
     ):
       | {
           @statusCode statusCode: 201;
-          @body response: ApiResponse<{
-            subscriptionId: string;
-            status: "active";
-            expiresAt?: utcDateTime;
-          }>;
+          @body response: ApiResponse<SalonSubscriptionResponse>;
         }
       | {
           @statusCode statusCode: 400;
@@ -339,17 +203,12 @@ namespace BeautySalon.Operations {
     op updateStaffSchedule(
       @path id: SalonId,
       @path staffId: StaffId,
-      @body schedule: {
-        regularHours: BusinessHours[];
-        exceptions?: ScheduleException[];
-        effectiveFrom: utcDateTime;
-        effectiveTo?: utcDateTime;
-      },
+      @body schedule: StaffScheduleUpdateRequest,
       @header("Authorization") authorization?: string,
     ):
       | {
           @statusCode statusCode: 200;
-          @body response: ApiResponse<StaffSchedule>;
+          @body response: ApiResponse<StaffScheduleManagement>;
         }
       | {
           @statusCode statusCode: 400;
@@ -367,44 +226,5 @@ namespace BeautySalon.Operations {
           @statusCode statusCode: 409; // Schedule conflict
           @body error: ProblemDetails;
         };
-  }
-
-  /**
-   * Extended models for improved operations
-   */
-  model SalonWithDistance extends Salon {
-    @doc("Distance from reference point in kilometers")
-    distance: float32;
-
-    @doc("Estimated travel time in minutes")
-    travelTime?: int32;
-  }
-
-  model SalonRecommendation extends SalonSummary {
-    @doc("Recommendation score (0-100)")
-    score: int32;
-
-    @doc("Reasons for recommendation")
-    reasons: string[];
-
-    @doc("Matching services")
-    matchingServices: ServiceSummary[];
-  }
-
-  model StaffSchedule {
-    staffId: StaffId;
-    salonId: SalonId;
-    regularHours: BusinessHours[];
-    exceptions: ScheduleException[];
-    effectiveFrom: utcDateTime;
-    effectiveTo?: utcDateTime;
-    ...AuditTrail;
-  }
-
-  model ScheduleException {
-    date: plainDate;
-    type: "holiday" | "sick_leave" | "vacation" | "training" | "other";
-    description?: string;
-    alternativeStaffId?: StaffId;
   }
 }

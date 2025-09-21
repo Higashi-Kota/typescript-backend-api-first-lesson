@@ -387,6 +387,81 @@ export const bookingServices = pgTable(
   ]
 )
 
+export const services = pgTable(
+  'services',
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    salonId: uuid().notNull(),
+    categoryId: uuid(),
+    name: varchar({ length: 255 }).notNull(),
+    description: text(),
+    shortDescription: varchar({ length: 500 }),
+    duration: integer().notNull(),
+    price: integer().notNull(),
+    discountPrice: integer(),
+    taxIncluded: boolean().default(true).notNull(),
+    imageUrl: varchar({ length: 500 }),
+    imageUrls: jsonb().default([]),
+    requiredStaffLevel: staffLevel(),
+    maxBookingsPerDay: integer(),
+    requiresConsultation: boolean().default(false).notNull(),
+    allowOnlineBooking: boolean().default(true).notNull(),
+    isPackage: boolean().default(false).notNull(),
+    packageServiceIds: jsonb().default([]),
+    requiredProducts: jsonb().default([]),
+    tags: jsonb().default([]),
+    sortOrder: integer().default(0).notNull(),
+    isActive: boolean().default(true).notNull(),
+    deletedAt: timestamp({ withTimezone: true, mode: 'string' }),
+    createdAt: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    pricingStrategy: pricingStrategy().default('fixed'),
+    serviceStatus: serviceStatus().default('active'),
+    availability: serviceAvailability().default('always'),
+    bookingRequirements: bookingRequirement().array(),
+  },
+  (table) => [
+    index('idx_services_availability').using(
+      'btree',
+      table.availability.asc().nullsLast().op('enum_ops')
+    ),
+    index('idx_services_category_id').using(
+      'btree',
+      table.categoryId.asc().nullsLast().op('uuid_ops')
+    ),
+    index('idx_services_deleted_at').using(
+      'btree',
+      table.deletedAt.asc().nullsLast().op('timestamptz_ops')
+    ),
+    index('idx_services_pricing_strategy').using(
+      'btree',
+      table.pricingStrategy.asc().nullsLast().op('enum_ops')
+    ),
+    index('idx_services_salon_id').using(
+      'btree',
+      table.salonId.asc().nullsLast().op('uuid_ops')
+    ),
+    index('idx_services_service_status').using(
+      'btree',
+      table.serviceStatus.asc().nullsLast().op('enum_ops')
+    ),
+    foreignKey({
+      columns: [table.salonId],
+      foreignColumns: [salons.id],
+      name: 'services_salon_id_fk',
+    }).onDelete('cascade'),
+    foreignKey({
+      columns: [table.categoryId],
+      foreignColumns: [serviceCategories.id],
+      name: 'services_category_id_fk',
+    }).onDelete('set null'),
+  ]
+)
+
 export const staff = pgTable(
   'staff',
   {
@@ -507,6 +582,9 @@ export const salons = pgTable(
     imageUrls: jsonb().default([]),
     features: jsonb().default([]),
     amenities: jsonb().default([]),
+    businessHours: jsonb(),
+    rating: numeric({ precision: 3, scale: 2 }),
+    reviewCount: integer().default(0),
     timezone: varchar({ length: 50 }).default('Asia/Tokyo').notNull(),
     currency: varchar({ length: 3 }).default('JPY').notNull(),
     taxRate: numeric({ precision: 5, scale: 2 }).default('10.00').notNull(),
@@ -531,6 +609,127 @@ export const salons = pgTable(
       table.email.asc().nullsLast().op('text_ops')
     ),
     unique('salons_email_unique').on(table.email),
+  ]
+)
+
+export const customers = pgTable(
+  'customers',
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    userId: uuid(),
+    firstName: varchar({ length: 100 }).notNull(),
+    lastName: varchar({ length: 100 }).notNull(),
+    firstNameKana: varchar({ length: 100 }),
+    lastNameKana: varchar({ length: 100 }),
+    email: varchar({ length: 255 }).notNull(),
+    phoneNumber: varchar({ length: 20 }).notNull(),
+    alternativePhone: varchar({ length: 20 }),
+    postalCode: varchar({ length: 10 }),
+    prefecture: varchar({ length: 50 }),
+    city: varchar({ length: 100 }),
+    address: varchar({ length: 255 }),
+    building: varchar({ length: 255 }),
+    birthDate: date(),
+    gender: varchar({ length: 20 }),
+    occupation: varchar({ length: 100 }),
+    membershipTier: membershipTier().default('regular').notNull(),
+    loyaltyPoints: integer().default(0).notNull(),
+    lifetimeValue: integer().default(0).notNull(),
+    preferences: jsonb().default({}),
+    notes: text(),
+    internalNotes: text(),
+    tags: jsonb().default([]),
+    referredBy: uuid(),
+    referralCode: varchar({ length: 50 }),
+    allowMarketing: boolean().default(true).notNull(),
+    allowSms: boolean().default(true).notNull(),
+    allowEmail: boolean().default(true).notNull(),
+    firstVisitDate: date(),
+    lastVisitDate: date(),
+    visitCount: integer().default(0).notNull(),
+    noShowCount: integer().default(0).notNull(),
+    cancellationCount: integer().default(0).notNull(),
+    isActive: boolean().default(true).notNull(),
+    deletedAt: timestamp({ withTimezone: true, mode: 'string' }),
+    createdAt: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    hairType: hairType(),
+    hairThickness: hairThickness(),
+    scalpCondition: scalpCondition(),
+    customerStatus: customerStatus().default('active'),
+  },
+  (table) => [
+    index('idx_customers_customer_status').using(
+      'btree',
+      table.customerStatus.asc().nullsLast().op('enum_ops')
+    ),
+    index('idx_customers_deleted_at').using(
+      'btree',
+      table.deletedAt.asc().nullsLast().op('timestamptz_ops')
+    ),
+    index('idx_customers_email').using(
+      'btree',
+      table.email.asc().nullsLast().op('text_ops')
+    ),
+    index('idx_customers_hair_type').using(
+      'btree',
+      table.hairType.asc().nullsLast().op('enum_ops')
+    ),
+    index('idx_customers_membership_tier').using(
+      'btree',
+      table.membershipTier.asc().nullsLast().op('enum_ops')
+    ),
+    index('idx_customers_phone_number').using(
+      'btree',
+      table.phoneNumber.asc().nullsLast().op('text_ops')
+    ),
+    index('idx_customers_user_id').using(
+      'btree',
+      table.userId.asc().nullsLast().op('uuid_ops')
+    ),
+    foreignKey({
+      columns: [table.referredBy],
+      foreignColumns: [table.id],
+      name: 'customers_referred_by_fk',
+    }).onDelete('set null'),
+    unique('customers_email_unique').on(table.email),
+    unique('customers_referral_code_unique').on(table.referralCode),
+  ]
+)
+
+export const customerAllergies = pgTable(
+  'customer_allergies',
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    customerId: uuid().notNull(),
+    allergyType: allergyType().notNull(),
+    allergenName: varchar({ length: 255 }).notNull(),
+    severity: integer().default(3).notNull(),
+    symptoms: text(),
+    notes: text(),
+    confirmedDate: date(),
+    createdAt: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    severityType: allergySeverity(),
+  },
+  (table) => [
+    index('idx_customer_allergies_customer_id').using(
+      'btree',
+      table.customerId.asc().nullsLast().op('uuid_ops')
+    ),
+    foreignKey({
+      columns: [table.customerId],
+      foreignColumns: [customers.id],
+      name: 'customer_allergies_customer_id_fk',
+    }).onDelete('cascade'),
   ]
 )
 
@@ -842,202 +1041,6 @@ export const inventoryTransactions = pgTable(
   ]
 )
 
-export const customers = pgTable(
-  'customers',
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    userId: uuid(),
-    firstName: varchar({ length: 100 }).notNull(),
-    lastName: varchar({ length: 100 }).notNull(),
-    firstNameKana: varchar({ length: 100 }),
-    lastNameKana: varchar({ length: 100 }),
-    email: varchar({ length: 255 }).notNull(),
-    phoneNumber: varchar({ length: 20 }).notNull(),
-    alternativePhone: varchar({ length: 20 }),
-    postalCode: varchar({ length: 10 }),
-    prefecture: varchar({ length: 50 }),
-    city: varchar({ length: 100 }),
-    address: varchar({ length: 255 }),
-    building: varchar({ length: 255 }),
-    birthDate: date(),
-    gender: varchar({ length: 20 }),
-    occupation: varchar({ length: 100 }),
-    membershipTier: membershipTier().default('regular').notNull(),
-    loyaltyPoints: integer().default(0).notNull(),
-    lifetimeValue: integer().default(0).notNull(),
-    preferences: jsonb().default({}),
-    notes: text(),
-    internalNotes: text(),
-    tags: jsonb().default([]),
-    referredBy: uuid(),
-    referralCode: varchar({ length: 50 }),
-    allowMarketing: boolean().default(true).notNull(),
-    allowSms: boolean().default(true).notNull(),
-    allowEmail: boolean().default(true).notNull(),
-    firstVisitDate: date(),
-    lastVisitDate: date(),
-    visitCount: integer().default(0).notNull(),
-    noShowCount: integer().default(0).notNull(),
-    cancellationCount: integer().default(0).notNull(),
-    isActive: boolean().default(true).notNull(),
-    deletedAt: timestamp({ withTimezone: true, mode: 'string' }),
-    createdAt: timestamp({ withTimezone: true, mode: 'string' })
-      .defaultNow()
-      .notNull(),
-    updatedAt: timestamp({ withTimezone: true, mode: 'string' })
-      .defaultNow()
-      .notNull(),
-    hairType: hairType(),
-    hairThickness: hairThickness(),
-    scalpCondition: scalpCondition(),
-    customerStatus: customerStatus().default('active'),
-  },
-  (table) => [
-    index('idx_customers_customer_status').using(
-      'btree',
-      table.customerStatus.asc().nullsLast().op('enum_ops')
-    ),
-    index('idx_customers_deleted_at').using(
-      'btree',
-      table.deletedAt.asc().nullsLast().op('timestamptz_ops')
-    ),
-    index('idx_customers_email').using(
-      'btree',
-      table.email.asc().nullsLast().op('text_ops')
-    ),
-    index('idx_customers_hair_type').using(
-      'btree',
-      table.hairType.asc().nullsLast().op('enum_ops')
-    ),
-    index('idx_customers_membership_tier').using(
-      'btree',
-      table.membershipTier.asc().nullsLast().op('enum_ops')
-    ),
-    index('idx_customers_phone_number').using(
-      'btree',
-      table.phoneNumber.asc().nullsLast().op('text_ops')
-    ),
-    index('idx_customers_user_id').using(
-      'btree',
-      table.userId.asc().nullsLast().op('uuid_ops')
-    ),
-    foreignKey({
-      columns: [table.referredBy],
-      foreignColumns: [table.id],
-      name: 'customers_referred_by_fk',
-    }).onDelete('set null'),
-    unique('customers_email_unique').on(table.email),
-    unique('customers_referral_code_unique').on(table.referralCode),
-  ]
-)
-
-export const customerAllergies = pgTable(
-  'customer_allergies',
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    customerId: uuid().notNull(),
-    allergyType: allergyType().notNull(),
-    allergenName: varchar({ length: 255 }).notNull(),
-    severity: integer().default(3).notNull(),
-    symptoms: text(),
-    notes: text(),
-    confirmedDate: date(),
-    createdAt: timestamp({ withTimezone: true, mode: 'string' })
-      .defaultNow()
-      .notNull(),
-    updatedAt: timestamp({ withTimezone: true, mode: 'string' })
-      .defaultNow()
-      .notNull(),
-    severityType: allergySeverity(),
-  },
-  (table) => [
-    index('idx_customer_allergies_customer_id').using(
-      'btree',
-      table.customerId.asc().nullsLast().op('uuid_ops')
-    ),
-    foreignKey({
-      columns: [table.customerId],
-      foreignColumns: [customers.id],
-      name: 'customer_allergies_customer_id_fk',
-    }).onDelete('cascade'),
-  ]
-)
-
-export const services = pgTable(
-  'services',
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    salonId: uuid().notNull(),
-    categoryId: uuid(),
-    name: varchar({ length: 255 }).notNull(),
-    description: text(),
-    shortDescription: varchar({ length: 500 }),
-    duration: integer().notNull(),
-    price: integer().notNull(),
-    discountPrice: integer(),
-    taxIncluded: boolean().default(true).notNull(),
-    imageUrl: varchar({ length: 500 }),
-    imageUrls: jsonb().default([]),
-    requiredStaffLevel: staffLevel(),
-    maxBookingsPerDay: integer(),
-    requiresConsultation: boolean().default(false).notNull(),
-    allowOnlineBooking: boolean().default(true).notNull(),
-    isPackage: boolean().default(false).notNull(),
-    packageServiceIds: jsonb().default([]),
-    requiredProducts: jsonb().default([]),
-    tags: jsonb().default([]),
-    sortOrder: integer().default(0).notNull(),
-    isActive: boolean().default(true).notNull(),
-    deletedAt: timestamp({ withTimezone: true, mode: 'string' }),
-    createdAt: timestamp({ withTimezone: true, mode: 'string' })
-      .defaultNow()
-      .notNull(),
-    updatedAt: timestamp({ withTimezone: true, mode: 'string' })
-      .defaultNow()
-      .notNull(),
-    pricingStrategy: pricingStrategy().default('fixed'),
-    serviceStatus: serviceStatus().default('active'),
-    availability: serviceAvailability().default('always'),
-    bookingRequirements: bookingRequirement().array(),
-  },
-  (table) => [
-    index('idx_services_availability').using(
-      'btree',
-      table.availability.asc().nullsLast().op('enum_ops')
-    ),
-    index('idx_services_category_id').using(
-      'btree',
-      table.categoryId.asc().nullsLast().op('uuid_ops')
-    ),
-    index('idx_services_deleted_at').using(
-      'btree',
-      table.deletedAt.asc().nullsLast().op('timestamptz_ops')
-    ),
-    index('idx_services_pricing_strategy').using(
-      'btree',
-      table.pricingStrategy.asc().nullsLast().op('enum_ops')
-    ),
-    index('idx_services_salon_id').using(
-      'btree',
-      table.salonId.asc().nullsLast().op('uuid_ops')
-    ),
-    index('idx_services_service_status').using(
-      'btree',
-      table.serviceStatus.asc().nullsLast().op('enum_ops')
-    ),
-    foreignKey({
-      columns: [table.salonId],
-      foreignColumns: [salons.id],
-      name: 'services_salon_id_fk',
-    }).onDelete('cascade'),
-    foreignKey({
-      columns: [table.categoryId],
-      foreignColumns: [serviceCategories.id],
-      name: 'services_category_id_fk',
-    }).onDelete('set null'),
-  ]
-)
-
 export const membershipTiers = pgTable(
   'membership_tiers',
   {
@@ -1148,6 +1151,145 @@ export const paymentMethods = pgTable(
       foreignColumns: [salons.id],
       name: 'payment_methods_salon_id_fk',
     }).onDelete('cascade'),
+  ]
+)
+
+export const sales = pgTable(
+  'sales',
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    saleNumber: varchar({ length: 50 }).notNull(),
+    salonId: uuid().notNull(),
+    customerId: uuid(),
+    staffId: uuid(),
+    bookingId: uuid(),
+    saleDate: date().notNull(),
+    saleTime: timestamp({ withTimezone: true, mode: 'string' }).notNull(),
+    subtotal: integer().notNull(),
+    discountAmount: integer().default(0).notNull(),
+    taxAmount: integer().notNull(),
+    totalAmount: integer().notNull(),
+    pointsUsed: integer().default(0),
+    pointsEarned: integer().default(0),
+    paymentStatus: paymentStatus().default('pending').notNull(),
+    isVoid: boolean().default(false).notNull(),
+    voidedAt: timestamp({ withTimezone: true, mode: 'string' }),
+    voidReason: text(),
+    notes: text(),
+    createdAt: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index('idx_sales_booking_id').using(
+      'btree',
+      table.bookingId.asc().nullsLast().op('uuid_ops')
+    ),
+    index('idx_sales_customer_id').using(
+      'btree',
+      table.customerId.asc().nullsLast().op('uuid_ops')
+    ),
+    index('idx_sales_sale_date').using(
+      'btree',
+      table.saleDate.asc().nullsLast().op('date_ops')
+    ),
+    index('idx_sales_sale_number').using(
+      'btree',
+      table.saleNumber.asc().nullsLast().op('text_ops')
+    ),
+    index('idx_sales_salon_id').using(
+      'btree',
+      table.salonId.asc().nullsLast().op('uuid_ops')
+    ),
+    index('idx_sales_staff_id').using(
+      'btree',
+      table.staffId.asc().nullsLast().op('uuid_ops')
+    ),
+    foreignKey({
+      columns: [table.salonId],
+      foreignColumns: [salons.id],
+      name: 'sales_salon_id_fk',
+    }).onDelete('restrict'),
+    foreignKey({
+      columns: [table.customerId],
+      foreignColumns: [customers.id],
+      name: 'sales_customer_id_fk',
+    }).onDelete('restrict'),
+    foreignKey({
+      columns: [table.staffId],
+      foreignColumns: [staff.id],
+      name: 'sales_staff_id_fk',
+    }).onDelete('restrict'),
+    foreignKey({
+      columns: [table.bookingId],
+      foreignColumns: [bookings.id],
+      name: 'sales_booking_id_fk',
+    }).onDelete('restrict'),
+    unique('sales_sale_number_unique').on(table.saleNumber),
+  ]
+)
+
+export const paymentTransactions = pgTable(
+  'payment_transactions',
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    saleId: uuid().notNull(),
+    paymentMethodId: uuid().notNull(),
+    transactionNumber: varchar({ length: 100 }).notNull(),
+    amount: integer().notNull(),
+    status: paymentStatus().notNull(),
+    processorTransactionId: varchar({ length: 255 }),
+    processorResponse: jsonb(),
+    cardLastFour: varchar({ length: 4 }),
+    cardBrand: varchar({ length: 50 }),
+    errorCode: varchar({ length: 100 }),
+    errorMessage: text(),
+    processedAt: timestamp({ withTimezone: true, mode: 'string' }),
+    failedAt: timestamp({ withTimezone: true, mode: 'string' }),
+    refundedAt: timestamp({ withTimezone: true, mode: 'string' }),
+    refundAmount: integer(),
+    refundReason: text(),
+    metadata: jsonb(),
+    createdAt: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index('idx_payment_transactions_payment_method_id').using(
+      'btree',
+      table.paymentMethodId.asc().nullsLast().op('uuid_ops')
+    ),
+    index('idx_payment_transactions_sale_id').using(
+      'btree',
+      table.saleId.asc().nullsLast().op('uuid_ops')
+    ),
+    index('idx_payment_transactions_status').using(
+      'btree',
+      table.status.asc().nullsLast().op('enum_ops')
+    ),
+    index('idx_payment_transactions_transaction_number').using(
+      'btree',
+      table.transactionNumber.asc().nullsLast().op('text_ops')
+    ),
+    foreignKey({
+      columns: [table.saleId],
+      foreignColumns: [sales.id],
+      name: 'payment_transactions_sale_id_fk',
+    }).onDelete('cascade'),
+    foreignKey({
+      columns: [table.paymentMethodId],
+      foreignColumns: [paymentMethods.id],
+      name: 'payment_transactions_payment_method_id_fk',
+    }).onDelete('restrict'),
+    unique('payment_transactions_transaction_number_unique').on(
+      table.transactionNumber
+    ),
   ]
 )
 
@@ -1308,6 +1450,162 @@ export const serviceCategories = pgTable(
       foreignColumns: [table.id],
       name: 'service_categories_parent_id_fk',
     }).onDelete('set null'),
+  ]
+)
+
+export const serviceOptions = pgTable(
+  'service_options',
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    serviceId: uuid().notNull(),
+    name: varchar({ length: 255 }).notNull(),
+    description: text(),
+    additionalTime: integer().default(0).notNull(),
+    additionalPrice: integer().default(0).notNull(),
+    maxQuantity: integer().default(1).notNull(),
+    isRequired: boolean().default(false).notNull(),
+    sortOrder: integer().default(0).notNull(),
+    isActive: boolean().default(true).notNull(),
+    createdAt: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    optionType: serviceOptionType().default('addon'),
+  },
+  (table) => [
+    index('idx_service_options_service_id').using(
+      'btree',
+      table.serviceId.asc().nullsLast().op('uuid_ops')
+    ),
+    foreignKey({
+      columns: [table.serviceId],
+      foreignColumns: [services.id],
+      name: 'service_options_service_id_fk',
+    }).onDelete('cascade'),
+  ]
+)
+
+export const users = pgTable(
+  'users',
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    email: varchar({ length: 255 }).notNull(),
+    passwordHash: text().notNull(),
+    role: userRole().default('customer').notNull(),
+    permissions: jsonb().default([]),
+    status: accountStatus().default('active').notNull(),
+    emailVerified: boolean().default(false).notNull(),
+    emailVerificationToken: varchar({ length: 255 }),
+    emailVerificationExpiry: timestamp({ withTimezone: true, mode: 'string' }),
+    passwordResetToken: varchar({ length: 255 }),
+    passwordResetExpiry: timestamp({ withTimezone: true, mode: 'string' }),
+    lastPasswordChange: timestamp({ withTimezone: true, mode: 'string' }),
+    passwordHistory: jsonb().default([]),
+    twoFactorEnabled: boolean().default(false).notNull(),
+    twoFactorSecret: text(),
+    backupCodes: jsonb(),
+    failedLoginAttempts: integer().default(0).notNull(),
+    lockedUntil: timestamp({ withTimezone: true, mode: 'string' }),
+    lastLoginAt: timestamp({ withTimezone: true, mode: 'string' }),
+    lastLoginIp: varchar({ length: 50 }),
+    trustedIpAddresses: jsonb().default([]),
+    customerId: uuid(),
+    staffId: uuid(),
+    metadata: jsonb().default({}),
+    deletedAt: timestamp({ withTimezone: true, mode: 'string' }),
+    createdAt: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    twoFactorStatus: twoFactorStatus().default('disabled'),
+  },
+  (table) => [
+    index('idx_users_customer_id').using(
+      'btree',
+      table.customerId.asc().nullsLast().op('uuid_ops')
+    ),
+    index('idx_users_deleted_at').using(
+      'btree',
+      table.deletedAt.asc().nullsLast().op('timestamptz_ops')
+    ),
+    index('idx_users_email').using(
+      'btree',
+      table.email.asc().nullsLast().op('text_ops')
+    ),
+    index('idx_users_staff_id').using(
+      'btree',
+      table.staffId.asc().nullsLast().op('uuid_ops')
+    ),
+    index('idx_users_two_factor_status').using(
+      'btree',
+      table.twoFactorStatus.asc().nullsLast().op('enum_ops')
+    ),
+    foreignKey({
+      columns: [table.customerId],
+      foreignColumns: [customers.id],
+      name: 'users_customer_id_fk',
+    }).onDelete('set null'),
+    foreignKey({
+      columns: [table.staffId],
+      foreignColumns: [staff.id],
+      name: 'users_staff_id_fk',
+    }).onDelete('set null'),
+    unique('users_email_unique').on(table.email),
+  ]
+)
+
+export const sessions = pgTable(
+  'sessions',
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    userId: uuid().notNull(),
+    token: text().notNull(),
+    refreshToken: text(),
+    ipAddress: varchar({ length: 50 }).notNull(),
+    userAgent: text().notNull(),
+    deviceId: varchar({ length: 255 }),
+    expiresAt: timestamp({ withTimezone: true, mode: 'string' }).notNull(),
+    refreshExpiresAt: timestamp({ withTimezone: true, mode: 'string' }),
+    lastActivityAt: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    createdAt: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    authenticationState: authenticationState().default('authenticated'),
+  },
+  (table) => [
+    index('idx_sessions_authentication_state').using(
+      'btree',
+      table.authenticationState.asc().nullsLast().op('enum_ops')
+    ),
+    index('idx_sessions_expires_at').using(
+      'btree',
+      table.expiresAt.asc().nullsLast().op('timestamptz_ops')
+    ),
+    index('idx_sessions_refresh_token').using(
+      'btree',
+      table.refreshToken.asc().nullsLast().op('text_ops')
+    ),
+    index('idx_sessions_token').using(
+      'btree',
+      table.token.asc().nullsLast().op('text_ops')
+    ),
+    index('idx_sessions_user_id').using(
+      'btree',
+      table.userId.asc().nullsLast().op('uuid_ops')
+    ),
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [users.id],
+      name: 'sessions_user_id_fk',
+    }).onDelete('cascade'),
+    unique('sessions_token_unique').on(table.token),
+    unique('sessions_refresh_token_unique').on(table.refreshToken),
   ]
 )
 
@@ -1577,301 +1875,6 @@ export const treatmentPhotos = pgTable(
       columns: [table.treatmentRecordId],
       foreignColumns: [treatmentRecords.id],
       name: 'treatment_photos_treatment_record_id_fk',
-    }).onDelete('cascade'),
-  ]
-)
-
-export const paymentTransactions = pgTable(
-  'payment_transactions',
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    saleId: uuid().notNull(),
-    paymentMethodId: uuid().notNull(),
-    transactionNumber: varchar({ length: 100 }).notNull(),
-    amount: integer().notNull(),
-    status: paymentStatus().notNull(),
-    processorTransactionId: varchar({ length: 255 }),
-    processorResponse: jsonb(),
-    cardLastFour: varchar({ length: 4 }),
-    cardBrand: varchar({ length: 50 }),
-    errorCode: varchar({ length: 100 }),
-    errorMessage: text(),
-    processedAt: timestamp({ withTimezone: true, mode: 'string' }),
-    failedAt: timestamp({ withTimezone: true, mode: 'string' }),
-    refundedAt: timestamp({ withTimezone: true, mode: 'string' }),
-    refundAmount: integer(),
-    refundReason: text(),
-    metadata: jsonb(),
-    createdAt: timestamp({ withTimezone: true, mode: 'string' })
-      .defaultNow()
-      .notNull(),
-    updatedAt: timestamp({ withTimezone: true, mode: 'string' })
-      .defaultNow()
-      .notNull(),
-  },
-  (table) => [
-    index('idx_payment_transactions_payment_method_id').using(
-      'btree',
-      table.paymentMethodId.asc().nullsLast().op('uuid_ops')
-    ),
-    index('idx_payment_transactions_sale_id').using(
-      'btree',
-      table.saleId.asc().nullsLast().op('uuid_ops')
-    ),
-    index('idx_payment_transactions_status').using(
-      'btree',
-      table.status.asc().nullsLast().op('enum_ops')
-    ),
-    index('idx_payment_transactions_transaction_number').using(
-      'btree',
-      table.transactionNumber.asc().nullsLast().op('text_ops')
-    ),
-    foreignKey({
-      columns: [table.saleId],
-      foreignColumns: [sales.id],
-      name: 'payment_transactions_sale_id_fk',
-    }).onDelete('cascade'),
-    foreignKey({
-      columns: [table.paymentMethodId],
-      foreignColumns: [paymentMethods.id],
-      name: 'payment_transactions_payment_method_id_fk',
-    }).onDelete('restrict'),
-    unique('payment_transactions_transaction_number_unique').on(
-      table.transactionNumber
-    ),
-  ]
-)
-
-export const sales = pgTable(
-  'sales',
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    saleNumber: varchar({ length: 50 }).notNull(),
-    salonId: uuid().notNull(),
-    customerId: uuid(),
-    staffId: uuid(),
-    bookingId: uuid(),
-    saleDate: date().notNull(),
-    saleTime: timestamp({ withTimezone: true, mode: 'string' }).notNull(),
-    subtotal: integer().notNull(),
-    discountAmount: integer().default(0).notNull(),
-    taxAmount: integer().notNull(),
-    totalAmount: integer().notNull(),
-    pointsUsed: integer().default(0),
-    pointsEarned: integer().default(0),
-    paymentStatus: paymentStatus().default('pending').notNull(),
-    isVoid: boolean().default(false).notNull(),
-    voidedAt: timestamp({ withTimezone: true, mode: 'string' }),
-    voidReason: text(),
-    notes: text(),
-    createdAt: timestamp({ withTimezone: true, mode: 'string' })
-      .defaultNow()
-      .notNull(),
-    updatedAt: timestamp({ withTimezone: true, mode: 'string' })
-      .defaultNow()
-      .notNull(),
-  },
-  (table) => [
-    index('idx_sales_booking_id').using(
-      'btree',
-      table.bookingId.asc().nullsLast().op('uuid_ops')
-    ),
-    index('idx_sales_customer_id').using(
-      'btree',
-      table.customerId.asc().nullsLast().op('uuid_ops')
-    ),
-    index('idx_sales_sale_date').using(
-      'btree',
-      table.saleDate.asc().nullsLast().op('date_ops')
-    ),
-    index('idx_sales_sale_number').using(
-      'btree',
-      table.saleNumber.asc().nullsLast().op('text_ops')
-    ),
-    index('idx_sales_salon_id').using(
-      'btree',
-      table.salonId.asc().nullsLast().op('uuid_ops')
-    ),
-    index('idx_sales_staff_id').using(
-      'btree',
-      table.staffId.asc().nullsLast().op('uuid_ops')
-    ),
-    foreignKey({
-      columns: [table.salonId],
-      foreignColumns: [salons.id],
-      name: 'sales_salon_id_fk',
-    }).onDelete('restrict'),
-    foreignKey({
-      columns: [table.customerId],
-      foreignColumns: [customers.id],
-      name: 'sales_customer_id_fk',
-    }).onDelete('restrict'),
-    foreignKey({
-      columns: [table.staffId],
-      foreignColumns: [staff.id],
-      name: 'sales_staff_id_fk',
-    }).onDelete('restrict'),
-    foreignKey({
-      columns: [table.bookingId],
-      foreignColumns: [bookings.id],
-      name: 'sales_booking_id_fk',
-    }).onDelete('restrict'),
-    unique('sales_sale_number_unique').on(table.saleNumber),
-  ]
-)
-
-export const users = pgTable(
-  'users',
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    email: varchar({ length: 255 }).notNull(),
-    passwordHash: text().notNull(),
-    role: userRole().default('customer').notNull(),
-    permissions: jsonb().default([]),
-    status: accountStatus().default('active').notNull(),
-    emailVerified: boolean().default(false).notNull(),
-    emailVerificationToken: varchar({ length: 255 }),
-    emailVerificationExpiry: timestamp({ withTimezone: true, mode: 'string' }),
-    passwordResetToken: varchar({ length: 255 }),
-    passwordResetExpiry: timestamp({ withTimezone: true, mode: 'string' }),
-    lastPasswordChange: timestamp({ withTimezone: true, mode: 'string' }),
-    passwordHistory: jsonb().default([]),
-    twoFactorEnabled: boolean().default(false).notNull(),
-    twoFactorSecret: text(),
-    backupCodes: jsonb(),
-    failedLoginAttempts: integer().default(0).notNull(),
-    lockedUntil: timestamp({ withTimezone: true, mode: 'string' }),
-    lastLoginAt: timestamp({ withTimezone: true, mode: 'string' }),
-    lastLoginIp: varchar({ length: 50 }),
-    trustedIpAddresses: jsonb().default([]),
-    customerId: uuid(),
-    staffId: uuid(),
-    metadata: jsonb().default({}),
-    deletedAt: timestamp({ withTimezone: true, mode: 'string' }),
-    createdAt: timestamp({ withTimezone: true, mode: 'string' })
-      .defaultNow()
-      .notNull(),
-    updatedAt: timestamp({ withTimezone: true, mode: 'string' })
-      .defaultNow()
-      .notNull(),
-    twoFactorStatus: twoFactorStatus().default('disabled'),
-  },
-  (table) => [
-    index('idx_users_customer_id').using(
-      'btree',
-      table.customerId.asc().nullsLast().op('uuid_ops')
-    ),
-    index('idx_users_deleted_at').using(
-      'btree',
-      table.deletedAt.asc().nullsLast().op('timestamptz_ops')
-    ),
-    index('idx_users_email').using(
-      'btree',
-      table.email.asc().nullsLast().op('text_ops')
-    ),
-    index('idx_users_staff_id').using(
-      'btree',
-      table.staffId.asc().nullsLast().op('uuid_ops')
-    ),
-    index('idx_users_two_factor_status').using(
-      'btree',
-      table.twoFactorStatus.asc().nullsLast().op('enum_ops')
-    ),
-    foreignKey({
-      columns: [table.customerId],
-      foreignColumns: [customers.id],
-      name: 'users_customer_id_fk',
-    }).onDelete('set null'),
-    foreignKey({
-      columns: [table.staffId],
-      foreignColumns: [staff.id],
-      name: 'users_staff_id_fk',
-    }).onDelete('set null'),
-    unique('users_email_unique').on(table.email),
-  ]
-)
-
-export const sessions = pgTable(
-  'sessions',
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    userId: uuid().notNull(),
-    token: text().notNull(),
-    refreshToken: text(),
-    ipAddress: varchar({ length: 50 }).notNull(),
-    userAgent: text().notNull(),
-    deviceId: varchar({ length: 255 }),
-    expiresAt: timestamp({ withTimezone: true, mode: 'string' }).notNull(),
-    refreshExpiresAt: timestamp({ withTimezone: true, mode: 'string' }),
-    lastActivityAt: timestamp({ withTimezone: true, mode: 'string' })
-      .defaultNow()
-      .notNull(),
-    createdAt: timestamp({ withTimezone: true, mode: 'string' })
-      .defaultNow()
-      .notNull(),
-    authenticationState: authenticationState().default('authenticated'),
-  },
-  (table) => [
-    index('idx_sessions_authentication_state').using(
-      'btree',
-      table.authenticationState.asc().nullsLast().op('enum_ops')
-    ),
-    index('idx_sessions_expires_at').using(
-      'btree',
-      table.expiresAt.asc().nullsLast().op('timestamptz_ops')
-    ),
-    index('idx_sessions_refresh_token').using(
-      'btree',
-      table.refreshToken.asc().nullsLast().op('text_ops')
-    ),
-    index('idx_sessions_token').using(
-      'btree',
-      table.token.asc().nullsLast().op('text_ops')
-    ),
-    index('idx_sessions_user_id').using(
-      'btree',
-      table.userId.asc().nullsLast().op('uuid_ops')
-    ),
-    foreignKey({
-      columns: [table.userId],
-      foreignColumns: [users.id],
-      name: 'sessions_user_id_fk',
-    }).onDelete('cascade'),
-    unique('sessions_token_unique').on(table.token),
-    unique('sessions_refresh_token_unique').on(table.refreshToken),
-  ]
-)
-
-export const serviceOptions = pgTable(
-  'service_options',
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    serviceId: uuid().notNull(),
-    name: varchar({ length: 255 }).notNull(),
-    description: text(),
-    additionalTime: integer().default(0).notNull(),
-    additionalPrice: integer().default(0).notNull(),
-    maxQuantity: integer().default(1).notNull(),
-    isRequired: boolean().default(false).notNull(),
-    sortOrder: integer().default(0).notNull(),
-    isActive: boolean().default(true).notNull(),
-    createdAt: timestamp({ withTimezone: true, mode: 'string' })
-      .defaultNow()
-      .notNull(),
-    updatedAt: timestamp({ withTimezone: true, mode: 'string' })
-      .defaultNow()
-      .notNull(),
-    optionType: serviceOptionType().default('addon'),
-  },
-  (table) => [
-    index('idx_service_options_service_id').using(
-      'btree',
-      table.serviceId.asc().nullsLast().op('uuid_ops')
-    ),
-    foreignKey({
-      columns: [table.serviceId],
-      foreignColumns: [services.id],
-      name: 'service_options_service_id_fk',
     }).onDelete('cascade'),
   ]
 )

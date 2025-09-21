@@ -40,7 +40,9 @@ export interface ModelsPayment {
   metadata?: ModelsPaymentMetadata
   notes?: string
   createdAt: string
-  createdBy?: string
+  /** @nullable */
+  createdBy: string | null
   updatedAt: string
-  updatedBy?: string
+  /** @nullable */
+  updatedBy: string | null
 }

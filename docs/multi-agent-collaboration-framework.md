@@ -8,6 +8,16 @@
 
 ## 🏗️ アーキテクチャ前提
 
+### API-DB整合性の必須要件
+
+[TypeSpec API Type Rules](./typespec-api-type-rules.md)で定義された以下の制約を全エージェントが遵守：
+
+1. **プロパティ名の完全一致**: API定義のプロパティ名はDB定義のカラム名と完全一致
+2. **Nullable性の統一**: DBのNULL制約とAPIのnullable型が完全一致
+3. **Optional制約**: Optionalフィールドは検索・更新APIのみ
+4. **ブランド型の使用**: 全エンティティIDにブランド型を使用
+5. **API-DB不整合の禁止**: API定義にあってDB定義にないプロパティは許可しない
+
 ### DB駆動型定義の原則
 
 [DB-Driven Domain Model](./db-driven-domain-model.md)アーキテクチャに基づく型定義フロー：
@@ -286,6 +296,31 @@ interface EscalationRequest {
 ```
 
 ## 🎯 Validation Checkpoint Definitions
+
+### API-DB Property Validation Checklist
+
+各エージェントが協業して確認すべき項目：
+
+#### 1. プロパティ存在性チェック（Database Schema Architect + TypeSpec API Architect）
+- [ ] APIで定義された全プロパティに対応するDBカラムが存在する
+- [ ] DBカラムが存在しないAPIプロパティを検出し、マイグレーション要否を判定
+- [ ] 新規プロパティ追加時にDB側のALTER TABLE文が生成される
+
+#### 2. プロパティ名一致チェック（Design Review Architect）
+- [ ] snake_case（DB） → camelCase（API）の変換規則が一貫している
+- [ ] UIの入出力集約粒度都合による以外の名前変更がない（例: website → websiteUrl）
+- [ ] Mapperで不要な名前変換を行っていない
+
+#### 3. Nullable性一致チェック（全エージェント）
+- [ ] DBのNULL制約とAPIのnullable型が完全一致
+- [ ] nullを空文字列やデフォルト値に変換していない
+- [ ] Optional + Nullableの組み合わせが適切（更新APIでのリセット機能）
+
+#### 4. Optional制約チェック（TypeSpec API Architect）
+- [ ] 作成API: Optionalフィールドなし（全て必須、値はnullable）
+- [ ] 更新API: 全フィールドOptional（部分更新）
+- [ ] 検索API: フィルター項目のみOptional
+- [ ] レスポンス: Optionalフィールドなし（全て必須）
 
 ### Checkpoint 1: DB-API Type Alignment
 ```typescript

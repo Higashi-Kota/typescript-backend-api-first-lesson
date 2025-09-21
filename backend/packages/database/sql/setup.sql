@@ -4,7 +4,7 @@
 -- - All tables with columns, constraints, and defaults
 -- - All foreign key relationships
 -- - All indexes
--- Generated on: 2025-09-20T14:22:19.974Z
+-- Generated on: 2025-09-21T08:24:43.820Z
 -- Source: backend/packages/database/src/schema.ts
 
 CREATE TYPE "public"."account_status" AS ENUM('active', 'unverified', 'inactive', 'locked', 'suspended', 'deleted');
@@ -474,6 +474,9 @@ CREATE TABLE "salons" (
 	"imageUrls" jsonb DEFAULT '[]'::jsonb,
 	"features" jsonb DEFAULT '[]'::jsonb,
 	"amenities" jsonb DEFAULT '[]'::jsonb,
+	"businessHours" jsonb,
+	"rating" numeric(3, 2),
+	"reviewCount" integer DEFAULT 0,
 	"timezone" varchar(50) DEFAULT 'Asia/Tokyo' NOT NULL,
 	"currency" varchar(3) DEFAULT 'JPY' NOT NULL,
 	"taxRate" numeric(5, 2) DEFAULT '10.00' NOT NULL,

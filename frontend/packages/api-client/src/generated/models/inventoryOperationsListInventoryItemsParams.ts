@@ -5,11 +5,11 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsInventorySearchParamsSalonIdParameter } from './modelsInventorySearchParamsSalonIdParameter'
-import type { ModelsInventorySearchParamsCategoryParameter } from './modelsInventorySearchParamsCategoryParameter'
-import type { ModelsInventorySearchParamsStatusParameter } from './modelsInventorySearchParamsStatusParameter'
-import type { ModelsInventorySearchParamsLowStockParameter } from './modelsInventorySearchParamsLowStockParameter'
-import type { ModelsInventorySearchParamsExpiringSoonParameter } from './modelsInventorySearchParamsExpiringSoonParameter'
+import type { ModelsSearchInventoryRequestSalonIdParameter } from './modelsSearchInventoryRequestSalonIdParameter'
+import type { ModelsSearchInventoryRequestCategoryParameter } from './modelsSearchInventoryRequestCategoryParameter'
+import type { ModelsSearchInventoryRequestStatusParameter } from './modelsSearchInventoryRequestStatusParameter'
+import type { ModelsSearchInventoryRequestLowStockParameter } from './modelsSearchInventoryRequestLowStockParameter'
+import type { ModelsSearchInventoryRequestExpiringSoonParameter } from './modelsSearchInventoryRequestExpiringSoonParameter'
 import type { ModelsSearchParamsQParameter } from './modelsSearchParamsQParameter'
 import type { ModelsSearchParamsSortByParameter } from './modelsSearchParamsSortByParameter'
 import type { ModelsSearchParamsSortOrderParameter } from './modelsSearchParamsSortOrderParameter'
@@ -20,11 +20,11 @@ export type InventoryOperationsListInventoryItemsParams = {
   /**
    * Branded UUID type for Salon ID
    */
-  salonId: ModelsInventorySearchParamsSalonIdParameter
-  category?: ModelsInventorySearchParamsCategoryParameter
-  status?: ModelsInventorySearchParamsStatusParameter
-  lowStock?: ModelsInventorySearchParamsLowStockParameter
-  expiringSoon?: ModelsInventorySearchParamsExpiringSoonParameter
+  salonId: ModelsSearchInventoryRequestSalonIdParameter
+  category?: ModelsSearchInventoryRequestCategoryParameter
+  status?: ModelsSearchInventoryRequestStatusParameter
+  lowStock?: ModelsSearchInventoryRequestLowStockParameter
+  expiringSoon?: ModelsSearchInventoryRequestExpiringSoonParameter
   q?: ModelsSearchParamsQParameter
   sortBy?: ModelsSearchParamsSortByParameter
   sortOrder?: ModelsSearchParamsSortOrderParameter

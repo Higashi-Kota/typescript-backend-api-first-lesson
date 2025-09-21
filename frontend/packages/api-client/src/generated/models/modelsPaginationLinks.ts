@@ -9,12 +9,24 @@
 export interface ModelsPaginationLinks {
   /** Link to current page */
   self: string
-  /** Link to first page */
-  first?: string
-  /** Link to last page */
-  last?: string
-  /** Link to next page */
-  next?: string
-  /** Link to previous page */
-  prev?: string
+  /**
+   * Link to first page
+   * @nullable
+   */
+  first: string | null
+  /**
+   * Link to last page
+   * @nullable
+   */
+  last: string | null
+  /**
+   * Link to next page
+   * @nullable
+   */
+  next: string | null
+  /**
+   * Link to previous page
+   * @nullable
+   */
+  prev: string | null
 }

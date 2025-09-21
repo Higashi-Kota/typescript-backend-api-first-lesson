@@ -171,7 +171,7 @@ namespace BeautySalon.Models {
 
   model PaginationMeta {
     @doc("Total number of items")
-    total?: int32;
+    total: int32 | null;
 
     @doc("Number of items per page")
     limit: int32;
@@ -180,13 +180,13 @@ namespace BeautySalon.Models {
     hasMore: boolean;
 
     @doc("Current cursor position")
-    cursor?: string;
+    cursor: string | null;
 
     @doc("Next cursor for pagination")
-    nextCursor?: string;
+    nextCursor: string | null;
 
     @doc("Previous cursor for pagination")
-    prevCursor?: string;
+    prevCursor: string | null;
   }
 
   model PaginationLinks {
@@ -194,16 +194,16 @@ namespace BeautySalon.Models {
     self: string;
 
     @doc("Link to first page")
-    first?: string;
+    first: string | null;
 
     @doc("Link to last page")
-    last?: string;
+    last: string | null;
 
     @doc("Link to next page")
-    next?: string;
+    next: string | null;
 
     @doc("Link to previous page")
-    prev?: string;
+    prev: string | null;
   }
 
   /**

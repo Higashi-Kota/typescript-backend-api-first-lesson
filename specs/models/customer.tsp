@@ -1,6 +1,7 @@
 import "@typespec/http";
 import "./common.tsp";
 import "./booking.tsp";
+import "./_shared/common-api-patterns.tsp";
 
 using TypeSpec.Http;
 using BeautySalon.Models;
@@ -29,24 +30,24 @@ namespace BeautySalon.Models {
 
   model MembershipBenefitDetail {
     type: MembershipBenefitType;
-    percentage?: int32;
-    multiplier?: decimal;
-    service?: string;
-    frequency?: "monthly" | "quarterly" | "yearly";
-    value?: int32;
-    description?: string;
+    percentage: int32 | null;
+    multiplier: decimal | null;
+    service: string | null;
+    frequency: "monthly" | "quarterly" | "yearly" | null;
+    value: int32 | null;
+    description: string | null;
   }
 
   model MembershipInfo {
     tier: MembershipTierType;
     since: utcDateTime;
     benefits: MembershipBenefitDetail[];
-    dedicatedManager?: string;
+    dedicatedManager: string | null;
     points: int32;
     totalPointsEarned: int32;
     totalPointsUsed: int32;
-    expiringPoints?: int32;
-    pointsExpireAt?: utcDateTime;
+    expiringPoints: int32 | null;
+    pointsExpireAt: utcDateTime | null;
   }
 
   // ============================================================================
@@ -63,11 +64,11 @@ namespace BeautySalon.Models {
 
   model CustomerStatusDetail {
     type: CustomerStatusType;
-    reason?: string;
-    since?: utcDateTime;
-    until?: utcDateTime;
-    by?: string;
-    deletedAt?: utcDateTime;
+    reason: string | null;
+    since: utcDateTime | null;
+    until: utcDateTime | null;
+    by: string | null;
+    deletedAt: utcDateTime | null;
   }
 
   // ============================================================================
@@ -91,11 +92,11 @@ namespace BeautySalon.Models {
 
   model AllergyInfo {
     type: AllergyType;
-    substances?: string[];
-    fragrances?: string[];
-    metals?: string[];
-    plants?: string[];
-    description?: string;
+    substances: string[] | null;
+    fragrances: string[] | null;
+    metals: string[] | null;
+    plants: string[] | null;
+    description: string | null;
     severity: AllergySeverityType;
   }
 
@@ -125,23 +126,23 @@ namespace BeautySalon.Models {
     thickness: HairThicknessType;
     condition: string[];
     chemicalHistory: string[];
-    notes?: string;
+    notes: string | null;
   }
 
   model ScalpInfo {
     condition: ScalpConditionType;
     sensitivities: string[];
-    notes?: string;
+    notes: string | null;
   }
 
   model CustomerHealth {
     allergies: AllergyInfo[];
-    hairInfo?: HairInfo;
-    scalpInfo?: ScalpInfo;
-    medicalConditions?: string[];
-    medications?: string[];
-    pregnancyStatus?: boolean;
-    specialNeeds?: string;
+    hairInfo: HairInfo | null;
+    scalpInfo: ScalpInfo | null;
+    medicalConditions: string[] | null;
+    medications: string[] | null;
+    pregnancyStatus: boolean | null;
+    specialNeeds: string | null;
   }
 
   // ============================================================================
@@ -149,36 +150,36 @@ namespace BeautySalon.Models {
   // ============================================================================
 
   model StylePreference {
-    preferredLength?: string;
-    preferredColors?: string[];
-    avoidStyles?: string[];
-    inspirationImages?: string[];
+    preferredLength: string | null;
+    preferredColors: string[] | null;
+    avoidStyles: string[] | null;
+    inspirationImages: string[] | null;
   }
 
   model ServicePreference {
-    favoriteServices?: ServiceId[];
-    avoidServices?: ServiceId[];
-    preferredDuration?: int32;
-    preferredPriceRange?: PriceRangeFilter;
+    favoriteServices: ServiceId[] | null;
+    avoidServices: ServiceId[] | null;
+    preferredDuration: int32 | null;
+    preferredPriceRange: PriceRangeFilter | null;
   }
 
   model CustomerPreferences {
-    stylePreferences?: StylePreference;
-    servicePreferences?: ServicePreference;
-    communicationPreferences?: NotificationSettings;
-    preferredStaff?: StaffId[];
-    avoidStaff?: StaffId[];
-    preferredDayOfWeek?: DayOfWeekType[];
-    preferredTimeSlots?: TimeSlot[];
-    specialRequests?: string;
-    language?: string;
+    stylePreferences: StylePreference | null;
+    servicePreferences: ServicePreference | null;
+    communicationPreferences: NotificationSettings | null;
+    preferredStaff: StaffId[] | null;
+    avoidStaff: StaffId[] | null;
+    preferredDayOfWeek: DayOfWeekType[] | null;
+    preferredTimeSlots: TimeSlot[] | null;
+    specialRequests: string | null;
+    language: string | null;
   }
 
   model VisitHistory {
     visitCount: int32;
-    firstVisitDate?: utcDateTime;
-    lastVisitDate?: utcDateTime;
-    averageSpendPerVisit?: int32;
+    firstVisitDate: utcDateTime | null;
+    lastVisitDate: utcDateTime | null;
+    averageSpendPerVisit: int32 | null;
     totalSpent: int32;
     cancelCount: int32;
     noShowCount: int32;
@@ -187,12 +188,12 @@ namespace BeautySalon.Models {
 
   model CustomerHistory {
     visits: VisitHistory;
-    lastServiceId?: ServiceId;
-    lastStaffId?: StaffId;
+    lastServiceId: ServiceId | null;
+    lastStaffId: StaffId | null;
     favoriteServiceIds: ServiceId[];
     favoriteStaffIds: StaffId[];
-    pastTreatments?: string[];
-    notes?: string[];
+    pastTreatments: string[] | null;
+    notes: string[] | null;
   }
 
   // ============================================================================
@@ -200,12 +201,12 @@ namespace BeautySalon.Models {
   // ============================================================================
 
   model CustomerAssociations {
-    primarySalonId?: SalonId;
+    primarySalonId: SalonId | null;
     visitedSalonIds: SalonId[];
-    familyMemberIds?: CustomerId[];
-    referredBy?: CustomerId;
-    referredCustomerIds?: CustomerId[];
-    groupId?: string;
+    familyMemberIds: CustomerId[] | null;
+    referredBy: CustomerId | null;
+    referredCustomerIds: CustomerId[] | null;
+    groupId: string | null;
   }
 
   // ============================================================================
@@ -213,20 +214,21 @@ namespace BeautySalon.Models {
   // ============================================================================
 
   model CustomerMetadata {
-    source?:
+    source:
       | "walk_in"
       | "online"
       | "phone"
       | "referral"
       | "social_media"
-      | "advertisement";
-    campaign?: string;
-    tags?: string[];
-    customFields?: Record<unknown>;
-    internalNotes?: string[];
-    riskScore?: int32;
-    lifetimeValue?: int32;
-    lastUpdatedBy?: string;
+      | "advertisement"
+      | null;
+    campaign: string | null;
+    tags: string[] | null;
+    customFields: Record<unknown> | null;
+    internalNotes: string[] | null;
+    riskScore: int32 | null;
+    lifetimeValue: int32 | null;
+    lastUpdatedBy: string | null;
   }
   // ============================================================================
   // Main Customer Model
@@ -238,61 +240,61 @@ namespace BeautySalon.Models {
     contactInfo: ContactInfo;
 
     @doc("Customer gender")
-    gender?: CustomerGenderType;
+    gender: CustomerGenderType | null;
 
     @doc("Birth date")
-    birthDate?: plainDate;
+    birthDate: plainDate | null;
 
     @doc("Address")
-    address?: Address;
+    address: Address | null;
 
     @doc("Preferences and requirements")
-    preferences?: string;
+    preferences: string | null;
 
     @doc("Internal notes")
-    notes?: string;
+    notes: string | null;
 
     @doc("Tags for categorization")
-    tags?: string[];
+    tags: string[] | null;
 
     @doc("Current loyalty points")
-    loyaltyPoints?: int32;
+    loyaltyPoints: int32 | null;
 
     @doc("Membership information")
-    membership?: MembershipInfo;
+    membership: MembershipInfo | null;
 
     @doc("NotificationType settings")
-    notificationSettings?: NotificationSettings;
+    notificationSettings: NotificationSettings | null;
 
     @doc("Health information")
-    health?: CustomerHealth;
+    health: CustomerHealth | null;
 
     @doc("Customer preferences")
-    customerPreferences?: CustomerPreferences;
+    customerPreferences: CustomerPreferences | null;
 
     @doc("Visit history")
-    history?: CustomerHistory;
+    history: CustomerHistory | null;
 
     @doc("Customer associations")
-    associations?: CustomerAssociations;
+    associations: CustomerAssociations | null;
 
     @doc("Customer status")
-    status?: CustomerStatusDetail;
+    status: CustomerStatusDetail | null;
 
     @doc("Customer metadata")
-    metadata?: CustomerMetadata;
+    metadata: CustomerMetadata | null;
 
     @doc("Medical chart ID")
-    medicalChartId?: MedicalChartId;
+    medicalChartId: MedicalChartId | null;
 
     @doc("Is active customer")
     isActive: boolean = true;
 
     @doc("Registration source")
-    registrationSource?: "walk_in" | "online" | "phone" | "referral";
+    registrationSource: "walk_in" | "online" | "phone" | "referral" | null;
 
     @doc("Referrer customer ID")
-    referredBy?: CustomerId;
+    referredBy: CustomerId | null;
 
     ...AuditInfo;
   }
@@ -334,16 +336,46 @@ namespace BeautySalon.Models {
 
   model CustomerProfile extends Customer {
     visitCount: int32;
-    lastVisitDate?: utcDateTime;
-    favoriteStaffIds?: StaffId[];
-    favoriteServiceIds?: ServiceId[];
+    lastVisitDate: utcDateTime | null;
+    favoriteStaffIds: StaffId[] | null;
+    favoriteServiceIds: ServiceId[] | null;
     totalSpent: int32;
   }
 
-  @doc("Customer search parameters - all fields are optional")
-  model SearchCustomerRequest {
-    @query search?: string;
-    @query tags?: string[];
+  /**
+   * Customer search request with extended parameters
+   * Extends from AdvancedSearchParams for pagination and advanced filtering
+   */
+  model SearchCustomerRequest extends AdvancedSearchParams {
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
+    @query
+    @doc("Search in customer name, email, or phone")
+    search?: string;
+
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
+    @query
+    @doc("Filter by customer tags")
+    tags?: string[];
+
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
+    @query
+    @doc("Filter by registration date from")
+    registeredFrom?: utcDateTime;
+
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
+    @query
+    @doc("Filter by registration date to")
+    registeredTo?: utcDateTime;
+
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
+    @query
+    @doc("Filter by customer status")
+    status?: "active" | "inactive" | "suspended" | "deleted" | "blacklisted";
+
+    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
+    @query
+    @doc("Filter by loyalty tier")
+    loyaltyTier?: "bronze" | "silver" | "gold" | "platinum";
   }
 
   @doc("Customer reservations filter parameters")
@@ -356,5 +388,94 @@ namespace BeautySalon.Models {
   @doc("Customer bookings filter parameters")
   model GetCustomerBookingsRequest {
     @query status?: BookingStatusCodeType;
+  }
+
+  /**
+   * Customer statistics response
+   */
+  model CustomerStatistics {
+    @doc("Total bookings")
+    totalBookings: int32;
+
+    @doc("Total spent")
+    totalSpent: Money;
+
+    @doc("Average booking value")
+    averageBookingValue: Money;
+
+    @doc("Last visit date")
+    lastVisit?: utcDateTime;
+
+    @doc("Favorite services")
+    favoriteServices: ServiceSummary[];
+
+    @doc("Favorite staff")
+    favoriteStaff: StaffSummary[];
+
+    @doc("Loyalty points")
+    loyaltyPoints: int32;
+
+    @doc("Customer since")
+    customerSince: utcDateTime;
+
+    @doc("Cancellation rate")
+    cancellationRate: float32;
+
+    @doc("No-show rate")
+    noShowRate: float32;
+  }
+
+  /**
+   * Notification preferences model
+   */
+  model NotificationPreferences {
+    @doc("Email notifications enabled")
+    email: boolean;
+
+    @doc("SMS notifications enabled")
+    sms: boolean;
+
+    @doc("Push notifications enabled")
+    push: boolean;
+
+    @doc("Reminder timing (hours before appointment)")
+    reminderHours: int32;
+  }
+
+  /**
+   * Time preference model
+   */
+  model TimePreference {
+    @doc("Day of week")
+    dayOfWeek: DayOfWeekType;
+
+    @doc("Preferred time slots")
+    timeSlots: TimeSlot[];
+  }
+
+  /**
+   * Customer preferences update model
+   */
+  model CustomerPreferencesUpdate {
+    @doc("Preferred contact method")
+    contactMethod: ContactMethodType;
+
+    @doc("NotificationType preferences")
+    notifications: NotificationPreferences;
+
+    @doc("Marketing opt-in status")
+    marketingOptIn: boolean;
+
+    @doc("Preferred language")
+    preferredLanguage?: string;
+
+    @doc("Accessibility requirements")
+    accessibilityRequirements?: string[];
+
+    @doc("Allergies or sensitivities")
+    allergies?: string[];
+
+    @doc("Preferred appointment times")
+    preferredTimes?: TimePreference[];
   }
 }

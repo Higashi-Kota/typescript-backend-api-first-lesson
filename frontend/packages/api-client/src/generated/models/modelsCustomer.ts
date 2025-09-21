@@ -7,63 +7,118 @@
  */
 import type { ModelsCustomerId } from './modelsCustomerId'
 import type { ModelsContactInfo } from './modelsContactInfo'
-import type { ModelsCustomerGenderType } from './modelsCustomerGenderType'
-import type { ModelsAddress } from './modelsAddress'
-import type { ModelsMembershipInfo } from './modelsMembershipInfo'
-import type { ModelsNotificationSettings } from './modelsNotificationSettings'
-import type { ModelsCustomerHealth } from './modelsCustomerHealth'
-import type { ModelsCustomerPreferences } from './modelsCustomerPreferences'
-import type { ModelsCustomerHistory } from './modelsCustomerHistory'
-import type { ModelsCustomerAssociations } from './modelsCustomerAssociations'
-import type { ModelsCustomerStatusDetail } from './modelsCustomerStatusDetail'
-import type { ModelsCustomerMetadata } from './modelsCustomerMetadata'
-import type { ModelsMedicalChartId } from './modelsMedicalChartId'
+import type { ModelsCustomerGender } from './modelsCustomerGender'
+import type { ModelsCustomerAddress } from './modelsCustomerAddress'
+import type { ModelsCustomerMembership } from './modelsCustomerMembership'
+import type { ModelsCustomerNotificationSettings } from './modelsCustomerNotificationSettings'
+import type { ModelsCustomerHealthProperty } from './modelsCustomerHealthProperty'
+import type { ModelsCustomerCustomerPreferences } from './modelsCustomerCustomerPreferences'
+import type { ModelsCustomerHistoryProperty } from './modelsCustomerHistoryProperty'
+import type { ModelsCustomerAssociationsProperty } from './modelsCustomerAssociationsProperty'
+import type { ModelsCustomerStatus } from './modelsCustomerStatus'
+import type { ModelsCustomerMetadataProperty } from './modelsCustomerMetadataProperty'
 import type { ModelsCustomerRegistrationSource } from './modelsCustomerRegistrationSource'
 
 export interface ModelsCustomer {
   id: ModelsCustomerId
   name: string
   contactInfo: ModelsContactInfo
-  /** Customer gender */
-  gender?: ModelsCustomerGenderType
-  /** Birth date */
-  birthDate?: string
-  /** Address */
-  address?: ModelsAddress
-  /** Preferences and requirements */
-  preferences?: string
-  /** Internal notes */
-  notes?: string
-  /** Tags for categorization */
-  tags?: string[]
-  /** Current loyalty points */
-  loyaltyPoints?: number
-  /** Membership information */
-  membership?: ModelsMembershipInfo
-  /** NotificationType settings */
-  notificationSettings?: ModelsNotificationSettings
-  /** Health information */
-  health?: ModelsCustomerHealth
-  /** Customer preferences */
-  customerPreferences?: ModelsCustomerPreferences
-  /** Visit history */
-  history?: ModelsCustomerHistory
-  /** Customer associations */
-  associations?: ModelsCustomerAssociations
-  /** Customer status */
-  status?: ModelsCustomerStatusDetail
-  /** Customer metadata */
-  metadata?: ModelsCustomerMetadata
-  /** Medical chart ID */
-  medicalChartId?: ModelsMedicalChartId
+  /**
+   * Customer gender
+   * @nullable
+   */
+  gender: ModelsCustomerGender
+  /**
+   * Birth date
+   * @nullable
+   */
+  birthDate: string | null
+  /**
+   * Address
+   * @nullable
+   */
+  address: ModelsCustomerAddress
+  /**
+   * Preferences and requirements
+   * @nullable
+   */
+  preferences: string | null
+  /**
+   * Internal notes
+   * @nullable
+   */
+  notes: string | null
+  /**
+   * Tags for categorization
+   * @nullable
+   */
+  tags: string[] | null
+  /**
+   * Current loyalty points
+   * @nullable
+   */
+  loyaltyPoints: number | null
+  /**
+   * Membership information
+   * @nullable
+   */
+  membership: ModelsCustomerMembership
+  /**
+   * NotificationType settings
+   * @nullable
+   */
+  notificationSettings: ModelsCustomerNotificationSettings
+  /**
+   * Health information
+   * @nullable
+   */
+  health: ModelsCustomerHealthProperty
+  /**
+   * Customer preferences
+   * @nullable
+   */
+  customerPreferences: ModelsCustomerCustomerPreferences
+  /**
+   * Visit history
+   * @nullable
+   */
+  history: ModelsCustomerHistoryProperty
+  /**
+   * Customer associations
+   * @nullable
+   */
+  associations: ModelsCustomerAssociationsProperty
+  /**
+   * Customer status
+   * @nullable
+   */
+  status: ModelsCustomerStatus
+  /**
+   * Customer metadata
+   * @nullable
+   */
+  metadata: ModelsCustomerMetadataProperty
+  /**
+   * Medical chart ID
+   * @nullable
+   */
+  medicalChartId: string | null
   /** Is active customer */
   isActive: boolean
-  /** Registration source */
-  registrationSource?: ModelsCustomerRegistrationSource
-  /** Referrer customer ID */
-  referredBy?: ModelsCustomerId
+  /**
+   * Registration source
+   * @nullable
+   */
+  registrationSource: ModelsCustomerRegistrationSource
+  /**
+   * Referrer customer ID
+   * @nullable
+   */
+  referredBy: string | null
   createdAt: string
-  createdBy?: string
+  /** @nullable */
+  createdBy: string | null
   updatedAt: string
-  updatedBy?: string
+  /** @nullable */
+  updatedBy: string | null
 }

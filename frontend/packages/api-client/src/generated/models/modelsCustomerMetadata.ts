@@ -9,12 +9,20 @@ import type { ModelsCustomerMetadataSource } from './modelsCustomerMetadataSourc
 import type { ModelsCustomerMetadataCustomFields } from './modelsCustomerMetadataCustomFields'
 
 export interface ModelsCustomerMetadata {
-  source?: ModelsCustomerMetadataSource
-  campaign?: string
-  tags?: string[]
-  customFields?: ModelsCustomerMetadataCustomFields
-  internalNotes?: string[]
-  riskScore?: number
-  lifetimeValue?: number
-  lastUpdatedBy?: string
+  /** @nullable */
+  source: ModelsCustomerMetadataSource
+  /** @nullable */
+  campaign: string | null
+  /** @nullable */
+  tags: string[] | null
+  /** @nullable */
+  customFields: ModelsCustomerMetadataCustomFields
+  /** @nullable */
+  internalNotes: string[] | null
+  /** @nullable */
+  riskScore: number | null
+  /** @nullable */
+  lifetimeValue: number | null
+  /** @nullable */
+  lastUpdatedBy: string | null
 }

@@ -25,11 +25,13 @@ import type {
   ModelsBatchGetRequest,
   ModelsCreateSalonRequest,
   ModelsProblemDetails,
+  ModelsSalonAvailabilityRequest,
   ModelsSalonId,
+  ModelsSalonSubscriptionRequest,
   ModelsStaffId,
+  ModelsStaffScheduleUpdateRequest,
   ModelsUpdateSalonRequest,
   ModelsUpdateSalonRequestUpdate,
-  OperationsSalonAvailabilityRequest,
   SalonCrudBatchGet200,
   SalonCrudBulkCreate207,
   SalonCrudBulkCreateBody,
@@ -62,9 +64,7 @@ import type {
   SalonOperationsGetStatistics200,
   SalonOperationsGetStatisticsParams,
   SalonOperationsSubscribe201,
-  SalonOperationsSubscribeBody,
   SalonOperationsUpdateStaffSchedule200,
-  SalonOperationsUpdateStaffScheduleBody,
 } from '../../models'
 
 import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher'
@@ -2148,7 +2148,7 @@ export const getSalonOperationsCheckAvailabilityUrl = (id: ModelsSalonId) => {
 
 export const salonOperationsCheckAvailability = async (
   id: ModelsSalonId,
-  operationsSalonAvailabilityRequest: OperationsSalonAvailabilityRequest,
+  modelsSalonAvailabilityRequest: ModelsSalonAvailabilityRequest,
   options?: RequestInit
 ): Promise<salonOperationsCheckAvailabilityResponse> => {
   return customInstance<salonOperationsCheckAvailabilityResponse>(
@@ -2157,7 +2157,7 @@ export const salonOperationsCheckAvailability = async (
       ...options,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(operationsSalonAvailabilityRequest),
+      body: JSON.stringify(modelsSalonAvailabilityRequest),
     }
   )
 }
@@ -2169,14 +2169,14 @@ export const getSalonOperationsCheckAvailabilityMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof salonOperationsCheckAvailability>>,
     TError,
-    { id: ModelsSalonId; data: OperationsSalonAvailabilityRequest },
+    { id: ModelsSalonId; data: ModelsSalonAvailabilityRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof salonOperationsCheckAvailability>>,
   TError,
-  { id: ModelsSalonId; data: OperationsSalonAvailabilityRequest },
+  { id: ModelsSalonId; data: ModelsSalonAvailabilityRequest },
   TContext
 > => {
   const mutationKey = ['salonOperationsCheckAvailability']
@@ -2190,7 +2190,7 @@ export const getSalonOperationsCheckAvailabilityMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof salonOperationsCheckAvailability>>,
-    { id: ModelsSalonId; data: OperationsSalonAvailabilityRequest }
+    { id: ModelsSalonId; data: ModelsSalonAvailabilityRequest }
   > = (props) => {
     const { id, data } = props ?? {}
 
@@ -2204,7 +2204,7 @@ export type SalonOperationsCheckAvailabilityMutationResult = NonNullable<
   Awaited<ReturnType<typeof salonOperationsCheckAvailability>>
 >
 export type SalonOperationsCheckAvailabilityMutationBody =
-  OperationsSalonAvailabilityRequest
+  ModelsSalonAvailabilityRequest
 export type SalonOperationsCheckAvailabilityMutationError = ModelsProblemDetails
 
 /**
@@ -2218,7 +2218,7 @@ export const useSalonOperationsCheckAvailability = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof salonOperationsCheckAvailability>>,
       TError,
-      { id: ModelsSalonId; data: OperationsSalonAvailabilityRequest },
+      { id: ModelsSalonId; data: ModelsSalonAvailabilityRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -2227,7 +2227,7 @@ export const useSalonOperationsCheckAvailability = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof salonOperationsCheckAvailability>>,
   TError,
-  { id: ModelsSalonId; data: OperationsSalonAvailabilityRequest },
+  { id: ModelsSalonId; data: ModelsSalonAvailabilityRequest },
   TContext
 > => {
   const mutationOptions =
@@ -2709,7 +2709,7 @@ export const getSalonOperationsUpdateStaffScheduleUrl = (
 export const salonOperationsUpdateStaffSchedule = async (
   id: ModelsSalonId,
   staffId: ModelsStaffId,
-  salonOperationsUpdateStaffScheduleBody: SalonOperationsUpdateStaffScheduleBody,
+  modelsStaffScheduleUpdateRequest: ModelsStaffScheduleUpdateRequest,
   options?: RequestInit
 ): Promise<salonOperationsUpdateStaffScheduleResponse> => {
   return customInstance<salonOperationsUpdateStaffScheduleResponse>(
@@ -2718,7 +2718,7 @@ export const salonOperationsUpdateStaffSchedule = async (
       ...options,
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(salonOperationsUpdateStaffScheduleBody),
+      body: JSON.stringify(modelsStaffScheduleUpdateRequest),
     }
   )
 }
@@ -2733,7 +2733,7 @@ export const getSalonOperationsUpdateStaffScheduleMutationOptions = <
     {
       id: ModelsSalonId
       staffId: ModelsStaffId
-      data: SalonOperationsUpdateStaffScheduleBody
+      data: ModelsStaffScheduleUpdateRequest
     },
     TContext
   >
@@ -2744,7 +2744,7 @@ export const getSalonOperationsUpdateStaffScheduleMutationOptions = <
   {
     id: ModelsSalonId
     staffId: ModelsStaffId
-    data: SalonOperationsUpdateStaffScheduleBody
+    data: ModelsStaffScheduleUpdateRequest
   },
   TContext
 > => {
@@ -2762,7 +2762,7 @@ export const getSalonOperationsUpdateStaffScheduleMutationOptions = <
     {
       id: ModelsSalonId
       staffId: ModelsStaffId
-      data: SalonOperationsUpdateStaffScheduleBody
+      data: ModelsStaffScheduleUpdateRequest
     }
   > = (props) => {
     const { id, staffId, data } = props ?? {}
@@ -2777,7 +2777,7 @@ export type SalonOperationsUpdateStaffScheduleMutationResult = NonNullable<
   Awaited<ReturnType<typeof salonOperationsUpdateStaffSchedule>>
 >
 export type SalonOperationsUpdateStaffScheduleMutationBody =
-  SalonOperationsUpdateStaffScheduleBody
+  ModelsStaffScheduleUpdateRequest
 export type SalonOperationsUpdateStaffScheduleMutationError =
   ModelsProblemDetails
 
@@ -2795,7 +2795,7 @@ export const useSalonOperationsUpdateStaffSchedule = <
       {
         id: ModelsSalonId
         staffId: ModelsStaffId
-        data: SalonOperationsUpdateStaffScheduleBody
+        data: ModelsStaffScheduleUpdateRequest
       },
       TContext
     >
@@ -2808,7 +2808,7 @@ export const useSalonOperationsUpdateStaffSchedule = <
   {
     id: ModelsSalonId
     staffId: ModelsStaffId
-    data: SalonOperationsUpdateStaffScheduleBody
+    data: ModelsStaffScheduleUpdateRequest
   },
   TContext
 > => {
@@ -3073,7 +3073,7 @@ export const getSalonOperationsSubscribeUrl = (id: ModelsSalonId) => {
 
 export const salonOperationsSubscribe = async (
   id: ModelsSalonId,
-  salonOperationsSubscribeBody: SalonOperationsSubscribeBody,
+  modelsSalonSubscriptionRequest: ModelsSalonSubscriptionRequest,
   options?: RequestInit
 ): Promise<salonOperationsSubscribeResponse> => {
   return customInstance<salonOperationsSubscribeResponse>(
@@ -3082,7 +3082,7 @@ export const salonOperationsSubscribe = async (
       ...options,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(salonOperationsSubscribeBody),
+      body: JSON.stringify(modelsSalonSubscriptionRequest),
     }
   )
 }
@@ -3094,14 +3094,14 @@ export const getSalonOperationsSubscribeMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof salonOperationsSubscribe>>,
     TError,
-    { id: ModelsSalonId; data: SalonOperationsSubscribeBody },
+    { id: ModelsSalonId; data: ModelsSalonSubscriptionRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof salonOperationsSubscribe>>,
   TError,
-  { id: ModelsSalonId; data: SalonOperationsSubscribeBody },
+  { id: ModelsSalonId; data: ModelsSalonSubscriptionRequest },
   TContext
 > => {
   const mutationKey = ['salonOperationsSubscribe']
@@ -3115,7 +3115,7 @@ export const getSalonOperationsSubscribeMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof salonOperationsSubscribe>>,
-    { id: ModelsSalonId; data: SalonOperationsSubscribeBody }
+    { id: ModelsSalonId; data: ModelsSalonSubscriptionRequest }
   > = (props) => {
     const { id, data } = props ?? {}
 
@@ -3128,7 +3128,8 @@ export const getSalonOperationsSubscribeMutationOptions = <
 export type SalonOperationsSubscribeMutationResult = NonNullable<
   Awaited<ReturnType<typeof salonOperationsSubscribe>>
 >
-export type SalonOperationsSubscribeMutationBody = SalonOperationsSubscribeBody
+export type SalonOperationsSubscribeMutationBody =
+  ModelsSalonSubscriptionRequest
 export type SalonOperationsSubscribeMutationError = ModelsProblemDetails
 
 /**
@@ -3142,7 +3143,7 @@ export const useSalonOperationsSubscribe = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof salonOperationsSubscribe>>,
       TError,
-      { id: ModelsSalonId; data: SalonOperationsSubscribeBody },
+      { id: ModelsSalonId; data: ModelsSalonSubscriptionRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -3151,7 +3152,7 @@ export const useSalonOperationsSubscribe = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof salonOperationsSubscribe>>,
   TError,
-  { id: ModelsSalonId; data: SalonOperationsSubscribeBody },
+  { id: ModelsSalonId; data: ModelsSalonSubscriptionRequest },
   TContext
 > => {
   const mutationOptions = getSalonOperationsSubscribeMutationOptions(options)

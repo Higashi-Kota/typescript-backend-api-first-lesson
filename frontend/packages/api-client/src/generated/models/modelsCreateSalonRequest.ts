@@ -11,15 +11,19 @@ import type { ModelsOpeningHours } from './modelsOpeningHours'
 import type { ModelsBusinessHours } from './modelsBusinessHours'
 
 /**
- * Salon creation request with required and optional fields
+ * Salon creation request - all keys required, values nullable where appropriate
  */
 export interface ModelsCreateSalonRequest {
   name: string
-  description: string
+  /** @nullable */
+  description: string | null
   address: ModelsAddress
   contactInfo: ModelsContactInfo
   openingHours: ModelsOpeningHours[]
-  businessHours?: ModelsBusinessHours[]
-  imageUrls?: string[]
-  features?: string[]
+  /** @nullable */
+  businessHours: ModelsBusinessHours[] | null
+  /** @nullable */
+  imageUrls: string[] | null
+  /** @nullable */
+  features: string[] | null
 }

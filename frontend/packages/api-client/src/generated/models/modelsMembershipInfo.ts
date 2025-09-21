@@ -12,10 +12,13 @@ export interface ModelsMembershipInfo {
   tier: ModelsMembershipTierType
   since: string
   benefits: ModelsMembershipBenefitDetail[]
-  dedicatedManager?: string
+  /** @nullable */
+  dedicatedManager: string | null
   points: number
   totalPointsEarned: number
   totalPointsUsed: number
-  expiringPoints?: number
-  pointsExpireAt?: string
+  /** @nullable */
+  expiringPoints: number | null
+  /** @nullable */
+  pointsExpireAt: string | null
 }

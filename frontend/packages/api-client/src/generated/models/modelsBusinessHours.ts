@@ -7,13 +7,16 @@
  */
 import type { ModelsDayOfWeekType } from './modelsDayOfWeekType'
 import type { ModelsTimeSlot } from './modelsTimeSlot'
-import type { ModelsDateRange } from './modelsDateRange'
+import type { ModelsBusinessHoursEffectivePeriod } from './modelsBusinessHoursEffectivePeriod'
 
 export interface ModelsBusinessHours {
   dayOfWeek: ModelsDayOfWeekType
   operatingSlots: ModelsTimeSlot[]
-  breakSlots?: ModelsTimeSlot[]
+  /** @nullable */
+  breakSlots: ModelsTimeSlot[] | null
   isClosed: boolean
-  effectivePeriod?: ModelsDateRange
-  timezone?: string
+  /** @nullable */
+  effectivePeriod: ModelsBusinessHoursEffectivePeriod
+  /** @nullable */
+  timezone: string | null
 }

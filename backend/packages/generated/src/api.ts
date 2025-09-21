@@ -10,8 +10,8 @@ export type {
   $defs,
 } from './api-types'
 
-// Re-export helper types that are actually used
-export type {
-  Components,
-  Schemas,
-} from './api-types'
+import type { components } from './api-types'
+
+// Components and Schemas types (if needed for backward compatibility)
+export type Components = components
+export type Schemas = components['schemas']

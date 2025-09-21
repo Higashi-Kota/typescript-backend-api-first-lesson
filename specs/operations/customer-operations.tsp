@@ -15,124 +15,6 @@ using BeautySalon.Models;
 using BeautySalon.Operations;
 
 namespace BeautySalon.Operations {
-  /**
-   * Extended search parameters for customer queries
-   */
-  model CustomerSearchParams extends AdvancedSearchParams {
-    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
-    @query
-    @doc("Search in customer name, email, or phone")
-    search?: string;
-
-    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
-    @query
-    @doc("Filter by customer tags")
-    tags?: string[];
-
-    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
-    @query
-    @doc("Filter by registration date from")
-    registeredFrom?: utcDateTime;
-
-    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
-    @query
-    @doc("Filter by registration date to")
-    registeredTo?: utcDateTime;
-
-    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
-    @query
-    @doc("Filter by customer status")
-    status?: "active" | "inactive" | "suspended" | "deleted" | "blacklisted";
-
-    #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
-    @query
-    @doc("Filter by loyalty tier")
-    loyaltyTier?: "bronze" | "silver" | "gold" | "platinum";
-  }
-
-  /**
-   * Customer statistics response
-   */
-  model CustomerStatistics {
-    @doc("Total bookings")
-    totalBookings: int32;
-
-    @doc("Total spent")
-    totalSpent: Money;
-
-    @doc("Average booking value")
-    averageBookingValue: Money;
-
-    @doc("Last visit date")
-    lastVisit?: utcDateTime;
-
-    @doc("Favorite services")
-    favoriteServices: ServiceSummary[];
-
-    @doc("Favorite staff")
-    favoriteStaff: StaffSummary[];
-
-    @doc("Loyalty points")
-    loyaltyPoints: int32;
-
-    @doc("Customer since")
-    customerSince: utcDateTime;
-
-    @doc("Cancellation rate")
-    cancellationRate: float32;
-
-    @doc("No-show rate")
-    noShowRate: float32;
-  }
-
-  /**
-   * Customer preferences model
-   */
-  model CustomerPreferences {
-    @doc("Preferred contact method")
-    contactMethod: ContactMethodType;
-
-    @doc("NotificationType preferences")
-    notifications: NotificationPreferences;
-
-    @doc("Marketing opt-in status")
-    marketingOptIn: boolean;
-
-    @doc("Preferred language")
-    preferredLanguage?: string;
-
-    @doc("Accessibility requirements")
-    accessibilityRequirements?: string[];
-
-    @doc("Allergies or sensitivities")
-    allergies?: string[];
-
-    @doc("Preferred appointment times")
-    preferredTimes?: TimePreference[];
-  }
-
-  model NotificationPreferences {
-    @doc("Email notifications enabled")
-    email: boolean;
-
-    @doc("SMS notifications enabled")
-    sms: boolean;
-
-    @doc("Push notifications enabled")
-    push: boolean;
-
-    @doc("Reminder timing (hours before appointment)")
-    reminderHours: int32;
-  }
-
-  model TimePreference {
-    @doc("Day of week")
-    dayOfWeek: DayOfWeekType;
-
-    @doc("Preferred time slots")
-    timeSlots: TimeSlot[];
-  }
-
   @route("/api/v1/customers")
   @tag("Customers")
   namespace CustomerOperations {
@@ -145,7 +27,7 @@ namespace BeautySalon.Operations {
           Customer,
           CreateCustomerRequest,
           UpdateCustomerRequest,
-          CustomerSearchParams,
+          SearchCustomerRequest,
           CustomerId
         >,
         BulkOperations<
@@ -154,7 +36,7 @@ namespace BeautySalon.Operations {
           UpdateCustomerRequest,
           CustomerId
         >,
-        SearchOperations<Customer, CustomerSearchParams>,
+        SearchOperations<Customer, SearchCustomerRequest>,
         AuditOperations<Customer, CustomerId> {}
 
     /**
@@ -268,7 +150,7 @@ namespace BeautySalon.Operations {
     @route("{id}/preferences")
     op updatePreferences(
       @path id: CustomerId,
-      @body preferences: CustomerPreferences,
+      @body preferences: CustomerPreferencesUpdate,
       @header("Authorization") authorization?: string,
     ):
       | {

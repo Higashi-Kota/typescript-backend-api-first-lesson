@@ -33,7 +33,9 @@ export interface ModelsPointTransaction {
   /** Transaction timestamp */
   transactedAt: string
   createdAt: string
-  createdBy?: string
+  /** @nullable */
+  createdBy: string | null
   updatedAt: string
-  updatedBy?: string
+  /** @nullable */
+  updatedBy: string | null
 }

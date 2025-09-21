@@ -30,7 +30,6 @@
   "ignoreDependencies": [
     "husky",
     "lint-staged",
-    "@changesets/cli",
     "@biomejs/biome",
     "typescript",
     "tsx"

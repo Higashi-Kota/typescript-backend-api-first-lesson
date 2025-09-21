@@ -1,52 +1,247 @@
 # Sum型とパターンマッチング
 
-TypeScriptにおけるSum型（判別共用体）とts-patternを使用した網羅的パターンマッチングのガイドです。
+**実装済みのSalonドメイン**で使用されているSum型（判別共用体）とts-patternを使用した網羅的パターンマッチングのガイドです。
 
-## ts-patternを使用した網羅的パターンマッチング
+## Result型での ts-pattern 活用（実装版）
 
-### 基本的な使用法
+### 基本的なResult型パターンマッチング
 
 ```typescript
-import { match, P } from 'ts-pattern';
+// backend/packages/utility/src/result/result.ts
+import { match } from 'ts-pattern'
 
-// Sum型の定義
-type ApiResponse<T> = 
-  | { status: 'success'; data: T }
-  | { status: 'error'; code: string; message: string }
-  | { status: 'loading' }
-  | { status: 'notFound'; resource: string };
+export type Result<T, E> =
+  | { type: 'success'; data: T }
+  | { type: 'error'; error: E }
 
-// ts-patternによる網羅的マッチング
-function handleResponse<T>(response: ApiResponse<T>): string {
-  return match(response)
-    .with({ status: 'success' }, ({ data }) => 
-      `Success: ${JSON.stringify(data)}`
-    )
-    .with({ status: 'error' }, ({ code, message }) => 
-      `Error ${code}: ${message}`
-    )
-    .with({ status: 'loading' }, () => 
-      'Loading...'
-    )
-    .with({ status: 'notFound' }, ({ resource }) => 
-      `${resource} not found`
-    )
-    .exhaustive(); // コンパイル時に全ケースの処理を保証
+// UseCase でのパターンマッチング例
+export class CreateSalonUseCase {
+  async execute(
+    request: ApiCreateSalonRequest
+  ): Promise<Result<ApiSalon, DomainError>> {
+
+    const validation = this.validate(request)
+    if (Result.isError(validation)) {
+      return validation // エラー時の早期return
+    }
+
+    const emailExists = await this.repository.existsByEmail(request.contactInfo.email)
+    // Result型のネストしたパターンマッチング
+    return match(emailExists)
+      .with({ type: 'success', data: true }, () =>
+        Result.error(DomainErrors.alreadyExists('Salon', 'email', request.contactInfo.email))
+      )
+      .with({ type: 'success', data: false }, async () => {
+        // メイン処理
+        const createResult = await this.repository.create(/* ... */)
+        return createResult
+      })
+      .with({ type: 'error' }, ({ error }) => Result.error(error))
+      .exhaustive()
+  }
 }
 ```
 
-## 複雑なパターンマッチング
-
-### 複数条件の組み合わせ
+### API層での網羅的エラーハンドリング
 
 ```typescript
-type PaymentEvent = 
-  | { type: 'initiated'; amount: number; currency: string }
-  | { type: 'processing'; transactionId: string }
-  | { type: 'completed'; transactionId: string; receipt: string }
-  | { type: 'failed'; reason: string; retryable: boolean };
+// backend/packages/api/src/routes/salon.routes.ts
+import { match } from 'ts-pattern'
 
-type UserRole = 'admin' | 'user' | 'guest';
+const createSalonHandler: RequestHandler = async (req, res, next) => {
+  try {
+    const useCase = new CreateSalonUseCase(repository)
+    const result = await useCase.execute(req.body)
+
+    // Result型の網羅的処理
+    match(result)
+      .with({ type: 'success' }, ({ data }) => {
+        const response: CreateSalonResponse = {
+          data,
+          meta: {
+            correlationId: `req-${Date.now()}`,
+            timestamp: new Date().toISOString(),
+            version: '1.0.0',
+          },
+          links: {
+            self: `/salons/${data.id}`,
+            list: '/salons',
+          },
+        }
+        res.status(201).json(response)
+      })
+      .with({ type: 'error' }, ({ error }) =>
+        handleDomainError(res as Response<ErrorResponse>, error)
+      )
+      .exhaustive() // 全パターンの処理を保証
+  } catch (error) {
+    next(error)
+  }
+}
+```
+
+## DomainError Sum型パターン（実装版）
+
+### 複数エラー型の判別処理
+
+```typescript
+// backend/packages/domain/src/shared/errors.ts
+export type DomainError =
+  | { type: 'validation'; message: string; code: string; details: string[] }
+  | { type: 'notFound'; entity: string; id: string }
+  | { type: 'alreadyExists'; entity: string; field: string; value: string }
+  | { type: 'businessRule'; rule: string; message: string }
+  | { type: 'database'; message: string; cause?: unknown }
+
+// エラーハンドリングでの判別処理
+const handleDomainError = (res: Response, error: DomainError): Response => {
+  const problemDetails = match(error)
+    .with({ type: 'validation' }, ({ message, code, details }) => ({
+      type: 'https://example.com/probs/validation-error',
+      title: 'Validation Error',
+      status: 400,
+      detail: message,
+      code,
+      errors: details,
+      timestamp: new Date().toISOString(),
+    }))
+    .with({ type: 'notFound' }, ({ entity, id }) => ({
+      type: 'https://example.com/probs/not-found',
+      title: 'Not Found',
+      status: 404,
+      detail: `${entity} with ID ${id} not found`,
+      code: 'NOT_FOUND',
+      timestamp: new Date().toISOString(),
+    }))
+    .with({ type: 'alreadyExists' }, ({ entity, field, value }) => ({
+      type: 'https://example.com/probs/already-exists',
+      title: 'Already Exists',
+      status: 409,
+      detail: `${entity} with ${field} '${value}' already exists`,
+      code: 'ALREADY_EXISTS',
+      timestamp: new Date().toISOString(),
+    }))
+    .with({ type: 'businessRule' }, ({ rule, message }) => ({
+      type: 'https://example.com/probs/business-rule',
+      title: 'Business Rule Violation',
+      status: 422,
+      detail: message,
+      code: rule.toUpperCase(),
+      timestamp: new Date().toISOString(),
+    }))
+    .with({ type: 'database' }, ({ message }) => ({
+      type: 'https://example.com/probs/internal-error',
+      title: 'Internal Server Error',
+      status: 500,
+      detail: 'An internal error occurred',
+      code: 'INTERNAL_ERROR',
+      timestamp: new Date().toISOString(),
+    }))
+    .exhaustive()
+
+  return res.status(problemDetails.status).json(problemDetails)
+}
+```
+
+## Repository Result型パターン（実装版）
+
+### データベース操作での Result パターン
+
+```typescript
+// backend/packages/infrastructure/src/repositories/salon.repository.impl.ts
+export class SalonRepository implements ISalonRepository {
+  async findById(id: SalonId): Promise<Result<DbSalon | null, DomainError>> {
+    try {
+      const [salon] = await this.db
+        .select()
+        .from(salons)
+        .where(and(eq(salons.id, id), isNull(salons.deletedAt)))
+        .limit(1)
+
+      return Result.success(salon ?? null)
+    } catch (error) {
+      return Result.error(
+        DomainErrors.database(
+          'Failed to find salon by ID',
+          error instanceof Error ? error.message : error
+        )
+      )
+    }
+  }
+
+  async existsByEmail(email: string): Promise<Result<boolean, DomainError>> {
+    try {
+      const [result] = await this.db
+        .select({ count: sql<number>`count(*)::int` })
+        .from(salons)
+        .where(and(eq(salons.email, email), isNull(salons.deletedAt)))
+
+      return Result.success((result?.count ?? 0) > 0)
+    } catch (error) {
+      return Result.error(
+        DomainErrors.database(
+          'Failed to check salon email existence',
+          error instanceof Error ? error.message : error
+        )
+      )
+    }
+  }
+}
+```
+
+## 高度なパターンマッチング（実装可能パターン）
+
+### ガード付きパターンマッチング
+
+```typescript
+import { match, P } from 'ts-pattern'
+
+type SalonState =
+  | { type: 'active'; salon: DbSalon }
+  | { type: 'inactive'; salon: DbSalon; reason: string }
+  | { type: 'pending'; salon: DbSalon; reviewDate: string }
+
+const processSalonState = (state: SalonState): string => {
+  return match(state)
+    .with({ type: 'active' }, ({ salon }) =>
+      `Active salon: ${salon.name}`
+    )
+    .with(
+      { type: 'pending', reviewDate: P.when(date =>
+        new Date(date) < new Date()
+      )},
+      ({ salon }) => `Review overdue for: ${salon.name}`
+    )
+    .with({ type: 'pending' }, ({ salon, reviewDate }) =>
+      `Pending review: ${salon.name} (${reviewDate})`
+    )
+    .with({ type: 'inactive' }, ({ salon, reason }) =>
+      `Inactive: ${salon.name} (${reason})`
+    )
+    .exhaustive()
+}
+```
+
+### 配列パターンマッチング
+
+```typescript
+type ValidationResult =
+  | { type: 'success'; data: unknown }
+  | { type: 'error'; errors: string[] }
+
+const handleValidationErrors = (result: ValidationResult): string => {
+  return match(result)
+    .with({ type: 'success' }, () => 'Validation passed')
+    .with({ type: 'error', errors: [] }, () => 'No specific errors')
+    .with({ type: 'error', errors: [P.string] }, ({ errors }) =>
+      `Single error: ${errors[0]}`
+    )
+    .with({ type: 'error', errors: P.array(P.string) }, ({ errors }) =>
+      `Multiple errors: ${errors.join(', ')}`
+    )
+    .exhaustive()
+}
+```
 
 interface Context {
   event: PaymentEvent;

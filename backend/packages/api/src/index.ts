@@ -7,6 +7,7 @@ import cors from 'cors'
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
 import express, { type Express } from 'express'
 import helmet from 'helmet'
+import salonRoutes from './routes/salon.routes'
 
 // 依存関係の型
 export type AppDependencies = {
@@ -34,7 +35,8 @@ export const createApp = (_deps: AppDependencies): Express => {
     res.json({ status: 'ok' })
   })
 
-  // API routes will be added here as we implement features
+  // API routes
+  app.use('/api/v1', salonRoutes)
 
   return app
 }

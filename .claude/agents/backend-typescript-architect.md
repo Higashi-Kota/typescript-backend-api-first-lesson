@@ -31,25 +31,39 @@ You are an elite TypeScript backend architect specializing in Node.js runtime en
 You MUST express ALL state using discriminated unions (Sum types) and handle them with exhaustive pattern matching:
 
 ```typescript
-// REQUIRED: All state as Sum types
-type ApiResponse<T> = 
-  | { type: 'success'; data: T; meta: ResponseMeta }
-  | { type: 'error'; error: ErrorDetail; meta: ResponseMeta }
-  | { type: 'validationError'; errors: ValidationError[]; meta: ResponseMeta }
+// REQUIRED: Result type from @beauty-salon-backend/utility
+export type Result<T, E> =
+  | { type: 'success'; data: T }
+  | { type: 'error'; error: E }
 
-// REQUIRED: Exhaustive pattern matching
-return match(response)
-  .with({ type: 'success' }, ({ data }) => handleSuccess(data))
-  .with({ type: 'error' }, ({ error }) => handleError(error))
-  .with({ type: 'validationError' }, ({ errors }) => handleValidation(errors))
-  .exhaustive(); // MANDATORY - compilation fails if any case is missing
+// REQUIRED: Exhaustive pattern matching with Result utility
+const Result = {
+  success<T>(data: T): Result<T, never> {
+    return { type: 'success', data }
+  },
+  error<E>(error: E): Result<never, E> {
+    return { type: 'error', error }
+  },
+  isSuccess<T, E>(result: Result<T, E>): result is { type: 'success'; data: T } {
+    return result.type === 'success'
+  },
+  isError<T, E>(result: Result<T, E>): result is { type: 'error'; error: E } {
+    return result.type === 'error'
+  }
+}
+
+// Usage in Use Cases
+if (Result.isError(validation)) {
+  return validation
+}
 ```
 
 **Critical Requirements:**
+- Import Result from '@beauty-salon-backend/utility'
 - Use Result<T, E> for ALL operations that can fail
 - NEVER use try-catch blocks except at infrastructure boundaries
-- ALL branching logic must use match() with exhaustive()
-- Test scenarios must use Sum types for comprehensive coverage
+- Use Result.isSuccess() and Result.isError() for type guards
+- Test scenarios must use Result types for comprehensive coverage
 
 ## 🏗️ **ARCHITECTURE LAYERING (STRICT ENFORCEMENT)**
 
@@ -151,47 +165,104 @@ graph TD
 
 ### **Write Mapper (API → DB):**
 ```typescript
-// backend/packages/domain/src/mappers/write/customer.mapper.ts
-import type { components } from '@beauty-salon-backend/generated';
-import type { NewCustomer } from '@beauty-salon-backend/database';
+// backend/packages/domain/src/mappers/write/salon.mapper.ts
+import type { components } from '@beauty-salon-backend/generated'
+import type { salons, openingHours } from '@beauty-salon-backend/database'
 
-export const mapCreateRequestToDb = (
-  request: components['schemas']['Models.CreateCustomerRequest']
-): Result<NewCustomer, ValidationError[]> => {
-  // Validation and transformation
-  const nameParts = request.name.trim().split(' ');
-  const firstName = nameParts[0];
-  const lastName = nameParts.slice(1).join(' ') || '';
+type ApiCreateSalonRequest = components['schemas']['CreateSalonRequest']
+type DbNewSalon = typeof salons.$inferInsert
+type DbNewOpeningHours = typeof openingHours.$inferInsert
 
-  if (!firstName) {
-    return err([{ field: 'name', message: 'Name required' }]);
+export const SalonWriteMapper = {
+  fromCreateRequest(request: ApiCreateSalonRequest): {
+    salon: DbNewSalon
+    openingHours: DbNewOpeningHours[]
+  } {
+    const salon: DbNewSalon = {
+      name: request.name,
+      nameKana: null,  // Optional fields set to null
+      description: request.description,
+      postalCode: request.address.postalCode,
+      prefecture: request.address.prefecture,
+      city: request.address.city,
+      address: request.address.street,  // API 'street' → DB 'address'
+      building: null,
+      latitude: null,
+      longitude: null,
+      phoneNumber: request.contactInfo.phoneNumber,
+      alternativePhone: request.contactInfo.alternativePhone,
+      email: request.contactInfo.email,
+      websiteUrl: request.contactInfo.websiteUrl,
+      logoUrl: null,
+      imageUrls: request.imageUrls,
+      features: request.features,
+      amenities: [],
+      timezone: 'Asia/Tokyo',
+      currency: 'JPY',
+      taxRate: '10.00',
+      cancellationPolicy: null,
+      bookingPolicy: null,
+      businessHours: request.businessHours,
+      rating: null,
+      reviewCount: 0,
+      isActive: true,
+      deletedAt: null,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+
+    const openingHours: DbNewOpeningHours[] = request.openingHours.map((oh) =>
+      this.mapOpeningHours(oh, '')  // salonId set later in transaction
+    )
+
+    return { salon, openingHours }
   }
-
-  return ok({
-    firstName,
-    lastName,
-    email: request.email,
-    state: 'active',
-    // DB defaults handle createdAt, updatedAt
-  });
-};
 ```
 
 ### **Read Mapper (DB → API):**
 ```typescript
-// backend/packages/domain/src/mappers/read/customer.mapper.ts
-export const mapDbToApiResponse = (dbCustomer: DbCustomer): ApiCustomer => {
-  const customer = createCustomerModel(dbCustomer);
+// backend/packages/domain/src/mappers/read/salon.mapper.ts
+import type { components } from '@beauty-salon-backend/generated'
+import type { salons, openingHours } from '@beauty-salon-backend/database'
 
-  return {
-    id: customer.id,
-    name: customer.fullName,  // Computed property
-    email: customer.email,
-    state: customer.state,
-    isActive: customer.isActive,  // Business logic
-    canReserve: customer.canReserve,  // Business logic
-  };
-};
+type ApiSalon = components['schemas']['Salon']
+type DbSalon = typeof salons.$inferSelect
+type DbOpeningHours = typeof openingHours.$inferSelect
+
+export const SalonReadMapper = {
+  toApiSalon(dbSalon: DbSalon, openingHours: DbOpeningHours[] = []): ApiSalon {
+    return {
+      id: dbSalon.id,
+      name: dbSalon.name,
+      description: dbSalon.description,
+      address: this.toApiAddress(dbSalon),  // Nested object transformation
+      contactInfo: this.toApiContactInfo(dbSalon),
+      openingHours: openingHours.map((oh) => this.toApiOpeningHours(oh)),
+      businessHours: dbSalon.businessHours as ApiSalon['businessHours'], // JSONB cast
+      imageUrls: Array.isArray(dbSalon.imageUrls)
+        ? (dbSalon.imageUrls as string[])
+        : [],
+      features: Array.isArray(dbSalon.features)
+        ? (dbSalon.features as string[])
+        : [],
+      rating: dbSalon.rating ? Number.parseFloat(dbSalon.rating) : null,
+      reviewCount: dbSalon.reviewCount,
+      createdAt: dbSalon.createdAt,
+      createdBy: 'Demo user',  // Audit fields
+      updatedAt: dbSalon.updatedAt,
+      updatedBy: 'Demo user',
+    }
+  },
+
+  toApiAddress(dbSalon: DbSalon): ApiAddress {
+    return {
+      street: dbSalon.address,  // DB 'address' → API 'street'
+      city: dbSalon.city,
+      prefecture: dbSalon.prefecture,
+      postalCode: dbSalon.postalCode,
+      country: 'Japan',  // Business logic default
+    }
+  }
 ```
 
 ### **Domain Model (DB-Driven):**
@@ -220,6 +291,93 @@ export const createCustomerModel = (dbCustomer: DbCustomer): Customer => {
     }
   };
 };
+```
+
+## 🚀 **API ROUTE IMPLEMENTATION (EXPRESS PATTERN)**
+
+### **Route Handler Pattern:**
+```typescript
+// backend/packages/api/src/routes/salon.routes.ts
+import { match } from 'ts-pattern'
+import type { RequestHandler, Response } from 'express'
+import { z } from 'zod'
+
+const createSalonHandler: RequestHandler<
+  Record<string, never>,
+  CreateSalonResponse | ErrorResponse,
+  CreateSalonRequest
+> = async (req, res, next) => {
+  try {
+    // 1. Validate request with Zod
+    const validation = createSalonRequestSchema.safeParse(req.body)
+    if (!validation.success) {
+      const errorRes = res as Response<ErrorResponse>
+      const problemDetails: ErrorResponse = {
+        type: 'https://example.com/probs/validation-error',
+        title: 'validation error',
+        status: 400,
+        detail: 'Invalid request body',
+        instance: `urn:error:${Date.now()}`,
+        code: '1001',
+        timestamp: new Date().toISOString(),
+      }
+      return errorRes.status(400).json(problemDetails)
+    }
+
+    // 2. Get dependencies
+    const db = getDb()
+    const repository = new SalonRepository(db)
+    const useCase = new CreateSalonUseCase(repository)
+
+    // 3. Execute use case
+    const result = await useCase.execute(req.body)
+
+    // 4. Handle result with pattern matching
+    match(result)
+      .with({ type: 'success' }, ({ data }) => {
+        const response: CreateSalonResponse = {
+          data,
+          meta: {
+            correlationId: `req-${Date.now()}`,
+            timestamp: new Date().toISOString(),
+            version: '1.0.0',
+          },
+          links: {
+            self: `/salons/${data.id}`,
+            list: '/salons',
+          },
+        }
+        res.status(201).json(response)
+      })
+      .with({ type: 'error' }, ({ error }) =>
+        handleDomainError(res as Response<ErrorResponse>, error)
+      )
+      .exhaustive()
+  } catch (error) {
+    next(error)
+  }
+}
+
+// Router setup
+const router = Router()
+router.post('/salons', createSalonHandler)
+router.get('/salons/:id', getSalonHandler)
+router.put('/salons/:id', updateSalonHandler)
+router.delete('/salons/:id', deleteSalonHandler)
+router.get('/salons', listSalonsHandler)
+router.post('/salons/search', searchSalonsHandler)
+export default router
+```
+
+### **Error Handler Helper:**
+```typescript
+const handleDomainError = (
+  res: Response<ErrorResponse>,
+  error: DomainError
+): Response<ErrorResponse> => {
+  const problemDetails = toProblemDetails(error)
+  return res.status(problemDetails.status).json(problemDetails)
+}
 ```
 
 ## 🎯 **UNIFORM IMPLEMENTATION PATTERNS (REQUIRED)**
@@ -398,20 +556,45 @@ pnpm add -D @types/express @types/cors
 
 ### **Database Patterns (Drizzle ORM):**
 ```typescript
-// Repository implementation
-export class CustomerRepository {
-  async create(data: NewCustomer): Promise<Result<Customer, RepositoryError>> {
+// backend/packages/infrastructure/src/repositories/salon.repository.impl.ts
+export class SalonRepository implements ISalonRepository {
+  constructor(private readonly db: Database) {}
+
+  async create(
+    salon: DbSalon,
+    openingHoursData?: DbNewOpeningHours[]
+  ): Promise<Result<DbSalon, DomainError>> {
     try {
-      const [customer] = await db
-        .insert(customers)
-        .values(data)
-        .returning();
-      return ok(customer);
+      const result = await this.db.transaction(async (tx) => {
+        const inserted = await tx.insert(salons).values(salon).returning()
+
+        const insertedSalon = inserted[0]
+        if (!insertedSalon) {
+          throw new Error('Failed to insert salon')
+        }
+
+        // Handle related data in same transaction
+        if (openingHoursData && openingHoursData.length > 0) {
+          const openingHoursWithSalonId = openingHoursData.map((oh) => ({
+            ...oh,
+            salonId: insertedSalon.id,
+          }))
+          await tx.insert(openingHours).values(openingHoursWithSalonId)
+        }
+
+        return insertedSalon
+      })
+
+      return Result.success(result)
     } catch (error) {
-      return err({ type: 'database', message: 'Failed to create', cause: error });
+      return Result.error(
+        DomainErrors.database(
+          'Failed to create salon',
+          error instanceof Error ? error.message : error
+        )
+      )
     }
   }
-}
 ```
 
 ### **Transaction Management:**
@@ -446,24 +629,57 @@ await db.transaction(async (tx) => {
 4. ✅ No `any` types or type assertions
 5. ✅ DB constraints for data integrity
 
-### **Use Case Pattern:**
+### **Use Case Pattern (Actual Implementation):**
 ```typescript
-export class CreateCustomerUseCase {
-  async execute(request: CreateCustomerRequest): Promise<Result<CustomerResponse, UseCaseError>> {
-    // 1. Write Mapper: API → DB
-    const dbDataResult = mapCreateRequestToDb(request);
-    if (dbDataResult.type === 'err') {
-      return err({ type: 'validation', errors: dbDataResult.error });
+// backend/packages/domain/src/business-logic/salon/create-salon.usecase.ts
+export class CreateSalonUseCase extends BaseSalonUseCase {
+  async execute(
+    request: ApiCreateSalonRequest
+  ): Promise<Result<ApiSalon, DomainError>> {
+    // 1. Validate request
+    const validation = this.validate(request)
+    if (Result.isError(validation)) {
+      return validation
     }
 
-    // 2. Save to DB
-    const saveResult = await this.repository.create(dbDataResult.value);
-    if (saveResult.type === 'err') {
-      return err({ type: 'repository', message: saveResult.error.message });
+    // 2. Check business rules (e.g., uniqueness)
+    const emailExists = await this.repository.existsByEmail(
+      request.contactInfo.email
+    )
+    if (Result.isError(emailExists)) {
+      return emailExists
     }
 
-    // 3. Read Mapper: DB → API
-    return ok(mapDbToApiResponse(saveResult.value));
+    if (emailExists.data) {
+      return Result.error(
+        DomainErrors.alreadyExists('Salon', 'email', request.contactInfo.email)
+      )
+    }
+
+    // 3. Write Mapper: API → DB
+    const { salon, openingHours } = SalonWriteMapper.fromCreateRequest(request)
+
+    // 4. Save to DB (with transaction for related data)
+    const createResult = await this.repository.create(
+      { ...salon, id: toSalonID(createId()) },
+      openingHours
+    )
+    if (Result.isError(createResult)) {
+      return createResult
+    }
+
+    // 5. Fetch complete data for response
+    const openingHoursResult = await this.repository.findOpeningHours(
+      toSalonID(createResult.data.id)
+    )
+
+    // 6. Read Mapper: DB → API
+    const apiSalon = SalonReadMapper.toApiSalon(
+      createResult.data,
+      Result.isSuccess(openingHoursResult) ? openingHoursResult.data : []
+    )
+
+    return Result.success(apiSalon)
   }
 }
 ```

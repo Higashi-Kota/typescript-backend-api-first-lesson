@@ -53,22 +53,8 @@ async function generateTypesFromOpenAPI(): Promise<void> {
   // Read and enhance generated types
   const baseTypes = readFileSync(tempOutput, 'utf-8')
 
-  // DO NOT transform string types to branded types
-  // Domain package has its own brand type definitions
-  // baseTypes = transformBrandedTypes(baseTypes)
-
-  // Generate additional type utilities
-  const brandTypes = generateBrandTypes()
-  const helperTypes = generateHelperTypes()
-  const extractorTypes = generateExtractorTypes()
-
   // Create final api-types.ts directly in src/
-  const apiTypesContent = createApiTypesFile(
-    baseTypes,
-    brandTypes,
-    helperTypes,
-    extractorTypes
-  )
+  const apiTypesContent = createApiTypesFile(baseTypes)
   writeFileSync(join(outputDir, 'api-types.ts'), apiTypesContent)
 
   // Generate additional files
@@ -93,64 +79,15 @@ async function generateTypesFromOpenAPI(): Promise<void> {
 }
 
 /**
- * Generate Brand type utilities and type declarations
- * DEPRECATED: Domain package now owns all brand type definitions
- * This function returns empty string to prevent duplicate brand types
- */
-function generateBrandTypes(): string {
-  return `// Brand types are defined in domain package
-// Import from @beauty-salon-backend/domain/shared/brand-types
-// DO NOT define brand types here to avoid conflicts`
-}
-
-/**
- * Generate helper type utilities
- * NOTE: Removed unused types per YAGNI principle
- * - Result/Ok/Err: domain has its own implementation
- * - Nullable/DeepPartial/DeepReadonly: not used anywhere
- */
-function generateHelperTypes(): string {
-  return ''
-}
-
-/**
- * Generate type extractors for API operations
- * NOTE: Removed unused extractors per YAGNI principle
- * Only keeping what's actually needed
- */
-function generateExtractorTypes(): string {
-  return `// Type extractors for API operations
-export type Components = components extends { schemas: infer S } ? S : never;
-export type Schemas = Components;
-export type Paths = paths;
-export type Operations = operations;
-`
-}
-
-/**
  * Create the main api-types.ts file
  */
-function createApiTypesFile(
-  baseTypes: string,
-  brandTypes: string,
-  helperTypes: string,
-  extractorTypes: string
-): string {
+function createApiTypesFile(baseTypes: string): string {
   return `// Generated from TypeSpec/OpenAPI using openapi-typescript
 // DO NOT EDIT MANUALLY
 // Last generated: ${new Date().toISOString()}
 
-${brandTypes}
-
-${helperTypes}
-
 // Base types from OpenAPI
 ${baseTypes}
-
-${extractorTypes}
-
-// Removed unused operation types per YAGNI principle
-// These were never imported or used anywhere in the codebase
 `
 }
 
@@ -218,15 +155,6 @@ export * from './api-types';
 
 // Zod validation schemas
 export * from './schema';
-
-// Re-export commonly used types for convenience
-export type {
-  // API types
-  Components,
-  Schemas,
-  Paths,
-  Operations,
-} from './api-types';
 `
 
   writeFileSync(join(outputDir, 'index.ts'), indexContent)

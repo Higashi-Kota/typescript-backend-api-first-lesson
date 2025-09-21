@@ -6,8 +6,12 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * @nullable
+ */
 export type ModelsMembershipBenefitDetailFrequency =
-  (typeof ModelsMembershipBenefitDetailFrequency)[keyof typeof ModelsMembershipBenefitDetailFrequency]
+  | (typeof ModelsMembershipBenefitDetailFrequency)[keyof typeof ModelsMembershipBenefitDetailFrequency]
+  | null
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsMembershipBenefitDetailFrequency = {

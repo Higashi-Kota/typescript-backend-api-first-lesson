@@ -212,31 +212,35 @@ namespace BeautySalon.Models {
   }
 
   model OpeningHours {
-    dayOfWeek: DayOfWeekType;
-    openTime: string;
-    closeTime: string;
+    dayOfWeek: DayOfWeekType | null;
+    date: plainDate | null;
+    openTime: string | null;
+    closeTime: string | null;
     isHoliday: boolean;
+    holidayName: string | null;
+    notes: string | null;
   }
 
   model Address {
     street: string;
     city: string;
-    state: string;
-    postalCode: string;
+    prefecture: string;
+    postalCode: string | null;
     country: string = "Japan";
   }
 
   model ContactInfo {
     email: string;
     phoneNumber: string;
-    alternativePhone?: string;
+    alternativePhone: string | null;
+    websiteUrl: string | null;
   }
 
   model AuditInfo {
     createdAt: utcDateTime;
-    createdBy?: string;
+    createdBy: string | null;
     updatedAt: utcDateTime;
-    updatedBy?: string;
+    updatedBy: string | null;
   }
 
   // Result型 - Sum型パターン（シンプルなunion型として定義）
@@ -303,10 +307,10 @@ namespace BeautySalon.Models {
   model BusinessHours {
     dayOfWeek: DayOfWeekType;
     operatingSlots: TimeSlot[];
-    breakSlots?: TimeSlot[];
+    breakSlots: TimeSlot[] | null;
     isClosed: boolean = false;
-    effectivePeriod?: DateRange;
-    timezone?: string;
+    effectivePeriod: DateRange | null;
+    timezone: string | null;
   }
 
   // 通知設定
@@ -321,8 +325,8 @@ namespace BeautySalon.Models {
     currentPoints: int32;
     totalEarnedPoints: int32;
     totalUsedPoints: int32;
-    expiringPoints?: int32;
-    expirationDate?: utcDateTime;
+    expiringPoints: int32 | null;
+    expirationDate: utcDateTime | null;
   }
 
   /**
@@ -331,7 +335,7 @@ namespace BeautySalon.Models {
   model ServiceSummary {
     id: ServiceId;
     name: string;
-    bookingCount?: int32;
+    bookingCount: int32 | null;
   }
 
   /**
@@ -340,8 +344,8 @@ namespace BeautySalon.Models {
   model StaffSummary {
     id: StaffId;
     name: string;
-    rating?: float32;
-    bookingCount?: int32;
+    rating: float32 | null;
+    bookingCount: int32 | null;
   }
 
   /**

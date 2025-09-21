@@ -7,16 +7,28 @@
  */
 
 export interface ModelsPaginationMeta {
-  /** Total number of items */
-  total?: number
+  /**
+   * Total number of items
+   * @nullable
+   */
+  total: number | null
   /** Number of items per page */
   limit: number
   /** Whether there are more pages */
   hasMore: boolean
-  /** Current cursor position */
-  cursor?: string
-  /** Next cursor for pagination */
-  nextCursor?: string
-  /** Previous cursor for pagination */
-  prevCursor?: string
+  /**
+   * Current cursor position
+   * @nullable
+   */
+  cursor: string | null
+  /**
+   * Next cursor for pagination
+   * @nullable
+   */
+  nextCursor: string | null
+  /**
+   * Previous cursor for pagination
+   * @nullable
+   */
+  prevCursor: string | null
 }

@@ -8,9 +8,12 @@
 
 export interface ModelsVisitHistory {
   visitCount: number
-  firstVisitDate?: string
-  lastVisitDate?: string
-  averageSpendPerVisit?: number
+  /** @nullable */
+  firstVisitDate: string | null
+  /** @nullable */
+  lastVisitDate: string | null
+  /** @nullable */
+  averageSpendPerVisit: number | null
   totalSpent: number
   cancelCount: number
   noShowCount: number

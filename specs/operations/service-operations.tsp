@@ -17,7 +17,13 @@ namespace BeautySalon.Operations {
     @get
     op list(
       @path salonId: SalonId,
-      @query category?: "cut" | "color" | "perm" | "treatment" | "spa" | "other",
+      @query category?:
+        | "cut"
+        | "color"
+        | "perm"
+        | "treatment"
+        | "spa"
+        | "other",
       ...PaginationParams,
     ): {
       @statusCode statusCode: 200;

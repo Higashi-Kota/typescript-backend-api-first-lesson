@@ -13,6 +13,8 @@ import type { ModelsStaffId } from './modelsStaffId'
 export interface ModelsStaffSummary {
   id: ModelsStaffId
   name: string
-  rating?: number
-  bookingCount?: number
+  /** @nullable */
+  rating: number | null
+  /** @nullable */
+  bookingCount: number | null
 }

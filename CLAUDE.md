@@ -13,6 +13,11 @@ The system follows Clean Architecture with API-First development. See [docs/arch
 3. **Type Safety**: Sum types with exhaustive pattern matching
 4. **Exception-Free**: Result types for all error handling
 5. **YAGNI**: No code "for the future"
+6. **DB-Driven Design**: Database schemas are the source of truth for domain models
+7. **Property Consistency**: API property names must match DB column names exactly
+8. **Nullable Alignment**: API nullable types must match DB nullable constraints
+9. **Branded Types**: Use branded types for all entity IDs for type safety
+10. **Optional Constraints**: Optional fields only in Search and Update APIs
 
 ## 🔒 Type Safety Requirements
 
@@ -44,19 +49,28 @@ See [docs/typescript-configuration.md](docs/typescript-configuration.md) for com
 All state management uses discriminated unions (Sum types) with ts-pattern:
 
 ```typescript
-// State definition
-type EntityState =
-  | { type: 'active'; entity: Entity }
-  | { type: 'inactive'; reason: string }
-  | { type: 'deleted'; deletedAt: string }
+// Result type (from @beauty-salon-backend/utility)
+export type Result<T, E> =
+  | { type: 'success'; data: T }
+  | { type: 'error'; error: E }
 
-// Exhaustive handling
-const handleState = (state: EntityState) =>
-  match(state)
-    .with({ type: 'active' }, ({ entity }) => processActive(entity))
-    .with({ type: 'inactive' }, ({ reason }) => processInactive(reason))
-    .with({ type: 'deleted' }, ({ deletedAt }) => processDeleted(deletedAt))
-    .exhaustive()
+// Domain error types
+export type DomainError =
+  | { type: 'validation'; message: string; code: string; details: string[] }
+  | { type: 'notFound'; entity: string; field: string; value: unknown }
+  | { type: 'alreadyExists'; entity: string; field: string; value: unknown }
+  | { type: 'database'; message: string; cause: unknown }
+
+// Exhaustive handling in API routes
+match(result)
+  .with({ type: 'success' }, ({ data }) => {
+    res.status(201).json({ data, meta: {...}, links: {...} })
+  })
+  .with({ type: 'error' }, ({ error }) => {
+    const problemDetails = toProblemDetails(error)
+    res.status(problemDetails.status).json(problemDetails)
+  })
+  .exhaustive()
 ```
 
 See [docs/sum-types-pattern-matching.md](docs/sum-types-pattern-matching.md) for patterns.
@@ -180,6 +194,54 @@ pnpm build:prod      # Production build
 - [Type Generation System](docs/type-generation-system.md)
 - [API Testing Guide](docs/api-testing-guide.md)
 
+## 📖 Reference Implementation (Salon Domain)
+
+The salon domain serves as the reference implementation for all other domains:
+
+### Layer Structure:
+```typescript
+// 1. Database Schema (Source of Truth)
+// backend/packages/database/src/schema.ts
+export const salons = pgTable('salons', {...})
+export type DbSalon = typeof salons.$inferSelect
+export type DbNewSalon = typeof salons.$inferInsert
+
+// 2. Repository Interface
+// backend/packages/domain/src/repositories/salon.repository.ts
+export interface ISalonRepository {
+  create(salon: DbSalon, openingHours?: DbNewOpeningHours[]): Promise<Result<DbSalon, DomainError>>
+  findById(id: SalonId): Promise<Result<DbSalon | null, DomainError>>
+}
+
+// 3. Use Case
+// backend/packages/domain/src/business-logic/salon/create-salon.usecase.ts
+export class CreateSalonUseCase extends BaseSalonUseCase {
+  async execute(request: ApiCreateSalonRequest): Promise<Result<ApiSalon, DomainError>> {
+    // Validate → Check business rules → Map API→DB → Save → Map DB→API → Return
+  }
+}
+
+// 4. Mappers
+// backend/packages/domain/src/mappers/write/salon.mapper.ts
+export const SalonWriteMapper = {
+  fromCreateRequest(request: ApiCreateSalonRequest): { salon: DbNewSalon; openingHours: DbNewOpeningHours[] }
+}
+// backend/packages/domain/src/mappers/read/salon.mapper.ts
+export const SalonReadMapper = {
+  toApiSalon(dbSalon: DbSalon, openingHours: DbOpeningHours[]): ApiSalon
+}
+
+// 5. API Route
+// backend/packages/api/src/routes/salon.routes.ts
+const createSalonHandler: RequestHandler = async (req, res, next) => {
+  const result = await useCase.execute(req.body)
+  match(result)
+    .with({ type: 'success' }, ({ data }) => res.status(201).json({data}))
+    .with({ type: 'error' }, ({ error }) => handleDomainError(res, error))
+    .exhaustive()
+}
+```
+
 ## ⚠️ Important Notes
 
 ### TypeSpec Enum Naming
@@ -192,6 +254,32 @@ Database schemas are the source of truth for domain models:
 type Customer = typeof customers.$inferSelect
 type NewCustomer = typeof customers.$inferInsert
 ```
+
+### API-DB Consistency Rules
+
+#### Property Naming
+- API property names MUST match DB column names exactly
+- No UI-driven renaming (e.g., `websiteUrl` not `website` if DB has `website_url`)
+- Mappers must NOT transform property names
+
+#### Type Alignment
+- Nullable fields in DB MUST be nullable in API (`Type | null`)
+- NOT NULL fields in DB MUST be required in API
+- Never convert null to empty string or default values
+
+#### Optional Field Constraints
+| API Type | Optional Fields | Required Fields |
+|----------|-----------------|-----------------|
+| Create | None | All (values can be null) |
+| Update | All | None |
+| Search | Filter params | Core params (if any) |
+| Response | None | All |
+
+#### Validation Checklist
+- [ ] All API properties have corresponding DB columns
+- [ ] Nullable consistency between API and DB
+- [ ] No property name transformations in mappers
+- [ ] New API properties trigger DB migration
 
 ### Clean Code Policy
 - Remove unused code immediately

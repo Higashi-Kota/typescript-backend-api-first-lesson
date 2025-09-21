@@ -13,5 +13,6 @@ import type { ModelsServiceId } from './modelsServiceId'
 export interface ModelsServiceSummary {
   id: ModelsServiceId
   name: string
-  bookingCount?: number
+  /** @nullable */
+  bookingCount: number | null
 }

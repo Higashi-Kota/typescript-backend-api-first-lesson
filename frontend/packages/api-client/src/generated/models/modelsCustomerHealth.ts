@@ -6,15 +6,21 @@
  * OpenAPI spec version: 2.0
  */
 import type { ModelsAllergyInfo } from './modelsAllergyInfo'
-import type { ModelsHairInfo } from './modelsHairInfo'
-import type { ModelsScalpInfo } from './modelsScalpInfo'
+import type { ModelsCustomerHealthHairInfo } from './modelsCustomerHealthHairInfo'
+import type { ModelsCustomerHealthScalpInfo } from './modelsCustomerHealthScalpInfo'
 
 export interface ModelsCustomerHealth {
   allergies: ModelsAllergyInfo[]
-  hairInfo?: ModelsHairInfo
-  scalpInfo?: ModelsScalpInfo
-  medicalConditions?: string[]
-  medications?: string[]
-  pregnancyStatus?: boolean
-  specialNeeds?: string
+  /** @nullable */
+  hairInfo: ModelsCustomerHealthHairInfo
+  /** @nullable */
+  scalpInfo: ModelsCustomerHealthScalpInfo
+  /** @nullable */
+  medicalConditions: string[] | null
+  /** @nullable */
+  medications: string[] | null
+  /** @nullable */
+  pregnancyStatus: boolean | null
+  /** @nullable */
+  specialNeeds: string | null
 }

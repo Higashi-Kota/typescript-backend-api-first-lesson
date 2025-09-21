@@ -8,9 +8,11 @@
 
 /**
  * Registration source
+ * @nullable
  */
 export type ModelsCustomerRegistrationSource =
-  (typeof ModelsCustomerRegistrationSource)[keyof typeof ModelsCustomerRegistrationSource]
+  | (typeof ModelsCustomerRegistrationSource)[keyof typeof ModelsCustomerRegistrationSource]
+  | null
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsCustomerRegistrationSource = {

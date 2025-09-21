@@ -12,9 +12,7 @@
     "format": "biome format --write .",
     "format:fix": "biome check . --fix --unsafe",
     "lint": "biome lint .",
-    "lint:fix": "biome lint . --write",
-    "test": "vitest",
-    "test:ui": "vitest --ui"
+    "lint:fix": "biome lint . --write"
   },
   "dependencies": {
     "@beauty-salon-backend/api": "workspace:*",
@@ -22,6 +20,8 @@
     "@beauty-salon-backend/infrastructure": "workspace:*"
   },
   "devDependencies": {
+    "@beauty-salon-shared/config": "workspace:*",
+    "@biomejs/biome": "^1.9.4",
     "@types/node": "^24.0.13",
     "tsx": "^4.20.3"
   }

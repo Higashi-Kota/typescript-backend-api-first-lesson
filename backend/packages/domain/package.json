@@ -31,15 +31,16 @@
   "dependencies": {
     "@beauty-salon-backend/database": "workspace:*",
     "@beauty-salon-backend/generated": "workspace:*",
+    "@beauty-salon-backend/utility": "workspace:*",
     "drizzle-orm": "^0.44.2",
     "ts-pattern": "^5.7.1",
-    "uuid": "^11.1.0",
     "zod": "^4.0.5"
   },
   "devDependencies": {
+    "@beauty-salon-shared/config": "workspace:*",
+    "@biomejs/biome": "^1.9.4",
     "@rslib/core": "^0.10.5",
     "@types/node": "^24.0.13",
-    "@types/uuid": "^10.0.0",
     "vitest": "^3.2.4"
   }
 }

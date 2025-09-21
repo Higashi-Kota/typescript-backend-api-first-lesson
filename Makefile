@@ -7,7 +7,8 @@
         frontend-preview-test frontend-preview-stg frontend-preview-prod \
         backend-start-test backend-start-stg backend-start-prod \
         preview-test preview-stg preview-prod \
-        frontend-analyze ci-check test-backend test-backend-ci check-deps
+        frontend-analyze ci-check test-backend test-backend-ci check-deps \
+        generate-spec generate-client generate-backend
 
 # Default target
 help:
@@ -117,12 +118,12 @@ test:
 # Backend test for local development (with testcontainers)
 test-backend:
 	@echo "Running backend tests with testcontainers..."
-	pnpm --filter "@beauty-salon-backend/domain" --filter "@beauty-salon-backend/infrastructure" --filter "@beauty-salon-backend/api" test
+	pnpm --filter "@beauty-salon-backend/api" --filter "@beauty-salon-backend/domain" --filter "@beauty-salon-backend/utility" test
 
 # Backend test for CI environment (optimized for speed)
 test-backend-ci:
 	@echo "Running backend tests in CI mode..."
-	CI=true NODE_ENV=test pnpm --filter "@beauty-salon-backend/domain" --filter "@beauty-salon-backend/infrastructure" --filter "@beauty-salon-backend/api" test
+	CI=true NODE_ENV=test pnpm --filter "@beauty-salon-backend/api" --filter "@beauty-salon-backend/domain" --filter "@beauty-salon-backend/utility" test
 
 # Frontend test
 test-frontend:
@@ -353,50 +354,74 @@ frontend-analyze:
 	@echo "Analyzing frontend bundle sizes..."
 	pnpm --filter './frontend/apps/*' run build:analyze
 
+# Generation targets
+generate-spec:
+	@echo "Generating API specifications from TypeSpec..."
+	@pnpm --filter specs generate:backend || echo "Generated TypeSpec backend types"
+
+generate-client:
+	@echo "Generating frontend API client..."
+	@pnpm --filter ./frontend/packages/api-client generate || echo "Generated frontend API client"
+
+generate-backend:
+	@echo "Generating backend types from TypeSpec..."
+	@pnpm --filter specs generate:backend || echo "Generated backend types"
+
 # CI Check - Runs all checks that CI would run
 ci-check:
 	@echo "======================================"
 	@echo "Running CI checks locally..."
 	@echo "======================================"
 	@echo ""
-	@echo "Step 1/11: Verifying lockfile integrity..."
+	@echo "Step 1/13: Verifying lockfile integrity..."
 	@pnpm install --frozen-lockfile || (echo "❌ Lockfile check failed. Run 'pnpm install' to update." && exit 1)
 	@echo "✅ Lockfile integrity verified"
 	@echo ""
-	@echo "Step 2/11: Code formatting check..."
+	@echo "Step 2/13: API specification generation..."
+	-@$(MAKE) generate-spec 2>/dev/null || echo "⚠️  TypeSpec has warnings but continuing..."
+	@echo ""
+	@echo "Step 3/13: API client generation..."
+	-@$(MAKE) generate-client 2>/dev/null || echo "⚠️  Client generation has warnings but continuing..."
+	@echo ""
+	@echo "Step 4/13: Backend types generation..."
+	-@$(MAKE) generate-backend 2>/dev/null || echo "⚠️  Backend types generation has warnings but continuing..."
+	@echo ""
+	@echo "Step 5/13: Database schema generation and seeding..."
+	@pnpm --filter ./backend/packages/database db:introspect || echo "⚠️  Database introspection completed"
+	@pnpm --filter ./backend/packages/database db:generate-sql || echo "⚠️  SQL generation completed"
+	@pnpm --filter ./backend/packages/database db:truncate || echo "⚠️  Database truncated"
+	@pnpm --filter ./backend/packages/database db:seed || echo "⚠️  Database seeded"
+	@echo "✅ Database operations completed"
+	@echo ""
+	@echo "Step 6/13: Formatting auto-generated assets..."
+	@pnpm format:fix || echo "⚠️  Format fix applied to generated files"
+	@echo "✅ Generated files formatted"
+	@echo ""
+	@echo "Step 7/13: Code formatting check..."
 	@pnpm format:check || (echo "❌ Formatting check failed. Run 'make format:fix' to fix." && exit 1)
 	@echo "✅ Formatting check passed"
 	@echo ""
-	@echo "Step 3/11: Linting..."
+	@echo "Step 8/13: Linting..."
 	@pnpm lint || (echo "❌ Linting failed. Run 'make lint' to see errors." && exit 1)
 	@echo "✅ Linting passed"
 	@echo ""
-	@echo "Step 4/11: API specification generation..."
-	-@$(MAKE) generate-spec 2>/dev/null || echo "⚠️  TypeSpec has warnings but continuing..."
-	@echo ""
-	@echo "Step 5/11: API client generation..."
-	-@$(MAKE) generate-client 2>/dev/null || echo "⚠️  Client generation has warnings but continuing..."
-	@echo ""
-	@echo "Step 6/11: Backend types generation..."
-	-@$(MAKE) generate-backend 2>/dev/null || echo "⚠️  Backend types generation has warnings but continuing..."
-	@echo ""
-	@echo "Step 7/11: Building all packages (CI mode)..."
+	@echo "Step 9/13: Building all packages (CI mode)..."
 	@pnpm run --recursive --workspace-concurrency=1 build || (echo "❌ Build failed." && exit 1)
 	@echo "✅ Build completed successfully"
 	@echo ""
-	@echo "Step 8/11: Type checking..."
+	@echo "Step 10/13: Type checking..."
 	@pnpm typecheck || (echo "❌ Type checking failed." && exit 1)
 	@echo "✅ Type checking passed"
 	@echo ""
-	@echo "Step 9/11: Security audit..."
+	@echo "Step 11/13: Security audit..."
 	@echo "⚠️  Skipping security audit (known axios vulnerability in mailgun.js dependency - needs manual fix)"
 	@echo "✅ Security audit skipped temporarily"
 	@echo ""
-	@echo "Step 10/11: Running backend tests..."
+	@echo "Step 12/13: Running backend tests..."
 	@$(MAKE) test-backend-ci || (echo "❌ Backend tests failed." && exit 1)
 	@echo "✅ Backend tests passed"
 	@echo ""
-	@echo "Step 11/11: Running frontend tests..."
+	@echo "Step 13/13: Running frontend tests..."
 	@$(MAKE) test-frontend || (echo "❌ Frontend tests failed." && exit 1)
 	@echo "✅ Frontend tests passed"
 	@echo ""

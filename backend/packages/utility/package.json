@@ -1,0 +1,51 @@
+{
+  "name": "@beauty-salon-backend/utility",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "files": ["dist"],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "clean": "rm -rf dist *.tsbuildinfo",
+    "build:dev": "NODE_ENV=development rslib build && tsc --emitDeclarationOnly",
+    "build:test": "NODE_ENV=test rslib build && tsc --emitDeclarationOnly",
+    "build:stg": "NODE_ENV=staging rslib build && tsc --emitDeclarationOnly",
+    "build:prod": "NODE_ENV=production rslib build && tsc --emitDeclarationOnly",
+    "build": "NODE_ENV=production rslib build && tsc --emitDeclarationOnly",
+    "build:watch": "NODE_ENV=development rslib build --watch",
+    "dev": "NODE_ENV=development rslib build --watch",
+    "dev:tsc": "tsc --build --watch",
+    "typecheck": "tsc --build --noEmit",
+    "format": "biome format --write .",
+    "format:fix": "biome check . --fix --unsafe",
+    "lint": "biome lint .",
+    "lint:fix": "biome lint . --write",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "knip": "knip --include dependencies,optionalPeerDependencies,unlisted,binaries,unresolved",
+    "package:check": "taze -r"
+  },
+  "dependencies": {
+    "uuid": "^11.1.0",
+    "ts-pattern": "^5.7.1"
+  },
+  "devDependencies": {
+    "@types/uuid": "^10.0.0",
+    "@beauty-salon-shared/config": "workspace:*",
+    "@biomejs/biome": "^1.9.4",
+    "@rslib/core": "^0.10.5",
+    "@types/node": "^24.0.13",
+    "type-fest": "^4.41.0",
+    "utility-types": "^3.11.0",
+    "knip": "^5.61.3",
+    "taze": "^19.1.0",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  }
+}

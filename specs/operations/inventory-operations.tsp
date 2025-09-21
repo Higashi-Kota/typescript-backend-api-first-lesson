@@ -14,7 +14,7 @@ namespace BeautySalon.Operations {
     @doc("List inventory items with filters")
     @get
     listInventoryItems(
-      ...InventorySearchParams,
+      ...SearchInventoryRequest,
     ): Result<PaginationResponse<InventoryItem>>;
 
     @doc("Get inventory item by ID")

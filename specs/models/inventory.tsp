@@ -248,7 +248,10 @@ namespace BeautySalon.Models {
     notes?: string;
   }
 
-  model InventorySearchParams {
+  /**
+   * Inventory search request
+   */
+  model SearchInventoryRequest {
     @query salonId: SalonId;
     @query category?: string;
     @query status?: InventoryStatusType;

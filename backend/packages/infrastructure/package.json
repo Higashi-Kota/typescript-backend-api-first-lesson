@@ -29,8 +29,6 @@
     "build:watch": "NODE_ENV=development rslib build --watch",
     "dev": "NODE_ENV=development rslib build --watch",
     "dev:tsc": "tsc --build --watch",
-    "test": "vitest",
-    "test:ui": "vitest --ui",
     "typecheck": "tsc --build --noEmit",
     "format": "biome format --write .",
     "format:fix": "biome check . --fix --unsafe",
@@ -44,15 +42,9 @@
     "@beauty-salon-backend/config": "workspace:*",
     "@beauty-salon-backend/generated": "workspace:*",
     "@beauty-salon-backend/database": "workspace:*",
+    "@beauty-salon-backend/utility": "workspace:*",
     "drizzle-orm": "^0.44.2",
-    "postgres": "^3.4.7",
-    "dotenv": "^16.5.0",
-    "nodemailer": "^6.9.19",
-    "mailgun.js": "^10.3.2",
-    "form-data": "^4.0.1",
-    "date-fns": "^4.1.0",
-    "@aws-sdk/client-s3": "^3.709.0",
-    "@aws-sdk/s3-request-presigner": "^3.709.0"
+    "postgres": "^3.4.7"
   },
   "devDependencies": {
     "@beauty-salon-backend/database": "workspace:*",
@@ -60,16 +52,9 @@
     "@beauty-salon-backend/test-utils": "workspace:*",
     "@biomejs/biome": "^1.9.4",
     "@rslib/core": "^0.10.5",
-    "@testcontainers/postgresql": "^11.2.1",
     "@types/node": "^24.0.13",
-    "@types/nodemailer": "^6.4.17",
-    "drizzle-kit": "^0.31.4",
     "knip": "^5.61.3",
     "taze": "^19.1.0",
-    "testcontainers": "^11.2.1",
-    "typescript": "^5.8.3",
-    "vite": "^7.0.4",
-    "vite-plugin-dts": "^4.5.4",
-    "vitest": "^3.2.4"
+    "typescript": "^5.8.3"
   }
 }

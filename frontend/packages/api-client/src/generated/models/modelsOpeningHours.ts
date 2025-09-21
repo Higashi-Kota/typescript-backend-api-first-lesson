@@ -5,11 +5,20 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsDayOfWeekType } from './modelsDayOfWeekType'
+import type { ModelsOpeningHoursDayOfWeek } from './modelsOpeningHoursDayOfWeek'
 
 export interface ModelsOpeningHours {
-  dayOfWeek: ModelsDayOfWeekType
-  openTime: string
-  closeTime: string
+  /** @nullable */
+  dayOfWeek: ModelsOpeningHoursDayOfWeek
+  /** @nullable */
+  date: string | null
+  /** @nullable */
+  openTime: string | null
+  /** @nullable */
+  closeTime: string | null
   isHoliday: boolean
+  /** @nullable */
+  holidayName: string | null
+  /** @nullable */
+  notes: string | null
 }

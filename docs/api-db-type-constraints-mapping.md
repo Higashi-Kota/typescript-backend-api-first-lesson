@@ -16,41 +16,43 @@
 
 ## 概要
 
-API-DB型制約マッピング機構は、APIからデータベースまでの型安全性とデータ整合性を保証する包括的なシステムです。DB駆動ドメインモデルアプローチにより、DBスキーマを真実の源として型の一貫性を実現します。
+API-DB型制約マッピング機構は、APIからデータベースまでの型安全性とデータ整合性を保証する包括的なシステムです。**実装済みのSalonドメイン**を参考モデルとして、DB駆動ドメインモデルアプローチにより、DBスキーマを真実の源として型の一貫性を実現します。
 
-### 主な特徴
+### 主な特徴（実装版）
 
-- **DB駆動型定義**: DBスキーマから型を推論し、それを基にドメインモデルを構築
-- **API-First開発**: TypeSpecが契約の起点となり、OpenAPIを介して型定義を自動生成
-- **明確なマッパー構造**: Read/Writeマッパーが`@beauty-salon-backend/domain`パッケージ内に統合
-- **自動型推論**: Drizzle ORMの`$inferSelect`と`$inferInsert`による自動型生成
-- **Sum型の活用**: 状態管理にSum型を使用し、網羅的なパターンマッチング
-- **Result型**: 例外を投げずにエラーをデータとして扱う
+- **DB駆動型定義**: Drizzle `$inferSelect`/`$inferInsert` → `DeepRequired`型による強制必須化
+- **ブランド型**: `SalonId`のような型安全なエンティティID
+- **分離マッパー**: Write (API→DB) と Read (DB→API) の明確な責務分離
+- **Result型パターン**: `Result<T, E>` + ts-pattern による例外なしエラーハンドリング
+- **Problem Details**: 標準化されたHTTPエラーレスポンス形式
+- **トランザクション統合**: 関連データの整合性保証（salon + opening_hours）
 
 ## エンドツーエンドの型変換チェーン
 
-### DB駆動型変換フロー
+### DB駆動型変換フロー（実装版）
 
 ```mermaid
 graph TD
-    A[Database Schema<br/>Drizzle ORM] -->|Type Inference| B[Domain Models<br/>DB推論型 + ビジネスロジック]
-    B -->|Read Mapper| C[API Response Types<br/>@beauty-salon-backend/generated]
+    A[Drizzle Schema<br/>salons table] -->|$inferSelect/$inferInsert| B[DbSalon/DbNewSalon<br/>+ DeepRequired]
+    B -->|SalonReadMapper| C[ApiSalon Response<br/>TypeSpec generated]
 
-    D[API Request Types<br/>@beauty-salon-backend/generated] -->|Write Mapper| E[Domain Commands]
-    E -->|Transform| F[DB Insert/Update Types<br/>Drizzle推論型]
-    F -->|SQL Constraints| A
+    D[ApiCreateSalonRequest<br/>TypeSpec generated] -->|SalonWriteMapper| E[DbNewSalon + DbNewOpeningHours]
+    E -->|Repository.create| F[Transaction<br/>salons + opening_hours]
+    F -->|Insert Success| A
 
-    style A fill:#fce4ec
-    style B fill:#f3e5f5
+    style A fill:#e8f5e8
+    style B fill:#fff3e0
+    style C fill:#e3f2fd
 ```
 
-### 型変換の責務
+### 型変換の責務（実装版）
 
-| レイヤー | パッケージ | 責務 |
-|----------|------------|------|
-| Database | `@beauty-salon-backend/database` | スキーマ定義、型推論の源 |
-| Domain | `@beauty-salon-backend/domain` | DB型を基にしたモデル、マッパー |
-| API | `@beauty-salon-backend/generated` | TypeSpec/OpenAPIから自動生成 |
+| レイヤー | パッケージ | 具体例 | 責務 |
+|----------|------------|--------|------|
+| Database | `@beauty-salon-backend/database` | `salons.$inferSelect` | Drizzle スキーマ、型推論の源 |
+| Domain Models | `@beauty-salon-backend/domain/models` | `DbSalon`, `SalonId` | ブランド型、DB型エイリアス |
+| Domain Mappers | `@beauty-salon-backend/domain/mappers` | `SalonWriteMapper/SalonReadMapper` | 分離された変換ロジック |
+| Generated | `@beauty-salon-backend/generated` | `ApiSalon`, `ApiCreateSalonRequest` | TypeSpec → TypeScript 型 |
 
 ## API-First開発のデータフロー
 
@@ -105,190 +107,313 @@ backend/packages/
             └── api-types.ts
 ```
 
-## 実装方法
+## 実装方法（Salon ドメイン実装例）
 
 ### 1. DBスキーマ定義（真実の源）
 
 ```typescript
-// backend/packages/database/src/schema/customer.ts
-import { pgTable, uuid, text, timestamp, integer, pgEnum } from 'drizzle-orm/pg-core'
+// backend/packages/database/src/schema.ts
+import { pgTable, uuid, text, timestamp, numeric, integer, boolean, jsonb } from 'drizzle-orm/pg-core'
 
-export const customerStateEnum = pgEnum('customer_state', ['active', 'inactive', 'suspended'])
-
-export const customers = pgTable('customers', {
+export const salons = pgTable('salons', {
   id: uuid('id').primaryKey().defaultRandom(),
-  salonId: uuid('salon_id'),
-  firstName: text('first_name').notNull(),
-  lastName: text('last_name').notNull(),
+  name: text('name').notNull(),
+  nameKana: text('name_kana'),
+  description: text('description').notNull(),
+  postalCode: text('postal_code').notNull(),
+  prefecture: text('prefecture').notNull(),
+  city: text('city').notNull(),
+  address: text('address').notNull(),
+  building: text('building'),
+  phoneNumber: text('phone_number').notNull(),
+  alternativePhone: text('alternative_phone'),
   email: text('email').notNull().unique(),
-  phoneNumber: text('phone_number'),
-  state: customerStateEnum('state').notNull().default('active'),
-  loyaltyPoints: integer('loyalty_points').notNull().default(0),
+  websiteUrl: text('website_url'),
+  businessHours: jsonb('business_hours').notNull(),
+  imageUrls: text('image_urls').array(),
+  features: text('features').array(),
+  rating: numeric('rating', { precision: 3, scale: 2 }),
+  reviewCount: integer('review_count').notNull().default(0),
+  isActive: boolean('is_active').notNull().default(true),
+  deletedAt: timestamp('deleted_at'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
 
-// 型推論
-export type Customer = typeof customers.$inferSelect
-export type NewCustomer = typeof customers.$inferInsert
+export const openingHours = pgTable('opening_hours', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  salonId: uuid('salon_id').notNull().references(() => salons.id),
+  dayOfWeek: integer('day_of_week'),
+  specificDate: text('specific_date'),
+  openTime: text('open_time'),
+  closeTime: text('close_time'),
+  isHoliday: boolean('is_holiday').notNull().default(false),
+  holidayName: text('holiday_name'),
+  notes: text('notes'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+})
+
+// Drizzle 型推論（実装の源泉）
+export type Salon = typeof salons.$inferSelect
+export type NewSalon = typeof salons.$inferInsert
+export type OpeningHours = typeof openingHours.$inferSelect
+export type NewOpeningHours = typeof openingHours.$inferInsert
 ```
 
-### 2. ドメインモデル（DB型を拡張）
+### 2. ドメインモデル（DB型 + ブランド型）
 
 ```typescript
-// backend/packages/domain/src/models/customer.ts
-import type { Customer as DbCustomer } from '@beauty-salon-backend/database'
+// backend/packages/domain/src/models/salon.ts
+import type { openingHours, salons } from '@beauty-salon-backend/database'
+import type { components, operations } from '@beauty-salon-backend/generated'
+import type { Brand, DeepRequired } from '@beauty-salon-backend/utility'
 
-// DB型を基にドメインモデルを構築
-export type Customer = DbCustomer & {
-  // 計算プロパティ
-  readonly fullName: string
-  readonly isActive: boolean
-  readonly canReserve: boolean
+// ブランド型でID型安全性を確保
+export const salonIdBrand: unique symbol = Symbol('SalonId')
+export type SalonId = Brand<string, typeof salonIdBrand>
+export function toSalonID(raw: string): SalonId {
+  return raw as SalonId
 }
 
-// Sum型で状態管理
-export type CustomerState =
-  | { type: 'active'; customer: Customer }
-  | { type: 'inactive'; customer: Customer; reason: string }
-  | { type: 'suspended'; customer: Customer; until: Date }
+// DB駆動型（Drizzle推論 + DeepRequired）
+export type DbSalon = DeepRequired<typeof salons.$inferSelect>
+export type DbNewSalon = DeepRequired<Omit<typeof salons.$inferInsert, 'id'>>
+export type DbOpeningHours = DeepRequired<typeof openingHours.$inferSelect>
+export type DbNewOpeningHours = DeepRequired<Omit<typeof openingHours.$inferInsert, 'id'>>
 
-// ファクトリ関数
-export const createCustomerModel = (dbCustomer: DbCustomer): Customer => {
-  return {
-    ...dbCustomer,
-    get fullName() {
-      return `${dbCustomer.firstName} ${dbCustomer.lastName}`.trim()
-    },
-    get isActive() {
-      return dbCustomer.state === 'active'
-    },
-    get canReserve() {
-      return dbCustomer.state === 'active' && dbCustomer.loyaltyPoints >= 0
+// API型（TypeSpec生成）
+export type ApiSalon = components['schemas']['Models.Salon']
+export type ApiCreateSalonRequest = components['schemas']['Models.CreateSalonRequest']
+export type ApiUpdateSalonRequest = components['schemas']['Models.UpdateSalonRequest']
+export type ApiSalonSummary = components['schemas']['Models.SalonSummary']
+
+// Search パラメータ（操作から推論）
+export type SalonSearchParams = NonNullable<
+  operations['SalonCrud_search']['parameters']['query']
+>
+```
+
+### 3. Writeマッパー（API → DB）- 実装版
+
+```typescript
+// backend/packages/domain/src/mappers/write/salon.mapper.ts
+import type {
+  ApiCreateSalonRequest,
+  ApiOpeningHours,
+  ApiUpdateSalonRequest,
+  DbNewOpeningHours,
+  DbNewSalon,
+} from '../../models/salon'
+
+export const SalonWriteMapper = {
+  fromCreateRequest(request: ApiCreateSalonRequest): {
+    salon: DbNewSalon
+    openingHours: DbNewOpeningHours[]
+  } {
+    // API → DB 厳密なプロパティマッピング
+    const salon: DbNewSalon = {
+      name: request.name,
+      nameKana: null,
+      description: request.description,
+      // ネストしたaddressをフラット化
+      postalCode: request.address.postalCode,
+      prefecture: request.address.prefecture,
+      city: request.address.city,
+      address: request.address.street,
+      building: null,
+      latitude: null,
+      longitude: null,
+      // ネストしたcontactInfoをフラット化
+      phoneNumber: request.contactInfo.phoneNumber,
+      alternativePhone: request.contactInfo.alternativePhone,
+      email: request.contactInfo.email,
+      websiteUrl: request.contactInfo.websiteUrl,
+      logoUrl: null,
+      imageUrls: request.imageUrls,
+      features: request.features,
+      amenities: [],
+      timezone: 'Asia/Tokyo',
+      currency: 'JPY',
+      taxRate: '10.00',
+      cancellationPolicy: null,
+      bookingPolicy: null,
+      businessHours: request.businessHours,
+      rating: null,
+      reviewCount: 0,
+      isActive: true,
+      deletedAt: null,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     }
-  }
-}
-```
 
-### 3. Writeマッパー（API → DB）
+    // 関連データも同時に変換
+    const openingHours: DbNewOpeningHours[] = request.openingHours.map((oh) =>
+      this.mapOpeningHours(oh, '')
+    )
 
-```typescript
-// backend/packages/domain/src/mappers/write/customer.mapper.ts
-import type { components } from '@beauty-salon-backend/generated'
-import type { NewCustomer } from '@beauty-salon-backend/database'
-import { ok, err, type Result } from '../../shared/result'
+    return { salon, openingHours }
+  },
 
-type CreateCustomerRequest = components['schemas']['Models.CreateCustomerRequest']
-type UpdateCustomerRequest = components['schemas']['Models.UpdateCustomerRequest']
+  fromUpdateRequest(request: ApiUpdateSalonRequest): Partial<DbNewSalon> {
+    const updates: Partial<DbNewSalon> = {}
 
-export const mapCreateRequestToDb = (
-  request: CreateCustomerRequest
-): Result<NewCustomer, ValidationError[]> => {
-  const errors: ValidationError[] = []
-
-  // バリデーション
-  const nameParts = request.name.trim().split(' ')
-  const firstName = nameParts[0]
-  const lastName = nameParts.slice(1).join(' ') || ''
-
-  if (!firstName) {
-    errors.push({
-      field: 'name',
-      message: 'Name must contain at least a first name'
-    })
-  }
-
-  if (errors.length > 0) {
-    return err(errors)
-  }
-
-  // DB型に変換
-  const newCustomer: NewCustomer = {
-    salonId: request.salonId ?? null,
-    firstName,
-    lastName,
-    email: request.email,
-    phoneNumber: request.phoneNumber ?? null,
-    state: 'active',
-    loyaltyPoints: 0
-  }
-
-  return ok(newCustomer)
-}
-
-export const mapUpdateRequestToDb = (
-  request: UpdateCustomerRequest
-): Result<Partial<NewCustomer>, ValidationError[]> => {
-  const updates: Partial<NewCustomer> = {}
-
-  if (request.name !== undefined) {
-    const nameParts = request.name.trim().split(' ')
-    updates.firstName = nameParts[0]
-    updates.lastName = nameParts.slice(1).join(' ') || ''
-  }
-
-  if (request.email !== undefined) {
-    updates.email = request.email
-  }
-
-  if (request.state !== undefined) {
-    updates.state = request.state
-  }
-
-  return ok(updates)
-}
-```
-
-### 4. Readマッパー（DB → API）
-
-```typescript
-// backend/packages/domain/src/mappers/read/customer.mapper.ts
-import type { components } from '@beauty-salon-backend/generated'
-import type { Customer as DbCustomer } from '@beauty-salon-backend/database'
-import { createCustomerModel } from '../../models/customer'
-
-type ApiCustomer = components['schemas']['Models.Customer']
-type CustomerListResponse = components['schemas']['Models.CustomerListResponse']
-
-export const mapDbToApiResponse = (dbCustomer: DbCustomer): ApiCustomer => {
-  const customer = createCustomerModel(dbCustomer)
-
-  return {
-    id: customer.id,
-    salonId: customer.salonId ?? null,
-    name: customer.fullName,
-    email: customer.email,
-    phoneNumber: customer.phoneNumber ?? null,
-    state: customer.state,
-    loyaltyPoints: customer.loyaltyPoints,
-    isActive: customer.isActive,
-    canReserve: customer.canReserve
-  }
-}
-
-export const mapDbListToApiResponse = (
-  dbCustomers: DbCustomer[]
-): ApiCustomer[] => {
-  return dbCustomers.map(mapDbToApiResponse)
-}
-
-export const mapDbPageToApiResponse = (
-  dbCustomers: DbCustomer[],
-  total: number,
-  page: number,
-  limit: number
-): CustomerListResponse => {
-  return {
-    items: mapDbListToApiResponse(dbCustomers),
-    pagination: {
-      total,
-      page,
-      limit,
-      totalPages: Math.ceil(total / limit)
+    // 名前更新
+    if (request.name !== undefined) {
+      updates.name = request.name
     }
-  }
+
+    // ネストした住所の個別更新
+    if (request.address !== undefined) {
+      if (request.address.postalCode !== undefined) {
+        updates.postalCode = request.address.postalCode
+      }
+      if (request.address.prefecture !== undefined) {
+        updates.prefecture = request.address.prefecture
+      }
+      if (request.address.city !== undefined) {
+        updates.city = request.address.city
+      }
+      if (request.address.street !== undefined) {
+        updates.address = request.address.street
+      }
+    }
+
+    // 連絡先の個別更新
+    if (request.contactInfo !== undefined) {
+      if (request.contactInfo.phoneNumber !== undefined) {
+        updates.phoneNumber = request.contactInfo.phoneNumber
+      }
+      if (request.contactInfo.email !== undefined) {
+        updates.email = request.contactInfo.email
+      }
+    }
+
+    // タイムスタンプ更新
+    updates.updatedAt = new Date().toISOString()
+
+    return updates
+  },
+
+  mapOpeningHours(hours: ApiOpeningHours, salonId: string): DbNewOpeningHours {
+    return {
+      salonId,
+      dayOfWeek: hours.dayOfWeek,
+      specificDate: hours.date,
+      openTime: hours.openTime,
+      closeTime: hours.closeTime,
+      isHoliday: hours.isHoliday,
+      holidayName: hours.holidayName,
+      notes: hours.notes,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+  },
 }
 ```
+
+### 4. Readマッパー（DB → API）- 実装版
+
+```typescript
+// backend/packages/domain/src/mappers/read/salon.mapper.ts
+import type {
+  ApiAddress,
+  ApiContactInfo,
+  ApiOpeningHours,
+  ApiSalon,
+  ApiSalonSummary,
+  DbOpeningHours,
+  DbSalon,
+} from '../../models/salon'
+
+export const SalonReadMapper = {
+  toApiSalon(dbSalon: DbSalon, openingHours: DbOpeningHours[] = []): ApiSalon {
+    return {
+      id: dbSalon.id,
+      name: dbSalon.name,
+      description: dbSalon.description,
+      // フラットなDBデータをネストしたAPI構造に変換
+      address: this.toApiAddress(dbSalon),
+      contactInfo: this.toApiContactInfo(dbSalon),
+      openingHours: openingHours.map((oh) => this.toApiOpeningHours(oh)),
+      businessHours: dbSalon.businessHours as ApiSalon['businessHours'], // jsonb cast
+      imageUrls: Array.isArray(dbSalon.imageUrls)
+        ? (dbSalon.imageUrls as string[])
+        : [],
+      features: Array.isArray(dbSalon.features)
+        ? (dbSalon.features as string[])
+        : [],
+      rating: dbSalon.rating ? Number.parseFloat(dbSalon.rating) : null, // numeric → float
+      reviewCount: dbSalon.reviewCount,
+      createdAt: dbSalon.createdAt,
+      createdBy: 'Demo user', // 実装固定値
+      updatedAt: dbSalon.updatedAt,
+      updatedBy: 'Demo user', // 実装固定値
+    }
+  },
+
+  toApiSalonSummary(dbSalon: DbSalon): ApiSalonSummary {
+    return {
+      id: dbSalon.id,
+      name: dbSalon.name,
+      address: this.toApiAddress(dbSalon),
+      rating: dbSalon.rating ? Number.parseFloat(dbSalon.rating) : null,
+      reviewCount: dbSalon.reviewCount,
+    }
+  },
+
+  toApiAddress(dbSalon: DbSalon): ApiAddress {
+    return {
+      street: dbSalon.address,      // address → address.street
+      city: dbSalon.city,
+      prefecture: dbSalon.prefecture,
+      postalCode: dbSalon.postalCode, // postalCode → address.postalCode
+      country: 'Japan',              // 固定値
+    }
+  },
+
+  toApiContactInfo(dbSalon: DbSalon): ApiContactInfo {
+    return {
+      phoneNumber: dbSalon.phoneNumber,
+      alternativePhone: dbSalon.alternativePhone,
+      email: dbSalon.email,
+      websiteUrl: dbSalon.websiteUrl,
+    }
+  },
+
+  toApiOpeningHours(dbOpeningHours: DbOpeningHours): ApiOpeningHours {
+    return {
+      dayOfWeek: dbOpeningHours.dayOfWeek,
+      date: dbOpeningHours.specificDate,  // specificDate → date
+      openTime: dbOpeningHours.openTime,
+      closeTime: dbOpeningHours.closeTime,
+      isHoliday: dbOpeningHours.isHoliday,
+      holidayName: dbOpeningHours.holidayName,
+      notes: dbOpeningHours.notes,
+    }
+  },
+
+  toApiSalonList(dbSalons: DbSalon[]): ApiSalonSummary[] {
+    return dbSalons.map((salon) => this.toApiSalonSummary(salon))
+  },
+}
+```
+
+### 5. API-DB整合性保証の重要原則
+
+#### プロパティ名の厳密一致
+- API `address.postalCode` ↔ DB `postalCode`
+- API `address.street` ↔ DB `address`
+- API `contactInfo.phoneNumber` ↔ DB `phoneNumber`
+
+#### Null可能性の一致
+- DB `NOT NULL` → API 必須フィールド
+- DB nullable → API `| null` 型
+
+#### 型変換の明示
+- DB `numeric` → API `number` (parseFloat)
+- DB `jsonb` → API オブジェクト (as キャスト)
+- DB `text[]` → API `string[]` (Array.isArray チェック)
 
 ### 5. ユースケース実装
 

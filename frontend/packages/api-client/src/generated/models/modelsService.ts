@@ -57,7 +57,9 @@ export interface ModelsService {
   requiredStaffLevel?: number
   isActive: boolean
   createdAt: string
-  createdBy?: string
+  /** @nullable */
+  createdBy: string | null
   updatedAt: string
-  updatedBy?: string
+  /** @nullable */
+  updatedBy: string | null
 }

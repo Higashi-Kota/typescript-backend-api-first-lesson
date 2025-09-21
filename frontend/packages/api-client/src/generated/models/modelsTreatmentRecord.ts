@@ -49,7 +49,9 @@ export interface ModelsTreatmentRecord {
   /** Points earned */
   pointsEarned?: number
   createdAt: string
-  createdBy?: string
+  /** @nullable */
+  createdBy: string | null
   updatedAt: string
-  updatedBy?: string
+  /** @nullable */
+  updatedBy: string | null
 }

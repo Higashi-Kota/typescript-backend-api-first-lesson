@@ -7,8 +7,12 @@
  */
 
 export interface ModelsStylePreference {
-  preferredLength?: string
-  preferredColors?: string[]
-  avoidStyles?: string[]
-  inspirationImages?: string[]
+  /** @nullable */
+  preferredLength: string | null
+  /** @nullable */
+  preferredColors: string[] | null
+  /** @nullable */
+  avoidStyles: string[] | null
+  /** @nullable */
+  inspirationImages: string[] | null
 }

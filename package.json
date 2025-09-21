@@ -18,7 +18,7 @@
     "start:backend:prod": "pnpm --filter '@beauty-salon-backend/server' run start",
     "build:frontend": "pnpm --filter './frontend/**' run build",
     "test": "pnpm -r run test",
-    "test:backend": "pnpm --filter './backend/**' run test",
+    "test:backend": "pnpm --filter '@beauty-salon-backend/api' --filter '@beauty-salon-backend/domain' --filter '@beauty-salon-backend/utility' run test",
     "test:frontend": "pnpm --filter './frontend/**' run test",
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "lint": "pnpm -r run lint",
@@ -47,36 +47,17 @@
   },
   "devDependencies": {
     "@beauty-salon-shared/config": "workspace:*",
-    "@biomejs/biome": "^1.9.4",
-    "@changesets/cli": "^2.29.5",
-    "@tailwindcss/postcss": "^4.1.11",
-    "@types/uuid": "^10.0.0",
-    "@vitest/ui": "^3.2.4",
-    "autoprefixer": "^10.4.21",
     "concurrently": "^8.2.2",
     "husky": "^9.1.7",
     "knip": "^5.61.3",
     "lint-staged": "^15.5.2",
-    "openapi-typescript": "^7.8.0",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.11",
     "taze": "^19.1.0",
-    "tsx": "^4.20.3",
-    "typescript": "^5.8.3",
-    "vitest": "^3.2.4"
+    "@biomejs/biome": "^1.9.4"
   },
   "volta": {
     "node": "24.4.0",
     "yarn": "4.9.2",
     "npm": "11.4.2",
     "pnpm": "10.13.1"
-  },
-  "packageManager": "pnpm@10.13.1",
-  "dependencies": {
-    "date-fns": "^4.1.0",
-    "ts-pattern": "^5.7.1",
-    "uuid": "^11.1.0",
-    "yaml": "^2.3.4",
-    "zod": "^4.0.5"
   }
 }

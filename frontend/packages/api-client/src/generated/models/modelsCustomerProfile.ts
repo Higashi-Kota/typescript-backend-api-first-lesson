@@ -11,19 +11,29 @@ import type { ModelsServiceId } from './modelsServiceId'
 
 export type ModelsCustomerProfile = ModelsCustomer & {
   visitCount: number
-  lastVisitDate?: string
-  favoriteStaffIds?: ModelsStaffId[]
-  favoriteServiceIds?: ModelsServiceId[]
+  /** @nullable */
+  lastVisitDate: string | null
+  /** @nullable */
+  favoriteStaffIds: ModelsStaffId[] | null
+  /** @nullable */
+  favoriteServiceIds: ModelsServiceId[] | null
   totalSpent: number
 } & Required<
     Pick<
       ModelsCustomer & {
         visitCount: number
-        lastVisitDate?: string
-        favoriteStaffIds?: ModelsStaffId[]
-        favoriteServiceIds?: ModelsServiceId[]
+        /** @nullable */
+        lastVisitDate: string | null
+        /** @nullable */
+        favoriteStaffIds: ModelsStaffId[] | null
+        /** @nullable */
+        favoriteServiceIds: ModelsServiceId[] | null
         totalSpent: number
       },
-      'visitCount' | 'totalSpent'
+      | 'visitCount'
+      | 'lastVisitDate'
+      | 'favoriteStaffIds'
+      | 'favoriteServiceIds'
+      | 'totalSpent'
     >
   >

@@ -10,5 +10,6 @@ import type { ModelsScalpConditionType } from './modelsScalpConditionType'
 export interface ModelsScalpInfo {
   condition: ModelsScalpConditionType
   sensitivities: string[]
-  notes?: string
+  /** @nullable */
+  notes: string | null
 }

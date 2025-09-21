@@ -9,7 +9,8 @@
 export interface ModelsAddressUpdate {
   street?: string
   city?: string
-  state?: string
-  postalCode?: string
+  prefecture?: string
+  /** @nullable */
+  postalCode?: string | null
   country?: string
 }

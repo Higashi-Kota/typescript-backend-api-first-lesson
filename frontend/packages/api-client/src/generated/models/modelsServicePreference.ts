@@ -6,11 +6,15 @@
  * OpenAPI spec version: 2.0
  */
 import type { ModelsServiceId } from './modelsServiceId'
-import type { ModelsPriceRangeFilter } from './modelsPriceRangeFilter'
+import type { ModelsServicePreferencePreferredPriceRange } from './modelsServicePreferencePreferredPriceRange'
 
 export interface ModelsServicePreference {
-  favoriteServices?: ModelsServiceId[]
-  avoidServices?: ModelsServiceId[]
-  preferredDuration?: number
-  preferredPriceRange?: ModelsPriceRangeFilter
+  /** @nullable */
+  favoriteServices: ModelsServiceId[] | null
+  /** @nullable */
+  avoidServices: ModelsServiceId[] | null
+  /** @nullable */
+  preferredDuration: number | null
+  /** @nullable */
+  preferredPriceRange: ModelsServicePreferencePreferredPriceRange
 }

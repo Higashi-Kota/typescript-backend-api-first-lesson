@@ -5,15 +5,23 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { SalonCrudExportBodyCategory } from './salonCrudExportBodyCategory'
+import type { ModelsServiceCategoryType } from './modelsServiceCategoryType'
 import type { SalonCrudExportBodySortOrder } from './salonCrudExportBodySortOrder'
 import type { SalonCrudExportBodyFormat } from './salonCrudExportBodyFormat'
 
 export type SalonCrudExportBody = {
+  /** Search keyword (alias for q) */
+  keyword?: string
   /** Filter by city name */
   city?: string
-  /** Filter by service category */
-  category?: SalonCrudExportBodyCategory
+  /** Filter by prefecture name */
+  prefecture?: string
+  /** Filter by service categories */
+  categories?: ModelsServiceCategoryType[]
+  /** Filter by features (array) */
+  features?: string[]
+  /** Filter by active status */
+  isActive?: boolean
   /**
    * Filter by minimum rating
    * @minimum 0
@@ -29,8 +37,6 @@ export type SalonCrudExportBody = {
   lat?: number
   /** Reference longitude for distance calculation */
   lon?: number
-  /** Filter by features (comma-separated) */
-  features?: string
   /** Filter by opening hours */
   openNow?: boolean
   /** Filter by specific day and time */
