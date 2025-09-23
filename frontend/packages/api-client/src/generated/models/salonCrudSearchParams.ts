@@ -5,18 +5,18 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsSearchSalonRequestKeywordParameter } from './modelsSearchSalonRequestKeywordParameter'
-import type { ModelsSearchSalonRequestCityParameter } from './modelsSearchSalonRequestCityParameter'
-import type { ModelsSearchSalonRequestPrefectureParameter } from './modelsSearchSalonRequestPrefectureParameter'
-import type { ModelsSearchSalonRequestCategoriesParameter } from './modelsSearchSalonRequestCategoriesParameter'
-import type { ModelsSearchSalonRequestFeaturesParameter } from './modelsSearchSalonRequestFeaturesParameter'
-import type { ModelsSearchSalonRequestIsActiveParameter } from './modelsSearchSalonRequestIsActiveParameter'
-import type { ModelsSearchSalonRequestMinRatingParameter } from './modelsSearchSalonRequestMinRatingParameter'
-import type { ModelsSearchSalonRequestMaxDistanceParameter } from './modelsSearchSalonRequestMaxDistanceParameter'
-import type { ModelsSearchSalonRequestLatParameter } from './modelsSearchSalonRequestLatParameter'
-import type { ModelsSearchSalonRequestLonParameter } from './modelsSearchSalonRequestLonParameter'
-import type { ModelsSearchSalonRequestOpenNowParameter } from './modelsSearchSalonRequestOpenNowParameter'
-import type { ModelsSearchSalonRequestOpenAtParameter } from './modelsSearchSalonRequestOpenAtParameter'
+import type { ModelsSalonSearchRequestKeywordParameter } from './modelsSalonSearchRequestKeywordParameter'
+import type { ModelsSalonSearchRequestCityParameter } from './modelsSalonSearchRequestCityParameter'
+import type { ModelsSalonSearchRequestPrefectureParameter } from './modelsSalonSearchRequestPrefectureParameter'
+import type { ModelsSalonSearchRequestCategoriesParameter } from './modelsSalonSearchRequestCategoriesParameter'
+import type { ModelsSalonSearchRequestFeaturesParameter } from './modelsSalonSearchRequestFeaturesParameter'
+import type { ModelsSalonSearchRequestIsActiveParameter } from './modelsSalonSearchRequestIsActiveParameter'
+import type { ModelsSalonSearchRequestMinRatingParameter } from './modelsSalonSearchRequestMinRatingParameter'
+import type { ModelsSalonSearchRequestMaxDistanceParameter } from './modelsSalonSearchRequestMaxDistanceParameter'
+import type { ModelsSalonSearchRequestLatParameter } from './modelsSalonSearchRequestLatParameter'
+import type { ModelsSalonSearchRequestLonParameter } from './modelsSalonSearchRequestLonParameter'
+import type { ModelsSalonSearchRequestOpenNowParameter } from './modelsSalonSearchRequestOpenNowParameter'
+import type { ModelsSalonSearchRequestOpenAtParameter } from './modelsSalonSearchRequestOpenAtParameter'
 import type { ModelsAdvancedSearchParamsQParameter } from './modelsAdvancedSearchParamsQParameter'
 import type { ModelsAdvancedSearchParamsFilterParameter } from './modelsAdvancedSearchParamsFilterParameter'
 import type { ModelsAdvancedSearchParamsFieldsParameter } from './modelsAdvancedSearchParamsFieldsParameter'
@@ -32,54 +32,54 @@ export type SalonCrudSearchParams = {
   /**
    * 検索キーワード。qパラメータのエイリアス
    */
-  keyword?: ModelsSearchSalonRequestKeywordParameter
+  keyword?: ModelsSalonSearchRequestKeywordParameter
   /**
    * 市区町村名による絞り込み
    */
-  city?: ModelsSearchSalonRequestCityParameter
+  city?: ModelsSalonSearchRequestCityParameter
   /**
    * 都道府県名による絞り込み
    */
-  prefecture?: ModelsSearchSalonRequestPrefectureParameter
+  prefecture?: ModelsSalonSearchRequestPrefectureParameter
   /**
    * サービスカテゴリ（カット・カラー等）による絞り込み
    */
-  categories?: ModelsSearchSalonRequestCategoriesParameter
+  categories?: ModelsSalonSearchRequestCategoriesParameter
   /**
    * 設備やこだわり条件などの特徴タグによる絞り込み
    */
-  features?: ModelsSearchSalonRequestFeaturesParameter
+  features?: ModelsSalonSearchRequestFeaturesParameter
   /**
    * 営業中サロンのみを対象にするかどうか
    */
-  isActive?: ModelsSearchSalonRequestIsActiveParameter
+  isActive?: ModelsSalonSearchRequestIsActiveParameter
   /**
    * 最低評価値による絞り込み
    * @minimum 0
    * @maximum 5
    */
-  minRating?: ModelsSearchSalonRequestMinRatingParameter
+  minRating?: ModelsSalonSearchRequestMinRatingParameter
   /**
    * 検索基点からの最大距離（km）
    * @minimum 0
    */
-  maxDistance?: ModelsSearchSalonRequestMaxDistanceParameter
+  maxDistance?: ModelsSalonSearchRequestMaxDistanceParameter
   /**
    * 距離計算に使用する基準緯度
    */
-  lat?: ModelsSearchSalonRequestLatParameter
+  lat?: ModelsSalonSearchRequestLatParameter
   /**
    * 距離計算に使用する基準経度
    */
-  lon?: ModelsSearchSalonRequestLonParameter
+  lon?: ModelsSalonSearchRequestLonParameter
   /**
    * 現在営業中かどうかで絞り込むフラグ
    */
-  openNow?: ModelsSearchSalonRequestOpenNowParameter
+  openNow?: ModelsSalonSearchRequestOpenNowParameter
   /**
    * 特定日時に営業しているサロンを探すための基準日時
    */
-  openAt?: ModelsSearchSalonRequestOpenAtParameter
+  openAt?: ModelsSalonSearchRequestOpenAtParameter
   /**
    * 全文検索キーワード。名称や説明文を横断的に検索する。
    */

@@ -41,13 +41,13 @@ model Attachment {
   @doc("ファイルをアップロードしたユーザーID。")
   uploadedBy: string;
 
-  @doc("ファイルが紐づくサロンID。任意項目。")
+  @doc("ファイルが紐づくサロンID。全社共通ファイルやシステムファイルの場合はnull。")
   salonId: string | null;
 
-  @doc("必要に応じて付加情報を保持する任意メタデータ。")
+  @doc("必要に応じて付加情報を保持する任意メタデータ。追加情報が不要な場合はnull。")
   metadata: Record<unknown> | null;
 
-  @doc("ラベリングや検索に利用するタグ情報のセット。")
+  @doc("ラベリングや検索に利用するタグ情報のセット。タグ付けをしていない場合はnull。")
   tags: Record<string> | null;
 
   @doc("ファイルがアップロードされた日時。")
@@ -68,10 +68,10 @@ model AttachmentCreateRequest {
   @doc("ファイルのContent-Type。")
   content: string;
 
-  @doc("ファイルを関連付けるサロンID。任意設定。")
+  @doc("ファイルを関連付けるサロンID。全社共通ファイルの場合はnull。")
   salonId: string | null;
 
-  @doc("タグ情報を表すJSON文字列。任意設定。")
+  @doc("タグ情報を表すJSON文字列。タグを設定しない場合はnull。")
   tags: string | null;
 }
 
@@ -86,7 +86,7 @@ model AttachmentUploadUrlGetRequest {
   @doc("アップロード予定ファイルのサイズ（バイト単位）。")
   size: int32;
 
-  @doc("ファイルをひも付けるサロンID。任意設定。")
+  @doc("ファイルをひも付けるサロンID。全社共通ファイルの場合はnull。")
   salonId: string | null;
 }
 
@@ -122,10 +122,10 @@ model ShareLink {
   @doc("共有対象の添付ファイルID。")
   attachmentId: string;
 
-  @doc("共有リンクの有効期限。任意設定。")
+  @doc("共有リンクの有効期限。無期限の場合はnull。")
   expiresAt: utcDateTime | null;
 
-  @doc("許可する最大ダウンロード回数。任意設定。")
+  @doc("許可する最大ダウンロード回数。無制限の場合はnull。")
   maxDownloads: int32 | null;
 
   @doc("これまでのダウンロード累計数。")
@@ -134,7 +134,7 @@ model ShareLink {
   @doc("共有リンクがパスワード保護されているか。")
   hasPassword: boolean;
 
-  @doc("アクセスを許可するメールアドレス一覧。任意設定。")
+  @doc("アクセスを許可するメールアドレス一覧。制限なしの場合はnull。")
   allowedEmails: string[] | null;
 
   @doc("共有リンクを作成したユーザーID。")
@@ -146,22 +146,22 @@ model ShareLink {
 
 @doc("添付ファイルの共有リンクを新規発行する際のリクエスト。")
 model ShareLinkCreateRequest {
-  @doc("共有リンクの有効期限。任意設定。")
+  @doc("共有リンクの有効期限。無期限の場合はnull。")
   expiresAt: utcDateTime | null;
 
-  @doc("許可する最大ダウンロード回数。任意設定。")
+  @doc("許可する最大ダウンロード回数。無制限の場合はnull。")
   maxDownloads: int32 | null;
 
-  @doc("共有リンク保護用のパスワード。任意設定。")
+  @doc("共有リンク保護用のパスワード。パスワード保護なしの場合はnull。")
   password: string | null;
 
-  @doc("アクセスを許可するメールアドレス一覧。任意設定。")
+  @doc("アクセスを許可するメールアドレス一覧。制限なしの場合はnull。")
   allowedEmails: string[] | null;
 }
 
 @doc("パスワード保護された共有リンクへアクセスする際のリクエスト。")
 model ShareLinkAccessRequest {
-  @doc("共有リンクのパスワード。保護されている場合に入力。")
+  @doc("共有リンクのパスワード。パスワード保護されていない場合はnull。")
   password: string | null;
 }
 

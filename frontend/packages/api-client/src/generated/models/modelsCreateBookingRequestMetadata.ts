@@ -7,7 +7,7 @@
  */
 
 /**
- * 外部連携や業務用に保持する任意メタデータ。
+ * 外部連携や業務用に保持する任意メタデータ。追加情報が不要の場合はnull。
  * @nullable
  */
 export type ModelsCreateBookingRequestMetadata = {

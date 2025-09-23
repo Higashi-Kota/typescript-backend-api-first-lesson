@@ -18,10 +18,10 @@ namespace BeautySalon.Models {
     @doc("勤務終了時刻 (フォーマット例: HH:mm)")
     endTime: string;
 
-    @doc("当日の休憩時間帯リスト")
+    @doc("当日の休憩時間帯リスト - 休憩なしのフル勤務の場合はnull")
     breakTime: TimeSlot[] | null;
 
-    @doc("シフトが有効となる期間")
+    @doc("シフトが有効となる期間 - 無期限スケジュールの場合はnull")
     effectivePeriod: DateRange | null;
   }
 
@@ -35,13 +35,13 @@ namespace BeautySalon.Models {
     @doc("資格を取得した日付")
     certificationDate: plainDate;
 
-    @doc("資格の有効期限。無期限の場合は省略")
+    @doc("資格の有効期限 - 無期限資格や更新不要の資格の場合はnull")
     expiryDate: plainDate | null;
 
-    @doc("資格を発行した機関名")
+    @doc("資格を発行した機関名 - 発行機関が不明または未記録の場合はnull")
     issuer: string | null;
 
-    @doc("資格証明番号などの識別子")
+    @doc("資格証明番号などの識別子 - 証明番号がない内部認定やサロン独自資格の場合はnull")
     credentialId: string | null;
   }
 
@@ -55,10 +55,10 @@ namespace BeautySalon.Models {
     @doc("許可されたアクションの一覧")
     actions: string[];
 
-    @doc("権限が適用される範囲や条件")
+    @doc("権限が適用される範囲や条件 - 全体権限の場合や特定範囲がない場合はnull")
     scope: string | null;
 
-    @doc("権限の有効期限 (UTC)")
+    @doc("権限の有効期限 (UTC) - 無期限権限の場合はnull")
     expiresAt: utcDateTime | null;
   }
 
@@ -81,28 +81,28 @@ namespace BeautySalon.Models {
     @doc("得意分野や専門メニューの一覧")
     specialties: string[];
 
-    @doc("プロフィール画像のURL")
+    @doc("プロフィール画像のURL - プロフィール画像未設定の場合はnull")
     imageUrl: string | null;
 
-    @doc("自己紹介や経歴の概要")
+    @doc("自己紹介や経歴の概要 - プロフィール未記入の新人スタッフの場合はnull")
     bio: string | null;
 
-    @doc("実務経験年数")
+    @doc("実務経験年数 - 経験年数未記載またはアシスタントスタッフの場合はnull")
     yearsOfExperience: int32 | null;
 
-    @doc("保有資格名の一覧 (テキスト管理)")
+    @doc("保有資格名の一覧 (テキスト管理) - 資格なしの新人やアシスタントの場合はnull")
     certifications: string[] | null;
 
-    @doc("詳細な資格情報の一覧")
+    @doc("詳細な資格情報の一覧 - 詳細資格情報未登録の場合はnull")
     qualifications: StaffQualification[] | null;
 
-    @doc("通常勤務スケジュールの一覧")
+    @doc("通常勤務スケジュールの一覧 - スケジュール未設定やフリーランススタッフの場合はnull")
     schedules: StaffSchedule[] | null;
 
     @doc("現在スタッフがアクティブに勤務可能かを示すフラグ")
     isActive: boolean;
 
-    @doc("システム上で付与されている追加権限一覧")
+    @doc("システム上で付与されている追加権限一覧 - 特別権限がない一般スタッフの場合はnull")
     permissions: StaffPermission[] | null;
 
     ...AuditInfo;
@@ -124,25 +124,25 @@ namespace BeautySalon.Models {
     @doc("得意分野や専門メニューの一覧")
     specialties: string[];
 
-    @doc("プロフィール画像のURL")
+    @doc("プロフィール画像のURL - プロフィール画像未設定の場合はnull")
     imageUrl: string | null;
 
-    @doc("自己紹介や経歴の概要")
+    @doc("自己紹介や経歴の概要 - プロフィール未記入の新人スタッフの場合はnull")
     bio: string | null;
 
-    @doc("実務経験年数")
+    @doc("実務経験年数 - 経験年数未記載またはアシスタントスタッフの場合はnull")
     yearsOfExperience: int32 | null;
 
-    @doc("保有資格名の一覧")
+    @doc("保有資格名の一覧 - 資格なしの新人やアシスタントの場合はnull")
     certifications: string[] | null;
 
-    @doc("詳細な資格情報の一覧")
+    @doc("詳細な資格情報の一覧 - 詳細資格情報未登録の場合はnull")
     qualifications: StaffQualification[] | null;
 
-    @doc("通常勤務スケジュールの一覧")
+    @doc("通常勤務スケジュールの一覧 - スケジュール未設定やフリーランススタッフの場合はnull")
     schedules: StaffSchedule[] | null;
 
-    @doc("付与する権限の一覧")
+    @doc("付与する権限の一覧 - 特別権限がない一般スタッフの場合はnull")
     permissions: StaffPermission[] | null;
   }
 
@@ -200,10 +200,10 @@ namespace BeautySalon.Models {
     @doc("空き枠の終了時刻 (HH:mm)")
     endTime: string;
 
-    @doc("休憩などの開始時刻")
+    @doc("休憩などの開始時刻 - 休憩なしの連続勤務の場合はnull")
     breakStart: string | null;
 
-    @doc("休憩などの終了時刻")
+    @doc("休憩などの終了時刻 - 休憩なしの連続勤務の場合はnull")
     breakEnd: string | null;
   }
 }

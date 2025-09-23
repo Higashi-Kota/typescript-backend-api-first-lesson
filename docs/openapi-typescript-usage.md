@@ -303,7 +303,7 @@ router.post('/login', async (
 
 ```typespec
 @doc("Customer search parameters - all fields are optional")
-model SearchCustomerRequest {
+model CustomerSearchRequest {
   @query search?: string;
   @query tags?: string[];
 }

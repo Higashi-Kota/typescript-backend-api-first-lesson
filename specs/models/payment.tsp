@@ -144,13 +144,13 @@ namespace BeautySalon.Models {
     billed: Money;
 
     @doc("課税対象額に対する税額")
-    tax?: Money;
+    tax: Money | null;
 
     @doc("割引金額の合計")
-    discount?: Money;
+    discount: Money | null;
 
     @doc("チップとして受領する金額")
-    tip?: Money;
+    tip: Money | null;
 
     @doc("最終的な支払金額")
     totalPayable: Money;
@@ -168,10 +168,10 @@ namespace BeautySalon.Models {
     customerId: CustomerId;
 
     @doc("関連する予約 ID")
-    bookingId?: BookingId;
+    bookingId: BookingId | null;
 
     @doc("関連する施術記録 ID")
-    treatmentRecordId?: TreatmentRecordId;
+    treatmentRecordId: TreatmentRecordId | null;
 
     @doc("使用した支払い方法")
     method: PaymentMethodType;
@@ -183,31 +183,31 @@ namespace BeautySalon.Models {
     amounts: PaymentAmounts;
 
     @doc("使用したポイント数")
-    pointsUsed?: int32;
+    pointsUsed: int32 | null;
 
     @doc("予約時に適用した預り金額")
-    depositApplied?: Money;
+    depositApplied: Money | null;
 
     @doc("未収残高がある場合の金額")
-    outstandingAmount?: Money;
+    outstandingAmount: Money | null;
 
     @doc("外部決済サービスの参照番号")
-    externalReference?: string;
+    externalReference: string | null;
 
     @doc("発行したレシート番号")
-    receiptNumber?: string;
+    receiptNumber: string | null;
 
     @doc("状態変遷の履歴一覧")
     history: PaymentHistory[];
 
     @doc("関連する返金記録の一覧")
-    refunds?: Refund[];
+    refunds: Refund[] | null;
 
     @doc("外部サービス連携向けのメタデータ")
-    metadata?: Record<unknown>;
+    metadata: Record<unknown> | null;
 
     @doc("スタッフ用の備考メモ")
-    notes?: string;
+    notes: string | null;
 
     ...AuditInfo;
   }
@@ -227,16 +227,16 @@ namespace BeautySalon.Models {
     occurredAt: utcDateTime;
 
     @doc("操作主体の区分")
-    actor?: "system" | "staff" | "customer";
+    actor: "system" | "staff" | "customer" | null;
 
     @doc("操作主体の ID")
-    actorId?: string;
+    actorId: string | null;
 
     @doc("変更内容の補足メモ")
-    note?: string;
+    note: string | null;
 
     @doc("履歴に紐づく追加メタデータ")
-    metadata?: Record<unknown>;
+    metadata: Record<unknown> | null;
   }
 
   @doc("返金処理の記録")
@@ -260,16 +260,16 @@ namespace BeautySalon.Models {
     status: "requested" | "processing" | "completed" | "failed";
 
     @doc("返金処理を担当したスタッフ ID")
-    processedBy?: StaffId;
+    processedBy: StaffId | null;
 
     @doc("返金に使用した支払い方法")
-    method?: PaymentMethodType;
+    method: PaymentMethodType | null;
 
     @doc("外部返金参照コード")
-    referenceCode?: string;
+    referenceCode: string | null;
 
     @doc("返金処理に関する備考")
-    notes?: string;
+    notes: string | null;
   }
 
   @doc("支払金額の内訳プレビュー")
@@ -284,7 +284,7 @@ namespace BeautySalon.Models {
     discount: Money;
 
     @doc("ポイント適用による割引額")
-    pointsDiscount?: Money;
+    pointsDiscount: Money | null;
 
     @doc("支払総額")
     total: Money;
@@ -296,10 +296,10 @@ namespace BeautySalon.Models {
     salonId: SalonId;
 
     @doc("見積対象の顧客 ID")
-    customerId?: CustomerId;
+    customerId: CustomerId | null;
 
     @doc("関連する予約 ID")
-    bookingId?: BookingId;
+    bookingId: BookingId | null;
 
     @doc("金額内訳のプレビュー")
     breakdown: PaymentBreakdown;
@@ -308,7 +308,7 @@ namespace BeautySalon.Models {
     recommendedMethods: PaymentMethodType[];
 
     @doc("顧客・スタッフ向けの備考")
-    notes?: string;
+    notes: string | null;
   }
 
   @doc("期間内の売上実績を集計したレポート")
@@ -401,7 +401,7 @@ namespace BeautySalon.Models {
     averageServiceValue: Money;
 
     @doc("顧客満足度評価（任意）")
-    customerSatisfaction?: float32;
+    customerSatisfaction: float32 | null;
   }
 
   @doc("顧客ポイントの付与・利用履歴")
@@ -422,16 +422,16 @@ namespace BeautySalon.Models {
     balanceAfter: int32;
 
     @doc("関連する決済 ID")
-    paymentId?: PaymentId;
+    paymentId: PaymentId | null;
 
     @doc("関連する予約 ID")
-    bookingId?: BookingId;
+    bookingId: BookingId | null;
 
     @doc("取引内容の説明")
     description: string;
 
     @doc("獲得ポイントの有効期限")
-    expiresAt?: utcDateTime;
+    expiresAt: utcDateTime | null;
 
     @doc("取引発生日時")
     transactedAt: utcDateTime;

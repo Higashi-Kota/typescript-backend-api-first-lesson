@@ -21,47 +21,74 @@ export interface ModelsInventoryItem {
   productCode: string
   /** 商品名 */
   productName: string
-  /** 商品説明文 */
-  description?: string
+  /**
+   * 商品説明文
+   * @nullable
+   */
+  description: string | null
   /** 分類カテゴリ */
   category: string
-  /** ブランド名 */
-  brand?: string
-  /** 仕入先情報 */
-  supplier?: string
+  /**
+   * ブランド名
+   * @nullable
+   */
+  brand: string | null
+  /**
+   * 仕入先情報
+   * @nullable
+   */
+  supplier: string | null
   /** 現在の在庫数量 */
   currentStock: number
   /** 最低在庫数（警告閾値） */
   minimumStock: number
-  /** 最大在庫数（上限管理用） */
-  maximumStock?: number
+  /**
+   * 最大在庫数（上限管理用）
+   * @nullable
+   */
+  maximumStock: number | null
   /** 数量の単位 */
   unit: string
   /** 仕入単価 */
   unitCost: number
-  /** 顧客販売価格 */
-  sellingPrice?: number
+  /**
+   * 顧客販売価格
+   * @nullable
+   */
+  sellingPrice: number | null
   /** 在庫状態区分 */
   status: ModelsInventoryStatusType
-  /** サロン内の保管場所 */
-  location?: string
-  /** 賞味・使用期限 */
-  expirationDate?: string
-  /** 直近の入庫日時 */
-  lastRestocked?: string
-  /** 備考メモ */
-  notes?: string
+  /**
+   * サロン内の保管場所
+   * @nullable
+   */
+  location: string | null
+  /**
+   * 賞味・使用期限
+   * @nullable
+   */
+  expirationDate: string | null
+  /**
+   * 直近の入庫日時
+   * @nullable
+   */
+  lastRestocked: string | null
+  /**
+   * 備考メモ
+   * @nullable
+   */
+  notes: string | null
   /** レコード作成日時。 */
   createdAt: string
   /**
-   * レコードを作成したユーザーID。匿名作成の場合はnull。
+   * レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull
    * @nullable
    */
   createdBy: string | null
   /** レコード最終更新日時。 */
   updatedAt: string
   /**
-   * レコードを最後に更新したユーザーID。匿名更新の場合はnull。
+   * レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull
    * @nullable
    */
   updatedBy: string | null

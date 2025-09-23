@@ -13,16 +13,22 @@ import type { ModelsSalon } from './modelsSalon'
 export type ModelsSalonWithDistance = ModelsSalon & {
   /** 基準地点からの距離（km） */
   distance: number
-  /** 想定移動時間（分）。計算不能時はnull */
-  travelTime?: number
+  /**
+   * 想定移動時間（分）。計算不可の場合はnull
+   * @nullable
+   */
+  travelTime: number | null
 } & Required<
     Pick<
       ModelsSalon & {
         /** 基準地点からの距離（km） */
         distance: number
-        /** 想定移動時間（分）。計算不能時はnull */
-        travelTime?: number
+        /**
+         * 想定移動時間（分）。計算不可の場合はnull
+         * @nullable
+         */
+        travelTime: number | null
       },
-      'distance'
+      'distance' | 'travelTime'
     >
   >

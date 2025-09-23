@@ -35,12 +35,12 @@ export interface ModelsBooking {
   /** 現在のステータスコード。 */
   statusCode: ModelsBookingStatusCodeType
   /**
-   * ウェイティングリスト情報。対象外の場合はnull。
+   * ウェイティングリスト情報。ウェイティングリストに登録されていない場合はnull。
    * @nullable
    */
   waitlistEntry: ModelsBookingWaitlistEntry
   /**
-   * 預かり金に関する情報。必要な場合のみ設定。
+   * 預かり金に関する情報。デポジットが不要な場合はnull。
    * @nullable
    */
   deposit: ModelsBookingDepositProperty
@@ -51,36 +51,36 @@ export interface ModelsBooking {
   /** 最終的に請求する金額。 */
   finalAmount: ModelsMoney
   /**
-   * 未収金額。完済の場合はnull。
+   * 未収金額。支払いが完了している場合はnull。
    * @nullable
    */
   balanceDue: ModelsBookingBalanceDue
   /**
-   * 予定している支払い方法。未定の場合はnull。
+   * 予定している支払い方法。当日決定または未選択の場合はnull
    * @nullable
    */
   paymentMethod: ModelsBookingPaymentMethod
   /**
-   * 支払いの進捗ステータス。未設定の場合は支払い前。
+   * 支払いの進捗ステータス。支払いが未開始の場合はnull。
    * @nullable
    */
   paymentStatus: ModelsBookingPaymentStatus
   /**
-   * スタッフ・顧客間で共有するメモ。
+   * スタッフ・顧客間で共有するメモ。メモがない場合はnull。
    * @nullable
    */
   notes: string | null
   /** レコード作成日時。 */
   createdAt: string
   /**
-   * レコードを作成したユーザーID。匿名作成の場合はnull。
+   * レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull
    * @nullable
    */
   createdBy: string | null
   /** レコード最終更新日時。 */
   updatedAt: string
   /**
-   * レコードを最後に更新したユーザーID。匿名更新の場合はnull。
+   * レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull
    * @nullable
    */
   updatedBy: string | null

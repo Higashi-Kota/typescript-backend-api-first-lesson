@@ -16,7 +16,7 @@ export interface ModelsUserRoleAssignment {
   /** 割り当てるロール ID */
   roleId: ModelsRoleId
   /**
-   * サロン単位のロールの場合の対象サロン ID
+   * サロン単位のロールの場合の対象サロン ID - システム全体ロールの場合はnull
    * @nullable
    */
   salonId: string | null
@@ -25,7 +25,7 @@ export interface ModelsUserRoleAssignment {
   /** 割当を実施したユーザー ID */
   assignedBy: string
   /**
-   * ロール割当の有効期限
+   * ロール割当の有効期限 - 無期限割当の場合はnull
    * @nullable
    */
   expiresAt: string | null

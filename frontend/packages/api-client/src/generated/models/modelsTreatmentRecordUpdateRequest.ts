@@ -13,27 +13,27 @@ import type { ModelsAttachmentId } from './modelsAttachmentId'
  */
 export interface ModelsTreatmentRecordUpdateRequest {
   /**
-   * 施術メモ
+   * 施術メモ - 特記事項がない通常施術の場合はnull、null指定で値をリセット可能
    * @nullable
    */
   notes?: string | null
   /**
-   * 使用した資材一覧
+   * 使用した資材一覧 - カットのみなど商材を使用しない施術の場合はnull、null指定で値をリセット可能
    * @nullable
    */
   usedMaterials?: ModelsMaterialUsage[] | null
   /**
-   * 顧客フィードバック
+   * 顧客フィードバック - 施術直後でフィードバック未収集の場合はnull、null指定で値をリセット可能
    * @nullable
    */
   customerFeedback?: string | null
   /**
-   * 次回来店への提案内容
+   * 次回来店への提案内容 - 特に提案事項がない場合や定期メンテナンスのみの場合はnull、null指定で値をリセット可能
    * @nullable
    */
   nextRecommendations?: string | null
   /**
-   * 施術前後写真 ID
+   * 施術前後写真 ID - 写真撮影を希望しない顧客や撮影が不要な施術の場合はnull、null指定で値をリセット可能
    * @nullable
    */
   photos?: ModelsAttachmentId[] | null

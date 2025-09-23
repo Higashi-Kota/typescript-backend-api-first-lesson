@@ -8,7 +8,7 @@
 import type { ModelsUserRoleDetail } from './modelsUserRoleDetail'
 
 /**
- * 担当サロンやレベル等を含む拡張ロール情報。
+ * 担当サロンやレベル等を含む拡張ロール情報。詳細情報が設定されていない場合はnull。
  * @nullable
  */
 export type ModelsUserRoleDetailProperty = ModelsUserRoleDetail | null

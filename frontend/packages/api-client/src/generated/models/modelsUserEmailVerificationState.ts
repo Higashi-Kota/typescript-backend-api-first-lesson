@@ -8,7 +8,7 @@
 import type { ModelsEmailVerificationStateType } from './modelsEmailVerificationStateType'
 
 /**
- * メール確認状態区分。
+ * メール確認状態区分。状態が未設定の場合はnull。
  * @nullable
  */
 export type ModelsUserEmailVerificationState =

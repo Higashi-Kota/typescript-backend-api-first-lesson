@@ -14,22 +14,22 @@ export interface ModelsPaginationLinks {
   /** 現在ページを指すリンク。 */
   self: string
   /**
-   * 最初のページへのリンク。総件数が確定しない場合は null。
+   * 最初のページへのリンク。総件数が確定しない場合はnull
    * @nullable
    */
   first: string | null
   /**
-   * 最後のページへのリンク。カーソル算出ができない場合は null。
+   * 最後のページへのリンク。カーソル算出ができない場合はnull
    * @nullable
    */
   last: string | null
   /**
-   * 次ページへのリンク。さらに結果がある場合のみ設定される。
+   * 次ページへのリンク。最終ページの場合はnull
    * @nullable
    */
   next: string | null
   /**
-   * 前ページへのリンク。戻り操作が不要な場合は null。
+   * 前ページへのリンク。初回ページまたは戻り操作が不要な場合はnull
    * @nullable
    */
   prev: string | null

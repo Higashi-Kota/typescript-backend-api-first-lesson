@@ -7,7 +7,7 @@
  */
 
 /**
- * Filter by customer status
+ * 顧客ステータスでフィルタ
  */
 export type CustomerCrudExportBodyStatus =
   (typeof CustomerCrudExportBodyStatus)[keyof typeof CustomerCrudExportBodyStatus]

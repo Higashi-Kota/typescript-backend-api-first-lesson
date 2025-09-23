@@ -7,6 +7,6 @@
  */
 
 /**
- * Preferences and requirements
+ * 顧客の好みや要望
  */
 export type ModelsCustomerPreferencesProperty = { [key: string]: unknown }

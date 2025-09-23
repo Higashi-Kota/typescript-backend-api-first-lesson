@@ -293,7 +293,7 @@ namespace BeautySalon.Models {
     @doc("ユーザーまたはオペレーターに提示するエラーメッセージ。")
     message: string;
 
-    @doc("デバッグやサポート対応に役立つ追加情報。任意項目。")
+    @doc("デバッグやサポート対応に役立つ追加情報。追加情報がない場合はnull")
     details: Record<unknown> | null;
   }
 
@@ -337,25 +337,25 @@ namespace BeautySalon.Models {
 
   @doc("曜日別および特定日の営業時間を管理するモデル。")
   model OpeningHours {
-    @doc("対象となる曜日。特定日設定のみの場合はnull。")
+    @doc("対象となる曜日。特定日指定の場合はnull")
     dayOfWeek: DayOfWeekType | null;
 
-    @doc("特別営業日の個別日付。通常スケジュールの場合はnull。")
+    @doc("特定日の日付。曜日別営業時間の場合はnull")
     date: plainDate | null;
 
-    @doc("開店時刻（HH:mm形式）。未設定の場合は休業扱い。")
+    @doc("開店時刻（HH:mm形式）。休業日の場合はnull")
     openTime: string | null;
 
-    @doc("閉店時刻（HH:mm形式）。未設定の場合は休業扱い。")
+    @doc("閉店時刻（HH:mm形式）。休業日の場合はnull")
     closeTime: string | null;
 
     @doc("休業日かどうかを示すフラグ。")
     isHoliday: boolean;
 
-    @doc("祝日名称や社内呼称などの休業理由。未設定時はnull。")
+    @doc("祝日名称や社内呼称などの休業理由。通常営業日または理由不要の場合はnull")
     holidayName: string | null;
 
-    @doc("備考や注意事項。未設定時はnull。")
+    @doc("備考や注意事項。特記事項がない場合はnull")
     notes: string | null;
   }
 
@@ -370,7 +370,7 @@ namespace BeautySalon.Models {
     @doc("都道府県名。")
     prefecture: string;
 
-    @doc("郵便番号。未設定の場合はnull。")
+    @doc("郵便番号。未登録の場合はnull")
     postalCode: string | null;
 
     @doc("国名。既定値はJapan。")
@@ -385,10 +385,10 @@ namespace BeautySalon.Models {
     @doc("主要連絡先として利用する電話番号。")
     phoneNumber: string;
 
-    @doc("緊急連絡用などの予備電話番号。未設定時はnull。")
+    @doc("緊急連絡用などの予備電話番号。未登録の場合はnull")
     alternativePhone: string | null;
 
-    @doc("公式サイトや予約ページのURL。未設定時はnull。")
+    @doc("公式サイトや予約ページのURL。ウェブサイトがない場合はnull")
     websiteUrl: string | null;
   }
 
@@ -397,13 +397,13 @@ namespace BeautySalon.Models {
     @doc("レコード作成日時。")
     createdAt: utcDateTime;
 
-    @doc("レコードを作成したユーザーID。匿名作成の場合はnull。")
+    @doc("レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull")
     createdBy: string | null;
 
     @doc("レコード最終更新日時。")
     updatedAt: utcDateTime;
 
-    @doc("レコードを最後に更新したユーザーID。匿名更新の場合はnull。")
+    @doc("レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull")
     updatedBy: string | null;
   }
 
@@ -471,7 +471,7 @@ namespace BeautySalon.Models {
     @doc("使用する通貨コード。")
     currency: CurrencyCodeType;
 
-    @doc("適用税率。任意設定。")
+    @doc("適用税率。税率が適用されない場合はnull")
     taxRate: decimal | null;
   }
 
@@ -518,16 +518,16 @@ namespace BeautySalon.Models {
     @doc("営業時間帯の一覧。複数設定で分割営業に対応。")
     operatingSlots: TimeSlot[];
 
-    @doc("休憩時間や中断時間帯の一覧。未設定時はnull。")
+    @doc("休憩時間や中断時間帯の一覧。休憩がない場合はnull")
     breakSlots: TimeSlot[] | null;
 
     @doc("当該曜日を休業扱いとする場合のフラグ。既定値はfalse。")
     isClosed: boolean = false;
 
-    @doc("季節営業などの適用期間。未設定時は通年有効。")
+    @doc("季節営業などの適用期間。通年有効の場合はnull")
     effectivePeriod: DateRange | null;
 
-    @doc("営業基準となるタイムゾーンID。未設定時はサロン既定値。")
+    @doc("営業基準となるタイムゾーンID。サロン既定値を使用する場合はnull")
     timezone: string | null;
   }
 
@@ -554,10 +554,10 @@ namespace BeautySalon.Models {
     @doc("累計で利用（消費）したポイント総数。")
     totalUsedPoints: int32;
 
-    @doc("失効予定のポイント数。未設定時はnull。")
+    @doc("失効予定のポイント数。失効予定がない場合はnull")
     expiringPoints: int32 | null;
 
-    @doc("最も早く失効するポイントの失効日。未設定時はnull。")
+    @doc("最も早く失効するポイントの失効日。失効予定がない場合はnull")
     expirationDate: utcDateTime | null;
   }
 
@@ -569,7 +569,7 @@ namespace BeautySalon.Models {
     @doc("顧客向けに表示するサービス名称。")
     name: string;
 
-    @doc("対象サービスの予約件数。統計未計算時はnull。")
+    @doc("対象サービスの予約件数。統計未計算の場合はnull")
     bookingCount: int32 | null;
   }
 
@@ -581,10 +581,10 @@ namespace BeautySalon.Models {
     @doc("スタッフの表示名。")
     name: string;
 
-    @doc("平均評価スコア。未評価の場合はnull。")
+    @doc("平均評価スコア。未評価または評価データがない場合はnull")
     rating: float32 | null;
 
-    @doc("担当した予約件数。統計未計算時はnull。")
+    @doc("担当した予約件数。統計未計算の場合はnull")
     bookingCount: int32 | null;
   }
 

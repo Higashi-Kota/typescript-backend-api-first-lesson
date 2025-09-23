@@ -8,7 +8,7 @@
 import type { ModelsBookingLimit } from './modelsBookingLimit'
 
 /**
- * 顧客ごとの予約上限設定
+ * 顧客ごとの予約上限設定。予約回数制限がない場合はnull
  * @nullable
  */
 export type ModelsServiceRestrictionsMaxBookingsPerCustomer =

@@ -15,7 +15,7 @@ export interface ModelsCancellationFee {
   /** キャンセル料金率（%） */
   percentage: number
   /**
-   * 固定額で設定するキャンセル料金
+   * 固定額で設定するキャンセル料金。パーセンテージベースの料金設定の場合はnull
    * @nullable
    */
   fixedAmount: number | null

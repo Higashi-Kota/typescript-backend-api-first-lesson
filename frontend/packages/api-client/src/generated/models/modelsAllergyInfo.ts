@@ -9,16 +9,33 @@ import type { ModelsAllergyType } from './modelsAllergyType'
 import type { ModelsAllergySeverityType } from './modelsAllergySeverityType'
 
 export interface ModelsAllergyInfo {
+  /** アレルギーのタイプ分類。物質の種類を示す */
   type: ModelsAllergyType
-  /** @nullable */
+  /**
+   * アレルギー物質一覧。該当なしの場合はnull
+   * @nullable
+   */
   substances: string[] | null
-  /** @nullable */
+  /**
+   * アレルギー香料一覧。該当なしの場合はnull
+   * @nullable
+   */
   fragrances: string[] | null
-  /** @nullable */
+  /**
+   * アレルギー金属一覧。該当なしの場合はnull
+   * @nullable
+   */
   metals: string[] | null
-  /** @nullable */
+  /**
+   * アレルギー植物一覧。該当なしの場合はnull
+   * @nullable
+   */
   plants: string[] | null
-  /** @nullable */
+  /**
+   * アレルギー詳細説明。追加情報がない場合はnull
+   * @nullable
+   */
   description: string | null
+  /** アレルギーの重篤度。反応の強さと対応レベル */
   severity: ModelsAllergySeverityType
 }

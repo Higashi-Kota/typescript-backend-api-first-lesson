@@ -19,5 +19,5 @@ export type CustomerCrudSearch200 = {
   /** 検索条件や件数などのメタ情報。ページングやログ解析に活用する。 */
   meta: ModelsSearchMeta
   /** ファセット集計結果。各フィールドごとの件数分布を保持する。 */
-  facets?: CustomerCrudSearch200Facets
+  facets: CustomerCrudSearch200Facets
 }

@@ -7,7 +7,7 @@
  */
 
 /**
- * 関連リソースや次アクションへのリンク情報。
+ * 関連リソースや次アクションへのリンク情報。リンクがない場合はnull
  * @nullable
  */
 export type SalonCrudCreate201Links = { [key: string]: string } | null

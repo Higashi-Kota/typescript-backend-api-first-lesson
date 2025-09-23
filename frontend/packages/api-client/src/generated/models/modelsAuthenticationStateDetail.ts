@@ -14,32 +14,32 @@ export interface ModelsAuthenticationStateDetail {
   /** 現在の認証状態区分。 */
   type: ModelsAuthenticationStateType
   /**
-   * 状態に紐づくセッションID。未確立の場合はnull。
+   * 状態に紐づくセッションID。セッションが未確立の場合はnull。
    * @nullable
    */
   sessionId: string | null
   /**
-   * 該当状態が失効する日時。
+   * 該当状態が失効する日時。無期限の場合はnull。
    * @nullable
    */
   expiresAt: string | null
   /**
-   * 2要素認証や一時アクセスに利用する暫定トークン。
+   * 2要素認証や一時アクセスに利用する暫定トークン。不要な状態の場合はnull。
    * @nullable
    */
   tempToken: string | null
   /**
-   * ロックや制限状態が解除される予定日時。
+   * ロックや制限状態が解除される予定日時。通常状態の場合はnull。
    * @nullable
    */
   until: string | null
   /**
-   * 認証失敗などの試行回数。
+   * 認証失敗などの試行回数。試行がない場合はnull。
    * @nullable
    */
   attempts: number | null
   /**
-   * 状態が発生した具体的な理由メッセージ。
+   * 状態が発生した具体的な理由メッセージ。理由が特にない場合はnull。
    * @nullable
    */
   reason: string | null

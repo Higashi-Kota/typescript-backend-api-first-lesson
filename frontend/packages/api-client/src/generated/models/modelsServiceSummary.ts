@@ -16,7 +16,7 @@ export interface ModelsServiceSummary {
   /** 顧客向けに表示するサービス名称。 */
   name: string
   /**
-   * 対象サービスの予約件数。統計未計算時はnull。
+   * 対象サービスの予約件数。統計未計算の場合はnull
    * @nullable
    */
   bookingCount: number | null

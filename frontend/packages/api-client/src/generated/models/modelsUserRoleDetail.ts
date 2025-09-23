@@ -15,12 +15,12 @@ export interface ModelsUserRoleDetail {
   /** システム内での基礎的な役割区分。 */
   type: ModelsUserRoleType
   /**
-   * 役割が適用されるサロンID。全社権限の場合はnull。
+   * 役割が適用されるサロンID。全社管理者やシステム管理者の場合はnull。
    * @nullable
    */
   salonId: string | null
   /**
-   * スタッフに対して設定される技術レベル。
+   * スタッフに対して設定される技術レベル。スタッフ以外の役割の場合はnull。
    * @nullable
    */
   level: ModelsUserRoleDetailLevel

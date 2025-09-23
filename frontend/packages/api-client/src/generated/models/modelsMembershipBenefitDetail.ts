@@ -9,17 +9,36 @@ import type { ModelsMembershipBenefitType } from './modelsMembershipBenefitType'
 import type { ModelsMembershipBenefitDetailFrequency } from './modelsMembershipBenefitDetailFrequency'
 
 export interface ModelsMembershipBenefitDetail {
+  /** 会員特典のタイプ。特典の種類を識別する */
   type: ModelsMembershipBenefitType
-  /** @nullable */
+  /**
+   * 特典の割引率。割引特典以外の場合はnull
+   * @nullable
+   */
   percentage: number | null
-  /** @nullable */
+  /**
+   * ポイント倍率。ポイント特典以外の場合はnull
+   * @nullable
+   */
   multiplier: number | null
-  /** @nullable */
+  /**
+   * 特典対象サービス名。サービス指定がない場合はnull
+   * @nullable
+   */
   service: string | null
-  /** @nullable */
+  /**
+   * 特典提供频度。频度指定がない場合はnull
+   * @nullable
+   */
   frequency: ModelsMembershipBenefitDetailFrequency
-  /** @nullable */
+  /**
+   * 特典の価値。数値化できない場合はnull
+   * @nullable
+   */
   value: number | null
-  /** @nullable */
+  /**
+   * 特典の説明文。詳細説明が不要な場合はnull
+   * @nullable
+   */
   description: string | null
 }

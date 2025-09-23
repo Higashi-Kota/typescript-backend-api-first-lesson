@@ -25,7 +25,7 @@ export interface ModelsCreateReservationRequest {
   /** 希望する施術開始日時 (UTC) */
   startTime: string
   /**
-   * 顧客要望や注意事項のメモ
+   * 顧客要望や注意事項のメモ - 特記事項がない標準予約の場合はnull
    * @nullable
    */
   notes: string | null

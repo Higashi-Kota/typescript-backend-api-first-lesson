@@ -8,7 +8,7 @@
 import type { ModelsStaffLevelType } from './modelsStaffLevelType'
 
 /**
- * 必要なスタッフレベル
+ * 必要なスタッフレベル。全スタッフが対応可能な場合はnull
  * @nullable
  */
 export type ModelsServiceRestrictionsRequiredStaffLevel =

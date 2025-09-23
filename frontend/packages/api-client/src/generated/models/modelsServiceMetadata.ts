@@ -11,42 +11,42 @@
  */
 export interface ModelsServiceMetadata {
   /**
-   * タグ一覧
+   * タグ一覧。タグ付けが不要な場合はnull
    * @nullable
    */
   tags: string[] | null
   /**
-   * 検索キーワード
+   * 検索キーワード。追加の検索キーワードが不要な場合はnull
    * @nullable
    */
   keywords: string[] | null
   /**
-   * SEO 用タイトル
+   * SEO 用タイトル。デフォルトのサービス名を使用する場合はnull
    * @nullable
    */
   seoTitle: string | null
   /**
-   * SEO 用ディスクリプション
+   * SEO 用ディスクリプション。デフォルトの説明文を使用する場合はnull
    * @nullable
    */
   seoDescription: string | null
   /**
-   * 内部向けメモ
+   * 内部向けメモ。特記事項がない場合はnull
    * @nullable
    */
   internalNotes: string | null
   /**
-   * 表示順序
+   * 表示順序。自動ソートまたはデフォルト順序の場合はnull
    * @nullable
    */
   sortOrder: number | null
   /**
-   * 注目サービスとして表示するか
+   * 注目サービスとして表示するか。通常表示の場合はnull（falseと同義）
    * @nullable
    */
   featured: boolean | null
   /**
-   * メニュー非表示フラグ
+   * メニュー非表示フラグ。通常表示の場合はnull（falseと同義）
    * @nullable
    */
   hideFromMenu: boolean | null

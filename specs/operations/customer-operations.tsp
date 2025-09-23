@@ -24,18 +24,18 @@ namespace BeautySalon.Operations {
     interface CustomerCrud
       extends CrudOperations<
           Customer,
-          CreateCustomerRequest,
-          UpdateCustomerRequest,
-          SearchCustomerRequest,
+          CustomerCreateRequest,
+          CustomerUpdateRequest,
+          CustomerSearchRequest,
           CustomerId
         >,
         BulkOperations<
           Customer,
-          CreateCustomerRequest,
-          UpdateCustomerRequest,
+          CustomerCreateRequest,
+          CustomerUpdateRequest,
           CustomerId
         >,
-        SearchOperations<Customer, SearchCustomerRequest>,
+        SearchOperations<Customer, CustomerSearchRequest>,
         AuditOperations<Customer, CustomerId> {}
 
     @doc("顧客の基本情報に加え、嗜好や連絡先など拡張情報を取得し、パーソナライズ対応に活かします。")

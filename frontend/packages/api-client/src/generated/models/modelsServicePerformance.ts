@@ -16,7 +16,7 @@ export interface ModelsServicePerformance {
   /** 施術完了率 */
   completionRate: ModelsDecimal
   /**
-   * 平均評価スコア
+   * 平均評価スコア。まだ評価がない新サービスの場合はnull
    * @nullable
    */
   averageRating: number | null
@@ -25,12 +25,12 @@ export interface ModelsServicePerformance {
   /** 売上実績（円） */
   revenue: number
   /**
-   * 人気度スコア
+   * 人気度スコア。算出に必要なデータが不足している場合はnull
    * @nullable
    */
   popularityScore: number | null
   /**
-   * リピート率
+   * リピート率（%）。リピート実績がない新サービスの場合はnull
    * @nullable
    */
   repeatRate: number | null

@@ -11,17 +11,17 @@ import type { CustomerCrudExportBodySortOrder } from './customerCrudExportBodySo
 import type { CustomerCrudExportBodyFormat } from './customerCrudExportBodyFormat'
 
 export type CustomerCrudExportBody = {
-  /** Search in customer name, email, or phone */
+  /** 顧客名、メール、または電話番号で検索 */
   search?: string
-  /** Filter by customer tags */
+  /** 顧客タグでフィルタ */
   tags?: string[]
-  /** Filter by registration date from */
+  /** 登録日開始でフィルタ */
   registeredFrom?: string
-  /** Filter by registration date to */
+  /** 登録日終了でフィルタ */
   registeredTo?: string
-  /** Filter by customer status */
+  /** 顧客ステータスでフィルタ */
   status?: CustomerCrudExportBodyStatus
-  /** Filter by loyalty tier */
+  /** ロイヤルティティアでフィルタ */
   loyaltyTier?: CustomerCrudExportBodyLoyaltyTier
   /** 全文検索キーワード。名称や説明文を横断的に検索する。 */
   q?: string

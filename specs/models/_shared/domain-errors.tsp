@@ -42,19 +42,19 @@ namespace BeautySalon.Models {
     @doc("機械判読可能なエラーコード。外部連携やログ分析に利用する。")
     code: string;
 
-    @doc("追加のエラー文脈。入力値や関連設定など柔軟に格納する。")
+    @doc("追加のエラー文脈。入力値や関連設定など柔軟に格納する。追加情報がない場合はnull")
     details: Record<unknown> | null;
 
-    @doc("関連するエンティティ名。例: `Reservation` や `Customer`。")
+    @doc("関連するエンティティ名。例: `Reservation` や `Customer`。特定のエンティティに関連しない場合はnull")
     entity: string | null;
 
-    @doc("問題が発生したフィールド名。入力フォームとの紐付けに利用。")
+    @doc("問題が発生したフィールド名。入力フォームとの紐付けに利用。フィールド特定が不要な場合はnull")
     field: string | null;
 
-    @doc("問題があった値。マスキングが不要なケースのみ保持する。")
+    @doc("問題があった値。マスキングが不要なケースのみ保持する。値を出力しない場合はnull")
     value: string | null;
 
-    @doc("外部サービスエラー時の対象サービス名。連携先の切り分けに役立つ。")
+    @doc("外部サービスエラー時の対象サービス名。連携先の切り分けに役立つ。外部サービスに関係ない場合はnull")
     service: string | null;
   }
 
@@ -156,10 +156,10 @@ namespace BeautySalon.Models {
     @doc("エラーが発生した日時 (UTC)。再発防止のタイムライン分析に活用。")
     occurredAt: utcDateTime;
 
-    @doc("エラーが発生した操作名やユースケース。例: `CreateReservation`。")
+    @doc("エラーが発生した操作名やユースケース。例: `CreateReservation`。操作名が特定できない場合はnull")
     operation: string | null;
 
-    @doc("デバッグ用のスタックトレース。開発・検証環境のみで出力する。")
+    @doc("デバッグ用のスタックトレース。開発・検証環境のみで出力する。本番環境ではnull")
     stackTrace: string | null;
   }
 }

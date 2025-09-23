@@ -16,7 +16,7 @@ export interface ModelsDraftBookingStatus {
   /** 下書きが作成された日時。 */
   createdAt: string
   /**
-   * 下書きの有効期限。未設定の場合は期限なし。
+   * 下書きの有効期限。無期限の場合はnull。
    * @nullable
    */
   expiresAt: string | null

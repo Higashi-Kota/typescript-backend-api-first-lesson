@@ -15,14 +15,14 @@ export interface ModelsStaffScheduleUpdateRequest {
   /** 更新後の通常勤務時間帯一覧 */
   regularHours: ModelsBusinessHours[]
   /**
-   * 休暇や特例などの例外設定一覧。変更がない場合はnull
+   * 休暇や特例などの例外設定一覧。例外がない場合はnull
    * @nullable
    */
   exceptions: ModelsScheduleException[] | null
   /** 更新内容の適用開始日時 */
   effectiveFrom: string
   /**
-   * 適用終了日時。未定の場合はnull
+   * 適用終了日時。無期限の場合はnull
    * @nullable
    */
   effectiveTo: string | null

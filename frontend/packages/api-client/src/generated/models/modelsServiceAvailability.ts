@@ -8,7 +8,7 @@
 import type { ModelsServiceAvailabilityDetail } from './modelsServiceAvailabilityDetail'
 
 /**
- * 提供可能条件の設定
+ * 提供可能条件の設定。常時提供で特別な制約がない場合はnull
  * @nullable
  */
 export type ModelsServiceAvailability = ModelsServiceAvailabilityDetail | null

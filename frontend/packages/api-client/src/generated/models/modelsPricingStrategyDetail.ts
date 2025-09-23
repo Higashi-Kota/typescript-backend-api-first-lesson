@@ -17,47 +17,47 @@ export interface ModelsPricingStrategyDetail {
   /** 価格戦略タイプ */
   type: ModelsPricingStrategyType
   /**
-   * 固定価格型の場合の金額
+   * 固定価格型の場合の金額。固定価格戦略以外の場合はnull
    * @nullable
    */
   amount: number | null
   /**
-   * 段階価格の設定一覧
+   * 段階価格の設定一覧。段階価格戦略以外の場合はnull
    * @nullable
    */
   tiers: ModelsPriceTier[] | null
   /**
-   * 基準価格
+   * 基準価格。動的価格やカスタム価格など基準価格を持たない戦略の場合はnull
    * @nullable
    */
   basePrice: number | null
   /**
-   * 価格変動要因の設定
+   * 価格変動要因の設定。動的価格戦略以外の場合はnull
    * @nullable
    */
   factors: ModelsPricingFactor[] | null
   /**
-   * セット対象となるサービス ID
+   * セット対象となるサービス ID。パッケージ価格戦略以外の場合はnull
    * @nullable
    */
   services: ModelsServiceId[] | null
   /**
-   * 割引率（%）
+   * 割引率（%）。割引設定がない、または固定額割引の場合はnull
    * @nullable
    */
   discountRate: number | null
   /**
-   * 会員向け特別価格
+   * 会員向け特別価格。会員価格戦略以外の場合はnull
    * @nullable
    */
   memberPrice: number | null
   /**
-   * 非会員向け価格
+   * 非会員向け価格。会員価格戦略以外の場合はnull
    * @nullable
    */
   nonMemberPrice: number | null
   /**
-   * 戦略の説明
+   * 戦略の説明。説明が不要な標準的な価格戦略の場合はnull
    * @nullable
    */
   description: string | null

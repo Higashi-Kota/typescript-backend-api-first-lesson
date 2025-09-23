@@ -17,12 +17,12 @@ export type SalonOperationsGetStatistics200 = {
   /** レスポンスの主体となるビジネスデータ。 */
   data: ModelsSalonStatistics
   /**
-   * リクエスト識別子やバージョン情報など共通メタデータ。
+   * リクエスト識別子やバージョン情報など共通メタデータ。メタ情報が不要な場合はnull
    * @nullable
    */
   meta: SalonOperationsGetStatistics200Meta
   /**
-   * 関連リソースや次アクションへのリンク情報。
+   * 関連リソースや次アクションへのリンク情報。リンクがない場合はnull
    * @nullable
    */
   links: SalonOperationsGetStatistics200Links

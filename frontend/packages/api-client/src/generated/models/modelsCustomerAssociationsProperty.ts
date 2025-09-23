@@ -8,7 +8,7 @@
 import type { ModelsCustomerAssociations } from './modelsCustomerAssociations'
 
 /**
- * Customer associations
+ * 顧客関連情報。関連がない場合はnull
  * @nullable
  */
 export type ModelsCustomerAssociationsProperty =

@@ -13,19 +13,19 @@ export interface ModelsPriceTier {
   /** 価格段階の名称 */
   name: string
   /**
-   * 段階の説明
+   * 段階の説明。詳細な説明が不要なシンプルな価格設定の場合はnull
    * @nullable
    */
   description: string | null
   /** 適用価格（税抜） */
   price: number
   /**
-   * この段階での施術時間
+   * この段階での施術時間（分）。価格段階による時間変更がない場合はnull
    * @nullable
    */
   duration: number | null
   /**
-   * 適用条件の説明リスト
+   * 適用条件の説明リスト。特別な条件がない場合はnull
    * @nullable
    */
   conditions: string[] | null

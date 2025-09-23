@@ -11,22 +11,22 @@
  */
 export interface ModelsShareLinkCreateRequest {
   /**
-   * 共有リンクの有効期限。任意設定。
+   * 共有リンクの有効期限。無期限の場合はnull。
    * @nullable
    */
   expiresAt: string | null
   /**
-   * 許可する最大ダウンロード回数。任意設定。
+   * 許可する最大ダウンロード回数。無制限の場合はnull。
    * @nullable
    */
   maxDownloads: number | null
   /**
-   * 共有リンク保護用のパスワード。任意設定。
+   * 共有リンク保護用のパスワード。パスワード保護なしの場合はnull。
    * @nullable
    */
   password: string | null
   /**
-   * アクセスを許可するメールアドレス一覧。任意設定。
+   * アクセスを許可するメールアドレス一覧。制限なしの場合はnull。
    * @nullable
    */
   allowedEmails: string[] | null

@@ -588,7 +588,7 @@ export const SalonReadMapper = {
     openingHoursMap: Map<string, DbOpeningHours[]> = new Map()
   ): ApiSalon[] {
     return dbSalons.map((salon) =>
-      this.toApiSalon(salon, openingHoursMap.get(salon.id) || [])
+      this.toApiSalon(salon, openingHoursMap.get(salon.id) ?? [])
     )
   },
 }

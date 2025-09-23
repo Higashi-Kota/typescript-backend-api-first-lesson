@@ -13,8 +13,11 @@ import type { ModelsAvailableTimeSlot } from './modelsAvailableTimeSlot'
 export interface ModelsSalonAvailabilityResponse {
   /** 予約可能な時間帯候補一覧 */
   availableSlots: ModelsAvailableTimeSlot[]
-  /** 希望日が満席の場合に提示する次の空き日 */
-  nextAvailableDate?: string
+  /**
+   * 希望日が満席の場合に提示する次の空き日。空きがない場合はnull
+   * @nullable
+   */
+  nextAvailableDate: string | null
   /** ウェイトリスト登録の可否 */
   waitlistAvailable: boolean
 }

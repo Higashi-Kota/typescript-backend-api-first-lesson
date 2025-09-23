@@ -12,34 +12,34 @@ import type { ModelsOpeningHoursDayOfWeek } from './modelsOpeningHoursDayOfWeek'
  */
 export interface ModelsOpeningHours {
   /**
-   * 対象となる曜日。特定日設定のみの場合はnull。
+   * 対象となる曜日。特定日指定の場合はnull
    * @nullable
    */
   dayOfWeek: ModelsOpeningHoursDayOfWeek
   /**
-   * 特別営業日の個別日付。通常スケジュールの場合はnull。
+   * 特定日の日付。曜日別営業時間の場合はnull
    * @nullable
    */
   date: string | null
   /**
-   * 開店時刻（HH:mm形式）。未設定の場合は休業扱い。
+   * 開店時刻（HH:mm形式）。休業日の場合はnull
    * @nullable
    */
   openTime: string | null
   /**
-   * 閉店時刻（HH:mm形式）。未設定の場合は休業扱い。
+   * 閉店時刻（HH:mm形式）。休業日の場合はnull
    * @nullable
    */
   closeTime: string | null
   /** 休業日かどうかを示すフラグ。 */
   isHoliday: boolean
   /**
-   * 祝日名称や社内呼称などの休業理由。未設定時はnull。
+   * 祝日名称や社内呼称などの休業理由。通常営業日または理由不要の場合はnull
    * @nullable
    */
   holidayName: string | null
   /**
-   * 備考や注意事項。未設定時はnull。
+   * 備考や注意事項。特記事項がない場合はnull
    * @nullable
    */
   notes: string | null

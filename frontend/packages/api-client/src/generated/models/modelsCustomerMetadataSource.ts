@@ -7,6 +7,7 @@
  */
 
 /**
+ * 顧客獲得チャネル。不明の場合はnull
  * @nullable
  */
 export type ModelsCustomerMetadataSource =

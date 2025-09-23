@@ -17,7 +17,7 @@ export interface ModelsCancelledBookingStatus {
   /** キャンセルが登録された日時。 */
   cancelledAt: string
   /**
-   * キャンセル理由のメモ。未設定の場合はnull。
+   * キャンセル理由のメモ。理由が記録されていない場合はnull。
    * @nullable
    */
   reason: string | null

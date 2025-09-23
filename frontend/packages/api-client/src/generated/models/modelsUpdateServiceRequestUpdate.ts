@@ -14,12 +14,12 @@ export interface ModelsUpdateServiceRequestUpdate {
   /** 更新後のサービス名 */
   name?: string
   /**
-   * 更新後の説明文
+   * 更新後の説明文。null指定で説明文をクリア（空文字列にリセット）
    * @nullable
    */
   description?: string | null
   /**
-   * 更新後の施術時間
+   * 更新後の施術時間。null指定で時間設定をクリア（デフォルト値にリセット）
    * @nullable
    */
   duration?: number | null

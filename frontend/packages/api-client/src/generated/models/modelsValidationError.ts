@@ -20,12 +20,12 @@ export interface ModelsValidationError {
   /** ユーザーに提示する具体的なエラーメッセージ。 */
   message: string
   /**
-   * 検証対象となった実際の値。セキュリティ観点で出力が許容される場合のみ利用する。
+   * 検証対象となった実際の値。セキュリティ観点で出力が許容される場合のみ利用する。出力不可の場合はnull
    * @nullable
    */
   value: ModelsValidationErrorValue
   /**
-   * 期待される値や制約条件。入力補助やUI表示のガイダンスに使用する。
+   * 期待される値や制約条件。入力補助やUI表示のガイダンスに使用する。制約が明示不要な場合はnull
    * @nullable
    */
   constraint: ModelsValidationErrorConstraint

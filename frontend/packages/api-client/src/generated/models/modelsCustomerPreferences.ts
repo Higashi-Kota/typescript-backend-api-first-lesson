@@ -13,22 +13,49 @@ import type { ModelsDayOfWeekType } from './modelsDayOfWeekType'
 import type { ModelsTimeSlot } from './modelsTimeSlot'
 
 export interface ModelsCustomerPreferences {
-  /** @nullable */
+  /**
+   * スタイルの好み設定。設定がない場合はnull
+   * @nullable
+   */
   stylePreferences: ModelsCustomerPreferencesStylePreferences
-  /** @nullable */
+  /**
+   * サービスの好み設定。設定がない場合はnull
+   * @nullable
+   */
   servicePreferences: ModelsCustomerPreferencesServicePreferences
-  /** @nullable */
+  /**
+   * 連絡方法の好み設定。設定がない場合はnull
+   * @nullable
+   */
   communicationPreferences: ModelsCustomerPreferencesCommunicationPreferences
-  /** @nullable */
+  /**
+   * 希望スタッフ一覧。指名がない場合はnull
+   * @nullable
+   */
   preferredStaff: ModelsStaffId[] | null
-  /** @nullable */
+  /**
+   * 避けたいスタッフ一覧。特にない場合はnull
+   * @nullable
+   */
   avoidStaff: ModelsStaffId[] | null
-  /** @nullable */
+  /**
+   * 希望曜日一覧。特に希望がない場合はnull
+   * @nullable
+   */
   preferredDayOfWeek: ModelsDayOfWeekType[] | null
-  /** @nullable */
+  /**
+   * 希望時間帯一覧。特に希望がない場合はnull
+   * @nullable
+   */
   preferredTimeSlots: ModelsTimeSlot[] | null
-  /** @nullable */
+  /**
+   * 特別なリクエスト。特にない場合はnull
+   * @nullable
+   */
   specialRequests: string | null
-  /** @nullable */
+  /**
+   * 希望言語。日本語で問題ない場合はnull
+   * @nullable
+   */
   language: string | null
 }

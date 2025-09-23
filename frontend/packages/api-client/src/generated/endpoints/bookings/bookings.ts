@@ -31,10 +31,10 @@ import type {
   ModelsBooking,
   ModelsBookingDetail,
   ModelsBookingId,
+  ModelsBookingUpdateRequest,
   ModelsCreateBookingRequest,
   ModelsError,
   ModelsReservationId,
-  ModelsUpdateBookingRequest,
 } from '../../models'
 
 import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher'
@@ -580,7 +580,7 @@ export const getBookingOperationsUpdateUrl = (id: ModelsBookingId) => {
 
 export const bookingOperationsUpdate = async (
   id: ModelsBookingId,
-  modelsUpdateBookingRequest: ModelsUpdateBookingRequest,
+  modelsBookingUpdateRequest: ModelsBookingUpdateRequest,
   options?: RequestInit
 ): Promise<bookingOperationsUpdateResponse> => {
   return customInstance<bookingOperationsUpdateResponse>(
@@ -589,7 +589,7 @@ export const bookingOperationsUpdate = async (
       ...options,
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsUpdateBookingRequest),
+      body: JSON.stringify(modelsBookingUpdateRequest),
     }
   )
 }
@@ -601,14 +601,14 @@ export const getBookingOperationsUpdateMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof bookingOperationsUpdate>>,
     TError,
-    { id: ModelsBookingId; data: ModelsUpdateBookingRequest },
+    { id: ModelsBookingId; data: ModelsBookingUpdateRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof bookingOperationsUpdate>>,
   TError,
-  { id: ModelsBookingId; data: ModelsUpdateBookingRequest },
+  { id: ModelsBookingId; data: ModelsBookingUpdateRequest },
   TContext
 > => {
   const mutationKey = ['bookingOperationsUpdate']
@@ -622,7 +622,7 @@ export const getBookingOperationsUpdateMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof bookingOperationsUpdate>>,
-    { id: ModelsBookingId; data: ModelsUpdateBookingRequest }
+    { id: ModelsBookingId; data: ModelsBookingUpdateRequest }
   > = (props) => {
     const { id, data } = props ?? {}
 
@@ -635,7 +635,7 @@ export const getBookingOperationsUpdateMutationOptions = <
 export type BookingOperationsUpdateMutationResult = NonNullable<
   Awaited<ReturnType<typeof bookingOperationsUpdate>>
 >
-export type BookingOperationsUpdateMutationBody = ModelsUpdateBookingRequest
+export type BookingOperationsUpdateMutationBody = ModelsBookingUpdateRequest
 export type BookingOperationsUpdateMutationError = ModelsError
 
 /**
@@ -649,7 +649,7 @@ export const useBookingOperationsUpdate = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof bookingOperationsUpdate>>,
       TError,
-      { id: ModelsBookingId; data: ModelsUpdateBookingRequest },
+      { id: ModelsBookingId; data: ModelsBookingUpdateRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -658,7 +658,7 @@ export const useBookingOperationsUpdate = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof bookingOperationsUpdate>>,
   TError,
-  { id: ModelsBookingId; data: ModelsUpdateBookingRequest },
+  { id: ModelsBookingId; data: ModelsBookingUpdateRequest },
   TContext
 > => {
   const mutationOptions = getBookingOperationsUpdateMutationOptions(options)

@@ -31,34 +31,34 @@ export interface ModelsTreatmentRecordCreateRequest {
   /** 施術終了日時 */
   endTime: string
   /**
-   * 施術メモ
+   * 施術メモ - 特記事項がない通常施術の場合はnull
    * @nullable
    */
   notes: string | null
   /**
-   * 使用した資材一覧
+   * 使用した資材一覧 - カットのみなど商材を使用しない施術の場合はnull
    * @nullable
    */
   usedMaterials: ModelsMaterialUsage[] | null
   /**
-   * 顧客フィードバック
+   * 顧客フィードバック - 施術直後でフィードバック未収集の場合はnull
    * @nullable
    */
   customerFeedback: string | null
   /**
-   * 次回来店への提案内容
+   * 次回来店への提案内容 - 特に提案事項がない場合や定期メンテナンスのみの場合はnull
    * @nullable
    */
   nextRecommendations: string | null
   /** 請求総額 */
   totalAmount: number
   /**
-   * 割引額
+   * 割引額 - 割引を適用しない定価施術の場合はnull
    * @nullable
    */
   discountAmount: number | null
   /**
-   * 付与ポイント数
+   * 付与ポイント数 - ポイント対象外の施術やポイント制度未導入サロンの場合はnull
    * @nullable
    */
   pointsEarned: number | null

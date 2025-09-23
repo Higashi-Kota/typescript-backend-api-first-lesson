@@ -16,7 +16,7 @@ export interface ModelsMoneyUpdate {
   /** 使用する通貨コード。 */
   currency?: ModelsCurrencyCodeType
   /**
-   * 適用税率。任意設定。
+   * 適用税率。税率が適用されない場合はnull
    * @nullable
    */
   taxRate?: number | null

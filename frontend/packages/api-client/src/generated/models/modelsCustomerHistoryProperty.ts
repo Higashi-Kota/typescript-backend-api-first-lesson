@@ -8,7 +8,7 @@
 import type { ModelsCustomerHistory } from './modelsCustomerHistory'
 
 /**
- * Visit history
+ * 来店履歴。履歴がない場合はnull
  * @nullable
  */
 export type ModelsCustomerHistoryProperty = ModelsCustomerHistory | null

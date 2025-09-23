@@ -13,24 +13,27 @@ import type { ModelsStaffSummary } from './modelsStaffSummary'
  * Customer statistics response
  */
 export interface ModelsCustomerStatistics {
-  /** Total bookings */
+  /** 総予約数 */
   totalBookings: number
-  /** Total spent */
+  /** 総支払額 */
   totalSpent: ModelsMoney
-  /** Average booking value */
+  /** 平均予約単価 */
   averageBookingValue: ModelsMoney
-  /** Last visit date */
-  lastVisit?: string
-  /** Favorite services */
+  /**
+   * 最終来店日
+   * @nullable
+   */
+  lastVisit: string | null
+  /** お気に入りサービス */
   favoriteServices: ModelsServiceSummary[]
-  /** Favorite staff */
+  /** お気に入りスタッフ */
   favoriteStaff: ModelsStaffSummary[]
-  /** Loyalty points */
+  /** ロイヤルティポイント */
   loyaltyPoints: number
-  /** Customer since */
+  /** 顧客登録日 */
   customerSince: string
-  /** Cancellation rate */
+  /** キャンセル率 */
   cancellationRate: number
-  /** No-show rate */
+  /** 無断キャンセル率 */
   noShowRate: number
 }

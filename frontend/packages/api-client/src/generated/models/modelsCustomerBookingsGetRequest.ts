@@ -8,7 +8,7 @@
 import type { ModelsBookingStatusCodeType } from './modelsBookingStatusCodeType'
 
 /**
- * Customer bookings filter parameters
+ * 顧客予約フィルタパラメータ
  */
 export interface ModelsCustomerBookingsGetRequest {
   status?: ModelsBookingStatusCodeType

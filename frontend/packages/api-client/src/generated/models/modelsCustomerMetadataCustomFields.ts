@@ -7,6 +7,7 @@
  */
 
 /**
+ * カスタムフィールド。追加情報がない場合はnull
  * @nullable
  */
 export type ModelsCustomerMetadataCustomFields = {

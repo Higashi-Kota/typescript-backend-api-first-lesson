@@ -7,6 +7,7 @@
  */
 
 /**
- * 監視環境固有の追加メタ情報。必要に応じてキーを拡張する。
+ * 監視環境固有の追加メタ情報。必要に応じてキーを拡張する。追加情報がない場合はnull
+ * @nullable
  */
-export type ModelsHealthStatusMetadata = { [key: string]: unknown }
+export type ModelsHealthStatusMetadata = { [key: string]: unknown } | null

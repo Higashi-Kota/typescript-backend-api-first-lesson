@@ -8,7 +8,7 @@
 import type { ModelsReservationStatusType } from './modelsReservationStatusType'
 
 /**
- * Customer reservations filter parameters
+ * 顧客予約フィルタパラメータ
  */
 export interface ModelsCustomerReservationsGetRequest {
   status?: ModelsReservationStatusType

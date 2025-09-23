@@ -8,7 +8,7 @@
 import type { ModelsPaymentStatusCodeType } from './modelsPaymentStatusCodeType'
 
 /**
- * 支払いの進捗ステータス。未設定の場合は支払い前。
+ * 支払いの進捗ステータス。支払いが未開始の場合はnull。
  * @nullable
  */
 export type ModelsBookingPaymentStatus = ModelsPaymentStatusCodeType | null

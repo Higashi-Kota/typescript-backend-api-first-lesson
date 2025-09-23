@@ -21,12 +21,12 @@ export interface ModelsStaffAvailability {
   /** 空き枠の終了時刻 (HH:mm) */
   endTime: string
   /**
-   * 休憩などの開始時刻
+   * 休憩などの開始時刻 - 休憩なしの連続勤務の場合はnull
    * @nullable
    */
   breakStart: string | null
   /**
-   * 休憩などの終了時刻
+   * 休憩などの終了時刻 - 休憩なしの連続勤務の場合はnull
    * @nullable
    */
   breakEnd: string | null

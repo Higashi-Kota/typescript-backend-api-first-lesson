@@ -24,37 +24,37 @@ export interface ModelsCreateStaffRequest {
   /** 得意分野や専門メニューの一覧 */
   specialties: string[]
   /**
-   * プロフィール画像のURL
+   * プロフィール画像のURL - プロフィール画像未設定の場合はnull
    * @nullable
    */
   imageUrl: string | null
   /**
-   * 自己紹介や経歴の概要
+   * 自己紹介や経歴の概要 - プロフィール未記入の新人スタッフの場合はnull
    * @nullable
    */
   bio: string | null
   /**
-   * 実務経験年数
+   * 実務経験年数 - 経験年数未記載またはアシスタントスタッフの場合はnull
    * @nullable
    */
   yearsOfExperience: number | null
   /**
-   * 保有資格名の一覧
+   * 保有資格名の一覧 - 資格なしの新人やアシスタントの場合はnull
    * @nullable
    */
   certifications: string[] | null
   /**
-   * 詳細な資格情報の一覧
+   * 詳細な資格情報の一覧 - 詳細資格情報未登録の場合はnull
    * @nullable
    */
   qualifications: ModelsStaffQualification[] | null
   /**
-   * 通常勤務スケジュールの一覧
+   * 通常勤務スケジュールの一覧 - スケジュール未設定やフリーランススタッフの場合はnull
    * @nullable
    */
   schedules: ModelsStaffSchedule[] | null
   /**
-   * 付与する権限の一覧
+   * 付与する権限の一覧 - 特別権限がない一般スタッフの場合はnull
    * @nullable
    */
   permissions: ModelsStaffPermission[] | null

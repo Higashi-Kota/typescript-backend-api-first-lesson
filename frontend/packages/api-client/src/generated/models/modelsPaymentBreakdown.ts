@@ -6,6 +6,7 @@
  * OpenAPI spec version: 2.0
  */
 import type { ModelsMoney } from './modelsMoney'
+import type { ModelsPaymentBreakdownPointsDiscount } from './modelsPaymentBreakdownPointsDiscount'
 
 /**
  * 支払金額の内訳プレビュー
@@ -17,8 +18,11 @@ export interface ModelsPaymentBreakdown {
   tax: ModelsMoney
   /** 割引金額 */
   discount: ModelsMoney
-  /** ポイント適用による割引額 */
-  pointsDiscount?: ModelsMoney
+  /**
+   * ポイント適用による割引額
+   * @nullable
+   */
+  pointsDiscount: ModelsPaymentBreakdownPointsDiscount
   /** 支払総額 */
   total: ModelsMoney
 }

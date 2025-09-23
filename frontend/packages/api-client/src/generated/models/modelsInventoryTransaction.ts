@@ -31,10 +31,19 @@ export interface ModelsInventoryTransaction {
   performedBy: ModelsStaffId
   /** 操作日時 */
   occurredAt: string
-  /** 関連する外部参照 ID */
-  referenceId?: string
-  /** 備考メモ */
-  notes?: string
-  /** 追加のメタデータ */
-  metadata?: ModelsInventoryTransactionMetadata
+  /**
+   * 関連する外部参照 ID
+   * @nullable
+   */
+  referenceId: string | null
+  /**
+   * 備考メモ
+   * @nullable
+   */
+  notes: string | null
+  /**
+   * 追加のメタデータ
+   * @nullable
+   */
+  metadata: ModelsInventoryTransactionMetadata
 }

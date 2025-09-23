@@ -167,16 +167,16 @@ namespace BeautySalon.Models {
     @doc("価格段階の名称")
     name: string;
 
-    @doc("段階の説明")
+    @doc("段階の説明。詳細な説明が不要なシンプルな価格設定の場合はnull")
     description: string | null;
 
     @doc("適用価格（税抜）")
     price: int32;
 
-    @doc("この段階での施術時間")
+    @doc("この段階での施術時間（分）。価格段階による時間変更がない場合はnull")
     duration: int32 | null;
 
-    @doc("適用条件の説明リスト")
+    @doc("適用条件の説明リスト。特別な条件がない場合はnull")
     conditions: string[] | null;
   }
 
@@ -185,19 +185,19 @@ namespace BeautySalon.Models {
     @doc("変動要因の種類")
     type: "day_of_week" | "time_of_day" | "staff_level" | "demand" | "season";
 
-    @doc("条件に応じた倍率設定")
+    @doc("条件に応じた倍率設定。固定倍率または他の計算方法を使用する場合はnull")
     multipliers: Record<decimal> | null;
 
-    @doc("ピーク時間帯の指定")
+    @doc("ピーク時間帯の指定（HH:mm形式）。時間帯による料金変動がない場合はnull")
     peakHours: string[] | null;
 
-    @doc("ピーク時間帯に適用する倍率")
+    @doc("ピーク時間帯に適用する倍率。ピーク時間設定がない場合はnull")
     peakMultiplier: decimal | null;
 
-    @doc("需要に応じた閾値設定")
+    @doc("需要に応じた閾値設定。需要ベースの料金調整を行わない場合はnull")
     threshold: int32 | null;
 
-    @doc("季節要因の詳細設定")
+    @doc("季節要因の詳細設定。季節による価格変動がない場合はnull")
     seasons: Season[] | null;
   }
 
@@ -221,31 +221,31 @@ namespace BeautySalon.Models {
     @doc("価格戦略タイプ")
     type: PricingStrategyType;
 
-    @doc("固定価格型の場合の金額")
+    @doc("固定価格型の場合の金額。固定価格戦略以外の場合はnull")
     amount: int32 | null;
 
-    @doc("段階価格の設定一覧")
+    @doc("段階価格の設定一覧。段階価格戦略以外の場合はnull")
     tiers: PriceTier[] | null;
 
-    @doc("基準価格")
+    @doc("基準価格。動的価格やカスタム価格など基準価格を持たない戦略の場合はnull")
     basePrice: int32 | null;
 
-    @doc("価格変動要因の設定")
+    @doc("価格変動要因の設定。動的価格戦略以外の場合はnull")
     factors: PricingFactor[] | null;
 
-    @doc("セット対象となるサービス ID")
+    @doc("セット対象となるサービス ID。パッケージ価格戦略以外の場合はnull")
     services: ServiceId[] | null;
 
-    @doc("割引率（%）")
+    @doc("割引率（%）。割引設定がない、または固定額割引の場合はnull")
     discountRate: decimal | null;
 
-    @doc("会員向け特別価格")
+    @doc("会員向け特別価格。会員価格戦略以外の場合はnull")
     memberPrice: int32 | null;
 
-    @doc("非会員向け価格")
+    @doc("非会員向け価格。会員価格戦略以外の場合はnull")
     nonMemberPrice: int32 | null;
 
-    @doc("戦略の説明")
+    @doc("戦略の説明。説明が不要な標準的な価格戦略の場合はnull")
     description: string | null;
   }
 
@@ -260,19 +260,19 @@ namespace BeautySalon.Models {
     @doc("通貨コード")
     currency: CurrencyCodeType;
 
-    @doc("設定されている最低料金")
+    @doc("設定されている最低料金。最低料金制限がない場合はnull")
     minimumPrice: int32 | null;
 
-    @doc("設定されている最高料金")
+    @doc("設定されている最高料金。最高料金制限がない場合はnull")
     maximumPrice: int32 | null;
 
     @doc("予約時にデポジットが必要か")
     depositRequired: boolean;
 
-    @doc("必要なデポジット金額")
+    @doc("必要なデポジット金額。デポジットが不要な場合はnull")
     depositAmount: int32 | null;
 
-    @doc("キャンセル料金の設定")
+    @doc("キャンセル料金の設定。キャンセル料が発生しない場合はnull")
     cancellationFee: CancellationFee | null;
   }
 
@@ -284,7 +284,7 @@ namespace BeautySalon.Models {
     @doc("キャンセル料金率（%）")
     percentage: int32;
 
-    @doc("固定額で設定するキャンセル料金")
+    @doc("固定額で設定するキャンセル料金。パーセンテージベースの料金設定の場合はnull")
     fixedAmount: int32 | null;
   }
 
@@ -310,40 +310,40 @@ namespace BeautySalon.Models {
     @doc("オプションの種類")
     type: ServiceOptionType;
 
-    @doc("オプション名")
+    @doc("オプション名。タイプから自明な名称の場合はnull")
     name: string | null;
 
-    @doc("オプション料金")
+    @doc("オプション料金。無料オプションまたは他の料金設定方法の場合はnull")
     price: int32 | null;
 
-    @doc("追加される施術時間")
+    @doc("追加される施術時間（分）。時間追加がないオプションの場合はnull")
     duration: int32 | null;
 
-    @doc("オプションの説明")
+    @doc("オプションの説明。説明が不要な自明なオプションの場合はnull")
     description: string | null;
 
-    @doc("アップグレード元のレベル")
+    @doc("アップグレード元のレベル。アップグレード型以外のオプションの場合はnull")
     fromLevel: string | null;
 
-    @doc("アップグレード先のレベル")
+    @doc("アップグレード先のレベル。アップグレード型以外のオプションの場合はnull")
     toLevel: string | null;
 
-    @doc("追加料金")
+    @doc("追加料金。基本料金に含まれる、または他の料金設定の場合はnull")
     additionalPrice: int32 | null;
 
-    @doc("時間延長（分）")
+    @doc("時間延長（分）。時間延長型以外のオプションの場合はnull")
     extension: int32 | null;
 
-    @doc("関連商品 ID")
+    @doc("関連商品 ID。商品追加型以外のオプションの場合はnull")
     productId: string | null;
 
-    @doc("必須オプションかどうか")
+    @doc("必須オプションかどうか。任意選択の標準的なオプションの場合はnull（falseと同義）")
     required: boolean | null;
 
-    @doc("同時予約が必要なサービス ID")
+    @doc("同時予約が必要なサービス ID。コンボ型以外のオプションの場合はnull")
     withService: ServiceId | null;
 
-    @doc("割引金額")
+    @doc("割引金額。割引がない、またはパーセンテージ割引の場合はnull")
     discountAmount: int32 | null;
   }
 
@@ -373,34 +373,34 @@ namespace BeautySalon.Models {
     @doc("要件の種類")
     type: BookingRequirementType;
 
-    @doc("金額要件（例: デポジット額）")
+    @doc("金額要件（例: デポジット額）。金額指定が不要な要件の場合はnull")
     amount: int32 | null;
 
-    @doc("割合で設定する要件")
+    @doc("割合で設定する要件（%）。固定額または割合設定が不要な要件の場合はnull")
     percentage: int32 | null;
 
-    @doc("必須かどうか")
+    @doc("必須かどうか。デフォルトで任意の要件の場合はnull（falseと同義）")
     required: boolean | null;
 
-    @doc("所要時間や準備時間")
+    @doc("所要時間や準備時間（分）。時間指定が不要な要件の場合はnull")
     duration: int32 | null;
 
-    @doc("何日前までに対応が必要か")
+    @doc("何日前までに対応が必要か。事前対応が不要な要件の場合はnull")
     daysInAdvance: int32 | null;
 
-    @doc("利用可能な最低年齢")
+    @doc("利用可能な最低年齢。年齢制限がない要件の場合はnull")
     minAge: int32 | null;
 
-    @doc("利用可能な最高年齢")
+    @doc("利用可能な最高年齢。年齢上限がない要件の場合はnull")
     maxAge: int32 | null;
 
-    @doc("利用可能な性別の制限")
+    @doc("利用可能な性別の制限。性別制限がない要件の場合はnull")
     allowedGenders: string[] | null;
 
-    @doc("必要な会員ランク")
+    @doc("必要な会員ランク。会員限定でない、またはランク指定がない要件の場合はnull")
     requiredTier: string | null;
 
-    @doc("顧客への具体的な指示")
+    @doc("顧客への具体的な指示。特別な準備や指示が不要な要件の場合はnull")
     instructions: string[] | null;
   }
 
@@ -432,7 +432,7 @@ namespace BeautySalon.Models {
     @doc("提供終了時刻（HH:mm）")
     endTime: string;
 
-    @doc("予約受け入れ上限数")
+    @doc("予約受け入れ上限数。予約数制限がない場合はnull")
     maxBookings: int32 | null;
   }
 
@@ -441,19 +441,19 @@ namespace BeautySalon.Models {
     @doc("提供可否タイプ")
     type: ServiceAvailabilityType;
 
-    @doc("曜日・時間帯のスケジュール")
+    @doc("曜日・時間帯のスケジュール。常時提供または予約制の場合はnull")
     schedule: ServiceSchedule[] | null;
 
-    @doc("事前承認が必要かどうか")
+    @doc("事前承認が必要かどうか。即時予約可能な場合はnull（falseと同義）")
     requiresApproval: boolean | null;
 
-    @doc("季節限定時の季節設定")
+    @doc("季節限定時の季節設定。季節限定以外の提供タイプの場合はnull")
     seasons: Season[] | null;
 
-    @doc("1 日あたりの提供上限")
+    @doc("1 日あたりの提供上限。日次制限がない場合はnull")
     maxPerDay: int32 | null;
 
-    @doc("1 週間あたりの提供上限")
+    @doc("1 週間あたりの提供上限。週次制限がない場合はnull")
     maxPerWeek: int32 | null;
   }
 
@@ -481,28 +481,28 @@ namespace BeautySalon.Models {
     @doc("ステータス区分")
     type: ServiceStatusType;
 
-    @doc("ステータス変更理由")
+    @doc("ステータス変更理由。理由の記録が不要な通常変更の場合はnull")
     reason: string | null;
 
-    @doc("この状態が開始した日時")
+    @doc("この状態が開始した日時。開始日時の記録が不要な場合はnull")
     since: utcDateTime | null;
 
-    @doc("提供可能な月の一覧")
+    @doc("提供可能な月の一覧（1-12）。季節限定以外のステータスの場合はnull")
     availableMonths: int32[] | null;
 
-    @doc("提供終了予定日")
+    @doc("提供終了予定日。終了予定が未定または無期限の場合はnull")
     availableUntil: utcDateTime | null;
 
-    @doc("残り提供可能枠数")
+    @doc("残り提供可能枠数。数量限定以外のステータスの場合はnull")
     remainingSlots: int32 | null;
 
-    @doc("廃止日時")
+    @doc("廃止日時。廃止ステータス以外の場合はnull")
     discontinuedAt: utcDateTime | null;
 
-    @doc("代替サービス ID")
+    @doc("代替サービス ID。廃止時に代替サービスがない場合はnull")
     replacementId: ServiceId | null;
 
-    @doc("公開予定日")
+    @doc("公開予定日。近日公開以外のステータス、または予定日未定の場合はnull")
     launchDate: utcDateTime | null;
   }
 
@@ -511,25 +511,25 @@ namespace BeautySalon.Models {
     @doc("サービス名称")
     name: string;
 
-    @doc("サービス名の読み仮名")
+    @doc("サービス名の読み仮名。外国語サービス名など読み仮名が不要な場合はnull")
     nameKana: string | null;
 
     @doc("サービス詳細説明文")
     description: string;
 
-    @doc("短めの紹介文")
+    @doc("短めの紹介文。詳細説明で十分な場合はnull")
     shortDescription: string | null;
 
-    @doc("提供価値・メリットの一覧")
+    @doc("提供価値・メリットの一覧。特別なメリット説明が不要な基本サービスの場合はnull")
     benefits: string[] | null;
 
-    @doc("主な対象顧客層")
+    @doc("主な対象顧客層。全顧客対象で特定層を限定しない場合はnull")
     targetCustomer: string | null;
 
-    @doc("サービス画像の URL 一覧")
+    @doc("サービス画像の URL 一覧。画像登録がない場合はnull")
     imageUrls: string[] | null;
 
-    @doc("紹介動画の URL")
+    @doc("紹介動画の URL。動画コンテンツがない場合はnull")
     videoUrl: string | null;
   }
 
@@ -538,16 +538,16 @@ namespace BeautySalon.Models {
     @doc("標準施術時間（分）")
     standard: int32;
 
-    @doc("最短施術時間")
+    @doc("最短施術時間（分）。固定時間制で短縮不可の場合はnull")
     minimum: int32 | null;
 
-    @doc("最長施術時間")
+    @doc("最長施術時間（分）。固定時間制で延長不可の場合はnull")
     maximum: int32 | null;
 
-    @doc("施術前のバッファ時間")
+    @doc("施術前のバッファ時間（分）。準備時間が不要な場合はnull")
     bufferBefore: int32 | null;
 
-    @doc("施術後のバッファ時間")
+    @doc("施術後のバッファ時間（分）。片付け時間が不要な場合はnull")
     bufferAfter: int32 | null;
 
     @doc("カウンセリング時間を含むか")
@@ -556,22 +556,22 @@ namespace BeautySalon.Models {
 
   @doc("サービス提供時の制約条件")
   model ServiceRestrictions {
-    @doc("必要なスタッフレベル")
+    @doc("必要なスタッフレベル。全スタッフが対応可能な場合はnull")
     requiredStaffLevel: StaffLevelType | null;
 
-    @doc("必要資格の一覧")
+    @doc("必要資格の一覧。特別な資格が不要な場合はnull")
     requiredCertifications: string[] | null;
 
-    @doc("同時提供可能な最大件数")
+    @doc("同時提供可能な最大件数。同時提供制限がない場合はnull")
     maxConcurrent: int32 | null;
 
-    @doc("再予約までの最短間隔（日）")
+    @doc("再予約までの最短間隔（日）。連続予約可能な場合はnull")
     minIntervalDays: int32 | null;
 
-    @doc("顧客ごとの予約上限設定")
+    @doc("顧客ごとの予約上限設定。予約回数制限がない場合はnull")
     maxBookingsPerCustomer: BookingLimit | null;
 
-    @doc("提供不可日（ブラックアウト）一覧")
+    @doc("提供不可日（ブラックアウト）一覧。特定の除外日がない場合はnull")
     blackoutDates: utcDateTime[] | null;
   }
 
@@ -592,7 +592,7 @@ namespace BeautySalon.Models {
     @doc("施術完了率")
     completionRate: decimal;
 
-    @doc("平均評価スコア")
+    @doc("平均評価スコア。まだ評価がない新サービスの場合はnull")
     averageRating: decimal | null;
 
     @doc("レビュー件数")
@@ -601,10 +601,10 @@ namespace BeautySalon.Models {
     @doc("売上実績（円）")
     revenue: int64;
 
-    @doc("人気度スコア")
+    @doc("人気度スコア。算出に必要なデータが不足している場合はnull")
     popularityScore: decimal | null;
 
-    @doc("リピート率")
+    @doc("リピート率（%）。リピート実績がない新サービスの場合はnull")
     repeatRate: decimal | null;
   }
 
@@ -613,49 +613,49 @@ namespace BeautySalon.Models {
     @doc("紐づくカテゴリ ID")
     categoryId: CategoryId;
 
-    @doc("親サービス ID")
+    @doc("親サービス ID。独立したサービスで親を持たない場合はnull")
     parentServiceId: ServiceId | null;
 
-    @doc("子サービス ID 一覧")
+    @doc("子サービス ID 一覧。子サービスを持たない場合はnull")
     childServiceIds: ServiceId[] | null;
 
-    @doc("予約時に必須のサービス ID")
+    @doc("予約時に必須のサービス ID。前提サービスがない独立したサービスの場合はnull")
     requiredServiceIds: ServiceId[] | null;
 
-    @doc("併用を推奨するサービス ID")
+    @doc("併用を推奨するサービス ID。推奨する組み合わせがない場合はnull")
     recommendedServiceIds: ServiceId[] | null;
 
-    @doc("施術資格を持つスタッフ ID")
+    @doc("施術資格を持つスタッフ ID。全スタッフが対応可能な場合はnull")
     qualifiedStaffIds: StaffId[] | null;
 
-    @doc("優先的に担当させたいスタッフ ID")
+    @doc("優先的に担当させたいスタッフ ID。特定の優先スタッフがいない場合はnull")
     preferredStaffIds: StaffId[] | null;
   }
 
   @doc("サービスのメタデータ情報")
   model ServiceMetadata {
-    @doc("タグ一覧")
+    @doc("タグ一覧。タグ付けが不要な場合はnull")
     tags: string[] | null;
 
-    @doc("検索キーワード")
+    @doc("検索キーワード。追加の検索キーワードが不要な場合はnull")
     keywords: string[] | null;
 
-    @doc("SEO 用タイトル")
+    @doc("SEO 用タイトル。デフォルトのサービス名を使用する場合はnull")
     seoTitle: string | null;
 
-    @doc("SEO 用ディスクリプション")
+    @doc("SEO 用ディスクリプション。デフォルトの説明文を使用する場合はnull")
     seoDescription: string | null;
 
-    @doc("内部向けメモ")
+    @doc("内部向けメモ。特記事項がない場合はnull")
     internalNotes: string | null;
 
-    @doc("表示順序")
+    @doc("表示順序。自動ソートまたはデフォルト順序の場合はnull")
     sortOrder: int32 | null;
 
-    @doc("注目サービスとして表示するか")
+    @doc("注目サービスとして表示するか。通常表示の場合はnull（falseと同義）")
     featured: boolean | null;
 
-    @doc("メニュー非表示フラグ")
+    @doc("メニュー非表示フラグ。通常表示の場合はnull（falseと同義）")
     hideFromMenu: boolean | null;
   }
 
@@ -673,7 +673,7 @@ namespace BeautySalon.Models {
     @doc("サービスカテゴリ区分")
     category: ServiceCategoryType;
 
-    @doc("カテゴリ ID（分類ツリー連携用）")
+    @doc("カテゴリ ID（分類ツリー連携用）。サービスカテゴリ区分のみで分類される場合はnull")
     categoryId: CategoryId | null;
 
     @doc("料金設定情報")
@@ -682,46 +682,46 @@ namespace BeautySalon.Models {
     @doc("提供時間の設定")
     duration: ServiceDuration;
 
-    @doc("提供可能条件の設定")
+    @doc("提供可能条件の設定。常時提供で特別な制約がない場合はnull")
     availability: ServiceAvailabilityDetail | null;
 
-    @doc("予約時に必要な要件一覧")
+    @doc("予約時に必要な要件一覧。特別な要件がない標準サービスの場合はnull")
     requirements: BookingRequirementDetail[] | null;
 
-    @doc("追加オプション設定")
+    @doc("追加オプション設定。オプションがないシンプルなサービスの場合はnull")
     options: ServiceOptionDetail[] | null;
 
-    @doc("提供上の制約条件")
+    @doc("提供上の制約条件。制約がないサービスの場合はnull")
     restrictions: ServiceRestrictions | null;
 
-    @doc("サービス実績の指標")
+    @doc("サービス実績の指標。新サービスで実績データがない場合はnull")
     performance: ServicePerformance | null;
 
-    @doc("関連サービス・担当者情報")
+    @doc("関連サービス・担当者情報。関連設定がない独立したサービスの場合はnull")
     associations: ServiceAssociations | null;
 
-    @doc("メタデータ・表示設定")
+    @doc("メタデータ・表示設定。特別な表示設定が不要な場合はnull")
     metadata: ServiceMetadata | null;
 
     @doc("現在の提供ステータス")
     status: ServiceStatusDetail;
 
-    @doc("互換性維持のための旧項目：サービス名")
+    @doc("サービス名")
     name: string;
 
-    @doc("互換性維持のための旧項目：説明文")
+    @doc("説明文")
     description: string;
 
-    @doc("互換性維持のための旧項目：料金")
+    @doc("料金")
     price: int32;
 
-    @doc("互換性維持のための旧項目：画像 URL")
+    @doc("画像 URL。画像が登録されていない場合はnull")
     imageUrl: string | null;
 
-    @doc("互換性維持のための旧項目：スタッフレベル")
+    @doc("スタッフレベル。全スタッフが対応可能な場合はnull")
     requiredStaffLevel: int32 | null;
 
-    @doc("互換性維持のための旧項目：有効フラグ")
+    @doc("有効フラグ")
     isActive: boolean;
 
     ...AuditInfo;
@@ -747,25 +747,25 @@ namespace BeautySalon.Models {
     @doc("サービスカテゴリ区分")
     category: ServiceCategoryType;
 
-    @doc("カテゴリ ID")
+    @doc("カテゴリ ID。サービスカテゴリ区分のみで分類する場合はnull")
     categoryId: CategoryId | null;
 
-    @doc("サービス画像 URL")
+    @doc("サービス画像 URL。画像がない場合はnull")
     imageUrl: string | null;
 
-    @doc("必要スタッフレベル")
+    @doc("必要スタッフレベル。全スタッフが対応可能な場合はnull")
     requiredStaffLevel: int32 | null;
 
-    @doc("必要なデポジット額")
+    @doc("必要なデポジット額。デポジットが不要な場合はnull")
     depositAmount: int32 | null;
 
-    @doc("有効フラグ")
+    @doc("有効フラグ。未指定時はデフォルトでtrueとして扱う場合null")
     isActive: boolean | null;
 
-    @doc("最大全日予約可能日数")
+    @doc("最大全日予約可能日数。予約可能期間に制限がない場合はnull")
     maxAdvanceBookingDays: int32 | null;
 
-    @doc("最短予約受付時間（時間）")
+    @doc("最短予約受付時間（時間）。即時予約可能な場合はnull")
     minAdvanceBookingHours: int32 | null;
   }
 
@@ -774,10 +774,10 @@ namespace BeautySalon.Models {
     @doc("更新後のサービス名")
     name?: string;
 
-    @doc("更新後の説明文")
+    @doc("更新後の説明文。null指定で説明文をクリア（空文字列にリセット）")
     description: string | null;
 
-    @doc("更新後の施術時間")
+    @doc("更新後の施術時間。null指定で時間設定をクリア（デフォルト値にリセット）")
     duration: int32 | null;
 
     @doc("更新後の料金")
@@ -819,7 +819,7 @@ namespace BeautySalon.Models {
     @doc("カテゴリ説明")
     description: string;
 
-    @doc("親カテゴリ ID")
+    @doc("親カテゴリ ID。最上位カテゴリの場合はnull")
     parentId: CategoryId | null;
 
     @doc("表示順序")

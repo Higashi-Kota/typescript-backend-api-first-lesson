@@ -20,12 +20,12 @@ export interface ModelsStaffSchedule {
   /** 勤務終了時刻 (フォーマット例: HH:mm) */
   endTime: string
   /**
-   * 当日の休憩時間帯リスト
+   * 当日の休憩時間帯リスト - 休憩なしのフル勤務の場合はnull
    * @nullable
    */
   breakTime: ModelsTimeSlot[] | null
   /**
-   * シフトが有効となる期間
+   * シフトが有効となる期間 - 無期限スケジュールの場合はnull
    * @nullable
    */
   effectivePeriod: ModelsStaffScheduleEffectivePeriod

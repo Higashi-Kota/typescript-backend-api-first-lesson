@@ -24,11 +24,11 @@ namespace BeautySalon.Operations {
           Salon,
           CreateSalonRequest,
           UpdateSalonRequest,
-          SearchSalonRequest,
+          SalonSearchRequest,
           SalonId
         >,
         BulkOperations<Salon, CreateSalonRequest, UpdateSalonRequest, SalonId>,
-        SearchOperations<Salon, SearchSalonRequest>,
+        SearchOperations<Salon, SalonSearchRequest>,
         AuditOperations<Salon, SalonId> {}
 
     @doc("サロンの売上や予約件数など主要指標を取得し、経営判断や施策検討に活用します。")

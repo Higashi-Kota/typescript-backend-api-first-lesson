@@ -15,7 +15,7 @@ namespace BeautySalon.Models {
     @doc("管理画面などで表示する名称")
     displayName: string;
 
-    @doc("ロールの詳細説明")
+    @doc("ロールの詳細説明 - システム標準ロールや説明不要なシンプルなロールの場合はnull")
     description: string | null;
 
     @doc("付与されている権限一覧")
@@ -41,7 +41,7 @@ namespace BeautySalon.Models {
     @doc("権限の名称")
     name: string;
 
-    @doc("権限の説明")
+    @doc("権限の説明 - 自明な権限や説明不要な基本権限の場合はnull")
     description: string | null;
 
     @doc("対象リソース種別")
@@ -50,7 +50,7 @@ namespace BeautySalon.Models {
     @doc("許可する操作区分")
     action: string;
 
-    @doc("権限の適用範囲（own/salon/all）")
+    @doc("権限の適用範囲（own/salon/all） - 範囲指定が不要なグローバル権限の場合はnull")
     scope: "own" | "salon" | "all" | null;
   }
 
@@ -62,7 +62,7 @@ namespace BeautySalon.Models {
     @doc("割り当てるロール ID")
     roleId: RoleId;
 
-    @doc("サロン単位のロールの場合の対象サロン ID")
+    @doc("サロン単位のロールの場合の対象サロン ID - システム全体ロールの場合はnull")
     salonId: SalonId | null;
 
     @doc("割当日時")
@@ -71,7 +71,7 @@ namespace BeautySalon.Models {
     @doc("割当を実施したユーザー ID")
     assignedBy: string;
 
-    @doc("ロール割当の有効期限")
+    @doc("ロール割当の有効期限 - 無期限割当の場合はnull")
     expiresAt: utcDateTime | null;
 
     @doc("割当が現在有効かどうか")
@@ -89,10 +89,10 @@ namespace BeautySalon.Models {
     @doc("実行したい操作区分")
     action: string;
 
-    @doc("サロン単位での権限チェック時のサロン ID")
+    @doc("サロン単位での権限チェック時のサロン ID - システム全体権限のチェック時はnull")
     salonId: SalonId | null;
 
-    @doc("リソース固有の ID")
+    @doc("リソース固有の ID - リソース種別全体への権限チェック時はnull")
     resourceId: string | null;
   }
 
@@ -101,13 +101,13 @@ namespace BeautySalon.Models {
     @doc("操作が許可されたかどうか")
     allowed: boolean;
 
-    @doc("拒否または許可の理由")
+    @doc("拒否または許可の理由 - 理由説明不要な明白なケースの場合はnull")
     reason: string | null;
 
-    @doc("必要な権限キー一覧")
+    @doc("必要な権限キー一覧 - 権限不要なパブリック操作の場合はnull")
     requiredPermissions: string[] | null;
 
-    @doc("ユーザーが保有する権限キー一覧")
+    @doc("ユーザーが保有する権限キー一覧 - 未ログインや権限なしユーザーの場合はnull")
     userPermissions: string[] | null;
   }
 
@@ -208,7 +208,7 @@ namespace BeautySalon.Models {
     @doc("権限が付与されているかどうか")
     granted: boolean;
 
-    @doc("権限を付与したロール情報")
+    @doc("権限を付与したロール情報 - 権限が付与されていない場合はnull")
     source: string | null;
   }
 }

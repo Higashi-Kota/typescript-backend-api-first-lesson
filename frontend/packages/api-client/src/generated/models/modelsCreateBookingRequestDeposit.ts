@@ -8,7 +8,7 @@
 import type { ModelsBookingDeposit } from './modelsBookingDeposit'
 
 /**
- * 預かり金設定。不要な場合はnull。
+ * 預かり金設定。デポジットが不要な場合はnull。
  * @nullable
  */
 export type ModelsCreateBookingRequestDeposit = ModelsBookingDeposit | null

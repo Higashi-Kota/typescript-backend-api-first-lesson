@@ -10,24 +10,46 @@ import type { ModelsStaffId } from './modelsStaffId'
 import type { ModelsServiceId } from './modelsServiceId'
 
 export type ModelsCustomerProfile = ModelsCustomer & {
+  /** 総来店回数。これまでの来店実績の合計 */
   visitCount: number
-  /** @nullable */
+  /**
+   * 最終来店日。新規顧客でまだ来店がない場合はnull
+   * @nullable
+   */
   lastVisitDate: string | null
-  /** @nullable */
+  /**
+   * お気に入りスタッフID一覧。指名がない場合はnull
+   * @nullable
+   */
   favoriteStaffIds: ModelsStaffId[] | null
-  /** @nullable */
+  /**
+   * お気に入りサービスID一覧。お気に入りがない場合はnull
+   * @nullable
+   */
   favoriteServiceIds: ModelsServiceId[] | null
+  /** 累計利用金額。これまでの総支払額 */
   totalSpent: number
 } & Required<
     Pick<
       ModelsCustomer & {
+        /** 総来店回数。これまでの来店実績の合計 */
         visitCount: number
-        /** @nullable */
+        /**
+         * 最終来店日。新規顧客でまだ来店がない場合はnull
+         * @nullable
+         */
         lastVisitDate: string | null
-        /** @nullable */
+        /**
+         * お気に入りスタッフID一覧。指名がない場合はnull
+         * @nullable
+         */
         favoriteStaffIds: ModelsStaffId[] | null
-        /** @nullable */
+        /**
+         * お気に入りサービスID一覧。お気に入りがない場合はnull
+         * @nullable
+         */
         favoriteServiceIds: ModelsServiceId[] | null
+        /** 累計利用金額。これまでの総支払額 */
         totalSpent: number
       },
       | 'visitCount'

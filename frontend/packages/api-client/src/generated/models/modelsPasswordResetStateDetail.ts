@@ -14,22 +14,22 @@ export interface ModelsPasswordResetStateDetail {
   /** 現在のリセット状態区分。 */
   type: ModelsPasswordResetStateType
   /**
-   * リセット手続きに使用するトークン。
+   * リセット手続きに使用するトークン。リセットが要求されていない場合はnull。
    * @nullable
    */
   token: string | null
   /**
-   * トークンの有効期限。
+   * トークンの有効期限。リセットが要求されていない場合はnull。
    * @nullable
    */
   expiresAt: string | null
   /**
-   * リセットを要求した日時。
+   * リセットを要求した日時。リセットが要求されていない場合はnull。
    * @nullable
    */
   requestedAt: string | null
   /**
-   * リセット完了日時。未完了の場合はnull。
+   * リセット完了日時。パスワードリセットが未完了の場合はnull。
    * @nullable
    */
   completedAt: string | null

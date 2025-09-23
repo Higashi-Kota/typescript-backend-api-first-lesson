@@ -19,7 +19,7 @@ export interface ModelsPermission {
   /** 権限の名称 */
   name: string
   /**
-   * 権限の説明
+   * 権限の説明 - 自明な権限や説明不要な基本権限の場合はnull
    * @nullable
    */
   description: string | null
@@ -28,7 +28,7 @@ export interface ModelsPermission {
   /** 許可する操作区分 */
   action: string
   /**
-   * 権限の適用範囲（own/salon/all）
+   * 権限の適用範囲（own/salon/all） - 範囲指定が不要なグローバル権限の場合はnull
    * @nullable
    */
   scope: ModelsPermissionScope

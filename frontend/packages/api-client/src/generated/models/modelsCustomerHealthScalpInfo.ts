@@ -8,6 +8,7 @@
 import type { ModelsScalpInfo } from './modelsScalpInfo'
 
 /**
+ * 頭皮情報。情報提供がない場合はnull
  * @nullable
  */
 export type ModelsCustomerHealthScalpInfo = ModelsScalpInfo | null

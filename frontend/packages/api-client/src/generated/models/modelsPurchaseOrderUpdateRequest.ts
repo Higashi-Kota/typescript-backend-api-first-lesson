@@ -13,12 +13,21 @@ import type { ModelsOrderStatusType } from './modelsOrderStatusType'
 export interface ModelsPurchaseOrderUpdateRequest {
   /** 更新後の発注ステータス */
   status?: ModelsOrderStatusType
-  /** 更新後の予定納期 */
-  expectedDelivery?: string
-  /** 実際の納品日 */
-  actualDelivery?: string
-  /** 納品関連の備考 */
-  deliveryNotes?: string
+  /**
+   * 更新後の予定納期
+   * @nullable
+   */
+  expectedDelivery?: string | null
+  /**
+   * 実際の納品日
+   * @nullable
+   */
+  actualDelivery?: string | null
+  /**
+   * 納品関連の備考
+   * @nullable
+   */
+  deliveryNotes?: string | null
   /** その他の備考 */
   notes?: string
 }

@@ -20,12 +20,12 @@ export interface ModelsDomainOperationError {
   /** エラーが発生した日時 (UTC)。再発防止のタイムライン分析に活用。 */
   occurredAt: string
   /**
-   * エラーが発生した操作名やユースケース。例: `CreateReservation`。
+   * エラーが発生した操作名やユースケース。例: `CreateReservation`。操作名が特定できない場合はnull
    * @nullable
    */
   operation: string | null
   /**
-   * デバッグ用のスタックトレース。開発・検証環境のみで出力する。
+   * デバッグ用のスタックトレース。開発・検証環境のみで出力する。本番環境ではnull
    * @nullable
    */
   stackTrace: string | null

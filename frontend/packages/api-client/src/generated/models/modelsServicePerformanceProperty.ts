@@ -8,7 +8,7 @@
 import type { ModelsServicePerformance } from './modelsServicePerformance'
 
 /**
- * サービス実績の指標
+ * サービス実績の指標。新サービスで実績データがない場合はnull
  * @nullable
  */
 export type ModelsServicePerformanceProperty = ModelsServicePerformance | null

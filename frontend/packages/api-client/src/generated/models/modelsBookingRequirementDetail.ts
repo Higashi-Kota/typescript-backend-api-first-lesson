@@ -14,52 +14,52 @@ export interface ModelsBookingRequirementDetail {
   /** 要件の種類 */
   type: ModelsBookingRequirementType
   /**
-   * 金額要件（例: デポジット額）
+   * 金額要件（例: デポジット額）。金額指定が不要な要件の場合はnull
    * @nullable
    */
   amount: number | null
   /**
-   * 割合で設定する要件
+   * 割合で設定する要件（%）。固定額または割合設定が不要な要件の場合はnull
    * @nullable
    */
   percentage: number | null
   /**
-   * 必須かどうか
+   * 必須かどうか。デフォルトで任意の要件の場合はnull（falseと同義）
    * @nullable
    */
   required: boolean | null
   /**
-   * 所要時間や準備時間
+   * 所要時間や準備時間（分）。時間指定が不要な要件の場合はnull
    * @nullable
    */
   duration: number | null
   /**
-   * 何日前までに対応が必要か
+   * 何日前までに対応が必要か。事前対応が不要な要件の場合はnull
    * @nullable
    */
   daysInAdvance: number | null
   /**
-   * 利用可能な最低年齢
+   * 利用可能な最低年齢。年齢制限がない要件の場合はnull
    * @nullable
    */
   minAge: number | null
   /**
-   * 利用可能な最高年齢
+   * 利用可能な最高年齢。年齢上限がない要件の場合はnull
    * @nullable
    */
   maxAge: number | null
   /**
-   * 利用可能な性別の制限
+   * 利用可能な性別の制限。性別制限がない要件の場合はnull
    * @nullable
    */
   allowedGenders: string[] | null
   /**
-   * 必要な会員ランク
+   * 必要な会員ランク。会員限定でない、またはランク指定がない要件の場合はnull
    * @nullable
    */
   requiredTier: string | null
   /**
-   * 顧客への具体的な指示
+   * 顧客への具体的な指示。特別な準備や指示が不要な要件の場合はnull
    * @nullable
    */
   instructions: string[] | null

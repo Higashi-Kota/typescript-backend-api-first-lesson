@@ -16,27 +16,27 @@ export interface ModelsServiceAvailabilityDetail {
   /** 提供可否タイプ */
   type: ModelsServiceAvailabilityType
   /**
-   * 曜日・時間帯のスケジュール
+   * 曜日・時間帯のスケジュール。常時提供または予約制の場合はnull
    * @nullable
    */
   schedule: ModelsServiceSchedule[] | null
   /**
-   * 事前承認が必要かどうか
+   * 事前承認が必要かどうか。即時予約可能な場合はnull（falseと同義）
    * @nullable
    */
   requiresApproval: boolean | null
   /**
-   * 季節限定時の季節設定
+   * 季節限定時の季節設定。季節限定以外の提供タイプの場合はnull
    * @nullable
    */
   seasons: ModelsSeason[] | null
   /**
-   * 1 日あたりの提供上限
+   * 1 日あたりの提供上限。日次制限がない場合はnull
    * @nullable
    */
   maxPerDay: number | null
   /**
-   * 1 週間あたりの提供上限
+   * 1 週間あたりの提供上限。週次制限がない場合はnull
    * @nullable
    */
   maxPerWeek: number | null

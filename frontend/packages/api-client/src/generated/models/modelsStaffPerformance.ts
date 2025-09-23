@@ -22,6 +22,9 @@ export interface ModelsStaffPerformance {
   serviceCount: number
   /** 平均サービス単価 */
   averageServiceValue: ModelsMoney
-  /** 顧客満足度評価（任意） */
-  customerSatisfaction?: number
+  /**
+   * 顧客満足度評価（任意）
+   * @nullable
+   */
+  customerSatisfaction: number | null
 }

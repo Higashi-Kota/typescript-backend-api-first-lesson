@@ -31,7 +31,7 @@ export interface ModelsSalon {
   /** 曜日別の基本営業時間帯一覧 */
   openingHours: ModelsOpeningHours[]
   /**
-   * 季節やキャンペーン等に合わせた営業スケジュール。未設定時はnull
+   * 季節やキャンペーン等に合わせた営業スケジュール。通常営業時間のみの場合はnull
    * @nullable
    */
   businessHours: ModelsBusinessHours[] | null
@@ -40,7 +40,7 @@ export interface ModelsSalon {
   /** 設備・サービス・こだわりポイント等の特徴タグ一覧 */
   features: string[]
   /**
-   * 顧客レビューから算出した平均評価。評価が無い場合はnull
+   * 顧客レビューから算出した平均評価。レビュー未登録の場合はnull
    * @nullable
    */
   rating: number | null
@@ -52,14 +52,14 @@ export interface ModelsSalon {
   /** レコード作成日時。 */
   createdAt: string
   /**
-   * レコードを作成したユーザーID。匿名作成の場合はnull。
+   * レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull
    * @nullable
    */
   createdBy: string | null
   /** レコード最終更新日時。 */
   updatedAt: string
   /**
-   * レコードを最後に更新したユーザーID。匿名更新の場合はnull。
+   * レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull
    * @nullable
    */
   updatedBy: string | null

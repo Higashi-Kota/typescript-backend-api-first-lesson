@@ -8,7 +8,7 @@
 import type { ModelsPaymentMethodType } from './modelsPaymentMethodType'
 
 /**
- * 予定している支払い方法。
+ * 予定している支払い方法。当日決定または未選択の場合はnull
  * @nullable
  */
 export type ModelsCreateBookingRequestPaymentMethod =

@@ -8,7 +8,7 @@
 import type { ModelsWaitlistEntry } from './modelsWaitlistEntry'
 
 /**
- * ウェイティングリスト情報。対象外の場合はnull。
+ * ウェイティングリスト情報。ウェイティングリストに登録されていない場合はnull。
  * @nullable
  */
 export type ModelsBookingWaitlistEntry = ModelsWaitlistEntry | null

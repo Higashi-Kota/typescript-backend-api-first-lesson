@@ -20,44 +20,44 @@ export interface ModelsReviewCreateRequest {
   /** 紐づく来店予約ID (booking_id) */
   bookingId: ModelsBookingId
   /**
-   * 評価対象スタッフのID
+   * 評価対象スタッフのID - セルフサービスやスタッフ特定不要の施術の場合はnull
    * @nullable
    */
   staffId: string | null
   /** 全体満足度の評価値 */
   overallRating: number
   /**
-   * 自由記述のコメント
+   * 自由記述のコメント - 評価のみでコメントなしのシンプルレビューの場合はnull
    * @nullable
    */
   comment: string | null
   /**
-   * レビュータイトル
+   * レビュータイトル - タイトル未設定の簡易レビューの場合はnull
    * @nullable
    */
   title: string | null
   /**
-   * サービス品質に対する評価値
+   * サービス品質に対する評価値 - 個別評価をしない総合評価のみのレビューの場合はnull
    * @nullable
    */
   serviceRating: number | null
   /**
-   * スタッフ対応に対する評価値
+   * スタッフ対応に対する評価値 - スタッフ評価省略またはセルフサービスの場合はnull
    * @nullable
    */
   staffRating: number | null
   /**
-   * 清潔さ・衛生状態に対する評価値
+   * 清潔さ・衛生状態に対する評価値 - 清潔さ評価を省略したレビューの場合はnull
    * @nullable
    */
   cleanlinessRating: number | null
   /**
-   * 価格に見合う価値の評価値
+   * 価格に見合う価値の評価値 - 価格評価を省略したレビューの場合はnull
    * @nullable
    */
   valueRating: number | null
   /**
-   * 添付画像のURL一覧
+   * 添付画像のURL一覧 - 画像添付なしのテキストのみレビューの場合はnull
    * @nullable
    */
   imageUrls: string[] | null

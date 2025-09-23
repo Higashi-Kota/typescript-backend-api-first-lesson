@@ -8,7 +8,7 @@
 import type { ModelsMembershipInfo } from './modelsMembershipInfo'
 
 /**
- * Membership information
+ * 会員情報。非会員の場合はnull
  * @nullable
  */
 export type ModelsCustomerMembership = ModelsMembershipInfo | null

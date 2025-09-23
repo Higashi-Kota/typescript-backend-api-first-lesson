@@ -18,17 +18,17 @@ export interface ModelsHealthCheck {
   /** 対象サービスの稼働状態。`up` は正常、`down` は停止、`degraded` は部分的な性能低下を示す。 */
   status: ModelsHealthCheckStatus
   /**
-   * ヘルスチェックに要した時間 (ミリ秒)。応答遅延の指標。
+   * ヘルスチェックに要した時間 (ミリ秒)。応答遅延の指標。測定不可の場合はnull
    * @nullable
    */
   responseTime: number | null
   /**
-   * 停止時のエラーメッセージや原因メモ。
+   * 停止時のエラーメッセージや原因メモ。正常時はnull
    * @nullable
    */
   error: string | null
   /**
-   * 監視対象固有の追加詳細。再試行回数や依存サービス名などを含める。
+   * 監視対象固有の追加詳細。再試行回数や依存サービス名などを含める。追加情報がない場合はnull
    * @nullable
    */
   details: ModelsHealthCheckDetails

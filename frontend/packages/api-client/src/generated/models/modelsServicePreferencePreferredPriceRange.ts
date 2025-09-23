@@ -8,6 +8,7 @@
 import type { ModelsPriceRangeFilter } from './modelsPriceRangeFilter'
 
 /**
+ * 希望価格帯。特に希望がない場合はnull
  * @nullable
  */
 export type ModelsServicePreferencePreferredPriceRange =

@@ -8,7 +8,7 @@
 import type { ModelsStaffLevelType } from './modelsStaffLevelType'
 
 /**
- * スタッフに対して設定される技術レベル。
+ * スタッフに対して設定される技術レベル。スタッフ以外の役割の場合はnull。
  * @nullable
  */
 export type ModelsUserRoleDetailLevel = ModelsStaffLevelType | null

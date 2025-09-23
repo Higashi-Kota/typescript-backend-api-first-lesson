@@ -16,12 +16,12 @@ export interface ModelsPendingBookingStatusUpdate {
   /** 顧客から予約リクエストを受け付けた日時。 */
   requestedAt?: string
   /**
-   * 保留状態の有効期限。未設定の場合は期限なし。
+   * 保留状態の有効期限。無期限の場合はnull。
    * @nullable
    */
   holdExpiresAt?: string | null
   /**
-   * 仮割り当てされたスタッフID。未確定の場合はnull。
+   * 仮割り当てされたスタッフID。スタッフが未確定の場合はnull。
    * @nullable
    */
   assignedStaffId?: string | null

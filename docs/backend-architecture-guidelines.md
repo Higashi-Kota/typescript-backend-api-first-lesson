@@ -208,7 +208,7 @@ export const Result = {
 // backend/packages/domain/src/models/salon.ts
 import type { openingHours, salons } from '@beauty-salon-backend/database'
 import type { components } from '@beauty-salon-backend/generated'
-import type { Brand, DeepRequired } from '@beauty-salon-backend/utility'
+import type { Brand, DeepRequired, Omit } from '@beauty-salon-backend/utility'
 
 // ブランド型でID型安全性
 export const salonIdBrand: unique symbol = Symbol('SalonId')

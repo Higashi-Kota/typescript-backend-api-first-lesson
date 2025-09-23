@@ -20,27 +20,27 @@ export interface ModelsDomainErrorDetails {
   /** 機械判読可能なエラーコード。外部連携やログ分析に利用する。 */
   code: string
   /**
-   * 追加のエラー文脈。入力値や関連設定など柔軟に格納する。
+   * 追加のエラー文脈。入力値や関連設定など柔軟に格納する。追加情報がない場合はnull
    * @nullable
    */
   details: ModelsDomainErrorDetailsDetails
   /**
-   * 関連するエンティティ名。例: `Reservation` や `Customer`。
+   * 関連するエンティティ名。例: `Reservation` や `Customer`。特定のエンティティに関連しない場合はnull
    * @nullable
    */
   entity: string | null
   /**
-   * 問題が発生したフィールド名。入力フォームとの紐付けに利用。
+   * 問題が発生したフィールド名。入力フォームとの紐付けに利用。フィールド特定が不要な場合はnull
    * @nullable
    */
   field: string | null
   /**
-   * 問題があった値。マスキングが不要なケースのみ保持する。
+   * 問題があった値。マスキングが不要なケースのみ保持する。値を出力しない場合はnull
    * @nullable
    */
   value: string | null
   /**
-   * 外部サービスエラー時の対象サービス名。連携先の切り分けに役立つ。
+   * 外部サービスエラー時の対象サービス名。連携先の切り分けに役立つ。外部サービスに関係ない場合はnull
    * @nullable
    */
   service: string | null

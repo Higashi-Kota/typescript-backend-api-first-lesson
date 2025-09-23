@@ -7,7 +7,7 @@
  */
 
 /**
- * 権限の適用範囲（own/salon/all）
+ * 権限の適用範囲（own/salon/all） - 範囲指定が不要なグローバル権限の場合はnull
  * @nullable
  */
 export type ModelsPermissionScope =

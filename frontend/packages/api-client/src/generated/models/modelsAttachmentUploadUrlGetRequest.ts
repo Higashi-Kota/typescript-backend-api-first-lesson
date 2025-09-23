@@ -17,7 +17,7 @@ export interface ModelsAttachmentUploadUrlGetRequest {
   /** アップロード予定ファイルのサイズ（バイト単位）。 */
   size: number
   /**
-   * ファイルをひも付けるサロンID。任意設定。
+   * ファイルをひも付けるサロンID。全社共通ファイルの場合はnull。
    * @nullable
    */
   salonId: string | null

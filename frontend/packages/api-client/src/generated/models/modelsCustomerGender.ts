@@ -8,7 +8,7 @@
 import type { ModelsCustomerGenderType } from './modelsCustomerGenderType'
 
 /**
- * Customer gender
+ * 顧客の性別。未登録または非公開の場合はnull
  * @nullable
  */
 export type ModelsCustomerGender = ModelsCustomerGenderType | null

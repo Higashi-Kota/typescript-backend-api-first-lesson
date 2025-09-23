@@ -19,16 +19,16 @@ namespace BeautySalon.Models {
     productName: string;
 
     @doc("商品説明文")
-    description?: string;
+    description: string | null;
 
     @doc("分類カテゴリ")
     category: string;
 
     @doc("ブランド名")
-    brand?: string;
+    brand: string | null;
 
     @doc("仕入先情報")
-    supplier?: string;
+    supplier: string | null;
 
     @doc("現在の在庫数量")
     currentStock: float32;
@@ -37,7 +37,7 @@ namespace BeautySalon.Models {
     minimumStock: float32;
 
     @doc("最大在庫数（上限管理用）")
-    maximumStock?: float32;
+    maximumStock: float32 | null;
 
     @doc("数量の単位")
     unit: string;
@@ -46,22 +46,22 @@ namespace BeautySalon.Models {
     unitCost: float32;
 
     @doc("顧客販売価格")
-    sellingPrice?: float32;
+    sellingPrice: float32 | null;
 
     @doc("在庫状態区分")
     status: InventoryStatusType;
 
     @doc("サロン内の保管場所")
-    location?: string;
+    location: string | null;
 
     @doc("賞味・使用期限")
-    expirationDate?: utcDateTime;
+    expirationDate: utcDateTime | null;
 
     @doc("直近の入庫日時")
-    lastRestocked?: utcDateTime;
+    lastRestocked: utcDateTime | null;
 
     @doc("備考メモ")
-    notes?: string;
+    notes: string | null;
 
     ...AuditInfo;
   }
@@ -93,13 +93,13 @@ namespace BeautySalon.Models {
     occurredAt: utcDateTime;
 
     @doc("関連する外部参照 ID")
-    referenceId?: string;
+    referenceId: string | null;
 
     @doc("備考メモ")
-    notes?: string;
+    notes: string | null;
 
     @doc("追加のメタデータ")
-    metadata?: Record<unknown>;
+    metadata: Record<unknown> | null;
   }
 
   @doc("在庫の移動履歴")
@@ -113,10 +113,10 @@ namespace BeautySalon.Models {
     stockAfter: float32;
 
     @doc("紐づく発注 ID")
-    orderId?: OrderId;
+    orderId: OrderId | null;
 
     @doc("紐づく施術記録 ID")
-    treatmentRecordId?: TreatmentRecordId;
+    treatmentRecordId: TreatmentRecordId | null;
 
     @doc("移動が確定した日時")
     movedAt: utcDateTime;
@@ -151,7 +151,7 @@ namespace BeautySalon.Models {
     taxAmount: float32;
 
     @doc("送料")
-    shippingCost?: float32;
+    shippingCost: float32 | null;
 
     @doc("発注合計金額")
     totalAmount: float32;
@@ -160,25 +160,25 @@ namespace BeautySalon.Models {
     orderDate: utcDateTime;
 
     @doc("予定納期")
-    expectedDelivery?: utcDateTime;
+    expectedDelivery: utcDateTime | null;
 
     @doc("実際の納品日")
-    actualDelivery?: utcDateTime;
+    actualDelivery: utcDateTime | null;
 
     @doc("納品に関するメモ")
-    deliveryNotes?: string;
+    deliveryNotes: string | null;
 
     @doc("支払条件")
-    paymentTerms?: string;
+    paymentTerms: string | null;
 
     @doc("その他備考")
     notes?: string;
 
     @doc("発注承認を行ったスタッフ ID")
-    approvedBy?: StaffId;
+    approvedBy: StaffId | null;
 
     @doc("承認日時")
-    approvedAt?: utcDateTime;
+    approvedAt: utcDateTime | null;
 
     ...AuditInfo;
   }
@@ -242,13 +242,13 @@ namespace BeautySalon.Models {
     severity: "info" | "warning" | "critical";
 
     @doc("確認済みかどうか")
-    acknowledged?: boolean;
+    acknowledged: boolean | null;
 
     @doc("確認したスタッフ ID")
-    acknowledgedBy?: StaffId;
+    acknowledgedBy: StaffId | null;
 
     @doc("確認日時")
-    acknowledgedAt?: utcDateTime;
+    acknowledgedAt: utcDateTime | null;
   }
 
   @doc("在庫アイテムを新規登録する入力モデル")
@@ -398,13 +398,13 @@ namespace BeautySalon.Models {
     status?: OrderStatusType;
 
     @doc("更新後の予定納期")
-    expectedDelivery?: utcDateTime;
+    expectedDelivery: utcDateTime | null;
 
     @doc("実際の納品日")
-    actualDelivery?: utcDateTime;
+    actualDelivery: utcDateTime | null;
 
     @doc("納品関連の備考")
-    deliveryNotes?: string;
+    deliveryNotes: string | null;
 
     @doc("その他の備考")
     notes?: string;

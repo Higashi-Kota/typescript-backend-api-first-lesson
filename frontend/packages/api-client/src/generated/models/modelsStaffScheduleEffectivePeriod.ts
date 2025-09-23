@@ -8,7 +8,7 @@
 import type { ModelsDateRange } from './modelsDateRange'
 
 /**
- * シフトが有効となる期間
+ * シフトが有効となる期間 - 無期限スケジュールの場合はnull
  * @nullable
  */
 export type ModelsStaffScheduleEffectivePeriod = ModelsDateRange | null

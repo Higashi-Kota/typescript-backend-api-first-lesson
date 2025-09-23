@@ -8,6 +8,7 @@
 import type { ModelsServicePreference } from './modelsServicePreference'
 
 /**
+ * サービスの好み設定。設定がない場合はnull
  * @nullable
  */
 export type ModelsCustomerPreferencesServicePreferences =

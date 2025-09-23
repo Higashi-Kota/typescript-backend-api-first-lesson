@@ -14,42 +14,42 @@ export interface ModelsServiceStatusDetail {
   /** ステータス区分 */
   type: ModelsServiceStatusType
   /**
-   * ステータス変更理由
+   * ステータス変更理由。理由の記録が不要な通常変更の場合はnull
    * @nullable
    */
   reason: string | null
   /**
-   * この状態が開始した日時
+   * この状態が開始した日時。開始日時の記録が不要な場合はnull
    * @nullable
    */
   since: string | null
   /**
-   * 提供可能な月の一覧
+   * 提供可能な月の一覧（1-12）。季節限定以外のステータスの場合はnull
    * @nullable
    */
   availableMonths: number[] | null
   /**
-   * 提供終了予定日
+   * 提供終了予定日。終了予定が未定または無期限の場合はnull
    * @nullable
    */
   availableUntil: string | null
   /**
-   * 残り提供可能枠数
+   * 残り提供可能枠数。数量限定以外のステータスの場合はnull
    * @nullable
    */
   remainingSlots: number | null
   /**
-   * 廃止日時
+   * 廃止日時。廃止ステータス以外の場合はnull
    * @nullable
    */
   discontinuedAt: string | null
   /**
-   * 代替サービス ID
+   * 代替サービス ID。廃止時に代替サービスがない場合はnull
    * @nullable
    */
   replacementId: string | null
   /**
-   * 公開予定日
+   * 公開予定日。近日公開以外のステータス、または予定日未定の場合はnull
    * @nullable
    */
   launchDate: string | null

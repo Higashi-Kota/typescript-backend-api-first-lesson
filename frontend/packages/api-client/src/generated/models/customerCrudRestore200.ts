@@ -17,12 +17,12 @@ export type CustomerCrudRestore200 = {
   /** レスポンスの主体となるビジネスデータ。 */
   data: ModelsCustomer
   /**
-   * リクエスト識別子やバージョン情報など共通メタデータ。
+   * リクエスト識別子やバージョン情報など共通メタデータ。メタ情報が不要な場合はnull
    * @nullable
    */
   meta: CustomerCrudRestore200Meta
   /**
-   * 関連リソースや次アクションへのリンク情報。
+   * 関連リソースや次アクションへのリンク情報。リンクがない場合はnull
    * @nullable
    */
   links: CustomerCrudRestore200Links

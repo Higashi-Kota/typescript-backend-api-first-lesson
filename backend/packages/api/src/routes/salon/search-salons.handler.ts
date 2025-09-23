@@ -53,7 +53,7 @@ export const searchSalonsHandler: RequestHandler<
             filters: [city, category].filter(Boolean) as string[],
             duration: 0, // Could be calculated if needed
           },
-          facets: undefined, // Could add faceted search later
+          facets: {}, // Could add faceted search later
         }
         res.json(response)
       })

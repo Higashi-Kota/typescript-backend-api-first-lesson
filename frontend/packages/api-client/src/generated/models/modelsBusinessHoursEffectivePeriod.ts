@@ -8,7 +8,7 @@
 import type { ModelsDateRange } from './modelsDateRange'
 
 /**
- * 季節営業などの適用期間。未設定時は通年有効。
+ * 季節営業などの適用期間。通年有効の場合はnull
  * @nullable
  */
 export type ModelsBusinessHoursEffectivePeriod = ModelsDateRange | null

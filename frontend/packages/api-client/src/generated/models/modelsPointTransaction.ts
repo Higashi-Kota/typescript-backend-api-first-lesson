@@ -8,8 +8,6 @@
 import type { ModelsPointTransactionId } from './modelsPointTransactionId'
 import type { ModelsCustomerId } from './modelsCustomerId'
 import type { ModelsPointTransactionType } from './modelsPointTransactionType'
-import type { ModelsPaymentId } from './modelsPaymentId'
-import type { ModelsBookingId } from './modelsBookingId'
 
 /**
  * 顧客ポイントの付与・利用履歴
@@ -25,27 +23,36 @@ export interface ModelsPointTransaction {
   points: number
   /** 取引後のポイント残高 */
   balanceAfter: number
-  /** 関連する決済 ID */
-  paymentId?: ModelsPaymentId
-  /** 関連する予約 ID */
-  bookingId?: ModelsBookingId
+  /**
+   * 関連する決済 ID
+   * @nullable
+   */
+  paymentId: string | null
+  /**
+   * 関連する予約 ID
+   * @nullable
+   */
+  bookingId: string | null
   /** 取引内容の説明 */
   description: string
-  /** 獲得ポイントの有効期限 */
-  expiresAt?: string
+  /**
+   * 獲得ポイントの有効期限
+   * @nullable
+   */
+  expiresAt: string | null
   /** 取引発生日時 */
   transactedAt: string
   /** レコード作成日時。 */
   createdAt: string
   /**
-   * レコードを作成したユーザーID。匿名作成の場合はnull。
+   * レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull
    * @nullable
    */
   createdBy: string | null
   /** レコード最終更新日時。 */
   updatedAt: string
   /**
-   * レコードを最後に更新したユーザーID。匿名更新の場合はnull。
+   * レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull
    * @nullable
    */
   updatedBy: string | null

@@ -7,15 +7,29 @@
  */
 
 export interface ModelsVisitHistory {
+  /** 総来店回数。これまでの来店実績の合計 */
   visitCount: number
-  /** @nullable */
+  /**
+   * 初回来店日。未来店の場合はnull
+   * @nullable
+   */
   firstVisitDate: string | null
-  /** @nullable */
+  /**
+   * 最終来店日。新規顧客でまだ来店がない場合はnull
+   * @nullable
+   */
   lastVisitDate: string | null
-  /** @nullable */
+  /**
+   * 平均利用金額。利用実績がない場合はnull
+   * @nullable
+   */
   averageSpendPerVisit: number | null
+  /** 累計利用金額。これまでの総支払額 */
   totalSpent: number
+  /** キャンセル回数。予約をキャンセルした回数 */
   cancelCount: number
+  /** 無断キャンセル回数。連絡なしで来店しなかった回数 */
   noShowCount: number
+  /** 完了サービス数。正常に完了した施術の総数 */
   completedServices: number
 }

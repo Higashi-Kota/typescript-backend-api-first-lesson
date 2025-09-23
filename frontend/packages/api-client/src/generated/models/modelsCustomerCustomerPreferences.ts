@@ -8,7 +8,7 @@
 import type { ModelsCustomerPreferences } from './modelsCustomerPreferences'
 
 /**
- * Customer preferences
+ * 顧客の好み設定。設定がない場合はnull
  * @nullable
  */
 export type ModelsCustomerCustomerPreferences = ModelsCustomerPreferences | null

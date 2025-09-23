@@ -31,7 +31,7 @@ namespace BeautySalon.Models {
     @doc("曜日別の基本営業時間帯一覧")
     openingHours: OpeningHours[];
 
-    @doc("季節やキャンペーン等に合わせた営業スケジュール。未設定時はnull")
+    @doc("季節やキャンペーン等に合わせた営業スケジュール。通常営業時間のみの場合はnull")
     businessHours: BusinessHours[] | null;
 
     @doc("店舗写真や内装画像のURL一覧")
@@ -40,7 +40,7 @@ namespace BeautySalon.Models {
     @doc("設備・サービス・こだわりポイント等の特徴タグ一覧")
     features: string[];
 
-    @doc("顧客レビューから算出した平均評価。評価が無い場合はnull")
+    @doc("顧客レビューから算出した平均評価。レビュー未登録の場合はnull")
     rating: float32 | null;
 
     @doc("蓄積されたレビュー件数。レビュー未登録の場合はnull")
@@ -56,7 +56,7 @@ namespace BeautySalon.Models {
     @doc("新規登録時に必須となるサロン名")
     name: string;
 
-    @doc("サロン紹介文。未設定の場合はnullで送信")
+    @doc("サロン紹介文。未設定の場合はnull")
     description: string | null;
 
     @doc("店舗の正規住所・連絡先配送先")
@@ -68,7 +68,7 @@ namespace BeautySalon.Models {
     @doc("通常営業日の営業時間設定一覧")
     openingHours: OpeningHours[];
 
-    @doc("特別営業スケジュールやシフト連動の営業時間。不要な場合はnull")
+    @doc("特別営業スケジュールやシフト連動の営業時間。通常営業時間のみの場合はnull")
     businessHours: BusinessHours[] | null;
 
     @doc("店舗写真やメニュー画像のURL一覧")
@@ -118,10 +118,10 @@ namespace BeautySalon.Models {
     @doc("ユーザーに提示する所在地情報")
     address: Address;
 
-    @doc("レビュー平均値。評価が無い場合はnull")
+    @doc("レビュー平均値。レビュー未登録の場合はnull")
     rating: float32 | null;
 
-    @doc("レビュー件数。未集計の場合はnull")
+    @doc("レビュー件数。レビュー未登録の場合はnull")
     reviewCount: int32 | null;
   }
 
@@ -129,7 +129,7 @@ namespace BeautySalon.Models {
     サロン検索リクエスト - 高度な検索条件とページネーションを指定して店舗を絞り込む
     AdvancedSearchParamsを継承し、並び順やページ情報も含めて取得する
     """)
-  model SearchSalonRequest extends AdvancedSearchParams {
+  model SalonSearchRequest extends AdvancedSearchParams {
     #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
     @query
     @doc("検索キーワード。qパラメータのエイリアス")
@@ -202,8 +202,8 @@ namespace BeautySalon.Models {
     @doc("在籍スタッフの総数")
     totalStaff: int32;
 
-    @doc("レビューから算出した平均評価")
-    averageRating?: float32;
+    @doc("レビューから算出した平均評価。レビュー未登録の場合はnull")
+    averageRating: float32 | null;
 
     @doc("累計レビュー件数")
     totalReviews: int32;
@@ -211,8 +211,8 @@ namespace BeautySalon.Models {
     @doc("当月の予約件数合計")
     monthlyBookings: int32;
 
-    @doc("当月の売上総額")
-    monthlyRevenue?: Money;
+    @doc("当月の売上総額。売上未集計の場合はnull")
+    monthlyRevenue: Money | null;
 
     @doc("人気の高いサービス一覧")
     popularServices: ServiceSummary[];
@@ -245,8 +245,8 @@ namespace BeautySalon.Models {
     @doc("予約可能な時間帯候補一覧")
     availableSlots: AvailableTimeSlot[];
 
-    @doc("希望日が満席の場合に提示する次の空き日")
-    nextAvailableDate?: plainDate;
+    @doc("希望日が満席の場合に提示する次の空き日。空きがない場合はnull")
+    nextAvailableDate: plainDate | null;
 
     @doc("ウェイトリスト登録の可否")
     waitlistAvailable: boolean;
@@ -272,8 +272,8 @@ namespace BeautySalon.Models {
     @doc("基準地点からの距離（km）")
     distance: float32;
 
-    @doc("想定移動時間（分）。計算不能時はnull")
-    travelTime?: int32;
+    @doc("想定移動時間（分）。計算不可の場合はnull")
+    travelTime: int32 | null;
   }
 
   @doc("パーソナライズされたおすすめ度スコアを含むサロン推薦モデル")
@@ -319,11 +319,11 @@ namespace BeautySalon.Models {
     @doc("例外の種別（休暇・病欠など）")
     type: "holiday" | "sick_leave" | "vacation" | "training" | "other";
 
-    @doc("補足説明や注意事項。不要な場合はnull")
-    description?: string;
+    @doc("補足説明や注意事項。特記事項がない場合はnull")
+    description: string | null;
 
-    @doc("代替対応するスタッフのID。未手配の場合はnull")
-    alternativeStaffId?: StaffId;
+    @doc("代替対応するスタッフのID。代替スタッフ未手配の場合はnull")
+    alternativeStaffId: StaffId | null;
   }
 
   @doc("サロンからの最新情報通知を希望する顧客の購読リクエスト")
@@ -335,7 +335,7 @@ namespace BeautySalon.Models {
     notificationTypes: NotificationType[];
 
     @doc("関心の高いサービスカテゴリ。未指定の場合は全カテゴリ対象")
-    categories?: ("cut" | "color" | "perm" | "treatment" | "spa" | "other")[];
+    categories: ("cut" | "color" | "perm" | "treatment" | "spa" | "other")[];
   }
 
   @doc("サロン通知購読の作成結果を返すレスポンスモデル")
@@ -347,7 +347,7 @@ namespace BeautySalon.Models {
     status: "active";
 
     @doc("購読の有効期限。無期限の場合はnull")
-    expiresAt?: utcDateTime;
+    expiresAt: utcDateTime | null;
   }
 
   @doc("スタッフの勤務スケジュールを更新するためのリクエスト")
@@ -355,13 +355,13 @@ namespace BeautySalon.Models {
     @doc("更新後の通常勤務時間帯一覧")
     regularHours: BusinessHours[];
 
-    @doc("休暇や特例などの例外設定一覧。変更がない場合はnull")
+    @doc("休暇や特例などの例外設定一覧。例外がない場合はnull")
     exceptions: ScheduleException[] | null;
 
     @doc("更新内容の適用開始日時")
     effectiveFrom: utcDateTime;
 
-    @doc("適用終了日時。未定の場合はnull")
+    @doc("適用終了日時。無期限の場合はnull")
     effectiveTo: utcDateTime | null;
   }
 }

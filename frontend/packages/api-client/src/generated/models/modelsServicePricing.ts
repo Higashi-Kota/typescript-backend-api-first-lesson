@@ -20,24 +20,24 @@ export interface ModelsServicePricing {
   /** 通貨コード */
   currency: ModelsCurrencyCodeType
   /**
-   * 設定されている最低料金
+   * 設定されている最低料金。最低料金制限がない場合はnull
    * @nullable
    */
   minimumPrice: number | null
   /**
-   * 設定されている最高料金
+   * 設定されている最高料金。最高料金制限がない場合はnull
    * @nullable
    */
   maximumPrice: number | null
   /** 予約時にデポジットが必要か */
   depositRequired: boolean
   /**
-   * 必要なデポジット金額
+   * 必要なデポジット金額。デポジットが不要な場合はnull
    * @nullable
    */
   depositAmount: number | null
   /**
-   * キャンセル料金の設定
+   * キャンセル料金の設定。キャンセル料が発生しない場合はnull
    * @nullable
    */
   cancellationFee: ModelsServicePricingCancellationFee

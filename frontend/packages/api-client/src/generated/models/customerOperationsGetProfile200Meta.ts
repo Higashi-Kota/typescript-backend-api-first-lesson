@@ -8,7 +8,7 @@
 import type { ModelsResponseMeta } from './modelsResponseMeta'
 
 /**
- * リクエスト識別子やバージョン情報など共通メタデータ。
+ * リクエスト識別子やバージョン情報など共通メタデータ。メタ情報が不要な場合はnull
  * @nullable
  */
 export type CustomerOperationsGetProfile200Meta = ModelsResponseMeta | null

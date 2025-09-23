@@ -17,6 +17,9 @@ export interface ModelsBatchGetRequest {
    * @maxItems 100
    */
   ids: string[]
-  /** レスポンスに含めたいフィールドのカンマ区切りリスト。パフォーマンス最適化に活用する。 */
-  fields?: string
+  /**
+   * レスポンスに含めたいフィールドのカンマ区切りリスト。パフォーマンス最適化に活用する。全フィールド取得の場合はnull
+   * @nullable
+   */
+  fields: string | null
 }

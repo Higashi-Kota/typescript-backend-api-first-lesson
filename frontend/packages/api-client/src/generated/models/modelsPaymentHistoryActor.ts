@@ -8,9 +8,11 @@
 
 /**
  * 操作主体の区分
+ * @nullable
  */
 export type ModelsPaymentHistoryActor =
-  (typeof ModelsPaymentHistoryActor)[keyof typeof ModelsPaymentHistoryActor]
+  | (typeof ModelsPaymentHistoryActor)[keyof typeof ModelsPaymentHistoryActor]
+  | null
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsPaymentHistoryActor = {

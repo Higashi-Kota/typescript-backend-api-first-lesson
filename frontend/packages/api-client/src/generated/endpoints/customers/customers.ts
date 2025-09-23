@@ -62,12 +62,12 @@ import type {
   CustomerOperationsRequestDeletionBody,
   CustomerOperationsUpdatePreferences200,
   ModelsBatchGetRequest,
-  ModelsCreateCustomerRequest,
+  ModelsCustomerCreateRequest,
   ModelsCustomerId,
   ModelsCustomerPreferencesUpdateRequest,
+  ModelsCustomerUpdateRequest,
+  ModelsCustomerUpdateRequestUpdate,
   ModelsProblemDetails,
-  ModelsUpdateCustomerRequest,
-  ModelsUpdateCustomerRequestUpdate,
 } from '../../models'
 
 import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher'
@@ -306,7 +306,7 @@ export const getCustomerCrudCreateUrl = () => {
 }
 
 export const customerCrudCreate = async (
-  modelsCreateCustomerRequest: ModelsCreateCustomerRequest,
+  modelsCustomerCreateRequest: ModelsCustomerCreateRequest,
   options?: RequestInit
 ): Promise<customerCrudCreateResponse> => {
   return customInstance<customerCrudCreateResponse>(
@@ -315,7 +315,7 @@ export const customerCrudCreate = async (
       ...options,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsCreateCustomerRequest),
+      body: JSON.stringify(modelsCustomerCreateRequest),
     }
   )
 }
@@ -327,14 +327,14 @@ export const getCustomerCrudCreateMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof customerCrudCreate>>,
     TError,
-    { data: ModelsCreateCustomerRequest },
+    { data: ModelsCustomerCreateRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof customerCrudCreate>>,
   TError,
-  { data: ModelsCreateCustomerRequest },
+  { data: ModelsCustomerCreateRequest },
   TContext
 > => {
   const mutationKey = ['customerCrudCreate']
@@ -348,7 +348,7 @@ export const getCustomerCrudCreateMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof customerCrudCreate>>,
-    { data: ModelsCreateCustomerRequest }
+    { data: ModelsCustomerCreateRequest }
   > = (props) => {
     const { data } = props ?? {}
 
@@ -361,7 +361,7 @@ export const getCustomerCrudCreateMutationOptions = <
 export type CustomerCrudCreateMutationResult = NonNullable<
   Awaited<ReturnType<typeof customerCrudCreate>>
 >
-export type CustomerCrudCreateMutationBody = ModelsCreateCustomerRequest
+export type CustomerCrudCreateMutationBody = ModelsCustomerCreateRequest
 export type CustomerCrudCreateMutationError = ModelsProblemDetails
 
 /**
@@ -375,7 +375,7 @@ export const useCustomerCrudCreate = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof customerCrudCreate>>,
       TError,
-      { data: ModelsCreateCustomerRequest },
+      { data: ModelsCustomerCreateRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -384,7 +384,7 @@ export const useCustomerCrudCreate = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof customerCrudCreate>>,
   TError,
-  { data: ModelsCreateCustomerRequest },
+  { data: ModelsCustomerCreateRequest },
   TContext
 > => {
   const mutationOptions = getCustomerCrudCreateMutationOptions(options)
@@ -1521,7 +1521,7 @@ export const getCustomerCrudUpdateUrl = (id: ModelsCustomerId) => {
 
 export const customerCrudUpdate = async (
   id: ModelsCustomerId,
-  modelsUpdateCustomerRequest: ModelsUpdateCustomerRequest,
+  modelsCustomerUpdateRequest: ModelsCustomerUpdateRequest,
   options?: RequestInit
 ): Promise<customerCrudUpdateResponse> => {
   return customInstance<customerCrudUpdateResponse>(
@@ -1530,7 +1530,7 @@ export const customerCrudUpdate = async (
       ...options,
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsUpdateCustomerRequest),
+      body: JSON.stringify(modelsCustomerUpdateRequest),
     }
   )
 }
@@ -1542,14 +1542,14 @@ export const getCustomerCrudUpdateMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof customerCrudUpdate>>,
     TError,
-    { id: ModelsCustomerId; data: ModelsUpdateCustomerRequest },
+    { id: ModelsCustomerId; data: ModelsCustomerUpdateRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof customerCrudUpdate>>,
   TError,
-  { id: ModelsCustomerId; data: ModelsUpdateCustomerRequest },
+  { id: ModelsCustomerId; data: ModelsCustomerUpdateRequest },
   TContext
 > => {
   const mutationKey = ['customerCrudUpdate']
@@ -1563,7 +1563,7 @@ export const getCustomerCrudUpdateMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof customerCrudUpdate>>,
-    { id: ModelsCustomerId; data: ModelsUpdateCustomerRequest }
+    { id: ModelsCustomerId; data: ModelsCustomerUpdateRequest }
   > = (props) => {
     const { id, data } = props ?? {}
 
@@ -1576,7 +1576,7 @@ export const getCustomerCrudUpdateMutationOptions = <
 export type CustomerCrudUpdateMutationResult = NonNullable<
   Awaited<ReturnType<typeof customerCrudUpdate>>
 >
-export type CustomerCrudUpdateMutationBody = ModelsUpdateCustomerRequest
+export type CustomerCrudUpdateMutationBody = ModelsCustomerUpdateRequest
 export type CustomerCrudUpdateMutationError = ModelsProblemDetails
 
 /**
@@ -1590,7 +1590,7 @@ export const useCustomerCrudUpdate = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof customerCrudUpdate>>,
       TError,
-      { id: ModelsCustomerId; data: ModelsUpdateCustomerRequest },
+      { id: ModelsCustomerId; data: ModelsCustomerUpdateRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -1599,7 +1599,7 @@ export const useCustomerCrudUpdate = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof customerCrudUpdate>>,
   TError,
-  { id: ModelsCustomerId; data: ModelsUpdateCustomerRequest },
+  { id: ModelsCustomerId; data: ModelsCustomerUpdateRequest },
   TContext
 > => {
   const mutationOptions = getCustomerCrudUpdateMutationOptions(options)
@@ -1649,7 +1649,7 @@ export const getCustomerCrudPatchUrl = (
 
 export const customerCrudPatch = async (
   id: ModelsCustomerId,
-  modelsUpdateCustomerRequestUpdate: ModelsUpdateCustomerRequestUpdate,
+  modelsCustomerUpdateRequestUpdate: ModelsCustomerUpdateRequestUpdate,
   params?: CustomerCrudPatchParams,
   options?: RequestInit
 ): Promise<customerCrudPatchResponse> => {
@@ -1659,7 +1659,7 @@ export const customerCrudPatch = async (
       ...options,
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsUpdateCustomerRequestUpdate),
+      body: JSON.stringify(modelsCustomerUpdateRequestUpdate),
     }
   )
 }
@@ -1673,7 +1673,7 @@ export const getCustomerCrudPatchMutationOptions = <
     TError,
     {
       id: ModelsCustomerId
-      data: ModelsUpdateCustomerRequestUpdate
+      data: ModelsCustomerUpdateRequestUpdate
       params?: CustomerCrudPatchParams
     },
     TContext
@@ -1684,7 +1684,7 @@ export const getCustomerCrudPatchMutationOptions = <
   TError,
   {
     id: ModelsCustomerId
-    data: ModelsUpdateCustomerRequestUpdate
+    data: ModelsCustomerUpdateRequestUpdate
     params?: CustomerCrudPatchParams
   },
   TContext
@@ -1702,7 +1702,7 @@ export const getCustomerCrudPatchMutationOptions = <
     Awaited<ReturnType<typeof customerCrudPatch>>,
     {
       id: ModelsCustomerId
-      data: ModelsUpdateCustomerRequestUpdate
+      data: ModelsCustomerUpdateRequestUpdate
       params?: CustomerCrudPatchParams
     }
   > = (props) => {
@@ -1717,7 +1717,7 @@ export const getCustomerCrudPatchMutationOptions = <
 export type CustomerCrudPatchMutationResult = NonNullable<
   Awaited<ReturnType<typeof customerCrudPatch>>
 >
-export type CustomerCrudPatchMutationBody = ModelsUpdateCustomerRequestUpdate
+export type CustomerCrudPatchMutationBody = ModelsCustomerUpdateRequestUpdate
 export type CustomerCrudPatchMutationError = ModelsProblemDetails
 
 /**
@@ -1733,7 +1733,7 @@ export const useCustomerCrudPatch = <
       TError,
       {
         id: ModelsCustomerId
-        data: ModelsUpdateCustomerRequestUpdate
+        data: ModelsCustomerUpdateRequestUpdate
         params?: CustomerCrudPatchParams
       },
       TContext
@@ -1746,7 +1746,7 @@ export const useCustomerCrudPatch = <
   TError,
   {
     id: ModelsCustomerId
-    data: ModelsUpdateCustomerRequestUpdate
+    data: ModelsCustomerUpdateRequestUpdate
     params?: CustomerCrudPatchParams
   },
   TContext

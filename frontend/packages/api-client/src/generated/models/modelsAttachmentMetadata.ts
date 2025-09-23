@@ -7,7 +7,7 @@
  */
 
 /**
- * 必要に応じて付加情報を保持する任意メタデータ。
+ * 必要に応じて付加情報を保持する任意メタデータ。追加情報が不要な場合はnull。
  * @nullable
  */
 export type ModelsAttachmentMetadata = { [key: string]: unknown } | null

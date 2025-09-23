@@ -25,37 +25,37 @@ export interface ModelsCreateServiceRequest {
   /** サービスカテゴリ区分 */
   category: ModelsServiceCategoryType
   /**
-   * カテゴリ ID
+   * カテゴリ ID。サービスカテゴリ区分のみで分類する場合はnull
    * @nullable
    */
   categoryId: string | null
   /**
-   * サービス画像 URL
+   * サービス画像 URL。画像がない場合はnull
    * @nullable
    */
   imageUrl: string | null
   /**
-   * 必要スタッフレベル
+   * 必要スタッフレベル。全スタッフが対応可能な場合はnull
    * @nullable
    */
   requiredStaffLevel: number | null
   /**
-   * 必要なデポジット額
+   * 必要なデポジット額。デポジットが不要な場合はnull
    * @nullable
    */
   depositAmount: number | null
   /**
-   * 有効フラグ
+   * 有効フラグ。未指定時はデフォルトでtrueとして扱う場合null
    * @nullable
    */
   isActive: boolean | null
   /**
-   * 最大全日予約可能日数
+   * 最大全日予約可能日数。予約可能期間に制限がない場合はnull
    * @nullable
    */
   maxAdvanceBookingDays: number | null
   /**
-   * 最短予約受付時間（時間）
+   * 最短予約受付時間（時間）。即時予約可能な場合はnull
    * @nullable
    */
   minAdvanceBookingHours: number | null

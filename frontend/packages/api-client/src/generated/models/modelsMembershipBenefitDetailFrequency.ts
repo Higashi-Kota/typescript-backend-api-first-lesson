@@ -7,6 +7,7 @@
  */
 
 /**
+ * 特典提供频度。频度指定がない場合はnull
  * @nullable
  */
 export type ModelsMembershipBenefitDetailFrequency =

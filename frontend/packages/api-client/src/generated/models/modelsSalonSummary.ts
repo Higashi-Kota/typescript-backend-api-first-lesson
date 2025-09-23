@@ -19,12 +19,12 @@ export interface ModelsSalonSummary {
   /** ユーザーに提示する所在地情報 */
   address: ModelsAddress
   /**
-   * レビュー平均値。評価が無い場合はnull
+   * レビュー平均値。レビュー未登録の場合はnull
    * @nullable
    */
   rating: number | null
   /**
-   * レビュー件数。未集計の場合はnull
+   * レビュー件数。レビュー未登録の場合はnull
    * @nullable
    */
   reviewCount: number | null

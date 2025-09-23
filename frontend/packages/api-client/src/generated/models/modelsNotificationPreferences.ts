@@ -10,12 +10,12 @@
  * Notification preferences model
  */
 export interface ModelsNotificationPreferences {
-  /** Email notifications enabled */
+  /** メール通知有効 */
   email: boolean
-  /** SMS notifications enabled */
+  /** SMS通知有効 */
   sms: boolean
-  /** Push notifications enabled */
+  /** プッシュ通知有効 */
   push: boolean
-  /** Reminder timing (hours before appointment) */
+  /** リマインダータイミング（予約の何時間前） */
   reminderHours: number
 }

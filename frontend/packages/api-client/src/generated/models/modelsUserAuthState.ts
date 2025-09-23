@@ -8,7 +8,7 @@
 import type { ModelsAuthenticationStateType } from './modelsAuthenticationStateType'
 
 /**
- * 現在の認証状態区分。
+ * 現在の認証状態区分。状態が未設定の場合はnull。
  * @nullable
  */
 export type ModelsUserAuthState = ModelsAuthenticationStateType | null

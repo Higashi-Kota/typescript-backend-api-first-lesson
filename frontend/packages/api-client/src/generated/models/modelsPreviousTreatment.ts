@@ -16,12 +16,12 @@ export interface ModelsPreviousTreatment {
   /** 施術日 */
   date: string
   /**
-   * 施術を受けたサロン名
+   * 施術を受けたサロン名 - 自店での施術や不明な場合はnull
    * @nullable
    */
   salonName: string | null
   /**
-   * 施術に関するメモ
+   * 施術に関するメモ - 特記事項がない通常の過去施術の場合はnull
    * @nullable
    */
   notes: string | null

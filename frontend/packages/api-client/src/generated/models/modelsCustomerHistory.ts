@@ -10,15 +10,30 @@ import type { ModelsServiceId } from './modelsServiceId'
 import type { ModelsStaffId } from './modelsStaffId'
 
 export interface ModelsCustomerHistory {
+  /** 来店履歴詳細。全ての来店関連情報 */
   visits: ModelsVisitHistory
-  /** @nullable */
+  /**
+   * 最後に利用したサービスID。利用実績がない場合はnull
+   * @nullable
+   */
   lastServiceId: string | null
-  /** @nullable */
+  /**
+   * 最後に担当したスタッフID。利用実績がない場合はnull
+   * @nullable
+   */
   lastStaffId: string | null
+  /** お気に入りサービスID一覧。頻繁に利用するサービス */
   favoriteServiceIds: ModelsServiceId[]
+  /** お気に入りスタッフID一覧。指名の多いスタッフ */
   favoriteStaffIds: ModelsStaffId[]
-  /** @nullable */
+  /**
+   * 過去の施術履歴。履歴がない場合はnull
+   * @nullable
+   */
   pastTreatments: string[] | null
-  /** @nullable */
+  /**
+   * 履歴に関するメモ。メモがない場合はnull
+   * @nullable
+   */
   notes: string[] | null
 }

@@ -13,34 +13,34 @@ export interface ModelsServiceInfo {
   /** サービス名称 */
   name: string
   /**
-   * サービス名の読み仮名
+   * サービス名の読み仮名。外国語サービス名など読み仮名が不要な場合はnull
    * @nullable
    */
   nameKana: string | null
   /** サービス詳細説明文 */
   description: string
   /**
-   * 短めの紹介文
+   * 短めの紹介文。詳細説明で十分な場合はnull
    * @nullable
    */
   shortDescription: string | null
   /**
-   * 提供価値・メリットの一覧
+   * 提供価値・メリットの一覧。特別なメリット説明が不要な基本サービスの場合はnull
    * @nullable
    */
   benefits: string[] | null
   /**
-   * 主な対象顧客層
+   * 主な対象顧客層。全顧客対象で特定層を限定しない場合はnull
    * @nullable
    */
   targetCustomer: string | null
   /**
-   * サービス画像の URL 一覧
+   * サービス画像の URL 一覧。画像登録がない場合はnull
    * @nullable
    */
   imageUrls: string[] | null
   /**
-   * 紹介動画の URL
+   * 紹介動画の URL。動画コンテンツがない場合はnull
    * @nullable
    */
   videoUrl: string | null

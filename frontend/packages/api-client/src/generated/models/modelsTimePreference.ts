@@ -12,8 +12,8 @@ import type { ModelsTimeSlot } from './modelsTimeSlot'
  * Time preference model
  */
 export interface ModelsTimePreference {
-  /** Day of week */
+  /** 曜日 */
   dayOfWeek: ModelsDayOfWeekType
-  /** Preferred time slots */
+  /** 希望時間帯 */
   timeSlots: ModelsTimeSlot[]
 }

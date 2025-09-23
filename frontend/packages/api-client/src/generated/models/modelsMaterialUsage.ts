@@ -20,7 +20,7 @@ export interface ModelsMaterialUsage {
   /** 数量単位 */
   unit: string
   /**
-   * 備考メモ
+   * 備考メモ - 特記事項がない標準的な使用量の場合はnull
    * @nullable
    */
   notes: string | null

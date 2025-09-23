@@ -21,31 +21,31 @@ namespace BeautySalon.Models {
     @doc("紐づく来店予約を示すID (DBカラム booking_id と整合)")
     bookingId: BookingId;
 
-    @doc("評価対象のスタッフID。スタッフ未指定レビューの場合は省略")
+    @doc("評価対象のスタッフID - セルフサービスやスタッフ特定不要の施術の場合はnull")
     staffId: StaffId | null;
 
     @doc("全体満足度の評価値 (例: 1〜5)")
     overallRating: int32;
 
-    @doc("自由記述のレビューコメント")
+    @doc("自由記述のレビューコメント - 評価のみでコメントなしのシンプルレビューの場合はnull")
     comment: string | null;
 
-    @doc("レビュータイトルや要約")
+    @doc("レビュータイトルや要約 - タイトル未設定の簡易レビューの場合はnull")
     title: string | null;
 
-    @doc("施術サービスそのものに対する評価値")
+    @doc("施術サービスそのものに対する評価値 - 個別評価をしない総合評価のみのレビューの場合はnull")
     serviceRating: int32 | null;
 
-    @doc("スタッフの接客・技術に対する評価値")
+    @doc("スタッフの接客・技術に対する評価値 - スタッフ評価省略またはセルフサービスの場合はnull")
     staffRating: int32 | null;
 
-    @doc("店内の清潔さ・衛生面に対する評価値")
+    @doc("店内の清潔さ・衛生面に対する評価値 - 清潔さ評価を省略したレビューの場合はnull")
     cleanlinessRating: int32 | null;
 
-    @doc("価格に対する価値・コストパフォーマンス評価値")
+    @doc("価格に対する価値・コストパフォーマンス評価値 - 価格評価を省略したレビューの場合はnull")
     valueRating: int32 | null;
 
-    @doc("レビューに添付された画像URLの一覧")
+    @doc("レビューに添付された画像URLの一覧 - 画像添付なしのテキストのみレビューの場合はnull")
     imageUrls: string[] | null;
 
     @doc("実来店が確認済みかを表す検証フラグ")
@@ -57,10 +57,10 @@ namespace BeautySalon.Models {
     @doc("不適切報告が入った累積回数")
     reportCount: int32 = 0;
 
-    @doc("サロン運営からの公式返信本文")
+    @doc("サロン運営からの公式返信本文 - オーナー未返信のレビューの場合はnull")
     ownerResponse: string | null;
 
-    @doc("運営が返信した日時 (UTC)")
+    @doc("運営が返信した日時 (UTC) - オーナー未返信のレビューの場合はnull")
     ownerRespondedAt: utcDateTime | null;
 
     ...AuditInfo;
@@ -79,31 +79,31 @@ namespace BeautySalon.Models {
     @doc("紐づく来店予約ID (booking_id)")
     bookingId: BookingId;
 
-    @doc("評価対象スタッフのID")
+    @doc("評価対象スタッフのID - セルフサービスやスタッフ特定不要の施術の場合はnull")
     staffId: StaffId | null;
 
     @doc("全体満足度の評価値")
     overallRating: int32;
 
-    @doc("自由記述のコメント")
+    @doc("自由記述のコメント - 評価のみでコメントなしのシンプルレビューの場合はnull")
     comment: string | null;
 
-    @doc("レビュータイトル")
+    @doc("レビュータイトル - タイトル未設定の簡易レビューの場合はnull")
     title: string | null;
 
-    @doc("サービス品質に対する評価値")
+    @doc("サービス品質に対する評価値 - 個別評価をしない総合評価のみのレビューの場合はnull")
     serviceRating: int32 | null;
 
-    @doc("スタッフ対応に対する評価値")
+    @doc("スタッフ対応に対する評価値 - スタッフ評価省略またはセルフサービスの場合はnull")
     staffRating: int32 | null;
 
-    @doc("清潔さ・衛生状態に対する評価値")
+    @doc("清潔さ・衛生状態に対する評価値 - 清潔さ評価を省略したレビューの場合はnull")
     cleanlinessRating: int32 | null;
 
-    @doc("価格に見合う価値の評価値")
+    @doc("価格に見合う価値の評価値 - 価格評価を省略したレビューの場合はnull")
     valueRating: int32 | null;
 
-    @doc("添付画像のURL一覧")
+    @doc("添付画像のURL一覧 - 画像添付なしのテキストのみレビューの場合はnull")
     imageUrls: string[] | null;
   }
 

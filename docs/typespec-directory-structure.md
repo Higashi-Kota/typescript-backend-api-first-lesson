@@ -310,6 +310,7 @@ Duplicate type name: 'Models.SomeType'
 - [型生成システムガイド](./type-generation-system.md)
 - [TypeSpec API型定義ルール](./typespec-api-type-rules.md)
 - [バックエンドアーキテクチャガイドライン](./backend-architecture-guidelines.md)
+
 ## ビルド後フック
 
 `specs/package.json` の `compile` スクリプトは `tsp compile .` 実行後に `scripts/postprocess-openapi.ts` を呼び出し、既知の `duplicate-type-name` 問題を回避するためにOpenAPI出力の対象列挙型を `#/components/schemas/Models.*` へ自動置換します。手動で再実行したい場合は以下を利用します。

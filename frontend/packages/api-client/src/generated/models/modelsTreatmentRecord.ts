@@ -38,53 +38,53 @@ export interface ModelsTreatmentRecord {
   /** 施術終了日時 */
   endTime: string
   /**
-   * 施術の詳細メモ
+   * 施術の詳細メモ - 特記事項がない通常施術の場合はnull
    * @nullable
    */
   notes: string | null
   /**
-   * 使用した資材・商材の記録
+   * 使用した資材・商材の記録 - カットのみなど商材を使用しない施術の場合はnull
    * @nullable
    */
   usedMaterials: ModelsMaterialUsage[] | null
   /**
-   * 施術前後の写真 ID
+   * 施術前後の写真 ID - 写真撮影を希望しない顧客や撮影が不要な施術の場合はnull
    * @nullable
    */
   photos: ModelsAttachmentId[] | null
   /**
-   * 顧客のフィードバック
+   * 顧客のフィードバック - 施術直後でフィードバック未収集の場合はnull
    * @nullable
    */
   customerFeedback: string | null
   /**
-   * 次回来店への提案内容
+   * 次回来店への提案内容 - 特に提案事項がない場合や定期メンテナンスのみの場合はnull
    * @nullable
    */
   nextRecommendations: string | null
   /** 請求総額 */
   totalAmount: number
   /**
-   * 適用した割引額
+   * 適用した割引額 - 割引を適用しない定価施術の場合はnull
    * @nullable
    */
   discountAmount: number | null
   /**
-   * 付与したポイント数
+   * 付与したポイント数 - ポイント対象外の施術やポイント制度未導入サロンの場合はnull
    * @nullable
    */
   pointsEarned: number | null
   /** レコード作成日時。 */
   createdAt: string
   /**
-   * レコードを作成したユーザーID。匿名作成の場合はnull。
+   * レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull
    * @nullable
    */
   createdBy: string | null
   /** レコード最終更新日時。 */
   updatedAt: string
   /**
-   * レコードを最後に更新したユーザーID。匿名更新の場合はnull。
+   * レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull
    * @nullable
    */
   updatedBy: string | null

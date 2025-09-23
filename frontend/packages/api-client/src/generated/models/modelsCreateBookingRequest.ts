@@ -25,29 +25,29 @@ export interface ModelsCreateBookingRequest {
   /** 紐付ける予約リクエストID一覧。 */
   reservationIds: ModelsReservationId[]
   /**
-   * ウェイティングリスト情報。不要な場合はnull。
+   * ウェイティングリスト情報。ウェイティングリストに登録していない場合はnull。
    * @nullable
    */
   waitlistEntry: ModelsCreateBookingRequestWaitlistEntry
   /**
-   * 預かり金設定。不要な場合はnull。
+   * 預かり金設定。デポジットが不要な場合はnull。
    * @nullable
    */
   deposit: ModelsCreateBookingRequestDeposit
   /** 適用する割引額 */
   discountAmount: ModelsMoney
   /**
-   * 予定している支払い方法。
+   * 予定している支払い方法。当日決定または未選択の場合はnull
    * @nullable
    */
   paymentMethod: ModelsCreateBookingRequestPaymentMethod
   /**
-   * スタッフ向けの備考。
+   * スタッフ向けの備考。備考がない場合はnull。
    * @nullable
    */
   notes: string | null
   /**
-   * 外部連携や業務用に保持する任意メタデータ。
+   * 外部連携や業務用に保持する任意メタデータ。追加情報が不要の場合はnull。
    * @nullable
    */
   metadata: ModelsCreateBookingRequestMetadata

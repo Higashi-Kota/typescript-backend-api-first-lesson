@@ -21,103 +21,106 @@ import type { ModelsCustomerMetadataProperty } from './modelsCustomerMetadataPro
 import type { ModelsCustomerRegistrationSource } from './modelsCustomerRegistrationSource'
 
 export interface ModelsCustomer {
+  /** 顧客を一意に識別するID。システム内で重複しない識別子 */
   id: ModelsCustomerId
+  /** 顧客氏名。フルネームまたは通称名 */
   name: string
+  /** 連絡先情報。メール、電話番号等の連絡手段 */
   contactInfo: ModelsContactInfo
   /**
-   * Customer gender
+   * 顧客の性別。未登録または非公開の場合はnull
    * @nullable
    */
   gender: ModelsCustomerGender
   /**
-   * Birth date
+   * 生年月日。未登録または非公開の場合はnull
    * @nullable
    */
   birthDate: string | null
   /**
-   * Address
+   * 住所情報。未登録の場合はnull
    * @nullable
    */
   address: ModelsCustomerAddress
-  /** Preferences and requirements */
+  /** 顧客の好みや要望 */
   preferences: ModelsCustomerPreferencesProperty
   /**
-   * Internal notes
+   * 内部メモ。メモがない場合はnull
    * @nullable
    */
   notes: string | null
-  /** Tags for categorization */
+  /** 分類用タグ */
   tags: string[]
-  /** Current loyalty points */
+  /** 現在のロイヤルティポイント */
   loyaltyPoints: number
   /**
-   * Membership information
+   * 会員情報。非会員の場合はnull
    * @nullable
    */
   membership: ModelsCustomerMembership
   /**
-   * NotificationType settings
+   * 通知設定。設定がない場合はnull
    * @nullable
    */
   notificationSettings: ModelsCustomerNotificationSettings
   /**
-   * Health information
+   * 健康情報。情報提供がない場合はnull
    * @nullable
    */
   health: ModelsCustomerHealthProperty
   /**
-   * Customer preferences
+   * 顧客の好み設定。設定がない場合はnull
    * @nullable
    */
   customerPreferences: ModelsCustomerCustomerPreferences
   /**
-   * Visit history
+   * 来店履歴。履歴がない場合はnull
    * @nullable
    */
   history: ModelsCustomerHistoryProperty
   /**
-   * Customer associations
+   * 顧客関連情報。関連がない場合はnull
    * @nullable
    */
   associations: ModelsCustomerAssociationsProperty
   /**
-   * Customer status
+   * 顧客ステータス詳細。特別なステータスがない場合はnull
    * @nullable
    */
   status: ModelsCustomerStatus
   /**
-   * Customer metadata
+   * 顧客メタデータ。追加情報がない場合はnull
    * @nullable
    */
   metadata: ModelsCustomerMetadataProperty
   /**
-   * Medical chart ID
+   * カルテID。カルテがない場合はnull
    * @nullable
    */
   medicalChartId: string | null
-  /** Is active customer */
+  /** アクティブな顧客かどうか */
   isActive: boolean
   /**
-   * Registration source
+   * 登録経路。不明の場合はnull
    * @nullable
    */
   registrationSource: ModelsCustomerRegistrationSource
   /**
-   * Referrer customer ID
+   * 紹介元顧客ID。紹介ではない場合はnull
    * @nullable
    */
   referredBy: string | null
   /** レコード作成日時。 */
   createdAt: string
   /**
-   * レコードを作成したユーザーID。匿名作成の場合はnull。
+   * レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull
    * @nullable
    */
   createdBy: string | null
   /** レコード最終更新日時。 */
   updatedAt: string
   /**
-   * レコードを最後に更新したユーザーID。匿名更新の場合はnull。
+   * レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull
    * @nullable
    */
   updatedBy: string | null

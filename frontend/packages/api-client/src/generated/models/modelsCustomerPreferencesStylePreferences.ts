@@ -8,6 +8,7 @@
 import type { ModelsStylePreference } from './modelsStylePreference'
 
 /**
+ * スタイルの好み設定。設定がない場合はnull
  * @nullable
  */
 export type ModelsCustomerPreferencesStylePreferences =

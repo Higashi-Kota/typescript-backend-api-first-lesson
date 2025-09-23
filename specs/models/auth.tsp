@@ -51,22 +51,22 @@ namespace BeautySalon.Models {
     @doc("現在の認証状態区分。")
     type: AuthenticationStateType;
 
-    @doc("状態に紐づくセッションID。未確立の場合はnull。")
+    @doc("状態に紐づくセッションID。セッションが未確立の場合はnull。")
     sessionId: SessionId | null;
 
-    @doc("該当状態が失効する日時。")
+    @doc("該当状態が失効する日時。無期限の場合はnull。")
     expiresAt: utcDateTime | null;
 
-    @doc("2要素認証や一時アクセスに利用する暫定トークン。")
+    @doc("2要素認証や一時アクセスに利用する暫定トークン。不要な状態の場合はnull。")
     tempToken: string | null;
 
-    @doc("ロックや制限状態が解除される予定日時。")
+    @doc("ロックや制限状態が解除される予定日時。通常状態の場合はnull。")
     until: utcDateTime | null;
 
-    @doc("認証失敗などの試行回数。")
+    @doc("認証失敗などの試行回数。試行がない場合はnull。")
     attempts: int32 | null;
 
-    @doc("状態が発生した具体的な理由メッセージ。")
+    @doc("状態が発生した具体的な理由メッセージ。理由が特にない場合はnull。")
     reason: string | null;
   }
 
@@ -92,16 +92,16 @@ namespace BeautySalon.Models {
     @doc("現在の確認状態区分。")
     type: EmailVerificationStateType;
 
-    @doc("確認完了日時。未確認の場合はnull。")
+    @doc("確認完了日時。メールアドレスが未確認の場合はnull。")
     verifiedAt: utcDateTime | null;
 
-    @doc("確認メールに含めるトークン。再送未実施の場合はnull。")
+    @doc("確認メールに含めるトークン。確認メールが未送信の場合はnull。")
     token: string | null;
 
-    @doc("トークンの有効期限。")
+    @doc("トークンの有効期限。トークンが発行されていない場合はnull。")
     expiresAt: utcDateTime | null;
 
-    @doc("確認メールを送信した日時。")
+    @doc("確認メールを送信した日時。メール未送信の場合はnull。")
     sentAt: utcDateTime | null;
   }
 
@@ -127,16 +127,16 @@ namespace BeautySalon.Models {
     @doc("現在のリセット状態区分。")
     type: PasswordResetStateType;
 
-    @doc("リセット手続きに使用するトークン。")
+    @doc("リセット手続きに使用するトークン。リセットが要求されていない場合はnull。")
     token: string | null;
 
-    @doc("トークンの有効期限。")
+    @doc("トークンの有効期限。リセットが要求されていない場合はnull。")
     expiresAt: utcDateTime | null;
 
-    @doc("リセットを要求した日時。")
+    @doc("リセットを要求した日時。リセットが要求されていない場合はnull。")
     requestedAt: utcDateTime | null;
 
-    @doc("リセット完了日時。未完了の場合はnull。")
+    @doc("リセット完了日時。パスワードリセットが未完了の場合はnull。")
     completedAt: utcDateTime | null;
   }
 
@@ -166,10 +166,10 @@ namespace BeautySalon.Models {
     @doc("システム内での基礎的な役割区分。")
     type: UserRoleType;
 
-    @doc("役割が適用されるサロンID。全社権限の場合はnull。")
+    @doc("役割が適用されるサロンID。全社管理者やシステム管理者の場合はnull。")
     salonId: SalonId | null;
 
-    @doc("スタッフに対して設定される技術レベル。")
+    @doc("スタッフに対して設定される技術レベル。スタッフ以外の役割の場合はnull。")
     level: StaffLevelType | null;
   }
   @doc("""
@@ -236,58 +236,58 @@ namespace BeautySalon.Models {
     @doc("メールアドレスが確認済みかどうか。")
     emailVerified: boolean;
 
-    @doc("メール確認に利用するトークン。内部管理用。")
+    @doc("メール確認に利用するトークン。メール確認済みまたは未送信の場合はnull。")
     emailVerificationToken: string | null;
 
-    @doc("メール確認トークンの有効期限。")
+    @doc("メール確認トークンの有効期限。トークンが発行されていない場合はnull。")
     emailVerificationTokenExpiry: utcDateTime | null;
 
     @doc("2要素認証の設定状態。")
     twoFactorStatus: TwoFactorStatusType;
 
-    @doc("暗号化された2要素認証シークレット。")
+    @doc("暗号化された2要素認証シークレット。2要素認証が無効の場合はnull。")
     twoFactorSecret: string | null;
 
-    @doc("2要素認証の復旧用バックアップコード一覧。")
+    @doc("2要素認証の復旧用バックアップコード一覧。2要素認証が無効の場合はnull。")
     backupCodes: string[] | null;
 
     @doc("連続したログイン失敗回数。")
     failedLoginAttempts: int32 = 0;
 
-    @doc("アカウントをロックした日時。未ロックの場合はnull。")
+    @doc("アカウントをロックした日時。アカウントがロックされていない場合はnull。")
     lockedAt: utcDateTime | null;
 
-    @doc("パスワードリセットに利用するトークン。内部管理用。")
+    @doc("パスワードリセットに利用するトークン。リセットが要求されていない場合はnull。")
     passwordResetToken: string | null;
 
-    @doc("パスワードリセットトークンの有効期限。")
+    @doc("パスワードリセットトークンの有効期限。トークンが発行されていない場合はnull。")
     passwordResetTokenExpiry: utcDateTime | null;
 
-    @doc("最後にパスワードを変更した日時。")
+    @doc("最後にパスワードを変更した日時。パスワード変更履歴がない場合はnull。")
     lastPasswordChangeAt: utcDateTime | null;
 
-    @doc("再利用防止のため保持する過去パスワードハッシュ。")
+    @doc("再利用防止のため保持する過去パスワードハッシュ。履歴管理をしていない場合はnull。")
     passwordHistory: string[] | null;
 
-    @doc("信頼済みIPアドレスのリスト。")
+    @doc("信頼済みIPアドレスのリスト。IP制限を設定していない場合はnull。")
     trustedIpAddresses: string[] | null;
 
-    @doc("ユーザーが顧客の場合の顧客プロファイルID。")
+    @doc("ユーザーが顧客の場合の顧客プロファイルID。顧客以外の役割の場合はnull。")
     customerId: CustomerId | null;
 
-    @doc("ユーザーがスタッフの場合のスタッフプロファイルID。")
+    @doc("ユーザーがスタッフの場合のスタッフプロファイルID。スタッフ以外の役割の場合はnull。")
     staffId: StaffId | null;
 
-    @doc("担当サロンやレベル等を含む拡張ロール情報。")
+    @doc("担当サロンやレベル等を含む拡張ロール情報。詳細情報が設定されていない場合はnull。")
     roleDetail: UserRoleDetail | null;
 
-    @doc("現在の認証状態区分。")
+    @doc("現在の認証状態区分。状態が未設定の場合はnull。")
     authState: AuthenticationStateType | null;
 
-    @doc("メール確認状態区分。")
+    @doc("メール確認状態区分。状態が未設定の場合はnull。")
     emailVerificationState: EmailVerificationStateType | null;
 
-    @doc("パスワードリセット状態区分。")
+    @doc("パスワードリセット状態区分。リセットが要求されていない場合はnull。")
     passwordResetState: PasswordResetStateType | null;
 
     @doc("ユーザーアカウント作成日時。")
@@ -296,10 +296,10 @@ namespace BeautySalon.Models {
     @doc("ユーザー情報の最終更新日時。")
     updatedAt: utcDateTime;
 
-    @doc("直近のログイン日時。")
+    @doc("直近のログイン日時。一度もログインしていない場合はnull。")
     lastLoginAt: utcDateTime | null;
 
-    @doc("直近ログイン時のIPアドレス。")
+    @doc("直近ログイン時のIPアドレス。ログイン履歴がない場合はnull。")
     lastLoginIp: string | null;
   }
 

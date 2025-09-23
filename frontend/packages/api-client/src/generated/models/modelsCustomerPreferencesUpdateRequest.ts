@@ -10,21 +10,21 @@ import type { ModelsNotificationPreferences } from './modelsNotificationPreferen
 import type { ModelsTimePreference } from './modelsTimePreference'
 
 /**
- * Customer preferences update model
+ * 顧客の好み設定更新リクエスト。通知設定や連絡方法の変更
  */
 export interface ModelsCustomerPreferencesUpdateRequest {
-  /** Preferred contact method */
+  /** 希望連絡方法 */
   contactMethod: ModelsContactMethodType
-  /** NotificationType preferences */
+  /** 通知設定 */
   notifications: ModelsNotificationPreferences
-  /** Marketing opt-in status */
+  /** マーケティング配信許可状態 */
   marketingOptIn: boolean
-  /** Preferred language */
+  /** 希望言語 */
   preferredLanguage?: string
-  /** Accessibility requirements */
+  /** アクセシビリティ要件 */
   accessibilityRequirements?: string[]
-  /** Allergies or sensitivities */
+  /** アレルギーや過敏症 */
   allergies?: string[]
-  /** Preferred appointment times */
+  /** 希望予約時間 */
   preferredTimes?: ModelsTimePreference[]
 }

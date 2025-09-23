@@ -18,19 +18,19 @@ export interface ModelsBusinessHours {
   /** 営業時間帯の一覧。複数設定で分割営業に対応。 */
   operatingSlots: ModelsTimeSlot[]
   /**
-   * 休憩時間や中断時間帯の一覧。未設定時はnull。
+   * 休憩時間や中断時間帯の一覧。休憩がない場合はnull
    * @nullable
    */
   breakSlots: ModelsTimeSlot[] | null
   /** 当該曜日を休業扱いとする場合のフラグ。既定値はfalse。 */
   isClosed: boolean
   /**
-   * 季節営業などの適用期間。未設定時は通年有効。
+   * 季節営業などの適用期間。通年有効の場合はnull
    * @nullable
    */
   effectivePeriod: ModelsBusinessHoursEffectivePeriod
   /**
-   * 営業基準となるタイムゾーンID。未設定時はサロン既定値。
+   * 営業基準となるタイムゾーンID。サロン既定値を使用する場合はnull
    * @nullable
    */
   timezone: string | null

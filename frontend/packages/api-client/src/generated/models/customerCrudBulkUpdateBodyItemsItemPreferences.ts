@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 顧客の好みや要望。カスタム設定情報
+ */
 export type CustomerCrudBulkUpdateBodyItemsItemPreferences = {
   [key: string]: unknown
 }

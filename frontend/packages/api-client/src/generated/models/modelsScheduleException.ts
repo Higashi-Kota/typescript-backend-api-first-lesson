@@ -6,7 +6,6 @@
  * OpenAPI spec version: 2.0
  */
 import type { ModelsScheduleExceptionType } from './modelsScheduleExceptionType'
-import type { ModelsStaffId } from './modelsStaffId'
 
 /**
  * スタッフに発生する例外スケジュール（休暇・研修等）を表すモデル
@@ -16,8 +15,14 @@ export interface ModelsScheduleException {
   date: string
   /** 例外の種別（休暇・病欠など） */
   type: ModelsScheduleExceptionType
-  /** 補足説明や注意事項。不要な場合はnull */
-  description?: string
-  /** 代替対応するスタッフのID。未手配の場合はnull */
-  alternativeStaffId?: ModelsStaffId
+  /**
+   * 補足説明や注意事項。特記事項がない場合はnull
+   * @nullable
+   */
+  description: string | null
+  /**
+   * 代替対応するスタッフのID。代替スタッフ未手配の場合はnull
+   * @nullable
+   */
+  alternativeStaffId: string | null
 }

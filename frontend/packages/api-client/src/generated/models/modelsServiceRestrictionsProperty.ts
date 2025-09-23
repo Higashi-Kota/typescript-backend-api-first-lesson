@@ -8,7 +8,7 @@
 import type { ModelsServiceRestrictions } from './modelsServiceRestrictions'
 
 /**
- * 提供上の制約条件
+ * 提供上の制約条件。制約がないサービスの場合はnull
  * @nullable
  */
 export type ModelsServiceRestrictionsProperty = ModelsServiceRestrictions | null

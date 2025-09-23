@@ -7,12 +7,24 @@
  */
 
 export interface ModelsStylePreference {
-  /** @nullable */
+  /**
+   * 希望の髪の長さ。特に希望がない場合はnull
+   * @nullable
+   */
   preferredLength: string | null
-  /** @nullable */
+  /**
+   * 希望のカラー一覧。特に希望がない場合はnull
+   * @nullable
+   */
   preferredColors: string[] | null
-  /** @nullable */
+  /**
+   * 避けたいスタイル一覧。特にない場合はnull
+   * @nullable
+   */
   avoidStyles: string[] | null
-  /** @nullable */
+  /**
+   * 参考画像URL一覧。画像がない場合はnull
+   * @nullable
+   */
   inspirationImages: string[] | null
 }

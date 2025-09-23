@@ -17,12 +17,12 @@ export interface ModelsAttachmentCreateRequest {
   /** ファイルのContent-Type。 */
   content: string
   /**
-   * ファイルを関連付けるサロンID。任意設定。
+   * ファイルを関連付けるサロンID。全社共通ファイルの場合はnull。
    * @nullable
    */
   salonId: string | null
   /**
-   * タグ情報を表すJSON文字列。任意設定。
+   * タグ情報を表すJSON文字列。タグを設定しない場合はnull。
    * @nullable
    */
   tags: string | null

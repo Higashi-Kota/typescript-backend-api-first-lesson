@@ -8,7 +8,7 @@
 import type { ModelsCancellationFee } from './modelsCancellationFee'
 
 /**
- * キャンセル料金の設定
+ * キャンセル料金の設定。キャンセル料が発生しない場合はnull
  * @nullable
  */
 export type ModelsServicePricingCancellationFee = ModelsCancellationFee | null

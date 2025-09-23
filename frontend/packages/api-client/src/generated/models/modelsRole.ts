@@ -19,7 +19,7 @@ export interface ModelsRole {
   /** 管理画面などで表示する名称 */
   displayName: string
   /**
-   * ロールの詳細説明
+   * ロールの詳細説明 - システム標準ロールや説明不要なシンプルなロールの場合はnull
    * @nullable
    */
   description: string | null
@@ -32,14 +32,14 @@ export interface ModelsRole {
   /** レコード作成日時。 */
   createdAt: string
   /**
-   * レコードを作成したユーザーID。匿名作成の場合はnull。
+   * レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull
    * @nullable
    */
   createdBy: string | null
   /** レコード最終更新日時。 */
   updatedAt: string
   /**
-   * レコードを最後に更新したユーザーID。匿名更新の場合はnull。
+   * レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull
    * @nullable
    */
   updatedBy: string | null

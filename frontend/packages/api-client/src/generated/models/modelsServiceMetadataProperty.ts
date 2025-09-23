@@ -8,7 +8,7 @@
 import type { ModelsServiceMetadata } from './modelsServiceMetadata'
 
 /**
- * メタデータ・表示設定
+ * メタデータ・表示設定。特別な表示設定が不要な場合はnull
  * @nullable
  */
 export type ModelsServiceMetadataProperty = ModelsServiceMetadata | null

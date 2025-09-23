@@ -26,6 +26,7 @@ API-DB型制約マッピング機構は、APIからデータベースまでの�
 - **Result型パターン**: `Result<T, E>` + ts-pattern による例外なしエラーハンドリング
 - **Problem Details**: 標準化されたHTTPエラーレスポンス形式
 - **トランザクション統合**: 関連データの整合性保証（salon + opening_hours）
+- **Optional制約の厳格適用**: ベースモデルでOptional禁止、UpdateRequest/SearchRequestのみ許可
 
 ## エンドツーエンドの型変換チェーン
 
@@ -167,7 +168,7 @@ export type NewOpeningHours = typeof openingHours.$inferInsert
 // backend/packages/domain/src/models/salon.ts
 import type { openingHours, salons } from '@beauty-salon-backend/database'
 import type { components, operations } from '@beauty-salon-backend/generated'
-import type { Brand, DeepRequired } from '@beauty-salon-backend/utility'
+import type { Brand, DeepRequired, Omit } from '@beauty-salon-backend/utility'
 
 // ブランド型でID型安全性を確保
 export const salonIdBrand: unique symbol = Symbol('SalonId')
@@ -409,6 +410,12 @@ export const SalonReadMapper = {
 #### Null可能性の一致
 - DB `NOT NULL` → API 必須フィールド
 - DB nullable → API `| null` 型
+
+#### Optional制約の厳格適用
+- **ベースモデル（エンティティ）**: Optional (`?`) 使用禁止、nullable (`| null`) のみ
+- **UpdateRequest**: すべてのフィールドOptional可（`?`）
+- **SearchRequest**: @queryフィールドのみOptional可（`?`）
+- **CreateRequest/Response/その他**: Optional使用禁止
 
 #### 型変換の明示
 - DB `numeric` → API `number` (parseFloat)

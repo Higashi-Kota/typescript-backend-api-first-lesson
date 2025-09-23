@@ -18,7 +18,7 @@ export interface ModelsCategoryModel {
   /** カテゴリ説明 */
   description: string
   /**
-   * 親カテゴリ ID
+   * 親カテゴリ ID。最上位カテゴリの場合はnull
    * @nullable
    */
   parentId: string | null
@@ -29,14 +29,14 @@ export interface ModelsCategoryModel {
   /** レコード作成日時。 */
   createdAt: string
   /**
-   * レコードを作成したユーザーID。匿名作成の場合はnull。
+   * レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull
    * @nullable
    */
   createdBy: string | null
   /** レコード最終更新日時。 */
   updatedAt: string
   /**
-   * レコードを最後に更新したユーザーID。匿名更新の場合はnull。
+   * レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull
    * @nullable
    */
   updatedBy: string | null

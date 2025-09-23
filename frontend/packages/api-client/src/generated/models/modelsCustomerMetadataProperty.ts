@@ -8,7 +8,7 @@
 import type { ModelsCustomerMetadata } from './modelsCustomerMetadata'
 
 /**
- * Customer metadata
+ * 顧客メタデータ。追加情報がない場合はnull
  * @nullable
  */
 export type ModelsCustomerMetadataProperty = ModelsCustomerMetadata | null

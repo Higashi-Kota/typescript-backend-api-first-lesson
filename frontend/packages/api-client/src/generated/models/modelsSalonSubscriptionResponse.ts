@@ -15,6 +15,9 @@ export interface ModelsSalonSubscriptionResponse {
   subscriptionId: string
   /** 購読状態（常にactiveを返却） */
   status: ModelsSalonSubscriptionResponseStatus
-  /** 購読の有効期限。無期限の場合はnull */
-  expiresAt?: string
+  /**
+   * 購読の有効期限。無期限の場合はnull
+   * @nullable
+   */
+  expiresAt: string | null
 }

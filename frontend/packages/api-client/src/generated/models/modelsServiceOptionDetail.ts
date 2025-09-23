@@ -14,62 +14,62 @@ export interface ModelsServiceOptionDetail {
   /** オプションの種類 */
   type: ModelsServiceOptionType
   /**
-   * オプション名
+   * オプション名。タイプから自明な名称の場合はnull
    * @nullable
    */
   name: string | null
   /**
-   * オプション料金
+   * オプション料金。無料オプションまたは他の料金設定方法の場合はnull
    * @nullable
    */
   price: number | null
   /**
-   * 追加される施術時間
+   * 追加される施術時間（分）。時間追加がないオプションの場合はnull
    * @nullable
    */
   duration: number | null
   /**
-   * オプションの説明
+   * オプションの説明。説明が不要な自明なオプションの場合はnull
    * @nullable
    */
   description: string | null
   /**
-   * アップグレード元のレベル
+   * アップグレード元のレベル。アップグレード型以外のオプションの場合はnull
    * @nullable
    */
   fromLevel: string | null
   /**
-   * アップグレード先のレベル
+   * アップグレード先のレベル。アップグレード型以外のオプションの場合はnull
    * @nullable
    */
   toLevel: string | null
   /**
-   * 追加料金
+   * 追加料金。基本料金に含まれる、または他の料金設定の場合はnull
    * @nullable
    */
   additionalPrice: number | null
   /**
-   * 時間延長（分）
+   * 時間延長（分）。時間延長型以外のオプションの場合はnull
    * @nullable
    */
   extension: number | null
   /**
-   * 関連商品 ID
+   * 関連商品 ID。商品追加型以外のオプションの場合はnull
    * @nullable
    */
   productId: string | null
   /**
-   * 必須オプションかどうか
+   * 必須オプションかどうか。任意選択の標準的なオプションの場合はnull（falseと同義）
    * @nullable
    */
   required: boolean | null
   /**
-   * 同時予約が必要なサービス ID
+   * 同時予約が必要なサービス ID。コンボ型以外のオプションの場合はnull
    * @nullable
    */
   withService: string | null
   /**
-   * 割引金額
+   * 割引金額。割引がない、またはパーセンテージ割引の場合はnull
    * @nullable
    */
   discountAmount: number | null

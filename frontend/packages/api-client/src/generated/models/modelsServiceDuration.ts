@@ -13,22 +13,22 @@ export interface ModelsServiceDuration {
   /** 標準施術時間（分） */
   standard: number
   /**
-   * 最短施術時間
+   * 最短施術時間（分）。固定時間制で短縮不可の場合はnull
    * @nullable
    */
   minimum: number | null
   /**
-   * 最長施術時間
+   * 最長施術時間（分）。固定時間制で延長不可の場合はnull
    * @nullable
    */
   maximum: number | null
   /**
-   * 施術前のバッファ時間
+   * 施術前のバッファ時間（分）。準備時間が不要な場合はnull
    * @nullable
    */
   bufferBefore: number | null
   /**
-   * 施術後のバッファ時間
+   * 施術後のバッファ時間（分）。片付け時間が不要な場合はnull
    * @nullable
    */
   bufferAfter: number | null

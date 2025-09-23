@@ -22,12 +22,24 @@ export interface ModelsPaymentHistory {
   status: ModelsPaymentStatus
   /** 変更が発生した日時 */
   occurredAt: string
-  /** 操作主体の区分 */
-  actor?: ModelsPaymentHistoryActor
-  /** 操作主体の ID */
-  actorId?: string
-  /** 変更内容の補足メモ */
-  note?: string
-  /** 履歴に紐づく追加メタデータ */
-  metadata?: ModelsPaymentHistoryMetadata
+  /**
+   * 操作主体の区分
+   * @nullable
+   */
+  actor: ModelsPaymentHistoryActor
+  /**
+   * 操作主体の ID
+   * @nullable
+   */
+  actorId: string | null
+  /**
+   * 変更内容の補足メモ
+   * @nullable
+   */
+  note: string | null
+  /**
+   * 履歴に紐づく追加メタデータ
+   * @nullable
+   */
+  metadata: ModelsPaymentHistoryMetadata
 }

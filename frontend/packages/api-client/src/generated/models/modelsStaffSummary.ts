@@ -16,12 +16,12 @@ export interface ModelsStaffSummary {
   /** スタッフの表示名。 */
   name: string
   /**
-   * 平均評価スコア。未評価の場合はnull。
+   * 平均評価スコア。未評価または評価データがない場合はnull
    * @nullable
    */
   rating: number | null
   /**
-   * 担当した予約件数。統計未計算時はnull。
+   * 担当した予約件数。統計未計算の場合はnull
    * @nullable
    */
   bookingCount: number | null

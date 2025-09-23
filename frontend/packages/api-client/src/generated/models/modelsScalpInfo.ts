@@ -8,8 +8,13 @@
 import type { ModelsScalpConditionType } from './modelsScalpConditionType'
 
 export interface ModelsScalpInfo {
+  /** 頭皮の状態。健康状態やケア必要性の分類 */
   condition: ModelsScalpConditionType
+  /** 頭皮の敏感性リスト。特定の刺激への反応 */
   sensitivities: string[]
-  /** @nullable */
+  /**
+   * 頭皮に関する備考。特記事項がない場合はnull
+   * @nullable
+   */
   notes: string | null
 }

@@ -10,13 +10,23 @@ import type { CustomerCrudBulkUpdateBodyItemsItemPreferences } from './customerC
 import type { ModelsCustomerId } from './modelsCustomerId'
 
 export type CustomerCrudBulkUpdateBodyItemsItem = {
+  /** 顧客氏名。フルネームまたは通称名 */
   name?: string
+  /** 連絡先情報。メール、電話番号等の連絡手段 */
   contactInfo?: ModelsContactInfo
+  /** 顧客の好みや要望。カスタム設定情報 */
   preferences?: CustomerCrudBulkUpdateBodyItemsItemPreferences
-  /** @nullable */
+  /**
+   * 内部メモ。スタッフ用の顧客に関する備考。null指定でリセット可能
+   * @nullable
+   */
   notes?: string | null
+  /** 分類用タグ。顧客をグループ化するためのラベル */
   tags?: string[]
-  /** @nullable */
+  /**
+   * 生年月日。年齢計算や誕生日特典に使用。null指定でリセット可能
+   * @nullable
+   */
   birthDate?: string | null
   id: ModelsCustomerId
 }

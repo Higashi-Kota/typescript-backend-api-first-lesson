@@ -13,34 +13,34 @@ export interface ModelsWaitlistEntry {
   /** 現在の待機順序。 */
   position: number
   /**
-   * 呼び出し予想時刻。未確定の場合はnull。
+   * 呼び出し予想時刻。時刻が未確定の場合はnull。
    * @nullable
    */
   estimatedTime: string | null
   /** ウェイティングリストに参加した日時。 */
   joinedAt: string
   /**
-   * 待機権が失効する日時。
+   * 待機権が失効する日時。無期限の場合はnull。
    * @nullable
    */
   expiresAt: string | null
   /**
-   * 呼び出し通知を送信した日時。
+   * 呼び出し通知を送信した日時。未通知の場合はnull。
    * @nullable
    */
   notifiedAt: string | null
   /**
-   * 希望スタッフID。任意指定。
+   * 希望スタッフID。指名なしの場合はnull。
    * @nullable
    */
   preferredStaffId: string | null
   /**
-   * 希望サービスID。任意指定。
+   * 希望サービスID。サービスを指定していない場合はnull。
    * @nullable
    */
   preferredServiceId: string | null
   /**
-   * 追加メモ。
+   * 追加メモ。メモがない場合はnull。
    * @nullable
    */
   notes: string | null

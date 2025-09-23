@@ -9,12 +9,24 @@ import type { ModelsServiceId } from './modelsServiceId'
 import type { ModelsServicePreferencePreferredPriceRange } from './modelsServicePreferencePreferredPriceRange'
 
 export interface ModelsServicePreference {
-  /** @nullable */
+  /**
+   * お気に入りサービス一覧。特にない場合はnull
+   * @nullable
+   */
   favoriteServices: ModelsServiceId[] | null
-  /** @nullable */
+  /**
+   * 避けたいサービス一覧。特にない場合はnull
+   * @nullable
+   */
   avoidServices: ModelsServiceId[] | null
-  /** @nullable */
+  /**
+   * 希望施術時間（分）。特に希望がない場合はnull
+   * @nullable
+   */
   preferredDuration: number | null
-  /** @nullable */
+  /**
+   * 希望価格帯。特に希望がない場合はnull
+   * @nullable
+   */
   preferredPriceRange: ModelsServicePreferencePreferredPriceRange
 }

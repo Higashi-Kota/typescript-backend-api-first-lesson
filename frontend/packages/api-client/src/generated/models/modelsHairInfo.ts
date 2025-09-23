@@ -9,10 +9,17 @@ import type { ModelsHairType } from './modelsHairType'
 import type { ModelsHairThicknessType } from './modelsHairThicknessType'
 
 export interface ModelsHairInfo {
+  /** 髪質タイプ。髪のクセや形状の分類 */
   type: ModelsHairType
+  /** 髪の太さ。一本あたりの毛髪の太さ */
   thickness: ModelsHairThicknessType
+  /** 髪の状態リスト。ダメージや健康状態の詳細 */
   condition: string[]
+  /** 化学処理履歴。カラーやパーマ等の施術履歴 */
   chemicalHistory: string[]
-  /** @nullable */
+  /**
+   * 髪質に関する備考。特記事項がない場合はnull
+   * @nullable
+   */
   notes: string | null
 }

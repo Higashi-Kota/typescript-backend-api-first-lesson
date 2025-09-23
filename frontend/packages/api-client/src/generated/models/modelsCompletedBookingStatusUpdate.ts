@@ -16,12 +16,12 @@ export interface ModelsCompletedBookingStatusUpdate {
   /** 施術が完了した日時。 */
   completedAt?: string
   /**
-   * 関連する決済ID。未決済の場合はnull。
+   * 関連する決済ID。支払いが未完了または不要の場合はnull。
    * @nullable
    */
   paymentId?: string | null
   /**
-   * 施術内容のサマリーメモ。未設定の場合はnull。
+   * 施術内容のサマリーメモ。メモを記録していない場合はnull。
    * @nullable
    */
   serviceSummary?: string | null

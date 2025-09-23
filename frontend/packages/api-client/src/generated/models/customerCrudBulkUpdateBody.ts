@@ -19,7 +19,7 @@ export type CustomerCrudBulkUpdateBody = {
    */
   items: CustomerCrudBulkUpdateBodyItemsItem[]
   /** 途中でエラーが発生しても処理を継続するかどうか。既定は false。 */
-  continueOnError?: boolean
+  continueOnError: boolean
   /** トランザクション内で一括処理を行うかどうか。既定は true。 */
-  transactional?: boolean
+  transactional: boolean
 }

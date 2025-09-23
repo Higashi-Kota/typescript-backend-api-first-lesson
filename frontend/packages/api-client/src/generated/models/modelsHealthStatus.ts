@@ -22,6 +22,9 @@ export interface ModelsHealthStatus {
   timestamp: string
   /** 各内部サービスや依存コンポーネントのヘルスチェック結果一覧。 */
   checks: ModelsHealthCheck[]
-  /** 監視環境固有の追加メタ情報。必要に応じてキーを拡張する。 */
-  metadata?: ModelsHealthStatusMetadata
+  /**
+   * 監視環境固有の追加メタ情報。必要に応じてキーを拡張する。追加情報がない場合はnull
+   * @nullable
+   */
+  metadata: ModelsHealthStatusMetadata
 }

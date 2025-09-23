@@ -17,12 +17,12 @@ export interface ModelsPointInfo {
   /** 累計で利用（消費）したポイント総数。 */
   totalUsedPoints: number
   /**
-   * 失効予定のポイント数。未設定時はnull。
+   * 失効予定のポイント数。失効予定がない場合はnull
    * @nullable
    */
   expiringPoints: number | null
   /**
-   * 最も早く失効するポイントの失効日。未設定時はnull。
+   * 最も早く失効するポイントの失効日。失効予定がない場合はnull
    * @nullable
    */
   expirationDate: string | null

@@ -33,19 +33,19 @@ namespace BeautySalon.Models {
     @doc("予約の現在ステータスを表す区分値")
     status: ReservationStatusType;
 
-    @doc("顧客からの特記事項やサロン側メモ")
+    @doc("顧客からの特記事項やサロン側メモ - 特記事項がない標準予約の場合はnull")
     notes: string | null;
 
     @doc("施術料金の合計金額 (税・割引適用後)")
     totalAmount: int32;
 
-    @doc("事前に受領した内金・デポジット金額")
+    @doc("事前に受領した内金・デポジット金額 - 内金不要な予約や当日払いの場合はnull")
     depositAmount: int32 | null;
 
     @doc("予約に対する決済が完了しているかを示すフラグ")
     isPaid: boolean;
 
-    @doc("キャンセルが発生した場合の理由")
+    @doc("キャンセルが発生した場合の理由 - キャンセルされていない予約や理由未記録の場合はnull")
     cancellationReason: string | null;
 
     ...AuditInfo;
@@ -70,7 +70,7 @@ namespace BeautySalon.Models {
     @doc("希望する施術開始日時 (UTC)")
     startTime: utcDateTime;
 
-    @doc("顧客要望や注意事項のメモ")
+    @doc("顧客要望や注意事項のメモ - 特記事項がない標準予約の場合はnull")
     notes: string | null;
   }
 

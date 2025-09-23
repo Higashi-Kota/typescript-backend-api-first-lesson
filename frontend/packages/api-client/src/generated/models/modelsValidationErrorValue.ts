@@ -7,7 +7,7 @@
  */
 
 /**
- * 検証対象となった実際の値。セキュリティ観点で出力が許容される場合のみ利用する。
+ * 検証対象となった実際の値。セキュリティ観点で出力が許容される場合のみ利用する。出力不可の場合はnull
  * @nullable
  */
 export type ModelsValidationErrorValue = unknown | null

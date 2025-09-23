@@ -17,27 +17,27 @@ export interface ModelsBookingDeposit {
   /** デポジットの状態区分（pending: 入金待ち／paid: 入金済み／refunded: 返金済み／forfeited: 没収）。 */
   status: ModelsBookingDepositStatus
   /**
-   * 支払い期日。未設定の場合は即時支払い不要。
+   * 支払い期日。即時支払いまたは期日が未設定の場合はnull。
    * @nullable
    */
   dueDate: string | null
   /**
-   * 入金が確認された日時。
+   * 入金が確認された日時。未入金の場合はnull。
    * @nullable
    */
   paidAt: string | null
   /**
-   * 返金した日時。
+   * 返金した日時。返金していない場合はnull。
    * @nullable
    */
   refundedAt: string | null
   /**
-   * 紐づく決済ID。
+   * 紐づく決済ID。決済がない場合はnull。
    * @nullable
    */
   paymentId: string | null
   /**
-   * デポジットに関する備考。
+   * デポジットに関する備考。備考がない場合はnull。
    * @nullable
    */
   notes: string | null

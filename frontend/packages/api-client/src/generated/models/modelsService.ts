@@ -33,7 +33,7 @@ export interface ModelsService {
   /** サービスカテゴリ区分 */
   category: ModelsServiceCategoryType
   /**
-   * カテゴリ ID（分類ツリー連携用）
+   * カテゴリ ID（分類ツリー連携用）。サービスカテゴリ区分のみで分類される場合はnull
    * @nullable
    */
   categoryId: string | null
@@ -42,71 +42,71 @@ export interface ModelsService {
   /** 提供時間の設定 */
   duration: ModelsServiceDuration
   /**
-   * 提供可能条件の設定
+   * 提供可能条件の設定。常時提供で特別な制約がない場合はnull
    * @nullable
    */
   availability: ModelsServiceAvailability
   /**
-   * 予約時に必要な要件一覧
+   * 予約時に必要な要件一覧。特別な要件がない標準サービスの場合はnull
    * @nullable
    */
   requirements: ModelsBookingRequirementDetail[] | null
   /**
-   * 追加オプション設定
+   * 追加オプション設定。オプションがないシンプルなサービスの場合はnull
    * @nullable
    */
   options: ModelsServiceOptionDetail[] | null
   /**
-   * 提供上の制約条件
+   * 提供上の制約条件。制約がないサービスの場合はnull
    * @nullable
    */
   restrictions: ModelsServiceRestrictionsProperty
   /**
-   * サービス実績の指標
+   * サービス実績の指標。新サービスで実績データがない場合はnull
    * @nullable
    */
   performance: ModelsServicePerformanceProperty
   /**
-   * 関連サービス・担当者情報
+   * 関連サービス・担当者情報。関連設定がない独立したサービスの場合はnull
    * @nullable
    */
   associations: ModelsServiceAssociationsProperty
   /**
-   * メタデータ・表示設定
+   * メタデータ・表示設定。特別な表示設定が不要な場合はnull
    * @nullable
    */
   metadata: ModelsServiceMetadataProperty
   /** 現在の提供ステータス */
   status: ModelsServiceStatusDetail
-  /** 互換性維持のための旧項目：サービス名 */
+  /** サービス名 */
   name: string
-  /** 互換性維持のための旧項目：説明文 */
+  /** 説明文 */
   description: string
-  /** 互換性維持のための旧項目：料金 */
+  /** 料金 */
   price: number
   /**
-   * 互換性維持のための旧項目：画像 URL
+   * 画像 URL。画像が登録されていない場合はnull
    * @nullable
    */
   imageUrl: string | null
   /**
-   * 互換性維持のための旧項目：スタッフレベル
+   * スタッフレベル。全スタッフが対応可能な場合はnull
    * @nullable
    */
   requiredStaffLevel: number | null
-  /** 互換性維持のための旧項目：有効フラグ */
+  /** 有効フラグ */
   isActive: boolean
   /** レコード作成日時。 */
   createdAt: string
   /**
-   * レコードを作成したユーザーID。匿名作成の場合はnull。
+   * レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull
    * @nullable
    */
   createdBy: string | null
   /** レコード最終更新日時。 */
   updatedAt: string
   /**
-   * レコードを最後に更新したユーザーID。匿名更新の場合はnull。
+   * レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull
    * @nullable
    */
   updatedBy: string | null

@@ -1,6 +1,6 @@
 // Generated from TypeSpec/OpenAPI using openapi-typescript
 // DO NOT EDIT MANUALLY
-// Last generated: 2025-09-23T14:19:46.011Z
+// Last generated: 2025-09-23T17:27:19.980Z
 
 // Base types from OpenAPI
 /**
@@ -3170,20 +3170,20 @@ export interface components {
       resource: string
       /** @description 実行したい操作区分 */
       action: string
-      /** @description サロン単位での権限チェック時のサロン ID */
+      /** @description サロン単位での権限チェック時のサロン ID - システム全体権限のチェック時はnull */
       salonId: (string & components['schemas']['Models.SalonId']) | null
-      /** @description リソース固有の ID */
+      /** @description リソース固有の ID - リソース種別全体への権限チェック時はnull */
       resourceId: string | null
     }
     /** @description アクセス権限チェックの結果 */
     'Models.AccessResult': {
       /** @description 操作が許可されたかどうか */
       allowed: boolean
-      /** @description 拒否または許可の理由 */
+      /** @description 拒否または許可の理由 - 理由説明不要な明白なケースの場合はnull */
       reason: string | null
-      /** @description 必要な権限キー一覧 */
+      /** @description 必要な権限キー一覧 - 権限不要なパブリック操作の場合はnull */
       requiredPermissions: string[] | null
-      /** @description ユーザーが保有する権限キー一覧 */
+      /** @description ユーザーが保有する権限キー一覧 - 未ログインや権限なしユーザーの場合はnull */
       userPermissions: string[] | null
     }
     /** @description サロンや顧客の住所情報を表す共通モデル。 */
@@ -3194,7 +3194,7 @@ export interface components {
       city: string
       /** @description 都道府県名。 */
       prefecture: string
-      /** @description 郵便番号。未設定の場合はnull。 */
+      /** @description 郵便番号。未登録の場合はnull */
       postalCode: string | null
       /**
        * @description 国名。既定値はJapan。
@@ -3210,7 +3210,7 @@ export interface components {
       city?: string
       /** @description 都道府県名。 */
       prefecture?: string
-      /** @description 郵便番号。未設定の場合はnull。 */
+      /** @description 郵便番号。未登録の場合はnull */
       postalCode?: string | null
       /**
        * @description 国名。既定値はJapan。
@@ -3219,12 +3219,19 @@ export interface components {
       country: string
     }
     'Models.AllergyInfo': {
+      /** @description アレルギーのタイプ分類。物質の種類を示す */
       type: components['schemas']['Models.AllergyType']
+      /** @description アレルギー物質一覧。該当なしの場合はnull */
       substances: string[] | null
+      /** @description アレルギー香料一覧。該当なしの場合はnull */
       fragrances: string[] | null
+      /** @description アレルギー金属一覧。該当なしの場合はnull */
       metals: string[] | null
+      /** @description アレルギー植物一覧。該当なしの場合はnull */
       plants: string[] | null
+      /** @description アレルギー詳細説明。追加情報がない場合はnull */
       description: string | null
+      /** @description アレルギーの重篤度。反応の強さと対応レベル */
       severity: components['schemas']['Models.AllergySeverityType']
     }
     /**
@@ -3352,13 +3359,13 @@ export interface components {
       }
       /** @description ファイルをアップロードしたユーザーID。 */
       uploadedBy: string
-      /** @description ファイルが紐づくサロンID。任意項目。 */
+      /** @description ファイルが紐づくサロンID。全社共通ファイルやシステムファイルの場合はnull。 */
       salonId: string | null
-      /** @description 必要に応じて付加情報を保持する任意メタデータ。 */
+      /** @description 必要に応じて付加情報を保持する任意メタデータ。追加情報が不要な場合はnull。 */
       metadata: {
         [key: string]: unknown
       } | null
-      /** @description ラベリングや検索に利用するタグ情報のセット。 */
+      /** @description ラベリングや検索に利用するタグ情報のセット。タグ付けをしていない場合はnull。 */
       tags: {
         [key: string]: string
       } | null
@@ -3384,9 +3391,9 @@ export interface components {
       filename: string
       /** @description ファイルのContent-Type。 */
       content: string
-      /** @description ファイルを関連付けるサロンID。任意設定。 */
+      /** @description ファイルを関連付けるサロンID。全社共通ファイルの場合はnull。 */
       salonId: string | null
-      /** @description タグ情報を表すJSON文字列。任意設定。 */
+      /** @description タグ情報を表すJSON文字列。タグを設定しない場合はnull。 */
       tags: string | null
     }
     /** @description 添付ファイルをダウンロードするための署名付きURLを返すレスポンス。 */
@@ -3415,7 +3422,7 @@ export interface components {
        * @description アップロード予定ファイルのサイズ（バイト単位）。
        */
       size: number
-      /** @description ファイルをひも付けるサロンID。任意設定。 */
+      /** @description ファイルをひも付けるサロンID。全社共通ファイルの場合はnull。 */
       salonId: string | null
     }
     /** @description 署名付きアップロードURLと関連情報を返すレスポンス。 */
@@ -3437,14 +3444,14 @@ export interface components {
        * @description レコード作成日時。
        */
       createdAt: string
-      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
+      /** @description レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull */
       createdBy: string | null
       /**
        * Format: date-time
        * @description レコード最終更新日時。
        */
       updatedAt: string
-      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
+      /** @description レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull */
       updatedBy: string | null
     }
     /** @description 監査情報モデル。
@@ -3476,12 +3483,12 @@ export interface components {
       isDeleted: boolean
       /**
        * Format: date-time
-       * @description 削除操作が実行された日時 (UTC)。
+       * @description 削除操作が実行された日時 (UTC)。削除されていない場合はnull
        */
       deletedAt: string | null
-      /** @description 削除操作を実施したユーザーID またはサービス名。 */
+      /** @description 削除操作を実施したユーザーID またはサービス名。削除されていない場合はnull */
       deletedBy: string | null
-      /** @description 削除理由や補足メモ。カスタマーサポート対応に利用する。 */
+      /** @description 削除理由や補足メモ。カスタマーサポート対応に利用する。理由が不要または削除されていない場合はnull */
       deletionReason: string | null
     }
     /** @description メールアドレス確認を完了させるリクエスト。 */
@@ -3630,26 +3637,26 @@ export interface components {
     'Models.AuthenticationStateDetail': {
       /** @description 現在の認証状態区分。 */
       type: components['schemas']['Models.AuthenticationStateType']
-      /** @description 状態に紐づくセッションID。未確立の場合はnull。 */
+      /** @description 状態に紐づくセッションID。セッションが未確立の場合はnull。 */
       sessionId: (string & components['schemas']['Models.SessionId']) | null
       /**
        * Format: date-time
-       * @description 該当状態が失効する日時。
+       * @description 該当状態が失効する日時。無期限の場合はnull。
        */
       expiresAt: string | null
-      /** @description 2要素認証や一時アクセスに利用する暫定トークン。 */
+      /** @description 2要素認証や一時アクセスに利用する暫定トークン。不要な状態の場合はnull。 */
       tempToken: string | null
       /**
        * Format: date-time
-       * @description ロックや制限状態が解除される予定日時。
+       * @description ロックや制限状態が解除される予定日時。通常状態の場合はnull。
        */
       until: string | null
       /**
        * Format: int32
-       * @description 認証失敗などの試行回数。
+       * @description 認証失敗などの試行回数。試行がない場合はnull。
        */
       attempts: number | null
-      /** @description 状態が発生した具体的な理由メッセージ。 */
+      /** @description 状態が発生した具体的な理由メッセージ。理由が特にない場合はnull。 */
       reason: string | null
     }
     /**
@@ -3725,8 +3732,8 @@ export interface components {
     'Models.BatchGetRequest': {
       /** @description 取得対象となるリソースIDの配列。1件以上100件以下。 */
       ids: string[]
-      /** @description レスポンスに含めたいフィールドのカンマ区切りリスト。パフォーマンス最適化に活用する。 */
-      fields?: string
+      /** @description レスポンスに含めたいフィールドのカンマ区切りリスト。パフォーマンス最適化に活用する。全フィールド取得の場合はnull */
+      fields: string | null
     }
     /** @description サロンで確定管理する予約の集約モデル。 */
     'Models.Booking': {
@@ -3742,9 +3749,9 @@ export interface components {
       status: components['schemas']['Models.BookingStatus']
       /** @description 現在のステータスコード。 */
       statusCode: components['schemas']['Models.BookingStatusCodeType']
-      /** @description ウェイティングリスト情報。対象外の場合はnull。 */
+      /** @description ウェイティングリスト情報。ウェイティングリストに登録されていない場合はnull。 */
       waitlistEntry: components['schemas']['Models.WaitlistEntry'] | null
-      /** @description 預かり金に関する情報。必要な場合のみ設定。 */
+      /** @description 預かり金に関する情報。デポジットが不要な場合はnull。 */
       deposit: components['schemas']['Models.BookingDeposit'] | null
       /** @description 割引適用前の合計金額。 */
       totalAmount: components['schemas']['Models.Money']
@@ -3752,29 +3759,29 @@ export interface components {
       discountAmount: components['schemas']['Models.Money']
       /** @description 最終的に請求する金額。 */
       finalAmount: components['schemas']['Models.Money']
-      /** @description 未収金額。完済の場合はnull。 */
+      /** @description 未収金額。支払いが完了している場合はnull。 */
       balanceDue: components['schemas']['Models.Money'] | null
-      /** @description 予定している支払い方法。未定の場合はnull。 */
+      /** @description 予定している支払い方法。当日決定または未選択の場合はnull */
       paymentMethod: components['schemas']['Models.PaymentMethodType'] | null
-      /** @description 支払いの進捗ステータス。未設定の場合は支払い前。 */
+      /** @description 支払いの進捗ステータス。支払いが未開始の場合はnull。 */
       paymentStatus:
         | components['schemas']['Models.PaymentStatusCodeType']
         | null
-      /** @description スタッフ・顧客間で共有するメモ。 */
+      /** @description スタッフ・顧客間で共有するメモ。メモがない場合はnull。 */
       notes: string | null
       /**
        * Format: date-time
        * @description レコード作成日時。
        */
       createdAt: string
-      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
+      /** @description レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull */
       createdBy: string | null
       /**
        * Format: date-time
        * @description レコード最終更新日時。
        */
       updatedAt: string
-      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
+      /** @description レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull */
       updatedBy: string | null
     }
     /** @description 予約確定前に預かるデポジット情報。 */
@@ -3788,22 +3795,22 @@ export interface components {
       status: 'pending' | 'paid' | 'refunded' | 'forfeited'
       /**
        * Format: date-time
-       * @description 支払い期日。未設定の場合は即時支払い不要。
+       * @description 支払い期日。即時支払いまたは期日が未設定の場合はnull。
        */
       dueDate: string | null
       /**
        * Format: date-time
-       * @description 入金が確認された日時。
+       * @description 入金が確認された日時。未入金の場合はnull。
        */
       paidAt: string | null
       /**
        * Format: date-time
-       * @description 返金した日時。
+       * @description 返金した日時。返金していない場合はnull。
        */
       refundedAt: string | null
-      /** @description 紐づく決済ID。 */
+      /** @description 紐づく決済ID。決済がない場合はnull。 */
       paymentId: (string & components['schemas']['Models.PaymentId']) | null
-      /** @description デポジットに関する備考。 */
+      /** @description デポジットに関する備考。備考がない場合はnull。 */
       notes: string | null
     }
     /** @description 予約確定前に預かるデポジット情報。 */
@@ -3817,22 +3824,22 @@ export interface components {
       status?: 'pending' | 'paid' | 'refunded' | 'forfeited'
       /**
        * Format: date-time
-       * @description 支払い期日。未設定の場合は即時支払い不要。
+       * @description 支払い期日。即時支払いまたは期日が未設定の場合はnull。
        */
       dueDate?: string | null
       /**
        * Format: date-time
-       * @description 入金が確認された日時。
+       * @description 入金が確認された日時。未入金の場合はnull。
        */
       paidAt?: string | null
       /**
        * Format: date-time
-       * @description 返金した日時。
+       * @description 返金した日時。返金していない場合はnull。
        */
       refundedAt?: string | null
-      /** @description 紐づく決済ID。 */
+      /** @description 紐づく決済ID。決済がない場合はnull。 */
       paymentId?: (string & components['schemas']['Models.PaymentId']) | null
-      /** @description デポジットに関する備考。 */
+      /** @description デポジットに関する備考。備考がない場合はnull。 */
       notes?: string | null
     }
     /** @description 予約と関連情報をまとめた詳細ビュー。 */
@@ -3843,9 +3850,9 @@ export interface components {
       customerName: string
       /** @description サロンの表示名。 */
       salonName: string
-      /** @description 決済履歴の一覧。未登録の場合はnull。 */
+      /** @description 決済履歴の一覧。決済履歴がない場合はnull。 */
       paymentHistory: components['schemas']['Models.PaymentHistory'][] | null
-      /** @description ウェイティングリストの履歴。未登録の場合はnull。 */
+      /** @description ウェイティングリストの履歴。ウェイティングリストに登録したことがない場合はnull。 */
       waitlistHistory: components['schemas']['Models.WaitlistEntry'][] | null
     } & components['schemas']['Models.Booking']
     /**
@@ -3872,41 +3879,41 @@ export interface components {
       type: components['schemas']['Models.BookingRequirementType']
       /**
        * Format: int32
-       * @description 金額要件（例: デポジット額）
+       * @description 金額要件（例: デポジット額）。金額指定が不要な要件の場合はnull
        */
       amount: number | null
       /**
        * Format: int32
-       * @description 割合で設定する要件
+       * @description 割合で設定する要件（%）。固定額または割合設定が不要な要件の場合はnull
        */
       percentage: number | null
-      /** @description 必須かどうか */
+      /** @description 必須かどうか。デフォルトで任意の要件の場合はnull（falseと同義） */
       required: boolean | null
       /**
        * Format: int32
-       * @description 所要時間や準備時間
+       * @description 所要時間や準備時間（分）。時間指定が不要な要件の場合はnull
        */
       duration: number | null
       /**
        * Format: int32
-       * @description 何日前までに対応が必要か
+       * @description 何日前までに対応が必要か。事前対応が不要な要件の場合はnull
        */
       daysInAdvance: number | null
       /**
        * Format: int32
-       * @description 利用可能な最低年齢
+       * @description 利用可能な最低年齢。年齢制限がない要件の場合はnull
        */
       minAge: number | null
       /**
        * Format: int32
-       * @description 利用可能な最高年齢
+       * @description 利用可能な最高年齢。年齢上限がない要件の場合はnull
        */
       maxAge: number | null
-      /** @description 利用可能な性別の制限 */
+      /** @description 利用可能な性別の制限。性別制限がない要件の場合はnull */
       allowedGenders: string[] | null
-      /** @description 必要な会員ランク */
+      /** @description 必要な会員ランク。会員限定でない、またはランク指定がない要件の場合はnull */
       requiredTier: string | null
-      /** @description 顧客への具体的な指示 */
+      /** @description 顧客への具体的な指示。特別な準備や指示が不要な要件の場合はnull */
       instructions: string[] | null
     }
     /**
@@ -4023,6 +4030,35 @@ export interface components {
       | components['schemas']['Models.CompletedBookingStatusUpdate']
       | components['schemas']['Models.CancelledBookingStatusUpdate']
       | components['schemas']['Models.NoShowBookingStatusUpdate']
+    /** @description 予約情報を部分更新するためのリクエスト。null指定で値をリセット可能。 */
+    'Models.BookingUpdateRequest': {
+      /** @description ステータス詳細の更新。 */
+      status?: components['schemas']['Models.BookingStatusUpdate']
+      /** @description ステータスコードの更新。 */
+      statusCode?: components['schemas']['Models.BookingStatusCodeType']
+      /** @description ウェイティングリスト情報の更新またはリセット。 */
+      waitlistEntry?: components['schemas']['Models.WaitlistEntryUpdate'] | null
+      /** @description デポジット情報の更新またはリセット。 */
+      deposit?: components['schemas']['Models.BookingDepositUpdate'] | null
+      /** @description 支払い方法の更新またはリセット。 */
+      paymentMethod?: components['schemas']['Models.PaymentMethodType'] | null
+      /** @description 支払いステータスの更新またはリセット。 */
+      paymentStatus?:
+        | components['schemas']['Models.PaymentStatusCodeType']
+        | null
+      /** @description 割引額の更新 */
+      discountAmount?: components['schemas']['Models.MoneyUpdate']
+      /** @description 最終請求額の更新。 */
+      finalAmount?: components['schemas']['Models.MoneyUpdate']
+      /** @description 未収金額の更新またはリセット。 */
+      balanceDue?: components['schemas']['Models.MoneyUpdate'] | null
+      /** @description 備考の更新またはリセット。 */
+      notes?: string | null
+      /** @description 任意メタデータの更新。 */
+      metadata?: {
+        [key: string]: unknown
+      }
+    }
     /** @description 一括処理全体の集計情報モデル。
      *     成功件数・失敗件数を俯瞰し、運用レポートに反映する。 */
     'Models.BulkSummary': {
@@ -4053,16 +4089,16 @@ export interface components {
       dayOfWeek: components['schemas']['Models.DayOfWeekType']
       /** @description 営業時間帯の一覧。複数設定で分割営業に対応。 */
       operatingSlots: components['schemas']['Models.TimeSlot'][]
-      /** @description 休憩時間や中断時間帯の一覧。未設定時はnull。 */
+      /** @description 休憩時間や中断時間帯の一覧。休憩がない場合はnull */
       breakSlots: components['schemas']['Models.TimeSlot'][] | null
       /**
        * @description 当該曜日を休業扱いとする場合のフラグ。既定値はfalse。
        * @default false
        */
       isClosed: boolean
-      /** @description 季節営業などの適用期間。未設定時は通年有効。 */
+      /** @description 季節営業などの適用期間。通年有効の場合はnull */
       effectivePeriod: components['schemas']['Models.DateRange'] | null
-      /** @description 営業基準となるタイムゾーンID。未設定時はサロン既定値。 */
+      /** @description 営業基準となるタイムゾーンID。サロン既定値を使用する場合はnull */
       timezone: string | null
     }
     /** @description キャンセル料金のルール */
@@ -4079,7 +4115,7 @@ export interface components {
       percentage: number
       /**
        * Format: int32
-       * @description 固定額で設定するキャンセル料金
+       * @description 固定額で設定するキャンセル料金。パーセンテージベースの料金設定の場合はnull
        */
       fixedAmount: number | null
     }
@@ -4095,7 +4131,7 @@ export interface components {
        * @description キャンセルが登録された日時。
        */
       cancelledAt: string
-      /** @description キャンセル理由のメモ。未設定の場合はnull。 */
+      /** @description キャンセル理由のメモ。理由が記録されていない場合はnull。 */
       reason: string | null
       /**
        * @description キャンセルを実行した主体（customer: 顧客／salon: サロン側／system: システム判断）。
@@ -4115,7 +4151,7 @@ export interface components {
        * @description キャンセルが登録された日時。
        */
       cancelledAt?: string
-      /** @description キャンセル理由のメモ。未設定の場合はnull。 */
+      /** @description キャンセル理由のメモ。理由が記録されていない場合はnull。 */
       reason?: string | null
       /**
        * @description キャンセルを実行した主体（customer: 顧客／salon: サロン側／system: システム判断）。
@@ -4136,7 +4172,7 @@ export interface components {
       name: string
       /** @description カテゴリ説明 */
       description: string
-      /** @description 親カテゴリ ID */
+      /** @description 親カテゴリ ID。最上位カテゴリの場合はnull */
       parentId: (string & components['schemas']['Models.CategoryId']) | null
       /**
        * Format: int32
@@ -4150,14 +4186,14 @@ export interface components {
        * @description レコード作成日時。
        */
       createdAt: string
-      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
+      /** @description レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull */
       createdBy: string | null
       /**
        * Format: date-time
        * @description レコード最終更新日時。
        */
       updatedAt: string
-      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
+      /** @description レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull */
       updatedBy: string | null
     }
     /**
@@ -4225,9 +4261,9 @@ export interface components {
        * @description 施術が完了した日時。
        */
       completedAt: string
-      /** @description 関連する決済ID。未決済の場合はnull。 */
+      /** @description 関連する決済ID。支払いが未完了または不要の場合はnull。 */
       paymentId: (string & components['schemas']['Models.PaymentId']) | null
-      /** @description 施術内容のサマリーメモ。未設定の場合はnull。 */
+      /** @description 施術内容のサマリーメモ。メモを記録していない場合はnull。 */
       serviceSummary: string | null
     }
     /** @description 施術が完了した場合の状態情報。 */
@@ -4242,9 +4278,9 @@ export interface components {
        * @description 施術が完了した日時。
        */
       completedAt?: string
-      /** @description 関連する決済ID。未決済の場合はnull。 */
+      /** @description 関連する決済ID。支払いが未完了または不要の場合はnull。 */
       paymentId?: (string & components['schemas']['Models.PaymentId']) | null
-      /** @description 施術内容のサマリーメモ。未設定の場合はnull。 */
+      /** @description 施術内容のサマリーメモ。メモを記録していない場合はnull。 */
       serviceSummary?: string | null
     }
     /** @description 支払い完了状態の詳細 */
@@ -4327,9 +4363,9 @@ export interface components {
       email: string
       /** @description 主要連絡先として利用する電話番号。 */
       phoneNumber: string
-      /** @description 緊急連絡用などの予備電話番号。未設定時はnull。 */
+      /** @description 緊急連絡用などの予備電話番号。未登録の場合はnull */
       alternativePhone: string | null
-      /** @description 公式サイトや予約ページのURL。未設定時はnull。 */
+      /** @description 公式サイトや予約ページのURL。ウェブサイトがない場合はnull */
       websiteUrl: string | null
     }
     /** @description 顧客やサロンの連絡先情報を表す共通モデル。 */
@@ -4338,9 +4374,9 @@ export interface components {
       email?: string
       /** @description 主要連絡先として利用する電話番号。 */
       phoneNumber?: string
-      /** @description 緊急連絡用などの予備電話番号。未設定時はnull。 */
+      /** @description 緊急連絡用などの予備電話番号。未登録の場合はnull */
       alternativePhone?: string | null
-      /** @description 公式サイトや予約ページのURL。未設定時はnull。 */
+      /** @description 公式サイトや予約ページのURL。ウェブサイトがない場合はnull */
       websiteUrl?: string | null
     }
     /**
@@ -4380,32 +4416,20 @@ export interface components {
       customerId: components['schemas']['Models.CustomerId']
       /** @description 紐付ける予約リクエストID一覧。 */
       reservationIds: components['schemas']['Models.ReservationId'][]
-      /** @description ウェイティングリスト情報。不要な場合はnull。 */
+      /** @description ウェイティングリスト情報。ウェイティングリストに登録していない場合はnull。 */
       waitlistEntry: components['schemas']['Models.WaitlistEntry'] | null
-      /** @description 預かり金設定。不要な場合はnull。 */
+      /** @description 預かり金設定。デポジットが不要な場合はnull。 */
       deposit: components['schemas']['Models.BookingDeposit'] | null
       /** @description 適用する割引額 */
       discountAmount: components['schemas']['Models.Money']
-      /** @description 予定している支払い方法。 */
+      /** @description 予定している支払い方法。当日決定または未選択の場合はnull */
       paymentMethod: components['schemas']['Models.PaymentMethodType'] | null
-      /** @description スタッフ向けの備考。 */
+      /** @description スタッフ向けの備考。備考がない場合はnull。 */
       notes: string | null
-      /** @description 外部連携や業務用に保持する任意メタデータ。 */
+      /** @description 外部連携や業務用に保持する任意メタデータ。追加情報が不要の場合はnull。 */
       metadata: {
         [key: string]: unknown
       } | null
-    }
-    /** @description Customer creation request with required and optional fields */
-    'Models.CreateCustomerRequest': {
-      name: string
-      contactInfo: components['schemas']['Models.ContactInfo']
-      preferences: {
-        [key: string]: unknown
-      }
-      notes: string | null
-      tags: string[]
-      /** Format: date */
-      birthDate: string | null
     }
     /** @description 予約作成リクエスト - 新規予約登録時に必要なサロン・顧客・メニュー・希望日時の情報を受け取る */
     'Models.CreateReservationRequest': {
@@ -4422,14 +4446,14 @@ export interface components {
        * @description 希望する施術開始日時 (UTC)
        */
       startTime: string
-      /** @description 顧客要望や注意事項のメモ */
+      /** @description 顧客要望や注意事項のメモ - 特記事項がない標準予約の場合はnull */
       notes: string | null
     }
     /** @description サロン新規登録リクエスト - 全項目のキーが必須で、値は業務要件に応じてnull許可 */
     'Models.CreateSalonRequest': {
       /** @description 新規登録時に必須となるサロン名 */
       name: string
-      /** @description サロン紹介文。未設定の場合はnullで送信 */
+      /** @description サロン紹介文。未設定の場合はnull */
       description: string | null
       /** @description 店舗の正規住所・連絡先配送先 */
       address: components['schemas']['Models.Address']
@@ -4437,7 +4461,7 @@ export interface components {
       contactInfo: components['schemas']['Models.ContactInfo']
       /** @description 通常営業日の営業時間設定一覧 */
       openingHours: components['schemas']['Models.OpeningHours'][]
-      /** @description 特別営業スケジュールやシフト連動の営業時間。不要な場合はnull */
+      /** @description 特別営業スケジュールやシフト連動の営業時間。通常営業時間のみの場合はnull */
       businessHours: components['schemas']['Models.BusinessHours'][] | null
       /** @description 店舗写真やメニュー画像のURL一覧 */
       imageUrls: string[]
@@ -4464,30 +4488,30 @@ export interface components {
       price: number
       /** @description サービスカテゴリ区分 */
       category: components['schemas']['Models.ServiceCategoryType']
-      /** @description カテゴリ ID */
+      /** @description カテゴリ ID。サービスカテゴリ区分のみで分類する場合はnull */
       categoryId: (string & components['schemas']['Models.CategoryId']) | null
-      /** @description サービス画像 URL */
+      /** @description サービス画像 URL。画像がない場合はnull */
       imageUrl: string | null
       /**
        * Format: int32
-       * @description 必要スタッフレベル
+       * @description 必要スタッフレベル。全スタッフが対応可能な場合はnull
        */
       requiredStaffLevel: number | null
       /**
        * Format: int32
-       * @description 必要なデポジット額
+       * @description 必要なデポジット額。デポジットが不要な場合はnull
        */
       depositAmount: number | null
-      /** @description 有効フラグ */
+      /** @description 有効フラグ。未指定時はデフォルトでtrueとして扱う場合null */
       isActive: boolean | null
       /**
        * Format: int32
-       * @description 最大全日予約可能日数
+       * @description 最大全日予約可能日数。予約可能期間に制限がない場合はnull
        */
       maxAdvanceBookingDays: number | null
       /**
        * Format: int32
-       * @description 最短予約受付時間（時間）
+       * @description 最短予約受付時間（時間）。即時予約可能な場合はnull
        */
       minAdvanceBookingHours: number | null
     }
@@ -4501,24 +4525,24 @@ export interface components {
       contactInfo: components['schemas']['Models.ContactInfo']
       /** @description 得意分野や専門メニューの一覧 */
       specialties: string[]
-      /** @description プロフィール画像のURL */
+      /** @description プロフィール画像のURL - プロフィール画像未設定の場合はnull */
       imageUrl: string | null
-      /** @description 自己紹介や経歴の概要 */
+      /** @description 自己紹介や経歴の概要 - プロフィール未記入の新人スタッフの場合はnull */
       bio: string | null
       /**
        * Format: int32
-       * @description 実務経験年数
+       * @description 実務経験年数 - 経験年数未記載またはアシスタントスタッフの場合はnull
        */
       yearsOfExperience: number | null
-      /** @description 保有資格名の一覧 */
+      /** @description 保有資格名の一覧 - 資格なしの新人やアシスタントの場合はnull */
       certifications: string[] | null
-      /** @description 詳細な資格情報の一覧 */
+      /** @description 詳細な資格情報の一覧 - 詳細資格情報未登録の場合はnull */
       qualifications:
         | components['schemas']['Models.StaffQualification'][]
         | null
-      /** @description 通常勤務スケジュールの一覧 */
+      /** @description 通常勤務スケジュールの一覧 - スケジュール未設定やフリーランススタッフの場合はnull */
       schedules: components['schemas']['Models.StaffSchedule'][] | null
-      /** @description 付与する権限の一覧 */
+      /** @description 付与する権限の一覧 - 特別権限がない一般スタッフの場合はnull */
       permissions: components['schemas']['Models.StaffPermission'][] | null
     }
     /**
@@ -4585,93 +4609,122 @@ export interface components {
       | 'SGD'
       | 'TWD'
     'Models.Customer': {
+      /** @description 顧客を一意に識別するID。システム内で重複しない識別子 */
       id: components['schemas']['Models.CustomerId']
+      /** @description 顧客氏名。フルネームまたは通称名 */
       name: string
+      /** @description 連絡先情報。メール、電話番号等の連絡手段 */
       contactInfo: components['schemas']['Models.ContactInfo']
-      /** @description Customer gender */
+      /** @description 顧客の性別。未登録または非公開の場合はnull */
       gender: components['schemas']['Models.CustomerGenderType'] | null
       /**
        * Format: date
-       * @description Birth date
+       * @description 生年月日。未登録または非公開の場合はnull
        */
       birthDate: string | null
-      /** @description Address */
+      /** @description 住所情報。未登録の場合はnull */
       address: components['schemas']['Models.Address'] | null
-      /** @description Preferences and requirements */
+      /** @description 顧客の好みや要望 */
       preferences: {
         [key: string]: unknown
       }
-      /** @description Internal notes */
+      /** @description 内部メモ。メモがない場合はnull */
       notes: string | null
-      /** @description Tags for categorization */
+      /** @description 分類用タグ */
       tags: string[]
       /**
        * Format: int32
-       * @description Current loyalty points
+       * @description 現在のロイヤルティポイント
        */
       loyaltyPoints: number
-      /** @description Membership information */
+      /** @description 会員情報。非会員の場合はnull */
       membership: components['schemas']['Models.MembershipInfo'] | null
-      /** @description NotificationType settings */
+      /** @description 通知設定。設定がない場合はnull */
       notificationSettings:
         | components['schemas']['Models.NotificationSettings']
         | null
-      /** @description Health information */
+      /** @description 健康情報。情報提供がない場合はnull */
       health: components['schemas']['Models.CustomerHealth'] | null
-      /** @description Customer preferences */
+      /** @description 顧客の好み設定。設定がない場合はnull */
       customerPreferences:
         | components['schemas']['Models.CustomerPreferences']
         | null
-      /** @description Visit history */
+      /** @description 来店履歴。履歴がない場合はnull */
       history: components['schemas']['Models.CustomerHistory'] | null
-      /** @description Customer associations */
+      /** @description 顧客関連情報。関連がない場合はnull */
       associations: components['schemas']['Models.CustomerAssociations'] | null
-      /** @description Customer status */
+      /** @description 顧客ステータス詳細。特別なステータスがない場合はnull */
       status: components['schemas']['Models.CustomerStatusDetail'] | null
-      /** @description Customer metadata */
+      /** @description 顧客メタデータ。追加情報がない場合はnull */
       metadata: components['schemas']['Models.CustomerMetadata'] | null
-      /** @description Medical chart ID */
+      /** @description カルテID。カルテがない場合はnull */
       medicalChartId:
         | (string & components['schemas']['Models.MedicalChartId'])
         | null
       /**
-       * @description Is active customer
+       * @description アクティブな顧客かどうか
        * @default true
        */
       isActive: boolean
       /**
-       * @description Registration source
+       * @description 登録経路。不明の場合はnull
        * @enum {string|null}
        */
       registrationSource: 'walk_in' | 'online' | 'phone' | 'referral' | null
-      /** @description Referrer customer ID */
+      /** @description 紹介元顧客ID。紹介ではない場合はnull */
       referredBy: (string & components['schemas']['Models.CustomerId']) | null
       /**
        * Format: date-time
        * @description レコード作成日時。
        */
       createdAt: string
-      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
+      /** @description レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull */
       createdBy: string | null
       /**
        * Format: date-time
        * @description レコード最終更新日時。
        */
       updatedAt: string
-      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
+      /** @description レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull */
       updatedBy: string | null
     }
     'Models.CustomerAssociations': {
+      /** @description 主要利用サロンID。特定のサロンがない場合はnull */
       primarySalonId: (string & components['schemas']['Models.SalonId']) | null
+      /** @description 訪問済サロンID一覧。これまでに利用した全サロン */
       visitedSalonIds: components['schemas']['Models.SalonId'][]
+      /** @description 家族会員の顧客ID一覧。家族登録がない場合はnull */
       familyMemberIds: components['schemas']['Models.CustomerId'][] | null
+      /** @description 紹介元顧客ID。紹介ではない場合はnull */
       referredBy: (string & components['schemas']['Models.CustomerId']) | null
+      /** @description 紹介した顧客ID一覧。紹介実績がない場合はnull */
       referredCustomerIds: components['schemas']['Models.CustomerId'][] | null
+      /** @description グループID。グループに属さない場合はnull */
       groupId: string | null
     }
-    /** @description Customer bookings filter parameters */
+    /** @description 顧客予約フィルタパラメータ */
     'Models.CustomerBookingsGetRequest': {
       status?: components['schemas']['Models.BookingStatusCodeType']
+    }
+    /** @description 顧客作成リクエスト。必須フィールドとオプションフィールドを含む */
+    'Models.CustomerCreateRequest': {
+      /** @description 顧客氏名。フルネームまたは通称名 */
+      name: string
+      /** @description 連絡先情報。メール、電話番号等の連絡手段 */
+      contactInfo: components['schemas']['Models.ContactInfo']
+      /** @description 顧客の好みや要望。カスタム設定情報 */
+      preferences: {
+        [key: string]: unknown
+      }
+      /** @description 内部メモ。スタッフ用の顧客に関する備考。メモがない場合はnull */
+      notes: string | null
+      /** @description 分類用タグ。顧客をグループ化するためのラベル */
+      tags: string[]
+      /**
+       * Format: date
+       * @description 生年月日。年齢計算や誕生日特典に使用。未登録の場合はnull
+       */
+      birthDate: string | null
     }
     /**
 
@@ -4707,21 +4760,35 @@ export interface components {
       | 'other'
       | 'prefer_not_to_say'
     'Models.CustomerHealth': {
+      /** @description アレルギー情報リスト。全てのアレルギー詳細 */
       allergies: components['schemas']['Models.AllergyInfo'][]
+      /** @description 髪質情報。情報提供がない場合はnull */
       hairInfo: components['schemas']['Models.HairInfo'] | null
+      /** @description 頭皮情報。情報提供がない場合はnull */
       scalpInfo: components['schemas']['Models.ScalpInfo'] | null
+      /** @description 既往症一覧。既往症がない場合はnull */
       medicalConditions: string[] | null
+      /** @description 服用中の薬一覧。服用薬がない場合はnull */
       medications: string[] | null
+      /** @description 妊娠状態。未確認または非該当の場合はnull */
       pregnancyStatus: boolean | null
+      /** @description 特別な配慮事項。特にない場合はnull */
       specialNeeds: string | null
     }
     'Models.CustomerHistory': {
+      /** @description 来店履歴詳細。全ての来店関連情報 */
       visits: components['schemas']['Models.VisitHistory']
+      /** @description 最後に利用したサービスID。利用実績がない場合はnull */
       lastServiceId: (string & components['schemas']['Models.ServiceId']) | null
+      /** @description 最後に担当したスタッフID。利用実績がない場合はnull */
       lastStaffId: (string & components['schemas']['Models.StaffId']) | null
+      /** @description お気に入りサービスID一覧。頻繁に利用するサービス */
       favoriteServiceIds: components['schemas']['Models.ServiceId'][]
+      /** @description お気に入りスタッフID一覧。指名の多いスタッフ */
       favoriteStaffIds: components['schemas']['Models.StaffId'][]
+      /** @description 過去の施術履歴。履歴がない場合はnull */
       pastTreatments: string[] | null
+      /** @description 履歴に関するメモ。メモがない場合はnull */
       notes: string[] | null
     }
     /**
@@ -4730,7 +4797,10 @@ export interface components {
      */
     'Models.CustomerId': string
     'Models.CustomerMetadata': {
-      /** @enum {string|null} */
+      /**
+       * @description 顧客獲得チャネル。不明の場合はnull
+       * @enum {string|null}
+       */
       source:
         | 'walk_in'
         | 'online'
@@ -4739,61 +4809,92 @@ export interface components {
         | 'social_media'
         | 'advertisement'
         | null
+      /** @description キャンペーン名。キャンペーン経由でない場合はnull */
       campaign: string | null
+      /** @description 分類タグ一覧。タグがない場合はnull */
       tags: string[] | null
+      /** @description カスタムフィールド。追加情報がない場合はnull */
       customFields: {
         [key: string]: unknown
       } | null
+      /** @description 内部メモ一覧。メモがない場合はnull */
       internalNotes: string[] | null
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description リスクスコア。評価未実施の場合はnull
+       */
       riskScore: number | null
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 生涯価値。計算未実施の場合はnull
+       */
       lifetimeValue: number | null
+      /** @description 最終更新者。システム自動更新の場合はnull */
       lastUpdatedBy: string | null
     }
     'Models.CustomerPreferences': {
+      /** @description スタイルの好み設定。設定がない場合はnull */
       stylePreferences: components['schemas']['Models.StylePreference'] | null
+      /** @description サービスの好み設定。設定がない場合はnull */
       servicePreferences:
         | components['schemas']['Models.ServicePreference']
         | null
+      /** @description 連絡方法の好み設定。設定がない場合はnull */
       communicationPreferences:
         | components['schemas']['Models.NotificationSettings']
         | null
+      /** @description 希望スタッフ一覧。指名がない場合はnull */
       preferredStaff: components['schemas']['Models.StaffId'][] | null
+      /** @description 避けたいスタッフ一覧。特にない場合はnull */
       avoidStaff: components['schemas']['Models.StaffId'][] | null
+      /** @description 希望曜日一覧。特に希望がない場合はnull */
       preferredDayOfWeek: components['schemas']['Models.DayOfWeekType'][] | null
+      /** @description 希望時間帯一覧。特に希望がない場合はnull */
       preferredTimeSlots: components['schemas']['Models.TimeSlot'][] | null
+      /** @description 特別なリクエスト。特にない場合はnull */
       specialRequests: string | null
+      /** @description 希望言語。日本語で問題ない場合はnull */
       language: string | null
     }
-    /** @description Customer preferences update model */
+    /** @description 顧客の好み設定更新リクエスト。通知設定や連絡方法の変更 */
     'Models.CustomerPreferencesUpdateRequest': {
-      /** @description Preferred contact method */
+      /** @description 希望連絡方法 */
       contactMethod: components['schemas']['Models.ContactMethodType']
-      /** @description NotificationType preferences */
+      /** @description 通知設定 */
       notifications: components['schemas']['Models.NotificationPreferences']
-      /** @description Marketing opt-in status */
+      /** @description マーケティング配信許可状態 */
       marketingOptIn: boolean
-      /** @description Preferred language */
+      /** @description 希望言語 */
       preferredLanguage?: string
-      /** @description Accessibility requirements */
+      /** @description アクセシビリティ要件 */
       accessibilityRequirements?: string[]
-      /** @description Allergies or sensitivities */
+      /** @description アレルギーや過敏症 */
       allergies?: string[]
-      /** @description Preferred appointment times */
+      /** @description 希望予約時間 */
       preferredTimes?: components['schemas']['Models.TimePreference'][]
     }
     'Models.CustomerProfile': {
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 総来店回数。これまでの来店実績の合計
+       */
       visitCount: number
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 最終来店日。新規顧客でまだ来店がない場合はnull
+       */
       lastVisitDate: string | null
+      /** @description お気に入りスタッフID一覧。指名がない場合はnull */
       favoriteStaffIds: components['schemas']['Models.StaffId'][] | null
+      /** @description お気に入りサービスID一覧。お気に入りがない場合はnull */
       favoriteServiceIds: components['schemas']['Models.ServiceId'][] | null
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 累計利用金額。これまでの総支払額
+       */
       totalSpent: number
     } & components['schemas']['Models.Customer']
-    /** @description Customer reservations filter parameters */
+    /** @description 顧客予約フィルタパラメータ */
     'Models.CustomerReservationsGetRequest': {
       status?: components['schemas']['Models.ReservationStatusType']
       /** Format: date-time */
@@ -4805,52 +4906,64 @@ export interface components {
     'Models.CustomerStatistics': {
       /**
        * Format: int32
-       * @description Total bookings
+       * @description 総予約数
        */
       totalBookings: number
-      /** @description Total spent */
+      /** @description 総支払額 */
       totalSpent: components['schemas']['Models.Money']
-      /** @description Average booking value */
+      /** @description 平均予約単価 */
       averageBookingValue: components['schemas']['Models.Money']
       /**
        * Format: date-time
-       * @description Last visit date
+       * @description 最終来店日
        */
-      lastVisit?: string
-      /** @description Favorite services */
+      lastVisit: string | null
+      /** @description お気に入りサービス */
       favoriteServices: components['schemas']['Models.ServiceSummary'][]
-      /** @description Favorite staff */
+      /** @description お気に入りスタッフ */
       favoriteStaff: components['schemas']['Models.StaffSummary'][]
       /**
        * Format: int32
-       * @description Loyalty points
+       * @description ロイヤルティポイント
        */
       loyaltyPoints: number
       /**
        * Format: date-time
-       * @description Customer since
+       * @description 顧客登録日
        */
       customerSince: string
       /**
        * Format: float
-       * @description Cancellation rate
+       * @description キャンセル率
        */
       cancellationRate: number
       /**
        * Format: float
-       * @description No-show rate
+       * @description 無断キャンセル率
        */
       noShowRate: number
     }
     'Models.CustomerStatusDetail': {
+      /** @description 顧客ステータスタイプ。現在の顧客アカウント状態 */
       type: components['schemas']['Models.CustomerStatusType']
+      /** @description ステータス変更理由。理由が不要な場合はnull */
       reason: string | null
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description ステータス変更日時。未設定の場合はnull
+       */
       since: string | null
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description ステータス有効期限。無期限の場合はnull
+       */
       until: string | null
+      /** @description ステータス変更者。システム自動変更の場合はnull */
       by: string | null
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 削除日時。削除されていない場合はnull
+       */
       deletedAt: string | null
     }
     /**
@@ -4891,6 +5004,46 @@ export interface components {
       | 'suspended'
       | 'deleted'
       | 'blacklisted'
+    /** @description 顧客更新リクエスト。部分更新のためのオプションフィールドを含む。null指定で値をリセット可能 */
+    'Models.CustomerUpdateRequest': {
+      /** @description 顧客氏名。フルネームまたは通称名 */
+      name?: string
+      /** @description 連絡先情報。メール、電話番号等の連絡手段 */
+      contactInfo?: components['schemas']['Models.ContactInfo']
+      /** @description 顧客の好みや要望。カスタム設定情報 */
+      preferences?: {
+        [key: string]: unknown
+      }
+      /** @description 内部メモ。スタッフ用の顧客に関する備考。null指定でリセット可能 */
+      notes?: string | null
+      /** @description 分類用タグ。顧客をグループ化するためのラベル */
+      tags?: string[]
+      /**
+       * Format: date
+       * @description 生年月日。年齢計算や誕生日特典に使用。null指定でリセット可能
+       */
+      birthDate?: string | null
+    }
+    /** @description 顧客更新リクエスト。部分更新のためのオプションフィールドを含む。null指定で値をリセット可能 */
+    'Models.CustomerUpdateRequestUpdate': {
+      /** @description 顧客氏名。フルネームまたは通称名 */
+      name?: string
+      /** @description 連絡先情報。メール、電話番号等の連絡手段 */
+      contactInfo?: components['schemas']['Models.ContactInfoUpdate']
+      /** @description 顧客の好みや要望。カスタム設定情報 */
+      preferences?: {
+        [key: string]: unknown
+      }
+      /** @description 内部メモ。スタッフ用の顧客に関する備考。null指定でリセット可能 */
+      notes?: string | null
+      /** @description 分類用タグ。顧客をグループ化するためのラベル */
+      tags?: string[]
+      /**
+       * Format: date
+       * @description 生年月日。年齢計算や誕生日特典に使用。null指定でリセット可能
+       */
+      birthDate?: string | null
+    }
     /**
 
          * @description
@@ -4999,17 +5152,17 @@ export interface components {
       message: string
       /** @description 機械判読可能なエラーコード。外部連携やログ分析に利用する。 */
       code: string
-      /** @description 追加のエラー文脈。入力値や関連設定など柔軟に格納する。 */
+      /** @description 追加のエラー文脈。入力値や関連設定など柔軟に格納する。追加情報がない場合はnull */
       details: {
         [key: string]: unknown
       } | null
-      /** @description 関連するエンティティ名。例: `Reservation` や `Customer`。 */
+      /** @description 関連するエンティティ名。例: `Reservation` や `Customer`。特定のエンティティに関連しない場合はnull */
       entity: string | null
-      /** @description 問題が発生したフィールド名。入力フォームとの紐付けに利用。 */
+      /** @description 問題が発生したフィールド名。入力フォームとの紐付けに利用。フィールド特定が不要な場合はnull */
       field: string | null
-      /** @description 問題があった値。マスキングが不要なケースのみ保持する。 */
+      /** @description 問題があった値。マスキングが不要なケースのみ保持する。値を出力しない場合はnull */
       value: string | null
-      /** @description 外部サービスエラー時の対象サービス名。連携先の切り分けに役立つ。 */
+      /** @description 外部サービスエラー時の対象サービス名。連携先の切り分けに役立つ。外部サービスに関係ない場合はnull */
       service: string | null
     }
     /** @description ドメインエラー生成の標準設定モデル。
@@ -5180,9 +5333,9 @@ export interface components {
        * @description エラーが発生した日時 (UTC)。再発防止のタイムライン分析に活用。
        */
       occurredAt: string
-      /** @description エラーが発生した操作名やユースケース。例: `CreateReservation`。 */
+      /** @description エラーが発生した操作名やユースケース。例: `CreateReservation`。操作名が特定できない場合はnull */
       operation: string | null
-      /** @description デバッグ用のスタックトレース。開発・検証環境のみで出力する。 */
+      /** @description デバッグ用のスタックトレース。開発・検証環境のみで出力する。本番環境ではnull */
       stackTrace: string | null
     }
     /** @description 予約が下書き段階にある場合の状態情報。 */
@@ -5199,7 +5352,7 @@ export interface components {
       createdAt: string
       /**
        * Format: date-time
-       * @description 下書きの有効期限。未設定の場合は期限なし。
+       * @description 下書きの有効期限。無期限の場合はnull。
        */
       expiresAt: string | null
     }
@@ -5217,7 +5370,7 @@ export interface components {
       createdAt?: string
       /**
        * Format: date-time
-       * @description 下書きの有効期限。未設定の場合は期限なし。
+       * @description 下書きの有効期限。無期限の場合はnull。
        */
       expiresAt?: string | null
     }
@@ -5227,19 +5380,19 @@ export interface components {
       type: components['schemas']['Models.EmailVerificationStateType']
       /**
        * Format: date-time
-       * @description 確認完了日時。未確認の場合はnull。
+       * @description 確認完了日時。メールアドレスが未確認の場合はnull。
        */
       verifiedAt: string | null
-      /** @description 確認メールに含めるトークン。再送未実施の場合はnull。 */
+      /** @description 確認メールに含めるトークン。確認メールが未送信の場合はnull。 */
       token: string | null
       /**
        * Format: date-time
-       * @description トークンの有効期限。
+       * @description トークンの有効期限。トークンが発行されていない場合はnull。
        */
       expiresAt: string | null
       /**
        * Format: date-time
-       * @description 確認メールを送信した日時。
+       * @description 確認メールを送信した日時。メール未送信の場合はnull。
        */
       sentAt: string | null
     }
@@ -5274,7 +5427,7 @@ export interface components {
       code: string
       /** @description ユーザーまたはオペレーターに提示するエラーメッセージ。 */
       message: string
-      /** @description デバッグやサポート対応に役立つ追加情報。任意項目。 */
+      /** @description デバッグやサポート対応に役立つ追加情報。追加情報がない場合はnull */
       details: {
         [key: string]: unknown
       } | null
@@ -5497,10 +5650,15 @@ export interface components {
 
     'Models.FileType': 'image' | 'document' | 'other'
     'Models.HairInfo': {
+      /** @description 髪質タイプ。髪のクセや形状の分類 */
       type: components['schemas']['Models.HairType']
+      /** @description 髪の太さ。一本あたりの毛髪の太さ */
       thickness: components['schemas']['Models.HairThicknessType']
+      /** @description 髪の状態リスト。ダメージや健康状態の詳細 */
       condition: string[]
+      /** @description 化学処理履歴。カラーやパーマ等の施術履歴 */
       chemicalHistory: string[]
+      /** @description 髪質に関する備考。特記事項がない場合はnull */
       notes: string | null
     }
     /**
@@ -5569,12 +5727,12 @@ export interface components {
       status: 'up' | 'down' | 'degraded'
       /**
        * Format: int32
-       * @description ヘルスチェックに要した時間 (ミリ秒)。応答遅延の指標。
+       * @description ヘルスチェックに要した時間 (ミリ秒)。応答遅延の指標。測定不可の場合はnull
        */
       responseTime: number | null
-      /** @description 停止時のエラーメッセージや原因メモ。 */
+      /** @description 停止時のエラーメッセージや原因メモ。正常時はnull */
       error: string | null
-      /** @description 監視対象固有の追加詳細。再試行回数や依存サービス名などを含める。 */
+      /** @description 監視対象固有の追加詳細。再試行回数や依存サービス名などを含める。追加情報がない場合はnull */
       details: {
         [key: string]: unknown
       } | null
@@ -5596,10 +5754,10 @@ export interface components {
       timestamp: string
       /** @description 各内部サービスや依存コンポーネントのヘルスチェック結果一覧。 */
       checks: components['schemas']['Models.HealthCheck'][]
-      /** @description 監視環境固有の追加メタ情報。必要に応じてキーを拡張する。 */
-      metadata?: {
+      /** @description 監視環境固有の追加メタ情報。必要に応じてキーを拡張する。追加情報がない場合はnull */
+      metadata: {
         [key: string]: unknown
-      }
+      } | null
     }
     /** @description 施術が進行中の場合の状態情報。 */
     'Models.InProgressBookingStatus': {
@@ -5613,7 +5771,7 @@ export interface components {
        * @description 施術を開始した日時。
        */
       startedAt: string
-      /** @description 施術を行っているブースや席の名称。未設定の場合はnull。 */
+      /** @description 施術を行っているブースや席の名称。席が指定されていない場合はnull。 */
       stationName: string | null
     }
     /** @description 施術が進行中の場合の状態情報。 */
@@ -5628,7 +5786,7 @@ export interface components {
        * @description 施術を開始した日時。
        */
       startedAt?: string
-      /** @description 施術を行っているブースや席の名称。未設定の場合はnull。 */
+      /** @description 施術を行っているブースや席の名称。席が指定されていない場合はnull。 */
       stationName?: string | null
     }
     /** @description 在庫に関するアラート情報 */
@@ -5665,14 +5823,14 @@ export interface components {
        */
       severity: 'info' | 'warning' | 'critical'
       /** @description 確認済みかどうか */
-      acknowledged?: boolean
+      acknowledged: boolean | null
       /** @description 確認したスタッフ ID */
-      acknowledgedBy?: components['schemas']['Models.StaffId']
+      acknowledgedBy: (string & components['schemas']['Models.StaffId']) | null
       /**
        * Format: date-time
        * @description 確認日時
        */
-      acknowledgedAt?: string
+      acknowledgedAt: string | null
     }
     /**
      * Format: uuid
@@ -5690,13 +5848,13 @@ export interface components {
       /** @description 商品名 */
       productName: string
       /** @description 商品説明文 */
-      description?: string
+      description: string | null
       /** @description 分類カテゴリ */
       category: string
       /** @description ブランド名 */
-      brand?: string
+      brand: string | null
       /** @description 仕入先情報 */
-      supplier?: string
+      supplier: string | null
       /**
        * Format: float
        * @description 現在の在庫数量
@@ -5711,7 +5869,7 @@ export interface components {
        * Format: float
        * @description 最大在庫数（上限管理用）
        */
-      maximumStock?: number
+      maximumStock: number | null
       /** @description 数量の単位 */
       unit: string
       /**
@@ -5723,36 +5881,36 @@ export interface components {
        * Format: float
        * @description 顧客販売価格
        */
-      sellingPrice?: number
+      sellingPrice: number | null
       /** @description 在庫状態区分 */
       status: components['schemas']['Models.InventoryStatusType']
       /** @description サロン内の保管場所 */
-      location?: string
+      location: string | null
       /**
        * Format: date-time
        * @description 賞味・使用期限
        */
-      expirationDate?: string
+      expirationDate: string | null
       /**
        * Format: date-time
        * @description 直近の入庫日時
        */
-      lastRestocked?: string
+      lastRestocked: string | null
       /** @description 備考メモ */
-      notes?: string
+      notes: string | null
       /**
        * Format: date-time
        * @description レコード作成日時。
        */
       createdAt: string
-      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
+      /** @description レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull */
       createdBy: string | null
       /**
        * Format: date-time
        * @description レコード最終更新日時。
        */
       updatedAt: string
-      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
+      /** @description レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull */
       updatedBy: string | null
     }
     /** @description 在庫アイテムを新規登録する入力モデル */
@@ -5918,13 +6076,13 @@ export interface components {
        */
       occurredAt: string
       /** @description 関連する外部参照 ID */
-      referenceId?: string
+      referenceId: string | null
       /** @description 備考メモ */
-      notes?: string
+      notes: string | null
       /** @description 追加のメタデータ */
-      metadata?: {
+      metadata: {
         [key: string]: unknown
-      }
+      } | null
     }
     /**
      * Format: uuid
@@ -6006,7 +6164,7 @@ export interface components {
       quantity: number
       /** @description 数量単位 */
       unit: string
-      /** @description 備考メモ */
+      /** @description 備考メモ - 特記事項がない標準的な使用量の場合はnull */
       notes: string | null
     }
     /** @description 顧客ごとのカルテ情報 */
@@ -6015,23 +6173,23 @@ export interface components {
       id: components['schemas']['Models.MedicalChartId']
       /** @description 対象顧客 ID */
       customerId: components['schemas']['Models.CustomerId']
-      /** @description アレルギー・敏感情報 */
+      /** @description アレルギー・敏感情報 - アレルギーがない顧客の場合はnull */
       allergies: string[] | null
-      /** @description 頭皮状態のメモ */
+      /** @description 頭皮状態のメモ - 頭皮に問題がない健康な状態の場合はnull */
       scalpCondition: string | null
-      /** @description 毛髪状態のメモ */
+      /** @description 毛髪状態のメモ - 毛髪に特筆すべき問題がない場合はnull */
       hairCondition: string | null
-      /** @description 過去に実施したケミカル施術履歴 */
+      /** @description 過去に実施したケミカル施術履歴 - 初回来店やケミカル施術経験がない顧客の場合はnull */
       previousTreatments:
         | components['schemas']['Models.PreviousTreatment'][]
         | null
-      /** @description 注意が必要な持病・体調情報 */
+      /** @description 注意が必要な持病・体調情報 - 健康上の問題がない顧客の場合はnull */
       medicalConditions: string | null
-      /** @description 好みの商材・ブランド */
+      /** @description 好みの商材・ブランド - 特定の好みがない顧客の場合はnull */
       preferredProducts: string[] | null
-      /** @description 避けるべき商材 */
+      /** @description 避けるべき商材 - 特に避けるべき商材がない顧客の場合はnull */
       avoidProducts: string[] | null
-      /** @description 自由記述メモ */
+      /** @description 自由記述メモ - 追加情報がない標準的なカルテの場合はnull */
       notes: string | null
       /**
        * Format: date-time
@@ -6043,37 +6201,37 @@ export interface components {
        * @description レコード作成日時。
        */
       createdAt: string
-      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
+      /** @description レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull */
       createdBy: string | null
       /**
        * Format: date-time
        * @description レコード最終更新日時。
        */
       updatedAt: string
-      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
+      /** @description レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull */
       updatedBy: string | null
     }
     /** @description カルテを新規作成する入力モデル */
     'Models.MedicalChartCreateRequest': {
       /** @description 対象顧客 ID */
       customerId: components['schemas']['Models.CustomerId']
-      /** @description アレルギー情報 */
+      /** @description アレルギー情報 - アレルギーがない顧客の場合はnull */
       allergies: string[] | null
-      /** @description 頭皮状態 */
+      /** @description 頭皮状態 - 頭皮に問題がない健康な状態の場合はnull */
       scalpCondition: string | null
-      /** @description 毛髪状態 */
+      /** @description 毛髪状態 - 毛髪に特筆すべき問題がない場合はnull */
       hairCondition: string | null
-      /** @description 過去施術の履歴 */
+      /** @description 過去施術の履歴 - 初回来店やケミカル施術経験がない顧客の場合はnull */
       previousTreatments:
         | components['schemas']['Models.PreviousTreatment'][]
         | null
-      /** @description 注意すべき体調・持病 */
+      /** @description 注意すべき体調・持病 - 健康上の問題がない顧客の場合はnull */
       medicalConditions: string | null
-      /** @description 好みの商材 */
+      /** @description 好みの商材 - 特定の好みがない顧客の場合はnull */
       preferredProducts: string[] | null
-      /** @description 避けるべき商材 */
+      /** @description 避けるべき商材 - 特に避けるべき商材がない顧客の場合はnull */
       avoidProducts: string[] | null
-      /** @description その他メモ */
+      /** @description その他メモ - 追加情報がない標準的なカルテの場合はnull */
       notes: string | null
     }
     /**
@@ -6083,35 +6241,48 @@ export interface components {
     'Models.MedicalChartId': string
     /** @description カルテ情報を更新する入力モデル */
     'Models.MedicalChartUpdateRequest': {
-      /** @description アレルギー情報 */
+      /** @description アレルギー情報 - アレルギーがない顧客の場合はnull、null指定で値をリセット可能 */
       allergies?: string[] | null
-      /** @description 頭皮状態 */
+      /** @description 頭皮状態 - 頭皮に問題がない健康な状態の場合はnull、null指定で値をリセット可能 */
       scalpCondition?: string | null
-      /** @description 毛髪状態 */
+      /** @description 毛髪状態 - 毛髪に特筆すべき問題がない場合はnull、null指定で値をリセット可能 */
       hairCondition?: string | null
-      /** @description 過去施術の履歴 */
+      /** @description 過去施術の履歴 - 初回来店やケミカル施術経験がない顧客の場合はnull、null指定で値をリセット可能 */
       previousTreatments?:
         | components['schemas']['Models.PreviousTreatment'][]
         | null
-      /** @description 注意すべき体調・持病 */
+      /** @description 注意すべき体調・持病 - 健康上の問題がない顧客の場合はnull、null指定で値をリセット可能 */
       medicalConditions?: string | null
-      /** @description 好みの商材 */
+      /** @description 好みの商材 - 特定の好みがない顧客の場合はnull、null指定で値をリセット可能 */
       preferredProducts?: string[] | null
-      /** @description 避けるべき商材 */
+      /** @description 避けるべき商材 - 特に避けるべき商材がない顧客の場合はnull、null指定で値をリセット可能 */
       avoidProducts?: string[] | null
-      /** @description その他メモ */
+      /** @description その他メモ - 追加情報がない標準的なカルテの場合はnull、null指定で値をリセット可能 */
       notes?: string | null
     }
     'Models.MembershipBenefitDetail': {
+      /** @description 会員特典のタイプ。特典の種類を識別する */
       type: components['schemas']['Models.MembershipBenefitType']
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 特典の割引率。割引特典以外の場合はnull
+       */
       percentage: number | null
+      /** @description ポイント倍率。ポイント特典以外の場合はnull */
       multiplier: (number & components['schemas']['Models.decimal']) | null
+      /** @description 特典対象サービス名。サービス指定がない場合はnull */
       service: string | null
-      /** @enum {string|null} */
+      /**
+       * @description 特典提供频度。频度指定がない場合はnull
+       * @enum {string|null}
+       */
       frequency: 'monthly' | 'quarterly' | 'yearly' | null
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 特典の価値。数値化できない場合はnull
+       */
       value: number | null
+      /** @description 特典の説明文。詳細説明が不要な場合はnull */
       description: string | null
     }
     /**
@@ -6158,20 +6329,41 @@ export interface components {
       | 'birthday_special'
       | 'exclusive_access'
     'Models.MembershipInfo': {
+      /** @description 会員ランク。顧客の現在のメンバーシップレベル */
       tier: components['schemas']['Models.MembershipTierType']
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 会員登録日時。該当ランクになった日時
+       */
       since: string
+      /** @description 現在享受可能な特典リスト。ランクに応じた特典の詳細 */
       benefits: components['schemas']['Models.MembershipBenefitDetail'][]
+      /** @description 専任担当者名。専任担当がいない場合はnull */
       dedicatedManager: string | null
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 現在保有ポイント数。利用可能なポイント残高
+       */
       points: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 累積獲得ポイント数。これまでに獲得した全ポイント
+       */
       totalPointsEarned: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 累積使用ポイント数。これまでに使用した全ポイント
+       */
       totalPointsUsed: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 失効予定のポイント数。失効予定がない場合はnull
+       */
       expiringPoints: number | null
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description ポイント失効日時。失効予定がない場合はnull
+       */
       pointsExpireAt: string | null
     }
     /**
@@ -6221,7 +6413,7 @@ export interface components {
       value: number
       /** @description 使用する通貨コード。 */
       currency: components['schemas']['Models.CurrencyCodeType']
-      /** @description 適用税率。任意設定。 */
+      /** @description 適用税率。税率が適用されない場合はnull */
       taxRate: (number & components['schemas']['Models.decimal']) | null
     }
     /** @description 税抜・税込計算に利用する金額モデル。 */
@@ -6233,7 +6425,7 @@ export interface components {
       value?: number
       /** @description 使用する通貨コード。 */
       currency?: components['schemas']['Models.CurrencyCodeType']
-      /** @description 適用税率。任意設定。 */
+      /** @description 適用税率。税率が適用されない場合はnull */
       taxRate?: (number & components['schemas']['Models.decimal']) | null
     }
     /**
@@ -6312,15 +6504,15 @@ export interface components {
     }
     /** @description Notification preferences model */
     'Models.NotificationPreferences': {
-      /** @description Email notifications enabled */
+      /** @description メール通知有効 */
       email: boolean
-      /** @description SMS notifications enabled */
+      /** @description SMS通知有効 */
       sms: boolean
-      /** @description Push notifications enabled */
+      /** @description プッシュ通知有効 */
       push: boolean
       /**
        * Format: int32
-       * @description Reminder timing (hours before appointment)
+       * @description リマインダータイミング（予約の何時間前）
        */
       reminderHours: number
     }
@@ -6388,22 +6580,22 @@ export interface components {
     }
     /** @description 曜日別および特定日の営業時間を管理するモデル。 */
     'Models.OpeningHours': {
-      /** @description 対象となる曜日。特定日設定のみの場合はnull。 */
+      /** @description 対象となる曜日。特定日指定の場合はnull */
       dayOfWeek: components['schemas']['Models.DayOfWeekType'] | null
       /**
        * Format: date
-       * @description 特別営業日の個別日付。通常スケジュールの場合はnull。
+       * @description 特定日の日付。曜日別営業時間の場合はnull
        */
       date: string | null
-      /** @description 開店時刻（HH:mm形式）。未設定の場合は休業扱い。 */
+      /** @description 開店時刻（HH:mm形式）。休業日の場合はnull */
       openTime: string | null
-      /** @description 閉店時刻（HH:mm形式）。未設定の場合は休業扱い。 */
+      /** @description 閉店時刻（HH:mm形式）。休業日の場合はnull */
       closeTime: string | null
       /** @description 休業日かどうかを示すフラグ。 */
       isHoliday: boolean
-      /** @description 祝日名称や社内呼称などの休業理由。未設定時はnull。 */
+      /** @description 祝日名称や社内呼称などの休業理由。通常営業日または理由不要の場合はnull */
       holidayName: string | null
-      /** @description 備考や注意事項。未設定時はnull。 */
+      /** @description 備考や注意事項。特記事項がない場合はnull */
       notes: string | null
     }
     /**
@@ -6517,13 +6709,13 @@ export interface components {
     'Models.PaginationLinks': {
       /** @description 現在ページを指すリンク。 */
       self: string
-      /** @description 最初のページへのリンク。総件数が確定しない場合は null。 */
+      /** @description 最初のページへのリンク。総件数が確定しない場合はnull */
       first: string | null
-      /** @description 最後のページへのリンク。カーソル算出ができない場合は null。 */
+      /** @description 最後のページへのリンク。カーソル算出ができない場合はnull */
       last: string | null
-      /** @description 次ページへのリンク。さらに結果がある場合のみ設定される。 */
+      /** @description 次ページへのリンク。最終ページの場合はnull */
       next: string | null
-      /** @description 前ページへのリンク。戻り操作が不要な場合は null。 */
+      /** @description 前ページへのリンク。初回ページまたは戻り操作が不要な場合はnull */
       prev: string | null
     }
     /** @description ページネーションに関する統計情報モデル。
@@ -6531,7 +6723,7 @@ export interface components {
     'Models.PaginationMeta': {
       /**
        * Format: int32
-       * @description 取得対象全体の総件数。件数計測ができない場合は null。
+       * @description 取得対象全体の総件数。件数計測ができない場合はnull
        */
       total: number | null
       /**
@@ -6541,11 +6733,11 @@ export interface components {
       limit: number
       /** @description 次ページが存在するかを示すフラグ。無限スクロールの継続判定に使用。 */
       hasMore: boolean
-      /** @description 現在ページのカーソル値。次リクエストで `cursor` に指定することで同位置から再開できる。 */
+      /** @description 現在ページのカーソル値。次リクエストで `cursor` に指定することで同位置から再開できる。初回ページの場合はnull */
       cursor: string | null
-      /** @description 次ページを取得するためのカーソル値。存在しない場合は null。 */
+      /** @description 次ページを取得するためのカーソル値。最終ページの場合はnull */
       nextCursor: string | null
-      /** @description 前ページへ戻るためのカーソル値。戻り操作が不要な場合は null。 */
+      /** @description 前ページへ戻るためのカーソル値。初回ページまたは戻り操作が不要な場合はnull */
       prevCursor: string | null
     }
     /** @description 部分返金済み状態の詳細 */
@@ -6590,21 +6782,21 @@ export interface components {
     'Models.PasswordResetStateDetail': {
       /** @description 現在のリセット状態区分。 */
       type: components['schemas']['Models.PasswordResetStateType']
-      /** @description リセット手続きに使用するトークン。 */
+      /** @description リセット手続きに使用するトークン。リセットが要求されていない場合はnull。 */
       token: string | null
       /**
        * Format: date-time
-       * @description トークンの有効期限。
+       * @description トークンの有効期限。リセットが要求されていない場合はnull。
        */
       expiresAt: string | null
       /**
        * Format: date-time
-       * @description リセットを要求した日時。
+       * @description リセットを要求した日時。リセットが要求されていない場合はnull。
        */
       requestedAt: string | null
       /**
        * Format: date-time
-       * @description リセット完了日時。未完了の場合はnull。
+       * @description リセット完了日時。パスワードリセットが未完了の場合はnull。
        */
       completedAt: string | null
     }
@@ -6642,9 +6834,11 @@ export interface components {
       /** @description 支払いを行う顧客 ID */
       customerId: components['schemas']['Models.CustomerId']
       /** @description 関連する予約 ID */
-      bookingId?: components['schemas']['Models.BookingId']
+      bookingId: (string & components['schemas']['Models.BookingId']) | null
       /** @description 関連する施術記録 ID */
-      treatmentRecordId?: components['schemas']['Models.TreatmentRecordId']
+      treatmentRecordId:
+        | (string & components['schemas']['Models.TreatmentRecordId'])
+        | null
       /** @description 使用した支払い方法 */
       method: components['schemas']['Models.PaymentMethodType']
       /** @description 現在の支払い状態の詳細 */
@@ -6655,38 +6849,38 @@ export interface components {
        * Format: int32
        * @description 使用したポイント数
        */
-      pointsUsed?: number
+      pointsUsed: number | null
       /** @description 予約時に適用した預り金額 */
-      depositApplied?: components['schemas']['Models.Money']
+      depositApplied: components['schemas']['Models.Money'] | null
       /** @description 未収残高がある場合の金額 */
-      outstandingAmount?: components['schemas']['Models.Money']
+      outstandingAmount: components['schemas']['Models.Money'] | null
       /** @description 外部決済サービスの参照番号 */
-      externalReference?: string
+      externalReference: string | null
       /** @description 発行したレシート番号 */
-      receiptNumber?: string
+      receiptNumber: string | null
       /** @description 状態変遷の履歴一覧 */
       history: components['schemas']['Models.PaymentHistory'][]
       /** @description 関連する返金記録の一覧 */
-      refunds?: components['schemas']['Models.Refund'][]
+      refunds: components['schemas']['Models.Refund'][] | null
       /** @description 外部サービス連携向けのメタデータ */
-      metadata?: {
+      metadata: {
         [key: string]: unknown
-      }
+      } | null
       /** @description スタッフ用の備考メモ */
-      notes?: string
+      notes: string | null
       /**
        * Format: date-time
        * @description レコード作成日時。
        */
       createdAt: string
-      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
+      /** @description レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull */
       createdBy: string | null
       /**
        * Format: date-time
        * @description レコード最終更新日時。
        */
       updatedAt: string
-      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
+      /** @description レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull */
       updatedBy: string | null
     }
     /** @description 請求金額の内訳 */
@@ -6694,11 +6888,11 @@ export interface components {
       /** @description サービス代金の税抜合計 */
       billed: components['schemas']['Models.Money']
       /** @description 課税対象額に対する税額 */
-      tax?: components['schemas']['Models.Money']
+      tax: components['schemas']['Models.Money'] | null
       /** @description 割引金額の合計 */
-      discount?: components['schemas']['Models.Money']
+      discount: components['schemas']['Models.Money'] | null
       /** @description チップとして受領する金額 */
-      tip?: components['schemas']['Models.Money']
+      tip: components['schemas']['Models.Money'] | null
       /** @description 最終的な支払金額 */
       totalPayable: components['schemas']['Models.Money']
     }
@@ -6711,7 +6905,7 @@ export interface components {
       /** @description 割引金額 */
       discount: components['schemas']['Models.Money']
       /** @description ポイント適用による割引額 */
-      pointsDiscount?: components['schemas']['Models.Money']
+      pointsDiscount: components['schemas']['Models.Money'] | null
       /** @description 支払総額 */
       total: components['schemas']['Models.Money']
     }
@@ -6760,17 +6954,17 @@ export interface components {
       occurredAt: string
       /**
        * @description 操作主体の区分
-       * @enum {string}
+       * @enum {string|null}
        */
-      actor?: 'system' | 'staff' | 'customer'
+      actor: 'system' | 'staff' | 'customer' | null
       /** @description 操作主体の ID */
-      actorId?: string
+      actorId: string | null
       /** @description 変更内容の補足メモ */
-      note?: string
+      note: string | null
       /** @description 履歴に紐づく追加メタデータ */
-      metadata?: {
+      metadata: {
         [key: string]: unknown
-      }
+      } | null
     }
     /**
      * Format: uuid
@@ -6830,15 +7024,15 @@ export interface components {
       /** @description 見積対象のサロン ID */
       salonId: components['schemas']['Models.SalonId']
       /** @description 見積対象の顧客 ID */
-      customerId?: components['schemas']['Models.CustomerId']
+      customerId: (string & components['schemas']['Models.CustomerId']) | null
       /** @description 関連する予約 ID */
-      bookingId?: components['schemas']['Models.BookingId']
+      bookingId: (string & components['schemas']['Models.BookingId']) | null
       /** @description 金額内訳のプレビュー */
       breakdown: components['schemas']['Models.PaymentBreakdown']
       /** @description 推奨する支払い方法の一覧 */
       recommendedMethods: components['schemas']['Models.PaymentMethodType'][]
       /** @description 顧客・スタッフ向けの備考 */
-      notes?: string
+      notes: string | null
     }
     /** @description 支払い状態の詳細情報を表すユニオン */
     'Models.PaymentStatus':
@@ -6934,10 +7128,10 @@ export interface components {
       requestedAt: string
       /**
        * Format: date-time
-       * @description 保留状態の有効期限。未設定の場合は期限なし。
+       * @description 保留状態の有効期限。無期限の場合はnull。
        */
       holdExpiresAt: string | null
-      /** @description 仮割り当てされたスタッフID。未確定の場合はnull。 */
+      /** @description 仮割り当てされたスタッフID。スタッフが未確定の場合はnull。 */
       assignedStaffId: (string & components['schemas']['Models.StaffId']) | null
     }
     /** @description 予約が確認待ち段階にある場合の状態情報。 */
@@ -6954,10 +7148,10 @@ export interface components {
       requestedAt?: string
       /**
        * Format: date-time
-       * @description 保留状態の有効期限。未設定の場合は期限なし。
+       * @description 保留状態の有効期限。無期限の場合はnull。
        */
       holdExpiresAt?: string | null
-      /** @description 仮割り当てされたスタッフID。未確定の場合はnull。 */
+      /** @description 仮割り当てされたスタッフID。スタッフが未確定の場合はnull。 */
       assignedStaffId?:
         | (string & components['schemas']['Models.StaffId'])
         | null
@@ -7034,14 +7228,14 @@ export interface components {
       key: string
       /** @description 権限の名称 */
       name: string
-      /** @description 権限の説明 */
+      /** @description 権限の説明 - 自明な権限や説明不要な基本権限の場合はnull */
       description: string | null
       /** @description 対象リソース種別 */
       resource: string
       /** @description 許可する操作区分 */
       action: string
       /**
-       * @description 権限の適用範囲（own/salon/all）
+       * @description 権限の適用範囲（own/salon/all） - 範囲指定が不要なグローバル権限の場合はnull
        * @enum {string|null}
        */
       scope: 'own' | 'salon' | 'all' | null
@@ -7073,7 +7267,7 @@ export interface components {
       permission: string
       /** @description 権限が付与されているかどうか */
       granted: boolean
-      /** @description 権限を付与したロール情報 */
+      /** @description 権限を付与したロール情報 - 権限が付与されていない場合はnull */
       source: string | null
     }
     /** @description 顧客ロイヤルティポイントの累積状況を表すモデル。 */
@@ -7095,12 +7289,12 @@ export interface components {
       totalUsedPoints: number
       /**
        * Format: int32
-       * @description 失効予定のポイント数。未設定時はnull。
+       * @description 失効予定のポイント数。失効予定がない場合はnull
        */
       expiringPoints: number | null
       /**
        * Format: date-time
-       * @description 最も早く失効するポイントの失効日。未設定時はnull。
+       * @description 最も早く失効するポイントの失効日。失効予定がない場合はnull
        */
       expirationDate: string | null
     }
@@ -7126,16 +7320,16 @@ export interface components {
        */
       balanceAfter: number
       /** @description 関連する決済 ID */
-      paymentId?: components['schemas']['Models.PaymentId']
+      paymentId: (string & components['schemas']['Models.PaymentId']) | null
       /** @description 関連する予約 ID */
-      bookingId?: components['schemas']['Models.BookingId']
+      bookingId: (string & components['schemas']['Models.BookingId']) | null
       /** @description 取引内容の説明 */
       description: string
       /**
        * Format: date-time
        * @description 獲得ポイントの有効期限
        */
-      expiresAt?: string
+      expiresAt: string | null
       /**
        * Format: date-time
        * @description 取引発生日時
@@ -7146,14 +7340,14 @@ export interface components {
        * @description レコード作成日時。
        */
       createdAt: string
-      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
+      /** @description レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull */
       createdBy: string | null
       /**
        * Format: date-time
        * @description レコード最終更新日時。
        */
       updatedAt: string
-      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
+      /** @description レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull */
       updatedBy: string | null
     }
     /** @description ポイント取引を登録する入力モデル */
@@ -7196,9 +7390,9 @@ export interface components {
        * @description 施術日
        */
       date: string
-      /** @description 施術を受けたサロン名 */
+      /** @description 施術を受けたサロン名 - 自店での施術や不明な場合はnull */
       salonName: string | null
-      /** @description 施術に関するメモ */
+      /** @description 施術に関するメモ - 特記事項がない通常の過去施術の場合はnull */
       notes: string | null
     }
     /** @description 金額レンジで絞り込むための共通クエリモデル。 */
@@ -7218,7 +7412,7 @@ export interface components {
     'Models.PriceTier': {
       /** @description 価格段階の名称 */
       name: string
-      /** @description 段階の説明 */
+      /** @description 段階の説明。詳細な説明が不要なシンプルな価格設定の場合はnull */
       description: string | null
       /**
        * Format: int32
@@ -7227,10 +7421,10 @@ export interface components {
       price: number
       /**
        * Format: int32
-       * @description この段階での施術時間
+       * @description この段階での施術時間（分）。価格段階による時間変更がない場合はnull
        */
       duration: number | null
-      /** @description 適用条件の説明リスト */
+      /** @description 適用条件の説明リスト。特別な条件がない場合はnull */
       conditions: string[] | null
     }
     /** @description 料金調整に使用する変動要因 */
@@ -7240,20 +7434,20 @@ export interface components {
        * @enum {string}
        */
       type: 'day_of_week' | 'time_of_day' | 'staff_level' | 'demand' | 'season'
-      /** @description 条件に応じた倍率設定 */
+      /** @description 条件に応じた倍率設定。固定倍率または他の計算方法を使用する場合はnull */
       multipliers: {
         [key: string]: components['schemas']['Models.decimal']
       } | null
-      /** @description ピーク時間帯の指定 */
+      /** @description ピーク時間帯の指定（HH:mm形式）。時間帯による料金変動がない場合はnull */
       peakHours: string[] | null
-      /** @description ピーク時間帯に適用する倍率 */
+      /** @description ピーク時間帯に適用する倍率。ピーク時間設定がない場合はnull */
       peakMultiplier: (number & components['schemas']['Models.decimal']) | null
       /**
        * Format: int32
-       * @description 需要に応じた閾値設定
+       * @description 需要に応じた閾値設定。需要ベースの料金調整を行わない場合はnull
        */
       threshold: number | null
-      /** @description 季節要因の詳細設定 */
+      /** @description 季節要因の詳細設定。季節による価格変動がない場合はnull */
       seasons: components['schemas']['Models.Season'][] | null
     }
     /** @description 採用している価格戦略の詳細 */
@@ -7262,33 +7456,33 @@ export interface components {
       type: components['schemas']['Models.PricingStrategyType']
       /**
        * Format: int32
-       * @description 固定価格型の場合の金額
+       * @description 固定価格型の場合の金額。固定価格戦略以外の場合はnull
        */
       amount: number | null
-      /** @description 段階価格の設定一覧 */
+      /** @description 段階価格の設定一覧。段階価格戦略以外の場合はnull */
       tiers: components['schemas']['Models.PriceTier'][] | null
       /**
        * Format: int32
-       * @description 基準価格
+       * @description 基準価格。動的価格やカスタム価格など基準価格を持たない戦略の場合はnull
        */
       basePrice: number | null
-      /** @description 価格変動要因の設定 */
+      /** @description 価格変動要因の設定。動的価格戦略以外の場合はnull */
       factors: components['schemas']['Models.PricingFactor'][] | null
-      /** @description セット対象となるサービス ID */
+      /** @description セット対象となるサービス ID。パッケージ価格戦略以外の場合はnull */
       services: components['schemas']['Models.ServiceId'][] | null
-      /** @description 割引率（%） */
+      /** @description 割引率（%）。割引設定がない、または固定額割引の場合はnull */
       discountRate: (number & components['schemas']['Models.decimal']) | null
       /**
        * Format: int32
-       * @description 会員向け特別価格
+       * @description 会員向け特別価格。会員価格戦略以外の場合はnull
        */
       memberPrice: number | null
       /**
        * Format: int32
-       * @description 非会員向け価格
+       * @description 非会員向け価格。会員価格戦略以外の場合はnull
        */
       nonMemberPrice: number | null
-      /** @description 戦略の説明 */
+      /** @description 戦略の説明。説明が不要な標準的な価格戦略の場合はnull */
       description: string | null
     }
     /**
@@ -7346,15 +7540,15 @@ export interface components {
        * @description レスポンスに付与される HTTP ステータスコード。
        */
       status: number
-      /** @description 今回の発生状況に固有の詳細説明。サポート対応時の一次情報となる。 */
+      /** @description 今回の発生状況に固有の詳細説明。サポート対応時の一次情報となる。詳細が不要な場合はnull */
       detail: string | null
-      /** @description この事象を一意に識別するための URI。監査ログやダッシュボードと連携する。 */
+      /** @description この事象を一意に識別するための URI。監査ログやダッシュボードと連携する。URIが不要な場合はnull */
       instance: string | null
       /** @description システム全体で共有する機械判読可能なエラーコード。画面表示や分岐処理に使用する。 */
       code: components['schemas']['Models.ErrorCodeType']
-      /** @description フィールド単位の検証エラーなど、追加のエラー詳細情報一覧。 */
+      /** @description フィールド単位の検証エラーなど、追加のエラー詳細情報一覧。検証エラーがない場合はnull */
       errors: components['schemas']['Models.ValidationError'][] | null
-      /** @description 障害調査や問い合わせで利用する相関 ID。リクエスト単位で一意。 */
+      /** @description 障害調査や問い合わせで利用する相関 ID。リクエスト単位で一意。相関IDが不要な場合はnull */
       correlationId: string | null
       /**
        * Format: date-time
@@ -7420,7 +7614,7 @@ export interface components {
        * Format: float
        * @description 送料
        */
-      shippingCost?: number
+      shippingCost: number | null
       /**
        * Format: float
        * @description 発注合計金額
@@ -7435,38 +7629,38 @@ export interface components {
        * Format: date-time
        * @description 予定納期
        */
-      expectedDelivery?: string
+      expectedDelivery: string | null
       /**
        * Format: date-time
        * @description 実際の納品日
        */
-      actualDelivery?: string
+      actualDelivery: string | null
       /** @description 納品に関するメモ */
-      deliveryNotes?: string
+      deliveryNotes: string | null
       /** @description 支払条件 */
-      paymentTerms?: string
+      paymentTerms: string | null
       /** @description その他備考 */
       notes?: string
       /** @description 発注承認を行ったスタッフ ID */
-      approvedBy?: components['schemas']['Models.StaffId']
+      approvedBy: (string & components['schemas']['Models.StaffId']) | null
       /**
        * Format: date-time
        * @description 承認日時
        */
-      approvedAt?: string
+      approvedAt: string | null
       /**
        * Format: date-time
        * @description レコード作成日時。
        */
       createdAt: string
-      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
+      /** @description レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull */
       createdBy: string | null
       /**
        * Format: date-time
        * @description レコード最終更新日時。
        */
       updatedAt: string
-      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
+      /** @description レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull */
       updatedBy: string | null
     }
     /** @description 仕入れ発注を作成する入力モデル */
@@ -7503,14 +7697,14 @@ export interface components {
        * Format: date-time
        * @description 更新後の予定納期
        */
-      expectedDelivery?: string
+      expectedDelivery?: string | null
       /**
        * Format: date-time
        * @description 実際の納品日
        */
-      actualDelivery?: string
+      actualDelivery?: string | null
       /** @description 納品関連の備考 */
-      deliveryNotes?: string
+      deliveryNotes?: string | null
       /** @description その他の備考 */
       notes?: string
     }
@@ -7538,13 +7732,13 @@ export interface components {
        */
       status: 'requested' | 'processing' | 'completed' | 'failed'
       /** @description 返金処理を担当したスタッフ ID */
-      processedBy?: components['schemas']['Models.StaffId']
+      processedBy: (string & components['schemas']['Models.StaffId']) | null
       /** @description 返金に使用した支払い方法 */
-      method?: components['schemas']['Models.PaymentMethodType']
+      method: components['schemas']['Models.PaymentMethodType'] | null
       /** @description 外部返金参照コード */
-      referenceCode?: string
+      referenceCode: string | null
       /** @description 返金処理に関する備考 */
-      notes?: string
+      notes: string | null
     }
     /** @description 返金処理を開始するための入力モデル */
     'Models.RefundCreateRequest': {
@@ -7657,7 +7851,7 @@ export interface components {
       endTime: string
       /** @description 予約の現在ステータスを表す区分値 */
       status: components['schemas']['Models.ReservationStatusType']
-      /** @description 顧客からの特記事項やサロン側メモ */
+      /** @description 顧客からの特記事項やサロン側メモ - 特記事項がない標準予約の場合はnull */
       notes: string | null
       /**
        * Format: int32
@@ -7666,26 +7860,26 @@ export interface components {
       totalAmount: number
       /**
        * Format: int32
-       * @description 事前に受領した内金・デポジット金額
+       * @description 事前に受領した内金・デポジット金額 - 内金不要な予約や当日払いの場合はnull
        */
       depositAmount: number | null
       /** @description 予約に対する決済が完了しているかを示すフラグ */
       isPaid: boolean
-      /** @description キャンセルが発生した場合の理由 */
+      /** @description キャンセルが発生した場合の理由 - キャンセルされていない予約や理由未記録の場合はnull */
       cancellationReason: string | null
       /**
        * Format: date-time
        * @description レコード作成日時。
        */
       createdAt: string
-      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
+      /** @description レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull */
       createdBy: string | null
       /**
        * Format: date-time
        * @description レコード最終更新日時。
        */
       updatedAt: string
-      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
+      /** @description レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull */
       updatedBy: string | null
     }
     /** @description 予約詳細モデル - 基本予約情報に顧客・スタッフ・メニュー名称やカテゴリなどの表示用情報を付加した拡張ビュー */
@@ -7772,38 +7966,38 @@ export interface components {
       customerId: components['schemas']['Models.CustomerId']
       /** @description 紐づく来店予約を示すID (DBカラム booking_id と整合) */
       bookingId: components['schemas']['Models.BookingId']
-      /** @description 評価対象のスタッフID。スタッフ未指定レビューの場合は省略 */
+      /** @description 評価対象のスタッフID - セルフサービスやスタッフ特定不要の施術の場合はnull */
       staffId: (string & components['schemas']['Models.StaffId']) | null
       /**
        * Format: int32
        * @description 全体満足度の評価値 (例: 1〜5)
        */
       overallRating: number
-      /** @description 自由記述のレビューコメント */
+      /** @description 自由記述のレビューコメント - 評価のみでコメントなしのシンプルレビューの場合はnull */
       comment: string | null
-      /** @description レビュータイトルや要約 */
+      /** @description レビュータイトルや要約 - タイトル未設定の簡易レビューの場合はnull */
       title: string | null
       /**
        * Format: int32
-       * @description 施術サービスそのものに対する評価値
+       * @description 施術サービスそのものに対する評価値 - 個別評価をしない総合評価のみのレビューの場合はnull
        */
       serviceRating: number | null
       /**
        * Format: int32
-       * @description スタッフの接客・技術に対する評価値
+       * @description スタッフの接客・技術に対する評価値 - スタッフ評価省略またはセルフサービスの場合はnull
        */
       staffRating: number | null
       /**
        * Format: int32
-       * @description 店内の清潔さ・衛生面に対する評価値
+       * @description 店内の清潔さ・衛生面に対する評価値 - 清潔さ評価を省略したレビューの場合はnull
        */
       cleanlinessRating: number | null
       /**
        * Format: int32
-       * @description 価格に対する価値・コストパフォーマンス評価値
+       * @description 価格に対する価値・コストパフォーマンス評価値 - 価格評価を省略したレビューの場合はnull
        */
       valueRating: number | null
-      /** @description レビューに添付された画像URLの一覧 */
+      /** @description レビューに添付された画像URLの一覧 - 画像添付なしのテキストのみレビューの場合はnull */
       imageUrls: string[] | null
       /** @description 実来店が確認済みかを表す検証フラグ */
       isVerified: boolean
@@ -7819,11 +8013,11 @@ export interface components {
        * @default 0
        */
       reportCount: number
-      /** @description サロン運営からの公式返信本文 */
+      /** @description サロン運営からの公式返信本文 - オーナー未返信のレビューの場合はnull */
       ownerResponse: string | null
       /**
        * Format: date-time
-       * @description 運営が返信した日時 (UTC)
+       * @description 運営が返信した日時 (UTC) - オーナー未返信のレビューの場合はnull
        */
       ownerRespondedAt: string | null
       /**
@@ -7831,14 +8025,14 @@ export interface components {
        * @description レコード作成日時。
        */
       createdAt: string
-      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
+      /** @description レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull */
       createdBy: string | null
       /**
        * Format: date-time
        * @description レコード最終更新日時。
        */
       updatedAt: string
-      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
+      /** @description レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull */
       updatedBy: string | null
     }
     /** @description レビュー作成リクエスト - 顧客が新規レビュー投稿時に入力する評価情報と任意コメント・画像を受け取る */
@@ -7849,38 +8043,38 @@ export interface components {
       customerId: components['schemas']['Models.CustomerId']
       /** @description 紐づく来店予約ID (booking_id) */
       bookingId: components['schemas']['Models.BookingId']
-      /** @description 評価対象スタッフのID */
+      /** @description 評価対象スタッフのID - セルフサービスやスタッフ特定不要の施術の場合はnull */
       staffId: (string & components['schemas']['Models.StaffId']) | null
       /**
        * Format: int32
        * @description 全体満足度の評価値
        */
       overallRating: number
-      /** @description 自由記述のコメント */
+      /** @description 自由記述のコメント - 評価のみでコメントなしのシンプルレビューの場合はnull */
       comment: string | null
-      /** @description レビュータイトル */
+      /** @description レビュータイトル - タイトル未設定の簡易レビューの場合はnull */
       title: string | null
       /**
        * Format: int32
-       * @description サービス品質に対する評価値
+       * @description サービス品質に対する評価値 - 個別評価をしない総合評価のみのレビューの場合はnull
        */
       serviceRating: number | null
       /**
        * Format: int32
-       * @description スタッフ対応に対する評価値
+       * @description スタッフ対応に対する評価値 - スタッフ評価省略またはセルフサービスの場合はnull
        */
       staffRating: number | null
       /**
        * Format: int32
-       * @description 清潔さ・衛生状態に対する評価値
+       * @description 清潔さ・衛生状態に対する評価値 - 清潔さ評価を省略したレビューの場合はnull
        */
       cleanlinessRating: number | null
       /**
        * Format: int32
-       * @description 価格に見合う価値の評価値
+       * @description 価格に見合う価値の評価値 - 価格評価を省略したレビューの場合はnull
        */
       valueRating: number | null
-      /** @description 添付画像のURL一覧 */
+      /** @description 添付画像のURL一覧 - 画像添付なしのテキストのみレビューの場合はnull */
       imageUrls: string[] | null
     }
     /**
@@ -7947,7 +8141,7 @@ export interface components {
       name: string
       /** @description 管理画面などで表示する名称 */
       displayName: string
-      /** @description ロールの詳細説明 */
+      /** @description ロールの詳細説明 - システム標準ロールや説明不要なシンプルなロールの場合はnull */
       description: string | null
       /** @description 付与されている権限一覧 */
       permissions: components['schemas']['Models.Permission'][]
@@ -7960,14 +8154,14 @@ export interface components {
        * @description レコード作成日時。
        */
       createdAt: string
-      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
+      /** @description レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull */
       createdBy: string | null
       /**
        * Format: date-time
        * @description レコード最終更新日時。
        */
       updatedAt: string
-      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
+      /** @description レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull */
       updatedBy: string | null
     }
     /** @description ロール新規作成時の入力モデル */
@@ -8083,7 +8277,7 @@ export interface components {
       contactInfo: components['schemas']['Models.ContactInfo']
       /** @description 曜日別の基本営業時間帯一覧 */
       openingHours: components['schemas']['Models.OpeningHours'][]
-      /** @description 季節やキャンペーン等に合わせた営業スケジュール。未設定時はnull */
+      /** @description 季節やキャンペーン等に合わせた営業スケジュール。通常営業時間のみの場合はnull */
       businessHours: components['schemas']['Models.BusinessHours'][] | null
       /** @description 店舗写真や内装画像のURL一覧 */
       imageUrls: string[]
@@ -8091,7 +8285,7 @@ export interface components {
       features: string[]
       /**
        * Format: float
-       * @description 顧客レビューから算出した平均評価。評価が無い場合はnull
+       * @description 顧客レビューから算出した平均評価。レビュー未登録の場合はnull
        */
       rating: number | null
       /**
@@ -8104,14 +8298,14 @@ export interface components {
        * @description レコード作成日時。
        */
       createdAt: string
-      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
+      /** @description レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull */
       createdBy: string | null
       /**
        * Format: date-time
        * @description レコード最終更新日時。
        */
       updatedAt: string
-      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
+      /** @description レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull */
       updatedBy: string | null
     }
     /** @description 指定した条件でサロンの予約枠の空き状況を確認するためのリクエスト */
@@ -8140,9 +8334,9 @@ export interface components {
       availableSlots: components['schemas']['Models.AvailableTimeSlot'][]
       /**
        * Format: date
-       * @description 希望日が満席の場合に提示する次の空き日
+       * @description 希望日が満席の場合に提示する次の空き日。空きがない場合はnull
        */
-      nextAvailableDate?: string
+      nextAvailableDate: string | null
       /** @description ウェイトリスト登録の可否 */
       waitlistAvailable: boolean
     }
@@ -8177,9 +8371,9 @@ export interface components {
       totalStaff: number
       /**
        * Format: float
-       * @description レビューから算出した平均評価
+       * @description レビューから算出した平均評価。レビュー未登録の場合はnull
        */
-      averageRating?: number
+      averageRating: number | null
       /**
        * Format: int32
        * @description 累計レビュー件数
@@ -8190,8 +8384,8 @@ export interface components {
        * @description 当月の予約件数合計
        */
       monthlyBookings: number
-      /** @description 当月の売上総額 */
-      monthlyRevenue?: components['schemas']['Models.Money']
+      /** @description 当月の売上総額。売上未集計の場合はnull */
+      monthlyRevenue: components['schemas']['Models.Money'] | null
       /** @description 人気の高いサービス一覧 */
       popularServices: components['schemas']['Models.ServiceSummary'][]
       /** @description 予約が集中する時間帯の一覧 */
@@ -8204,7 +8398,7 @@ export interface components {
       /** @description 希望する通知カテゴリの種類一覧 */
       notificationTypes: components['schemas']['Models.NotificationType'][]
       /** @description 関心の高いサービスカテゴリ。未指定の場合は全カテゴリ対象 */
-      categories?: components['schemas']['Models.ServiceCategoryType'][]
+      categories: components['schemas']['Models.ServiceCategoryType'][]
     }
     /** @description サロン通知購読の作成結果を返すレスポンスモデル */
     'Models.SalonSubscriptionResponse': {
@@ -8219,7 +8413,7 @@ export interface components {
        * Format: date-time
        * @description 購読の有効期限。無期限の場合はnull
        */
-      expiresAt?: string
+      expiresAt: string | null
     }
     /** @description サロン概要モデル - リスト表示や検索結果に必要な要約情報を提供 */
     'Models.SalonSummary': {
@@ -8231,12 +8425,12 @@ export interface components {
       address: components['schemas']['Models.Address']
       /**
        * Format: float
-       * @description レビュー平均値。評価が無い場合はnull
+       * @description レビュー平均値。レビュー未登録の場合はnull
        */
       rating: number | null
       /**
        * Format: int32
-       * @description レビュー件数。未集計の場合はnull
+       * @description レビュー件数。レビュー未登録の場合はnull
        */
       reviewCount: number | null
     }
@@ -8249,9 +8443,9 @@ export interface components {
       distance: number
       /**
        * Format: int32
-       * @description 想定移動時間（分）。計算不能時はnull
+       * @description 想定移動時間（分）。計算不可の場合はnull
        */
-      travelTime?: number
+      travelTime: number | null
     } & components['schemas']['Models.Salon']
     /**
 
@@ -8288,8 +8482,11 @@ export interface components {
       | 'sensitive'
       | 'dandruff'
     'Models.ScalpInfo': {
+      /** @description 頭皮の状態。健康状態やケア必要性の分類 */
       condition: components['schemas']['Models.ScalpConditionType']
+      /** @description 頭皮の敏感性リスト。特定の刺激への反応 */
       sensitivities: string[]
+      /** @description 頭皮に関する備考。特記事項がない場合はnull */
       notes: string | null
     }
     /** @description スタッフに発生する例外スケジュール（休暇・研修等）を表すモデル */
@@ -8304,10 +8501,12 @@ export interface components {
        * @enum {string}
        */
       type: 'holiday' | 'sick_leave' | 'vacation' | 'training' | 'other'
-      /** @description 補足説明や注意事項。不要な場合はnull */
-      description?: string
-      /** @description 代替対応するスタッフのID。未手配の場合はnull */
-      alternativeStaffId?: components['schemas']['Models.StaffId']
+      /** @description 補足説明や注意事項。特記事項がない場合はnull */
+      description: string | null
+      /** @description 代替対応するスタッフのID。代替スタッフ未手配の場合はnull */
+      alternativeStaffId:
+        | (string & components['schemas']['Models.StaffId'])
+        | null
     }
     /** @description 検索結果の関連度スコア範囲を表すモデル。
      *     スコアの分布を把握し、しきい値設定を検討する際に利用する。 */
@@ -8370,102 +8569,102 @@ export interface components {
       info: components['schemas']['Models.ServiceInfo']
       /** @description サービスカテゴリ区分 */
       category: components['schemas']['Models.ServiceCategoryType']
-      /** @description カテゴリ ID（分類ツリー連携用） */
+      /** @description カテゴリ ID（分類ツリー連携用）。サービスカテゴリ区分のみで分類される場合はnull */
       categoryId: (string & components['schemas']['Models.CategoryId']) | null
       /** @description 料金設定情報 */
       pricing: components['schemas']['Models.ServicePricing']
       /** @description 提供時間の設定 */
       duration: components['schemas']['Models.ServiceDuration']
-      /** @description 提供可能条件の設定 */
+      /** @description 提供可能条件の設定。常時提供で特別な制約がない場合はnull */
       availability:
         | components['schemas']['Models.ServiceAvailabilityDetail']
         | null
-      /** @description 予約時に必要な要件一覧 */
+      /** @description 予約時に必要な要件一覧。特別な要件がない標準サービスの場合はnull */
       requirements:
         | components['schemas']['Models.BookingRequirementDetail'][]
         | null
-      /** @description 追加オプション設定 */
+      /** @description 追加オプション設定。オプションがないシンプルなサービスの場合はnull */
       options: components['schemas']['Models.ServiceOptionDetail'][] | null
-      /** @description 提供上の制約条件 */
+      /** @description 提供上の制約条件。制約がないサービスの場合はnull */
       restrictions: components['schemas']['Models.ServiceRestrictions'] | null
-      /** @description サービス実績の指標 */
+      /** @description サービス実績の指標。新サービスで実績データがない場合はnull */
       performance: components['schemas']['Models.ServicePerformance'] | null
-      /** @description 関連サービス・担当者情報 */
+      /** @description 関連サービス・担当者情報。関連設定がない独立したサービスの場合はnull */
       associations: components['schemas']['Models.ServiceAssociations'] | null
-      /** @description メタデータ・表示設定 */
+      /** @description メタデータ・表示設定。特別な表示設定が不要な場合はnull */
       metadata: components['schemas']['Models.ServiceMetadata'] | null
       /** @description 現在の提供ステータス */
       status: components['schemas']['Models.ServiceStatusDetail']
-      /** @description 互換性維持のための旧項目：サービス名 */
+      /** @description サービス名 */
       name: string
-      /** @description 互換性維持のための旧項目：説明文 */
+      /** @description 説明文 */
       description: string
       /**
        * Format: int32
-       * @description 互換性維持のための旧項目：料金
+       * @description 料金
        */
       price: number
-      /** @description 互換性維持のための旧項目：画像 URL */
+      /** @description 画像 URL。画像が登録されていない場合はnull */
       imageUrl: string | null
       /**
        * Format: int32
-       * @description 互換性維持のための旧項目：スタッフレベル
+       * @description スタッフレベル。全スタッフが対応可能な場合はnull
        */
       requiredStaffLevel: number | null
-      /** @description 互換性維持のための旧項目：有効フラグ */
+      /** @description 有効フラグ */
       isActive: boolean
       /**
        * Format: date-time
        * @description レコード作成日時。
        */
       createdAt: string
-      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
+      /** @description レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull */
       createdBy: string | null
       /**
        * Format: date-time
        * @description レコード最終更新日時。
        */
       updatedAt: string
-      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
+      /** @description レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull */
       updatedBy: string | null
     }
     /** @description サービス間・スタッフとの関連情報 */
     'Models.ServiceAssociations': {
       /** @description 紐づくカテゴリ ID */
       categoryId: components['schemas']['Models.CategoryId']
-      /** @description 親サービス ID */
+      /** @description 親サービス ID。独立したサービスで親を持たない場合はnull */
       parentServiceId:
         | (string & components['schemas']['Models.ServiceId'])
         | null
-      /** @description 子サービス ID 一覧 */
+      /** @description 子サービス ID 一覧。子サービスを持たない場合はnull */
       childServiceIds: components['schemas']['Models.ServiceId'][] | null
-      /** @description 予約時に必須のサービス ID */
+      /** @description 予約時に必須のサービス ID。前提サービスがない独立したサービスの場合はnull */
       requiredServiceIds: components['schemas']['Models.ServiceId'][] | null
-      /** @description 併用を推奨するサービス ID */
+      /** @description 併用を推奨するサービス ID。推奨する組み合わせがない場合はnull */
       recommendedServiceIds: components['schemas']['Models.ServiceId'][] | null
-      /** @description 施術資格を持つスタッフ ID */
+      /** @description 施術資格を持つスタッフ ID。全スタッフが対応可能な場合はnull */
       qualifiedStaffIds: components['schemas']['Models.StaffId'][] | null
-      /** @description 優先的に担当させたいスタッフ ID */
+      /** @description 優先的に担当させたいスタッフ ID。特定の優先スタッフがいない場合はnull */
       preferredStaffIds: components['schemas']['Models.StaffId'][] | null
     }
     /** @description サービスの提供可否設定 */
     'Models.ServiceAvailabilityDetail': {
       /** @description 提供可否タイプ */
       type: components['schemas']['Models.ServiceAvailabilityType']
-      /** @description 曜日・時間帯のスケジュール */
+      /** @description 曜日・時間帯のスケジュール。常時提供または予約制の場合はnull */
       schedule: components['schemas']['Models.ServiceSchedule'][] | null
-      /** @description 事前承認が必要かどうか */
+      /** @description 事前承認が必要かどうか。即時予約可能な場合はnull（falseと同義） */
       requiresApproval: boolean | null
-      /** @description 季節限定時の季節設定 */
+      /** @description 季節限定時の季節設定。季節限定以外の提供タイプの場合はnull */
       seasons: components['schemas']['Models.Season'][] | null
       /**
        * Format: int32
-       * @description 1 日あたりの提供上限
+       * @description 1 日あたりの提供上限。日次制限がない場合はnull
        */
       maxPerDay: number | null
       /**
        * Format: int32
-       * @description 1 週間あたりの提供上限
+       * @description 1 週間あたりの提供上限。週次制限がない場合はnull
        */
       maxPerWeek: number | null
     }
@@ -8559,22 +8758,22 @@ export interface components {
       standard: number
       /**
        * Format: int32
-       * @description 最短施術時間
+       * @description 最短施術時間（分）。固定時間制で短縮不可の場合はnull
        */
       minimum: number | null
       /**
        * Format: int32
-       * @description 最長施術時間
+       * @description 最長施術時間（分）。固定時間制で延長不可の場合はnull
        */
       maximum: number | null
       /**
        * Format: int32
-       * @description 施術前のバッファ時間
+       * @description 施術前のバッファ時間（分）。準備時間が不要な場合はnull
        */
       bufferBefore: number | null
       /**
        * Format: int32
-       * @description 施術後のバッファ時間
+       * @description 施術後のバッファ時間（分）。片付け時間が不要な場合はnull
        */
       bufferAfter: number | null
       /** @description カウンセリング時間を含むか */
@@ -8589,84 +8788,84 @@ export interface components {
     'Models.ServiceInfo': {
       /** @description サービス名称 */
       name: string
-      /** @description サービス名の読み仮名 */
+      /** @description サービス名の読み仮名。外国語サービス名など読み仮名が不要な場合はnull */
       nameKana: string | null
       /** @description サービス詳細説明文 */
       description: string
-      /** @description 短めの紹介文 */
+      /** @description 短めの紹介文。詳細説明で十分な場合はnull */
       shortDescription: string | null
-      /** @description 提供価値・メリットの一覧 */
+      /** @description 提供価値・メリットの一覧。特別なメリット説明が不要な基本サービスの場合はnull */
       benefits: string[] | null
-      /** @description 主な対象顧客層 */
+      /** @description 主な対象顧客層。全顧客対象で特定層を限定しない場合はnull */
       targetCustomer: string | null
-      /** @description サービス画像の URL 一覧 */
+      /** @description サービス画像の URL 一覧。画像登録がない場合はnull */
       imageUrls: string[] | null
-      /** @description 紹介動画の URL */
+      /** @description 紹介動画の URL。動画コンテンツがない場合はnull */
       videoUrl: string | null
     }
     /** @description サービスのメタデータ情報 */
     'Models.ServiceMetadata': {
-      /** @description タグ一覧 */
+      /** @description タグ一覧。タグ付けが不要な場合はnull */
       tags: string[] | null
-      /** @description 検索キーワード */
+      /** @description 検索キーワード。追加の検索キーワードが不要な場合はnull */
       keywords: string[] | null
-      /** @description SEO 用タイトル */
+      /** @description SEO 用タイトル。デフォルトのサービス名を使用する場合はnull */
       seoTitle: string | null
-      /** @description SEO 用ディスクリプション */
+      /** @description SEO 用ディスクリプション。デフォルトの説明文を使用する場合はnull */
       seoDescription: string | null
-      /** @description 内部向けメモ */
+      /** @description 内部向けメモ。特記事項がない場合はnull */
       internalNotes: string | null
       /**
        * Format: int32
-       * @description 表示順序
+       * @description 表示順序。自動ソートまたはデフォルト順序の場合はnull
        */
       sortOrder: number | null
-      /** @description 注目サービスとして表示するか */
+      /** @description 注目サービスとして表示するか。通常表示の場合はnull（falseと同義） */
       featured: boolean | null
-      /** @description メニュー非表示フラグ */
+      /** @description メニュー非表示フラグ。通常表示の場合はnull（falseと同義） */
       hideFromMenu: boolean | null
     }
     /** @description サービスに付随するオプション設定 */
     'Models.ServiceOptionDetail': {
       /** @description オプションの種類 */
       type: components['schemas']['Models.ServiceOptionType']
-      /** @description オプション名 */
+      /** @description オプション名。タイプから自明な名称の場合はnull */
       name: string | null
       /**
        * Format: int32
-       * @description オプション料金
+       * @description オプション料金。無料オプションまたは他の料金設定方法の場合はnull
        */
       price: number | null
       /**
        * Format: int32
-       * @description 追加される施術時間
+       * @description 追加される施術時間（分）。時間追加がないオプションの場合はnull
        */
       duration: number | null
-      /** @description オプションの説明 */
+      /** @description オプションの説明。説明が不要な自明なオプションの場合はnull */
       description: string | null
-      /** @description アップグレード元のレベル */
+      /** @description アップグレード元のレベル。アップグレード型以外のオプションの場合はnull */
       fromLevel: string | null
-      /** @description アップグレード先のレベル */
+      /** @description アップグレード先のレベル。アップグレード型以外のオプションの場合はnull */
       toLevel: string | null
       /**
        * Format: int32
-       * @description 追加料金
+       * @description 追加料金。基本料金に含まれる、または他の料金設定の場合はnull
        */
       additionalPrice: number | null
       /**
        * Format: int32
-       * @description 時間延長（分）
+       * @description 時間延長（分）。時間延長型以外のオプションの場合はnull
        */
       extension: number | null
-      /** @description 関連商品 ID */
+      /** @description 関連商品 ID。商品追加型以外のオプションの場合はnull */
       productId: string | null
-      /** @description 必須オプションかどうか */
+      /** @description 必須オプションかどうか。任意選択の標準的なオプションの場合はnull（falseと同義） */
       required: boolean | null
-      /** @description 同時予約が必要なサービス ID */
+      /** @description 同時予約が必要なサービス ID。コンボ型以外のオプションの場合はnull */
       withService: (string & components['schemas']['Models.ServiceId']) | null
       /**
        * Format: int32
-       * @description 割引金額
+       * @description 割引金額。割引がない、またはパーセンテージ割引の場合はnull
        */
       discountAmount: number | null
     }
@@ -8717,7 +8916,7 @@ export interface components {
       bookingCount: number
       /** @description 施術完了率 */
       completionRate: components['schemas']['Models.decimal']
-      /** @description 平均評価スコア */
+      /** @description 平均評価スコア。まだ評価がない新サービスの場合はnull */
       averageRating: (number & components['schemas']['Models.decimal']) | null
       /**
        * Format: int32
@@ -8729,16 +8928,22 @@ export interface components {
        * @description 売上実績（円）
        */
       revenue: number
-      /** @description 人気度スコア */
+      /** @description 人気度スコア。算出に必要なデータが不足している場合はnull */
       popularityScore: (number & components['schemas']['Models.decimal']) | null
-      /** @description リピート率 */
+      /** @description リピート率（%）。リピート実績がない新サービスの場合はnull */
       repeatRate: (number & components['schemas']['Models.decimal']) | null
     }
     'Models.ServicePreference': {
+      /** @description お気に入りサービス一覧。特にない場合はnull */
       favoriteServices: components['schemas']['Models.ServiceId'][] | null
+      /** @description 避けたいサービス一覧。特にない場合はnull */
       avoidServices: components['schemas']['Models.ServiceId'][] | null
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 希望施術時間（分）。特に希望がない場合はnull
+       */
       preferredDuration: number | null
+      /** @description 希望価格帯。特に希望がない場合はnull */
       preferredPriceRange:
         | components['schemas']['Models.PriceRangeFilter']
         | null
@@ -8753,45 +8958,45 @@ export interface components {
       currency: components['schemas']['Models.CurrencyCodeType']
       /**
        * Format: int32
-       * @description 設定されている最低料金
+       * @description 設定されている最低料金。最低料金制限がない場合はnull
        */
       minimumPrice: number | null
       /**
        * Format: int32
-       * @description 設定されている最高料金
+       * @description 設定されている最高料金。最高料金制限がない場合はnull
        */
       maximumPrice: number | null
       /** @description 予約時にデポジットが必要か */
       depositRequired: boolean
       /**
        * Format: int32
-       * @description 必要なデポジット金額
+       * @description 必要なデポジット金額。デポジットが不要な場合はnull
        */
       depositAmount: number | null
-      /** @description キャンセル料金の設定 */
+      /** @description キャンセル料金の設定。キャンセル料が発生しない場合はnull */
       cancellationFee: components['schemas']['Models.CancellationFee'] | null
     }
     /** @description サービス提供時の制約条件 */
     'Models.ServiceRestrictions': {
-      /** @description 必要なスタッフレベル */
+      /** @description 必要なスタッフレベル。全スタッフが対応可能な場合はnull */
       requiredStaffLevel: components['schemas']['Models.StaffLevelType'] | null
-      /** @description 必要資格の一覧 */
+      /** @description 必要資格の一覧。特別な資格が不要な場合はnull */
       requiredCertifications: string[] | null
       /**
        * Format: int32
-       * @description 同時提供可能な最大件数
+       * @description 同時提供可能な最大件数。同時提供制限がない場合はnull
        */
       maxConcurrent: number | null
       /**
        * Format: int32
-       * @description 再予約までの最短間隔（日）
+       * @description 再予約までの最短間隔（日）。連続予約可能な場合はnull
        */
       minIntervalDays: number | null
-      /** @description 顧客ごとの予約上限設定 */
+      /** @description 顧客ごとの予約上限設定。予約回数制限がない場合はnull */
       maxBookingsPerCustomer:
         | components['schemas']['Models.BookingLimit']
         | null
-      /** @description 提供不可日（ブラックアウト）一覧 */
+      /** @description 提供不可日（ブラックアウト）一覧。特定の除外日がない場合はnull */
       blackoutDates: string[] | null
     }
     /** @description サービス提供スケジュール */
@@ -8804,7 +9009,7 @@ export interface components {
       endTime: string
       /**
        * Format: int32
-       * @description 予約受け入れ上限数
+       * @description 予約受け入れ上限数。予約数制限がない場合はnull
        */
       maxBookings: number | null
     }
@@ -8812,35 +9017,35 @@ export interface components {
     'Models.ServiceStatusDetail': {
       /** @description ステータス区分 */
       type: components['schemas']['Models.ServiceStatusType']
-      /** @description ステータス変更理由 */
+      /** @description ステータス変更理由。理由の記録が不要な通常変更の場合はnull */
       reason: string | null
       /**
        * Format: date-time
-       * @description この状態が開始した日時
+       * @description この状態が開始した日時。開始日時の記録が不要な場合はnull
        */
       since: string | null
-      /** @description 提供可能な月の一覧 */
+      /** @description 提供可能な月の一覧（1-12）。季節限定以外のステータスの場合はnull */
       availableMonths: number[] | null
       /**
        * Format: date-time
-       * @description 提供終了予定日
+       * @description 提供終了予定日。終了予定が未定または無期限の場合はnull
        */
       availableUntil: string | null
       /**
        * Format: int32
-       * @description 残り提供可能枠数
+       * @description 残り提供可能枠数。数量限定以外のステータスの場合はnull
        */
       remainingSlots: number | null
       /**
        * Format: date-time
-       * @description 廃止日時
+       * @description 廃止日時。廃止ステータス以外の場合はnull
        */
       discontinuedAt: string | null
-      /** @description 代替サービス ID */
+      /** @description 代替サービス ID。廃止時に代替サービスがない場合はnull */
       replacementId: (string & components['schemas']['Models.ServiceId']) | null
       /**
        * Format: date-time
-       * @description 公開予定日
+       * @description 公開予定日。近日公開以外のステータス、または予定日未定の場合はnull
        */
       launchDate: string | null
     }
@@ -8895,7 +9100,7 @@ export interface components {
       name: string
       /**
        * Format: int32
-       * @description 対象サービスの予約件数。統計未計算時はnull。
+       * @description 対象サービスの予約件数。統計未計算の場合はnull
        */
       bookingCount: number | null
     }
@@ -8947,12 +9152,12 @@ export interface components {
       attachmentId: string
       /**
        * Format: date-time
-       * @description 共有リンクの有効期限。任意設定。
+       * @description 共有リンクの有効期限。無期限の場合はnull。
        */
       expiresAt: string | null
       /**
        * Format: int32
-       * @description 許可する最大ダウンロード回数。任意設定。
+       * @description 許可する最大ダウンロード回数。無制限の場合はnull。
        */
       maxDownloads: number | null
       /**
@@ -8962,7 +9167,7 @@ export interface components {
       downloadCount: number
       /** @description 共有リンクがパスワード保護されているか。 */
       hasPassword: boolean
-      /** @description アクセスを許可するメールアドレス一覧。任意設定。 */
+      /** @description アクセスを許可するメールアドレス一覧。制限なしの場合はnull。 */
       allowedEmails: string[] | null
       /** @description 共有リンクを作成したユーザーID。 */
       createdBy: string
@@ -8974,24 +9179,24 @@ export interface components {
     }
     /** @description パスワード保護された共有リンクへアクセスする際のリクエスト。 */
     'Models.ShareLinkAccessRequest': {
-      /** @description 共有リンクのパスワード。保護されている場合に入力。 */
+      /** @description 共有リンクのパスワード。パスワード保護されていない場合はnull。 */
       password: string | null
     }
     /** @description 添付ファイルの共有リンクを新規発行する際のリクエスト。 */
     'Models.ShareLinkCreateRequest': {
       /**
        * Format: date-time
-       * @description 共有リンクの有効期限。任意設定。
+       * @description 共有リンクの有効期限。無期限の場合はnull。
        */
       expiresAt: string | null
       /**
        * Format: int32
-       * @description 許可する最大ダウンロード回数。任意設定。
+       * @description 許可する最大ダウンロード回数。無制限の場合はnull。
        */
       maxDownloads: number | null
-      /** @description 共有リンク保護用のパスワード。任意設定。 */
+      /** @description 共有リンク保護用のパスワード。パスワード保護なしの場合はnull。 */
       password: string | null
-      /** @description アクセスを許可するメールアドレス一覧。任意設定。 */
+      /** @description アクセスを許可するメールアドレス一覧。制限なしの場合はnull。 */
       allowedEmails: string[] | null
     }
     /** @description ソフトデリート情報モデル。
@@ -9004,12 +9209,12 @@ export interface components {
       isDeleted: boolean
       /**
        * Format: date-time
-       * @description 削除操作が実行された日時 (UTC)。
+       * @description 削除操作が実行された日時 (UTC)。削除されていない場合はnull
        */
       deletedAt: string | null
-      /** @description 削除操作を実施したユーザーID またはサービス名。 */
+      /** @description 削除操作を実施したユーザーID またはサービス名。削除されていない場合はnull */
       deletedBy: string | null
-      /** @description 削除理由や補足メモ。カスタマーサポート対応に利用する。 */
+      /** @description 削除理由や補足メモ。カスタマーサポート対応に利用する。理由が不要または削除されていない場合はnull */
       deletionReason: string | null
     }
     /**
@@ -9057,40 +9262,40 @@ export interface components {
       contactInfo: components['schemas']['Models.ContactInfo']
       /** @description 得意分野や専門メニューの一覧 */
       specialties: string[]
-      /** @description プロフィール画像のURL */
+      /** @description プロフィール画像のURL - プロフィール画像未設定の場合はnull */
       imageUrl: string | null
-      /** @description 自己紹介や経歴の概要 */
+      /** @description 自己紹介や経歴の概要 - プロフィール未記入の新人スタッフの場合はnull */
       bio: string | null
       /**
        * Format: int32
-       * @description 実務経験年数
+       * @description 実務経験年数 - 経験年数未記載またはアシスタントスタッフの場合はnull
        */
       yearsOfExperience: number | null
-      /** @description 保有資格名の一覧 (テキスト管理) */
+      /** @description 保有資格名の一覧 (テキスト管理) - 資格なしの新人やアシスタントの場合はnull */
       certifications: string[] | null
-      /** @description 詳細な資格情報の一覧 */
+      /** @description 詳細な資格情報の一覧 - 詳細資格情報未登録の場合はnull */
       qualifications:
         | components['schemas']['Models.StaffQualification'][]
         | null
-      /** @description 通常勤務スケジュールの一覧 */
+      /** @description 通常勤務スケジュールの一覧 - スケジュール未設定やフリーランススタッフの場合はnull */
       schedules: components['schemas']['Models.StaffSchedule'][] | null
       /** @description 現在スタッフがアクティブに勤務可能かを示すフラグ */
       isActive: boolean
-      /** @description システム上で付与されている追加権限一覧 */
+      /** @description システム上で付与されている追加権限一覧 - 特別権限がない一般スタッフの場合はnull */
       permissions: components['schemas']['Models.StaffPermission'][] | null
       /**
        * Format: date-time
        * @description レコード作成日時。
        */
       createdAt: string
-      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
+      /** @description レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull */
       createdBy: string | null
       /**
        * Format: date-time
        * @description レコード最終更新日時。
        */
       updatedAt: string
-      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
+      /** @description レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull */
       updatedBy: string | null
     }
     /** @description スタッフ空き状況モデル - 個別時間帯の空き枠を表し、スポット予約や検索レスポンスに利用する */
@@ -9103,9 +9308,9 @@ export interface components {
       startTime: string
       /** @description 空き枠の終了時刻 (HH:mm) */
       endTime: string
-      /** @description 休憩などの開始時刻 */
+      /** @description 休憩などの開始時刻 - 休憩なしの連続勤務の場合はnull */
       breakStart: string | null
-      /** @description 休憩などの終了時刻 */
+      /** @description 休憩などの終了時刻 - 休憩なしの連続勤務の場合はnull */
       breakEnd: string | null
     }
     /**
@@ -9170,7 +9375,7 @@ export interface components {
        * Format: float
        * @description 顧客満足度評価（任意）
        */
-      customerSatisfaction?: number
+      customerSatisfaction: number | null
     }
     /** @description スタッフ権限モデル - スタッフアカウントに付与された操作対象と権限範囲を定義する */
     'Models.StaffPermission': {
@@ -9178,11 +9383,11 @@ export interface components {
       resource: string
       /** @description 許可されたアクションの一覧 */
       actions: string[]
-      /** @description 権限が適用される範囲や条件 */
+      /** @description 権限が適用される範囲や条件 - 全体権限の場合や特定範囲がない場合はnull */
       scope: string | null
       /**
        * Format: date-time
-       * @description 権限の有効期限 (UTC)
+       * @description 権限の有効期限 (UTC) - 無期限権限の場合はnull
        */
       expiresAt: string | null
     }
@@ -9197,12 +9402,12 @@ export interface components {
       certificationDate: string
       /**
        * Format: date
-       * @description 資格の有効期限。無期限の場合は省略
+       * @description 資格の有効期限 - 無期限資格や更新不要の資格の場合はnull
        */
       expiryDate: string | null
-      /** @description 資格を発行した機関名 */
+      /** @description 資格を発行した機関名 - 発行機関が不明または未記録の場合はnull */
       issuer: string | null
-      /** @description 資格証明番号などの識別子 */
+      /** @description 資格証明番号などの識別子 - 証明番号がない内部認定やサロン独自資格の場合はnull */
       credentialId: string | null
     }
     /** @description スタッフシフトモデル - 通常勤務スケジュールと休憩時間、適用期間を定義し、予約可能時間の算出に利用する */
@@ -9213,9 +9418,9 @@ export interface components {
       startTime: string
       /** @description 勤務終了時刻 (フォーマット例: HH:mm) */
       endTime: string
-      /** @description 当日の休憩時間帯リスト */
+      /** @description 当日の休憩時間帯リスト - 休憩なしのフル勤務の場合はnull */
       breakTime: components['schemas']['Models.TimeSlot'][] | null
-      /** @description シフトが有効となる期間 */
+      /** @description シフトが有効となる期間 - 無期限スケジュールの場合はnull */
       effectivePeriod: components['schemas']['Models.DateRange'] | null
     }
     /** @description スタッフの勤務スケジュールと例外設定を管理するモデル */
@@ -9264,19 +9469,19 @@ export interface components {
       isDeleted: boolean
       /**
        * Format: date-time
-       * @description 削除操作が実行された日時 (UTC)。
+       * @description 削除操作が実行された日時 (UTC)。削除されていない場合はnull
        */
       deletedAt: string | null
-      /** @description 削除操作を実施したユーザーID またはサービス名。 */
+      /** @description 削除操作を実施したユーザーID またはサービス名。削除されていない場合はnull */
       deletedBy: string | null
-      /** @description 削除理由や補足メモ。カスタマーサポート対応に利用する。 */
+      /** @description 削除理由や補足メモ。カスタマーサポート対応に利用する。理由が不要または削除されていない場合はnull */
       deletionReason: string | null
     }
     /** @description スタッフの勤務スケジュールを更新するためのリクエスト */
     'Models.StaffScheduleUpdateRequest': {
       /** @description 更新後の通常勤務時間帯一覧 */
       regularHours: components['schemas']['Models.BusinessHours'][]
-      /** @description 休暇や特例などの例外設定一覧。変更がない場合はnull */
+      /** @description 休暇や特例などの例外設定一覧。例外がない場合はnull */
       exceptions: components['schemas']['Models.ScheduleException'][] | null
       /**
        * Format: date-time
@@ -9285,7 +9490,7 @@ export interface components {
       effectiveFrom: string
       /**
        * Format: date-time
-       * @description 適用終了日時。未定の場合はnull
+       * @description 適用終了日時。無期限の場合はnull
        */
       effectiveTo: string | null
     }
@@ -9297,12 +9502,12 @@ export interface components {
       name: string
       /**
        * Format: float
-       * @description 平均評価スコア。未評価の場合はnull。
+       * @description 平均評価スコア。未評価または評価データがない場合はnull
        */
       rating: number | null
       /**
        * Format: int32
-       * @description 担当した予約件数。統計未計算時はnull。
+       * @description 担当した予約件数。統計未計算の場合はnull
        */
       bookingCount: number | null
     }
@@ -9354,13 +9559,13 @@ export interface components {
        */
       occurredAt: string
       /** @description 関連する外部参照 ID */
-      referenceId?: string
+      referenceId: string | null
       /** @description 備考メモ */
-      notes?: string
+      notes: string | null
       /** @description 追加のメタデータ */
-      metadata?: {
+      metadata: {
         [key: string]: unknown
-      }
+      } | null
       /** @description 対象在庫アイテム ID */
       inventoryId: components['schemas']['Models.InventoryId']
       /**
@@ -9369,9 +9574,11 @@ export interface components {
        */
       stockAfter: number
       /** @description 紐づく発注 ID */
-      orderId?: components['schemas']['Models.OrderId']
+      orderId: (string & components['schemas']['Models.OrderId']) | null
       /** @description 紐づく施術記録 ID */
-      treatmentRecordId?: components['schemas']['Models.TreatmentRecordId']
+      treatmentRecordId:
+        | (string & components['schemas']['Models.TreatmentRecordId'])
+        | null
       /**
        * Format: date-time
        * @description 移動が確定した日時
@@ -9382,14 +9589,14 @@ export interface components {
        * @description レコード作成日時。
        */
       createdAt: string
-      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
+      /** @description レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull */
       createdBy: string | null
       /**
        * Format: date-time
        * @description レコード最終更新日時。
        */
       updatedAt: string
-      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
+      /** @description レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull */
       updatedBy: string | null
     }
     /** @description 在庫移動処理を登録する入力モデル */
@@ -9418,9 +9625,13 @@ export interface components {
       notes: string | null
     }
     'Models.StylePreference': {
+      /** @description 希望の髪の長さ。特に希望がない場合はnull */
       preferredLength: string | null
+      /** @description 希望のカラー一覧。特に希望がない場合はnull */
       preferredColors: string[] | null
+      /** @description 避けたいスタイル一覧。特にない場合はnull */
       avoidStyles: string[] | null
+      /** @description 参考画像URL一覧。画像がない場合はnull */
       inspirationImages: string[] | null
     }
     /**
@@ -9516,9 +9727,9 @@ export interface components {
       | 'guest'
     /** @description Time preference model */
     'Models.TimePreference': {
-      /** @description Day of week */
+      /** @description 曜日 */
       dayOfWeek: components['schemas']['Models.DayOfWeekType']
-      /** @description Preferred time slots */
+      /** @description 希望時間帯 */
       timeSlots: components['schemas']['Models.TimeSlot'][]
     }
     /** @description 営業時間や休憩時間を表現する単一の時間帯スロット。 */
@@ -9554,15 +9765,15 @@ export interface components {
        * @description 施術終了日時
        */
       endTime: string
-      /** @description 施術の詳細メモ */
+      /** @description 施術の詳細メモ - 特記事項がない通常施術の場合はnull */
       notes: string | null
-      /** @description 使用した資材・商材の記録 */
+      /** @description 使用した資材・商材の記録 - カットのみなど商材を使用しない施術の場合はnull */
       usedMaterials: components['schemas']['Models.MaterialUsage'][] | null
-      /** @description 施術前後の写真 ID */
+      /** @description 施術前後の写真 ID - 写真撮影を希望しない顧客や撮影が不要な施術の場合はnull */
       photos: components['schemas']['Models.AttachmentId'][] | null
-      /** @description 顧客のフィードバック */
+      /** @description 顧客のフィードバック - 施術直後でフィードバック未収集の場合はnull */
       customerFeedback: string | null
-      /** @description 次回来店への提案内容 */
+      /** @description 次回来店への提案内容 - 特に提案事項がない場合や定期メンテナンスのみの場合はnull */
       nextRecommendations: string | null
       /**
        * Format: float
@@ -9571,12 +9782,12 @@ export interface components {
       totalAmount: number
       /**
        * Format: float
-       * @description 適用した割引額
+       * @description 適用した割引額 - 割引を適用しない定価施術の場合はnull
        */
       discountAmount: number | null
       /**
        * Format: int32
-       * @description 付与したポイント数
+       * @description 付与したポイント数 - ポイント対象外の施術やポイント制度未導入サロンの場合はnull
        */
       pointsEarned: number | null
       /**
@@ -9584,14 +9795,14 @@ export interface components {
        * @description レコード作成日時。
        */
       createdAt: string
-      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
+      /** @description レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull */
       createdBy: string | null
       /**
        * Format: date-time
        * @description レコード最終更新日時。
        */
       updatedAt: string
-      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
+      /** @description レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull */
       updatedBy: string | null
     }
     /** @description 施術記録を新規登録する入力モデル */
@@ -9616,13 +9827,13 @@ export interface components {
        * @description 施術終了日時
        */
       endTime: string
-      /** @description 施術メモ */
+      /** @description 施術メモ - 特記事項がない通常施術の場合はnull */
       notes: string | null
-      /** @description 使用した資材一覧 */
+      /** @description 使用した資材一覧 - カットのみなど商材を使用しない施術の場合はnull */
       usedMaterials: components['schemas']['Models.MaterialUsage'][] | null
-      /** @description 顧客フィードバック */
+      /** @description 顧客フィードバック - 施術直後でフィードバック未収集の場合はnull */
       customerFeedback: string | null
-      /** @description 次回来店への提案内容 */
+      /** @description 次回来店への提案内容 - 特に提案事項がない場合や定期メンテナンスのみの場合はnull */
       nextRecommendations: string | null
       /**
        * Format: float
@@ -9631,12 +9842,12 @@ export interface components {
       totalAmount: number
       /**
        * Format: float
-       * @description 割引額
+       * @description 割引額 - 割引を適用しない定価施術の場合はnull
        */
       discountAmount: number | null
       /**
        * Format: int32
-       * @description 付与ポイント数
+       * @description 付与ポイント数 - ポイント対象外の施術やポイント制度未導入サロンの場合はnull
        */
       pointsEarned: number | null
     }
@@ -9647,15 +9858,15 @@ export interface components {
     'Models.TreatmentRecordId': string
     /** @description 施術記録を更新する入力モデル */
     'Models.TreatmentRecordUpdateRequest': {
-      /** @description 施術メモ */
+      /** @description 施術メモ - 特記事項がない通常施術の場合はnull、null指定で値をリセット可能 */
       notes?: string | null
-      /** @description 使用した資材一覧 */
+      /** @description 使用した資材一覧 - カットのみなど商材を使用しない施術の場合はnull、null指定で値をリセット可能 */
       usedMaterials?: components['schemas']['Models.MaterialUsage'][] | null
-      /** @description 顧客フィードバック */
+      /** @description 顧客フィードバック - 施術直後でフィードバック未収集の場合はnull、null指定で値をリセット可能 */
       customerFeedback?: string | null
-      /** @description 次回来店への提案内容 */
+      /** @description 次回来店への提案内容 - 特に提案事項がない場合や定期メンテナンスのみの場合はnull、null指定で値をリセット可能 */
       nextRecommendations?: string | null
-      /** @description 施術前後写真 ID */
+      /** @description 施術前後写真 ID - 写真撮影を希望しない顧客や撮影が不要な施術の場合はnull、null指定で値をリセット可能 */
       photos?: components['schemas']['Models.AttachmentId'][] | null
     }
     /**
@@ -9794,59 +10005,6 @@ export interface components {
       /** @description エラー内容を伝えるメッセージ。 */
       message: string
     }
-    /** @description 予約情報を部分更新するためのリクエスト。null指定で値をリセット可能。 */
-    'Models.UpdateBookingRequest': {
-      /** @description ステータス詳細の更新。 */
-      status?: components['schemas']['Models.BookingStatusUpdate']
-      /** @description ステータスコードの更新。 */
-      statusCode?: components['schemas']['Models.BookingStatusCodeType']
-      /** @description ウェイティングリスト情報の更新またはリセット。 */
-      waitlistEntry?: components['schemas']['Models.WaitlistEntryUpdate'] | null
-      /** @description デポジット情報の更新またはリセット。 */
-      deposit?: components['schemas']['Models.BookingDepositUpdate'] | null
-      /** @description 支払い方法の更新またはリセット。 */
-      paymentMethod?: components['schemas']['Models.PaymentMethodType'] | null
-      /** @description 支払いステータスの更新またはリセット。 */
-      paymentStatus?:
-        | components['schemas']['Models.PaymentStatusCodeType']
-        | null
-      /** @description 割引額の更新 */
-      discountAmount?: components['schemas']['Models.MoneyUpdate']
-      /** @description 最終請求額の更新。 */
-      finalAmount?: components['schemas']['Models.MoneyUpdate']
-      /** @description 未収金額の更新またはリセット。 */
-      balanceDue?: components['schemas']['Models.MoneyUpdate'] | null
-      /** @description 備考の更新またはリセット。 */
-      notes?: string | null
-      /** @description 任意メタデータの更新。 */
-      metadata?: {
-        [key: string]: unknown
-      }
-    }
-    /** @description Customer update request with optional fields for partial updates. null指定で値をリセット可能 */
-    'Models.UpdateCustomerRequest': {
-      name?: string
-      contactInfo?: components['schemas']['Models.ContactInfo']
-      preferences?: {
-        [key: string]: unknown
-      }
-      notes?: string | null
-      tags?: string[]
-      /** Format: date */
-      birthDate?: string | null
-    }
-    /** @description Customer update request with optional fields for partial updates. null指定で値をリセット可能 */
-    'Models.UpdateCustomerRequestUpdate': {
-      name?: string
-      contactInfo?: components['schemas']['Models.ContactInfoUpdate']
-      preferences?: {
-        [key: string]: unknown
-      }
-      notes?: string | null
-      tags?: string[]
-      /** Format: date */
-      birthDate?: string | null
-    }
     /** @description 予約更新リクエスト - 部分更新に対応した任意項目の変更指示を受け取り、既存予約を調整する。null指定で値をリセット可能 */
     'Models.UpdateReservationRequest': {
       /** @description 更新後の予約ステータス */
@@ -9903,11 +10061,11 @@ export interface components {
     'Models.UpdateServiceRequest': {
       /** @description 更新後のサービス名 */
       name?: string
-      /** @description 更新後の説明文 */
+      /** @description 更新後の説明文。null指定で説明文をクリア（空文字列にリセット） */
       description: string | null
       /**
        * Format: int32
-       * @description 更新後の施術時間
+       * @description 更新後の施術時間。null指定で時間設定をクリア（デフォルト値にリセット）
        */
       duration: number | null
       /**
@@ -9948,11 +10106,11 @@ export interface components {
     'Models.UpdateServiceRequestUpdate': {
       /** @description 更新後のサービス名 */
       name?: string
-      /** @description 更新後の説明文 */
+      /** @description 更新後の説明文。null指定で説明文をクリア（空文字列にリセット） */
       description?: string | null
       /**
        * Format: int32
-       * @description 更新後の施術時間
+       * @description 更新後の施術時間。null指定で時間設定をクリア（デフォルト値にリセット）
        */
       duration?: number | null
       /**
@@ -10033,18 +10191,18 @@ export interface components {
       status: components['schemas']['Models.UserAccountStatusType']
       /** @description メールアドレスが確認済みかどうか。 */
       emailVerified: boolean
-      /** @description メール確認に利用するトークン。内部管理用。 */
+      /** @description メール確認に利用するトークン。メール確認済みまたは未送信の場合はnull。 */
       emailVerificationToken: string | null
       /**
        * Format: date-time
-       * @description メール確認トークンの有効期限。
+       * @description メール確認トークンの有効期限。トークンが発行されていない場合はnull。
        */
       emailVerificationTokenExpiry: string | null
       /** @description 2要素認証の設定状態。 */
       twoFactorStatus: components['schemas']['Models.TwoFactorStatusType']
-      /** @description 暗号化された2要素認証シークレット。 */
+      /** @description 暗号化された2要素認証シークレット。2要素認証が無効の場合はnull。 */
       twoFactorSecret: string | null
-      /** @description 2要素認証の復旧用バックアップコード一覧。 */
+      /** @description 2要素認証の復旧用バックアップコード一覧。2要素認証が無効の場合はnull。 */
       backupCodes: string[] | null
       /**
        * Format: int32
@@ -10054,38 +10212,38 @@ export interface components {
       failedLoginAttempts: number
       /**
        * Format: date-time
-       * @description アカウントをロックした日時。未ロックの場合はnull。
+       * @description アカウントをロックした日時。アカウントがロックされていない場合はnull。
        */
       lockedAt: string | null
-      /** @description パスワードリセットに利用するトークン。内部管理用。 */
+      /** @description パスワードリセットに利用するトークン。リセットが要求されていない場合はnull。 */
       passwordResetToken: string | null
       /**
        * Format: date-time
-       * @description パスワードリセットトークンの有効期限。
+       * @description パスワードリセットトークンの有効期限。トークンが発行されていない場合はnull。
        */
       passwordResetTokenExpiry: string | null
       /**
        * Format: date-time
-       * @description 最後にパスワードを変更した日時。
+       * @description 最後にパスワードを変更した日時。パスワード変更履歴がない場合はnull。
        */
       lastPasswordChangeAt: string | null
-      /** @description 再利用防止のため保持する過去パスワードハッシュ。 */
+      /** @description 再利用防止のため保持する過去パスワードハッシュ。履歴管理をしていない場合はnull。 */
       passwordHistory: string[] | null
-      /** @description 信頼済みIPアドレスのリスト。 */
+      /** @description 信頼済みIPアドレスのリスト。IP制限を設定していない場合はnull。 */
       trustedIpAddresses: string[] | null
-      /** @description ユーザーが顧客の場合の顧客プロファイルID。 */
+      /** @description ユーザーが顧客の場合の顧客プロファイルID。顧客以外の役割の場合はnull。 */
       customerId: (string & components['schemas']['Models.CustomerId']) | null
-      /** @description ユーザーがスタッフの場合のスタッフプロファイルID。 */
+      /** @description ユーザーがスタッフの場合のスタッフプロファイルID。スタッフ以外の役割の場合はnull。 */
       staffId: (string & components['schemas']['Models.StaffId']) | null
-      /** @description 担当サロンやレベル等を含む拡張ロール情報。 */
+      /** @description 担当サロンやレベル等を含む拡張ロール情報。詳細情報が設定されていない場合はnull。 */
       roleDetail: components['schemas']['Models.UserRoleDetail'] | null
-      /** @description 現在の認証状態区分。 */
+      /** @description 現在の認証状態区分。状態が未設定の場合はnull。 */
       authState: components['schemas']['Models.AuthenticationStateType'] | null
-      /** @description メール確認状態区分。 */
+      /** @description メール確認状態区分。状態が未設定の場合はnull。 */
       emailVerificationState:
         | components['schemas']['Models.EmailVerificationStateType']
         | null
-      /** @description パスワードリセット状態区分。 */
+      /** @description パスワードリセット状態区分。リセットが要求されていない場合はnull。 */
       passwordResetState:
         | components['schemas']['Models.PasswordResetStateType']
         | null
@@ -10101,10 +10259,10 @@ export interface components {
       updatedAt: string
       /**
        * Format: date-time
-       * @description 直近のログイン日時。
+       * @description 直近のログイン日時。一度もログインしていない場合はnull。
        */
       lastLoginAt: string | null
-      /** @description 直近ログイン時のIPアドレス。 */
+      /** @description 直近ログイン時のIPアドレス。ログイン履歴がない場合はnull。 */
       lastLoginIp: string | null
     }
     /**
@@ -10170,7 +10328,7 @@ export interface components {
       userId: string
       /** @description 割り当てるロール ID */
       roleId: components['schemas']['Models.RoleId']
-      /** @description サロン単位のロールの場合の対象サロン ID */
+      /** @description サロン単位のロールの場合の対象サロン ID - システム全体ロールの場合はnull */
       salonId: (string & components['schemas']['Models.SalonId']) | null
       /**
        * Format: date-time
@@ -10181,7 +10339,7 @@ export interface components {
       assignedBy: string
       /**
        * Format: date-time
-       * @description ロール割当の有効期限
+       * @description ロール割当の有効期限 - 無期限割当の場合はnull
        */
       expiresAt: string | null
       /** @description 割当が現在有効かどうか */
@@ -10191,9 +10349,9 @@ export interface components {
     'Models.UserRoleDetail': {
       /** @description システム内での基礎的な役割区分。 */
       type: components['schemas']['Models.UserRoleType']
-      /** @description 役割が適用されるサロンID。全社権限の場合はnull。 */
+      /** @description 役割が適用されるサロンID。全社管理者やシステム管理者の場合はnull。 */
       salonId: (string & components['schemas']['Models.SalonId']) | null
-      /** @description スタッフに対して設定される技術レベル。 */
+      /** @description スタッフに対して設定される技術レベル。スタッフ以外の役割の場合はnull。 */
       level: components['schemas']['Models.StaffLevelType'] | null
     }
     /**
@@ -10238,9 +10396,9 @@ export interface components {
       rule: string
       /** @description ユーザーに提示する具体的なエラーメッセージ。 */
       message: string
-      /** @description 検証対象となった実際の値。セキュリティ観点で出力が許容される場合のみ利用する。 */
+      /** @description 検証対象となった実際の値。セキュリティ観点で出力が許容される場合のみ利用する。出力不可の場合はnull */
       value: unknown
-      /** @description 期待される値や制約条件。入力補助やUI表示のガイダンスに使用する。 */
+      /** @description 期待される値や制約条件。入力補助やUI表示のガイダンスに使用する。制約が明示不要な場合はnull */
       constraint: unknown
     }
     /** @description 楽観的ロックを実現するためのバージョン管理モデル。
@@ -10258,21 +10416,45 @@ export interface components {
       lastModified: string
     }
     'Models.VisitHistory': {
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 総来店回数。これまでの来店実績の合計
+       */
       visitCount: number
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 初回来店日。未来店の場合はnull
+       */
       firstVisitDate: string | null
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 最終来店日。新規顧客でまだ来店がない場合はnull
+       */
       lastVisitDate: string | null
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 平均利用金額。利用実績がない場合はnull
+       */
       averageSpendPerVisit: number | null
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 累計利用金額。これまでの総支払額
+       */
       totalSpent: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description キャンセル回数。予約をキャンセルした回数
+       */
       cancelCount: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 無断キャンセル回数。連絡なしで来店しなかった回数
+       */
       noShowCount: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 完了サービス数。正常に完了した施術の総数
+       */
       completedServices: number
     }
     /** @description ウェイティングリストに登録された顧客情報。 */
@@ -10284,7 +10466,7 @@ export interface components {
       position: number
       /**
        * Format: date-time
-       * @description 呼び出し予想時刻。未確定の場合はnull。
+       * @description 呼び出し予想時刻。時刻が未確定の場合はnull。
        */
       estimatedTime: string | null
       /**
@@ -10294,23 +10476,23 @@ export interface components {
       joinedAt: string
       /**
        * Format: date-time
-       * @description 待機権が失効する日時。
+       * @description 待機権が失効する日時。無期限の場合はnull。
        */
       expiresAt: string | null
       /**
        * Format: date-time
-       * @description 呼び出し通知を送信した日時。
+       * @description 呼び出し通知を送信した日時。未通知の場合はnull。
        */
       notifiedAt: string | null
-      /** @description 希望スタッフID。任意指定。 */
+      /** @description 希望スタッフID。指名なしの場合はnull。 */
       preferredStaffId:
         | (string & components['schemas']['Models.StaffId'])
         | null
-      /** @description 希望サービスID。任意指定。 */
+      /** @description 希望サービスID。サービスを指定していない場合はnull。 */
       preferredServiceId:
         | (string & components['schemas']['Models.ServiceId'])
         | null
-      /** @description 追加メモ。 */
+      /** @description 追加メモ。メモがない場合はnull。 */
       notes: string | null
     }
     /** @description ウェイティングリストに登録された顧客情報。 */
@@ -10322,7 +10504,7 @@ export interface components {
       position?: number
       /**
        * Format: date-time
-       * @description 呼び出し予想時刻。未確定の場合はnull。
+       * @description 呼び出し予想時刻。時刻が未確定の場合はnull。
        */
       estimatedTime?: string | null
       /**
@@ -10332,23 +10514,23 @@ export interface components {
       joinedAt?: string
       /**
        * Format: date-time
-       * @description 待機権が失効する日時。
+       * @description 待機権が失効する日時。無期限の場合はnull。
        */
       expiresAt?: string | null
       /**
        * Format: date-time
-       * @description 呼び出し通知を送信した日時。
+       * @description 呼び出し通知を送信した日時。未通知の場合はnull。
        */
       notifiedAt?: string | null
-      /** @description 希望スタッフID。任意指定。 */
+      /** @description 希望スタッフID。指名なしの場合はnull。 */
       preferredStaffId?:
         | (string & components['schemas']['Models.StaffId'])
         | null
-      /** @description 希望サービスID。任意指定。 */
+      /** @description 希望サービスID。サービスを指定していない場合はnull。 */
       preferredServiceId?:
         | (string & components['schemas']['Models.ServiceId'])
         | null
-      /** @description 追加メモ。 */
+      /** @description 追加メモ。メモがない場合はnull。 */
       notes?: string | null
     }
     /**
@@ -10424,6 +10606,18 @@ export interface components {
     'Models.CursorPaginationParams.sortBy': string
     /** @description ソート順序。`asc` は昇順、`desc` は降順を表す。 */
     'Models.CursorPaginationParams.sortOrder': 'asc' | 'desc'
+    /** @description ロイヤルティティアでフィルタ */
+    'Models.CustomerSearchRequest.loyaltyTier': components['schemas']['Models.LoyaltyTierType']
+    /** @description 登録日開始でフィルタ */
+    'Models.CustomerSearchRequest.registeredFrom': string
+    /** @description 登録日終了でフィルタ */
+    'Models.CustomerSearchRequest.registeredTo': string
+    /** @description 顧客名、メール、または電話番号で検索 */
+    'Models.CustomerSearchRequest.search': string
+    /** @description 顧客ステータスでフィルタ */
+    'Models.CustomerSearchRequest.status': components['schemas']['Models.CustomerStatusType']
+    /** @description 顧客タグでフィルタ */
+    'Models.CustomerSearchRequest.tags': string[]
     /** @description 検索対象期間の終了日時。 */
     'Models.DateRangeFilter.endDate': string
     /** @description 検索対象期間の開始日時。 */
@@ -10450,48 +10644,36 @@ export interface components {
     'Models.SalesReportQuery.includeRefunds': boolean
     /** @description 集計対象のサロン ID */
     'Models.SalesReportQuery.salonId': components['schemas']['Models.SalonId']
-    /** @description Filter by loyalty tier */
-    'Models.SearchCustomerRequest.loyaltyTier': components['schemas']['Models.LoyaltyTierType']
-    /** @description Filter by registration date from */
-    'Models.SearchCustomerRequest.registeredFrom': string
-    /** @description Filter by registration date to */
-    'Models.SearchCustomerRequest.registeredTo': string
-    /** @description Search in customer name, email, or phone */
-    'Models.SearchCustomerRequest.search': string
-    /** @description Filter by customer status */
-    'Models.SearchCustomerRequest.status': components['schemas']['Models.CustomerStatusType']
-    /** @description Filter by customer tags */
-    'Models.SearchCustomerRequest.tags': string[]
+    /** @description サービスカテゴリ（カット・カラー等）による絞り込み */
+    'Models.SalonSearchRequest.categories': components['schemas']['Models.ServiceCategoryType'][]
+    /** @description 市区町村名による絞り込み */
+    'Models.SalonSearchRequest.city': string
+    /** @description 設備やこだわり条件などの特徴タグによる絞り込み */
+    'Models.SalonSearchRequest.features': string[]
+    /** @description 営業中サロンのみを対象にするかどうか */
+    'Models.SalonSearchRequest.isActive': boolean
+    /** @description 検索キーワード。qパラメータのエイリアス */
+    'Models.SalonSearchRequest.keyword': string
+    /** @description 距離計算に使用する基準緯度 */
+    'Models.SalonSearchRequest.lat': number
+    /** @description 距離計算に使用する基準経度 */
+    'Models.SalonSearchRequest.lon': number
+    /** @description 検索基点からの最大距離（km） */
+    'Models.SalonSearchRequest.maxDistance': number
+    /** @description 最低評価値による絞り込み */
+    'Models.SalonSearchRequest.minRating': number
+    /** @description 特定日時に営業しているサロンを探すための基準日時 */
+    'Models.SalonSearchRequest.openAt': string
+    /** @description 現在営業中かどうかで絞り込むフラグ */
+    'Models.SalonSearchRequest.openNow': boolean
+    /** @description 都道府県名による絞り込み */
+    'Models.SalonSearchRequest.prefecture': string
     /** @description フリーワード検索用キーワード。 */
     'Models.SearchParams.q': string
     /** @description 並び替え対象カラム名。 */
     'Models.SearchParams.sortBy': string
     /** @description 昇順ascまたは降順descの指定。 */
     'Models.SearchParams.sortOrder': 'asc' | 'desc'
-    /** @description サービスカテゴリ（カット・カラー等）による絞り込み */
-    'Models.SearchSalonRequest.categories': components['schemas']['Models.ServiceCategoryType'][]
-    /** @description 市区町村名による絞り込み */
-    'Models.SearchSalonRequest.city': string
-    /** @description 設備やこだわり条件などの特徴タグによる絞り込み */
-    'Models.SearchSalonRequest.features': string[]
-    /** @description 営業中サロンのみを対象にするかどうか */
-    'Models.SearchSalonRequest.isActive': boolean
-    /** @description 検索キーワード。qパラメータのエイリアス */
-    'Models.SearchSalonRequest.keyword': string
-    /** @description 距離計算に使用する基準緯度 */
-    'Models.SearchSalonRequest.lat': number
-    /** @description 距離計算に使用する基準経度 */
-    'Models.SearchSalonRequest.lon': number
-    /** @description 検索基点からの最大距離（km） */
-    'Models.SearchSalonRequest.maxDistance': number
-    /** @description 最低評価値による絞り込み */
-    'Models.SearchSalonRequest.minRating': number
-    /** @description 特定日時に営業しているサロンを探すための基準日時 */
-    'Models.SearchSalonRequest.openAt': string
-    /** @description 現在営業中かどうかで絞り込むフラグ */
-    'Models.SearchSalonRequest.openNow': boolean
-    /** @description 都道府県名による絞り込み */
-    'Models.SearchSalonRequest.prefecture': string
   }
   requestBodies: never
   headers: never
@@ -12245,7 +12427,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['Models.UpdateBookingRequest']
+        'application/json': components['schemas']['Models.BookingUpdateRequest']
       }
     }
     responses: {
@@ -12497,18 +12679,18 @@ export interface operations {
   CustomerCrud_list: {
     parameters: {
       query?: {
-        /** @description Search in customer name, email, or phone */
-        search?: components['parameters']['Models.SearchCustomerRequest.search']
-        /** @description Filter by customer tags */
-        tags?: components['parameters']['Models.SearchCustomerRequest.tags']
-        /** @description Filter by registration date from */
-        registeredFrom?: components['parameters']['Models.SearchCustomerRequest.registeredFrom']
-        /** @description Filter by registration date to */
-        registeredTo?: components['parameters']['Models.SearchCustomerRequest.registeredTo']
-        /** @description Filter by customer status */
-        status?: components['parameters']['Models.SearchCustomerRequest.status']
-        /** @description Filter by loyalty tier */
-        loyaltyTier?: components['parameters']['Models.SearchCustomerRequest.loyaltyTier']
+        /** @description 顧客名、メール、または電話番号で検索 */
+        search?: components['parameters']['Models.CustomerSearchRequest.search']
+        /** @description 顧客タグでフィルタ */
+        tags?: components['parameters']['Models.CustomerSearchRequest.tags']
+        /** @description 登録日開始でフィルタ */
+        registeredFrom?: components['parameters']['Models.CustomerSearchRequest.registeredFrom']
+        /** @description 登録日終了でフィルタ */
+        registeredTo?: components['parameters']['Models.CustomerSearchRequest.registeredTo']
+        /** @description 顧客ステータスでフィルタ */
+        status?: components['parameters']['Models.CustomerSearchRequest.status']
+        /** @description ロイヤルティティアでフィルタ */
+        loyaltyTier?: components['parameters']['Models.CustomerSearchRequest.loyaltyTier']
         /** @description 全文検索キーワード。名称や説明文を横断的に検索する。 */
         q?: components['parameters']['Models.AdvancedSearchParams.q']
         /** @description フィルター式。例: `status:active AND category:premium`。属性条件を組み合わせた絞り込みに使用。 */
@@ -12547,8 +12729,8 @@ export interface operations {
           'X-RateLimit-Remaining': number
           /** @description リミットがリセットされる時刻 (UNIX 時間)。 */
           'X-RateLimit-Reset': number
-          /** @description レート制限に達した際に再試行可能となるまでの秒数。 */
-          'Retry-After'?: number
+          /** @description レート制限に達した際に再試行可能となるまでの秒数。制限に達していない場合はnull */
+          'Retry-After': number | null
           [name: string]: unknown
         }
         content: {
@@ -12589,8 +12771,8 @@ export interface operations {
           'X-RateLimit-Remaining': number
           /** @description リミットがリセットされる時刻 (UNIX 時間)。 */
           'X-RateLimit-Reset': number
-          /** @description レート制限に達した際に再試行可能となるまでの秒数。 */
-          'Retry-After'?: number
+          /** @description レート制限に達した際に再試行可能となるまでの秒数。制限に達していない場合はnull */
+          'Retry-After': number | null
           [name: string]: unknown
         }
         content: {
@@ -12611,7 +12793,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['Models.CreateCustomerRequest']
+        'application/json': components['schemas']['Models.CustomerCreateRequest']
       }
     }
     responses: {
@@ -12625,9 +12807,9 @@ export interface operations {
           'application/json': {
             /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.Customer']
-            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。メタ情報が不要な場合はnull */
             meta: components['schemas']['Models.ResponseMeta'] | null
-            /** @description 関連リソースや次アクションへのリンク情報。 */
+            /** @description 関連リソースや次アクションへのリンク情報。リンクがない場合はnull */
             links: {
               [key: string]: string
             } | null
@@ -12696,9 +12878,9 @@ export interface operations {
           'application/json': {
             /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.Customer'][]
-            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。メタ情報が不要な場合はnull */
             meta: components['schemas']['Models.ResponseMeta'] | null
-            /** @description 関連リソースや次アクションへのリンク情報。 */
+            /** @description 関連リソースや次アクションへのリンク情報。リンクがない場合はnull */
             links: {
               [key: string]: string
             } | null
@@ -12739,14 +12921,22 @@ export interface operations {
         'application/json': {
           /** @description 処理対象となるアイテムの配列。1件以上100件以下に制限する。 */
           items: {
+            /** @description 顧客氏名。フルネームまたは通称名 */
             name?: string
+            /** @description 連絡先情報。メール、電話番号等の連絡手段 */
             contactInfo?: components['schemas']['Models.ContactInfo']
+            /** @description 顧客の好みや要望。カスタム設定情報 */
             preferences?: {
               [key: string]: unknown
             }
+            /** @description 内部メモ。スタッフ用の顧客に関する備考。null指定でリセット可能 */
             notes?: string | null
+            /** @description 分類用タグ。顧客をグループ化するためのラベル */
             tags?: string[]
-            /** Format: date */
+            /**
+             * Format: date
+             * @description 生年月日。年齢計算や誕生日特典に使用。null指定でリセット可能
+             */
             birthDate?: string | null
             id: components['schemas']['Models.CustomerId']
           }[]
@@ -12754,12 +12944,12 @@ export interface operations {
            * @description 途中でエラーが発生しても処理を継続するかどうか。既定は false。
            * @default false
            */
-          continueOnError?: boolean
+          continueOnError: boolean
           /**
            * @description トランザクション内で一括処理を行うかどうか。既定は true。
            * @default true
            */
-          transactional?: boolean
+          transactional: boolean
         }
       }
     }
@@ -12830,17 +13020,17 @@ export interface operations {
       content: {
         'application/json': {
           /** @description 処理対象となるアイテムの配列。1件以上100件以下に制限する。 */
-          items: components['schemas']['Models.CreateCustomerRequest'][]
+          items: components['schemas']['Models.CustomerCreateRequest'][]
           /**
            * @description 途中でエラーが発生しても処理を継続するかどうか。既定は false。
            * @default false
            */
-          continueOnError?: boolean
+          continueOnError: boolean
           /**
            * @description トランザクション内で一括処理を行うかどうか。既定は true。
            * @default true
            */
-          transactional?: boolean
+          transactional: boolean
         }
       }
     }
@@ -12982,22 +13172,22 @@ export interface operations {
     requestBody: {
       content: {
         'application/json': {
-          /** @description Search in customer name, email, or phone */
+          /** @description 顧客名、メール、または電話番号で検索 */
           search?: string
-          /** @description Filter by customer tags */
+          /** @description 顧客タグでフィルタ */
           tags?: string[]
           /**
            * Format: date-time
-           * @description Filter by registration date from
+           * @description 登録日開始でフィルタ
            */
           registeredFrom?: string
           /**
            * Format: date-time
-           * @description Filter by registration date to
+           * @description 登録日終了でフィルタ
            */
           registeredTo?: string
           /**
-           * @description Filter by customer status
+           * @description 顧客ステータスでフィルタ
            * @enum {string}
            */
           status?:
@@ -13007,7 +13197,7 @@ export interface operations {
             | 'deleted'
             | 'blacklisted'
           /**
-           * @description Filter by loyalty tier
+           * @description ロイヤルティティアでフィルタ
            * @enum {string}
            */
           loyaltyTier?: 'bronze' | 'silver' | 'gold' | 'platinum'
@@ -13119,9 +13309,9 @@ export interface operations {
           'application/json': {
             /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.Customer']
-            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。メタ情報が不要な場合はnull */
             meta: components['schemas']['Models.ResponseMeta'] | null
-            /** @description 関連リソースや次アクションへのリンク情報。 */
+            /** @description 関連リソースや次アクションへのリンク情報。リンクがない場合はnull */
             links: {
               [key: string]: string
             } | null
@@ -13169,18 +13359,18 @@ export interface operations {
   CustomerCrud_search: {
     parameters: {
       query?: {
-        /** @description Search in customer name, email, or phone */
-        search?: components['parameters']['Models.SearchCustomerRequest.search']
-        /** @description Filter by customer tags */
-        tags?: components['parameters']['Models.SearchCustomerRequest.tags']
-        /** @description Filter by registration date from */
-        registeredFrom?: components['parameters']['Models.SearchCustomerRequest.registeredFrom']
-        /** @description Filter by registration date to */
-        registeredTo?: components['parameters']['Models.SearchCustomerRequest.registeredTo']
-        /** @description Filter by customer status */
-        status?: components['parameters']['Models.SearchCustomerRequest.status']
-        /** @description Filter by loyalty tier */
-        loyaltyTier?: components['parameters']['Models.SearchCustomerRequest.loyaltyTier']
+        /** @description 顧客名、メール、または電話番号で検索 */
+        search?: components['parameters']['Models.CustomerSearchRequest.search']
+        /** @description 顧客タグでフィルタ */
+        tags?: components['parameters']['Models.CustomerSearchRequest.tags']
+        /** @description 登録日開始でフィルタ */
+        registeredFrom?: components['parameters']['Models.CustomerSearchRequest.registeredFrom']
+        /** @description 登録日終了でフィルタ */
+        registeredTo?: components['parameters']['Models.CustomerSearchRequest.registeredTo']
+        /** @description 顧客ステータスでフィルタ */
+        status?: components['parameters']['Models.CustomerSearchRequest.status']
+        /** @description ロイヤルティティアでフィルタ */
+        loyaltyTier?: components['parameters']['Models.CustomerSearchRequest.loyaltyTier']
         /** @description 全文検索キーワード。名称や説明文を横断的に検索する。 */
         q?: components['parameters']['Models.AdvancedSearchParams.q']
         /** @description フィルター式。例: `status:active AND category:premium`。属性条件を組み合わせた絞り込みに使用。 */
@@ -13222,7 +13412,7 @@ export interface operations {
             /** @description 検索条件や件数などのメタ情報。ページングやログ解析に活用する。 */
             meta: components['schemas']['Models.SearchMeta']
             /** @description ファセット集計結果。各フィールドごとの件数分布を保持する。 */
-            facets?: {
+            facets: {
               [key: string]: components['schemas']['Models.Facet'][]
             }
           }
@@ -13275,9 +13465,9 @@ export interface operations {
           'application/json': {
             /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.Customer']
-            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。メタ情報が不要な場合はnull */
             meta: components['schemas']['Models.ResponseMeta'] | null
-            /** @description 関連リソースや次アクションへのリンク情報。 */
+            /** @description 関連リソースや次アクションへのリンク情報。リンクがない場合はnull */
             links: {
               [key: string]: string
             } | null
@@ -13325,7 +13515,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['Models.UpdateCustomerRequest']
+        'application/json': components['schemas']['Models.CustomerUpdateRequest']
       }
     }
     responses: {
@@ -13339,9 +13529,9 @@ export interface operations {
           'application/json': {
             /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.Customer']
-            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。メタ情報が不要な場合はnull */
             meta: components['schemas']['Models.ResponseMeta'] | null
-            /** @description 関連リソースや次アクションへのリンク情報。 */
+            /** @description 関連リソースや次アクションへのリンク情報。リンクがない場合はnull */
             links: {
               [key: string]: string
             } | null
@@ -13464,7 +13654,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['Models.UpdateCustomerRequestUpdate']
+        'application/json': components['schemas']['Models.CustomerUpdateRequestUpdate']
       }
     }
     responses: {
@@ -13478,9 +13668,9 @@ export interface operations {
           'application/json': {
             /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.Customer']
-            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。メタ情報が不要な場合はnull */
             meta: components['schemas']['Models.ResponseMeta'] | null
-            /** @description 関連リソースや次アクションへのリンク情報。 */
+            /** @description 関連リソースや次アクションへのリンク情報。リンクがない場合はnull */
             links: {
               [key: string]: string
             } | null
@@ -13641,9 +13831,9 @@ export interface operations {
                */
               gracePeriodDays: number
             }
-            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。メタ情報が不要な場合はnull */
             meta: components['schemas']['Models.ResponseMeta'] | null
-            /** @description 関連リソースや次アクションへのリンク情報。 */
+            /** @description 関連リソースや次アクションへのリンク情報。リンクがない場合はnull */
             links: {
               [key: string]: string
             } | null
@@ -13827,9 +14017,9 @@ export interface operations {
               /** @description トランザクションID */
               transactionId: string
             }
-            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。メタ情報が不要な場合はnull */
             meta: components['schemas']['Models.ResponseMeta'] | null
-            /** @description 関連リソースや次アクションへのリンク情報。 */
+            /** @description 関連リソースや次アクションへのリンク情報。リンクがない場合はnull */
             links: {
               [key: string]: string
             } | null
@@ -13891,9 +14081,9 @@ export interface operations {
           'application/json': {
             /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.CustomerPreferences']
-            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。メタ情報が不要な場合はnull */
             meta: components['schemas']['Models.ResponseMeta'] | null
-            /** @description 関連リソースや次アクションへのリンク情報。 */
+            /** @description 関連リソースや次アクションへのリンク情報。リンクがない場合はnull */
             links: {
               [key: string]: string
             } | null
@@ -13951,9 +14141,9 @@ export interface operations {
           'application/json': {
             /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.CustomerProfile']
-            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。メタ情報が不要な場合はnull */
             meta: components['schemas']['Models.ResponseMeta'] | null
-            /** @description 関連リソースや次アクションへのリンク情報。 */
+            /** @description 関連リソースや次アクションへのリンク情報。リンクがない場合はnull */
             links: {
               [key: string]: string
             } | null
@@ -14065,9 +14255,9 @@ export interface operations {
           'application/json': {
             /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.Customer']
-            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。メタ情報が不要な場合はnull */
             meta: components['schemas']['Models.ResponseMeta'] | null
-            /** @description 関連リソースや次アクションへのリンク情報。 */
+            /** @description 関連リソースや次アクションへのリンク情報。リンクがない場合はnull */
             links: {
               [key: string]: string
             } | null
@@ -14128,9 +14318,9 @@ export interface operations {
           'application/json': {
             /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.CustomerStatistics']
-            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。メタ情報が不要な場合はnull */
             meta: components['schemas']['Models.ResponseMeta'] | null
-            /** @description 関連リソースや次アクションへのリンク情報。 */
+            /** @description 関連リソースや次アクションへのリンク情報。リンクがない場合はnull */
             links: {
               [key: string]: string
             } | null
@@ -14180,9 +14370,9 @@ export interface operations {
           'application/json': {
             /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.Customer']
-            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。メタ情報が不要な場合はnull */
             meta: components['schemas']['Models.ResponseMeta'] | null
-            /** @description 関連リソースや次アクションへのリンク情報。 */
+            /** @description 関連リソースや次アクションへのリンク情報。リンクがない場合はnull */
             links: {
               [key: string]: string
             } | null
@@ -14802,29 +14992,29 @@ export interface operations {
     parameters: {
       query?: {
         /** @description 検索キーワード。qパラメータのエイリアス */
-        keyword?: components['parameters']['Models.SearchSalonRequest.keyword']
+        keyword?: components['parameters']['Models.SalonSearchRequest.keyword']
         /** @description 市区町村名による絞り込み */
-        city?: components['parameters']['Models.SearchSalonRequest.city']
+        city?: components['parameters']['Models.SalonSearchRequest.city']
         /** @description 都道府県名による絞り込み */
-        prefecture?: components['parameters']['Models.SearchSalonRequest.prefecture']
+        prefecture?: components['parameters']['Models.SalonSearchRequest.prefecture']
         /** @description サービスカテゴリ（カット・カラー等）による絞り込み */
-        categories?: components['parameters']['Models.SearchSalonRequest.categories']
+        categories?: components['parameters']['Models.SalonSearchRequest.categories']
         /** @description 設備やこだわり条件などの特徴タグによる絞り込み */
-        features?: components['parameters']['Models.SearchSalonRequest.features']
+        features?: components['parameters']['Models.SalonSearchRequest.features']
         /** @description 営業中サロンのみを対象にするかどうか */
-        isActive?: components['parameters']['Models.SearchSalonRequest.isActive']
+        isActive?: components['parameters']['Models.SalonSearchRequest.isActive']
         /** @description 最低評価値による絞り込み */
-        minRating?: components['parameters']['Models.SearchSalonRequest.minRating']
+        minRating?: components['parameters']['Models.SalonSearchRequest.minRating']
         /** @description 検索基点からの最大距離（km） */
-        maxDistance?: components['parameters']['Models.SearchSalonRequest.maxDistance']
+        maxDistance?: components['parameters']['Models.SalonSearchRequest.maxDistance']
         /** @description 距離計算に使用する基準緯度 */
-        lat?: components['parameters']['Models.SearchSalonRequest.lat']
+        lat?: components['parameters']['Models.SalonSearchRequest.lat']
         /** @description 距離計算に使用する基準経度 */
-        lon?: components['parameters']['Models.SearchSalonRequest.lon']
+        lon?: components['parameters']['Models.SalonSearchRequest.lon']
         /** @description 現在営業中かどうかで絞り込むフラグ */
-        openNow?: components['parameters']['Models.SearchSalonRequest.openNow']
+        openNow?: components['parameters']['Models.SalonSearchRequest.openNow']
         /** @description 特定日時に営業しているサロンを探すための基準日時 */
-        openAt?: components['parameters']['Models.SearchSalonRequest.openAt']
+        openAt?: components['parameters']['Models.SalonSearchRequest.openAt']
         /** @description 全文検索キーワード。名称や説明文を横断的に検索する。 */
         q?: components['parameters']['Models.AdvancedSearchParams.q']
         /** @description フィルター式。例: `status:active AND category:premium`。属性条件を組み合わせた絞り込みに使用。 */
@@ -14863,8 +15053,8 @@ export interface operations {
           'X-RateLimit-Remaining': number
           /** @description リミットがリセットされる時刻 (UNIX 時間)。 */
           'X-RateLimit-Reset': number
-          /** @description レート制限に達した際に再試行可能となるまでの秒数。 */
-          'Retry-After'?: number
+          /** @description レート制限に達した際に再試行可能となるまでの秒数。制限に達していない場合はnull */
+          'Retry-After': number | null
           [name: string]: unknown
         }
         content: {
@@ -14905,8 +15095,8 @@ export interface operations {
           'X-RateLimit-Remaining': number
           /** @description リミットがリセットされる時刻 (UNIX 時間)。 */
           'X-RateLimit-Reset': number
-          /** @description レート制限に達した際に再試行可能となるまでの秒数。 */
-          'Retry-After'?: number
+          /** @description レート制限に達した際に再試行可能となるまでの秒数。制限に達していない場合はnull */
+          'Retry-After': number | null
           [name: string]: unknown
         }
         content: {
@@ -14941,9 +15131,9 @@ export interface operations {
           'application/json': {
             /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.Salon']
-            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。メタ情報が不要な場合はnull */
             meta: components['schemas']['Models.ResponseMeta'] | null
-            /** @description 関連リソースや次アクションへのリンク情報。 */
+            /** @description 関連リソースや次アクションへのリンク情報。リンクがない場合はnull */
             links: {
               [key: string]: string
             } | null
@@ -15012,9 +15202,9 @@ export interface operations {
           'application/json': {
             /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.Salon'][]
-            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。メタ情報が不要な場合はnull */
             meta: components['schemas']['Models.ResponseMeta'] | null
-            /** @description 関連リソースや次アクションへのリンク情報。 */
+            /** @description 関連リソースや次アクションへのリンク情報。リンクがない場合はnull */
             links: {
               [key: string]: string
             } | null
@@ -15079,12 +15269,12 @@ export interface operations {
            * @description 途中でエラーが発生しても処理を継続するかどうか。既定は false。
            * @default false
            */
-          continueOnError?: boolean
+          continueOnError: boolean
           /**
            * @description トランザクション内で一括処理を行うかどうか。既定は true。
            * @default true
            */
-          transactional?: boolean
+          transactional: boolean
         }
       }
     }
@@ -15160,12 +15350,12 @@ export interface operations {
            * @description 途中でエラーが発生しても処理を継続するかどうか。既定は false。
            * @default false
            */
-          continueOnError?: boolean
+          continueOnError: boolean
           /**
            * @description トランザクション内で一括処理を行うかどうか。既定は true。
            * @default true
            */
-          transactional?: boolean
+          transactional: boolean
         }
       }
     }
@@ -15532,29 +15722,29 @@ export interface operations {
     parameters: {
       query?: {
         /** @description 検索キーワード。qパラメータのエイリアス */
-        keyword?: components['parameters']['Models.SearchSalonRequest.keyword']
+        keyword?: components['parameters']['Models.SalonSearchRequest.keyword']
         /** @description 市区町村名による絞り込み */
-        city?: components['parameters']['Models.SearchSalonRequest.city']
+        city?: components['parameters']['Models.SalonSearchRequest.city']
         /** @description 都道府県名による絞り込み */
-        prefecture?: components['parameters']['Models.SearchSalonRequest.prefecture']
+        prefecture?: components['parameters']['Models.SalonSearchRequest.prefecture']
         /** @description サービスカテゴリ（カット・カラー等）による絞り込み */
-        categories?: components['parameters']['Models.SearchSalonRequest.categories']
+        categories?: components['parameters']['Models.SalonSearchRequest.categories']
         /** @description 設備やこだわり条件などの特徴タグによる絞り込み */
-        features?: components['parameters']['Models.SearchSalonRequest.features']
+        features?: components['parameters']['Models.SalonSearchRequest.features']
         /** @description 営業中サロンのみを対象にするかどうか */
-        isActive?: components['parameters']['Models.SearchSalonRequest.isActive']
+        isActive?: components['parameters']['Models.SalonSearchRequest.isActive']
         /** @description 最低評価値による絞り込み */
-        minRating?: components['parameters']['Models.SearchSalonRequest.minRating']
+        minRating?: components['parameters']['Models.SalonSearchRequest.minRating']
         /** @description 検索基点からの最大距離（km） */
-        maxDistance?: components['parameters']['Models.SearchSalonRequest.maxDistance']
+        maxDistance?: components['parameters']['Models.SalonSearchRequest.maxDistance']
         /** @description 距離計算に使用する基準緯度 */
-        lat?: components['parameters']['Models.SearchSalonRequest.lat']
+        lat?: components['parameters']['Models.SalonSearchRequest.lat']
         /** @description 距離計算に使用する基準経度 */
-        lon?: components['parameters']['Models.SearchSalonRequest.lon']
+        lon?: components['parameters']['Models.SalonSearchRequest.lon']
         /** @description 現在営業中かどうかで絞り込むフラグ */
-        openNow?: components['parameters']['Models.SearchSalonRequest.openNow']
+        openNow?: components['parameters']['Models.SalonSearchRequest.openNow']
         /** @description 特定日時に営業しているサロンを探すための基準日時 */
-        openAt?: components['parameters']['Models.SearchSalonRequest.openAt']
+        openAt?: components['parameters']['Models.SalonSearchRequest.openAt']
         /** @description 全文検索キーワード。名称や説明文を横断的に検索する。 */
         q?: components['parameters']['Models.AdvancedSearchParams.q']
         /** @description フィルター式。例: `status:active AND category:premium`。属性条件を組み合わせた絞り込みに使用。 */
@@ -15596,7 +15786,7 @@ export interface operations {
             /** @description 検索条件や件数などのメタ情報。ページングやログ解析に活用する。 */
             meta: components['schemas']['Models.SearchMeta']
             /** @description ファセット集計結果。各フィールドごとの件数分布を保持する。 */
-            facets?: {
+            facets: {
               [key: string]: components['schemas']['Models.Facet'][]
             }
           }
@@ -15649,9 +15839,9 @@ export interface operations {
           'application/json': {
             /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.Salon']
-            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。メタ情報が不要な場合はnull */
             meta: components['schemas']['Models.ResponseMeta'] | null
-            /** @description 関連リソースや次アクションへのリンク情報。 */
+            /** @description 関連リソースや次アクションへのリンク情報。リンクがない場合はnull */
             links: {
               [key: string]: string
             } | null
@@ -15713,9 +15903,9 @@ export interface operations {
           'application/json': {
             /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.Salon']
-            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。メタ情報が不要な場合はnull */
             meta: components['schemas']['Models.ResponseMeta'] | null
-            /** @description 関連リソースや次アクションへのリンク情報。 */
+            /** @description 関連リソースや次アクションへのリンク情報。リンクがない場合はnull */
             links: {
               [key: string]: string
             } | null
@@ -15852,9 +16042,9 @@ export interface operations {
           'application/json': {
             /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.Salon']
-            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。メタ情報が不要な場合はnull */
             meta: components['schemas']['Models.ResponseMeta'] | null
-            /** @description 関連リソースや次アクションへのリンク情報。 */
+            /** @description 関連リソースや次アクションへのリンク情報。リンクがない場合はnull */
             links: {
               [key: string]: string
             } | null
@@ -15934,9 +16124,9 @@ export interface operations {
           'application/json': {
             /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.SalonAvailabilityResponse']
-            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。メタ情報が不要な場合はnull */
             meta: components['schemas']['Models.ResponseMeta'] | null
-            /** @description 関連リソースや次アクションへのリンク情報。 */
+            /** @description 関連リソースや次アクションへのリンク情報。リンクがない場合はnull */
             links: {
               [key: string]: string
             } | null
@@ -16084,9 +16274,9 @@ export interface operations {
           'application/json': {
             /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.Salon']
-            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。メタ情報が不要な場合はnull */
             meta: components['schemas']['Models.ResponseMeta'] | null
-            /** @description 関連リソースや次アクションへのリンク情報。 */
+            /** @description 関連リソースや次アクションへのリンク情報。リンクがない場合はnull */
             links: {
               [key: string]: string
             } | null
@@ -16149,9 +16339,9 @@ export interface operations {
           'application/json': {
             /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.StaffScheduleManagement']
-            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。メタ情報が不要な場合はnull */
             meta: components['schemas']['Models.ResponseMeta'] | null
-            /** @description 関連リソースや次アクションへのリンク情報。 */
+            /** @description 関連リソースや次アクションへのリンク情報。リンクがない場合はnull */
             links: {
               [key: string]: string
             } | null
@@ -16221,9 +16411,9 @@ export interface operations {
           'application/json': {
             /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.SalonStatistics']
-            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。メタ情報が不要な場合はnull */
             meta: components['schemas']['Models.ResponseMeta'] | null
-            /** @description 関連リソースや次アクションへのリンク情報。 */
+            /** @description 関連リソースや次アクションへのリンク情報。リンクがない場合はnull */
             links: {
               [key: string]: string
             } | null
@@ -16276,9 +16466,9 @@ export interface operations {
           'application/json': {
             /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.SalonSubscriptionResponse']
-            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。メタ情報が不要な場合はnull */
             meta: components['schemas']['Models.ResponseMeta'] | null
-            /** @description 関連リソースや次アクションへのリンク情報。 */
+            /** @description 関連リソースや次アクションへのリンク情報。リンクがない場合はnull */
             links: {
               [key: string]: string
             } | null
@@ -16346,9 +16536,9 @@ export interface operations {
           'application/json': {
             /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.Salon']
-            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。メタ情報が不要な場合はnull */
             meta: components['schemas']['Models.ResponseMeta'] | null
-            /** @description 関連リソースや次アクションへのリンク情報。 */
+            /** @description 関連リソースや次アクションへのリンク情報。リンクがない場合はnull */
             links: {
               [key: string]: string
             } | null

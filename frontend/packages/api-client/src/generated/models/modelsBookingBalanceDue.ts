@@ -8,7 +8,7 @@
 import type { ModelsMoney } from './modelsMoney'
 
 /**
- * 未収金額。完済の場合はnull。
+ * 未収金額。支払いが完了している場合はnull。
  * @nullable
  */
 export type ModelsBookingBalanceDue = ModelsMoney | null

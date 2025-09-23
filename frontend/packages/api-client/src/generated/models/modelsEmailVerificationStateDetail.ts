@@ -14,22 +14,22 @@ export interface ModelsEmailVerificationStateDetail {
   /** 現在の確認状態区分。 */
   type: ModelsEmailVerificationStateType
   /**
-   * 確認完了日時。未確認の場合はnull。
+   * 確認完了日時。メールアドレスが未確認の場合はnull。
    * @nullable
    */
   verifiedAt: string | null
   /**
-   * 確認メールに含めるトークン。再送未実施の場合はnull。
+   * 確認メールに含めるトークン。確認メールが未送信の場合はnull。
    * @nullable
    */
   token: string | null
   /**
-   * トークンの有効期限。
+   * トークンの有効期限。トークンが発行されていない場合はnull。
    * @nullable
    */
   expiresAt: string | null
   /**
-   * 確認メールを送信した日時。
+   * 確認メールを送信した日時。メール未送信の場合はnull。
    * @nullable
    */
   sentAt: string | null

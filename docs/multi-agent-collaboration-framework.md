@@ -1,350 +1,275 @@
 # Agent-to-Agent Design Validation Protocol
 
+設計フェーズで型・定義の不整合を防ぐエージェント間自律検証プロトコル
+
 ## 概要
 
-設計フェーズにおいて、実装前に型・定義の不整合を防ぐためのエージェント間自律検証プロトコルです。各エージェントは設計成果物（Design Artifact）を生成し、[Design Review Architect](../.claude/agents/design-review-architect.md)が中心となって型同期を検証します。
+**目的**: 複数のAIエージェントが協調して、DB→API→フロントエンドの型定義の一貫性を保証する自律的な設計検証システム。各エージェントは専門領域を持ち、設計成果物（アーティファクト）を生成・検証・修正する。
 
-本プロトコルは[CLAUDE.md](../CLAUDE.md)で定義された開発原則および[アーキテクチャ概要](./architecture-overview.md)に準拠しています。
+**核心原則**:
+- **DB駆動設計**: データベーススキーマが全ての型の真実の源（Source of Truth）
+- **自律検証**: エージェント間で設計を相互検証し、不整合を自動修正
+- **段階的詳細化**: ビジネス要件→DB設計→API設計→フロントエンド実装の順で詳細化
 
-## 🏗️ アーキテクチャ前提
+## 🏗️ Core Architecture
 
-### API-DB整合性の必須要件
+### Type Flow (DB-Driven)
 
-[TypeSpec API Type Rules](./typespec-api-type-rules.md)で定義された以下の制約を全エージェントが遵守：
+**型の流れ（DB駆動）**: データベーススキーマから型が自動推論され、マッパーを通じてAPI型に変換、さらにコード生成でフロントエンド型になる単方向フロー。逆方向の型定義は禁止。
 
-1. **プロパティ名の完全一致**: API定義のプロパティ名はDB定義のカラム名と完全一致
-2. **Nullable性の統一**: DBのNULL制約とAPIのnullable型が完全一致
-3. **Optional制約**: Optionalフィールドは検索・更新APIのみ
-4. **ブランド型の使用**: 全エンティティIDにブランド型を使用
-5. **API-DB不整合の禁止**: API定義にあってDB定義にないプロパティは許可しない
-
-### DB駆動型定義の原則
-
-[DB-Driven Domain Model](./db-driven-domain-model.md)アーキテクチャに基づく型定義フロー：
-
-```
-Database Schema (Single Source of Truth)
-    ↓ [Type Inference]
-Domain Model
-    ↓ [Mapper]
-API Types (TypeSpec/OpenAPI)
-    ↓ [Code Generation]
-Frontend Types
+```mermaid
+graph TD
+    DB[Database Schema<br/>Source of Truth] -->|Type Inference| DM[Domain Model]
+    DM -->|Mapper| API[API Types<br/>TypeSpec/OpenAPI]
+    API -->|Code Gen| FE[Frontend Types]
 ```
 
-- **DBスキーマが型定義の源**: Drizzle ORMの型推論（`$inferSelect`, `$inferInsert`）から全てが始まる（[Backend Architecture Guidelines](./backend-architecture-guidelines.md)参照）
-- **TypeSpecは契約定義**: APIの入出力契約を定義し、DBスキーマとの整合性が必須（[TypeSpec API Type Rules](./typespec-api-type-rules.md)参照）
-- **型変換は明示的**: 各レイヤー間の型変換はマッパーで明示的に定義（[API-DB Type Constraints Mapping](./api-db-type-constraints-mapping.md)参照）
+**重要性**: この単方向フローにより、型の不整合を構造的に防止。DBスキーマ変更時は必ず下流の全型が更新される。
 
-## 📦 Design Artifact仕様
+### API-DB Consistency Rules
 
-各エージェントが生成する設計成果物の形式を定義します。これらは相互検証のための共通インターフェースです。
+**API-DB一貫性ルール**: データベースとAPIの間で厳密な型・命名・制約の一致を保証する5つの鉄則。
+
+1. **Property Names（プロパティ名）**: API = DB (exact match)
+   - **日本語説明**: APIプロパティ名は必ずDB列名と完全一致（snake_case→camelCase変換のみ）
+   - **理由**: UI都合での名前変更を防ぎ、トレーサビリティを保証
+
+2. **Nullable（NULL可能性）**: DB NULL constraint = API nullable
+   - **日本語説明**: DBのNULL制約とAPIのnullable定義は必ず一致
+   - **理由**: 実行時エラーを防ぎ、型安全性を保証
+
+3. **Optional Fields（オプショナルフィールド）**:
+   - Base Model: ❌ Optional, ✅ Nullable only
+   - UpdateRequest: ✅ All Optional（全フィールドオプショナル）
+   - SearchRequest: ✅ Query params Optional（検索パラメータのみ）
+   - CreateRequest: ❌ Optional（オプショナル禁止）
+   - **日本語説明**: モデルタイプごとにオプショナル性を厳密に定義。更新は部分更新可能、作成は全フィールド必須
+
+4. **Branded Types（ブランド型）**: All entity IDs
+   - **日本語説明**: 全エンティティIDにブランド型を適用し、型レベルでID混在を防止
+   - **例**: `CustomerId`と`SalonId`は両方stringでも型レベルで区別
+
+5. **No Orphan Properties（孤立プロパティ禁止）**: API property → DB column must exist
+   - **日本語説明**: APIに存在する全プロパティは必ず対応するDB列を持つ
+   - **理由**: データの永続化を保証し、実装漏れを防止
+
+## 📦 Design Artifacts
+
+**設計成果物（アーティファクト）**: 各エージェントが生成・検証する設計の中間成果物。これらが相互に整合性を持つことで全体の型安全性を保証。
 
 ### Database Schema Artifact
 
-[Database Schema Architect](../.claude/agents/database-schema-architect.md)が生成する成果物：
+**DBスキーマ成果物**: データベース設計の完全な型定義。テーブル構造、列定義、制約、enum値を含む。Drizzle ORMから型推論（$inferSelect/$inferInsert）される。
 
 ```typescript
 interface DatabaseSchemaArtifact {
-  tables: {
-    [tableName: string]: {
-      columns: {
-        [columnName: string]: {
-          type: "uuid" | "text" | "integer" | "timestamp" | "boolean" | "jsonb"
-          nullable: boolean
-          unique?: boolean
-          references?: { table: string; column: string }
-        }
-      }
-      enums?: {
-        [enumName: string]: string[]  // snake_case values
-      }
-    }
-  }
+  tables: Record<string, {
+    columns: Record<string, {
+      type: "uuid" | "text" | "integer" | "timestamp" | "boolean" | "jsonb"
+      nullable: boolean
+      unique?: boolean
+      references?: { table: string; column: string }
+    }>
+    enums?: Record<string, string[]>  // snake_case
+  }>
   inferredTypes: {
-    select: Record<string, TypeDefinition>  // $inferSelect結果
-    insert: Record<string, TypeDefinition>  // $inferInsert結果
+    select: Record<string, TypeDefinition>  // $inferSelect
+    insert: Record<string, TypeDefinition>  // $inferInsert
   }
 }
 ```
 
 ### TypeSpec API Artifact
 
-[TypeSpec API Architect](../.claude/agents/typespec-api-architect.md)が生成する成果物：
+**TypeSpec API成果物**: APIの完全な型定義。モデル、プロパティ、必須/オプショナル、enum値、操作定義を含む。OpenAPI仕様を生成する源。
 
 ```typescript
 interface TypeSpecAPIArtifact {
-  models: {
-    [modelName: string]: {
-      properties: {
-        [propertyName: string]: {
-          type: string
-          required: boolean
-          nullable: boolean
-          enum?: string[]  // camelCase values
-        }
-      }
-    }
-  }
-  operations: {
-    [operationId: string]: {
-      request?: string  // Model name
-      response: string  // Model name
-    }
-  }
+  models: Record<string, {
+    properties: Record<string, {
+      type: string
+      required: boolean
+      nullable: boolean
+      enum?: string[]  // any case
+    }>
+  }>
+  operations: Record<string, {
+    request?: string
+    response: string
+  }>
 }
 ```
 
 ### Frontend Type Artifact
 
-[Senior Frontend Architect](../.claude/agents/senior-frontend-architect.md)が生成する成果物：
+**フロントエンド型成果物**: UIで使用される型定義。APIクライアントの型、インターフェース、APIバインディングを含む。OpenAPIから自動生成。
 
 ```typescript
 interface FrontendTypeArtifact {
-  interfaces: {
-    [interfaceName: string]: {
-      fields: {
-        [fieldName: string]: {
-          type: string
-          optional: boolean
-          nullable: boolean
-        }
-      }
-    }
-  }
-  apiBindings: {
-    [operationId: string]: {
-      request?: string  // Interface name
-      response: string  // Interface name
-    }
-  }
+  interfaces: Record<string, {
+    fields: Record<string, {
+      type: string
+      optional: boolean
+      nullable: boolean
+    }>
+  }>
+  apiBindings: Record<string, {
+    request?: string
+    response: string
+  }>
 }
 ```
 
-### Mapper Definition Artifact
+### Mapper Artifact
 
-[Backend TypeScript Architect](../.claude/agents/backend-typescript-architect.md)が生成する成果物：
+**マッパー成果物**: DB型とAPI型の相互変換ロジック。読み取り（DB→API）と書き込み（API→DB）の双方向マッピング、検証ルール、変換関数を定義。
 
 ```typescript
 interface MapperArtifact {
-  readMappers: {
-    [mapperName: string]: {
-      source: string  // DB type
-      target: string  // API type
-      fieldMappings: Array<{
-        from: string  // snake_case
-        to: string    // camelCase
-        transform?: "direct" | "computed" | "lookup"
-      }>
-    }
-  }
-  writeMappers: {
-    [mapperName: string]: {
-      source: string  // API type
-      target: string  // DB type
-      validations: string[]
-      fieldMappings: Array<{
-        from: string  // camelCase
-        to: string    // snake_case
-        required: boolean
-      }>
-    }
-  }
-}
-```
-
-### Documentation Artifact
-
-[Documentation Specialist](../.claude/agents/documentation-specialist.md)が生成する成果物：
-
-```typescript
-interface DocumentationArtifact {
-  implementationPatterns: {
-    [patternName: string]: {
-      category: "api" | "database" | "business-logic" | "integration" | "testing"
-      description: string
-      applicability: string[]  // どのドメインで適用可能か
-      template: {
-        genericForm: string  // 汎用的なパターン
-        exampleImplementation: string  // 具体的な実装例
-        adaptationPoints: Array<{
-          aspect: string
-          considerations: string[]
-        }>
-      }
-    }
-  }
-  referenceGuides: {
-    [guideName: string]: {
-      targetAudience: "backend" | "frontend" | "fullstack"
-      prerequisites: string[]
-      steps: Array<{
-        title: string
-        description: string
-        codeExample?: string
-        checkpoints: string[]
-      }>
-    }
-  }
-  lessonsLearned: {
-    [domainName: string]: Array<{
-      challenge: string
-      solution: string
-      reusableApproach: boolean
+  readMappers: Record<string, {
+    source: string  // DB type
+    target: string  // API type
+    fieldMappings: Array<{
+      from: string  // snake_case
+      to: string    // camelCase
+      transform?: "direct" | "computed" | "lookup"
     }>
-  }
+  }>
+  writeMappers: Record<string, {
+    source: string  // API type
+    target: string  // DB type
+    validations: string[]
+    fieldMappings: Array<{
+      from: string  // camelCase
+      to: string    // snake_case
+      required: boolean
+    }>
+  }>
 }
 ```
 
-## 🔄 Agent Interaction Protocol
+## 🔄 Agent Interaction Flow
 
-### Phase 1: Initial Design Generation
-```
-[Salon Business Expert](../.claude/agents/salon-business-expert.md)
-    ↓ [Business Requirements]
-[Database Schema Architect](../.claude/agents/database-schema-architect.md) + [TypeSpec API Architect](../.claude/agents/typespec-api-architect.md) (並行)
-    ↓ [Initial Artifacts]
-[Design Review Architect](../.claude/agents/design-review-architect.md)
-    ↓ [Validation Request]
-```
+**エージェント相互作用フロー**: 4つのフェーズで段階的に設計を詳細化・検証。各フェーズで専門エージェントが協調動作。
 
-### Phase 2: Cross-Validation Loop
-```
-[Design Review Architect](../.claude/agents/design-review-architect.md)
-    ↓ [Type Mismatch Detection]
-    ├→ [Database Schema Architect](../.claude/agents/database-schema-architect.md) [Schema Adjustment Request]
-    ├→ [TypeSpec API Architect](../.claude/agents/typespec-api-architect.md) [API Model Adjustment Request]
-    └→ [Backend TypeScript Architect](../.claude/agents/backend-typescript-architect.md) [Mapper Design Request]
-    ↓ [Updated Artifacts]
-[Design Review Architect](../.claude/agents/design-review-architect.md)
-    ↓ [Re-validation]
-```
+**フェーズ説明**:
+- **Phase 1（初期設計）**: ビジネス要件からDB/API設計を開始
+- **Phase 2（検証）**: 設計レビューアーキテクトが全体整合性を検証、エラーを各エージェントにフィードバック
+- **Phase 3（フロントエンド）**: 検証済み設計からフロントエンド型を生成
+- **Phase 4（文書化）**: パターンを抽出し、将来の設計に活用
 
-### Phase 3: Frontend Integration Validation
-```
-[Design Review Architect](../.claude/agents/design-review-architect.md)
-    ↓ [API Contract Confirmation]
-[Senior Frontend Architect](../.claude/agents/senior-frontend-architect.md)
-    ↓ [Frontend Type Generation]
-[Design Review Architect](../.claude/agents/design-review-architect.md)
-    ↓ [End-to-End Validation]
-```
+```mermaid
+flowchart LR
+    subgraph Phase1[Phase 1: Initial Design]
+        BE[Business Expert] --> DSA[DB Schema Architect]
+        BE --> TSA[TypeSpec API Architect]
+    end
 
-[Senior UI Designer](../.claude/agents/senior-ui-designer.md)は、UIコンポーネントの設計においてフロントエンド型定義との整合性を確認します。
+    subgraph Phase2[Phase 2: Validation]
+        DSA --> DRA[Design Review Architect]
+        TSA --> DRA
+        DRA -->|Errors| DSA
+        DRA -->|Errors| TSA
+        DRA -->|Mapper Request| BTA[Backend TS Architect]
+    end
 
-### Phase 4: Implementation Documentation
-```
-[All Implementation Agents] (並行実装)
-    ↓ [Implementation Changes via git commit]
-[Documentation Specialist](../.claude/agents/documentation-specialist.md)
-    ↓ [Change Analysis via git status/diff]
-    ├→ [Pattern Extraction]
-    ├→ [Reference Guide Creation]
-    └→ [Documentation Updates]
-    ↓ [Updated Documentation]
-[Design Review Architect](../.claude/agents/design-review-architect.md)
-    ↓ [Documentation Review & Validation]
-```
+    subgraph Phase3[Phase 3: Frontend]
+        DRA -->|Validated| SFA[Frontend Architect]
+        SFA --> DRA
+    end
 
-[Documentation Specialist](../.claude/agents/documentation-specialist.md)は、実装完了後に以下を実施：
-- 実装変更の分析と パターン抽出
-- リファレンス実装ガイドの作成
-- 他ドメイン実装時に活用可能なテンプレート化
-- 既存ドキュメントとの整合性確認と更新
+    subgraph Phase4[Phase 4: Documentation]
+        DRA -->|Complete| DS[Documentation Specialist]
+        DS -->|Patterns| DRA
+    end
+```
 
 ## 🔍 Validation Rules
 
-### Level 1: Type Compatibility Matrix
-```typescript
-const typeCompatibility = {
-  // DB Type → API Type
-  "uuid": ["string"],
-  "text": ["string"],
-  "integer": ["number", "integer"],
-  "timestamp": ["string", "DateTime"],
-  "boolean": ["boolean"],
-  "jsonb": ["object", "any"]
-}
-```
+**検証ルール**: エージェントが設計を検証する際の具体的な規則と判定基準。
 
-### Level 2: Enum Synchronization Rules
+### Type Compatibility Matrix
 
-[TypeSpec API Type Rules](./typespec-api-type-rules.md)に準拠したEnum同期検証：
+**型互換性マトリックス**: DBの型とAPIで許可される型の対応表。この対応以外は型エラー。
 
-```typescript
-interface EnumValidation {
-  // DB enum (snake_case) must map to API enum (any case)
-  validateEnum(dbEnum: string[], apiEnum: string[]): ValidationResult {
-    const normalized = dbEnum.map(toSnakeCase)
-    const apiNormalized = apiEnum.map(toSnakeCase)
-    return {
-      valid: normalized.every(v => apiNormalized.includes(v)),
-      missing: normalized.filter(v => !apiNormalized.includes(v))
-    }
-  }
-}
-```
+| DB Type | API Types | 日本語説明 |
+|---------|-----------|------------|
+| uuid | string | UUID→文字列変換 |
+| text | string | テキスト→文字列（同一） |
+| integer | number, integer | 整数→数値または整数型 |
+| timestamp | string, DateTime | タイムスタンプ→ISO文字列またはDateTime |
+| boolean | boolean | ブール値（変換不要） |
+| jsonb | object, any | JSON→オブジェクトまたは任意型 |
 
-### Level 3: Field Mapping Rules
-```typescript
-interface FieldMappingValidation {
-  rules: {
-    // snake_case ↔ camelCase conversion is always valid
-    namingConvention: (dbField: string, apiField: string) =>
-      toSnakeCase(apiField) === dbField
+### Enum Validation
 
-    // Required in DB → Required in API (Create operations)
-    requiredConsistency: (dbRequired: boolean, apiRequired: boolean) =>
-      !dbRequired || apiRequired
-
-    // Nullable in DB → Nullable in API (All models)
-    nullableConsistency: (dbNullable: boolean, apiNullable: boolean) =>
-      dbNullable === apiNullable
-
-    // Update models: Optional + Nullable for nullable base fields
-    updateModelConsistency: (baseNullable: boolean, updateOptional: boolean, updateNullable: boolean) =>
-      updateOptional && (baseNullable ? updateNullable : !updateNullable)
-  }
-}
-```
-
-### Level 4: Nullable Field Rules
-
-全モデルタイプにおけるnullable制約の統一ルール：
+**Enum検証**: DB定義のenum値が全てAPIに存在することを保証。ケース変換を考慮した包含関係チェック。
 
 ```typescript
-interface NullableFieldValidation {
-  // 基本モデル: DBのnullable制約と完全一致
-  baseModel: (dbNullable: boolean, apiField: string) =>
-    dbNullable ? `${apiField}: Type | null` : `${apiField}: Type`
-
-  // 作成リクエスト: 全フィールド必須、nullable値許可
-  createRequest: (dbNullable: boolean, apiField: string) =>
-    dbNullable ? `${apiField}: Type | null` : `${apiField}: Type`
-
-  // 更新リクエスト: 全フィールドOptional、基本モデルnullableならnull許可
-  updateRequest: (dbNullable: boolean, apiField: string) =>
-    dbNullable ? `${apiField}?: Type | null` : `${apiField}?: Type`
-
-  // 検索パラメータ: フィルター項目のみOptional（nullableは不要）
-  searchParams: (apiField: string) => `${apiField}?: Type`
-
-  // ラッパーモデル: 基本モデルと同じルール適用
-  wrapperModel: (nullable: boolean, apiField: string) =>
-    nullable ? `${apiField}: Type | null` : `${apiField}: Type`
-}
+// DB enum (snake_case) → API enum (any case)
+// 日本語: DB列挙値（スネークケース）→API列挙値（任意ケース）の検証
+// 全DB値がAPI側に存在することを確認
+const validateEnum = (dbEnum: string[], apiEnum: string[]): boolean =>
+  dbEnum.every(v => apiEnum.map(toSnakeCase).includes(v))
 ```
 
-## 🚨 Validation Error Protocol
+### Field Mapping Rules
 
-### Error Types
+**フィールドマッピングルール**: DB列とAPIフィールドの変換規則。
+
+- **Naming（命名）**: `toSnakeCase(apiField) === dbField`
+  - **日本語**: APIフィールド名をsnake_case変換するとDB列名と一致
+- **Required（必須性）**: DB required → API required (Create)
+  - **日本語**: DB必須列は作成APIでも必須
+- **Nullable（NULL可能）**: DB nullable === API nullable
+  - **日本語**: DBのNULL可能性とAPIのnullable定義は完全一致
+- **Update Model（更新モデル）**: Optional + (Nullable if base nullable)
+  - **日本語**: 更新APIは全フィールドオプショナル、ベースがnullableならnullable維持
+
+### Model-Specific Rules
+
+**モデル別ルール**: APIモデルの種類ごとのオプショナル/nullable設定規則。
+
+| Model Type | Optional Fields | Nullable Fields | 用途 |
+|------------|-----------------|-----------------|
+| Base Model | ❌ None | Match DB | 基本エンティティ定義 |
+| CreateRequest | ❌ None | Match DB | 新規作成（全フィールド必須） |
+| UpdateRequest | ✅ All | Match base model | 部分更新（任意フィールド） |
+| SearchRequest | ✅ Query params only | ❌ None | 検索条件（パラメータのみ） |
+| Response | ❌ None | Match DB | APIレスポンス（完全データ） |
+
+## 🚨 Error Protocol
+
+**エラープロトコル**: 検証エラーの検出、分類、修正、エスカレーションの自動化フロー。
+
+### Error Types & Resolution
+
+**エラータイプと解決フロー**: 検証エラーの状態遷移図。エラー検出→修正試行→解決またはエスカレーション。
+
+```mermaid
+stateDiagram-v2
+    [*] --> Validating
+    Validating --> Validated: All Pass
+    Validating --> ErrorDetected: Errors Found
+    ErrorDetected --> Fixing: Can Fix
+    ErrorDetected --> Escalated: Cannot Fix
+    Fixing --> Validating: Fixed
+    Escalated --> Designing: Resolution
+    Designing --> Validating: Retry
+    Validated --> [*]
+```
+
+### Error Structure
+
+**エラー構造体**: 検証エラーの詳細情報を保持する統一フォーマット。エージェント間でエラー情報を正確に伝達。
+
 ```typescript
 enum ValidationErrorType {
-  TYPE_MISMATCH = "TYPE_MISMATCH",           // 型の不一致
-  ENUM_VALUE_MISSING = "ENUM_VALUE_MISSING", // Enum値の欠落
-  FIELD_MISSING = "FIELD_MISSING",           // フィールドの欠落
-  CONSTRAINT_VIOLATION = "CONSTRAINT_VIOLATION", // 制約違反
-  MAPPER_UNDEFINED = "MAPPER_UNDEFINED"      // マッパー未定義
+  TYPE_MISMATCH,      // 型不一致: DB型とAPI型が互換性なし
+  ENUM_VALUE_MISSING, // Enum値欠落: DB enum値がAPIに存在しない
+  FIELD_MISSING,      // フィールド欠落: 必須フィールドが未定義
+  CONSTRAINT_VIOLATION, // 制約違反: NULL制約やユニーク制約の不整合
+  MAPPER_UNDEFINED    // マッパー未定義: 型変換ロジックが存在しない
 }
 
 interface ValidationError {
@@ -363,317 +288,174 @@ interface ValidationError {
 }
 ```
 
-### Error Resolution Flow
-```
-Design Review Architect [Detects Error]
-    ↓ [ValidationError]
-Source Agent [Receives Error]
-    ↓ [Analyzes Root Cause]
-    ├→ [Can Fix] → Generate Updated Artifact → Re-validation
-    └→ [Cannot Fix] → Escalation Protocol
-```
+### Quick Fix Reference
 
-### Escalation Protocol
-```typescript
-interface EscalationRequest {
-  error: ValidationError
-  attemptedFixes: string[]
-  blockedBy: {
-    reason: "BUSINESS_CONSTRAINT" | "TECHNICAL_LIMITATION" | "CONFLICTING_REQUIREMENTS"
-    details: string
-  }
-  proposedResolution: {
-    option1: { change: string; impact: string }
-    option2: { change: string; impact: string }
-  }
-}
-```
+**クイックフィックス参照表**: よくあるエラーとその修正方法の早見表。
 
-## 🎯 Validation Checkpoint Definitions
+| Error Type | Common Cause | Fix Action | 日本語説明 |
+|------------|--------------|------------|
+| TYPE_MISMATCH | DB/API type mismatch | Align types per matrix | 型マトリックスに従って型を調整 |
+| ENUM_VALUE_MISSING | New DB enum value | Add to API enum | 新規DB enum値をAPIに追加 |
+| FIELD_MISSING | API field without DB column | Add migration or remove field | DB移行追加またはAPIフィールド削除 |
+| CONSTRAINT_VIOLATION | Nullable mismatch | Align nullable constraints | NULL制約を両側で一致させる |
+| MAPPER_UNDEFINED | New entity | Create read/write mappers | 読み書き両方のマッパーを作成 |
 
-### API-DB Property Validation Checklist
+## ✅ Validation Checklist
 
-各エージェントが協業して確認すべき項目：
+**検証チェックリスト**: 設計完了前に必ず確認する6つの必須項目。全てパスで設計承認。
 
-#### 1. プロパティ存在性チェック（Database Schema Architect + TypeSpec API Architect）
-- [ ] APIで定義された全プロパティに対応するDBカラムが存在する
-- [ ] DBカラムが存在しないAPIプロパティを検出し、マイグレーション要否を判定
-- [ ] 新規プロパティ追加時にDB側のALTER TABLE文が生成される
+```mermaid
+graph TD
+    subgraph Essential Checks
+        C1[Property Existence<br/>プロパティ存在確認<br/>API → DB mapping]
+        C2[Property Names<br/>プロパティ名一致<br/>snake_case ↔ camelCase]
+        C3[Nullable Consistency<br/>Nullable一貫性<br/>DB NULL = API nullable]
+        C4[Optional Rules<br/>オプショナルルール<br/>Per model type]
+        C5[Enum Sync<br/>Enum同期<br/>All values present]
+        C6[Mapper Coverage<br/>マッパーカバレッジ<br/>All entities]
+    end
 
-#### 2. プロパティ名一致チェック（Design Review Architect）
-- [ ] snake_case（DB） → camelCase（API）の変換規則が一貫している
-- [ ] UIの入出力集約粒度都合による以外の名前変更がない（例: website → websiteUrl）
-- [ ] Mapperで不要な名前変換を行っていない
-
-#### 3. Nullable性一致チェック（全エージェント）
-- [ ] DBのNULL制約とAPIのnullable型が完全一致
-- [ ] nullを空文字列やデフォルト値に変換していない
-- [ ] Optional + Nullableの組み合わせが適切（更新APIでのリセット機能）
-
-#### 4. Optional制約チェック（TypeSpec API Architect）
-- [ ] 基本モデル: Optionalフィールドなし、DBのnullable制約に応じて `| null`
-- [ ] 作成API: Optionalフィールドなし（全て必須、値はnullable）
-- [ ] 更新API: 全フィールドOptional（部分更新）、基本モデルでnullableなフィールドは `| null` 追加
-- [ ] 検索API: フィルター項目のみOptional
-- [ ] レスポンス: Optionalフィールドなし（全て必須）
-- [ ] ラッパーモデル（ApiResponse等）: 基本モデルと同じnullableルール適用
-
-#### 5. 更新モデル統合チェック（Design Review Architect）
-- [ ] 各ドメインにUpdateRequestモデルが1つだけ存在する
-- [ ] 基本モデルでnullableなフィールドのみ `| null` が付与されている
-- [ ] @docコメントに「null指定で値をリセット可能」が記載されている（該当する場合）
-
-#### 6. Nullable整合性チェック（全エージェント）
-- [ ] 基本モデル: 全フィールドがDBのnullable制約と一致
-- [ ] 作成モデル: 基本モデルのnullable制約を継承
-- [ ] 更新モデル: Optional + 条件付きnullable（基本モデル準拠）
-- [ ] ラッパーモデル: nullable制約が基本モデルルールに従う
-- [ ] Optionalのみの不正なフィールドが存在しない
-
-### Checkpoint 1: DB-API Type Alignment
-```typescript
-interface DBAPIAlignmentCheck {
-  validate(): CheckResult {
-    for (const table of dbArtifact.tables) {
-      const apiModel = findCorrespondingModel(table)
-      if (!apiModel) return { pass: false, error: "Missing API model" }
-
-      for (const column of table.columns) {
-        const apiProperty = findProperty(apiModel, column)
-        if (!validateTypeMapping(column.type, apiProperty.type)) {
-          return { pass: false, error: "Type mismatch" }
-        }
-      }
-    }
-    return { pass: true }
-  }
-}
+    C1 --> V{Valid?}
+    C2 --> V
+    C3 --> V
+    C4 --> V
+    C5 --> V
+    C6 --> V
+    V -->|Yes| PASS[Design Complete]
+    V -->|No| FIX[Fix & Retry]
 ```
 
-### Checkpoint 2: Enum Value Consistency
-```typescript
-interface EnumConsistencyCheck {
-  validate(): CheckResult {
-    for (const [tableName, table] of Object.entries(dbArtifact.tables)) {
-      if (!table.enums) continue
+### Priority Checks
 
-      for (const [enumName, dbValues] of Object.entries(table.enums)) {
-        const apiEnum = findAPIEnum(enumName)
-        const missing = dbValues.filter(v =>
-          !apiEnum.values.map(normalize).includes(normalize(v))
-        )
-        if (missing.length > 0) {
-          return { pass: false, missing }
-        }
-      }
-    }
-    return { pass: true }
-  }
-}
-```
+**優先チェック項目**: 最も重要な6つの検証項目。違反は即座に修正必須。
 
-### Checkpoint 3: Mapper Completeness
-```typescript
-interface MapperCompletenessCheck {
-  validate(): CheckResult {
-    // Every DB entity needs a Read mapper
-    for (const table of dbArtifact.tables) {
-      if (!mapperArtifact.readMappers[table.name]) {
-        return { pass: false, error: `Missing read mapper for ${table.name}` }
-      }
-    }
-
-    // Every API Create/Update operation needs a Write mapper
-    for (const operation of apiArtifact.operations) {
-      if (operation.request && !mapperArtifact.writeMappers[operation.id]) {
-        return { pass: false, error: `Missing write mapper for ${operation.id}` }
-      }
-    }
-
-    return { pass: true }
-  }
-}
-```
-
-### Checkpoint 4: Documentation Consistency
-```typescript
-interface DocumentationConsistencyCheck {
-  validate(): CheckResult {
-    // Check if patterns are documented
-    for (const pattern of implementedPatterns) {
-      if (!documentationArtifact.implementationPatterns[pattern.name]) {
-        return { pass: false, error: `Undocumented pattern: ${pattern.name}` }
-      }
-    }
-
-    // Check if reference guides cover all domains
-    for (const domain of implementedDomains) {
-      const hasGuide = Object.values(documentationArtifact.referenceGuides)
-        .some(guide => guide.steps.some(step => step.codeExample?.includes(domain)))
-
-      if (!hasGuide) {
-        return { pass: false, error: `Missing reference guide for ${domain}` }
-      }
-    }
-
-    // Check if documentation reflects actual implementation
-    const codePatterns = extractPatternsFromCode()
-    const docPatterns = Object.keys(documentationArtifact.implementationPatterns)
-    const undocumented = codePatterns.filter(p => !docPatterns.includes(p))
-
-    if (undocumented.length > 0) {
-      return { pass: false, error: `Undocumented patterns: ${undocumented.join(', ')}` }
-    }
-
-    return { pass: true }
-  }
-}
-```
+1. ✅ All API properties have DB columns
+   - **日本語**: 全APIプロパティに対応するDB列が存在
+2. ✅ No UI-driven property renaming
+   - **日本語**: UI都合でのプロパティ名変更禁止
+3. ✅ DB nullable = API nullable
+   - **日本語**: DBとAPIのnullable定義が完全一致
+4. ✅ Update models: Optional + conditional nullable
+   - **日本語**: 更新モデルは全オプショナル＋条件付きnullable
+5. ✅ One UpdateRequest per domain
+   - **日本語**: ドメインごとに1つの更新リクエスト型
+6. ✅ Mappers for all entities
+   - **日本語**: 全エンティティにマッパー定義必須
 
 ## 📊 Validation State Machine
 
+**検証状態マシン**: 設計検証プロセスの状態遷移を管理。各状態と許可される遷移を定義。
+
 ```typescript
+// 検証プロセスの状態定義
 enum ValidationState {
-  INITIAL = "INITIAL",
-  DESIGNING = "DESIGNING",
-  VALIDATING = "VALIDATING",
-  ERROR_DETECTED = "ERROR_DETECTED",
-  FIXING = "FIXING",
-  VALIDATED = "VALIDATED",
-  ESCALATED = "ESCALATED"
+  INITIAL,         // 初期状態
+  DESIGNING,       // 設計中
+  VALIDATING,      // 検証中
+  ERROR_DETECTED,  // エラー検出
+  FIXING,          // 修正中
+  VALIDATED,       // 検証完了
+  ESCALATED        // エスカレーション済
 }
 
-interface ValidationStateMachine {
-  currentState: ValidationState
-  artifacts: Map<string, any>
-  errors: ValidationError[]
-
-  transitions: {
-    [ValidationState.INITIAL]: ValidationState.DESIGNING,
-    [ValidationState.DESIGNING]: ValidationState.VALIDATING,
-    [ValidationState.VALIDATING]: ValidationState.VALIDATED | ValidationState.ERROR_DETECTED,
-    [ValidationState.ERROR_DETECTED]: ValidationState.FIXING | ValidationState.ESCALATED,
-    [ValidationState.FIXING]: ValidationState.VALIDATING,
-    [ValidationState.ESCALATED]: ValidationState.DESIGNING
-  }
+// 状態遷移の定義（現在状態→次の可能状態）
+const transitions = {
+  INITIAL: DESIGNING,
+  DESIGNING: VALIDATING,
+  VALIDATING: [VALIDATED, ERROR_DETECTED],
+  ERROR_DETECTED: [FIXING, ESCALATED],
+  FIXING: VALIDATING,
+  ESCALATED: DESIGNING
 }
 ```
 
 ## 🔐 Invariants
 
-設計プロセス全体で保証される不変条件（[CLAUDE.md](../CLAUDE.md)の型安全性要件に基づく）：
+**不変条件**: システム全体で常に維持される設計原則。これらは絶対に破ってはならない。
 
-1. **DB型からの推論が常に可能**: すべてのドメインモデルはDBスキーマから型推論可能（[DB-Driven Domain Model](./db-driven-domain-model.md)）
-2. **Enum値の完全性**: DBに存在するEnum値は必ずAPIにも存在（[TypeSpec Directory Structure](./typespec-directory-structure.md)）
-3. **必須フィールドの保持**: DBで必須のフィールドはAPI Createでも必須（[TypeSpec API Type Rules](./typespec-api-type-rules.md)）
-4. **マッパーの双方向性**: Read/Writeマッパーは逆変換可能（[API-DB Type Constraints Mapping](./api-db-type-constraints-mapping.md)）
-5. **型変換の明示性**: 暗黙の型変換は禁止、すべてマッパーで明示（[Sum Types & Pattern Matching](./sum-types-pattern-matching.md)）
+1. **DB Type Inference（DB型推論）**: All domain models from DB schema
+   - **日本語**: 全ドメインモデルはDBスキーマから型推論で生成
+   - **理由**: 手動定義による不整合を防止
 
-## 📋 Design Completion Criteria
+2. **Enum Completeness（Enum完全性）**: DB enums ⊆ API enums
+   - **日本語**: DB enum値は必ずAPI enum値の部分集合
+   - **理由**: DBに存在する値を必ずAPIで扱える保証
 
-設計が完了したと判定される条件：
+3. **Required Preservation（必須性保持）**: DB required → API required
+   - **日本語**: DB必須フィールドはAPI作成時も必須
+   - **理由**: データ整合性の保証
+
+4. **Mapper Reversibility（マッパー可逆性）**: Read/Write mappers invertible
+   - **日本語**: 読み書きマッパーは相互に可逆変換可能
+   - **理由**: データの往復変換で情報欠落を防止
+
+5. **Explicit Conversion（明示的変換）**: No implicit type conversion
+   - **日本語**: 暗黙の型変換禁止、全て明示的に定義
+   - **理由**: 予期せぬ型変換エラーを防止
+
+## 📋 Completion Criteria
+
+**完了基準**: 設計が完了したと判定するための7つの必須条件。全てtrueで設計承認。
 
 ```typescript
+// 設計完了を判定する基準
 interface DesignCompletionCriteria {
-  allArtifactsGenerated: boolean       // 全エージェントが成果物を生成
-  typeAlignmentValidated: boolean      // DB-API-Frontend型が整合
-  enumsSynchronized: boolean           // 全Enum値が同期
-  mappersComplete: boolean              // 全エンティティにマッパー定義
-  validationsPassed: boolean            // 全チェックポイント通過
-  noBlockingErrors: boolean            // 解決不能エラーなし
-  documentationUpdated: boolean        // ドキュメントが実装と同期
+  allArtifactsGenerated: boolean    // 全成果物生成完了: 各エージェントが設計成果物を提出
+  typeAlignmentValidated: boolean   // 型整合性検証済: DB-API-Frontend間の型が一致
+  enumsSynchronized: boolean        // Enum同期完了: 全enum値が各層で同期
+  mappersComplete: boolean           // マッパー定義完了: 全エンティティに読み書きマッパー存在
+  validationsPassed: boolean         // 検証合格: 全チェック項目がパス
+  noBlockingErrors: boolean          // ブロッカーなし: 解決不能なエラーが存在しない
+  documentationUpdated: boolean      // 文書更新済: 実装内容が文書に反映
 }
 
-const isDesignComplete = (criteria: DesignCompletionCriteria): boolean =>
-  Object.values(criteria).every(Boolean)
+// 完了判定: 全条件がtrueの場合のみ設計完了
+const isComplete = (c: DesignCompletionCriteria): boolean =>
+  Object.values(c).every(Boolean)
 ```
 
-## 🔄 Continuous Validation Loop
+## 🔄 Continuous Validation
 
-```typescript
-class DesignValidationOrchestrator {
-  async runValidation(): Promise<ValidationResult> {
-    while (!isDesignComplete(this.criteria)) {
-      // 1. Collect artifacts from all agents
-      const artifacts = await this.collectArtifacts()
+**継続的検証**: 設計が完了するまでエージェント間で継続的に検証・修正を繰り返すループ。エラーがなくなるまで自動的に継続。
 
-      // 2. Run validation checks
-      const errors = await this.validateArtifacts(artifacts)
+```mermaid
+sequenceDiagram
+    participant O as Orchestrator<br/>オーケストレーター
+    participant A as Agents<br/>各専門エージェント
+    participant DRA as Design Review<br/>設計レビューアーキテクト
+    participant DS as Doc Specialist<br/>文書化スペシャリスト
 
-      if (errors.length === 0) {
-        this.criteria.validationsPassed = true
-        break
-      }
-
-      // 3. Dispatch errors to responsible agents
-      for (const error of errors) {
-        await this.dispatchError(error)
-      }
-
-      // 4. Wait for fixes
-      await this.waitForFixes()
-
-      // 5. Check for escalation
-      if (this.hasEscalatedErrors()) {
-        return { status: "ESCALATED", errors: this.escalatedErrors }
-      }
-    }
-
-    // 6. Document implementation patterns
-    await this.documentImplementation()
-
-    return { status: "VALIDATED", artifacts: this.finalArtifacts }
-  }
-
-  async documentImplementation(): Promise<void> {
-    // Documentation Specialist analyzes and documents patterns
-    const docArtifact = await this.documentationSpecialist.analyze({
-      implementations: this.getImplementationChanges(),
-      existingDocs: this.getCurrentDocumentation()
-    })
-
-    // Update relevant documentation files
-    await this.updateDocumentation(docArtifact)
-
-    this.criteria.documentationUpdated = true
-  }
-}
+    loop Until Complete（完了まで繰り返し）
+        O->>A: Collect Artifacts（成果物収集）
+        A->>O: Return Artifacts（成果物返送）
+        O->>DRA: Validate（検証依頼）
+        DRA->>O: Errors/Pass（エラーまたは合格）
+        alt Has Errors（エラーあり）
+            O->>A: Dispatch Fixes（修正指示）
+            A->>O: Updated Artifacts（更新済成果物）
+        else No Errors（エラーなし）
+            O->>DS: Document Patterns（パターン文書化）
+            DS->>O: Documentation（文書完成）
+        end
+    end
 ```
 
-## 📚 参照
+## 📚 Key References
 
-### 開発原則・ガイドライン
-- [CLAUDE.md](../CLAUDE.md) - プロジェクト全体の開発ガイドライン
-- [README.md](../README.md) - システム概要とクイックスタート
-- [AGENTS.md](../AGENTS.md) - エージェント利用ガイド
+**主要参照文書**: このフレームワークを理解・実装するために必要な関連文書。各文書は特定の側面を詳細に説明。
 
-### アーキテクチャドキュメント
-- [Architecture Overview](./architecture-overview.md) - システムアーキテクチャ概要
-- [Backend Architecture Guidelines](./backend-architecture-guidelines.md) - バックエンドアーキテクチャガイドライン
-- [DB-Driven Domain Model](./db-driven-domain-model.md) - DB駆動ドメインモデルアーキテクチャ
+### Core Documents
+- [CLAUDE.md](../CLAUDE.md) - Development guidelines（開発ガイドライン: コーディング規約と原則）
+- [Architecture Overview](./architecture-overview.md) - System architecture（システムアーキテクチャ: 全体構造）
+- [Backend Architecture](./backend-architecture-guidelines.md) - Backend patterns（バックエンドパターン: 実装規約）
 
-### 型定義・同期ルール
-- [TypeSpec API Type Rules](./typespec-api-type-rules.md) - TypeSpec API型定義ルール
-- [API-DB Type Constraints Mapping](./api-db-type-constraints-mapping.md) - API-DB型制約マッピング機構
-- [TypeSpec Directory Structure](./typespec-directory-structure.md) - TypeSpecディレクトリ構造
-- [Type Safety Principles](./type-safety-principles.md) - 型安全性の原則
-- [Sum Types & Pattern Matching](./sum-types-pattern-matching.md) - Sum型とパターンマッチング
+### Type System
+- [TypeSpec API Rules](./typespec-api-type-rules.md) - API type rules（API型ルール: TypeSpec定義規則）
+- [API-DB Constraints](./api-db-type-constraints-mapping.md) - Type mapping（型マッピング: DB-API対応表）
+- [Type Safety](./type-safety-principles.md) - Type principles（型安全原則: 型システムの基本）
 
-### 実装ガイド
-- [Uniform Implementation Guide](./uniform-implementation-guide.md) - 統一実装ガイド
-- [Type Generation System](./type-generation-system.md) - 型生成システム
-- [TypeScript Configuration](./typescript-configuration.md) - TypeScript設定
-
-### テスト・品質保証
-- [Testing Requirements](./testing-requirements.md) - テスト要件
-- [API Testing Guide](./api-testing-guide.md) - APIテストガイド
-
-### エージェント定義
-- [Backend TypeScript Architect](../.claude/agents/backend-typescript-architect.md) - バックエンドTypeScriptアーキテクト
-- [Database Schema Architect](../.claude/agents/database-schema-architect.md) - データベーススキーマアーキテクト
-- [Design Review Architect](../.claude/agents/design-review-architect.md) - 設計レビューアーキテクト
-- [Documentation Specialist](../.claude/agents/documentation-specialist.md) - ドキュメンテーションスペシャリスト
-- [Salon Business Expert](../.claude/agents/salon-business-expert.md) - サロンビジネスエキスパート
-- [Senior Frontend Architect](../.claude/agents/senior-frontend-architect.md) - シニアフロントエンドアーキテクト
-- [Senior UI Designer](../.claude/agents/senior-ui-designer.md) - シニアUIデザイナー
-- [TypeSpec API Architect](../.claude/agents/typespec-api-architect.md) - TypeSpec APIアーキテクト
+### Agents
+- [Design Review Architect](../.claude/agents/design-review-architect.md) - Validation lead（検証責任者: 全体整合性チェック）
+- [Database Schema Architect](../.claude/agents/database-schema-architect.md) - DB design（DB設計: スキーマと制約定義）
+- [TypeSpec API Architect](../.claude/agents/typespec-api-architect.md) - API design（API設計: TypeSpec定義）
+- [Documentation Specialist](../.claude/agents/documentation-specialist.md) - Pattern extraction（パターン抽出: 文書化と知識蓄積）

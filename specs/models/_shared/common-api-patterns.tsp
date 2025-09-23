@@ -19,19 +19,19 @@ namespace BeautySalon.Models {
     @doc("レスポンスに付与される HTTP ステータスコード。")
     status: int32;
 
-    @doc("今回の発生状況に固有の詳細説明。サポート対応時の一次情報となる。")
+    @doc("今回の発生状況に固有の詳細説明。サポート対応時の一次情報となる。詳細が不要な場合はnull")
     detail: string | null;
 
-    @doc("この事象を一意に識別するための URI。監査ログやダッシュボードと連携する。")
+    @doc("この事象を一意に識別するための URI。監査ログやダッシュボードと連携する。URIが不要な場合はnull")
     instance: string | null;
 
     @doc("システム全体で共有する機械判読可能なエラーコード。画面表示や分岐処理に使用する。")
     code: ErrorCodeType;
 
-    @doc("フィールド単位の検証エラーなど、追加のエラー詳細情報一覧。")
+    @doc("フィールド単位の検証エラーなど、追加のエラー詳細情報一覧。検証エラーがない場合はnull")
     errors: ValidationError[] | null;
 
-    @doc("障害調査や問い合わせで利用する相関 ID。リクエスト単位で一意。")
+    @doc("障害調査や問い合わせで利用する相関 ID。リクエスト単位で一意。相関IDが不要な場合はnull")
     correlationId: string | null;
 
     @doc("エラー発生日時 (UTC)。サーバーログの検索キーとして使用する。")
@@ -121,10 +121,10 @@ namespace BeautySalon.Models {
     @doc("ユーザーに提示する具体的なエラーメッセージ。")
     message: string;
 
-    @doc("検証対象となった実際の値。セキュリティ観点で出力が許容される場合のみ利用する。")
+    @doc("検証対象となった実際の値。セキュリティ観点で出力が許容される場合のみ利用する。出力不可の場合はnull")
     value: unknown | null;
 
-    @doc("期待される値や制約条件。入力補助やUI表示のガイダンスに使用する。")
+    @doc("期待される値や制約条件。入力補助やUI表示のガイダンスに使用する。制約が明示不要な場合はnull")
     constraint: unknown | null;
   }
 
@@ -205,7 +205,7 @@ namespace BeautySalon.Models {
   総件数やカーソル位置を保持し、フロントエンドの続き取得や無限スクロールの制御に利用する。
   """)
   model PaginationMeta {
-    @doc("取得対象全体の総件数。件数計測ができない場合は null。")
+    @doc("取得対象全体の総件数。件数計測ができない場合はnull")
     total: int32 | null;
 
     @doc("1ページあたりの取得件数。クエリパラメータ `limit` と一致する。")
@@ -214,13 +214,13 @@ namespace BeautySalon.Models {
     @doc("次ページが存在するかを示すフラグ。無限スクロールの継続判定に使用。")
     hasMore: boolean;
 
-    @doc("現在ページのカーソル値。次リクエストで `cursor` に指定することで同位置から再開できる。")
+    @doc("現在ページのカーソル値。次リクエストで `cursor` に指定することで同位置から再開できる。初回ページの場合はnull")
     cursor: string | null;
 
-    @doc("次ページを取得するためのカーソル値。存在しない場合は null。")
+    @doc("次ページを取得するためのカーソル値。最終ページの場合はnull")
     nextCursor: string | null;
 
-    @doc("前ページへ戻るためのカーソル値。戻り操作が不要な場合は null。")
+    @doc("前ページへ戻るためのカーソル値。初回ページまたは戻り操作が不要な場合はnull")
     prevCursor: string | null;
   }
 
@@ -232,16 +232,16 @@ namespace BeautySalon.Models {
     @doc("現在ページを指すリンク。")
     self: string;
 
-    @doc("最初のページへのリンク。総件数が確定しない場合は null。")
+    @doc("最初のページへのリンク。総件数が確定しない場合はnull")
     first: string | null;
 
-    @doc("最後のページへのリンク。カーソル算出ができない場合は null。")
+    @doc("最後のページへのリンク。カーソル算出ができない場合はnull")
     last: string | null;
 
-    @doc("次ページへのリンク。さらに結果がある場合のみ設定される。")
+    @doc("次ページへのリンク。最終ページの場合はnull")
     next: string | null;
 
-    @doc("前ページへのリンク。戻り操作が不要な場合は null。")
+    @doc("前ページへのリンク。初回ページまたは戻り操作が不要な場合はnull")
     prev: string | null;
   }
 
@@ -253,10 +253,10 @@ namespace BeautySalon.Models {
     @doc("レスポンスの主体となるビジネスデータ。")
     data: T;
 
-    @doc("リクエスト識別子やバージョン情報など共通メタデータ。")
+    @doc("リクエスト識別子やバージョン情報など共通メタデータ。メタ情報が不要な場合はnull")
     meta: ResponseMeta | null;
 
-    @doc("関連リソースや次アクションへのリンク情報。")
+    @doc("関連リソースや次アクションへのリンク情報。リンクがない場合はnull")
     links: Record<string> | null;
   }
 
@@ -289,10 +289,10 @@ namespace BeautySalon.Models {
     items: T[];
 
     @doc("途中でエラーが発生しても処理を継続するかどうか。既定は false。")
-    continueOnError?: boolean = false;
+    continueOnError: boolean = false;
 
     @doc("トランザクション内で一括処理を行うかどうか。既定は true。")
-    transactional?: boolean = true;
+    transactional: boolean = true;
   }
 
   @doc("""
@@ -360,13 +360,13 @@ namespace BeautySalon.Models {
     @doc("論理削除フラグ。true の場合は通常の検索結果から除外する。")
     isDeleted: boolean = false;
 
-    @doc("削除操作が実行された日時 (UTC)。")
+    @doc("削除操作が実行された日時 (UTC)。削除されていない場合はnull")
     deletedAt: utcDateTime | null;
 
-    @doc("削除操作を実施したユーザーID またはサービス名。")
+    @doc("削除操作を実施したユーザーID またはサービス名。削除されていない場合はnull")
     deletedBy: string | null;
 
-    @doc("削除理由や補足メモ。カスタマーサポート対応に利用する。")
+    @doc("削除理由や補足メモ。カスタマーサポート対応に利用する。理由が不要または削除されていない場合はnull")
     deletionReason: string | null;
   }
 
@@ -417,9 +417,9 @@ namespace BeautySalon.Models {
     ids: string[];
 
     #suppress "@typespec/http/metadata-ignored" "Treated as queryParams"
-    @doc("レスポンスに含めたいフィールドのカンマ区切りリスト。パフォーマンス最適化に活用する。")
+    @doc("レスポンスに含めたいフィールドのカンマ区切りリスト。パフォーマンス最適化に活用する。全フィールド取得の場合はnull")
     @query
-    fields?: string;
+    fields: string | null;
   }
 
   @doc("""
@@ -439,8 +439,8 @@ namespace BeautySalon.Models {
     @doc("各内部サービスや依存コンポーネントのヘルスチェック結果一覧。")
     checks: HealthCheck[];
 
-    @doc("監視環境固有の追加メタ情報。必要に応じてキーを拡張する。")
-    metadata?: Record<unknown>;
+    @doc("監視環境固有の追加メタ情報。必要に応じてキーを拡張する。追加情報がない場合はnull")
+    metadata: Record<unknown> | null;
   }
 
   @doc("""
@@ -454,13 +454,13 @@ namespace BeautySalon.Models {
     @doc("対象サービスの稼働状態。`up` は正常、`down` は停止、`degraded` は部分的な性能低下を示す。")
     status: "up" | "down" | "degraded";
 
-    @doc("ヘルスチェックに要した時間 (ミリ秒)。応答遅延の指標。")
+    @doc("ヘルスチェックに要した時間 (ミリ秒)。応答遅延の指標。測定不可の場合はnull")
     responseTime: int32 | null;
 
-    @doc("停止時のエラーメッセージや原因メモ。")
+    @doc("停止時のエラーメッセージや原因メモ。正常時はnull")
     error: string | null;
 
-    @doc("監視対象固有の追加詳細。再試行回数や依存サービス名などを含める。")
+    @doc("監視対象固有の追加詳細。再試行回数や依存サービス名などを含める。追加情報がない場合はnull")
     details: Record<unknown> | null;
   }
 
@@ -514,7 +514,7 @@ namespace BeautySalon.Models {
     meta: SearchMeta;
 
     @doc("ファセット集計結果。各フィールドごとの件数分布を保持する。")
-    facets?: Record<Facet[]>;
+    facets: Record<Facet[]>;
   }
 
   @doc("""
@@ -567,9 +567,9 @@ namespace BeautySalon.Models {
   エンティティの更新競合を検知し、整合性を担保する。
   """)
   model Versioned {
-    @doc("HTTP ヘッダー `ETag` として返却するエンティティバージョン。")
+    @doc("HTTP ヘッダー `ETag` として返却するエンティティバージョン。バージョン管理が不要な場合はnull")
     @header("ETag")
-    etag?: string;
+    etag: string | null;
 
     @doc("内部的に管理するバージョン番号。更新ごとにインクリメントする。")
     version: int32;
@@ -595,8 +595,8 @@ namespace BeautySalon.Models {
     @header("X-RateLimit-Reset")
     reset: int32;
 
-    @doc("レート制限に達した際に再試行可能となるまでの秒数。")
+    @doc("レート制限に達した際に再試行可能となるまでの秒数。制限に達していない場合はnull")
     @header("Retry-After")
-    retryAfter?: int32;
+    retryAfter: int32 | null;
   }
 }

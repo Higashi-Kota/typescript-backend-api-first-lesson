@@ -1,6 +1,6 @@
 import type { openingHours, salons } from '@beauty-salon-backend/database'
 import type { components, operations } from '@beauty-salon-backend/generated'
-import type { Brand, DeepRequired } from '@beauty-salon-backend/utility'
+import type { Brand, DeepRequired, Omit } from '@beauty-salon-backend/utility'
 
 // Brand type for SalonId
 export const salonIdBrand: unique symbol = Symbol('SalonId')

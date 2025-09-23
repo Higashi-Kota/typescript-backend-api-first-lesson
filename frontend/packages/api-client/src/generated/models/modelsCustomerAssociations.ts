@@ -9,15 +9,31 @@ import type { ModelsSalonId } from './modelsSalonId'
 import type { ModelsCustomerId } from './modelsCustomerId'
 
 export interface ModelsCustomerAssociations {
-  /** @nullable */
+  /**
+   * 主要利用サロンID。特定のサロンがない場合はnull
+   * @nullable
+   */
   primarySalonId: string | null
+  /** 訪問済サロンID一覧。これまでに利用した全サロン */
   visitedSalonIds: ModelsSalonId[]
-  /** @nullable */
+  /**
+   * 家族会員の顧客ID一覧。家族登録がない場合はnull
+   * @nullable
+   */
   familyMemberIds: ModelsCustomerId[] | null
-  /** @nullable */
+  /**
+   * 紹介元顧客ID。紹介ではない場合はnull
+   * @nullable
+   */
   referredBy: string | null
-  /** @nullable */
+  /**
+   * 紹介した顧客ID一覧。紹介実績がない場合はnull
+   * @nullable
+   */
   referredCustomerIds: ModelsCustomerId[] | null
-  /** @nullable */
+  /**
+   * グループID。グループに属さない場合はnull
+   * @nullable
+   */
   groupId: string | null
 }

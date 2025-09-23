@@ -8,7 +8,7 @@
 import type { ModelsCustomerHealth } from './modelsCustomerHealth'
 
 /**
- * Health information
+ * 健康情報。情報提供がない場合はnull
  * @nullable
  */
 export type ModelsCustomerHealthProperty = ModelsCustomerHealth | null

@@ -28,17 +28,17 @@ export interface ModelsAttachment {
   /** ファイルをアップロードしたユーザーID。 */
   uploadedBy: string
   /**
-   * ファイルが紐づくサロンID。任意項目。
+   * ファイルが紐づくサロンID。全社共通ファイルやシステムファイルの場合はnull。
    * @nullable
    */
   salonId: string | null
   /**
-   * 必要に応じて付加情報を保持する任意メタデータ。
+   * 必要に応じて付加情報を保持する任意メタデータ。追加情報が不要な場合はnull。
    * @nullable
    */
   metadata: ModelsAttachmentMetadata
   /**
-   * ラベリングや検索に利用するタグ情報のセット。
+   * ラベリングや検索に利用するタグ情報のセット。タグ付けをしていない場合はnull。
    * @nullable
    */
   tags: ModelsAttachmentTags

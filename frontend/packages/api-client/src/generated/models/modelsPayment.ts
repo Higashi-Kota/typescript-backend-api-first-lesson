@@ -8,12 +8,11 @@
 import type { ModelsPaymentId } from './modelsPaymentId'
 import type { ModelsSalonId } from './modelsSalonId'
 import type { ModelsCustomerId } from './modelsCustomerId'
-import type { ModelsBookingId } from './modelsBookingId'
-import type { ModelsTreatmentRecordId } from './modelsTreatmentRecordId'
 import type { ModelsPaymentMethodType } from './modelsPaymentMethodType'
 import type { ModelsPaymentStatus } from './modelsPaymentStatus'
 import type { ModelsPaymentAmounts } from './modelsPaymentAmounts'
-import type { ModelsMoney } from './modelsMoney'
+import type { ModelsPaymentDepositApplied } from './modelsPaymentDepositApplied'
+import type { ModelsPaymentOutstandingAmount } from './modelsPaymentOutstandingAmount'
 import type { ModelsPaymentHistory } from './modelsPaymentHistory'
 import type { ModelsRefund } from './modelsRefund'
 import type { ModelsPaymentMetadata } from './modelsPaymentMetadata'
@@ -28,45 +27,75 @@ export interface ModelsPayment {
   salonId: ModelsSalonId
   /** 支払いを行う顧客 ID */
   customerId: ModelsCustomerId
-  /** 関連する予約 ID */
-  bookingId?: ModelsBookingId
-  /** 関連する施術記録 ID */
-  treatmentRecordId?: ModelsTreatmentRecordId
+  /**
+   * 関連する予約 ID
+   * @nullable
+   */
+  bookingId: string | null
+  /**
+   * 関連する施術記録 ID
+   * @nullable
+   */
+  treatmentRecordId: string | null
   /** 使用した支払い方法 */
   method: ModelsPaymentMethodType
   /** 現在の支払い状態の詳細 */
   status: ModelsPaymentStatus
   /** 請求金額の内訳情報 */
   amounts: ModelsPaymentAmounts
-  /** 使用したポイント数 */
-  pointsUsed?: number
-  /** 予約時に適用した預り金額 */
-  depositApplied?: ModelsMoney
-  /** 未収残高がある場合の金額 */
-  outstandingAmount?: ModelsMoney
-  /** 外部決済サービスの参照番号 */
-  externalReference?: string
-  /** 発行したレシート番号 */
-  receiptNumber?: string
+  /**
+   * 使用したポイント数
+   * @nullable
+   */
+  pointsUsed: number | null
+  /**
+   * 予約時に適用した預り金額
+   * @nullable
+   */
+  depositApplied: ModelsPaymentDepositApplied
+  /**
+   * 未収残高がある場合の金額
+   * @nullable
+   */
+  outstandingAmount: ModelsPaymentOutstandingAmount
+  /**
+   * 外部決済サービスの参照番号
+   * @nullable
+   */
+  externalReference: string | null
+  /**
+   * 発行したレシート番号
+   * @nullable
+   */
+  receiptNumber: string | null
   /** 状態変遷の履歴一覧 */
   history: ModelsPaymentHistory[]
-  /** 関連する返金記録の一覧 */
-  refunds?: ModelsRefund[]
-  /** 外部サービス連携向けのメタデータ */
-  metadata?: ModelsPaymentMetadata
-  /** スタッフ用の備考メモ */
-  notes?: string
+  /**
+   * 関連する返金記録の一覧
+   * @nullable
+   */
+  refunds: ModelsRefund[] | null
+  /**
+   * 外部サービス連携向けのメタデータ
+   * @nullable
+   */
+  metadata: ModelsPaymentMetadata
+  /**
+   * スタッフ用の備考メモ
+   * @nullable
+   */
+  notes: string | null
   /** レコード作成日時。 */
   createdAt: string
   /**
-   * レコードを作成したユーザーID。匿名作成の場合はnull。
+   * レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull
    * @nullable
    */
   createdBy: string | null
   /** レコード最終更新日時。 */
   updatedAt: string
   /**
-   * レコードを最後に更新したユーザーID。匿名更新の場合はnull。
+   * レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull
    * @nullable
    */
   updatedBy: string | null

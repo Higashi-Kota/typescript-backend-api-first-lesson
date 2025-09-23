@@ -8,15 +8,31 @@
 import type { ModelsCustomerStatusType } from './modelsCustomerStatusType'
 
 export interface ModelsCustomerStatusDetail {
+  /** 顧客ステータスタイプ。現在の顧客アカウント状態 */
   type: ModelsCustomerStatusType
-  /** @nullable */
+  /**
+   * ステータス変更理由。理由が不要な場合はnull
+   * @nullable
+   */
   reason: string | null
-  /** @nullable */
+  /**
+   * ステータス変更日時。未設定の場合はnull
+   * @nullable
+   */
   since: string | null
-  /** @nullable */
+  /**
+   * ステータス有効期限。無期限の場合はnull
+   * @nullable
+   */
   until: string | null
-  /** @nullable */
+  /**
+   * ステータス変更者。システム自動変更の場合はnull
+   * @nullable
+   */
   by: string | null
-  /** @nullable */
+  /**
+   * 削除日時。削除されていない場合はnull
+   * @nullable
+   */
   deletedAt: string | null
 }

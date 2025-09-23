@@ -5,12 +5,12 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsSearchCustomerRequestSearchParameter } from './modelsSearchCustomerRequestSearchParameter'
-import type { ModelsSearchCustomerRequestTagsParameter } from './modelsSearchCustomerRequestTagsParameter'
-import type { ModelsSearchCustomerRequestRegisteredFromParameter } from './modelsSearchCustomerRequestRegisteredFromParameter'
-import type { ModelsSearchCustomerRequestRegisteredToParameter } from './modelsSearchCustomerRequestRegisteredToParameter'
-import type { ModelsSearchCustomerRequestStatusParameter } from './modelsSearchCustomerRequestStatusParameter'
-import type { ModelsSearchCustomerRequestLoyaltyTierParameter } from './modelsSearchCustomerRequestLoyaltyTierParameter'
+import type { ModelsCustomerSearchRequestSearchParameter } from './modelsCustomerSearchRequestSearchParameter'
+import type { ModelsCustomerSearchRequestTagsParameter } from './modelsCustomerSearchRequestTagsParameter'
+import type { ModelsCustomerSearchRequestRegisteredFromParameter } from './modelsCustomerSearchRequestRegisteredFromParameter'
+import type { ModelsCustomerSearchRequestRegisteredToParameter } from './modelsCustomerSearchRequestRegisteredToParameter'
+import type { ModelsCustomerSearchRequestStatusParameter } from './modelsCustomerSearchRequestStatusParameter'
+import type { ModelsCustomerSearchRequestLoyaltyTierParameter } from './modelsCustomerSearchRequestLoyaltyTierParameter'
 import type { ModelsAdvancedSearchParamsQParameter } from './modelsAdvancedSearchParamsQParameter'
 import type { ModelsAdvancedSearchParamsFilterParameter } from './modelsAdvancedSearchParamsFilterParameter'
 import type { ModelsAdvancedSearchParamsFieldsParameter } from './modelsAdvancedSearchParamsFieldsParameter'
@@ -24,21 +24,21 @@ import type { ModelsCursorPaginationParamsSortOrderParameter } from './modelsCur
 
 export type CustomerCrudSearchParams = {
   /**
-   * Search in customer name, email, or phone
+   * 顧客名、メール、または電話番号で検索
    */
-  search?: ModelsSearchCustomerRequestSearchParameter
+  search?: ModelsCustomerSearchRequestSearchParameter
   /**
-   * Filter by customer tags
+   * 顧客タグでフィルタ
    */
-  tags?: ModelsSearchCustomerRequestTagsParameter
+  tags?: ModelsCustomerSearchRequestTagsParameter
   /**
-   * Filter by registration date from
+   * 登録日開始でフィルタ
    */
-  registeredFrom?: ModelsSearchCustomerRequestRegisteredFromParameter
+  registeredFrom?: ModelsCustomerSearchRequestRegisteredFromParameter
   /**
-   * Filter by registration date to
+   * 登録日終了でフィルタ
    */
-  registeredTo?: ModelsSearchCustomerRequestRegisteredToParameter
+  registeredTo?: ModelsCustomerSearchRequestRegisteredToParameter
   /**
  * 顧客ステータス区分 - 顧客アカウントの活動状態や利用可否を表す区分
 
@@ -48,7 +48,7 @@ suspended: 停止中 - 一時的に利用が停止されている状態
 deleted: 削除済み - アカウントが論理削除された状態
 blacklisted: ブラックリスト - 利用を禁止された状態
  */
-  status?: ModelsSearchCustomerRequestStatusParameter
+  status?: ModelsCustomerSearchRequestStatusParameter
   /**
  * ロイヤルティティア区分 - 顧客ロイヤルティプログラムの会員ランク
 
@@ -57,7 +57,7 @@ silver: シルバー - 中級会員ランク、標準的な特典を提供
 gold: ゴールド - 上級会員ランク、優待特典を提供
 platinum: プラチナ - 最上級会員ランク、最高レベルの特典を提供
  */
-  loyaltyTier?: ModelsSearchCustomerRequestLoyaltyTierParameter
+  loyaltyTier?: ModelsCustomerSearchRequestLoyaltyTierParameter
   /**
    * 全文検索キーワード。名称や説明文を横断的に検索する。
    */

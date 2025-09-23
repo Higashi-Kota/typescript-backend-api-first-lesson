@@ -7,7 +7,7 @@
  */
 
 /**
- * Registration source
+ * 登録経路。不明の場合はnull
  * @nullable
  */
 export type ModelsCustomerRegistrationSource =

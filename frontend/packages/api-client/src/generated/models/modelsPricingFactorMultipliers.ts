@@ -8,7 +8,7 @@
 import type { ModelsDecimal } from './modelsDecimal'
 
 /**
- * 条件に応じた倍率設定
+ * 条件に応じた倍率設定。固定倍率または他の計算方法を使用する場合はnull
  * @nullable
  */
 export type ModelsPricingFactorMultipliers = {

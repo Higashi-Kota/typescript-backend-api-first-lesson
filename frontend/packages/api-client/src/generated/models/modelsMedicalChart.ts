@@ -18,42 +18,42 @@ export interface ModelsMedicalChart {
   /** 対象顧客 ID */
   customerId: ModelsCustomerId
   /**
-   * アレルギー・敏感情報
+   * アレルギー・敏感情報 - アレルギーがない顧客の場合はnull
    * @nullable
    */
   allergies: string[] | null
   /**
-   * 頭皮状態のメモ
+   * 頭皮状態のメモ - 頭皮に問題がない健康な状態の場合はnull
    * @nullable
    */
   scalpCondition: string | null
   /**
-   * 毛髪状態のメモ
+   * 毛髪状態のメモ - 毛髪に特筆すべき問題がない場合はnull
    * @nullable
    */
   hairCondition: string | null
   /**
-   * 過去に実施したケミカル施術履歴
+   * 過去に実施したケミカル施術履歴 - 初回来店やケミカル施術経験がない顧客の場合はnull
    * @nullable
    */
   previousTreatments: ModelsPreviousTreatment[] | null
   /**
-   * 注意が必要な持病・体調情報
+   * 注意が必要な持病・体調情報 - 健康上の問題がない顧客の場合はnull
    * @nullable
    */
   medicalConditions: string | null
   /**
-   * 好みの商材・ブランド
+   * 好みの商材・ブランド - 特定の好みがない顧客の場合はnull
    * @nullable
    */
   preferredProducts: string[] | null
   /**
-   * 避けるべき商材
+   * 避けるべき商材 - 特に避けるべき商材がない顧客の場合はnull
    * @nullable
    */
   avoidProducts: string[] | null
   /**
-   * 自由記述メモ
+   * 自由記述メモ - 追加情報がない標準的なカルテの場合はnull
    * @nullable
    */
   notes: string | null
@@ -62,14 +62,14 @@ export interface ModelsMedicalChart {
   /** レコード作成日時。 */
   createdAt: string
   /**
-   * レコードを作成したユーザーID。匿名作成の場合はnull。
+   * レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull
    * @nullable
    */
   createdBy: string | null
   /** レコード最終更新日時。 */
   updatedAt: string
   /**
-   * レコードを最後に更新したユーザーID。匿名更新の場合はnull。
+   * レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull
    * @nullable
    */
   updatedBy: string | null

@@ -8,7 +8,6 @@
 import type { ModelsInventoryId } from './modelsInventoryId'
 import type { ModelsInventoryAlertAlert } from './modelsInventoryAlertAlert'
 import type { ModelsInventoryAlertSeverity } from './modelsInventoryAlertSeverity'
-import type { ModelsStaffId } from './modelsStaffId'
 
 /**
  * 在庫に関するアラート情報
@@ -30,10 +29,19 @@ export interface ModelsInventoryAlert {
   message: string
   /** 重要度レベル */
   severity: ModelsInventoryAlertSeverity
-  /** 確認済みかどうか */
-  acknowledged?: boolean
-  /** 確認したスタッフ ID */
-  acknowledgedBy?: ModelsStaffId
-  /** 確認日時 */
-  acknowledgedAt?: string
+  /**
+   * 確認済みかどうか
+   * @nullable
+   */
+  acknowledged: boolean | null
+  /**
+   * 確認したスタッフ ID
+   * @nullable
+   */
+  acknowledgedBy: string | null
+  /**
+   * 確認日時
+   * @nullable
+   */
+  acknowledgedAt: string | null
 }

@@ -8,7 +8,7 @@
 import type { ModelsPasswordResetStateType } from './modelsPasswordResetStateType'
 
 /**
- * パスワードリセット状態区分。
+ * パスワードリセット状態区分。リセットが要求されていない場合はnull。
  * @nullable
  */
 export type ModelsUserPasswordResetState = ModelsPasswordResetStateType | null

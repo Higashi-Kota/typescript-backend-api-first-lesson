@@ -16,7 +16,7 @@ export interface ModelsError {
   /** ユーザーまたはオペレーターに提示するエラーメッセージ。 */
   message: string
   /**
-   * デバッグやサポート対応に役立つ追加情報。任意項目。
+   * デバッグやサポート対応に役立つ追加情報。追加情報がない場合はnull
    * @nullable
    */
   details: ModelsErrorDetails

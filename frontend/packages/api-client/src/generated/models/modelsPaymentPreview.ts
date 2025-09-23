@@ -6,8 +6,6 @@
  * OpenAPI spec version: 2.0
  */
 import type { ModelsSalonId } from './modelsSalonId'
-import type { ModelsCustomerId } from './modelsCustomerId'
-import type { ModelsBookingId } from './modelsBookingId'
 import type { ModelsPaymentBreakdown } from './modelsPaymentBreakdown'
 import type { ModelsPaymentMethodType } from './modelsPaymentMethodType'
 
@@ -17,14 +15,23 @@ import type { ModelsPaymentMethodType } from './modelsPaymentMethodType'
 export interface ModelsPaymentPreview {
   /** 見積対象のサロン ID */
   salonId: ModelsSalonId
-  /** 見積対象の顧客 ID */
-  customerId?: ModelsCustomerId
-  /** 関連する予約 ID */
-  bookingId?: ModelsBookingId
+  /**
+   * 見積対象の顧客 ID
+   * @nullable
+   */
+  customerId: string | null
+  /**
+   * 関連する予約 ID
+   * @nullable
+   */
+  bookingId: string | null
   /** 金額内訳のプレビュー */
   breakdown: ModelsPaymentBreakdown
   /** 推奨する支払い方法の一覧 */
   recommendedMethods: ModelsPaymentMethodType[]
-  /** 顧客・スタッフ向けの備考 */
-  notes?: string
+  /**
+   * 顧客・スタッフ向けの備考
+   * @nullable
+   */
+  notes: string | null
 }

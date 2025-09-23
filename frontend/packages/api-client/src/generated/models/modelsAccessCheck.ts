@@ -17,12 +17,12 @@ export interface ModelsAccessCheck {
   /** 実行したい操作区分 */
   action: string
   /**
-   * サロン単位での権限チェック時のサロン ID
+   * サロン単位での権限チェック時のサロン ID - システム全体権限のチェック時はnull
    * @nullable
    */
   salonId: string | null
   /**
-   * リソース固有の ID
+   * リソース固有の ID - リソース種別全体への権限チェック時はnull
    * @nullable
    */
   resourceId: string | null

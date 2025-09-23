@@ -8,5 +8,8 @@
 
 /**
  * 追加のメタデータ
+ * @nullable
  */
-export type ModelsInventoryTransactionMetadata = { [key: string]: unknown }
+export type ModelsInventoryTransactionMetadata = {
+  [key: string]: unknown
+} | null

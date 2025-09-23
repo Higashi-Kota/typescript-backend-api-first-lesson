@@ -7,7 +7,7 @@
  */
 
 /**
- * Filter by loyalty tier
+ * ロイヤルティティアでフィルタ
  */
 export type CustomerCrudExportBodyLoyaltyTier =
   (typeof CustomerCrudExportBodyLoyaltyTier)[keyof typeof CustomerCrudExportBodyLoyaltyTier]

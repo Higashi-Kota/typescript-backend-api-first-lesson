@@ -23,44 +23,44 @@ export interface ModelsReview {
   /** 紐づく来店予約を示すID (DBカラム booking_id と整合) */
   bookingId: ModelsBookingId
   /**
-   * 評価対象のスタッフID。スタッフ未指定レビューの場合は省略
+   * 評価対象のスタッフID - セルフサービスやスタッフ特定不要の施術の場合はnull
    * @nullable
    */
   staffId: string | null
   /** 全体満足度の評価値 (例: 1〜5) */
   overallRating: number
   /**
-   * 自由記述のレビューコメント
+   * 自由記述のレビューコメント - 評価のみでコメントなしのシンプルレビューの場合はnull
    * @nullable
    */
   comment: string | null
   /**
-   * レビュータイトルや要約
+   * レビュータイトルや要約 - タイトル未設定の簡易レビューの場合はnull
    * @nullable
    */
   title: string | null
   /**
-   * 施術サービスそのものに対する評価値
+   * 施術サービスそのものに対する評価値 - 個別評価をしない総合評価のみのレビューの場合はnull
    * @nullable
    */
   serviceRating: number | null
   /**
-   * スタッフの接客・技術に対する評価値
+   * スタッフの接客・技術に対する評価値 - スタッフ評価省略またはセルフサービスの場合はnull
    * @nullable
    */
   staffRating: number | null
   /**
-   * 店内の清潔さ・衛生面に対する評価値
+   * 店内の清潔さ・衛生面に対する評価値 - 清潔さ評価を省略したレビューの場合はnull
    * @nullable
    */
   cleanlinessRating: number | null
   /**
-   * 価格に対する価値・コストパフォーマンス評価値
+   * 価格に対する価値・コストパフォーマンス評価値 - 価格評価を省略したレビューの場合はnull
    * @nullable
    */
   valueRating: number | null
   /**
-   * レビューに添付された画像URLの一覧
+   * レビューに添付された画像URLの一覧 - 画像添付なしのテキストのみレビューの場合はnull
    * @nullable
    */
   imageUrls: string[] | null
@@ -71,26 +71,26 @@ export interface ModelsReview {
   /** 不適切報告が入った累積回数 */
   reportCount: number
   /**
-   * サロン運営からの公式返信本文
+   * サロン運営からの公式返信本文 - オーナー未返信のレビューの場合はnull
    * @nullable
    */
   ownerResponse: string | null
   /**
-   * 運営が返信した日時 (UTC)
+   * 運営が返信した日時 (UTC) - オーナー未返信のレビューの場合はnull
    * @nullable
    */
   ownerRespondedAt: string | null
   /** レコード作成日時。 */
   createdAt: string
   /**
-   * レコードを作成したユーザーID。匿名作成の場合はnull。
+   * レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull
    * @nullable
    */
   createdBy: string | null
   /** レコード最終更新日時。 */
   updatedAt: string
   /**
-   * レコードを最後に更新したユーザーID。匿名更新の場合はnull。
+   * レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull
    * @nullable
    */
   updatedBy: string | null

@@ -9,20 +9,44 @@ import type { ModelsCustomerMetadataSource } from './modelsCustomerMetadataSourc
 import type { ModelsCustomerMetadataCustomFields } from './modelsCustomerMetadataCustomFields'
 
 export interface ModelsCustomerMetadata {
-  /** @nullable */
+  /**
+   * 顧客獲得チャネル。不明の場合はnull
+   * @nullable
+   */
   source: ModelsCustomerMetadataSource
-  /** @nullable */
+  /**
+   * キャンペーン名。キャンペーン経由でない場合はnull
+   * @nullable
+   */
   campaign: string | null
-  /** @nullable */
+  /**
+   * 分類タグ一覧。タグがない場合はnull
+   * @nullable
+   */
   tags: string[] | null
-  /** @nullable */
+  /**
+   * カスタムフィールド。追加情報がない場合はnull
+   * @nullable
+   */
   customFields: ModelsCustomerMetadataCustomFields
-  /** @nullable */
+  /**
+   * 内部メモ一覧。メモがない場合はnull
+   * @nullable
+   */
   internalNotes: string[] | null
-  /** @nullable */
+  /**
+   * リスクスコア。評価未実施の場合はnull
+   * @nullable
+   */
   riskScore: number | null
-  /** @nullable */
+  /**
+   * 生涯価値。計算未実施の場合はnull
+   * @nullable
+   */
   lifetimeValue: number | null
-  /** @nullable */
+  /**
+   * 最終更新者。システム自動更新の場合はnull
+   * @nullable
+   */
   lastUpdatedBy: string | null
 }

@@ -8,7 +8,7 @@
 import type { ModelsAddress } from './modelsAddress'
 
 /**
- * Address
+ * 住所情報。未登録の場合はnull
  * @nullable
  */
 export type ModelsCustomerAddress = ModelsAddress | null

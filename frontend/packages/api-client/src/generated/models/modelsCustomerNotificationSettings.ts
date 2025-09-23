@@ -8,7 +8,7 @@
 import type { ModelsNotificationSettings } from './modelsNotificationSettings'
 
 /**
- * NotificationType settings
+ * 通知設定。設定がない場合はnull
  * @nullable
  */
 export type ModelsCustomerNotificationSettings =

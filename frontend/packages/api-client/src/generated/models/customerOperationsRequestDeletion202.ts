@@ -17,12 +17,12 @@ export type CustomerOperationsRequestDeletion202 = {
   /** レスポンスの主体となるビジネスデータ。 */
   data: CustomerOperationsRequestDeletion202Data
   /**
-   * リクエスト識別子やバージョン情報など共通メタデータ。
+   * リクエスト識別子やバージョン情報など共通メタデータ。メタ情報が不要な場合はnull
    * @nullable
    */
   meta: CustomerOperationsRequestDeletion202Meta
   /**
-   * 関連リソースや次アクションへのリンク情報。
+   * 関連リソースや次アクションへのリンク情報。リンクがない場合はnull
    * @nullable
    */
   links: CustomerOperationsRequestDeletion202Links

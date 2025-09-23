@@ -12,42 +12,42 @@ import type { ModelsPreviousTreatment } from './modelsPreviousTreatment'
  */
 export interface ModelsMedicalChartUpdateRequest {
   /**
-   * アレルギー情報
+   * アレルギー情報 - アレルギーがない顧客の場合はnull、null指定で値をリセット可能
    * @nullable
    */
   allergies?: string[] | null
   /**
-   * 頭皮状態
+   * 頭皮状態 - 頭皮に問題がない健康な状態の場合はnull、null指定で値をリセット可能
    * @nullable
    */
   scalpCondition?: string | null
   /**
-   * 毛髪状態
+   * 毛髪状態 - 毛髪に特筆すべき問題がない場合はnull、null指定で値をリセット可能
    * @nullable
    */
   hairCondition?: string | null
   /**
-   * 過去施術の履歴
+   * 過去施術の履歴 - 初回来店やケミカル施術経験がない顧客の場合はnull、null指定で値をリセット可能
    * @nullable
    */
   previousTreatments?: ModelsPreviousTreatment[] | null
   /**
-   * 注意すべき体調・持病
+   * 注意すべき体調・持病 - 健康上の問題がない顧客の場合はnull、null指定で値をリセット可能
    * @nullable
    */
   medicalConditions?: string | null
   /**
-   * 好みの商材
+   * 好みの商材 - 特定の好みがない顧客の場合はnull、null指定で値をリセット可能
    * @nullable
    */
   preferredProducts?: string[] | null
   /**
-   * 避けるべき商材
+   * 避けるべき商材 - 特に避けるべき商材がない顧客の場合はnull、null指定で値をリセット可能
    * @nullable
    */
   avoidProducts?: string[] | null
   /**
-   * その他メモ
+   * その他メモ - 追加情報がない標準的なカルテの場合はnull、null指定で値をリセット可能
    * @nullable
    */
   notes?: string | null

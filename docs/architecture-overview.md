@@ -361,7 +361,7 @@ The salon domain demonstrates all established patterns working together. Here ar
 // backend/packages/domain/src/models/salon.ts
 import type { openingHours, salons } from '@beauty-salon-backend/database'
 import type { components, operations } from '@beauty-salon-backend/generated'
-import type { Brand, DeepRequired } from '@beauty-salon-backend/utility'
+import type { Brand, DeepRequired, Omit } from '@beauty-salon-backend/utility'
 
 // Branded type for type safety
 export const salonIdBrand: unique symbol = Symbol('SalonId')

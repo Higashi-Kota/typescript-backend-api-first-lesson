@@ -9,16 +9,31 @@ import type { ModelsMembershipTierType } from './modelsMembershipTierType'
 import type { ModelsMembershipBenefitDetail } from './modelsMembershipBenefitDetail'
 
 export interface ModelsMembershipInfo {
+  /** 会員ランク。顧客の現在のメンバーシップレベル */
   tier: ModelsMembershipTierType
+  /** 会員登録日時。該当ランクになった日時 */
   since: string
+  /** 現在享受可能な特典リスト。ランクに応じた特典の詳細 */
   benefits: ModelsMembershipBenefitDetail[]
-  /** @nullable */
+  /**
+   * 専任担当者名。専任担当がいない場合はnull
+   * @nullable
+   */
   dedicatedManager: string | null
+  /** 現在保有ポイント数。利用可能なポイント残高 */
   points: number
+  /** 累積獲得ポイント数。これまでに獲得した全ポイント */
   totalPointsEarned: number
+  /** 累積使用ポイント数。これまでに使用した全ポイント */
   totalPointsUsed: number
-  /** @nullable */
+  /**
+   * 失効予定のポイント数。失効予定がない場合はnull
+   * @nullable
+   */
   expiringPoints: number | null
-  /** @nullable */
+  /**
+   * ポイント失効日時。失効予定がない場合はnull
+   * @nullable
+   */
   pointsExpireAt: string | null
 }

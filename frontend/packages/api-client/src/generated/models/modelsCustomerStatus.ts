@@ -8,7 +8,7 @@
 import type { ModelsCustomerStatusDetail } from './modelsCustomerStatusDetail'
 
 /**
- * Customer status
+ * 顧客ステータス詳細。特別なステータスがない場合はnull
  * @nullable
  */
 export type ModelsCustomerStatus = ModelsCustomerStatusDetail | null

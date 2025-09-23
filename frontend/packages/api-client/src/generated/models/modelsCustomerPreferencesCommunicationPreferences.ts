@@ -8,6 +8,7 @@
 import type { ModelsNotificationSettings } from './modelsNotificationSettings'
 
 /**
+ * 連絡方法の好み設定。設定がない場合はnull
  * @nullable
  */
 export type ModelsCustomerPreferencesCommunicationPreferences =

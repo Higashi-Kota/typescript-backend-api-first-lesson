@@ -9,8 +9,7 @@ import type { ModelsRefundId } from './modelsRefundId'
 import type { ModelsPaymentId } from './modelsPaymentId'
 import type { ModelsMoney } from './modelsMoney'
 import type { ModelsRefundStatus } from './modelsRefundStatus'
-import type { ModelsStaffId } from './modelsStaffId'
-import type { ModelsPaymentMethodType } from './modelsPaymentMethodType'
+import type { ModelsRefundMethod } from './modelsRefundMethod'
 
 /**
  * 返金処理の記録
@@ -28,12 +27,24 @@ export interface ModelsRefund {
   refundedAt: string
   /** 返金処理の進捗状態 */
   status: ModelsRefundStatus
-  /** 返金処理を担当したスタッフ ID */
-  processedBy?: ModelsStaffId
-  /** 返金に使用した支払い方法 */
-  method?: ModelsPaymentMethodType
-  /** 外部返金参照コード */
-  referenceCode?: string
-  /** 返金処理に関する備考 */
-  notes?: string
+  /**
+   * 返金処理を担当したスタッフ ID
+   * @nullable
+   */
+  processedBy: string | null
+  /**
+   * 返金に使用した支払い方法
+   * @nullable
+   */
+  method: ModelsRefundMethod
+  /**
+   * 外部返金参照コード
+   * @nullable
+   */
+  referenceCode: string | null
+  /**
+   * 返金処理に関する備考
+   * @nullable
+   */
+  notes: string | null
 }

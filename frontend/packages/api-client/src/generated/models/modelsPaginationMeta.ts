@@ -12,7 +12,7 @@
  */
 export interface ModelsPaginationMeta {
   /**
-   * 取得対象全体の総件数。件数計測ができない場合は null。
+   * 取得対象全体の総件数。件数計測ができない場合はnull
    * @nullable
    */
   total: number | null
@@ -21,17 +21,17 @@ export interface ModelsPaginationMeta {
   /** 次ページが存在するかを示すフラグ。無限スクロールの継続判定に使用。 */
   hasMore: boolean
   /**
-   * 現在ページのカーソル値。次リクエストで `cursor` に指定することで同位置から再開できる。
+   * 現在ページのカーソル値。次リクエストで `cursor` に指定することで同位置から再開できる。初回ページの場合はnull
    * @nullable
    */
   cursor: string | null
   /**
-   * 次ページを取得するためのカーソル値。存在しない場合は null。
+   * 次ページを取得するためのカーソル値。最終ページの場合はnull
    * @nullable
    */
   nextCursor: string | null
   /**
-   * 前ページへ戻るためのカーソル値。戻り操作が不要な場合は null。
+   * 前ページへ戻るためのカーソル値。初回ページまたは戻り操作が不要な場合はnull
    * @nullable
    */
   prevCursor: string | null

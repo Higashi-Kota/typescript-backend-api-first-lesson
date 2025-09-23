@@ -17,7 +17,7 @@ export interface ModelsCreateSalonRequest {
   /** 新規登録時に必須となるサロン名 */
   name: string
   /**
-   * サロン紹介文。未設定の場合はnullで送信
+   * サロン紹介文。未設定の場合はnull
    * @nullable
    */
   description: string | null
@@ -28,7 +28,7 @@ export interface ModelsCreateSalonRequest {
   /** 通常営業日の営業時間設定一覧 */
   openingHours: ModelsOpeningHours[]
   /**
-   * 特別営業スケジュールやシフト連動の営業時間。不要な場合はnull
+   * 特別営業スケジュールやシフト連動の営業時間。通常営業時間のみの場合はnull
    * @nullable
    */
   businessHours: ModelsBusinessHours[] | null

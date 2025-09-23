@@ -15,42 +15,42 @@ export interface ModelsMedicalChartCreateRequest {
   /** 対象顧客 ID */
   customerId: ModelsCustomerId
   /**
-   * アレルギー情報
+   * アレルギー情報 - アレルギーがない顧客の場合はnull
    * @nullable
    */
   allergies: string[] | null
   /**
-   * 頭皮状態
+   * 頭皮状態 - 頭皮に問題がない健康な状態の場合はnull
    * @nullable
    */
   scalpCondition: string | null
   /**
-   * 毛髪状態
+   * 毛髪状態 - 毛髪に特筆すべき問題がない場合はnull
    * @nullable
    */
   hairCondition: string | null
   /**
-   * 過去施術の履歴
+   * 過去施術の履歴 - 初回来店やケミカル施術経験がない顧客の場合はnull
    * @nullable
    */
   previousTreatments: ModelsPreviousTreatment[] | null
   /**
-   * 注意すべき体調・持病
+   * 注意すべき体調・持病 - 健康上の問題がない顧客の場合はnull
    * @nullable
    */
   medicalConditions: string | null
   /**
-   * 好みの商材
+   * 好みの商材 - 特定の好みがない顧客の場合はnull
    * @nullable
    */
   preferredProducts: string[] | null
   /**
-   * 避けるべき商材
+   * 避けるべき商材 - 特に避けるべき商材がない顧客の場合はnull
    * @nullable
    */
   avoidProducts: string[] | null
   /**
-   * その他メモ
+   * その他メモ - 追加情報がない標準的なカルテの場合はnull
    * @nullable
    */
   notes: string | null

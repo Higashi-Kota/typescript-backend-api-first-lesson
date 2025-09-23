@@ -8,7 +8,7 @@
 import type { ModelsBookingDeposit } from './modelsBookingDeposit'
 
 /**
- * 預かり金に関する情報。必要な場合のみ設定。
+ * 預かり金に関する情報。デポジットが不要な場合はnull。
  * @nullable
  */
 export type ModelsBookingDepositProperty = ModelsBookingDeposit | null

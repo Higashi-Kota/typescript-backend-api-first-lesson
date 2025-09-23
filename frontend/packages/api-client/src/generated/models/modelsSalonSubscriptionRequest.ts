@@ -18,5 +18,5 @@ export interface ModelsSalonSubscriptionRequest {
   /** 希望する通知カテゴリの種類一覧 */
   notificationTypes: ModelsNotificationType[]
   /** 関心の高いサービスカテゴリ。未指定の場合は全カテゴリ対象 */
-  categories?: ModelsServiceCategoryType[]
+  categories: ModelsServiceCategoryType[]
 }

@@ -17,7 +17,7 @@ export interface ModelsAddressUpdate {
   /** 都道府県名。 */
   prefecture?: string
   /**
-   * 郵便番号。未設定の場合はnull。
+   * 郵便番号。未登録の場合はnull
    * @nullable
    */
   postalCode?: string | null
