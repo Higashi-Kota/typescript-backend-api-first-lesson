@@ -7,9 +7,13 @@
  */
 import type { ModelsProblemDetails } from './modelsProblemDetails'
 
+/**
+ * 一括処理で失敗した単一アイテムのエラーモデル。
+問題箇所を特定し再実行方針を検討する際に利用する。
+ */
 export type SalonCrudBulkDelete207FailedItem = {
-  /** Index in the original request */
+  /** 元リクエスト内でのインデックス。0 始まり。 */
   index: number
-  /** Error details */
+  /** 発生したエラー詳細。既定では `ProblemDetails` を使用する。 */
   error: ModelsProblemDetails
 }

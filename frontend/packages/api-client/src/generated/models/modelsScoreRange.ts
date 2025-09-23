@@ -6,9 +6,13 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 検索結果の関連度スコア範囲を表すモデル。
+スコアの分布を把握し、しきい値設定を検討する際に利用する。
+ */
 export interface ModelsScoreRange {
-  /** Minimum relevance score */
+  /** 関連度スコアの最小値。 */
   min: number
-  /** Maximum relevance score */
+  /** 関連度スコアの最大値。 */
   max: number
 }

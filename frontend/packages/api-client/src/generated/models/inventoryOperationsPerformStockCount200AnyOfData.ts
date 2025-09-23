@@ -8,6 +8,9 @@
 import type { ModelsStockMovement } from './modelsStockMovement'
 import type { InventoryOperationsPerformStockCount200AnyOfDataDiscrepanciesItem } from './inventoryOperationsPerformStockCount200AnyOfDataDiscrepanciesItem'
 
+/**
+ * 成功時に返却するドメインデータ。
+ */
 export type InventoryOperationsPerformStockCount200AnyOfData = {
   adjustments: ModelsStockMovement[]
   discrepancies: InventoryOperationsPerformStockCount200AnyOfDataDiscrepanciesItem[]

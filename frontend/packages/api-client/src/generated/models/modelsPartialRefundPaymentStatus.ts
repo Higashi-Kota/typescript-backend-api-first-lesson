@@ -9,10 +9,18 @@ import type { ModelsPartialRefundPaymentStatusType } from './modelsPartialRefund
 import type { ModelsMoney } from './modelsMoney'
 import type { ModelsRefundId } from './modelsRefundId'
 
+/**
+ * 部分返金済み状態の詳細
+ */
 export interface ModelsPartialRefundPaymentStatus {
+  /** 状態種別（partial_refund 固定値） */
   type: ModelsPartialRefundPaymentStatusType
+  /** 返金が行われた日時 */
   refundedAt: string
+  /** 返金された金額 */
   refundAmount: ModelsMoney
+  /** 返金後に残る請求金額 */
   remainingAmount: ModelsMoney
+  /** 関連する返金 ID */
   refundId: ModelsRefundId
 }

@@ -10,11 +10,20 @@ import type { ModelsCustomerId } from './modelsCustomerId'
 import type { ModelsStaffId } from './modelsStaffId'
 import type { ModelsServiceId } from './modelsServiceId'
 
+/**
+ * 予約作成リクエスト - 新規予約登録時に必要なサロン・顧客・メニュー・希望日時の情報を受け取る
+ */
 export interface ModelsCreateReservationRequest {
+  /** 予約対象のサロンID */
   salonId: ModelsSalonId
+  /** 予約を申し込む顧客ID */
   customerId: ModelsCustomerId
+  /** 担当予定のスタッフID */
   staffId: ModelsStaffId
+  /** 希望する施術メニューID */
   serviceId: ModelsServiceId
+  /** 希望する施術開始日時 (UTC) */
   startTime: string
+  /** 顧客要望や注意事項のメモ */
   notes?: string
 }

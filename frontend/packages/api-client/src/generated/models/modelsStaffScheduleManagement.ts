@@ -11,31 +11,37 @@ import type { ModelsBusinessHours } from './modelsBusinessHours'
 import type { ModelsScheduleException } from './modelsScheduleException'
 
 /**
- * Staff schedule management information
+ * スタッフの勤務スケジュールと例外設定を管理するモデル
  */
 export interface ModelsStaffScheduleManagement {
+  /** 対象スタッフのID */
   staffId: ModelsStaffId
+  /** 所属サロンのID */
   salonId: ModelsSalonId
+  /** 通常勤務時間帯の一覧 */
   regularHours: ModelsBusinessHours[]
+  /** 休暇や研修などの例外設定一覧 */
   exceptions: ModelsScheduleException[]
+  /** スケジュールが有効になる開始日時 */
   effectiveFrom: string
+  /** スケジュールの終了日時。無期限の場合はnull */
   effectiveTo?: string
-  /** Record creation timestamp */
+  /** レコード作成日時 (UTC)。 */
   createdAt: string
-  /** User who created the record */
+  /** レコードを作成したユーザーID またはサービス名。 */
   createdBy: string
-  /** Last update timestamp */
+  /** 最終更新日時 (UTC)。 */
   updatedAt: string
-  /** User who last updated the record */
+  /** 最後に更新したユーザーID またはサービス名。 */
   updatedBy: string
-  /** Version number for optimistic locking */
+  /** 楽観的ロックに使用するバージョン番号。 */
   version: number
-  /** Whether the record is deleted */
+  /** 論理削除フラグ。true の場合は通常の検索結果から除外する。 */
   isDeleted: boolean
-  /** Deletion timestamp */
+  /** 削除操作が実行された日時 (UTC)。 */
   deletedAt?: string
-  /** User who deleted the record */
+  /** 削除操作を実施したユーザーID またはサービス名。 */
   deletedBy?: string
-  /** Deletion reason */
+  /** 削除理由や補足メモ。カスタマーサポート対応に利用する。 */
   deletionReason?: string
 }

@@ -11,6 +11,15 @@ namespace BeautySalon.Models {
   // Membership Types
   // ============================================================================
 
+  @doc("""
+    会員ランク区分 - 顧客の会員ランクを表し、特典・優待内容を決定する区分
+    
+    regular: 一般会員 - 基本ランク、標準的なサービスを提供
+    silver: シルバー会員 - 中級ランク、5%の基本割引等の特典付与
+    gold: ゴールド会員 - 上級ランク、10%の割引や優先予約等の特典付与
+    platinum: プラチナ会員 - 最上級ランク、15%の割引や特別サービス提供
+    vip: VIP会員 - 特別会員、完全カスタマイズされた特別待遇を提供
+    """)
   enum MembershipTierType {
     regular,
     silver,
@@ -19,6 +28,16 @@ namespace BeautySalon.Models {
     vip,
   }
 
+  @doc("""
+    会員特典タイプ区分 - 会員ランクに応じて提供される特典の種類
+    
+    discount_rate: 割引率 - サービス料金に対するパーセンテージ割引
+    point_multiplier: ポイント倍率 - 通常のポイント付与率に対する乗数
+    priority_booking: 優先予約 - 一般公開前の優先的な予約権利
+    free_service: 無料サービス - 特定サービスの無料提供
+    birthday_special: 誕生日特典 - 誕生月に提供される特別サービス
+    exclusive_access: 特別アクセス権 - VIP専用メニューや特別イベントへの参加権
+    """)
   enum MembershipBenefitType {
     discount_rate,
     point_multiplier,
@@ -54,6 +73,15 @@ namespace BeautySalon.Models {
   // Customer Status
   // ============================================================================
 
+  @doc("""
+    顧客ステータス区分 - 顧客アカウントの活動状態や利用可否を表す区分
+    
+    active: アクティブ - 通常利用可能な状態
+    inactive: 休眠中 - 長期間利用がないがアカウントは維持されている状態
+    suspended: 停止中 - 一時的に利用が停止されている状態
+    deleted: 削除済み - アカウントが論理削除された状態
+    blacklisted: ブラックリスト - 利用を禁止された状態
+    """)
   enum CustomerStatusType {
     active,
     inactive,
@@ -75,6 +103,16 @@ namespace BeautySalon.Models {
   // Health and Allergy Information
   // ============================================================================
 
+  @doc("""
+    アレルギータイプ区分 - 顧客が持つアレルギーの種類を分類、施術時の注意事項として使用
+    
+    chemical: 化学物質 - カラー剤、パーマ剤等の化学薬品に対するアレルギー
+    fragrance: 香料 - 香水、シャンプー等の香料成分に対するアレルギー
+    metal: 金属 - ヘアピン、ハサミ等の金属製品に対するアレルギー
+    latex: ラテックス - 手袋等のゴム製品に対するアレルギー
+    plant: 植物 - ヘナ、ハーブ等の植物由来成分に対するアレルギー
+    other: その他 - 上記に分類されないアレルギー
+    """)
   enum AllergyType {
     chemical,
     fragrance,
@@ -84,6 +122,13 @@ namespace BeautySalon.Models {
     other,
   }
 
+  @doc("""
+    アレルギー重篤度区分 - アレルギー反応の重篤度を表し、対応レベルを決定
+    
+    mild: 軽度 - 軽いかゆみや赤み程度、通常の施術で注意すれば対応可能
+    moderate: 中等度 - 明確な皮膚反応、特別な配慮や代替品の使用が必要
+    severe: 重度 - 激しい反応、特定の施術を避けるべきレベル
+    """)
   enum AllergySeverityType {
     mild,
     moderate,
@@ -100,6 +145,14 @@ namespace BeautySalon.Models {
     severity: AllergySeverityType;
   }
 
+  @doc("""
+    髪質タイプ区分 - 顧客の髪のクセや形状を分類、適切な施術提案に使用
+    
+    straight: ストレート - 直毛、クセがほとんどない髪質
+    wavy: ウェービー - 緩やかな波状、S字カーブの髪質
+    curly: カーリー - 明確なカール、螺旋状の髪質
+    coily: コイリー - 非常に細かいカール、ジグザグ状の髪質
+    """)
   enum HairType {
     straight,
     wavy,
@@ -107,12 +160,27 @@ namespace BeautySalon.Models {
     coily,
   }
 
+  @doc("""
+    髪の太さ区分 - 髪の毛一本の太さを分類、カットやスタイリングの参考に使用
+    
+    fine: 細毛 - 柔らかく細い髪、ボリュームが出にくい
+    medium: 普通毛 - 平均的な太さの髪、扱いやすい
+    thick: 太毛 - しっかりとした太い髪、ボリュームが出やすい
+    """)
   enum HairThicknessType {
     fine,
     medium,
     thick,
   }
 
+  @doc("""
+    頭皮状態区分 - 頭皮の状態を分類、適切なケア方法の選択に使用
+    
+    normal: 正常 - 健康的な頭皮状態、特別なケア不要
+    dry: 乾燥 - 乾燥しやすい頭皮、保湿ケアが必要
+    oily: 脂性 - 皮脂分泌が多い頭皮、洗浄力のあるケアが必要
+    sensitive: 敏感 - 刺激に弱い頭皮、低刺激の製品使用が必要
+    """)
   enum ScalpConditionType {
     normal,
     dry,

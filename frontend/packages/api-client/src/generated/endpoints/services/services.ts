@@ -49,6 +49,7 @@ type Awaited<O> = O extends AwaitedInput<infer T> ? T : never
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 
 /**
+ * サロン内の提供メニューをカテゴリ別に一覧し、予約画面や在庫管理との連携に活用します。
  * @summary List salon services
  */
 export type serviceOperationsListResponse200 = {
@@ -268,6 +269,7 @@ export function useServiceOperationsList<
 }
 
 /**
+ * 新しい施術メニューを登録し、価格・施術時間・提供条件を設定します。
  * @summary Create service
  */
 export type serviceOperationsCreateResponse201 = {
@@ -381,6 +383,7 @@ export const useServiceOperationsCreate = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
+ * 複数メニューの共通項目を一括更新し、季節キャンペーンや価格調整を効率化します。
  * @summary Bulk update services
  */
 export type serviceOperationsBulkUpdateResponse200 = {
@@ -489,6 +492,7 @@ export const useServiceOperationsBulkUpdate = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
+ * 特定メニューの詳細情報を取得し、予約システムやスタッフ教育に必要な内容を確認します。
  * @summary Get service
  */
 export type serviceOperationsGetResponse200 = {
@@ -695,6 +699,7 @@ export function useServiceOperationsGet<
 }
 
 /**
+ * 既存メニューの内容を更新し、料金改定や提供条件の変更に対応します。
  * @summary Update service
  */
 export type serviceOperationsUpdateResponse200 = {
@@ -832,6 +837,7 @@ export const useServiceOperationsUpdate = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
+ * 提供終了となったメニューを削除し、予約導線から除外します。
  * @summary Delete service
  */
 export type serviceOperationsDeleteResponse204 = {
@@ -946,6 +952,7 @@ export const useServiceOperationsDelete = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
+ * 登録済みのカテゴリ一覧を取得し、メニュー分類や表示順を管理します。
  * @summary List service categories
  */
 export type categoryOperationsListCategoriesResponse200 = {
@@ -1149,6 +1156,7 @@ export function useCategoryOperationsListCategories<
 }
 
 /**
+ * 新しい施術カテゴリを作成し、階層構造や表示順を定義します。
  * @summary Create service category
  */
 export type categoryOperationsCreateCategoryResponse201 = {
@@ -1263,6 +1271,7 @@ export const useCategoryOperationsCreateCategory = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
+ * 既存カテゴリを更新し、名称や表示順、親子関係を調整します。
  * @summary Update service category
  */
 export type categoryOperationsUpdateCategoryResponse200 = {
@@ -1380,6 +1389,7 @@ export const useCategoryOperationsUpdateCategory = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
+ * 利用されなくなったカテゴリを削除し、メニュー構成を整理します。
  * @summary Delete service category
  */
 export type categoryOperationsDeleteCategoryResponse204 = {

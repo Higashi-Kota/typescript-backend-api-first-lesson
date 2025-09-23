@@ -16,42 +16,55 @@ import type { ModelsMaterialUsage } from './modelsMaterialUsage'
 import type { ModelsAttachmentId } from './modelsAttachmentId'
 
 /**
- * TreatmentType record for customer visit
+ * 顧客来店時の施術記録
  */
 export interface ModelsTreatmentRecord {
+  /** 施術記録 ID */
   id: ModelsTreatmentRecordId
+  /** 紐づく予約 ID */
   bookingId: ModelsBookingId
+  /** 施術を受けた顧客 ID */
   customerId: ModelsCustomerId
+  /** 施術担当スタッフ ID */
   staffId: ModelsStaffId
+  /** 施術を実施したサロン ID */
   salonId: ModelsSalonId
-  /** Type of treatment performed */
+  /** 実施した施術タイプ */
   treatment: ModelsTreatmentType
-  /** Services performed during this treatment */
+  /** 施術で提供したサービス ID 一覧 */
   serviceIds: ModelsServiceId[]
-  /** TreatmentType start time */
+  /** 施術開始日時 */
   startTime: string
-  /** TreatmentType end time */
+  /** 施術終了日時 */
   endTime: string
-  /** Detailed notes about the treatment */
+  /** 施術の詳細メモ */
   notes?: string
-  /** Materials and products used */
+  /** 使用した資材・商材の記録 */
   usedMaterials?: ModelsMaterialUsage[]
-  /** Before/after photos */
+  /** 施術前後の写真 ID */
   photos?: ModelsAttachmentId[]
-  /** Customer feedback and notes */
+  /** 顧客のフィードバック */
   customerFeedback?: string
-  /** Recommendations for next visit */
+  /** 次回来店への提案内容 */
   nextRecommendations?: string
-  /** Total amount charged */
+  /** 請求総額 */
   totalAmount: number
-  /** Discount applied */
+  /** 適用した割引額 */
   discountAmount?: number
-  /** Points earned */
+  /** 付与したポイント数 */
   pointsEarned?: number
+  /** レコード作成日時。 */
   createdAt: string
-  /** @nullable */
+  /**
+   * レコードを作成したユーザーID。匿名作成の場合はnull。
+   * @nullable
+   */
   createdBy: string | null
+  /** レコード最終更新日時。 */
   updatedAt: string
-  /** @nullable */
+  /**
+   * レコードを最後に更新したユーザーID。匿名更新の場合はnull。
+   * @nullable
+   */
   updatedBy: string | null
 }

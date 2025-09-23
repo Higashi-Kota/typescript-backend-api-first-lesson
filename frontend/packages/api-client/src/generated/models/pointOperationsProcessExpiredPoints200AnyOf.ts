@@ -8,7 +8,12 @@
 import type { PointOperationsProcessExpiredPoints200AnyOfStatus } from './pointOperationsProcessExpiredPoints200AnyOfStatus'
 import type { PointOperationsProcessExpiredPoints200AnyOfData } from './pointOperationsProcessExpiredPoints200AnyOfData'
 
+/**
+ * 成功時のデータとステータスを保持するモデル。
+ */
 export type PointOperationsProcessExpiredPoints200AnyOf = {
+  /** 固定値success。成功結果であることを示す。 */
   status: PointOperationsProcessExpiredPoints200AnyOfStatus
+  /** 成功時に返却するドメインデータ。 */
   data: PointOperationsProcessExpiredPoints200AnyOfData
 }

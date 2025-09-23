@@ -8,7 +8,12 @@
 import type { PointOperationsGetPointBalance200AnyOfStatus } from './pointOperationsGetPointBalance200AnyOfStatus'
 import type { ModelsPointInfo } from './modelsPointInfo'
 
+/**
+ * 成功時のデータとステータスを保持するモデル。
+ */
 export type PointOperationsGetPointBalance200AnyOf = {
+  /** 固定値success。成功結果であることを示す。 */
   status: PointOperationsGetPointBalance200AnyOfStatus
+  /** 成功時に返却するドメインデータ。 */
   data: ModelsPointInfo
 }

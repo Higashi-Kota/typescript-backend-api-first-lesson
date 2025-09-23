@@ -8,10 +8,18 @@
 import type { ModelsMaterialUsage } from './modelsMaterialUsage'
 import type { ModelsAttachmentId } from './modelsAttachmentId'
 
+/**
+ * 施術記録を更新する入力モデル
+ */
 export interface ModelsTreatmentRecordUpdateInput {
+  /** 施術メモ */
   notes?: string
+  /** 使用した資材一覧 */
   usedMaterials?: ModelsMaterialUsage[]
+  /** 顧客フィードバック */
   customerFeedback?: string
+  /** 次回来店への提案内容 */
   nextRecommendations?: string
+  /** 施術前後写真 ID */
   photos?: ModelsAttachmentId[]
 }

@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 固定値error。エラー結果であることを示す。
+ */
 export type TreatmentOperationsAddTreatmentPhotos200AnyOfThreeStatus =
   (typeof TreatmentOperationsAddTreatmentPhotos200AnyOfThreeStatus)[keyof typeof TreatmentOperationsAddTreatmentPhotos200AnyOfThreeStatus]
 

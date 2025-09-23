@@ -8,7 +8,12 @@
 import type { SalesReportOperationsGetDailySales200AnyOfStatus } from './salesReportOperationsGetDailySales200AnyOfStatus'
 import type { SalesReportOperationsGetDailySales200AnyOfData } from './salesReportOperationsGetDailySales200AnyOfData'
 
+/**
+ * 成功時のデータとステータスを保持するモデル。
+ */
 export type SalesReportOperationsGetDailySales200AnyOf = {
+  /** 固定値success。成功結果であることを示す。 */
   status: SalesReportOperationsGetDailySales200AnyOfStatus
+  /** 成功時に返却するドメインデータ。 */
   data: SalesReportOperationsGetDailySales200AnyOfData
 }

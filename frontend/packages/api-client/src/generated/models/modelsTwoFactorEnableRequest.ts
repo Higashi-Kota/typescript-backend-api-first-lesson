@@ -7,9 +7,9 @@
  */
 
 /**
- * Two-factor authentication enable request
+ * 2要素認証を有効化する際の認証リクエスト。
  */
 export interface ModelsTwoFactorEnableRequest {
-  /** Current password for verification */
+  /** 本人確認のための現在パスワード。 */
   password: string
 }

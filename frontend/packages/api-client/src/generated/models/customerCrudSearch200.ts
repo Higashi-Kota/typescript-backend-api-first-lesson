@@ -10,13 +10,14 @@ import type { ModelsSearchMeta } from './modelsSearchMeta'
 import type { CustomerCrudSearch200Facets } from './customerCrudSearch200Facets'
 
 /**
- * Search response with faceted results
+ * 検索結果とファセット集計をまとめたレスポンスモデル。
+キーワード検索の結果表示と、絞り込み条件の提示を同時に実現する。
  */
 export type CustomerCrudSearch200 = {
-  /** Search results */
+  /** 検索でヒットした結果一覧。サロンカードやメニュー一覧に利用。 */
   results: ModelsCustomer[]
-  /** Search metadata */
+  /** 検索条件や件数などのメタ情報。ページングやログ解析に活用する。 */
   meta: ModelsSearchMeta
-  /** Faceted aggregations */
+  /** ファセット集計結果。各フィールドごとの件数分布を保持する。 */
   facets?: CustomerCrudSearch200Facets
 }

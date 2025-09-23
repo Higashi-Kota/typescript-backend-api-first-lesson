@@ -7,27 +7,27 @@
  */
 
 /**
- * 共有リンク
+ * 外部共有用に発行された添付ファイルの共有リンク情報。
  */
 export interface ModelsShareLink {
-  /** 共有リンクID */
+  /** 共有リンクを一意に識別するID。 */
   id: string
-  /** 共有トークン */
+  /** 共有アクセス時に利用するトークン。 */
   token: string
-  /** 添付ファイルID */
+  /** 共有対象の添付ファイルID。 */
   attachmentId: string
-  /** 有効期限（オプション） */
+  /** 共有リンクの有効期限。任意設定。 */
   expiresAt?: string
-  /** 最大ダウンロード数（オプション） */
+  /** 許可する最大ダウンロード回数。任意設定。 */
   maxDownloads?: number
-  /** 現在のダウンロード数 */
+  /** これまでのダウンロード累計数。 */
   downloadCount: number
-  /** パスワード保護 */
+  /** 共有リンクがパスワード保護されているか。 */
   hasPassword: boolean
-  /** 許可されたメールアドレス（オプション） */
+  /** アクセスを許可するメールアドレス一覧。任意設定。 */
   allowedEmails?: string[]
-  /** 作成者ID */
+  /** 共有リンクを作成したユーザーID。 */
   createdBy: string
-  /** 作成日時 */
+  /** 共有リンクを作成した日時。 */
   createdAt: string
 }

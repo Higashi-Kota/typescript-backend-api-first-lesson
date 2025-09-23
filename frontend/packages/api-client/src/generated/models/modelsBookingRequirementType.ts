@@ -6,6 +6,17 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 予約要件タイプ区分 - サービス予約時に必要な条件や制約
+
+deposit: デポジット - 予約時に支払う予約金
+consultation: 事前カウンセリング - 施術前の相談・カウンセリング
+patch_test: パッチテスト - アレルギー確認のための事前テスト
+age_restriction: 年齢制限 - 年齢による利用制限
+gender_restriction: 性別制限 - 性別による利用制限
+membership: 会員限定 - 特定の会員ランク以上の制限
+preparation: 事前準備 - 顧客が事前に行うべき準備
+ */
 export type ModelsBookingRequirementType =
   (typeof ModelsBookingRequirementType)[keyof typeof ModelsBookingRequirementType]
 

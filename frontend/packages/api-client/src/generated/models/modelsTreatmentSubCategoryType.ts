@@ -6,6 +6,15 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * トリートメントサブカテゴリー区分 - ヘアトリートメントサービスの詳細分類
+
+deep_conditioning: ディープコンディショニング - 髪の内部まで栄養を浸透させるトリートメント
+protein_treatment: プロテイントリートメント - タンパク質を補給し髪を強化するトリートメント
+scalp_treatment: スカルプトリートメント - 頭皮ケアに特化したトリートメント
+keratin_treatment: ケラチントリートメント - ケラチンを補充し髪をストレートにするトリートメント
+olaplex: オラプレックス - ダメージした髪の内部結合を修復するトリートメント
+ */
 export type ModelsTreatmentSubCategoryType =
   (typeof ModelsTreatmentSubCategoryType)[keyof typeof ModelsTreatmentSubCategoryType]
 

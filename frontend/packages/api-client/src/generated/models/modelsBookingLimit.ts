@@ -7,7 +7,12 @@
  */
 import type { ModelsBookingLimitPeriod } from './modelsBookingLimitPeriod'
 
+/**
+ * 顧客単位の予約回数制限
+ */
 export interface ModelsBookingLimit {
+  /** 制限期間の単位 */
   period: ModelsBookingLimitPeriod
+  /** 期間内の最大予約可能数 */
   count: number
 }

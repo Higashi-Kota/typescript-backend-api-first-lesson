@@ -8,12 +8,24 @@
 import type { ModelsSalonId } from './modelsSalonId'
 import type { ModelsAddress } from './modelsAddress'
 
+/**
+ * サロン概要モデル - リスト表示や検索結果に必要な要約情報を提供
+ */
 export interface ModelsSalonSummary {
+  /** 対象サロンの一意なID */
   id: ModelsSalonId
+  /** 表示用のサロン名称 */
   name: string
+  /** ユーザーに提示する所在地情報 */
   address: ModelsAddress
-  /** @nullable */
+  /**
+   * レビュー平均値。評価が無い場合はnull
+   * @nullable
+   */
   rating: number | null
-  /** @nullable */
+  /**
+   * レビュー件数。未集計の場合はnull
+   * @nullable
+   */
   reviewCount: number | null
 }

@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 固定値error。エラー結果であることを示す。
+ */
 export type InventoryOperationsRecordStockMovement200AnyOfThreeStatus =
   (typeof InventoryOperationsRecordStockMovement200AnyOfThreeStatus)[keyof typeof InventoryOperationsRecordStockMovement200AnyOfThreeStatus]
 

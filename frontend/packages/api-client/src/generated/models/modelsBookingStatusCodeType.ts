@@ -6,6 +6,17 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 予約ステータスコード区分 - 予約の詳細な進行状態を表す区分
+
+draft: 下書き - 予約内容を作成中、まだ確定していない状態
+pending: 保留中 - 予約リクエストを受付、確認待ちの状態
+confirmed: 確定 - 予約が確定し、スタッフが割り当てられた状態
+in_progress: 施術中 - 現在サービスを実施中の状態
+completed: 完了 - サービス提供が終了した状態
+cancelled: キャンセル - 予約がキャンセルされた状態
+no_show: 無断キャンセル - 顧客が連絡なしに来店しなかった状態
+ */
 export type ModelsBookingStatusCodeType =
   (typeof ModelsBookingStatusCodeType)[keyof typeof ModelsBookingStatusCodeType]
 

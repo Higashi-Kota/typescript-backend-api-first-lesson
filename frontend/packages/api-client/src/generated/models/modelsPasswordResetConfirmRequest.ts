@@ -7,11 +7,11 @@
  */
 
 /**
- * Password reset confirmation
+ * パスワード再設定を確定するためのリクエスト。
  */
 export interface ModelsPasswordResetConfirmRequest {
-  /** Password reset token from email */
+  /** メールで受け取った再設定トークン。 */
   token: string
-  /** New password */
+  /** 新しいパスワード。 */
   newPassword: string
 }

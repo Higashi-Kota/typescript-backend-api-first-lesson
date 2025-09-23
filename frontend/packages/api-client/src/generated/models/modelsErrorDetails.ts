@@ -6,4 +6,7 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * デバッグやサポート対応に役立つ追加情報。任意項目。
+ */
 export type ModelsErrorDetails = { [key: string]: unknown }

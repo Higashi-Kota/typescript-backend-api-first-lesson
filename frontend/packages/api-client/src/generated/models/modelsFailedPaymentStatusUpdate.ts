@@ -7,9 +7,16 @@
  */
 import type { ModelsFailedPaymentStatusUpdateType } from './modelsFailedPaymentStatusUpdateType'
 
+/**
+ * 支払い失敗状態の詳細
+ */
 export interface ModelsFailedPaymentStatusUpdate {
+  /** 状態種別（failed 固定値） */
   type?: ModelsFailedPaymentStatusUpdateType
+  /** 支払いが失敗した日時 */
   failedAt?: string
+  /** 失敗理由の説明 */
   reason?: string
+  /** 再試行が可能かどうか */
   retryable?: boolean
 }

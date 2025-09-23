@@ -7,18 +7,34 @@
  */
 import type { ModelsInventoryStatusType } from './modelsInventoryStatusType'
 
+/**
+ * 在庫アイテムの情報更新入力モデル
+ */
 export interface ModelsInventoryItemUpdateInput {
+  /** 更新後の商品名 */
   productName?: string
+  /** 更新後の商品説明 */
   description?: string
+  /** 更新後のカテゴリ */
   category?: string
+  /** 更新後のブランド名 */
   brand?: string
+  /** 更新後の仕入先情報 */
   supplier?: string
+  /** 更新後の最低在庫数 */
   minimumStock?: number
+  /** 更新後の最大在庫数 */
   maximumStock?: number
+  /** 更新後の仕入単価 */
   unitCost?: number
+  /** 更新後の販売価格 */
   sellingPrice?: number
+  /** 更新後の保管場所 */
   location?: string
+  /** 更新後の賞味・使用期限 */
   expirationDate?: string
+  /** 在庫状態の更新 */
   status?: ModelsInventoryStatusType
+  /** 更新後の備考 */
   notes?: string
 }

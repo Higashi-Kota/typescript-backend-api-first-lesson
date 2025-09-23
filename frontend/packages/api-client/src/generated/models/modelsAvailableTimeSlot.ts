@@ -8,15 +8,15 @@
 import type { ModelsStaffSummary } from './modelsStaffSummary'
 
 /**
- * Available time slot details
+ * 予約可能な時間帯の詳細情報モデル
  */
 export interface ModelsAvailableTimeSlot {
-  /** Start time */
+  /** 開始日時 */
   startTime: string
-  /** End time */
+  /** 終了日時 */
   endTime: string
-  /** Available staff members */
+  /** 対応可能なスタッフの一覧 */
   availableStaff: ModelsStaffSummary[]
-  /** Availability percentage */
+  /** 対応可能枠の充足率（%） */
   availability: number
 }

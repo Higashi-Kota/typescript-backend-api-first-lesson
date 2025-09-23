@@ -7,6 +7,6 @@
  */
 
 /**
- * Filter by specific day and time
+ * 特定日時に営業しているサロンを探すための基準日時
  */
 export type ModelsSearchSalonRequestOpenAtParameter = string

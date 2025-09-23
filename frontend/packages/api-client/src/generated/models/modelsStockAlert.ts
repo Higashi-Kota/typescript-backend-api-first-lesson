@@ -7,9 +7,16 @@
  */
 import type { ModelsInventoryId } from './modelsInventoryId'
 
+/**
+ * 在庫残量の閾値警告
+ */
 export interface ModelsStockAlert {
+  /** 対象在庫 ID */
   itemId: ModelsInventoryId
+  /** 設定した閾値 */
   threshold: number
+  /** 警告発生時の在庫数 */
   currentStock: number
+  /** 警告が発生した日時 */
   triggeredAt: string
 }

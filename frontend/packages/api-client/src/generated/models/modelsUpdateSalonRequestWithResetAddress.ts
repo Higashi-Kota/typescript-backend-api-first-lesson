@@ -8,6 +8,7 @@
 import type { ModelsAddress } from './modelsAddress'
 
 /**
+ * 住所情報を更新または未設定に戻す場合に指定
  * @nullable
  */
 export type ModelsUpdateSalonRequestWithResetAddress = ModelsAddress | null

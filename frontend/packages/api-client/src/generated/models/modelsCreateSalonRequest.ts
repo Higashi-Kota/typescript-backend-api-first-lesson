@@ -11,19 +11,35 @@ import type { ModelsOpeningHours } from './modelsOpeningHours'
 import type { ModelsBusinessHours } from './modelsBusinessHours'
 
 /**
- * Salon creation request - all keys required, values nullable where appropriate
+ * サロン新規登録リクエスト - 全項目のキーが必須で、値は業務要件に応じてnull許可
  */
 export interface ModelsCreateSalonRequest {
+  /** 新規登録時に必須となるサロン名 */
   name: string
-  /** @nullable */
+  /**
+   * サロン紹介文。未設定の場合はnullで送信
+   * @nullable
+   */
   description: string | null
+  /** 店舗の正規住所・連絡先配送先 */
   address: ModelsAddress
+  /** 顧客問い合わせ用の電話やメール情報 */
   contactInfo: ModelsContactInfo
+  /** 通常営業日の営業時間設定一覧 */
   openingHours: ModelsOpeningHours[]
-  /** @nullable */
+  /**
+   * 特別営業スケジュールやシフト連動の営業時間。不要な場合はnull
+   * @nullable
+   */
   businessHours: ModelsBusinessHours[] | null
-  /** @nullable */
+  /**
+   * 店舗写真やメニュー画像のURL一覧。未登録時はnull
+   * @nullable
+   */
   imageUrls: string[] | null
-  /** @nullable */
+  /**
+   * バリアフリー対応や個室有無などの特徴タグ一覧。不要な場合はnull
+   * @nullable
+   */
   features: string[] | null
 }

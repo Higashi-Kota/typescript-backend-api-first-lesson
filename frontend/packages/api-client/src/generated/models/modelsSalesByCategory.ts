@@ -9,11 +9,15 @@ import type { ModelsServiceCategoryType } from './modelsServiceCategoryType'
 import type { ModelsMoney } from './modelsMoney'
 
 /**
- * Sales breakdown by category
+ * サービスカテゴリ別の売上集計行
  */
 export interface ModelsSalesByCategory {
+  /** サービスカテゴリ区分 */
   category: ModelsServiceCategoryType
+  /** 売上金額 */
   amount: ModelsMoney
+  /** 提供件数 */
   count: number
+  /** 総売上に対する構成比率（%） */
   percentage: number
 }

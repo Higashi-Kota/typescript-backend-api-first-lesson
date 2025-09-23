@@ -8,25 +8,25 @@
 import type { ModelsUserId } from './modelsUserId'
 
 /**
- * Session information
+ * ログインセッションの状態と追跡情報。
  */
 export interface ModelsSession {
-  /** Unique session identifier */
+  /** セッションを一意に識別するID。 */
   id: string
-  /** User ID associated with this session */
+  /** セッション所有者のユーザーID。 */
   userId: ModelsUserId
-  /** Refresh token for this session */
+  /** アクセストークン再発行に使用するリフレッシュトークン。 */
   refreshToken: string
-  /** IP address from which the session was created */
+  /** セッション発行元のIPアドレス。 */
   ipAddress: string
-  /** User agent string */
+  /** ブラウザやアプリを示すユーザーエージェント文字列。 */
   userAgent: string
-  /** Session expiry time */
+  /** セッションの有効期限。 */
   expiresAt: string
-  /** Remember me flag */
+  /** 永続化セッション（Remember me）を希望するかのフラグ。 */
   rememberMe: boolean
-  /** Session creation timestamp */
+  /** セッション作成日時。 */
   createdAt: string
-  /** Last activity timestamp */
+  /** 直近のアクティビティ日時。 */
   lastActivityAt: string
 }

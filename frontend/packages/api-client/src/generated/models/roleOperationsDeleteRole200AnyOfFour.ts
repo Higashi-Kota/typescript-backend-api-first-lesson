@@ -8,7 +8,12 @@
 import type { RoleOperationsDeleteRole200AnyOfFourStatus } from './roleOperationsDeleteRole200AnyOfFourStatus'
 import type { ModelsError } from './modelsError'
 
+/**
+ * 失敗時のエラー情報とステータスを保持するモデル。
+ */
 export type RoleOperationsDeleteRole200AnyOfFour = {
+  /** 固定値error。エラー結果であることを示す。 */
   status: RoleOperationsDeleteRole200AnyOfFourStatus
+  /** 失敗時に返却するエラー情報。 */
   error: ModelsError
 }

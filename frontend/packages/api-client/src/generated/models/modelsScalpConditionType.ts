@@ -6,6 +6,14 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 頭皮状態区分 - 頭皮の状態を分類、適切なケア方法の選択に使用
+
+normal: 正常 - 健康的な頭皮状態、特別なケア不要
+dry: 乾燥 - 乾燥しやすい頭皮、保湿ケアが必要
+oily: 脂性 - 皮脂分泌が多い頭皮、洗浄力のあるケアが必要
+sensitive: 敏感 - 刺激に弱い頭皮、低刺激の製品使用が必要
+ */
 export type ModelsScalpConditionType =
   (typeof ModelsScalpConditionType)[keyof typeof ModelsScalpConditionType]
 

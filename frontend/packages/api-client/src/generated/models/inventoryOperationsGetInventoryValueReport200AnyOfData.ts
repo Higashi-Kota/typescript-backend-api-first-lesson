@@ -7,6 +7,9 @@
  */
 import type { InventoryOperationsGetInventoryValueReport200AnyOfDataCategoriesItem } from './inventoryOperationsGetInventoryValueReport200AnyOfDataCategoriesItem'
 
+/**
+ * 成功時に返却するドメインデータ。
+ */
 export type InventoryOperationsGetInventoryValueReport200AnyOfData = {
   totalValue: number
   totalItems: number

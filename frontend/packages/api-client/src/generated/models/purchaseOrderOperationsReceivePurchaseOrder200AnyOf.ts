@@ -8,7 +8,12 @@
 import type { PurchaseOrderOperationsReceivePurchaseOrder200AnyOfStatus } from './purchaseOrderOperationsReceivePurchaseOrder200AnyOfStatus'
 import type { ModelsPurchaseOrder } from './modelsPurchaseOrder'
 
+/**
+ * 成功時のデータとステータスを保持するモデル。
+ */
 export type PurchaseOrderOperationsReceivePurchaseOrder200AnyOf = {
+  /** 固定値success。成功結果であることを示す。 */
   status: PurchaseOrderOperationsReceivePurchaseOrder200AnyOfStatus
+  /** 成功時に返却するドメインデータ。 */
   data: ModelsPurchaseOrder
 }

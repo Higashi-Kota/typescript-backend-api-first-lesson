@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * キャンセルを実行した主体（customer: 顧客／salon: サロン側／system: システム判断）。
+ */
 export type ModelsCancelledBookingStatusUpdateCancelledBy =
   (typeof ModelsCancelledBookingStatusUpdateCancelledBy)[keyof typeof ModelsCancelledBookingStatusUpdateCancelledBy]
 

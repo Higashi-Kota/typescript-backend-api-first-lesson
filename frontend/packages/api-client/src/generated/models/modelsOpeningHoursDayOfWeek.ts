@@ -8,6 +8,7 @@
 import type { ModelsDayOfWeekType } from './modelsDayOfWeekType'
 
 /**
+ * 対象となる曜日。特定日設定のみの場合はnull。
  * @nullable
  */
 export type ModelsOpeningHoursDayOfWeek = ModelsDayOfWeekType | null

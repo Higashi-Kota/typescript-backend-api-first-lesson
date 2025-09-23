@@ -6,11 +6,22 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 顧客やサロンの連絡先情報を表す共通モデル。
+ */
 export interface ModelsContactInfo {
+  /** 主要連絡先として利用するメールアドレス。 */
   email: string
+  /** 主要連絡先として利用する電話番号。 */
   phoneNumber: string
-  /** @nullable */
+  /**
+   * 緊急連絡用などの予備電話番号。未設定時はnull。
+   * @nullable
+   */
   alternativePhone: string | null
-  /** @nullable */
+  /**
+   * 公式サイトや予約ページのURL。未設定時はnull。
+   * @nullable
+   */
   websiteUrl: string | null
 }

@@ -6,4 +6,7 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 外部連携や業務用に保持する任意メタデータ。
+ */
 export type ModelsCreateBookingRequestMetadata = { [key: string]: unknown }

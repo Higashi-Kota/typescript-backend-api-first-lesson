@@ -6,6 +6,15 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * サービス提供可能性タイプ区分 - サービスが提供される時期や条件
+
+always: 常時提供 - いつでも利用可能なサービス
+scheduled: スケジュール制 - 特定の時間帯のみ提供
+by_appointment: 予約制 - 事前予約が必要なサービス
+seasonal: 季節限定 - 特定の季節のみ提供
+limited: 数量限定 - 提供数に制限があるサービス
+ */
 export type ModelsServiceAvailabilityType =
   (typeof ModelsServiceAvailabilityType)[keyof typeof ModelsServiceAvailabilityType]
 

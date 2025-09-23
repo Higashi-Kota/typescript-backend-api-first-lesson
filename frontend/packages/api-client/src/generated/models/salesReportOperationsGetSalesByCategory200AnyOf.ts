@@ -8,7 +8,12 @@
 import type { SalesReportOperationsGetSalesByCategory200AnyOfStatus } from './salesReportOperationsGetSalesByCategory200AnyOfStatus'
 import type { ModelsSalesByCategory } from './modelsSalesByCategory'
 
+/**
+ * 成功時のデータとステータスを保持するモデル。
+ */
 export type SalesReportOperationsGetSalesByCategory200AnyOf = {
+  /** 固定値success。成功結果であることを示す。 */
   status: SalesReportOperationsGetSalesByCategory200AnyOfStatus
+  /** 成功時に返却するドメインデータ。 */
   data: ModelsSalesByCategory[]
 }

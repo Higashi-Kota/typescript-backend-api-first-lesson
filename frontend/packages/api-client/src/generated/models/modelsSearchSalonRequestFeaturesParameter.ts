@@ -7,6 +7,6 @@
  */
 
 /**
- * Filter by features (array)
+ * 設備やこだわり条件などの特徴タグによる絞り込み
  */
 export type ModelsSearchSalonRequestFeaturesParameter = string[]

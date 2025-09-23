@@ -11,18 +11,39 @@ import type { ModelsMoneyUpdate } from './modelsMoneyUpdate'
 import type { ModelsPaymentUpdateInputDepositApplied } from './modelsPaymentUpdateInputDepositApplied'
 import type { ModelsPaymentUpdateInputMetadata } from './modelsPaymentUpdateInputMetadata'
 
+/**
+ * 決済情報の更新入力モデル
+ */
 export interface ModelsPaymentUpdateInput {
+  /** 変更後の支払い方法 */
   method?: ModelsPaymentMethodType
+  /** 変更後の支払い状態 */
   status?: ModelsPaymentStatusUpdate
+  /** 再計算した未収残高 */
   outstandingAmount?: ModelsMoneyUpdate
-  /** @nullable */
+  /**
+   * 更新後の預り金額（null 指定で解除）
+   * @nullable
+   */
   depositApplied?: ModelsPaymentUpdateInputDepositApplied
-  /** @nullable */
+  /**
+   * 更新後の外部参照番号（null 指定で解除）
+   * @nullable
+   */
   externalReference?: string | null
-  /** @nullable */
+  /**
+   * 更新後のレシート番号（null 指定で解除）
+   * @nullable
+   */
   receiptNumber?: string | null
-  /** @nullable */
+  /**
+   * 更新後の備考（null 指定で解除）
+   * @nullable
+   */
   notes?: string | null
-  /** @nullable */
+  /**
+   * 更新後のメタデータ（null 指定で解除）
+   * @nullable
+   */
   metadata?: ModelsPaymentUpdateInputMetadata
 }

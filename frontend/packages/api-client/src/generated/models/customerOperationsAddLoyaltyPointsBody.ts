@@ -8,12 +8,12 @@
 
 export type CustomerOperationsAddLoyaltyPointsBody = {
   /**
-   * Points to add
+   * 加算するポイント数
    * @minimum 1
    */
   points: number
-  /** Reason for adding points */
+  /** ポイント加算の理由 */
   reason: string
-  /** Reference ID (e.g., booking ID) */
+  /** 関連する参照ID（例: 予約ID） */
   referenceId?: string
 }

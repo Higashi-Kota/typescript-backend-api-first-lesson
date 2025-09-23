@@ -15,12 +15,11 @@ using BeautySalon.Models;
 using BeautySalon.Operations;
 
 namespace BeautySalon.Operations {
+  @doc("顧客情報の管理とエンゲージメント施策を支えるAPI操作群です。プロフィールから予約履歴、ロイヤルティ施策まで一貫して扱います。")
   @route("/api/v1/customers")
   @tag("Customers")
   namespace CustomerOperations {
-    /**
-     * Standard CRUD operations
-     */
+    @doc("顧客レコードの登録・更新・検索・監査を包括的に提供し、業務オペレーションの基盤を構築します。")
     @route("/")
     interface CustomerCrud
       extends CrudOperations<
@@ -39,9 +38,7 @@ namespace BeautySalon.Operations {
         SearchOperations<Customer, SearchCustomerRequest>,
         AuditOperations<Customer, CustomerId> {}
 
-    /**
-     * Get customer profile with extended information
-     */
+    @doc("顧客の基本情報に加え、嗜好や連絡先など拡張情報を取得し、パーソナライズ対応に活かします。")
     @summary("Get customer profile")
     @get
     @route("{id}/profile")
@@ -59,9 +56,7 @@ namespace BeautySalon.Operations {
       @body error: ProblemDetails;
     };
 
-    /**
-     * Get customer statistics
-     */
+    @doc("来店頻度や売上貢献度など顧客指標を集計し、セグメント施策やVIP判定に利用します。")
     @summary("Get customer statistics")
     @get
     @route("{id}/statistics")
@@ -69,7 +64,7 @@ namespace BeautySalon.Operations {
       @path id: CustomerId,
 
       @query
-      @doc("Period for statistics (e.g., '7d', '1m', '3m', '1y')")
+      @doc("集計対象期間（例: '7d', '1m', '3m', '1y'）")
       period?: string = "1y",
 
       @header("Authorization") authorization?: string,
@@ -84,9 +79,7 @@ namespace BeautySalon.Operations {
       @body error: ProblemDetails;
     };
 
-    /**
-     * Get customer reservations
-     */
+    @doc("顧客が保持する予約履歴を取得し、来店予定や過去施術の確認に利用します。")
     @summary("Get customer reservations")
     @get
     @route("{id}/reservations")
@@ -95,9 +88,11 @@ namespace BeautySalon.Operations {
       @query status?: ReservationStatusType,
 
       @query
+      @doc("取得対象期間の開始日時")
       from?: utcDateTime,
 
       @query
+      @doc("取得対象期間の終了日時")
       to?: utcDateTime,
 
       ...CursorPaginationParams,
@@ -113,9 +108,7 @@ namespace BeautySalon.Operations {
       @body error: ProblemDetails;
     };
 
-    /**
-     * Get customer bookings
-     */
+    @doc("顧客単位の予約パッケージ情報を取得し、複数施術を跨いだ利用状況を把握します。")
     @summary("Get customer bookings")
     @get
     @route("{id}/bookings")
@@ -124,9 +117,11 @@ namespace BeautySalon.Operations {
       @query status?: BookingStatusCodeType,
 
       @query
+      @doc("取得対象期間の開始日時")
       from?: utcDateTime,
 
       @query
+      @doc("取得対象期間の終了日時")
       to?: utcDateTime,
 
       ...CursorPaginationParams,
@@ -142,9 +137,7 @@ namespace BeautySalon.Operations {
       @body error: ProblemDetails;
     };
 
-    /**
-     * Update customer preferences
-     */
+    @doc("顧客の施術好みや連絡手段などの希望設定を更新し、パーソナライズされた提案に反映します。")
     @summary("Update customer preferences")
     @put
     @route("{id}/preferences")
@@ -170,21 +163,19 @@ namespace BeautySalon.Operations {
           @body error: ProblemDetails;
         };
 
-    /**
-     * Merge customer records
-     */
+    @doc("重複登録された顧客レコードを統合し、履歴やポイントを一本化します。")
     @summary("Merge customer records")
     @post
     @route("merge")
     op merge(
       @body request: {
-        @doc("Primary customer ID to keep")
+        @doc("統合後も残すメイン顧客ID")
         primaryCustomerId: CustomerId;
 
-        @doc("Secondary customer ID to merge and delete")
+        @doc("統合して削除するサブ顧客ID")
         secondaryCustomerId: CustomerId;
 
-        @doc("Strategy for handling conflicts")
+        @doc("重複データの優先ルール")
         conflictResolution?: "keep_primary" | "keep_secondary" | "keep_newest";
       },
       @header("Authorization") authorization?: string,
@@ -210,9 +201,7 @@ namespace BeautySalon.Operations {
           @body error: ProblemDetails;
         };
 
-    /**
-     * Export customer data (GDPR compliance)
-     */
+    @doc("顧客が自身のデータを取得できるようエクスポートし、GDPR等の個人情報規制に対応します。")
     @summary("Export customer data")
     @get
     @route("{id}/export")
@@ -220,7 +209,7 @@ namespace BeautySalon.Operations {
       @path id: CustomerId,
 
       @query
-      @doc("Export format")
+      @doc("エクスポート形式")
       format?: "json" | "csv" | "pdf" = "json",
 
       @header("Authorization") authorization?: string,
@@ -237,19 +226,17 @@ namespace BeautySalon.Operations {
       @body error: ProblemDetails;
     };
 
-    /**
-     * Request customer data deletion (GDPR compliance)
-     */
+    @doc("顧客からの削除要請を受け付け、規制に沿った消去フローを開始します。")
     @summary("Request customer data deletion")
     @post
     @route("{id}/deletion-request")
     op requestDeletion(
       @path id: CustomerId,
       @body request: {
-        @doc("Reason for deletion")
+        @doc("削除を希望する理由")
         reason: string;
 
-        @doc("Confirm understanding of consequences")
+        @doc("削除に伴う影響を理解しているか")
         confirmed: boolean;
       },
       @header("Authorization") authorization?: string,
@@ -257,13 +244,13 @@ namespace BeautySalon.Operations {
       | {
           @statusCode statusCode: 202;
           @body response: ApiResponse<{
-            @doc("Deletion request ID")
+            @doc("削除リクエストID")
             requestId: string;
 
-            @doc("Scheduled deletion date")
+            @doc("予定される削除日")
             scheduledDate: utcDateTime;
 
-            @doc("Grace period in days")
+            @doc("猶予期間（日数）")
             gracePeriodDays: int32;
           }>;
         }
@@ -280,23 +267,21 @@ namespace BeautySalon.Operations {
           @body error: ProblemDetails;
         };
 
-    /**
-     * Add loyalty points
-     */
+    @doc("来店やキャンペーンに応じてロイヤルティポイントを加算し、顧客維持を促進します。")
     @summary("Add loyalty points")
     @post
     @route("{id}/loyalty-points")
     op addLoyaltyPoints(
       @path id: CustomerId,
       @body request: {
-        @doc("Points to add")
+        @doc("加算するポイント数")
         @minValue(1)
         points: int32;
 
-        @doc("Reason for adding points")
+        @doc("ポイント加算の理由")
         reason: string;
 
-        @doc("Reference ID (e.g., booking ID)")
+        @doc("関連する参照ID（例: 予約ID）")
         referenceId?: string;
       },
       @header("Authorization") authorization?: string,
@@ -304,10 +289,10 @@ namespace BeautySalon.Operations {
       | {
           @statusCode statusCode: 200;
           @body response: ApiResponse<{
-            @doc("New points balance")
+            @doc("更新後のポイント残高")
             balance: int32;
 
-            @doc("Transaction ID")
+            @doc("トランザクションID")
             transactionId: string;
           }>;
         }

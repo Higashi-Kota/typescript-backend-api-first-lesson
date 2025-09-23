@@ -14,33 +14,53 @@ import type { ModelsOrderId } from './modelsOrderId'
 import type { ModelsTreatmentRecordId } from './modelsTreatmentRecordId'
 
 /**
- * Stock movement record
+ * 在庫の移動履歴
  */
 export interface ModelsStockMovement {
+  /** トランザクション ID */
   id: string
+  /** 対象在庫アイテム ID */
   itemId: ModelsInventoryId
+  /** 処理を行うサロン ID */
   salonId: ModelsSalonId
+  /** 在庫操作区分（入庫/出庫/調整/移動） */
   type: ModelsStockMovementType
+  /** 操作した数量 */
   quantity: number
+  /** 操作理由 */
   reason: string
+  /** 操作を担当したスタッフ ID */
   performedBy: ModelsStaffId
+  /** 操作日時 */
   occurredAt: string
+  /** 関連する外部参照 ID */
   referenceId?: string
+  /** 備考メモ */
   notes?: string
+  /** 追加のメタデータ */
   metadata?: ModelsStockMovementMetadata
+  /** 対象在庫アイテム ID */
   inventoryId: ModelsInventoryId
-  /** Stock level after movement */
+  /** 移動後の在庫数量 */
   stockAfter: number
-  /** Reason for movement */
+  /** 紐づく発注 ID */
   orderId?: ModelsOrderId
-  /** Related treatment */
+  /** 紐づく施術記録 ID */
   treatmentRecordId?: ModelsTreatmentRecordId
-  /** Movement timestamp */
+  /** 移動が確定した日時 */
   movedAt: string
+  /** レコード作成日時。 */
   createdAt: string
-  /** @nullable */
+  /**
+   * レコードを作成したユーザーID。匿名作成の場合はnull。
+   * @nullable
+   */
   createdBy: string | null
+  /** レコード最終更新日時。 */
   updatedAt: string
-  /** @nullable */
+  /**
+   * レコードを最後に更新したユーザーID。匿名更新の場合はnull。
+   * @nullable
+   */
   updatedBy: string | null
 }

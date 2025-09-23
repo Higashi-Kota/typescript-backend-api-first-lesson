@@ -10,12 +10,22 @@ import type { ModelsPointTransactionCreateInputType } from './modelsPointTransac
 import type { ModelsPaymentId } from './modelsPaymentId'
 import type { ModelsBookingId } from './modelsBookingId'
 
+/**
+ * ポイント取引を登録する入力モデル
+ */
 export interface ModelsPointTransactionCreateInput {
+  /** 対象顧客 ID */
   customerId: ModelsCustomerId
+  /** ポイント取引種別 */
   type: ModelsPointTransactionCreateInputType
+  /** ポイント変動量 */
   points: number
+  /** 関連する決済 ID */
   paymentId?: ModelsPaymentId
+  /** 関連する予約 ID */
   bookingId?: ModelsBookingId
+  /** 取引内容の説明 */
   description: string
+  /** ポイントの有効期限 */
   expiresAt?: string
 }

@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * デポジットの状態区分（pending: 入金待ち／paid: 入金済み／refunded: 返金済み／forfeited: 没収）。
+ */
 export type ModelsBookingDepositStatus =
   (typeof ModelsBookingDepositStatus)[keyof typeof ModelsBookingDepositStatus]
 

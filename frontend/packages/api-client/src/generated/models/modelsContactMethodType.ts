@@ -7,7 +7,12 @@
  */
 
 /**
- * Contact method enum
+ * 連絡方法区分 - 顧客との連絡・コミュニケーション手段の優先設定
+
+email: Eメール - 電子メールによる連絡方法
+sms: SMS - ショートメッセージサービスによる連絡方法
+phone: 電話 - 音声通話による連絡方法
+push: プッシュ通知 - アプリ内プッシュ通知による連絡方法
  */
 export type ModelsContactMethodType =
   (typeof ModelsContactMethodType)[keyof typeof ModelsContactMethodType]

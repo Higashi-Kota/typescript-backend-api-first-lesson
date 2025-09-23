@@ -6,4 +6,7 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * フリーワード検索用キーワード。
+ */
 export type ModelsSearchParamsQParameter = string

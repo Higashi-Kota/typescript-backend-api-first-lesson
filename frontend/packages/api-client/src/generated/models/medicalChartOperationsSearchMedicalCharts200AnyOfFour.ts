@@ -8,7 +8,12 @@
 import type { MedicalChartOperationsSearchMedicalCharts200AnyOfFourStatus } from './medicalChartOperationsSearchMedicalCharts200AnyOfFourStatus'
 import type { ModelsError } from './modelsError'
 
+/**
+ * 失敗時のエラー情報とステータスを保持するモデル。
+ */
 export type MedicalChartOperationsSearchMedicalCharts200AnyOfFour = {
+  /** 固定値error。エラー結果であることを示す。 */
   status: MedicalChartOperationsSearchMedicalCharts200AnyOfFourStatus
+  /** 失敗時に返却するエラー情報。 */
   error: ModelsError
 }

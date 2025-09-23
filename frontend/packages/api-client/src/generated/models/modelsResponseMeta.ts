@@ -6,12 +6,16 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * レスポンス共通メタデータモデル。
+問い合わせ対応やロギングで必要となる識別情報を保持する。
+ */
 export interface ModelsResponseMeta {
-  /** Request correlation ID */
+  /** リクエストを一意に紐づける相関 ID。ログ横断調査に使用する。 */
   correlationId: string
-  /** Response timestamp */
+  /** レスポンス生成日時 (UTC)。障害時のタイムライン整理に利用。 */
   timestamp: string
-  /** API version */
+  /** レスポンスを返却した API バージョン。 */
   version: string
   [key: string]: unknown
 }

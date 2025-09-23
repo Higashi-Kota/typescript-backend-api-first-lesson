@@ -7,6 +7,6 @@
  */
 
 /**
- * Related links
+ * 関連リソースや次アクションへのリンク情報。
  */
 export type CustomerCrudCreate201Links = { [key: string]: string }

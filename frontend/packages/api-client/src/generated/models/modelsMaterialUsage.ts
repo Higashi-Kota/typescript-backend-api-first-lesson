@@ -8,12 +8,17 @@
 import type { ModelsInventoryId } from './modelsInventoryId'
 
 /**
- * Material usage record
+ * 施術で使用した資材の記録
  */
 export interface ModelsMaterialUsage {
+  /** 使用した在庫 ID */
   inventoryId: ModelsInventoryId
+  /** 資材名 */
   productName: string
+  /** 使用量 */
   quantity: number
+  /** 数量単位 */
   unit: string
+  /** 備考メモ */
   notes?: string
 }

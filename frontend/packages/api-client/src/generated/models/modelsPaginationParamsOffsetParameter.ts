@@ -6,4 +6,7 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 取得開始位置を表すオフセット。省略時は0。
+ */
 export type ModelsPaginationParamsOffsetParameter = number

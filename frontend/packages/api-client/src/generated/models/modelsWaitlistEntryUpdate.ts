@@ -8,13 +8,24 @@
 import type { ModelsStaffId } from './modelsStaffId'
 import type { ModelsServiceId } from './modelsServiceId'
 
+/**
+ * ウェイティングリストに登録された顧客情報。
+ */
 export interface ModelsWaitlistEntryUpdate {
+  /** 現在の待機順序。 */
   position?: number
+  /** 呼び出し予想時刻。未確定の場合はnull。 */
   estimatedTime?: string
+  /** ウェイティングリストに参加した日時。 */
   joinedAt?: string
+  /** 待機権が失効する日時。 */
   expiresAt?: string
+  /** 呼び出し通知を送信した日時。 */
   notifiedAt?: string
+  /** 希望スタッフID。任意指定。 */
   preferredStaffId?: ModelsStaffId
+  /** 希望サービスID。任意指定。 */
   preferredServiceId?: ModelsServiceId
+  /** 追加メモ。 */
   notes?: string
 }

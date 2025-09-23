@@ -8,7 +8,12 @@
 import type { InventoryAlertOperationsGetAlertSummary200AnyOfStatus } from './inventoryAlertOperationsGetAlertSummary200AnyOfStatus'
 import type { InventoryAlertOperationsGetAlertSummary200AnyOfData } from './inventoryAlertOperationsGetAlertSummary200AnyOfData'
 
+/**
+ * 成功時のデータとステータスを保持するモデル。
+ */
 export type InventoryAlertOperationsGetAlertSummary200AnyOf = {
+  /** 固定値success。成功結果であることを示す。 */
   status: InventoryAlertOperationsGetAlertSummary200AnyOfStatus
+  /** 成功時に返却するドメインデータ。 */
   data: InventoryAlertOperationsGetAlertSummary200AnyOfData
 }

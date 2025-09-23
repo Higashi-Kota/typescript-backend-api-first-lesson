@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 状態種別（partial_refund 固定値）
+ */
 export type ModelsPartialRefundPaymentStatusType =
   (typeof ModelsPartialRefundPaymentStatusType)[keyof typeof ModelsPartialRefundPaymentStatusType]
 

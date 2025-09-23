@@ -8,7 +8,12 @@
 import type { RoleOperationsGetRole200AnyOfStatus } from './roleOperationsGetRole200AnyOfStatus'
 import type { ModelsRole } from './modelsRole'
 
+/**
+ * 成功時のデータとステータスを保持するモデル。
+ */
 export type RoleOperationsGetRole200AnyOf = {
+  /** 固定値success。成功結果であることを示す。 */
   status: RoleOperationsGetRole200AnyOfStatus
+  /** 成功時に返却するドメインデータ。 */
   data: ModelsRole
 }

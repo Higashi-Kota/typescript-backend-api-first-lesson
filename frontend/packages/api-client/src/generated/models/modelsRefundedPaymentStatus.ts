@@ -9,9 +9,16 @@ import type { ModelsRefundedPaymentStatusType } from './modelsRefundedPaymentSta
 import type { ModelsMoney } from './modelsMoney'
 import type { ModelsRefundId } from './modelsRefundId'
 
+/**
+ * 全額返金済み状態の詳細
+ */
 export interface ModelsRefundedPaymentStatus {
+  /** 状態種別（refunded 固定値） */
   type: ModelsRefundedPaymentStatusType
+  /** 返金が完了した日時 */
   refundedAt: string
+  /** 返金金額 */
   refundAmount: ModelsMoney
+  /** 関連する返金 ID */
   refundId?: ModelsRefundId
 }

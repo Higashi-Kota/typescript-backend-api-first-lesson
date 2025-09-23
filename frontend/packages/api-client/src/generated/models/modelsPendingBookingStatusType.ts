@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 固定値pending。保留状態であることを示す。
+ */
 export type ModelsPendingBookingStatusType =
   (typeof ModelsPendingBookingStatusType)[keyof typeof ModelsPendingBookingStatusType]
 

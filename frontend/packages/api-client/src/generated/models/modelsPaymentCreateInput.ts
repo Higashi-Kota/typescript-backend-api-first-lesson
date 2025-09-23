@@ -14,16 +14,30 @@ import type { ModelsPaymentAmounts } from './modelsPaymentAmounts'
 import type { ModelsMoney } from './modelsMoney'
 import type { ModelsPaymentCreateInputMetadata } from './modelsPaymentCreateInputMetadata'
 
+/**
+ * 決済登録時に利用する入力モデル
+ */
 export interface ModelsPaymentCreateInput {
+  /** 決済を登録するサロン ID */
   salonId: ModelsSalonId
+  /** 支払う顧客 ID */
   customerId: ModelsCustomerId
+  /** 紐づく予約 ID */
   bookingId?: ModelsBookingId
+  /** 紐づく施術記録 ID */
   treatmentRecordId?: ModelsTreatmentRecordId
+  /** 利用する支払い方法 */
   method: ModelsPaymentMethodType
+  /** 請求金額の内訳 */
   amounts: ModelsPaymentAmounts
+  /** 使用するポイント数 */
   pointsUsed?: number
+  /** 適用する預り金額 */
   depositApplied?: ModelsMoney
+  /** 外部決済参照番号 */
   externalReference?: string
+  /** 備考メモ */
   notes?: string
+  /** 外部システム連携向けメタデータ */
   metadata?: ModelsPaymentCreateInputMetadata
 }

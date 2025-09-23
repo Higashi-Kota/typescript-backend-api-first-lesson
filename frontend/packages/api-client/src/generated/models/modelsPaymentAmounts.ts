@@ -7,10 +7,18 @@
  */
 import type { ModelsMoney } from './modelsMoney'
 
+/**
+ * 請求金額の内訳
+ */
 export interface ModelsPaymentAmounts {
+  /** サービス代金の税抜合計 */
   billed: ModelsMoney
+  /** 課税対象額に対する税額 */
   tax?: ModelsMoney
+  /** 割引金額の合計 */
   discount?: ModelsMoney
+  /** チップとして受領する金額 */
   tip?: ModelsMoney
+  /** 最終的な支払金額 */
   totalPayable: ModelsMoney
 }

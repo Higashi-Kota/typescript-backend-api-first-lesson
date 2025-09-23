@@ -12,20 +12,33 @@ import type { ModelsSalesByCategory } from './modelsSalesByCategory'
 import type { ModelsStaffPerformance } from './modelsStaffPerformance'
 
 /**
- * Sales report summary
+ * 期間内の売上実績を集計したレポート
  */
 export interface ModelsSalesReport {
+  /** 対象サロン ID */
   salonId: ModelsSalonId
+  /** 集計期間の開始日時 */
   periodStart: string
+  /** 集計期間の終了日時 */
   periodEnd: string
+  /** 総売上額 */
   totalSales: ModelsMoney
+  /** 累計税額 */
   totalTax: ModelsMoney
+  /** 累計割引額 */
   totalDiscounts: ModelsMoney
+  /** 累計返金額 */
   totalRefunds: ModelsMoney
+  /** 返金考慮後の純売上額 */
   netSales: ModelsMoney
+  /** 取引件数 */
   transactionCount: number
+  /** 平均取引単価 */
   averageTransactionValue: ModelsMoney
+  /** 支払い方法別の売上内訳 */
   salesByMethod: ModelsSalesByMethod[]
+  /** サービスカテゴリ別の売上内訳 */
   salesByCategory: ModelsSalesByCategory[]
+  /** 売上貢献度の高いスタッフ情報 */
   topStaff: ModelsStaffPerformance[]
 }

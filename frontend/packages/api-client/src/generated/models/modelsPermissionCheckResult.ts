@@ -7,7 +7,12 @@
  */
 import type { ModelsPermissionStatus } from './modelsPermissionStatus'
 
+/**
+ * 権限チェックの結果モデル
+ */
 export interface ModelsPermissionCheckResult {
+  /** 確認対象のユーザー ID */
   userId: string
+  /** 各権限の判定結果一覧 */
   permissions: ModelsPermissionStatus[]
 }

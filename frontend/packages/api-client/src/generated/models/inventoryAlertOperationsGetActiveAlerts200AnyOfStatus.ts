@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 固定値success。成功結果であることを示す。
+ */
 export type InventoryAlertOperationsGetActiveAlerts200AnyOfStatus =
   (typeof InventoryAlertOperationsGetActiveAlerts200AnyOfStatus)[keyof typeof InventoryAlertOperationsGetActiveAlerts200AnyOfStatus]
 

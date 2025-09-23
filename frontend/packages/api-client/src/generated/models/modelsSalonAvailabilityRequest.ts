@@ -10,19 +10,19 @@ import type { ModelsTimeSlot } from './modelsTimeSlot'
 import type { ModelsStaffId } from './modelsStaffId'
 
 /**
- * Salon availability check request
+ * 指定した条件でサロンの予約枠の空き状況を確認するためのリクエスト
  */
 export interface ModelsSalonAvailabilityRequest {
-  /** Service ID to check availability for */
+  /** 空き状況を確認したいサービスのID */
   serviceId: ModelsServiceId
-  /** Preferred date */
+  /** 希望する施術日 */
   date: string
-  /** Preferred time slot */
+  /** 希望する時間帯。未指定の場合は全時間帯を対象 */
   timeSlot?: ModelsTimeSlot
-  /** Preferred staff ID */
+  /** 指名したいスタッフのID。指名なしの場合はnull */
   staffId?: ModelsStaffId
   /**
-   * Number of slots needed
+   * 必要な枠数。デフォルトは1枠
    * @minimum 1
    */
   slots?: number

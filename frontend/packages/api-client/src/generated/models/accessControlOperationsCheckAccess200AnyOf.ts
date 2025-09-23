@@ -8,7 +8,12 @@
 import type { AccessControlOperationsCheckAccess200AnyOfStatus } from './accessControlOperationsCheckAccess200AnyOfStatus'
 import type { ModelsAccessResult } from './modelsAccessResult'
 
+/**
+ * 成功時のデータとステータスを保持するモデル。
+ */
 export type AccessControlOperationsCheckAccess200AnyOf = {
+  /** 固定値success。成功結果であることを示す。 */
   status: AccessControlOperationsCheckAccess200AnyOfStatus
+  /** 成功時に返却するドメインデータ。 */
   data: ModelsAccessResult
 }

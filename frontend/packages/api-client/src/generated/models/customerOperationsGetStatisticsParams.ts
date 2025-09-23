@@ -8,7 +8,7 @@
 
 export type CustomerOperationsGetStatisticsParams = {
   /**
-   * Period for statistics (e.g., '7d', '1m', '3m', '1y')
+   * 集計対象期間（例: '7d', '1m', '3m', '1y'）
    */
   period?: string
 }

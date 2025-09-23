@@ -7,8 +7,14 @@
  */
 import type { ModelsReviewSummaryRatingDistribution } from './modelsReviewSummaryRatingDistribution'
 
+/**
+ * レビュー集計モデル - 平均評価や件数分布を保持し、ダッシュボードやランキング表示に活用する
+ */
 export interface ModelsReviewSummary {
+  /** 全体平均評価 (小数) */
   averageRating: number
+  /** レビュー総件数 */
   totalReviews: number
+  /** 評価値ごとのレビュー件数分布 */
   ratingDistribution: ModelsReviewSummaryRatingDistribution
 }

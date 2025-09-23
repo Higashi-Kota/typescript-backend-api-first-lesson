@@ -7,6 +7,6 @@
  */
 
 /**
- * Filter by active status
+ * 営業中サロンのみを対象にするかどうか
  */
 export type ModelsSearchSalonRequestIsActiveParameter = boolean

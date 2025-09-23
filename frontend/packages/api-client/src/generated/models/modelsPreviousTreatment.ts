@@ -8,11 +8,15 @@
 import type { ModelsTreatmentType } from './modelsTreatmentType'
 
 /**
- * Previous treatment history
+ * 過去施術の履歴
  */
 export interface ModelsPreviousTreatment {
+  /** 施術タイプ */
   treatment: ModelsTreatmentType
+  /** 施術日 */
   date: string
+  /** 施術を受けたサロン名 */
   salonName?: string
+  /** 施術に関するメモ */
   notes?: string
 }

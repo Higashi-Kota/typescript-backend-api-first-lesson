@@ -7,6 +7,6 @@
  */
 
 /**
- * Branded UUID type for Order ID
+ * サプライヤー発注・仕入れオーダーを識別するブランド付きUUID。
  */
 export type ModelsOrderId = string

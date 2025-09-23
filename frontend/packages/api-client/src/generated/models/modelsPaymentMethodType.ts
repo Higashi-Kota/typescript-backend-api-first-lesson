@@ -6,6 +6,17 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 支払い方法区分 - サロンで利用可能な決済手段の種類
+
+cash: 現金 - 現金による支払い
+credit_card: クレジットカード - クレジットカードによる支払い
+debit_card: デビットカード - 銀行口座から直接引き落としのカード支払い
+e_money: 電子マネー - Suica、PASMO等の電子マネーによる支払い
+qr_payment: QRコード決済 - PayPay、LINE Pay等のQRコード決済
+bank_transfer: 銀行振込 - 銀行口座への振込による支払い
+point: ポイント - サロンのポイントを使用した支払い
+ */
 export type ModelsPaymentMethodType =
   (typeof ModelsPaymentMethodType)[keyof typeof ModelsPaymentMethodType]
 

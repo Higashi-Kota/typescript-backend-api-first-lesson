@@ -7,6 +7,6 @@
  */
 
 /**
- * Full-text search query
+ * 全文検索キーワード。名称や説明文を横断的に検索する。
  */
 export type ModelsAdvancedSearchParamsQParameter = string

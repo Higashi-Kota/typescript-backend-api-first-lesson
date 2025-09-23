@@ -7,6 +7,9 @@
  */
 import type { AccessControlOperationsGetUserPermissions200AnyOfDataRolesItem } from './accessControlOperationsGetUserPermissions200AnyOfDataRolesItem'
 
+/**
+ * 成功時に返却するドメインデータ。
+ */
 export type AccessControlOperationsGetUserPermissions200AnyOfData = {
   userId: string
   permissions: string[]

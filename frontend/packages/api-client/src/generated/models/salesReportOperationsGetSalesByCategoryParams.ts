@@ -11,6 +11,12 @@ import type { ModelsDateRangeFilterEndDateParameter } from './modelsDateRangeFil
 
 export type SalesReportOperationsGetSalesByCategoryParams = {
   salonId: ModelsSalonId
+  /**
+   * 検索対象期間の開始日時。
+   */
   startDate?: ModelsDateRangeFilterStartDateParameter
+  /**
+   * 検索対象期間の終了日時。
+   */
   endDate?: ModelsDateRangeFilterEndDateParameter
 }

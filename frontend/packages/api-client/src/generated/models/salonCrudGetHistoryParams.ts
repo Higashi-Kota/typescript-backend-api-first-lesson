@@ -12,21 +12,21 @@ import type { ModelsCursorPaginationParamsSortOrderParameter } from './modelsCur
 
 export type SalonCrudGetHistoryParams = {
   /**
-   * Maximum number of items to return (1-100)
+   * 1ページあたりの取得件数上限 (1〜100)。指定が無い場合は既定値 20 を適用。
    * @minimum 1
    * @maximum 100
    */
   limit?: ModelsCursorPaginationParamsLimitParameter
   /**
-   * Cursor for the next page
+   * 次ページを指し示すカーソル。前回レスポンスの `meta.nextCursor` を設定する。
    */
   cursor?: ModelsCursorPaginationParamsCursorParameter
   /**
-   * Field to sort by
+   * ソート対象フィールド。予約日時や作成日時など業務軸を指定する。
    */
   sortBy?: ModelsCursorPaginationParamsSortByParameter
   /**
-   * Sort order
+   * ソート順序。`asc` は昇順、`desc` は降順を表す。
    */
   sortOrder?: ModelsCursorPaginationParamsSortOrderParameter
 }

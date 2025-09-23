@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 制限期間の単位
+ */
 export type ModelsBookingLimitPeriod =
   (typeof ModelsBookingLimitPeriod)[keyof typeof ModelsBookingLimitPeriod]
 

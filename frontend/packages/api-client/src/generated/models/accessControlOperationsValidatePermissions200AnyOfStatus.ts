@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 固定値success。成功結果であることを示す。
+ */
 export type AccessControlOperationsValidatePermissions200AnyOfStatus =
   (typeof AccessControlOperationsValidatePermissions200AnyOfStatus)[keyof typeof AccessControlOperationsValidatePermissions200AnyOfStatus]
 

@@ -10,17 +10,32 @@ import type { ModelsCustomerId } from './modelsCustomerId'
 import type { ModelsBookingId } from './modelsBookingId'
 import type { ModelsStaffId } from './modelsStaffId'
 
+/**
+ * レビュー作成リクエスト - 顧客が新規レビュー投稿時に入力する評価情報と任意コメント・画像を受け取る
+ */
 export interface ModelsCreateReviewRequest {
+  /** レビュー対象のサロンID */
   salonId: ModelsSalonId
+  /** レビュー投稿者の顧客ID */
   customerId: ModelsCustomerId
+  /** 紐づく来店予約ID (booking_id) */
   bookingId: ModelsBookingId
+  /** 評価対象スタッフのID */
   staffId?: ModelsStaffId
+  /** 全体満足度の評価値 */
   overallRating: number
+  /** 自由記述のコメント */
   comment?: string
+  /** レビュータイトル */
   title?: string
+  /** サービス品質に対する評価値 */
   serviceRating?: number
+  /** スタッフ対応に対する評価値 */
   staffRating?: number
+  /** 清潔さ・衛生状態に対する評価値 */
   cleanlinessRating?: number
+  /** 価格に見合う価値の評価値 */
   valueRating?: number
+  /** 添付画像のURL一覧 */
   imageUrls?: string[]
 }

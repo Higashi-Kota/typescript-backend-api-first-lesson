@@ -8,7 +8,12 @@
 import type { PointOperationsAdjustPoints200AnyOfStatus } from './pointOperationsAdjustPoints200AnyOfStatus'
 import type { ModelsPointTransaction } from './modelsPointTransaction'
 
+/**
+ * 成功時のデータとステータスを保持するモデル。
+ */
 export type PointOperationsAdjustPoints200AnyOf = {
+  /** 固定値success。成功結果であることを示す。 */
   status: PointOperationsAdjustPoints200AnyOfStatus
+  /** 成功時に返却するドメインデータ。 */
   data: ModelsPointTransaction
 }

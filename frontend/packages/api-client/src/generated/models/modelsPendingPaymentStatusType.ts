@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 状態種別（pending 固定値）
+ */
 export type ModelsPendingPaymentStatusType =
   (typeof ModelsPendingPaymentStatusType)[keyof typeof ModelsPendingPaymentStatusType]
 

@@ -6,11 +6,21 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * サロンや顧客の住所情報を表す共通モデル。
+ */
 export interface ModelsAddressUpdate {
+  /** 番地や建物名を含む詳細住所。 */
   street?: string
+  /** 市区町村名。 */
   city?: string
+  /** 都道府県名。 */
   prefecture?: string
-  /** @nullable */
+  /**
+   * 郵便番号。未設定の場合はnull。
+   * @nullable
+   */
   postalCode?: string | null
+  /** 国名。既定値はJapan。 */
   country?: string
 }

@@ -10,7 +10,7 @@ import type { ModelsDomainErrorFactoryAlreadyExistsDefaultCode } from './modelsD
 import type { ModelsDomainErrorFactoryAlreadyExistsHttpStatus } from './modelsDomainErrorFactoryAlreadyExistsHttpStatus'
 
 /**
- * Already exists error factory
+ * 重複登録エラーを生成するための設定。
  */
 export type ModelsDomainErrorFactoryAlreadyExists = {
   type: ModelsDomainErrorFactoryAlreadyExistsType

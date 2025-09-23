@@ -8,6 +8,7 @@
 import type { ModelsPaymentMethodType } from './modelsPaymentMethodType'
 
 /**
+ * 支払い方法の更新またはリセット。
  * @nullable
  */
 export type ModelsUpdateBookingRequestWithResetPaymentMethod =

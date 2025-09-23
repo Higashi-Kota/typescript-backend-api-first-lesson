@@ -9,10 +9,10 @@ import type { ModelsCustomerId } from './modelsCustomerId'
 import type { CustomerOperationsMergeBodyConflictResolution } from './customerOperationsMergeBodyConflictResolution'
 
 export type CustomerOperationsMergeBody = {
-  /** Primary customer ID to keep */
+  /** 統合後も残すメイン顧客ID */
   primaryCustomerId: ModelsCustomerId
-  /** Secondary customer ID to merge and delete */
+  /** 統合して削除するサブ顧客ID */
   secondaryCustomerId: ModelsCustomerId
-  /** Strategy for handling conflicts */
+  /** 重複データの優先ルール */
   conflictResolution?: CustomerOperationsMergeBodyConflictResolution
 }

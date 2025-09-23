@@ -8,7 +8,12 @@
 import type { RoleOperationsCloneRole200AnyOfStatus } from './roleOperationsCloneRole200AnyOfStatus'
 import type { ModelsRole } from './modelsRole'
 
+/**
+ * 成功時のデータとステータスを保持するモデル。
+ */
 export type RoleOperationsCloneRole200AnyOf = {
+  /** 固定値success。成功結果であることを示す。 */
   status: RoleOperationsCloneRole200AnyOfStatus
+  /** 成功時に返却するドメインデータ。 */
   data: ModelsRole
 }

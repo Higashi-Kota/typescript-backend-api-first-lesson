@@ -7,9 +7,16 @@
  */
 import type { ModelsRole } from './modelsRole'
 
+/**
+ * 成功時に返却するドメインデータ。
+ */
 export type RoleOperationsListRoles200AnyOfData = {
+  /** 取得した要素の配列。 */
   data: ModelsRole[]
+  /** 条件に一致する全件数。 */
   total: number
+  /** 1ページあたりの件数。 */
   limit: number
+  /** 取得開始位置のオフセット。 */
   offset: number
 }

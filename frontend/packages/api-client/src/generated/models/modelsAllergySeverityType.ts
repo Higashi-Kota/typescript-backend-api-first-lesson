@@ -6,6 +6,13 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * アレルギー重篤度区分 - アレルギー反応の重篤度を表し、対応レベルを決定
+
+mild: 軽度 - 軽いかゆみや赤み程度、通常の施術で注意すれば対応可能
+moderate: 中等度 - 明確な皮膚反応、特別な配慮や代替品の使用が必要
+severe: 重度 - 激しい反応、特定の施術を避けるべきレベル
+ */
 export type ModelsAllergySeverityType =
   (typeof ModelsAllergySeverityType)[keyof typeof ModelsAllergySeverityType]
 

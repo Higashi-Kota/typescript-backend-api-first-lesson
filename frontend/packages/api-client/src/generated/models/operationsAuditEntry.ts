@@ -10,7 +10,7 @@ import type { OperationsChangeSet } from './operationsChangeSet'
 import type { OperationsAuditEntryMetadata } from './operationsAuditEntryMetadata'
 
 /**
- * Audit entry model
+ * 監査ログ1件分の詳細を保持するモデルです。誰がいつどのような変更を行ったかを記録します。
  */
 export interface OperationsAuditEntry {
   /** Audit entry ID */

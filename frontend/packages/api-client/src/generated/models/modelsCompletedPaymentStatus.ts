@@ -8,9 +8,16 @@
 import type { ModelsCompletedPaymentStatusType } from './modelsCompletedPaymentStatusType'
 import type { ModelsMoney } from './modelsMoney'
 
+/**
+ * 支払い完了状態の詳細
+ */
 export interface ModelsCompletedPaymentStatus {
+  /** 状態種別（completed 固定値） */
   type: ModelsCompletedPaymentStatusType
+  /** 支払い完了日時 */
   completedAt: string
+  /** 実際に決済された金額 */
   paidAmount: ModelsMoney
+  /** 発行されたレシート番号 */
   receiptNumber?: string
 }

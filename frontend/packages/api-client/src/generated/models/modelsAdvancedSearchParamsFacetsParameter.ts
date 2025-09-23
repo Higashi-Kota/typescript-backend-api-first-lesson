@@ -7,6 +7,6 @@
  */
 
 /**
- * Enable faceted search results
+ * ファセット集計を有効化するかどうか。true で各項目の件数を集計する。
  */
 export type ModelsAdvancedSearchParamsFacetsParameter = boolean

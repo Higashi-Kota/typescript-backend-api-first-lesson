@@ -7,6 +7,6 @@
  */
 
 /**
- * Filter by prefecture name
+ * 都道府県名による絞り込み
  */
 export type ModelsSearchSalonRequestPrefectureParameter = string

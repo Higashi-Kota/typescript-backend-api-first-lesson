@@ -7,6 +7,6 @@
  */
 
 /**
- * Maximum distance in kilometers
+ * 検索基点からの最大距離（km）
  */
 export type ModelsSearchSalonRequestMaxDistanceParameter = number

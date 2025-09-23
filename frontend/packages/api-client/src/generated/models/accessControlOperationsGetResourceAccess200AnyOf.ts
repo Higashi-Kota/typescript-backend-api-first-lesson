@@ -8,7 +8,12 @@
 import type { AccessControlOperationsGetResourceAccess200AnyOfStatus } from './accessControlOperationsGetResourceAccess200AnyOfStatus'
 import type { AccessControlOperationsGetResourceAccess200AnyOfDataItem } from './accessControlOperationsGetResourceAccess200AnyOfDataItem'
 
+/**
+ * 成功時のデータとステータスを保持するモデル。
+ */
 export type AccessControlOperationsGetResourceAccess200AnyOf = {
+  /** 固定値success。成功結果であることを示す。 */
   status: AccessControlOperationsGetResourceAccess200AnyOfStatus
+  /** 成功時に返却するドメインデータ。 */
   data: AccessControlOperationsGetResourceAccess200AnyOfDataItem[]
 }

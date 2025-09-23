@@ -7,15 +7,15 @@
  */
 
 /**
- * Login request
+ * ユーザーがログインする際の認証リクエスト。
  */
 export interface ModelsLoginRequest {
-  /** User's email address */
+  /** ログインに使用するメールアドレス。 */
   email: string
-  /** User's password */
+  /** ログイン用パスワード。 */
   password: string
-  /** Remember me flag for extended session */
+  /** 永続セッションを希望するかどうかのフラグ。 */
   rememberMe?: boolean
-  /** Two-factor authentication code (if 2FA is enabled) */
+  /** 2要素認証が有効な場合に入力するワンタイムコード。 */
   twoFactorCode?: string
 }

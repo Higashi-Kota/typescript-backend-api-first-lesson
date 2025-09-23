@@ -7,7 +7,11 @@
  */
 
 /**
- * Two-factor authentication status
+ * 2要素認証ステータス区分 - 2要素認証の設定状態
+
+disabled: 無効 - 2要素認証が設定されていない状態
+pending: 設定中 - 2要素認証の設定が進行中の状態
+enabled: 有効 - 2要素認証が有効化されている状態
  */
 export type ModelsTwoFactorStatusType =
   (typeof ModelsTwoFactorStatusType)[keyof typeof ModelsTwoFactorStatusType]

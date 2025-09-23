@@ -8,7 +8,12 @@
 import type { PermissionOperationsGetPermissionsByResource200AnyOfStatus } from './permissionOperationsGetPermissionsByResource200AnyOfStatus'
 import type { ModelsPermission } from './modelsPermission'
 
+/**
+ * 成功時のデータとステータスを保持するモデル。
+ */
 export type PermissionOperationsGetPermissionsByResource200AnyOf = {
+  /** 固定値success。成功結果であることを示す。 */
   status: PermissionOperationsGetPermissionsByResource200AnyOfStatus
+  /** 成功時に返却するドメインデータ。 */
   data: ModelsPermission[]
 }

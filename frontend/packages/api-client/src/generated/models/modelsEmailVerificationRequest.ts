@@ -7,9 +7,9 @@
  */
 
 /**
- * Email verification request
+ * メールアドレス確認を完了させるリクエスト。
  */
 export interface ModelsEmailVerificationRequest {
-  /** Email verification token */
+  /** メールに記載された確認トークン。 */
   token: string
 }

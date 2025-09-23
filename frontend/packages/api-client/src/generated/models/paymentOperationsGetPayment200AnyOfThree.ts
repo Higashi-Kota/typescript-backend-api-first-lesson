@@ -8,7 +8,12 @@
 import type { PaymentOperationsGetPayment200AnyOfThreeStatus } from './paymentOperationsGetPayment200AnyOfThreeStatus'
 import type { ModelsError } from './modelsError'
 
+/**
+ * 失敗時のエラー情報とステータスを保持するモデル。
+ */
 export type PaymentOperationsGetPayment200AnyOfThree = {
+  /** 固定値error。エラー結果であることを示す。 */
   status: PaymentOperationsGetPayment200AnyOfThreeStatus
+  /** 失敗時に返却するエラー情報。 */
   error: ModelsError
 }

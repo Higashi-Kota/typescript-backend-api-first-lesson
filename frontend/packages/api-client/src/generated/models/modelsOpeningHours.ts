@@ -7,18 +7,40 @@
  */
 import type { ModelsOpeningHoursDayOfWeek } from './modelsOpeningHoursDayOfWeek'
 
+/**
+ * 曜日別および特定日の営業時間を管理するモデル。
+ */
 export interface ModelsOpeningHours {
-  /** @nullable */
+  /**
+   * 対象となる曜日。特定日設定のみの場合はnull。
+   * @nullable
+   */
   dayOfWeek: ModelsOpeningHoursDayOfWeek
-  /** @nullable */
+  /**
+   * 特別営業日の個別日付。通常スケジュールの場合はnull。
+   * @nullable
+   */
   date: string | null
-  /** @nullable */
+  /**
+   * 開店時刻（HH:mm形式）。未設定の場合は休業扱い。
+   * @nullable
+   */
   openTime: string | null
-  /** @nullable */
+  /**
+   * 閉店時刻（HH:mm形式）。未設定の場合は休業扱い。
+   * @nullable
+   */
   closeTime: string | null
+  /** 休業日かどうかを示すフラグ。 */
   isHoliday: boolean
-  /** @nullable */
+  /**
+   * 祝日名称や社内呼称などの休業理由。未設定時はnull。
+   * @nullable
+   */
   holidayName: string | null
-  /** @nullable */
+  /**
+   * 備考や注意事項。未設定時はnull。
+   * @nullable
+   */
   notes: string | null
 }

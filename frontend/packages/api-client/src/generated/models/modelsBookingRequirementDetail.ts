@@ -7,16 +7,30 @@
  */
 import type { ModelsBookingRequirementType } from './modelsBookingRequirementType'
 
+/**
+ * サービス予約時に必要な要件詳細
+ */
 export interface ModelsBookingRequirementDetail {
+  /** 要件の種類 */
   type: ModelsBookingRequirementType
+  /** 金額要件（例: デポジット額） */
   amount?: number
+  /** 割合で設定する要件 */
   percentage?: number
+  /** 必須かどうか */
   required?: boolean
+  /** 所要時間や準備時間 */
   duration?: number
+  /** 何日前までに対応が必要か */
   daysInAdvance?: number
+  /** 利用可能な最低年齢 */
   minAge?: number
+  /** 利用可能な最高年齢 */
   maxAge?: number
+  /** 利用可能な性別の制限 */
   allowedGenders?: string[]
+  /** 必要な会員ランク */
   requiredTier?: string
+  /** 顧客への具体的な指示 */
   instructions?: string[]
 }

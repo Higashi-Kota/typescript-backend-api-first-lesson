@@ -6,8 +6,14 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * キャンセル料金のルール
+ */
 export interface ModelsCancellationFee {
+  /** キャンセル料金を適用する期限（時間） */
   hours: number
+  /** キャンセル料金率（%） */
   percentage: number
+  /** 固定額で設定するキャンセル料金 */
   fixedAmount?: number
 }

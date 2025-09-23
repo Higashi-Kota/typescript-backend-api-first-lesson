@@ -7,6 +7,6 @@
  */
 
 /**
- * Branded UUID type for Payment ID
+ * 決済取引や請求のレコードを識別するブランド付きUUID。
  */
 export type ModelsPaymentId = string

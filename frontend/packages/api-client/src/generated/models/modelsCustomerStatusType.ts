@@ -6,6 +6,15 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 顧客ステータス区分 - 顧客アカウントの活動状態や利用可否を表す区分
+
+active: アクティブ - 通常利用可能な状態
+inactive: 休眠中 - 長期間利用がないがアカウントは維持されている状態
+suspended: 停止中 - 一時的に利用が停止されている状態
+deleted: 削除済み - アカウントが論理削除された状態
+blacklisted: ブラックリスト - 利用を禁止された状態
+ */
 export type ModelsCustomerStatusType =
   (typeof ModelsCustomerStatusType)[keyof typeof ModelsCustomerStatusType]
 

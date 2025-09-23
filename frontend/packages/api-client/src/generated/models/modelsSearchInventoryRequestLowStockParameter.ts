@@ -6,4 +6,7 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 最低在庫を下回るもののみ取得するか
+ */
 export type ModelsSearchInventoryRequestLowStockParameter = boolean

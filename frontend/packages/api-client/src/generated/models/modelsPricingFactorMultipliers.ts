@@ -7,4 +7,7 @@
  */
 import type { ModelsDecimal } from './modelsDecimal'
 
+/**
+ * 条件に応じた倍率設定
+ */
 export type ModelsPricingFactorMultipliers = { [key: string]: ModelsDecimal }

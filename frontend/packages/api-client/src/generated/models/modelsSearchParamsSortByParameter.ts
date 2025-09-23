@@ -6,4 +6,7 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 並び替え対象カラム名。
+ */
 export type ModelsSearchParamsSortByParameter = string

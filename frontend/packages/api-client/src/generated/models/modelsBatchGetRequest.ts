@@ -7,15 +7,16 @@
  */
 
 /**
- * Request for batch retrieval
+ * 複数リソースをまとめて取得するリクエストモデル。
+顧客IDや予約IDを複数指定して最小回数のAPI呼び出しで情報を取得する用途に利用。 
  */
 export interface ModelsBatchGetRequest {
   /**
-   * Array of IDs to retrieve
+   * 取得対象となるリソースIDの配列。1件以上100件以下。
    * @minItems 1
    * @maxItems 100
    */
   ids: string[]
-  /** Fields to include in response */
+  /** レスポンスに含めたいフィールドのカンマ区切りリスト。パフォーマンス最適化に活用する。 */
   fields?: string
 }

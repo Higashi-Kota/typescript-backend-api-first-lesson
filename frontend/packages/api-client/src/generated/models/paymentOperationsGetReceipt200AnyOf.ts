@@ -8,7 +8,12 @@
 import type { PaymentOperationsGetReceipt200AnyOfStatus } from './paymentOperationsGetReceipt200AnyOfStatus'
 import type { PaymentOperationsGetReceipt200AnyOfData } from './paymentOperationsGetReceipt200AnyOfData'
 
+/**
+ * 成功時のデータとステータスを保持するモデル。
+ */
 export type PaymentOperationsGetReceipt200AnyOf = {
+  /** 固定値success。成功結果であることを示す。 */
   status: PaymentOperationsGetReceipt200AnyOfStatus
+  /** 成功時に返却するドメインデータ。 */
   data: PaymentOperationsGetReceipt200AnyOfData
 }

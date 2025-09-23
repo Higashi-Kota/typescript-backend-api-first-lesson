@@ -7,7 +7,11 @@
  */
 
 /**
- * ファイルタイプ
+ * ファイルタイプ区分 - アップロードされるファイルの種類を分類
+
+image: 画像 - 写真やイラスト等の画像ファイル（jpg, png, gif等）
+document: ドキュメント - PDF、Word、Excel等の文書ファイル
+other: その他 - 上記に分類されないファイル
  */
 export type ModelsFileType =
   (typeof ModelsFileType)[keyof typeof ModelsFileType]

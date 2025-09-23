@@ -7,9 +7,9 @@
  */
 
 /**
- * Password reset request
+ * パスワード再設定メール送信を要求するリクエスト。
  */
 export interface ModelsPasswordResetRequest {
-  /** Email address of the account */
+  /** 対象アカウントのメールアドレス。 */
   email: string
 }

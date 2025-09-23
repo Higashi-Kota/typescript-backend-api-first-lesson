@@ -9,7 +9,7 @@ import type { CustomerOperationsExportDataFormat } from './customerOperationsExp
 
 export type CustomerOperationsExportDataParams = {
   /**
-   * Export format
+   * エクスポート形式
    */
   format?: CustomerOperationsExportDataFormat
 }

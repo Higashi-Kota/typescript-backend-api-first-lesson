@@ -7,15 +7,16 @@
  */
 
 /**
- * Soft delete information
+ * ソフトデリート情報モデル。
+論理削除されたレコードの状態や削除理由を記録し、監査ログや復旧オペレーションに活用する。
  */
 export interface ModelsSoftDelete {
-  /** Whether the record is deleted */
+  /** 論理削除フラグ。true の場合は通常の検索結果から除外する。 */
   isDeleted: boolean
-  /** Deletion timestamp */
+  /** 削除操作が実行された日時 (UTC)。 */
   deletedAt?: string
-  /** User who deleted the record */
+  /** 削除操作を実施したユーザーID またはサービス名。 */
   deletedBy?: string
-  /** Deletion reason */
+  /** 削除理由や補足メモ。カスタマーサポート対応に利用する。 */
   deletionReason?: string
 }

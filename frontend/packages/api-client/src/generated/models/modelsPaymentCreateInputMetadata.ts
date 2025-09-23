@@ -6,4 +6,7 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 外部システム連携向けメタデータ
+ */
 export type ModelsPaymentCreateInputMetadata = { [key: string]: unknown }

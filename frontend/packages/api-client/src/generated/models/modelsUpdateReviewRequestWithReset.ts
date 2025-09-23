@@ -7,22 +7,44 @@
  */
 
 /**
- * Review update request with reset capability
+ * リセット対応レビュー更新リクエスト - null指定でコメントや画像を初期化しながらレビューを再設定できる
  */
 export interface ModelsUpdateReviewRequestWithReset {
+  /** 更新後の全体満足度評価 */
   overallRating?: number
-  /** @nullable */
+  /**
+   * null指定も可能なコメント本文
+   * @nullable
+   */
   comment?: string | null
-  /** @nullable */
+  /**
+   * null指定も可能なレビュータイトル
+   * @nullable
+   */
   title?: string | null
-  /** @nullable */
+  /**
+   * null指定も可能なサービス品質評価
+   * @nullable
+   */
   serviceRating?: number | null
-  /** @nullable */
+  /**
+   * null指定も可能なスタッフ評価
+   * @nullable
+   */
   staffRating?: number | null
-  /** @nullable */
+  /**
+   * null指定も可能な清潔さ評価
+   * @nullable
+   */
   cleanlinessRating?: number | null
-  /** @nullable */
+  /**
+   * null指定も可能な価格価値評価
+   * @nullable
+   */
   valueRating?: number | null
-  /** @nullable */
+  /**
+   * null指定も可能な画像URL一覧
+   * @nullable
+   */
   imageUrls?: string[] | null
 }

@@ -7,6 +7,6 @@
  */
 
 /**
- * Filter by city name
+ * 市区町村名による絞り込み
  */
 export type ModelsSearchSalonRequestCityParameter = string

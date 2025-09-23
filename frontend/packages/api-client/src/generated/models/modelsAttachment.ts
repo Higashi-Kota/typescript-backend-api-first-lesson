@@ -10,31 +10,31 @@ import type { ModelsAttachmentMetadata } from './modelsAttachmentMetadata'
 import type { ModelsAttachmentTags } from './modelsAttachmentTags'
 
 /**
- * 添付ファイル情報
+ * サロンシステムで管理するアップロード済みファイルのメタ情報を表すモデル。
  */
 export interface ModelsAttachment {
-  /** 添付ファイルID (UUID) */
+  /** 添付ファイルを一意に識別するID。UUID形式。 */
   id: string
-  /** ストレージキー */
+  /** オブジェクトストレージでファイルを参照するための内部キー。 */
   key: string
-  /** オリジナルファイル名 */
+  /** 利用者がアップロードした元のファイル名。 */
   filename: string
-  /** Content-Type */
+  /** ファイルのMIMEタイプ（Content-Type）。 */
   content: string
-  /** ファイルサイズ（バイト） */
+  /** ファイルサイズ（バイト単位）。 */
   size: number
-  /** ファイルタイプ */
+  /** ファイルの実体情報。ダウンロードや共有レスポンスで利用。 */
   file: ModelsAttachmentFile
-  /** アップロードしたユーザーID */
+  /** ファイルをアップロードしたユーザーID。 */
   uploadedBy: string
-  /** 関連するサロンID（オプション） */
+  /** ファイルが紐づくサロンID。任意項目。 */
   salonId?: string
-  /** メタデータ */
+  /** 必要に応じて付加情報を保持する任意メタデータ。 */
   metadata?: ModelsAttachmentMetadata
-  /** タグ */
+  /** ラベリングや検索に利用するタグ情報のセット。 */
   tags?: ModelsAttachmentTags
-  /** アップロード日時 */
+  /** ファイルがアップロードされた日時。 */
   uploadedAt: string
-  /** 更新日時 */
+  /** ファイル情報が最後に更新された日時。 */
   updatedAt: string
 }

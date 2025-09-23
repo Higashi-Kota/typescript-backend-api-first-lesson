@@ -7,7 +7,7 @@
  */
 
 /**
- * Scope (own, salon, all)
+ * 権限の適用範囲（own/salon/all）
  */
 export type ModelsPermissionScope =
   (typeof ModelsPermissionScope)[keyof typeof ModelsPermissionScope]

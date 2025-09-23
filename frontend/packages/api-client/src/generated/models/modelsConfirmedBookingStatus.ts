@@ -8,9 +8,16 @@
 import type { ModelsConfirmedBookingStatusType } from './modelsConfirmedBookingStatusType'
 import type { ModelsStaffId } from './modelsStaffId'
 
+/**
+ * 予約が確定済みの場合の状態情報。
+ */
 export interface ModelsConfirmedBookingStatus {
+  /** 固定値confirmed。確定状態であることを示す。 */
   type: ModelsConfirmedBookingStatusType
+  /** 予約を確定した日時。 */
   confirmedAt: string
+  /** 担当するスタッフID。 */
   staffId: ModelsStaffId
+  /** 施術開始予定日時。 */
   expectedStart: string
 }

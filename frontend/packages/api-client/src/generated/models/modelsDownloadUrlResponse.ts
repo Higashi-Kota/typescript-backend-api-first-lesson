@@ -7,11 +7,11 @@
  */
 
 /**
- * 署名付きダウンロードURL取得レスポンス
+ * 添付ファイルをダウンロードするための署名付きURLを返すレスポンス。
  */
 export interface ModelsDownloadUrlResponse {
-  /** 署名付きダウンロードURL */
+  /** 一時的に有効なダウンロード用URL。 */
   downloadUrl: string
-  /** URL有効期限 */
+  /** 署名付きURLの有効期限。 */
   expiresAt: string
 }

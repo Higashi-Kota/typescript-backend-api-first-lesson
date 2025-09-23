@@ -8,7 +8,12 @@
 import type { TreatmentOperationsGetTreatmentStatistics200AnyOfStatus } from './treatmentOperationsGetTreatmentStatistics200AnyOfStatus'
 import type { TreatmentOperationsGetTreatmentStatistics200AnyOfData } from './treatmentOperationsGetTreatmentStatistics200AnyOfData'
 
+/**
+ * 成功時のデータとステータスを保持するモデル。
+ */
 export type TreatmentOperationsGetTreatmentStatistics200AnyOf = {
+  /** 固定値success。成功結果であることを示す。 */
   status: TreatmentOperationsGetTreatmentStatistics200AnyOfStatus
+  /** 成功時に返却するドメインデータ。 */
   data: TreatmentOperationsGetTreatmentStatistics200AnyOfData
 }

@@ -9,12 +9,22 @@ import type { ModelsMoneyUpdate } from './modelsMoneyUpdate'
 import type { ModelsBookingDepositUpdateStatus } from './modelsBookingDepositUpdateStatus'
 import type { ModelsPaymentId } from './modelsPaymentId'
 
+/**
+ * 予約確定前に預かるデポジット情報。
+ */
 export interface ModelsBookingDepositUpdate {
+  /** 預かり金額。 */
   amount?: ModelsMoneyUpdate
+  /** デポジットの状態区分（pending: 入金待ち／paid: 入金済み／refunded: 返金済み／forfeited: 没収）。 */
   status?: ModelsBookingDepositUpdateStatus
+  /** 支払い期日。未設定の場合は即時支払い不要。 */
   dueDate?: string
+  /** 入金が確認された日時。 */
   paidAt?: string
+  /** 返金した日時。 */
   refundedAt?: string
+  /** 紐づく決済ID。 */
   paymentId?: ModelsPaymentId
+  /** デポジットに関する備考。 */
   notes?: string
 }

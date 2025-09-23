@@ -7,13 +7,24 @@
  */
 import type { ModelsPreviousTreatment } from './modelsPreviousTreatment'
 
+/**
+ * カルテ情報を更新する入力モデル
+ */
 export interface ModelsMedicalChartUpdateInput {
+  /** アレルギー情報 */
   allergies?: string[]
+  /** 頭皮状態 */
   scalpCondition?: string
+  /** 毛髪状態 */
   hairCondition?: string
+  /** 過去施術の履歴 */
   previousTreatments?: ModelsPreviousTreatment[]
+  /** 注意すべき体調・持病 */
   medicalConditions?: string
+  /** 好みの商材 */
   preferredProducts?: string[]
+  /** 避けるべき商材 */
   avoidProducts?: string[]
+  /** その他メモ */
   notes?: string
 }

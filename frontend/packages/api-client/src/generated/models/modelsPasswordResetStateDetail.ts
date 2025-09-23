@@ -7,10 +7,18 @@
  */
 import type { ModelsPasswordResetStateType } from './modelsPasswordResetStateType'
 
+/**
+ * パスワード再設定リクエストの状態管理モデル。
+ */
 export interface ModelsPasswordResetStateDetail {
+  /** 現在のリセット状態区分。 */
   type: ModelsPasswordResetStateType
+  /** リセット手続きに使用するトークン。 */
   token?: string
+  /** トークンの有効期限。 */
   expiresAt?: string
+  /** リセットを要求した日時。 */
   requestedAt?: string
+  /** リセット完了日時。未完了の場合はnull。 */
   completedAt?: string
 }

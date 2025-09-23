@@ -9,10 +9,18 @@ import type { ModelsDayOfWeekType } from './modelsDayOfWeekType'
 import type { ModelsTimeSlot } from './modelsTimeSlot'
 import type { ModelsDateRange } from './modelsDateRange'
 
+/**
+ * スタッフシフトモデル - 通常勤務スケジュールと休憩時間、適用期間を定義し、予約可能時間の算出に利用する
+ */
 export interface ModelsStaffSchedule {
+  /** 対象となる曜日 */
   dayOfWeek: ModelsDayOfWeekType
+  /** 勤務開始時刻 (フォーマット例: HH:mm) */
   startTime: string
+  /** 勤務終了時刻 (フォーマット例: HH:mm) */
   endTime: string
+  /** 当日の休憩時間帯リスト */
   breakTime?: ModelsTimeSlot[]
+  /** シフトが有効となる期間 */
   effectivePeriod?: ModelsDateRange
 }

@@ -9,11 +9,15 @@ import type { ModelsBusinessHours } from './modelsBusinessHours'
 import type { ModelsScheduleException } from './modelsScheduleException'
 
 /**
- * Staff schedule update request
+ * スタッフの勤務スケジュールを更新するためのリクエスト
  */
 export interface ModelsStaffScheduleUpdateRequest {
+  /** 更新後の通常勤務時間帯一覧 */
   regularHours: ModelsBusinessHours[]
+  /** 休暇や特例などの例外設定一覧。変更がない場合はnull */
   exceptions?: ModelsScheduleException[]
+  /** 更新内容の適用開始日時 */
   effectiveFrom: string
+  /** 適用終了日時。未定の場合はnull */
   effectiveTo?: string
 }

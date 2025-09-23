@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 固定値in_progress。施術中であることを示す。
+ */
 export type ModelsInProgressBookingStatusType =
   (typeof ModelsInProgressBookingStatusType)[keyof typeof ModelsInProgressBookingStatusType]
 

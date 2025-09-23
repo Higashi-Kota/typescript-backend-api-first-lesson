@@ -9,11 +9,20 @@ import type { ModelsServiceAvailabilityType } from './modelsServiceAvailabilityT
 import type { ModelsServiceSchedule } from './modelsServiceSchedule'
 import type { ModelsSeason } from './modelsSeason'
 
+/**
+ * サービスの提供可否設定
+ */
 export interface ModelsServiceAvailabilityDetail {
+  /** 提供可否タイプ */
   type: ModelsServiceAvailabilityType
+  /** 曜日・時間帯のスケジュール */
   schedule?: ModelsServiceSchedule[]
+  /** 事前承認が必要かどうか */
   requiresApproval?: boolean
+  /** 季節限定時の季節設定 */
   seasons?: ModelsSeason[]
+  /** 1 日あたりの提供上限 */
   maxPerDay?: number
+  /** 1 週間あたりの提供上限 */
   maxPerWeek?: number
 }

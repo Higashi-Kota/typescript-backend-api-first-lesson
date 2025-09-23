@@ -7,7 +7,13 @@
  */
 
 /**
- * User account status
+ * ユーザーアカウントステータス区分 - アカウントの利用可否状態
+
+active: アクティブ - 正常に利用可能なアカウント
+unverified: メール未確認 - メールアドレスが確認されていないアカウント
+locked: ロック - ログイン失敗回数超過によりロックされたアカウント
+suspended: 停止 - 管理者によって停止されたアカウント
+deleted: 削除済み - 削除されたアカウント
  */
 export type ModelsUserAccountStatusType =
   (typeof ModelsUserAccountStatusType)[keyof typeof ModelsUserAccountStatusType]

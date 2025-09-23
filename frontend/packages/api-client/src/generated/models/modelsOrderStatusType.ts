@@ -6,6 +6,17 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 発注ステータス区分 - 商品発注の進行状態を表す区分
+
+draft: 下書き - 発注内容を作成中の状態
+pending: 承認待ち - 発注内容が確定し、承認を待っている状態
+approved: 承認済み - 責任者により発注が承認された状態
+ordered: 発注済み - サプライヤーへ正式に発注が行われた状態
+shipped: 発送済み - サプライヤーから商品が発送された状態
+delivered: 配送完了 - 商品が到着し、受領が完了した状態
+cancelled: キャンセル - 発注が取り消された状態
+ */
 export type ModelsOrderStatusType =
   (typeof ModelsOrderStatusType)[keyof typeof ModelsOrderStatusType]
 

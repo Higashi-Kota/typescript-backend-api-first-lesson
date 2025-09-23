@@ -9,17 +9,18 @@ import type { ModelsDomainErrorDetails } from './modelsDomainErrorDetails'
 import type { ModelsProblemDetails } from './modelsProblemDetails'
 
 /**
- * Error context for domain operations
+ * ドメイン操作で発生したエラーのコンテキストモデル。
+ビジネス層の例外情報と HTTP レイヤーの問題詳細を紐づけ、ログ出力やモニタリングを容易にする。
  */
 export interface ModelsDomainOperationError {
-  /** Domain error details */
+  /** ドメインエラーの詳細情報。ビジネスロジック層で発生した要因を保持する。 */
   domainError: ModelsDomainErrorDetails
-  /** Problem details for HTTP response */
+  /** HTTP レスポンスとして返却可能な ProblemDetails。クライアントへの通知に使用。 */
   problemDetails: ModelsProblemDetails
-  /** Occurred at timestamp */
+  /** エラーが発生した日時 (UTC)。再発防止のタイムライン分析に活用。 */
   occurredAt: string
-  /** Operation context */
+  /** エラーが発生した操作名やユースケース。例: `CreateReservation`。 */
   operation?: string
-  /** Stack trace for debugging (only in development) */
+  /** デバッグ用のスタックトレース。開発・検証環境のみで出力する。 */
   stackTrace?: string
 }

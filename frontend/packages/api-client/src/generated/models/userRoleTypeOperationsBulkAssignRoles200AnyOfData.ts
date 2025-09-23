@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 成功時に返却するドメインデータ。
+ */
 export type UserRoleTypeOperationsBulkAssignRoles200AnyOfData = {
   assigned: number
   failed: number

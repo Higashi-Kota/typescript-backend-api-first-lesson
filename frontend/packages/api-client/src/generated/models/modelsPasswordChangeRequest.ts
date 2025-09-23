@@ -7,11 +7,11 @@
  */
 
 /**
- * Password change request
+ * ログイン中ユーザーがパスワードを変更するためのリクエスト。
  */
 export interface ModelsPasswordChangeRequest {
-  /** Current password for verification */
+  /** 本人確認のための現在パスワード。 */
   currentPassword: string
-  /** New password */
+  /** 変更後の新しいパスワード。 */
   newPassword: string
 }

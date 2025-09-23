@@ -8,6 +8,6 @@
 import type { ModelsFacet } from './modelsFacet'
 
 /**
- * Faceted aggregations
+ * ファセット集計結果。各フィールドごとの件数分布を保持する。
  */
 export type CustomerCrudSearch200Facets = { [key: string]: ModelsFacet[] }

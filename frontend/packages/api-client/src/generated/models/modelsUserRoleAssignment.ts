@@ -9,18 +9,21 @@ import type { ModelsRoleId } from './modelsRoleId'
 import type { ModelsSalonId } from './modelsSalonId'
 
 /**
- * User role assignment
+ * ユーザーへのロール割当情報
  */
 export interface ModelsUserRoleAssignment {
+  /** 対象ユーザー ID（スタッフ/顧客いずれも可） */
   userId: string
+  /** 割り当てるロール ID */
   roleId: ModelsRoleId
+  /** サロン単位のロールの場合の対象サロン ID */
   salonId?: ModelsSalonId
-  /** Assignment date */
+  /** 割当日時 */
   assignedAt: string
-  /** Assigned by */
+  /** 割当を実施したユーザー ID */
   assignedBy: string
-  /** Expiration date */
+  /** ロール割当の有効期限 */
   expiresAt?: string
-  /** Is active */
+  /** 割当が現在有効かどうか */
   isActive: boolean
 }

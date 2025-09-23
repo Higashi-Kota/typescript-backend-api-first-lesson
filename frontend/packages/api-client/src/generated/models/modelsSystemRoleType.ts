@@ -6,6 +6,18 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * システムロールタイプ区分 - システムで事前定義されたロールの種類
+
+super_admin: スーパー管理者 - システム全体へのフルアクセス権限
+salon_owner: サロンオーナー - サロン全体へのフルアクセス権限
+salon_manager: サロンマネージャー - サロンの管理業務権限
+senior_staff: シニアスタッフ - 上級スタイリスト・セラピストの権限
+staff: スタッフ - 一般スタッフの権限
+receptionist: 受付 - フロントデスク業務の権限
+customer: 顧客 - 顧客セルフサービスの権限
+guest: ゲスト - 限定的なゲストアクセス権限
+ */
 export type ModelsSystemRoleType =
   (typeof ModelsSystemRoleType)[keyof typeof ModelsSystemRoleType]
 

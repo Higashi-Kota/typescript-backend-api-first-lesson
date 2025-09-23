@@ -6,10 +6,18 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 段階制価格の設定情報
+ */
 export interface ModelsPriceTier {
+  /** 価格段階の名称 */
   name: string
+  /** 段階の説明 */
   description?: string
+  /** 適用価格（税抜） */
   price: number
+  /** この段階での施術時間 */
   duration?: number
+  /** 適用条件の説明リスト */
   conditions?: string[]
 }

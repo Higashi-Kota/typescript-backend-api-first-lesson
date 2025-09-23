@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 重要度レベル
+ */
 export type ModelsInventoryAlertSeverity =
   (typeof ModelsInventoryAlertSeverity)[keyof typeof ModelsInventoryAlertSeverity]
 

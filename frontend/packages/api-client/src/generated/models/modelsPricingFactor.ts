@@ -10,11 +10,20 @@ import type { ModelsPricingFactorMultipliers } from './modelsPricingFactorMultip
 import type { ModelsDecimal } from './modelsDecimal'
 import type { ModelsSeason } from './modelsSeason'
 
+/**
+ * 料金調整に使用する変動要因
+ */
 export interface ModelsPricingFactor {
+  /** 変動要因の種類 */
   type: ModelsPricingFactorType
+  /** 条件に応じた倍率設定 */
   multipliers?: ModelsPricingFactorMultipliers
+  /** ピーク時間帯の指定 */
   peakHours?: string[]
+  /** ピーク時間帯に適用する倍率 */
   peakMultiplier?: ModelsDecimal
+  /** 需要に応じた閾値設定 */
   threshold?: number
+  /** 季節要因の詳細設定 */
   seasons?: ModelsSeason[]
 }

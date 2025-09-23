@@ -8,9 +8,16 @@
 import type { ModelsPendingBookingStatusUpdateType } from './modelsPendingBookingStatusUpdateType'
 import type { ModelsStaffId } from './modelsStaffId'
 
+/**
+ * 予約が確認待ち段階にある場合の状態情報。
+ */
 export interface ModelsPendingBookingStatusUpdate {
+  /** 固定値pending。保留状態であることを示す。 */
   type?: ModelsPendingBookingStatusUpdateType
+  /** 顧客から予約リクエストを受け付けた日時。 */
   requestedAt?: string
+  /** 保留状態の有効期限。未設定の場合は期限なし。 */
   holdExpiresAt?: string
+  /** 仮割り当てされたスタッフID。未確定の場合はnull。 */
   assignedStaffId?: ModelsStaffId
 }

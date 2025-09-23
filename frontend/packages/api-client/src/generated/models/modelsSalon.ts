@@ -11,28 +11,62 @@ import type { ModelsContactInfo } from './modelsContactInfo'
 import type { ModelsOpeningHours } from './modelsOpeningHours'
 import type { ModelsBusinessHours } from './modelsBusinessHours'
 
+/**
+ * サロン基本情報モデル - 美容室の店舗情報、顧客向け公開情報、運営に必要な基礎データを一元管理する
+ */
 export interface ModelsSalon {
+  /** サロンを一意に識別するID */
   id: ModelsSalonId
+  /** 公式名称またはブランド名称 */
   name: string
-  /** @nullable */
+  /**
+   * サロンの特徴やコンセプトを伝える説明文。未設定の場合はnull
+   * @nullable
+   */
   description: string | null
+  /** 所在地・アクセス・郵便番号等を含む住所情報 */
   address: ModelsAddress
+  /** 電話・メール・SNS等の問い合わせ窓口情報 */
   contactInfo: ModelsContactInfo
+  /** 曜日別の基本営業時間帯一覧 */
   openingHours: ModelsOpeningHours[]
-  /** @nullable */
+  /**
+   * 季節やキャンペーン等に合わせた営業スケジュール。未設定時はnull
+   * @nullable
+   */
   businessHours: ModelsBusinessHours[] | null
-  /** @nullable */
+  /**
+   * 店舗写真や内装画像のURL一覧。未登録時はnull
+   * @nullable
+   */
   imageUrls: string[] | null
-  /** @nullable */
+  /**
+   * 設備・サービス・こだわりポイント等の特徴タグ一覧。未設定時はnull
+   * @nullable
+   */
   features: string[] | null
-  /** @nullable */
+  /**
+   * 顧客レビューから算出した平均評価。評価が無い場合はnull
+   * @nullable
+   */
   rating: number | null
-  /** @nullable */
+  /**
+   * 蓄積されたレビュー件数。レビュー未登録の場合はnull
+   * @nullable
+   */
   reviewCount: number | null
+  /** レコード作成日時。 */
   createdAt: string
-  /** @nullable */
+  /**
+   * レコードを作成したユーザーID。匿名作成の場合はnull。
+   * @nullable
+   */
   createdBy: string | null
+  /** レコード最終更新日時。 */
   updatedAt: string
-  /** @nullable */
+  /**
+   * レコードを最後に更新したユーザーID。匿名更新の場合はnull。
+   * @nullable
+   */
   updatedBy: string | null
 }

@@ -10,13 +10,14 @@ import type { CustomerCrudBulkUpdate207FailedItem } from './customerCrudBulkUpda
 import type { ModelsBulkSummary } from './modelsBulkSummary'
 
 /**
- * Response from bulk operations
+ * 一括処理の結果を表すレスポンスモデル。
+成功・失敗の詳細と要約統計を返し、業務オペレーターの振り返りを支援する。
  */
 export type CustomerCrudBulkUpdate207 = {
-  /** Successfully processed items */
+  /** 正常に処理されたアイテムの一覧。ビジネス結果を含む。 */
   succeeded: CustomerCrudBulkUpdate207SucceededItem[]
-  /** Failed items */
+  /** エラーとなったアイテムの一覧。問題の詳細を確認できる。 */
   failed: CustomerCrudBulkUpdate207FailedItem[]
-  /** Summary statistics */
+  /** 処理件数や所要時間をまとめた統計情報。 */
   summary: ModelsBulkSummary
 }

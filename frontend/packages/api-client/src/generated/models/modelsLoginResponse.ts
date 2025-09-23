@@ -8,17 +8,17 @@
 import type { ModelsUser } from './modelsUser'
 
 /**
- * Login response
+ * ログイン成功時に返却するトークン情報。
  */
 export interface ModelsLoginResponse {
-  /** Access token for API requests */
+  /** API呼び出しに利用するアクセストークン。 */
   accessToken: string
-  /** Refresh token for obtaining new access tokens */
+  /** アクセストークン再発行に使用するリフレッシュトークン。 */
   refreshToken: string
-  /** Token type (always 'Bearer') */
+  /** トークン種別。常にBearer。 */
   token: string
-  /** Access token expiry in seconds */
+  /** アクセストークンの有効期限（秒）。 */
   expiresIn: number
-  /** Logged in user information */
+  /** ログインしたユーザーの情報。 */
   user: ModelsUser
 }

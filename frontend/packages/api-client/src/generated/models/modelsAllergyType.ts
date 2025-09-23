@@ -6,6 +6,16 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * アレルギータイプ区分 - 顧客が持つアレルギーの種類を分類、施術時の注意事項として使用
+
+chemical: 化学物質 - カラー剤、パーマ剤等の化学薬品に対するアレルギー
+fragrance: 香料 - 香水、シャンプー等の香料成分に対するアレルギー
+metal: 金属 - ヘアピン、ハサミ等の金属製品に対するアレルギー
+latex: ラテックス - 手袋等のゴム製品に対するアレルギー
+plant: 植物 - ヘナ、ハーブ等の植物由来成分に対するアレルギー
+other: その他 - 上記に分類されないアレルギー
+ */
 export type ModelsAllergyType =
   (typeof ModelsAllergyType)[keyof typeof ModelsAllergyType]
 

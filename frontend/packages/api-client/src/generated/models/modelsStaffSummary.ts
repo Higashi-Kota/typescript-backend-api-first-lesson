@@ -8,13 +8,21 @@
 import type { ModelsStaffId } from './modelsStaffId'
 
 /**
- * Staff summary for various contexts
+ * スタッフ一覧や選択候補で利用する要約情報。
  */
 export interface ModelsStaffSummary {
+  /** スタッフを識別するID。 */
   id: ModelsStaffId
+  /** スタッフの表示名。 */
   name: string
-  /** @nullable */
+  /**
+   * 平均評価スコア。未評価の場合はnull。
+   * @nullable
+   */
   rating: number | null
-  /** @nullable */
+  /**
+   * 担当した予約件数。統計未計算時はnull。
+   * @nullable
+   */
   bookingCount: number | null
 }

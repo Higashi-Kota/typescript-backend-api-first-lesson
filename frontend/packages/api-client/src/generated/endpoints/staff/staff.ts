@@ -45,6 +45,7 @@ type Awaited<O> = O extends AwaitedInput<infer T> ? T : never
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 
 /**
+ * サロンに所属するスタッフ一覧を取得し、配置状況や担当可能メニューを確認します。
  * @summary List staff members
  */
 export type staffOperationsListResponse200 = {
@@ -264,6 +265,7 @@ export function useStaffOperationsList<
 }
 
 /**
+ * 新しいスタッフを登録し、プロフィール情報や担当メニューの設定を開始します。
  * @summary Create staff member
  */
 export type staffOperationsCreateResponse201 = {
@@ -377,6 +379,7 @@ export const useStaffOperationsCreate = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
+ * 特定スタッフの詳細情報を取得し、顧客向け表示や社内確認に利用します。
  * @summary Get staff member
  */
 export type staffOperationsGetResponse200 = {
@@ -582,6 +585,7 @@ export function useStaffOperationsGet<
 }
 
 /**
+ * スタッフのプロフィールや担当メニュー、表示可否を更新します。
  * @summary Update staff member
  */
 export type staffOperationsUpdateResponse200 = {
@@ -711,6 +715,7 @@ export const useStaffOperationsUpdate = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
+ * 退職や契約終了に伴いスタッフを削除し、予約導線から除外します。
  * @summary Delete staff member
  */
 export type staffOperationsDeleteResponse204 = {
@@ -825,6 +830,7 @@ export const useStaffOperationsDelete = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
+ * 指定日のスタッフ空き状況を取得し、予約枠の提案や調整に活用します。
  * @summary Get staff availability
  */
 export type staffOperationsGetAvailabilityResponse200 = {
@@ -1057,6 +1063,7 @@ export function useStaffOperationsGetAvailability<
 }
 
 /**
+ * スタッフの稼働予定を更新し、シフト変更や臨時休みを反映します。
  * @summary Update staff availability
  */
 export type staffOperationsUpdateAvailabilityResponse200 = {
@@ -1196,6 +1203,7 @@ export const useStaffOperationsUpdateAvailability = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
+ * 専門分野や地域条件でスタッフを横断検索し、顧客の指名ニーズに応えます。
  * @summary Search staff across all salons
  */
 export type globalStaffOperationsSearchStaffResponse200 = {

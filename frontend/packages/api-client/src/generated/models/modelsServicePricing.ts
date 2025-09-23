@@ -9,13 +9,24 @@ import type { ModelsPricingStrategyDetail } from './modelsPricingStrategyDetail'
 import type { ModelsCurrencyCodeType } from './modelsCurrencyCodeType'
 import type { ModelsCancellationFee } from './modelsCancellationFee'
 
+/**
+ * サービスの料金設定情報
+ */
 export interface ModelsServicePricing {
+  /** 採用している価格戦略 */
   strategy: ModelsPricingStrategyDetail
+  /** 税込価格かどうか */
   taxIncluded: boolean
+  /** 通貨コード */
   currency: ModelsCurrencyCodeType
+  /** 設定されている最低料金 */
   minimumPrice?: number
+  /** 設定されている最高料金 */
   maximumPrice?: number
+  /** 予約時にデポジットが必要か */
   depositRequired: boolean
+  /** 必要なデポジット金額 */
   depositAmount?: number
+  /** キャンセル料金の設定 */
   cancellationFee?: ModelsCancellationFee
 }

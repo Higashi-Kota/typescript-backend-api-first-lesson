@@ -10,17 +10,18 @@ import type { ModelsHealthCheck } from './modelsHealthCheck'
 import type { ModelsHealthStatusMetadata } from './modelsHealthStatusMetadata'
 
 /**
- * API health status
+ * API ヘルスチェック結果モデル。
+監視基盤や運用ダッシュボードにシステム状態を提供し、早期異常検知を実現する。
  */
 export interface ModelsHealthStatus {
-  /** Overall health status */
+  /** システム全体の稼働状態。`healthy` は正常、`degraded` は性能低下、`unhealthy` は停止を表す。 */
   status: ModelsHealthStatusStatus
-  /** API version */
+  /** 稼働中の API バージョン。運用チームのバージョン管理に利用。 */
   version: string
-  /** Server timestamp */
+  /** 判定実行時点のサーバー時刻 (UTC)。 */
   timestamp: string
-  /** Individual service health checks */
+  /** 各内部サービスや依存コンポーネントのヘルスチェック結果一覧。 */
   checks: ModelsHealthCheck[]
-  /** Additional metadata */
+  /** 監視環境固有の追加メタ情報。必要に応じてキーを拡張する。 */
   metadata?: ModelsHealthStatusMetadata
 }

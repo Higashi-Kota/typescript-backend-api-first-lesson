@@ -7,6 +7,6 @@
  */
 
 /**
- * タグ
+ * ラベリングや検索に利用するタグ情報のセット。
  */
 export type ModelsAttachmentTags = { [key: string]: string }

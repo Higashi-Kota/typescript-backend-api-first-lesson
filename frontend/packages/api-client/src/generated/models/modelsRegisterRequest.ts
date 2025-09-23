@@ -8,15 +8,15 @@
 import type { ModelsAuthUserRoleType } from './modelsAuthUserRoleType'
 
 /**
- * Registration request
+ * 新規ユーザー登録時のリクエスト。
  */
 export interface ModelsRegisterRequest {
-  /** User's email address */
+  /** 登録に使用するメールアドレス。 */
   email: string
-  /** User's password (must meet security requirements) */
+  /** セキュリティ基準を満たすパスワード。 */
   password: string
-  /** User's display name */
+  /** ユーザーの表示名。 */
   name: string
-  /** User's role (defaults to customer) */
+  /** 付与するロール。既定はcustomer。 */
   role?: ModelsAuthUserRoleType
 }

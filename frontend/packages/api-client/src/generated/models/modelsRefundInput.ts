@@ -9,11 +9,20 @@ import type { ModelsPaymentId } from './modelsPaymentId'
 import type { ModelsMoney } from './modelsMoney'
 import type { ModelsStaffId } from './modelsStaffId'
 
+/**
+ * 返金処理を開始するための入力モデル
+ */
 export interface ModelsRefundInput {
+  /** 対象となる決済 ID */
   paymentId: ModelsPaymentId
+  /** 返金する金額 */
   amount: ModelsMoney
+  /** 返金理由の説明 */
   reason: string
+  /** 外部返金参照コード */
   referenceCode?: string
+  /** 返金を担当するスタッフ ID */
   processedBy?: ModelsStaffId
+  /** 返金に関する備考 */
   notes?: string
 }

@@ -6,9 +6,13 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * ファセット集計の単一要素を表すモデル。
+カテゴリや価格帯などの値と、その件数を組みで保持する。
+ */
 export interface ModelsFacet {
-  /** Facet value */
+  /** ファセットの値。例: `メンズ向け` や `個室あり`。 */
   value: string
-  /** Number of items with this value */
+  /** 該当値に一致する件数。 */
   count: number
 }

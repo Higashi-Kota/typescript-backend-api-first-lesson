@@ -9,12 +9,18 @@ import type { ModelsReservationStatusType } from './modelsReservationStatusType'
 import type { ModelsStaffId } from './modelsStaffId'
 
 /**
- * Reservation update request with reset capability
+ * リセット対応予約更新リクエスト - null指定により備考等を初期化しつつ、予約情報を更新できる
  */
 export interface ModelsUpdateReservationRequestWithReset {
+  /** 更新後の予約ステータス */
   status?: ModelsReservationStatusType
-  /** @nullable */
+  /**
+   * null指定で備考のリセットも可能な顧客メモ
+   * @nullable
+   */
   notes?: string | null
+  /** 調整後の施術開始日時 (UTC) */
   startTime?: string
+  /** 再割当先のスタッフID */
   staffId?: ModelsStaffId
 }

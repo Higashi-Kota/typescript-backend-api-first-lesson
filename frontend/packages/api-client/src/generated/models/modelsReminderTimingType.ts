@@ -6,6 +6,14 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * リマインダータイミング区分 - 予約リマインダーを送信するタイミングの設定
+
+one_day_before: 1日前 - 予約日の24時間前に通知
+three_hours_before: 3時間前 - 予約時刻の3時間前に通知
+one_hour_before: 1時間前 - 予約時刻の1時間前に通知
+thirty_minutes_before: 30分前 - 予約時刻の30分前に通知
+ */
 export type ModelsReminderTimingType =
   (typeof ModelsReminderTimingType)[keyof typeof ModelsReminderTimingType]
 

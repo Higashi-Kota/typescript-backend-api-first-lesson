@@ -7,6 +7,6 @@
  */
 
 /**
- * Filter by opening hours
+ * 現在営業中かどうかで絞り込むフラグ
  */
 export type ModelsSearchSalonRequestOpenNowParameter = boolean

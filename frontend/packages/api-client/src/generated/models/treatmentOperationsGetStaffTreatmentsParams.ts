@@ -11,8 +11,20 @@ import type { ModelsPaginationParamsLimitParameter } from './modelsPaginationPar
 import type { ModelsPaginationParamsOffsetParameter } from './modelsPaginationParamsOffsetParameter'
 
 export type TreatmentOperationsGetStaffTreatmentsParams = {
+  /**
+   * 検索対象期間の開始日時。
+   */
   startDate?: ModelsDateRangeFilterStartDateParameter
+  /**
+   * 検索対象期間の終了日時。
+   */
   endDate?: ModelsDateRangeFilterEndDateParameter
+  /**
+   * 1ページあたりの取得件数。省略時は20件。
+   */
   limit?: ModelsPaginationParamsLimitParameter
+  /**
+   * 取得開始位置を表すオフセット。省略時は0。
+   */
   offset?: ModelsPaginationParamsOffsetParameter
 }

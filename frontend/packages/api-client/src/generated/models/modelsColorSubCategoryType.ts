@@ -6,6 +6,18 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * カラーサブカテゴリー区分 - ヘアカラーリングサービスの詳細分類
+
+full_color: フルカラー - 髪全体を染めるサービス
+root_touch: リタッチ - 根元の伸びた部分のみを染めるサービス
+highlights: ハイライト - 部分的に明るい色を入れるサービス
+lowlights: ローライト - 部分的に暗い色を入れるサービス
+balayage: バレイヤージュ - グラデーション染め技法
+ombre: オンブレ - 根元から毛先にかけてグラデーション染め
+bleach: ブリーチ - 髪の色を抜く脱色サービス
+color_correction: カラーコレクション - 色ムラや失敗したカラーの修正
+ */
 export type ModelsColorSubCategoryType =
   (typeof ModelsColorSubCategoryType)[keyof typeof ModelsColorSubCategoryType]
 

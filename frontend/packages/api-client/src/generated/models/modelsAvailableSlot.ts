@@ -7,8 +7,14 @@
  */
 import type { ModelsStaffId } from './modelsStaffId'
 
+/**
+ * 空き枠情報モデル - スタッフごとの提供可能時間帯を表し、予約可能枠の算出に使用する
+ */
 export interface ModelsAvailableSlot {
+  /** 対象スタッフのID */
   staffId: ModelsStaffId
+  /** 空き枠の開始日時 (UTC) */
   startTime: string
+  /** 空き枠の終了日時 (UTC) */
   endTime: string
 }

@@ -6,4 +6,7 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 検索対象のサロン ID
+ */
 export type ModelsSearchInventoryRequestSalonIdParameter = string

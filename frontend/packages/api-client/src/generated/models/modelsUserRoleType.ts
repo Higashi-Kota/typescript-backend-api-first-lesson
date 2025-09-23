@@ -6,6 +6,15 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * ユーザーロール区分 - システム内でのユーザーの役割と権限レベル
+
+customer: 顧客 - サービスの予約・利用が可能なユーザー
+staff: スタッフ - 施術を提供するサロン従業員
+manager: マネージャー - サロンの管理業務を担当する管理者
+admin: 管理者 - システム全体の管理権限を持つユーザー
+owner: オーナー - サロンの所有者、最高権限を保持
+ */
 export type ModelsUserRoleType =
   (typeof ModelsUserRoleType)[keyof typeof ModelsUserRoleType]
 

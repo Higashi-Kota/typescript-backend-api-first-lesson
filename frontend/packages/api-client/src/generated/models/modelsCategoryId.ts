@@ -7,6 +7,6 @@
  */
 
 /**
- * Branded UUID type for Category ID
+ * サービスカテゴリやメニュー分類を識別するブランド付きUUID。
  */
 export type ModelsCategoryId = string

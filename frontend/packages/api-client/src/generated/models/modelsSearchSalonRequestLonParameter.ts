@@ -7,6 +7,6 @@
  */
 
 /**
- * Reference longitude for distance calculation
+ * 距離計算に使用する基準経度
  */
 export type ModelsSearchSalonRequestLonParameter = number

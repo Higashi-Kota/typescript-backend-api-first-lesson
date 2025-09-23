@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * アラート種別
+ */
 export type ModelsInventoryAlertAlert =
   (typeof ModelsInventoryAlertAlert)[keyof typeof ModelsInventoryAlertAlert]
 

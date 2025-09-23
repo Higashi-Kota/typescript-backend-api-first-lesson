@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 固定値error。エラー結果であることを示す。
+ */
 export type PointOperationsProcessExpiredPoints200AnyOfFourStatus =
   (typeof PointOperationsProcessExpiredPoints200AnyOfFourStatus)[keyof typeof PointOperationsProcessExpiredPoints200AnyOfFourStatus]
 

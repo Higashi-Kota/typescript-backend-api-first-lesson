@@ -10,33 +10,43 @@ import type { ModelsCustomerId } from './modelsCustomerId'
 import type { ModelsPreviousTreatment } from './modelsPreviousTreatment'
 
 /**
- * Medical chart for customer
+ * 顧客ごとのカルテ情報
  */
 export interface ModelsMedicalChart {
+  /** カルテ ID */
   id: ModelsMedicalChartId
+  /** 対象顧客 ID */
   customerId: ModelsCustomerId
-  /** Allergies and sensitivities */
+  /** アレルギー・敏感情報 */
   allergies?: string[]
-  /** Scalp condition */
+  /** 頭皮状態のメモ */
   scalpCondition?: string
-  /** Hair condition */
+  /** 毛髪状態のメモ */
   hairCondition?: string
-  /** Previous chemical treatments */
+  /** 過去に実施したケミカル施術履歴 */
   previousTreatments?: ModelsPreviousTreatment[]
-  /** Medical conditions to be aware of */
+  /** 注意が必要な持病・体調情報 */
   medicalConditions?: string
-  /** Preferred products */
+  /** 好みの商材・ブランド */
   preferredProducts?: string[]
-  /** Products to avoid */
+  /** 避けるべき商材 */
   avoidProducts?: string[]
-  /** General notes */
+  /** 自由記述メモ */
   notes?: string
-  /** Last updated date */
+  /** 最終更新日時 */
   lastUpdated: string
+  /** レコード作成日時。 */
   createdAt: string
-  /** @nullable */
+  /**
+   * レコードを作成したユーザーID。匿名作成の場合はnull。
+   * @nullable
+   */
   createdBy: string | null
+  /** レコード最終更新日時。 */
   updatedAt: string
-  /** @nullable */
+  /**
+   * レコードを最後に更新したユーザーID。匿名更新の場合はnull。
+   * @nullable
+   */
   updatedBy: string | null
 }

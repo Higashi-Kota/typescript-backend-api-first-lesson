@@ -7,13 +7,13 @@
  */
 
 /**
- * Response data
+ * レスポンスの主体となるビジネスデータ。
  */
 export type CustomerOperationsRequestDeletion202Data = {
-  /** Deletion request ID */
+  /** 削除リクエストID */
   requestId: string
-  /** Scheduled deletion date */
+  /** 予定される削除日 */
   scheduledDate: string
-  /** Grace period in days */
+  /** 猶予期間（日数） */
   gracePeriodDays: number
 }

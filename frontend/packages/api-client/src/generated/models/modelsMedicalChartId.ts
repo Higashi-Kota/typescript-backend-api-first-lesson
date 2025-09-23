@@ -7,6 +7,6 @@
  */
 
 /**
- * Branded UUID type for Medical Chart ID
+ * カルテ（メディカルチャート）を識別するブランド付きUUID。
  */
 export type ModelsMedicalChartId = string

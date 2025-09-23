@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 成功時に返却するドメインデータ。
+ */
 export type SalesReportOperationsExportSalesReport200AnyOfData = {
   downloadUrl: string
 }

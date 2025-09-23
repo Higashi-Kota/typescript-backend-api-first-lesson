@@ -8,15 +8,23 @@
 import type { ModelsInventoryId } from './modelsInventoryId'
 
 /**
- * Order item detail
+ * 発注明細の詳細情報
  */
 export interface ModelsOrderItem {
+  /** 紐づく在庫 ID */
   inventoryId: ModelsInventoryId
+  /** 商品コード */
   productCode: string
+  /** 商品名 */
   productName: string
+  /** 発注数量 */
   quantity: number
+  /** 数量単位 */
   unit: string
+  /** 単価 */
   unitPrice: number
+  /** 明細ごとの金額 */
   totalPrice: number
+  /** 備考メモ */
   notes?: string
 }

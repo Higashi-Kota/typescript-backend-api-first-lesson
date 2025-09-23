@@ -7,9 +7,9 @@
  */
 
 /**
- * Token refresh request
+ * アクセストークンを更新するためのリクエスト。
  */
 export interface ModelsTokenRefreshRequest {
-  /** Refresh token */
+  /** 認証済みセッションに紐づくリフレッシュトークン。 */
   refreshToken: string
 }

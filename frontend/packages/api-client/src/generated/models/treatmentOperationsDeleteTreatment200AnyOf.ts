@@ -8,7 +8,12 @@
 import type { TreatmentOperationsDeleteTreatment200AnyOfStatus } from './treatmentOperationsDeleteTreatment200AnyOfStatus'
 import type { TreatmentOperationsDeleteTreatment200AnyOfData } from './treatmentOperationsDeleteTreatment200AnyOfData'
 
+/**
+ * 成功時のデータとステータスを保持するモデル。
+ */
 export type TreatmentOperationsDeleteTreatment200AnyOf = {
+  /** 固定値success。成功結果であることを示す。 */
   status: TreatmentOperationsDeleteTreatment200AnyOfStatus
+  /** 成功時に返却するドメインデータ。 */
   data: TreatmentOperationsDeleteTreatment200AnyOfData
 }

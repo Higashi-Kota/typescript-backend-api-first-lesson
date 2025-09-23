@@ -8,19 +8,19 @@
 import type { ModelsSalon } from './modelsSalon'
 
 /**
- * Salon with distance information
+ * 検索基準地点からの距離情報を付与したサロンモデル
  */
 export type ModelsSalonWithDistance = ModelsSalon & {
-  /** Distance from reference point in kilometers */
+  /** 基準地点からの距離（km） */
   distance: number
-  /** Estimated travel time in minutes */
+  /** 想定移動時間（分）。計算不能時はnull */
   travelTime?: number
 } & Required<
     Pick<
       ModelsSalon & {
-        /** Distance from reference point in kilometers */
+        /** 基準地点からの距離（km） */
         distance: number
-        /** Estimated travel time in minutes */
+        /** 想定移動時間（分）。計算不能時はnull */
         travelTime?: number
       },
       'distance'

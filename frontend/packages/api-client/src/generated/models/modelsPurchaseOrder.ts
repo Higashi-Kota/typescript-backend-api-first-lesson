@@ -12,47 +12,57 @@ import type { ModelsOrderItem } from './modelsOrderItem'
 import type { ModelsStaffId } from './modelsStaffId'
 
 /**
- * Purchase order
+ * 仕入れ発注の基本情報
  */
 export interface ModelsPurchaseOrder {
+  /** 発注 ID */
   id: ModelsOrderId
+  /** 発注を行うサロン ID */
   salonId: ModelsSalonId
-  /** Order number */
+  /** 発注番号 */
   orderNumber: string
-  /** Supplier name */
+  /** 仕入先名 */
   supplier: string
-  /** Order status */
+  /** 発注ステータス区分 */
   status: ModelsOrderStatusType
-  /** Order items */
+  /** 発注明細の一覧 */
   items: ModelsOrderItem[]
-  /** Subtotal amount */
+  /** 税抜小計金額 */
   subtotal: number
-  /** Tax amount */
+  /** 税額 */
   taxAmount: number
-  /** Shipping cost */
+  /** 送料 */
   shippingCost?: number
-  /** Total amount */
+  /** 発注合計金額 */
   totalAmount: number
-  /** Order date */
+  /** 発注日 */
   orderDate: string
-  /** Expected delivery date */
+  /** 予定納期 */
   expectedDelivery?: string
-  /** Actual delivery date */
+  /** 実際の納品日 */
   actualDelivery?: string
-  /** Delivery notes */
+  /** 納品に関するメモ */
   deliveryNotes?: string
-  /** Payment terms */
+  /** 支払条件 */
   paymentTerms?: string
-  /** Order notes */
+  /** その他備考 */
   notes?: string
-  /** Approved by */
+  /** 発注承認を行ったスタッフ ID */
   approvedBy?: ModelsStaffId
-  /** Approved date */
+  /** 承認日時 */
   approvedAt?: string
+  /** レコード作成日時。 */
   createdAt: string
-  /** @nullable */
+  /**
+   * レコードを作成したユーザーID。匿名作成の場合はnull。
+   * @nullable
+   */
   createdBy: string | null
+  /** レコード最終更新日時。 */
   updatedAt: string
-  /** @nullable */
+  /**
+   * レコードを最後に更新したユーザーID。匿名更新の場合はnull。
+   * @nullable
+   */
   updatedBy: string | null
 }

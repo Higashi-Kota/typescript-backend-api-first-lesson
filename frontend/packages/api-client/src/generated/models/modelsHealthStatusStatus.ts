@@ -7,7 +7,7 @@
  */
 
 /**
- * Overall health status
+ * システム全体の稼働状態。`healthy` は正常、`degraded` は性能低下、`unhealthy` は停止を表す。
  */
 export type ModelsHealthStatusStatus =
   (typeof ModelsHealthStatusStatus)[keyof typeof ModelsHealthStatusStatus]

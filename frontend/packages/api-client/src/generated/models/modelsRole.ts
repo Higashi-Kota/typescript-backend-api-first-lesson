@@ -9,26 +9,35 @@ import type { ModelsRoleId } from './modelsRoleId'
 import type { ModelsPermission } from './modelsPermission'
 
 /**
- * Role definition for access control
+ * 権限管理におけるロール定義
  */
 export interface ModelsRole {
+  /** ロール ID */
   id: ModelsRoleId
-  /** Role name */
+  /** ロールのシステム内部名 */
   name: string
-  /** Role display name */
+  /** 管理画面などで表示する名称 */
   displayName: string
-  /** Role description */
+  /** ロールの詳細説明 */
   description?: string
-  /** Permissions assigned to this role */
+  /** 付与されている権限一覧 */
   permissions: ModelsPermission[]
-  /** Is this a system role */
+  /** システム標準ロールかどうか */
   isSystem: boolean
-  /** Is role active */
+  /** ロールが有効状態かどうか */
   isActive: boolean
+  /** レコード作成日時。 */
   createdAt: string
-  /** @nullable */
+  /**
+   * レコードを作成したユーザーID。匿名作成の場合はnull。
+   * @nullable
+   */
   createdBy: string | null
+  /** レコード最終更新日時。 */
   updatedAt: string
-  /** @nullable */
+  /**
+   * レコードを最後に更新したユーザーID。匿名更新の場合はnull。
+   * @nullable
+   */
   updatedBy: string | null
 }

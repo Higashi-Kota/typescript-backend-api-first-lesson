@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 固定値success。成功結果であることを示す。
+ */
 export type TreatmentOperationsGetTreatment200AnyOfStatus =
   (typeof TreatmentOperationsGetTreatment200AnyOfStatus)[keyof typeof TreatmentOperationsGetTreatment200AnyOfStatus]
 

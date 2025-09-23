@@ -8,22 +8,23 @@
 import type { ModelsOffsetPaginationParamsSortOrder } from './modelsOffsetPaginationParamsSortOrder'
 
 /**
- * Offset-based pagination parameters
+ * オフセット方式のページネーション指定モデル。
+既存基盤や BI 連携でカーソル方式に移行できないケース向けの互換パラメータを提供する。
  */
 export interface ModelsOffsetPaginationParams {
   /**
-   * Maximum number of items to return (1-100)
+   * 1ページあたりの取得件数上限 (1〜100)。指定が無い場合は既定値 20 を適用。
    * @minimum 1
    * @maximum 100
    */
   limit?: number
   /**
-   * Number of items to skip
+   * スキップする件数。リスト冒頭からのオフセット値を指定する。
    * @minimum 0
    */
   offset?: number
-  /** Field to sort by */
+  /** ソート対象フィールド。予約一覧や顧客一覧の表示順を決定する。 */
   sortBy?: string
-  /** Sort order */
+  /** ソート順序。`asc` は昇順、`desc` は降順を表す。 */
   sortOrder?: ModelsOffsetPaginationParamsSortOrder
 }

@@ -7,9 +7,13 @@
  */
 import type { ModelsSalon } from './modelsSalon'
 
+/**
+ * 一括処理で成功した単一アイテムの結果モデル。
+元リクエストにおける位置と処理結果を紐づける。
+ */
 export type SalonCrudBulkCreate207SucceededItem = {
-  /** Index in the original request */
+  /** 元リクエスト内でのインデックス。0 始まり。 */
   index: number
-  /** Processed result */
+  /** 処理後のビジネス結果。ID 付与や更新後の値などを含む。 */
   result: ModelsSalon
 }

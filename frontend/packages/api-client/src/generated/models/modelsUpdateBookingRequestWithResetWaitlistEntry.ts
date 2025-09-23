@@ -8,6 +8,7 @@
 import type { ModelsWaitlistEntry } from './modelsWaitlistEntry'
 
 /**
+ * ウェイティングリスト情報の更新またはリセット。
  * @nullable
  */
 export type ModelsUpdateBookingRequestWithResetWaitlistEntry =

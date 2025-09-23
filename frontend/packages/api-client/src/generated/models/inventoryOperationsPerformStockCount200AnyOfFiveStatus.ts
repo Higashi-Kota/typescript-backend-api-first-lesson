@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 固定値error。エラー結果であることを示す。
+ */
 export type InventoryOperationsPerformStockCount200AnyOfFiveStatus =
   (typeof InventoryOperationsPerformStockCount200AnyOfFiveStatus)[keyof typeof InventoryOperationsPerformStockCount200AnyOfFiveStatus]
 

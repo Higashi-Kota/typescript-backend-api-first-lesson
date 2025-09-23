@@ -7,6 +7,6 @@
  */
 
 /**
- * Branded UUID type for Booking ID
+ * 確定済みの予約（スケジュール確保）を識別するブランド付きUUID。
  */
 export type ModelsBookingId = string

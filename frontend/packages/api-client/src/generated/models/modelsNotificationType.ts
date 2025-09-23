@@ -6,6 +6,14 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 通知タイプ区分 - 顧客への通知・連絡手段の種類
+
+email: Eメール - 電子メールによる通知
+sms: SMS - ショートメッセージサービスによる通知
+push: プッシュ通知 - モバイルアプリのプッシュ通知
+line: LINE - LINEメッセージングサービスによる通知
+ */
 export type ModelsNotificationType =
   (typeof ModelsNotificationType)[keyof typeof ModelsNotificationType]
 

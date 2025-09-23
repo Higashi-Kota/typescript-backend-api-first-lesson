@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 固定値success。成功結果であることを示す。
+ */
 export type UserRoleTypeOperationsBulkAssignRoles200AnyOfStatus =
   (typeof UserRoleTypeOperationsBulkAssignRoles200AnyOfStatus)[keyof typeof UserRoleTypeOperationsBulkAssignRoles200AnyOfStatus]
 

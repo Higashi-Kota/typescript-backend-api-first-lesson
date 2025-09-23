@@ -10,7 +10,7 @@ import type { ModelsDomainErrorFactoryForbiddenDefaultCode } from './modelsDomai
 import type { ModelsDomainErrorFactoryForbiddenHttpStatus } from './modelsDomainErrorFactoryForbiddenHttpStatus'
 
 /**
- * Forbidden error factory
+ * 権限不足エラーを生成するための設定。
  */
 export type ModelsDomainErrorFactoryForbidden = {
   type: ModelsDomainErrorFactoryForbiddenType

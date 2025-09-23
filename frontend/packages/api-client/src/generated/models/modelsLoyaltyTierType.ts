@@ -7,7 +7,12 @@
  */
 
 /**
- * Loyalty tier enum
+ * ロイヤルティティア区分 - 顧客ロイヤルティプログラムの会員ランク
+
+bronze: ブロンズ - 基本会員ランク、初期段階の特典を提供
+silver: シルバー - 中級会員ランク、標準的な特典を提供
+gold: ゴールド - 上級会員ランク、優待特典を提供
+platinum: プラチナ - 最上級会員ランク、最高レベルの特典を提供
  */
 export type ModelsLoyaltyTierType =
   (typeof ModelsLoyaltyTierType)[keyof typeof ModelsLoyaltyTierType]

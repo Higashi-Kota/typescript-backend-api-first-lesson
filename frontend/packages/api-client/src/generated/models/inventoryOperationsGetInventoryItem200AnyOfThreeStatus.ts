@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 固定値error。エラー結果であることを示す。
+ */
 export type InventoryOperationsGetInventoryItem200AnyOfThreeStatus =
   (typeof InventoryOperationsGetInventoryItem200AnyOfThreeStatus)[keyof typeof InventoryOperationsGetInventoryItem200AnyOfThreeStatus]
 

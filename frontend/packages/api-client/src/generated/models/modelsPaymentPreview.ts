@@ -11,11 +11,20 @@ import type { ModelsBookingId } from './modelsBookingId'
 import type { ModelsPaymentBreakdown } from './modelsPaymentBreakdown'
 import type { ModelsPaymentMethodType } from './modelsPaymentMethodType'
 
+/**
+ * 決済前の支払見積情報
+ */
 export interface ModelsPaymentPreview {
+  /** 見積対象のサロン ID */
   salonId: ModelsSalonId
+  /** 見積対象の顧客 ID */
   customerId?: ModelsCustomerId
+  /** 関連する予約 ID */
   bookingId?: ModelsBookingId
+  /** 金額内訳のプレビュー */
   breakdown: ModelsPaymentBreakdown
+  /** 推奨する支払い方法の一覧 */
   recommendedMethods: ModelsPaymentMethodType[]
+  /** 顧客・スタッフ向けの備考 */
   notes?: string
 }

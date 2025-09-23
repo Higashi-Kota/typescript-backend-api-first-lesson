@@ -7,6 +7,6 @@
  */
 
 /**
- * Branded UUID type for Attachment ID
+ * 添付ファイル・画像データを識別するブランド付きUUID。
  */
 export type ModelsAttachmentId = string

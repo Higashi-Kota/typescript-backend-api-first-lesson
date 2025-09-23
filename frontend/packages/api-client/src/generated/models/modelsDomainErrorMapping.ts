@@ -9,13 +9,14 @@ import type { ModelsDomainErrorType } from './modelsDomainErrorType'
 import type { ModelsErrorCodeType } from './modelsErrorCodeType'
 
 /**
- * Mapping between domain error types and error codes
+ * ドメインエラータイプとシステム標準エラーコードの対応表モデル。
+内部ロジックとHTTPレスポンスの整合性を保つために利用する。
  */
 export interface ModelsDomainErrorMapping {
-  /** Domain error type */
+  /** ドメインエラータイプ。ビジネス層で識別されるカテゴリ。 */
   domainType: ModelsDomainErrorType
-  /** Corresponding error code */
+  /** 対応する標準エラーコード。`ErrorCodeType` を参照する。 */
   errorCode: ModelsErrorCodeType
-  /** HTTP status code */
+  /** レスポンスに適用する HTTP ステータスコード。 */
   httpStatus: number
 }

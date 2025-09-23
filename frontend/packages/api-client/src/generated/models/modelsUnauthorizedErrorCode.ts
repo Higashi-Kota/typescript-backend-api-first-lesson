@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 固定値UNAUTHORIZED。クライアントでのハンドリングを容易にする識別子。
+ */
 export type ModelsUnauthorizedErrorCode =
   (typeof ModelsUnauthorizedErrorCode)[keyof typeof ModelsUnauthorizedErrorCode]
 

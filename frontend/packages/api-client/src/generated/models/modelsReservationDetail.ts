@@ -8,19 +8,32 @@
 import type { ModelsReservation } from './modelsReservation'
 import type { ModelsServiceCategoryType } from './modelsServiceCategoryType'
 
+/**
+ * 予約詳細モデル - 基本予約情報に顧客・スタッフ・メニュー名称やカテゴリなどの表示用情報を付加した拡張ビュー
+ */
 export type ModelsReservationDetail = ModelsReservation & {
+  /** 顧客の表示名 */
   customerName: string
+  /** 担当スタッフの表示名 */
   staffName: string
+  /** 施術メニューの名称 */
   serviceName: string
+  /** 施術メニューが属するカテゴリ区分 */
   serviceCategory: ModelsServiceCategoryType
+  /** 施術メニューの所要時間 (分) */
   serviceDuration: number
 } & Required<
     Pick<
       ModelsReservation & {
+        /** 顧客の表示名 */
         customerName: string
+        /** 担当スタッフの表示名 */
         staffName: string
+        /** 施術メニューの名称 */
         serviceName: string
+        /** 施術メニューが属するカテゴリ区分 */
         serviceCategory: ModelsServiceCategoryType
+        /** 施術メニューの所要時間 (分) */
         serviceDuration: number
       },
       | 'customerName'

@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 在庫操作区分
+ */
 export type ModelsStockMovementInputType =
   (typeof ModelsStockMovementInputType)[keyof typeof ModelsStockMovementInputType]
 

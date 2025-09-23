@@ -6,6 +6,13 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * メール確認状態区分 - メールアドレスの確認状態を表す区分
+
+verified: 確認済み - メールアドレスが確認された状態
+unverified: 未確認 - メールアドレスが未確認の状態
+pending: 確認中 - 確認メールを送信し、確認待ちの状態
+ */
 export type ModelsEmailVerificationStateType =
   (typeof ModelsEmailVerificationStateType)[keyof typeof ModelsEmailVerificationStateType]
 

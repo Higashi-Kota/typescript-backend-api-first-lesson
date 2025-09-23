@@ -7,6 +7,9 @@
  */
 import type { ModelsMoney } from './modelsMoney'
 
+/**
+ * 成功時に返却するドメインデータ。
+ */
 export type SalesReportOperationsGetSalesTrends200AnyOfData = {
   labels: string[]
   sales: ModelsMoney[]

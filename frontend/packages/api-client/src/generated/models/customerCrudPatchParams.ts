@@ -9,7 +9,7 @@ import type { ModelsFieldMaskParameter } from './modelsFieldMaskParameter'
 
 export type CustomerCrudPatchParams = {
   /**
-   * Comma-separated list of field paths to update
+   * 更新対象フィールドをカンマ区切りで列挙した文字列。例: `name,address.street`。
    */
   updateMask?: ModelsFieldMaskParameter
 }

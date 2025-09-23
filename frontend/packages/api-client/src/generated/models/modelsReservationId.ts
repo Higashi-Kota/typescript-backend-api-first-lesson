@@ -7,6 +7,6 @@
  */
 
 /**
- * Branded UUID type for Reservation ID
+ * 予約申込レコードを識別するためのブランド付きUUID。
  */
 export type ModelsReservationId = string

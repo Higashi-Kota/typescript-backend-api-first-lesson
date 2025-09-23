@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 状態種別（processing 固定値）
+ */
 export type ModelsProcessingPaymentStatusUpdateType =
   (typeof ModelsProcessingPaymentStatusUpdateType)[keyof typeof ModelsProcessingPaymentStatusUpdateType]
 

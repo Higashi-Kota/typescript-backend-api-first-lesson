@@ -8,6 +8,9 @@
 import type { TreatmentOperationsGetTreatmentStatistics200AnyOfDataTreatmentsBy } from './treatmentOperationsGetTreatmentStatistics200AnyOfDataTreatmentsBy'
 import type { ModelsServiceId } from './modelsServiceId'
 
+/**
+ * 成功時に返却するドメインデータ。
+ */
 export type TreatmentOperationsGetTreatmentStatistics200AnyOfData = {
   totalTreatments: number
   treatmentsBy: TreatmentOperationsGetTreatmentStatistics200AnyOfDataTreatmentsBy

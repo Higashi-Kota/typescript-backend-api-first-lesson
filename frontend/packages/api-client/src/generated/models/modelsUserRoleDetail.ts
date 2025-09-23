@@ -9,8 +9,14 @@ import type { ModelsUserRoleType } from './modelsUserRoleType'
 import type { ModelsSalonId } from './modelsSalonId'
 import type { ModelsStaffLevelType } from './modelsStaffLevelType'
 
+/**
+ * ユーザーの詳細な役割情報と所属を表すモデル。
+ */
 export interface ModelsUserRoleDetail {
+  /** システム内での基礎的な役割区分。 */
   type: ModelsUserRoleType
+  /** 役割が適用されるサロンID。全社権限の場合はnull。 */
   salonId?: ModelsSalonId
+  /** スタッフに対して設定される技術レベル。 */
   level?: ModelsStaffLevelType
 }

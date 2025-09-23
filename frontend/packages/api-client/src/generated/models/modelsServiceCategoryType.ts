@@ -7,7 +7,14 @@
  */
 
 /**
- * Service category types
+ * サービスカテゴリー区分 - サロンで提供される主要なサービスカテゴリーの定義
+
+cut: カット - ヘアカット、トリミング等の切断系サービス
+color: カラー - ヘアカラー、ハイライト等の染色系サービス
+perm: パーマ - パーマネント、デジタルパーマ等のウェーブ形成サービス
+treatment: トリートメント - ヘアトリートメント、ヘアケア等の補修・改善サービス
+spa: スパ - ヘッドスパ、リラクゼーション等の癒し系サービス
+other: その他 - 上記カテゴリーに分類されないサービス
  */
 export type ModelsServiceCategoryType =
   (typeof ModelsServiceCategoryType)[keyof typeof ModelsServiceCategoryType]

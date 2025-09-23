@@ -7,6 +7,6 @@
  */
 
 /**
- * Additional metadata
+ * 監視環境固有の追加メタ情報。必要に応じてキーを拡張する。
  */
 export type ModelsHealthStatusMetadata = { [key: string]: unknown }

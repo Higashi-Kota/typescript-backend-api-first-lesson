@@ -50,6 +50,7 @@ type Awaited<O> = O extends AwaitedInput<infer T> ? T : never
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 
 /**
+ * 顧客やスタッフ、評価点でレビューを絞り込み、店舗運営の改善材料を抽出します。
  * @summary List reviews
  */
 export type reviewOperationsListResponse200 = {
@@ -249,6 +250,7 @@ export function useReviewOperationsList<
 }
 
 /**
+ * 施術完了後に顧客がレビューを投稿し、サービス品質の可視化と信頼獲得につなげます。
  * @summary Create review
  */
 export type reviewOperationsCreateResponse201 = {
@@ -361,6 +363,7 @@ export const useReviewOperationsCreate = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
+ * 単一レビューの詳細を表示し、コメント内容や評価指標を確認します。
  * @summary Get review
  */
 export type reviewOperationsGetResponse200 = {
@@ -553,6 +556,7 @@ export function useReviewOperationsGet<
 }
 
 /**
+ * 顧客が投稿後のレビューを修正し、誤記修正や追記を反映します。
  * @summary Update review
  */
 export type reviewOperationsUpdateResponse200 = {
@@ -666,6 +670,7 @@ export const useReviewOperationsUpdate = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
+ * レビューの削除要請に応じて投稿を非表示または除去し、コンプライアンスを維持します。
  * @summary Delete review
  */
 export type reviewOperationsDeleteResponse204 = {
@@ -776,6 +781,7 @@ export const useReviewOperationsDelete = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
+ * 他の利用者に役立つレビューをマーキングし、信頼性の高い声を強調します。
  * @summary Mark review as helpful
  */
 export type reviewOperationsMarkHelpfulResponse200 = {
@@ -886,6 +892,7 @@ export const useReviewOperationsMarkHelpful = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
+ * 不適切な内容や虚偽が疑われるレビューを通報し、運営による対応フローへ送ります。
  * @summary Report review
  */
 export type reviewOperationsReportResponse200 = {
@@ -999,6 +1006,7 @@ export const useReviewOperationsReport = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
+ * サロンに紐づくレビュー一覧を取得し、並び替え条件に応じて顧客の声を提示します。
  * @summary Get salon reviews
  */
 export type salonReviewOperationsGetSalonReviewsResponse200 = {
@@ -1222,6 +1230,7 @@ export function useSalonReviewOperationsGetSalonReviews<
 }
 
 /**
+ * サロン全体の平均評価や件数などの概要指標を取得し、ダッシュボード表示に利用します。
  * @summary Get salon reviews summary
  */
 export type salonReviewOperationsGetSummaryResponse200 = {
@@ -1418,6 +1427,7 @@ export function useSalonReviewOperationsGetSummary<
 }
 
 /**
+ * 特定スタッフに紐づくレビュー一覧を取得し、個別フィードバックとして活用します。
  * @summary Get staff reviews
  */
 export type staffReviewOperationsGetStaffReviewsResponse200 = {
@@ -1641,6 +1651,7 @@ export function useStaffReviewOperationsGetStaffReviews<
 }
 
 /**
+ * スタッフ別の平均評価やレビュー数を集計し、人事評価や表彰に用います。
  * @summary Get staff reviews summary
  */
 export type staffReviewOperationsGetStaffSummaryResponse200 = {

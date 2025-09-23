@@ -7,6 +7,6 @@
  */
 
 /**
- * Branded UUID type for Role ID
+ * ロールベース権限管理で利用する役割IDを識別するブランド付きUUID。
  */
 export type ModelsRoleId = string

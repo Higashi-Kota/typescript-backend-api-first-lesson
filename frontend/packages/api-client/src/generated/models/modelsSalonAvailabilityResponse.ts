@@ -8,13 +8,13 @@
 import type { ModelsAvailableTimeSlot } from './modelsAvailableTimeSlot'
 
 /**
- * Salon availability check response
+ * サロンの空き状況照会結果を返すレスポンス
  */
 export interface ModelsSalonAvailabilityResponse {
-  /** Available time slots */
+  /** 予約可能な時間帯候補一覧 */
   availableSlots: ModelsAvailableTimeSlot[]
-  /** Next available date if requested date is full */
+  /** 希望日が満席の場合に提示する次の空き日 */
   nextAvailableDate?: string
-  /** Waitlist available */
+  /** ウェイトリスト登録の可否 */
   waitlistAvailable: boolean
 }

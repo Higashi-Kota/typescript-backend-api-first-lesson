@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 固定値error。エラー結果であることを示す。
+ */
 export type PointOperationsAdjustPoints200AnyOfThreeStatus =
   (typeof PointOperationsAdjustPoints200AnyOfThreeStatus)[keyof typeof PointOperationsAdjustPoints200AnyOfThreeStatus]
 

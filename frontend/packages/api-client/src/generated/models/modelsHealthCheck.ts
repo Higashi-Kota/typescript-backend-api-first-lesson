@@ -8,15 +8,19 @@
 import type { ModelsHealthCheckStatus } from './modelsHealthCheckStatus'
 import type { ModelsHealthCheckDetails } from './modelsHealthCheckDetails'
 
+/**
+ * 個別サービスのヘルスチェック結果モデル。
+外部サービス連携や内部マイクロサービスごとの状態を把握する。
+ */
 export interface ModelsHealthCheck {
-  /** Service name */
+  /** 対象サービス名またはコンポーネント識別子。 */
   name: string
-  /** Service status */
+  /** 対象サービスの稼働状態。`up` は正常、`down` は停止、`degraded` は部分的な性能低下を示す。 */
   status: ModelsHealthCheckStatus
-  /** Response time in milliseconds */
+  /** ヘルスチェックに要した時間 (ミリ秒)。応答遅延の指標。 */
   responseTime?: number
-  /** Error message if service is down */
+  /** 停止時のエラーメッセージや原因メモ。 */
   error?: string
-  /** Additional details */
+  /** 監視対象固有の追加詳細。再試行回数や依存サービス名などを含める。 */
   details?: ModelsHealthCheckDetails
 }

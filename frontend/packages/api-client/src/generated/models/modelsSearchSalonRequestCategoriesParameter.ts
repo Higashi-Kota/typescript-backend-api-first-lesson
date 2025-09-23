@@ -8,7 +8,7 @@
 import type { ModelsServiceCategoryType } from './modelsServiceCategoryType'
 
 /**
- * Filter by service categories
+ * サービスカテゴリ（カット・カラー等）による絞り込み
  */
 export type ModelsSearchSalonRequestCategoriesParameter =
   ModelsServiceCategoryType[]

@@ -17,26 +17,52 @@ import type { ModelsMoney } from './modelsMoney'
 import type { ModelsPaymentMethodType } from './modelsPaymentMethodType'
 import type { ModelsPaymentStatusCodeType } from './modelsPaymentStatusCodeType'
 
+/**
+ * サロンで確定管理する予約の集約モデル。
+ */
 export interface ModelsBooking {
+  /** 予約を一意に識別するID。 */
   id: ModelsBookingId
+  /** 予約が紐づくサロンID。 */
   salonId: ModelsSalonId
+  /** 予約を行った顧客ID。 */
   customerId: ModelsCustomerId
+  /** 関連する予約リクエストID一覧。 */
   reservationIds: ModelsReservationId[]
+  /** 進行状況ごとの詳細情報。 */
   status: ModelsBookingStatus
+  /** 現在のステータスコード。 */
   statusCode: ModelsBookingStatusCodeType
+  /** ウェイティングリスト情報。対象外の場合はnull。 */
   waitlistEntry?: ModelsWaitlistEntry
+  /** 預かり金に関する情報。必要な場合のみ設定。 */
   deposit?: ModelsBookingDeposit
+  /** 割引適用前の合計金額。 */
   totalAmount: ModelsMoney
+  /** 適用された割引額。未適用の場合はnull。 */
   discountAmount?: ModelsMoney
+  /** 最終的に請求する金額。 */
   finalAmount: ModelsMoney
+  /** 未収金額。完済の場合はnull。 */
   balanceDue?: ModelsMoney
+  /** 予定している支払い方法。未定の場合はnull。 */
   paymentMethod?: ModelsPaymentMethodType
+  /** 支払いの進捗ステータス。未設定の場合は支払い前。 */
   paymentStatus?: ModelsPaymentStatusCodeType
+  /** スタッフ・顧客間で共有するメモ。 */
   notes?: string
+  /** レコード作成日時。 */
   createdAt: string
-  /** @nullable */
+  /**
+   * レコードを作成したユーザーID。匿名作成の場合はnull。
+   * @nullable
+   */
   createdBy: string | null
+  /** レコード最終更新日時。 */
   updatedAt: string
-  /** @nullable */
+  /**
+   * レコードを最後に更新したユーザーID。匿名更新の場合はnull。
+   * @nullable
+   */
   updatedBy: string | null
 }

@@ -7,17 +7,18 @@
  */
 
 /**
- * Validation error details
+ * 入力検証での失敗内容を表すモデル。
+画面入力フォームやAPI連携時のフィールド単位のエラー詳細を格納し、顧客やスタッフへのフィードバックに利用する。
  */
 export interface ModelsValidationError {
-  /** Field path that failed validation */
+  /** 検証に失敗したフィールドパス。ネストしたキーをドット記法で表現する。 */
   field: string
-  /** Validation rule that failed */
+  /** 違反した検証ルール名またはコード。 */
   rule: string
-  /** Human-readable error message */
+  /** ユーザーに提示する具体的なエラーメッセージ。 */
   message: string
-  /** Actual value that failed validation */
+  /** 検証対象となった実際の値。セキュリティ観点で出力が許容される場合のみ利用する。 */
   value?: unknown
-  /** Expected value or constraint */
+  /** 期待される値や制約条件。入力補助やUI表示のガイダンスに使用する。 */
   constraint?: unknown
 }

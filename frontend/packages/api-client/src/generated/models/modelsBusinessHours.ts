@@ -9,14 +9,29 @@ import type { ModelsDayOfWeekType } from './modelsDayOfWeekType'
 import type { ModelsTimeSlot } from './modelsTimeSlot'
 import type { ModelsBusinessHoursEffectivePeriod } from './modelsBusinessHoursEffectivePeriod'
 
+/**
+ * 曜日単位で管理する営業スケジュール設定。
+ */
 export interface ModelsBusinessHours {
+  /** 設定の対象となる曜日。 */
   dayOfWeek: ModelsDayOfWeekType
+  /** 営業時間帯の一覧。複数設定で分割営業に対応。 */
   operatingSlots: ModelsTimeSlot[]
-  /** @nullable */
+  /**
+   * 休憩時間や中断時間帯の一覧。未設定時はnull。
+   * @nullable
+   */
   breakSlots: ModelsTimeSlot[] | null
+  /** 当該曜日を休業扱いとする場合のフラグ。既定値はfalse。 */
   isClosed: boolean
-  /** @nullable */
+  /**
+   * 季節営業などの適用期間。未設定時は通年有効。
+   * @nullable
+   */
   effectivePeriod: ModelsBusinessHoursEffectivePeriod
-  /** @nullable */
+  /**
+   * 営業基準となるタイムゾーンID。未設定時はサロン既定値。
+   * @nullable
+   */
   timezone: string | null
 }

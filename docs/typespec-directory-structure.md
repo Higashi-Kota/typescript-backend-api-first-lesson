@@ -188,7 +188,90 @@ import "../models/customer.tsp";
 import "../models/booking.tsp";
 ```
 
+## 日本語ドキュメンテーション標準
+
+### @docアノテーションの徹底
+
+すべてのTypeSpecファイルには包括的な日本語の@docアノテーションが付与されています：
+
+#### 適用範囲
+- **モデル定義**: すべてのmodel定義に日本語説明
+- **プロパティ**: 各プロパティに用途と制約の説明
+- **Enum型**: 区分値の定義と各値の詳細説明
+- **オペレーション**: APIエンドポイントの目的と動作説明
+- **インターフェース**: 機能グループの説明
+
+#### 統計情報（2025年1月時点）
+- モデルファイル: 1,592個の@docアノテーション
+- オペレーションファイル: 267個の@docアノテーション
+- 合計: 1,859個の包括的な日本語ドキュメント
+
+### Enum型の@doc形式
+
+```typespec
+@doc("""
+  予約ステータス区分 - 予約のライフサイクルにおける現在の状態を表す
+
+  pending: 保留中 - 顧客が予約を作成したが確定していない状態
+  confirmed: 確定済み - サロン側が予約を確認し確定した状態
+  completed: 完了 - サービスが正常に提供された状態
+  cancelled: キャンセル済み - 顧客またはサロンにより取り消された状態
+  no_show: 無断欠席 - 顧客が連絡なしに来店しなかった状態
+  """)
+enum BookingStatusType {
+  pending,
+  confirmed,
+  completed,
+  cancelled,
+  no_show,
+}
+```
+
+### TypeScript生成での表示
+
+生成されたTypeScriptファイルでは、VSCode IntelliSenseで適切にフォーマットされた日本語ドキュメントが表示されます：
+
+```typescript
+/**
+ * @description
+ * 予約ステータス区分 - 予約のライフサイクルにおける現在の状態を表す
+ *
+ *
+ * pending: 保留中 - 顧客が予約を作成したが確定していない状態
+ *
+ * confirmed: 確定済み - サロン側が予約を確認し確定した状態
+ *
+ * completed: 完了 - サービスが正常に提供された状態
+ *
+ * cancelled: キャンセル済み - 顧客またはサロンにより取り消された状態
+ *
+ * no_show: 無断欠席 - 顧客が連絡なしに来店しなかった状態
+ */
+export const BookingStatusTypeSchema = z.enum([...])
+```
+
 ## トラブルシューティング
+
+### Spread演算子へのデコレータエラー
+
+```
+error invalid-decorator-location: Cannot decorate spread property.
+```
+
+**解決方法:**
+- spread演算子(`...`)には@docアノテーションを付けない
+- 参照元のモデルで各プロパティに@docを定義
+- spreadを含むモデル自体に説明を追加
+
+```typespec
+// ✅ 正しい
+model Payment {
+  @doc("決済ID")
+  id: PaymentId;
+
+  ...AuditInfo;  // @docなし、AuditInfo側で定義済み
+}
+```
 
 ### インポートエラー
 

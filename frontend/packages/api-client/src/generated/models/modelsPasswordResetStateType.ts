@@ -6,6 +6,13 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * パスワードリセット状態区分 - パスワードリセットの進行状態を表す区分
+
+none: なし - パスワードリセットが要求されていない状態
+requested: リクエスト中 - パスワードリセットが要求された状態
+completed: 完了 - パスワードリセットが完了した状態
+ */
 export type ModelsPasswordResetStateType =
   (typeof ModelsPasswordResetStateType)[keyof typeof ModelsPasswordResetStateType]
 

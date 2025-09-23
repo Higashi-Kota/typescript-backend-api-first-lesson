@@ -10,7 +10,7 @@ import type { ModelsDomainErrorFactoryBusinessRuleDefaultCode } from './modelsDo
 import type { ModelsDomainErrorFactoryBusinessRuleHttpStatus } from './modelsDomainErrorFactoryBusinessRuleHttpStatus'
 
 /**
- * Business rule violation factory
+ * ビジネスルール違反エラーを生成するための設定。
  */
 export type ModelsDomainErrorFactoryBusinessRule = {
   type: ModelsDomainErrorFactoryBusinessRuleType

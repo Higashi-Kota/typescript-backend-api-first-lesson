@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 返金処理の進捗状態
+ */
 export type ModelsRefundStatus =
   (typeof ModelsRefundStatus)[keyof typeof ModelsRefundStatus]
 

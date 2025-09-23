@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 固定値error。エラー結果であることを示す。
+ */
 export type InventoryAlertOperationsGetAlertSummary200AnyOfFourStatus =
   (typeof InventoryAlertOperationsGetAlertSummary200AnyOfFourStatus)[keyof typeof InventoryAlertOperationsGetAlertSummary200AnyOfFourStatus]
 

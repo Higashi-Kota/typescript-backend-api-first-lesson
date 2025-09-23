@@ -8,7 +8,12 @@
 import type { PurchaseOrderOperationsGetReorderSuggestions200AnyOfStatus } from './purchaseOrderOperationsGetReorderSuggestions200AnyOfStatus'
 import type { PurchaseOrderOperationsGetReorderSuggestions200AnyOfDataItem } from './purchaseOrderOperationsGetReorderSuggestions200AnyOfDataItem'
 
+/**
+ * 成功時のデータとステータスを保持するモデル。
+ */
 export type PurchaseOrderOperationsGetReorderSuggestions200AnyOf = {
+  /** 固定値success。成功結果であることを示す。 */
   status: PurchaseOrderOperationsGetReorderSuggestions200AnyOfStatus
+  /** 成功時に返却するドメインデータ。 */
   data: PurchaseOrderOperationsGetReorderSuggestions200AnyOfDataItem[]
 }

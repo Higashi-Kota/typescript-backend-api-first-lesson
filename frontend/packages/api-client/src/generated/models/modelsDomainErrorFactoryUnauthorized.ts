@@ -10,7 +10,7 @@ import type { ModelsDomainErrorFactoryUnauthorizedDefaultCode } from './modelsDo
 import type { ModelsDomainErrorFactoryUnauthorizedHttpStatus } from './modelsDomainErrorFactoryUnauthorizedHttpStatus'
 
 /**
- * Unauthorized error factory
+ * 未認証エラーを生成するための設定。
  */
 export type ModelsDomainErrorFactoryUnauthorized = {
   type: ModelsDomainErrorFactoryUnauthorizedType

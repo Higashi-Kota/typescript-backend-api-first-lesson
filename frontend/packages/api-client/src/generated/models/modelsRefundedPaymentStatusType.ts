@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 状態種別（refunded 固定値）
+ */
 export type ModelsRefundedPaymentStatusType =
   (typeof ModelsRefundedPaymentStatusType)[keyof typeof ModelsRefundedPaymentStatusType]
 

@@ -6,13 +6,17 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 一括処理全体の集計情報モデル。
+成功件数・失敗件数を俯瞰し、運用レポートに反映する。
+ */
 export interface ModelsBulkSummary {
-  /** Total items processed */
+  /** リクエストに含まれていたアイテム総数。 */
   total: number
-  /** Number of successful items */
+  /** 成功したアイテム件数。 */
   succeeded: number
-  /** Number of failed items */
+  /** 失敗したアイテム件数。 */
   failed: number
-  /** Processing duration in milliseconds */
+  /** 処理に要した時間 (ミリ秒)。バッチ最適化の指標。 */
   duration: number
 }

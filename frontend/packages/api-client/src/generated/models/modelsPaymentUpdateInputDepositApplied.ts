@@ -8,6 +8,7 @@
 import type { ModelsMoneyUpdate } from './modelsMoneyUpdate'
 
 /**
+ * 更新後の預り金額（null 指定で解除）
  * @nullable
  */
 export type ModelsPaymentUpdateInputDepositApplied = ModelsMoneyUpdate | null

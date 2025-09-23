@@ -7,7 +7,7 @@
  */
 
 /**
- * Strategy for handling conflicts
+ * 重複データの優先ルール
  */
 export type CustomerOperationsMergeBodyConflictResolution =
   (typeof CustomerOperationsMergeBodyConflictResolution)[keyof typeof CustomerOperationsMergeBodyConflictResolution]

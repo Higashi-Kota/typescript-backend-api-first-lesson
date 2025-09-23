@@ -6,4 +6,7 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 期限切れ間近の在庫を取得するか
+ */
 export type ModelsSearchInventoryRequestExpiringSoonParameter = boolean

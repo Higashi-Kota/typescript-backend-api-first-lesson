@@ -10,13 +10,24 @@ import type { ModelsPaymentStatus } from './modelsPaymentStatus'
 import type { ModelsPaymentHistoryActor } from './modelsPaymentHistoryActor'
 import type { ModelsPaymentHistoryMetadata } from './modelsPaymentHistoryMetadata'
 
+/**
+ * 決済状態の変更履歴
+ */
 export interface ModelsPaymentHistory {
+  /** 履歴イベント ID */
   eventId: string
+  /** 対象となる決済 ID */
   paymentId: ModelsPaymentId
+  /** 変更後の支払い状態 */
   status: ModelsPaymentStatus
+  /** 変更が発生した日時 */
   occurredAt: string
+  /** 操作主体の区分 */
   actor?: ModelsPaymentHistoryActor
+  /** 操作主体の ID */
   actorId?: string
+  /** 変更内容の補足メモ */
   note?: string
+  /** 履歴に紐づく追加メタデータ */
   metadata?: ModelsPaymentHistoryMetadata
 }

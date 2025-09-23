@@ -7,7 +7,7 @@
  */
 
 /**
- * Sort order
+ * ソート順序。`asc` は昇順、`desc` は降順を表す。
  */
 export type CustomerCrudExportBodySortOrder =
   (typeof CustomerCrudExportBodySortOrder)[keyof typeof CustomerCrudExportBodySortOrder]

@@ -79,15 +79,85 @@ async function generateTypesFromOpenAPI(): Promise<void> {
 }
 
 /**
- * Create the main api-types.ts file
+ * Create the main api-types.ts file with enhanced JSDoc comments
  */
 function createApiTypesFile(baseTypes: string): string {
+  // Read OpenAPI to get enum descriptions
+  const openApiContent = readFileSync(CONFIG.openApiPath, 'utf-8')
+  const openApi = parse(openApiContent)
+  const schemas = openApi.components?.schemas ?? {}
+
+  // Extract enum descriptions
+  const enumDescriptions = new Map<string, string>()
+  for (const [key, schema] of Object.entries(schemas)) {
+    const name = key.split('.').pop() ?? key
+    if (
+      // biome-ignore lint/suspicious/noExplicitAny: OpenAPI schema objects from YAML parsing have complex types
+      (schema as any).type === 'string' &&
+      // biome-ignore lint/suspicious/noExplicitAny: Accessing dynamic properties from parsed YAML
+      (schema as any).enum &&
+      // biome-ignore lint/suspicious/noExplicitAny: Schema description from dynamic YAML structure
+      (schema as any).description
+    ) {
+      // biome-ignore lint/suspicious/noExplicitAny: Accessing dynamic properties from parsed YAML
+      enumDescriptions.set(name, (schema as any).description)
+    }
+  }
+
+  // Process base types to enhance JSDoc comments for enums
+  let processedTypes = baseTypes
+
+  // Replace existing enum JSDoc comments with properly formatted ones
+  for (const [enumName, description] of enumDescriptions) {
+    // Format description for JSDoc with proper line breaks
+    const formattedDescription = formatEnumDescription(description)
+
+    // Create the full enum name as it appears in the generated types
+    const fullEnumName = `"Models.${enumName}"`
+
+    // Create a regex to match the JSDoc comment followed by the enum definition
+    // This will match:
+    // /**
+    //  * @description ...
+    //  * @enum {string}
+    //  */
+    // "Models.EnumName": ...
+    const enumRegex = new RegExp(
+      `(\\s*)/\\*\\*[^*]*\\*+(?:[^/*][^*]*\\*+)*/\\s*${fullEnumName.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')}:`,
+      'gm'
+    )
+
+    processedTypes = processedTypes.replace(enumRegex, (_match, indent) => {
+      // Extract just the enum definition part (after the colon)
+      const enumDefinition = `${fullEnumName}:`
+
+      // Build the new JSDoc comment with proper formatting
+      const docLines = formattedDescription.split('\n')
+      let jsdocComment = `${indent}/**\n`
+      jsdocComment += `${indent} * @description\n`
+
+      for (const line of docLines) {
+        if (line === '') {
+          jsdocComment += `${indent} *\n`
+        } else {
+          jsdocComment += `${indent} * ${line}\n`
+        }
+      }
+
+      jsdocComment += `${indent} * @enum {string}\n`
+      jsdocComment += `${indent} */\n`
+      jsdocComment += `${indent}${enumDefinition}`
+
+      return jsdocComment
+    })
+  }
+
   return `// Generated from TypeSpec/OpenAPI using openapi-typescript
 // DO NOT EDIT MANUALLY
 // Last generated: ${new Date().toISOString()}
 
 // Base types from OpenAPI
-${baseTypes}
+${processedTypes}
 `
 }
 
@@ -110,29 +180,121 @@ async function generateAdditionalFiles(
 }
 
 /**
- * Generate Zod validation schemas
+ * Format enum description for JSDoc comments
+ * Ensures proper line breaks for VSCode hover display
+ */
+function formatEnumDescription(description: string): string {
+  // Split by newlines to preserve formatting
+  const lines = description
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+
+  // Find lines with key:value format and add proper spacing
+  const formattedLines: string[] = []
+  let isHeaderSection = true
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i]
+
+    if (line) {
+      // Check if this line contains an enum value description (has colon after a key)
+      // Pattern: "KEY: description" or "number: description" or "lowercase_key: description"
+      if (line.match(/^[A-Za-z0-9_]+:|^\d+:/)) {
+        // We're now in the values section
+        if (isHeaderSection) {
+          // Add two empty lines after header before first value
+          formattedLines.push('')
+          formattedLines.push('')
+          isHeaderSection = false
+        } else {
+          // Add one empty line between each enum value
+          formattedLines.push('')
+        }
+        formattedLines.push(line)
+      } else {
+        // Header or continuation lines
+        formattedLines.push(line)
+      }
+    }
+  }
+
+  return formattedLines.join('\n')
+}
+
+/**
+ * Generate Zod validation schemas with JSDoc comments
  * NOTE: Removed unused schemas per YAGNI principle
  * - Brand ID schemas: domain has its own brand implementation
  * - Common schemas: not used anywhere in codebase
  * Only keeping enum schemas that are generated from OpenAPI
  */
-// biome-ignore lint/suspicious/noExplicitAny: OpenAPI spec type is complex
+// biome-ignore lint/suspicious/noExplicitAny: OpenAPI spec from YAML parsing has dynamic structure
 function generateZodSchemas(openApi: any): string {
   const schemas = openApi.components?.schemas ?? {}
 
-  let content = `import { z } from 'zod';
+  let content = `import { z } from 'zod'
 
 `
 
-  // Generate enum schemas
+  // Generate enum schemas with JSDoc comments
   for (const [key, schema] of Object.entries(schemas)) {
     const name = key.split('.').pop() ?? key
-    // biome-ignore lint/suspicious/noExplicitAny: Schema type from YAML parsing
+    // biome-ignore lint/suspicious/noExplicitAny: OpenAPI schema objects from YAML parsing have complex types
     if ((schema as any).type === 'string' && (schema as any).enum) {
-      // biome-ignore lint/suspicious/noExplicitAny: Enum array from YAML
+      // biome-ignore lint/suspicious/noExplicitAny: Enum values from dynamic YAML structure
       const enumValues = (schema as any).enum as string[]
-      content += `export const ${name}Schema = z.enum([${enumValues.map((v) => `'${v}'`).join(', ')}]);\n`
-      content += `export type ${name} = z.infer<typeof ${name}Schema>;\n\n`
+      // biome-ignore lint/suspicious/noExplicitAny: Description field from parsed schema
+      const description = (schema as any).description
+
+      // Add JSDoc comment for the Schema export
+      if (description) {
+        const formattedDescription = formatEnumDescription(description)
+        const docLines = formattedDescription.split('\n')
+
+        content += '/**\n'
+        content += ' * @description\n'
+        for (const line of docLines) {
+          // Preserve empty lines in JSDoc comments
+          if (line === '') {
+            content += ' *\n'
+          } else {
+            content += ` * ${line}\n`
+          }
+        }
+        content += ' */\n'
+      }
+
+      // Generate schema
+      const enumValuesFormatted = enumValues.map((v) => `'${v}'`).join(', ')
+
+      // Split long enum arrays across multiple lines for readability
+      if (enumValuesFormatted.length > 80) {
+        const formattedValues = enumValues.map((v) => `  '${v}'`).join(',\n')
+        content += `export const ${name}Schema = z.enum([\n${formattedValues}\n])\n`
+      } else {
+        content += `export const ${name}Schema = z.enum([${enumValuesFormatted}])\n`
+      }
+
+      // Add the same JSDoc comment for the Type export
+      if (description) {
+        const formattedDescription = formatEnumDescription(description)
+        const docLines = formattedDescription.split('\n')
+
+        content += '/**\n'
+        content += ' * @description\n'
+        for (const line of docLines) {
+          // Preserve empty lines in JSDoc comments
+          if (line === '') {
+            content += ' *\n'
+          } else {
+            content += ` * ${line}\n`
+          }
+        }
+        content += ' */\n'
+      }
+
+      content += `export type ${name} = z.infer<typeof ${name}Schema>\n\n`
     }
   }
 

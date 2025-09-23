@@ -10,49 +10,59 @@ import type { ModelsSalonId } from './modelsSalonId'
 import type { ModelsInventoryStatusType } from './modelsInventoryStatusType'
 
 /**
- * Inventory item
+ * サロンで管理する在庫アイテムの基本情報
  */
 export interface ModelsInventoryItem {
+  /** 在庫 ID */
   id: ModelsInventoryId
+  /** 在庫を管理するサロン ID */
   salonId: ModelsSalonId
-  /** Product code/SKU */
+  /** 商品コード・SKU */
   productCode: string
-  /** Product name */
+  /** 商品名 */
   productName: string
-  /** Product description */
+  /** 商品説明文 */
   description?: string
-  /** Category */
+  /** 分類カテゴリ */
   category: string
-  /** Brand */
+  /** ブランド名 */
   brand?: string
-  /** Supplier information */
+  /** 仕入先情報 */
   supplier?: string
-  /** Current stock quantity */
+  /** 現在の在庫数量 */
   currentStock: number
-  /** Minimum stock level */
+  /** 最低在庫数（警告閾値） */
   minimumStock: number
-  /** Maximum stock level */
+  /** 最大在庫数（上限管理用） */
   maximumStock?: number
-  /** Unit of measurement */
+  /** 数量の単位 */
   unit: string
-  /** Unit cost */
+  /** 仕入単価 */
   unitCost: number
-  /** Selling price (if sold to customers) */
+  /** 顧客販売価格 */
   sellingPrice?: number
-  /** Stock status */
+  /** 在庫状態区分 */
   status: ModelsInventoryStatusType
-  /** Location in salon */
+  /** サロン内の保管場所 */
   location?: string
-  /** Expiration date */
+  /** 賞味・使用期限 */
   expirationDate?: string
-  /** Last restocked date */
+  /** 直近の入庫日時 */
   lastRestocked?: string
-  /** Notes */
+  /** 備考メモ */
   notes?: string
+  /** レコード作成日時。 */
   createdAt: string
-  /** @nullable */
+  /**
+   * レコードを作成したユーザーID。匿名作成の場合はnull。
+   * @nullable
+   */
   createdBy: string | null
+  /** レコード最終更新日時。 */
   updatedAt: string
-  /** @nullable */
+  /**
+   * レコードを最後に更新したユーザーID。匿名更新の場合はnull。
+   * @nullable
+   */
   updatedBy: string | null
 }

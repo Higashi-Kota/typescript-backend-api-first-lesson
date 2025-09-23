@@ -8,8 +8,14 @@
 import type { ModelsNotificationType } from './modelsNotificationType'
 import type { ModelsReminderTimingType } from './modelsReminderTimingType'
 
+/**
+ * 顧客への通知チャネルとリマインダー設定をまとめたモデル。
+ */
 export interface ModelsNotificationSettings {
+  /** 利用を許可する通知チャネルの一覧。 */
   types: ModelsNotificationType[]
+  /** リマインダー送信タイミングの一覧。 */
   reminderTimings: ModelsReminderTimingType[]
+  /** 通知機能全体の有効・無効フラグ。 */
   enabled: boolean
 }

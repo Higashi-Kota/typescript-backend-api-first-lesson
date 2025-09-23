@@ -12,19 +12,36 @@ import type { ModelsTreatmentType } from './modelsTreatmentType'
 import type { ModelsServiceId } from './modelsServiceId'
 import type { ModelsMaterialUsage } from './modelsMaterialUsage'
 
+/**
+ * 施術記録を新規登録する入力モデル
+ */
 export interface ModelsTreatmentRecordCreateInput {
+  /** 紐づく予約 ID */
   bookingId: ModelsBookingId
+  /** 施術を受けた顧客 ID */
   customerId: ModelsCustomerId
+  /** 施術担当スタッフ ID */
   staffId: ModelsStaffId
+  /** 施術タイプ */
   treatment: ModelsTreatmentType
+  /** 提供したサービス ID 一覧 */
   serviceIds: ModelsServiceId[]
+  /** 施術開始日時 */
   startTime: string
+  /** 施術終了日時 */
   endTime: string
+  /** 施術メモ */
   notes?: string
+  /** 使用した資材一覧 */
   usedMaterials?: ModelsMaterialUsage[]
+  /** 顧客フィードバック */
   customerFeedback?: string
+  /** 次回来店への提案内容 */
   nextRecommendations?: string
+  /** 請求総額 */
   totalAmount: number
+  /** 割引額 */
   discountAmount?: number
+  /** 付与ポイント数 */
   pointsEarned?: number
 }

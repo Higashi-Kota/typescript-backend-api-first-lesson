@@ -6,4 +6,7 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 評価値ごとのレビュー件数分布
+ */
 export type ModelsReviewSummaryRatingDistribution = { [key: string]: number }

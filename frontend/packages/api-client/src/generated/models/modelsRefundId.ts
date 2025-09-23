@@ -7,6 +7,6 @@
  */
 
 /**
- * Branded UUID type for Refund ID
+ * 返金処理のトランザクションを識別するブランド付きUUID。
  */
 export type ModelsRefundId = string

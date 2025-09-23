@@ -8,7 +8,7 @@
 import type { ModelsSalonId } from './modelsSalonId'
 
 /**
- * Processed result
+ * 処理後のビジネス結果。ID 付与や更新後の値などを含む。
  */
 export type SalonCrudBulkDelete207SucceededItemResult = {
   id: ModelsSalonId

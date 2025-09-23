@@ -6,6 +6,13 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 髪の太さ区分 - 髪の毛一本の太さを分類、カットやスタイリングの参考に使用
+
+fine: 細毛 - 柔らかく細い髪、ボリュームが出にくい
+medium: 普通毛 - 平均的な太さの髪、扱いやすい
+thick: 太毛 - しっかりとした太い髪、ボリュームが出やすい
+ */
 export type ModelsHairThicknessType =
   (typeof ModelsHairThicknessType)[keyof typeof ModelsHairThicknessType]
 

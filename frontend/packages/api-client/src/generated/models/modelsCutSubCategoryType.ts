@@ -6,6 +6,15 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * カットサブカテゴリー区分 - カットサービスの詳細分類
+
+mens_cut: メンズカット - 男性向けヘアカットサービス
+womens_cut: レディースカット - 女性向けヘアカットサービス
+kids_cut: キッズカット - 子供向けヘアカットサービス
+bang_trim: 前髪カット - 前髪のみのカットサービス
+beard_trim: 髭トリミング - 髭の整えサービス
+ */
 export type ModelsCutSubCategoryType =
   (typeof ModelsCutSubCategoryType)[keyof typeof ModelsCutSubCategoryType]
 

@@ -7,6 +7,9 @@
  */
 import type { ModelsCustomerId } from './modelsCustomerId'
 
+/**
+ * 成功時に返却するドメインデータ。
+ */
 export type MedicalChartOperationsGetCustomerAllergies200AnyOfData = {
   customerId: ModelsCustomerId
   allergies: string[]

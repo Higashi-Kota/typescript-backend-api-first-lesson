@@ -6,4 +6,7 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 履歴に紐づく追加メタデータ
+ */
 export type ModelsPaymentHistoryMetadata = { [key: string]: unknown }

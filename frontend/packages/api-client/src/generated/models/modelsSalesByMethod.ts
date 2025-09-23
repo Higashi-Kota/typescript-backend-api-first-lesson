@@ -9,11 +9,15 @@ import type { ModelsPaymentMethodType } from './modelsPaymentMethodType'
 import type { ModelsMoney } from './modelsMoney'
 
 /**
- * Sales breakdown by payment method
+ * 支払い方法別の売上集計行
  */
 export interface ModelsSalesByMethod {
+  /** 支払い方法区分 */
   method: ModelsPaymentMethodType
+  /** 売上金額 */
   amount: ModelsMoney
+  /** 取引件数 */
   count: number
+  /** 総売上に対する構成比率（%） */
   percentage: number
 }

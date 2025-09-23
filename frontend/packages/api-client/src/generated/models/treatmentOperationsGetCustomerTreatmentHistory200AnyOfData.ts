@@ -7,9 +7,16 @@
  */
 import type { ModelsTreatmentRecord } from './modelsTreatmentRecord'
 
+/**
+ * 成功時に返却するドメインデータ。
+ */
 export type TreatmentOperationsGetCustomerTreatmentHistory200AnyOfData = {
+  /** 取得した要素の配列。 */
   data: ModelsTreatmentRecord[]
+  /** 条件に一致する全件数。 */
   total: number
+  /** 1ページあたりの件数。 */
   limit: number
+  /** 取得開始位置のオフセット。 */
   offset: number
 }

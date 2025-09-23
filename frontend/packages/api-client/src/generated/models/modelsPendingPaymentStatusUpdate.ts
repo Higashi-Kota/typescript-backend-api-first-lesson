@@ -7,7 +7,12 @@
  */
 import type { ModelsPendingPaymentStatusUpdateType } from './modelsPendingPaymentStatusUpdateType'
 
+/**
+ * 支払い待ち状態の詳細
+ */
 export interface ModelsPendingPaymentStatusUpdate {
+  /** 状態種別（pending 固定値） */
   type?: ModelsPendingPaymentStatusUpdateType
+  /** 支払いが登録された日時 */
   createdAt?: string
 }

@@ -8,25 +8,49 @@
 import type { ModelsServiceCategoryType } from './modelsServiceCategoryType'
 
 /**
- * Service update request with reset capability
+ * 値のリセットを含むサービス更新リクエスト
  */
 export interface ModelsUpdateServiceRequestWithReset {
+  /** 更新後のサービス名 */
   name?: string
+  /** 更新後の説明文 */
   description?: string
+  /** 更新後の施術時間 */
   duration?: number
+  /** 更新後の料金 */
   price?: number
+  /** 更新後のサービスカテゴリ */
   category?: ModelsServiceCategoryType
-  /** @nullable */
+  /**
+   * 更新後のカテゴリ ID（null 指定で解除）
+   * @nullable
+   */
   categoryId?: string | null
-  /** @nullable */
+  /**
+   * 更新後の画像 URL（null 指定で解除）
+   * @nullable
+   */
   imageUrl?: string | null
-  /** @nullable */
+  /**
+   * 更新後の必要スタッフレベル（null 指定で解除）
+   * @nullable
+   */
   requiredStaffLevel?: number | null
-  /** @nullable */
+  /**
+   * 更新後のデポジット額（null 指定で解除）
+   * @nullable
+   */
   depositAmount?: number | null
+  /** 更新後の有効フラグ */
   isActive?: boolean
-  /** @nullable */
+  /**
+   * 更新後の最大予約日数（null 指定で解除）
+   * @nullable
+   */
   maxAdvanceBookingDays?: number | null
-  /** @nullable */
+  /**
+   * 更新後の最短予約受付時間（null 指定で解除）
+   * @nullable
+   */
   minAdvanceBookingHours?: number | null
 }

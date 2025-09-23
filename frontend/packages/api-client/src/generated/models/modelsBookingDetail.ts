@@ -10,19 +10,32 @@ import type { ModelsReservationDetail } from './modelsReservationDetail'
 import type { ModelsPaymentHistory } from './modelsPaymentHistory'
 import type { ModelsWaitlistEntry } from './modelsWaitlistEntry'
 
+/**
+ * 予約と関連情報をまとめた詳細ビュー。
+ */
 export type ModelsBookingDetail = ModelsBooking & {
+  /** 紐づく予約リクエストの詳細一覧。 */
   reservations: ModelsReservationDetail[]
+  /** 顧客の表示名。 */
   customerName: string
+  /** サロンの表示名。 */
   salonName: string
+  /** 決済履歴の一覧。未登録の場合はnull。 */
   paymentHistory?: ModelsPaymentHistory[]
+  /** ウェイティングリストの履歴。未登録の場合はnull。 */
   waitlistHistory?: ModelsWaitlistEntry[]
 } & Required<
     Pick<
       ModelsBooking & {
+        /** 紐づく予約リクエストの詳細一覧。 */
         reservations: ModelsReservationDetail[]
+        /** 顧客の表示名。 */
         customerName: string
+        /** サロンの表示名。 */
         salonName: string
+        /** 決済履歴の一覧。未登録の場合はnull。 */
         paymentHistory?: ModelsPaymentHistory[]
+        /** ウェイティングリストの履歴。未登録の場合はnull。 */
         waitlistHistory?: ModelsWaitlistEntry[]
       },
       'reservations' | 'customerName' | 'salonName'

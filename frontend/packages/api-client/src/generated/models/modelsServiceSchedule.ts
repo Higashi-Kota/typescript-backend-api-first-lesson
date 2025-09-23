@@ -7,9 +7,16 @@
  */
 import type { ModelsDayOfWeekType } from './modelsDayOfWeekType'
 
+/**
+ * サービス提供スケジュール
+ */
 export interface ModelsServiceSchedule {
+  /** 曜日 */
   dayOfWeek: ModelsDayOfWeekType
+  /** 提供開始時刻（HH:mm） */
   startTime: string
+  /** 提供終了時刻（HH:mm） */
   endTime: string
+  /** 予約受け入れ上限数 */
   maxBookings?: number
 }

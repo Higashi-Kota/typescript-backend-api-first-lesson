@@ -8,17 +8,18 @@
 import type { SalonCrudBulkUpdateBodyItemsItem } from './salonCrudBulkUpdateBodyItemsItem'
 
 /**
- * Request for bulk operations
+ * 一括処理のリクエストモデル。
+顧客データの一括更新や予約枠のまとめ登録など、複数レコードをまとめて処理する際に利用する。
  */
 export type SalonCrudBulkUpdateBody = {
   /**
-   * Array of items to process
+   * 処理対象となるアイテムの配列。1件以上100件以下に制限する。
    * @minItems 1
    * @maxItems 100
    */
   items: SalonCrudBulkUpdateBodyItemsItem[]
-  /** Whether to continue on error */
+  /** 途中でエラーが発生しても処理を継続するかどうか。既定は false。 */
   continueOnError?: boolean
-  /** Whether to process in transaction */
+  /** トランザクション内で一括処理を行うかどうか。既定は true。 */
   transactional?: boolean
 }

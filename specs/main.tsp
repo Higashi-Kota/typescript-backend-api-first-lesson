@@ -41,13 +41,14 @@ using TypeSpec.Rest;
 using TypeSpec.OpenAPI;
 using TypeSpec.Versioning;
 
-/**
- * API versions for the Beauty Salon service
- */
+@doc("""
+APIバージョン区分 - ビューティーサロンサービスのAPIバージョン管理
+
+v1: バージョン1.0.0 - 初回リリース、基本機能を提供
+v2: バージョン2.0.0 - 拡張機能を追加、パフォーマンス最適化
+""")
 enum VersionType {
-  @doc("Version 1.0.0 - Initial release")
   v1: "1.0",
-  @doc("Version 2.0.0 - Added enhanced features")
   v2: "2.0",
 }
 

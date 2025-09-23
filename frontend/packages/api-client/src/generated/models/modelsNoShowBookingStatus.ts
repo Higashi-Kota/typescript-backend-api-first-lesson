@@ -7,8 +7,14 @@
  */
 import type { ModelsNoShowBookingStatusType } from './modelsNoShowBookingStatusType'
 
+/**
+ * 来店が確認できなかった場合の状態情報。
+ */
 export interface ModelsNoShowBookingStatus {
+  /** 固定値no_show。無断キャンセル状態であることを示す。 */
   type: ModelsNoShowBookingStatusType
+  /** 無断キャンセルとして記録した日時。 */
   recordedAt: string
+  /** ペナルティを適用したかどうか。既定値はfalse。 */
   penaltyApplied?: boolean
 }

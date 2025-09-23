@@ -7,6 +7,7 @@
  */
 
 /**
+ * 更新後のメタデータ（null 指定で解除）
  * @nullable
  */
 export type ModelsPaymentUpdateInputMetadata = { [key: string]: unknown } | null

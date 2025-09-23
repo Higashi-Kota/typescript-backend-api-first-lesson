@@ -6,9 +6,16 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * スタッフ権限モデル - スタッフアカウントに付与された操作対象と権限範囲を定義する
+ */
 export interface ModelsStaffPermission {
+  /** 操作対象リソースの識別子 */
   resource: string
+  /** 許可されたアクションの一覧 */
   actions: string[]
+  /** 権限が適用される範囲や条件 */
   scope?: string
+  /** 権限の有効期限 (UTC) */
   expiresAt?: string
 }

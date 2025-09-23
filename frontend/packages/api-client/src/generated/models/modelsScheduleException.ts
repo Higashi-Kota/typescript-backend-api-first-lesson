@@ -9,11 +9,15 @@ import type { ModelsScheduleExceptionType } from './modelsScheduleExceptionType'
 import type { ModelsStaffId } from './modelsStaffId'
 
 /**
- * Schedule exception for staff
+ * スタッフに発生する例外スケジュール（休暇・研修等）を表すモデル
  */
 export interface ModelsScheduleException {
+  /** 例外が適用される日付 */
   date: string
+  /** 例外の種別（休暇・病欠など） */
   type: ModelsScheduleExceptionType
+  /** 補足説明や注意事項。不要な場合はnull */
   description?: string
+  /** 代替対応するスタッフのID。未手配の場合はnull */
   alternativeStaffId?: ModelsStaffId
 }

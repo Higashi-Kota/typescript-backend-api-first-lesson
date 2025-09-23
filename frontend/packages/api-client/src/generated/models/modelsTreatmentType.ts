@@ -6,6 +6,20 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 施術タイプ区分 - サロンで提供される具体的な施術の種類
+
+cut: カット - ヘアカット、レイヤーカット等の切断技術
+color: カラー - ヘアカラー、白髪染め、ハイライト等の染色技術
+perm: パーマ - コールドパーマ、デジタルパーマ等のウェーブ技術
+treatment: トリートメント - ダメージケア、栄養補給等の毛髪改善技術
+head_spa: ヘッドスパ - 頭皮マッサージ、スカルプケア等の頭皮ケア技術
+styling: スタイリング - セット、アレンジ等のスタイリング技術
+extension: エクステンション - ヘアエクステ、増毛等の毛髪追加技術
+nail: ネイル - マニキュア、ジェルネイル等の爪装飾技術
+eyelash: まつげ - まつげエクステ、まつげパーマ等のまつげ装飾技術
+other: その他 - 上記に分類されない施術
+ */
 export type ModelsTreatmentType =
   (typeof ModelsTreatmentType)[keyof typeof ModelsTreatmentType]
 

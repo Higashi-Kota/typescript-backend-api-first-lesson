@@ -11,16 +11,30 @@ import type { ModelsInventoryTransactionType } from './modelsInventoryTransactio
 import type { ModelsStaffId } from './modelsStaffId'
 import type { ModelsInventoryTransactionMetadata } from './modelsInventoryTransactionMetadata'
 
+/**
+ * 在庫の入出庫トランザクション
+ */
 export interface ModelsInventoryTransaction {
+  /** トランザクション ID */
   id: string
+  /** 対象在庫アイテム ID */
   itemId: ModelsInventoryId
+  /** 処理を行うサロン ID */
   salonId: ModelsSalonId
+  /** 在庫操作区分（入庫/出庫/調整/移動） */
   type: ModelsInventoryTransactionType
+  /** 操作した数量 */
   quantity: number
+  /** 操作理由 */
   reason: string
+  /** 操作を担当したスタッフ ID */
   performedBy: ModelsStaffId
+  /** 操作日時 */
   occurredAt: string
+  /** 関連する外部参照 ID */
   referenceId?: string
+  /** 備考メモ */
   notes?: string
+  /** 追加のメタデータ */
   metadata?: ModelsInventoryTransactionMetadata
 }

@@ -8,6 +8,7 @@
 import type { ModelsContactInfo } from './modelsContactInfo'
 
 /**
+ * 連絡先情報を更新または未設定化する場合に指定
  * @nullable
  */
 export type ModelsUpdateSalonRequestWithResetContactInfo =

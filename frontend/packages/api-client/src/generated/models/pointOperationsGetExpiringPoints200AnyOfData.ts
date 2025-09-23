@@ -8,6 +8,9 @@
 import type { ModelsCustomerId } from './modelsCustomerId'
 import type { ModelsPointTransaction } from './modelsPointTransaction'
 
+/**
+ * 成功時に返却するドメインデータ。
+ */
 export type PointOperationsGetExpiringPoints200AnyOfData = {
   customerId: ModelsCustomerId
   expiringPoints: number

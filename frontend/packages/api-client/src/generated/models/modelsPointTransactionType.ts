@@ -7,7 +7,7 @@
  */
 
 /**
- * Transaction type: earn or use
+ * 取引種別（獲得・利用など）
  */
 export type ModelsPointTransactionType =
   (typeof ModelsPointTransactionType)[keyof typeof ModelsPointTransactionType]

@@ -21,45 +21,64 @@ import type { ModelsServiceAssociations } from './modelsServiceAssociations'
 import type { ModelsServiceMetadata } from './modelsServiceMetadata'
 import type { ModelsServiceStatusDetail } from './modelsServiceStatusDetail'
 
+/**
+ * サロンで提供するサービスの統合モデル
+ */
 export interface ModelsService {
+  /** サービス ID */
   id: ModelsServiceId
+  /** サービスを提供するサロン ID */
   salonId: ModelsSalonId
-  /** Service basic information */
+  /** サービスの紹介情報 */
   info: ModelsServiceInfo
-  /** Service category and sub-category */
+  /** サービスカテゴリ区分 */
   category: ModelsServiceCategoryType
+  /** カテゴリ ID（分類ツリー連携用） */
   categoryId?: ModelsCategoryId
-  /** Pricing information */
+  /** 料金設定情報 */
   pricing: ModelsServicePricing
-  /** Duration settings */
+  /** 提供時間の設定 */
   duration: ModelsServiceDuration
-  /** Availability settings */
+  /** 提供可能条件の設定 */
   availability?: ModelsServiceAvailabilityDetail
-  /** Booking requirements */
+  /** 予約時に必要な要件一覧 */
   requirements?: ModelsBookingRequirementDetail[]
-  /** Service options and addons */
+  /** 追加オプション設定 */
   options?: ModelsServiceOptionDetail[]
-  /** Service restrictions */
+  /** 提供上の制約条件 */
   restrictions?: ModelsServiceRestrictions
-  /** Performance metrics */
+  /** サービス実績の指標 */
   performance?: ModelsServicePerformance
-  /** Service associations */
+  /** 関連サービス・担当者情報 */
   associations?: ModelsServiceAssociations
-  /** Service metadata */
+  /** メタデータ・表示設定 */
   metadata?: ModelsServiceMetadata
-  /** Service status */
+  /** 現在の提供ステータス */
   status: ModelsServiceStatusDetail
-  /** Legacy fields for compatibility */
+  /** 互換性維持のための旧項目：サービス名 */
   name: string
+  /** 互換性維持のための旧項目：説明文 */
   description: string
+  /** 互換性維持のための旧項目：料金 */
   price: number
+  /** 互換性維持のための旧項目：画像 URL */
   imageUrl?: string
+  /** 互換性維持のための旧項目：スタッフレベル */
   requiredStaffLevel?: number
+  /** 互換性維持のための旧項目：有効フラグ */
   isActive: boolean
+  /** レコード作成日時。 */
   createdAt: string
-  /** @nullable */
+  /**
+   * レコードを作成したユーザーID。匿名作成の場合はnull。
+   * @nullable
+   */
   createdBy: string | null
+  /** レコード最終更新日時。 */
   updatedAt: string
-  /** @nullable */
+  /**
+   * レコードを最後に更新したユーザーID。匿名更新の場合はnull。
+   * @nullable
+   */
   updatedBy: string | null
 }

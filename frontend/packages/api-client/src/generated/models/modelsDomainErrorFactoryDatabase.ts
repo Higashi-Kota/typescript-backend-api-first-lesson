@@ -10,7 +10,7 @@ import type { ModelsDomainErrorFactoryDatabaseDefaultCode } from './modelsDomain
 import type { ModelsDomainErrorFactoryDatabaseHttpStatus } from './modelsDomainErrorFactoryDatabaseHttpStatus'
 
 /**
- * Database error factory
+ * データベースエラーを生成するための設定。
  */
 export type ModelsDomainErrorFactoryDatabase = {
   type: ModelsDomainErrorFactoryDatabaseType

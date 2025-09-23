@@ -11,29 +11,58 @@ import type { ModelsCustomerId } from './modelsCustomerId'
 import type { ModelsBookingId } from './modelsBookingId'
 import type { ModelsStaffId } from './modelsStaffId'
 
+/**
+ * レビューモデル - 施術後の顧客体験を定量・定性的に記録し、サロン品質の改善と信頼性向上に活用する
+ */
 export interface ModelsReview {
+  /** レビューを一意に識別するID */
   id: ModelsReviewId
+  /** レビュー対象のサロンID */
   salonId: ModelsSalonId
+  /** レビューを投稿した顧客ID */
   customerId: ModelsCustomerId
+  /** 紐づく来店予約を示すID (DBカラム booking_id と整合) */
   bookingId: ModelsBookingId
+  /** 評価対象のスタッフID。スタッフ未指定レビューの場合は省略 */
   staffId?: ModelsStaffId
+  /** 全体満足度の評価値 (例: 1〜5) */
   overallRating: number
+  /** 自由記述のレビューコメント */
   comment?: string
+  /** レビュータイトルや要約 */
   title?: string
+  /** 施術サービスそのものに対する評価値 */
   serviceRating?: number
+  /** スタッフの接客・技術に対する評価値 */
   staffRating?: number
+  /** 店内の清潔さ・衛生面に対する評価値 */
   cleanlinessRating?: number
+  /** 価格に対する価値・コストパフォーマンス評価値 */
   valueRating?: number
+  /** レビューに添付された画像URLの一覧 */
   imageUrls?: string[]
+  /** 実来店が確認済みかを表す検証フラグ */
   isVerified: boolean
+  /** レビューが「参考になった」と評価された累積回数 */
   helpfulCount: number
+  /** 不適切報告が入った累積回数 */
   reportCount: number
+  /** サロン運営からの公式返信本文 */
   ownerResponse?: string
+  /** 運営が返信した日時 (UTC) */
   ownerRespondedAt?: string
+  /** レコード作成日時。 */
   createdAt: string
-  /** @nullable */
+  /**
+   * レコードを作成したユーザーID。匿名作成の場合はnull。
+   * @nullable
+   */
   createdBy: string | null
+  /** レコード最終更新日時。 */
   updatedAt: string
-  /** @nullable */
+  /**
+   * レコードを最後に更新したユーザーID。匿名更新の場合はnull。
+   * @nullable
+   */
   updatedBy: string | null
 }

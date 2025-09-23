@@ -7,9 +7,9 @@
  */
 
 /**
- * 共有リンクアクセスリクエスト
+ * パスワード保護された共有リンクへアクセスする際のリクエスト。
  */
 export interface ModelsAccessShareLinkRequest {
-  /** パスワード（パスワード保護されている場合） */
+  /** 共有リンクのパスワード。保護されている場合に入力。 */
   password?: string
 }

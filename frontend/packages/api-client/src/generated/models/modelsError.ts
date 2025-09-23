@@ -7,8 +7,14 @@
  */
 import type { ModelsErrorDetails } from './modelsErrorDetails'
 
+/**
+ * API全体で共通利用する業務エラーの基本モデル。
+ */
 export interface ModelsError {
+  /** エラーの種類を特定するアプリケーション固有コード。 */
   code: string
+  /** ユーザーまたはオペレーターに提示するエラーメッセージ。 */
   message: string
+  /** デバッグやサポート対応に役立つ追加情報。任意項目。 */
   details?: ModelsErrorDetails
 }

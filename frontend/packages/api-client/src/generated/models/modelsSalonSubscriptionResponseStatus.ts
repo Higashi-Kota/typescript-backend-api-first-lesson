@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 購読状態（常にactiveを返却）
+ */
 export type ModelsSalonSubscriptionResponseStatus =
   (typeof ModelsSalonSubscriptionResponseStatus)[keyof typeof ModelsSalonSubscriptionResponseStatus]
 

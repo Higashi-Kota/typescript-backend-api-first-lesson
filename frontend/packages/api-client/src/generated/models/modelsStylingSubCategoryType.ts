@@ -6,6 +6,15 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * スタイリングサブカテゴリー区分 - ヘアスタイリングサービスの詳細分類
+
+blowout: ブローアウト - ブロードライでボリュームを出すスタイリング
+updo: アップスタイル - まとめ髪、シニヨン等のヘアアレンジ
+braiding: 編み込み - 三つ編み、編み込みアレンジ等
+extensions: エクステンション - ヘアエクステの装着サービス
+event_styling: イベントスタイリング - 結婚式、パーティー等の特別なスタイリング
+ */
 export type ModelsStylingSubCategoryType =
   (typeof ModelsStylingSubCategoryType)[keyof typeof ModelsStylingSubCategoryType]
 

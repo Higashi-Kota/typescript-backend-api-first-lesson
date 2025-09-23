@@ -7,6 +7,6 @@
  */
 
 /**
- * Branded UUID type for TreatmentType Record ID
+ * 施術記録やカウンセリングメモを識別するブランド付きUUID。
  */
 export type ModelsTreatmentRecordId = string

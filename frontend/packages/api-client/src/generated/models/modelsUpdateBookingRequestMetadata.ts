@@ -6,4 +6,7 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 任意メタデータの更新。
+ */
 export type ModelsUpdateBookingRequestMetadata = { [key: string]: unknown }

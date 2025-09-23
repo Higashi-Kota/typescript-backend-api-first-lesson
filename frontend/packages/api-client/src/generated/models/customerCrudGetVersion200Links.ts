@@ -7,6 +7,6 @@
  */
 
 /**
- * Related links
+ * 関連リソースや次アクションへのリンク情報。
  */
 export type CustomerCrudGetVersion200Links = { [key: string]: string }

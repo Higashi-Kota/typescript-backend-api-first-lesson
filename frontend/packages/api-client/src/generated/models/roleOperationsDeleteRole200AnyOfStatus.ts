@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 固定値success。成功結果であることを示す。
+ */
 export type RoleOperationsDeleteRole200AnyOfStatus =
   (typeof RoleOperationsDeleteRole200AnyOfStatus)[keyof typeof RoleOperationsDeleteRole200AnyOfStatus]
 

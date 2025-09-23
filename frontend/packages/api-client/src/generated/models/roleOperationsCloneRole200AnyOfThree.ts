@@ -8,7 +8,12 @@
 import type { RoleOperationsCloneRole200AnyOfThreeStatus } from './roleOperationsCloneRole200AnyOfThreeStatus'
 import type { ModelsError } from './modelsError'
 
+/**
+ * 失敗時のエラー情報とステータスを保持するモデル。
+ */
 export type RoleOperationsCloneRole200AnyOfThree = {
+  /** 固定値error。エラー結果であることを示す。 */
   status: RoleOperationsCloneRole200AnyOfThreeStatus
+  /** 失敗時に返却するエラー情報。 */
   error: ModelsError
 }

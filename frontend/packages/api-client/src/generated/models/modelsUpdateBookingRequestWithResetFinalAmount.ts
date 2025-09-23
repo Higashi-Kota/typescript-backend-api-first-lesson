@@ -8,6 +8,7 @@
 import type { ModelsMoney } from './modelsMoney'
 
 /**
+ * 最終請求額の更新またはリセット。
  * @nullable
  */
 export type ModelsUpdateBookingRequestWithResetFinalAmount = ModelsMoney | null

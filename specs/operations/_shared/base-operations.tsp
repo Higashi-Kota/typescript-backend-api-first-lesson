@@ -10,11 +10,7 @@ using TypeSpec.OpenAPI;
 using BeautySalon.Models;
 
 namespace BeautySalon.Operations {
-  /**
-   * Base interface for CRUD operations with comprehensive error handling
-   * Provides standard endpoints that can be extended by specific resources
-   */
-  @doc("Standard CRUD operations interface")
+  @doc("各リソースが共通で利用できる堅牢なCRUD操作セットを定義し、拡張しやすい土台を提供します。")
   interface CrudOperations<
     TEntity,
     TCreateRequest,
@@ -22,9 +18,7 @@ namespace BeautySalon.Operations {
     TListParams = CursorPaginationParams,
     TId = string
   > {
-    /**
-     * List resources with pagination and filtering
-     */
+    @doc("ページネーションやフィルター条件を指定して対象リソースを一覧取得します。業務画面のリスト表示に利用します。")
     @summary("List {Name} resources")
     @get
     list(
@@ -46,9 +40,7 @@ namespace BeautySalon.Operations {
       ...RateLimitInfo;
     };
 
-    /**
-     * Get a single resource by ID
-     */
+    @doc("IDを指定して単一リソースを取得し、詳細表示や編集フォームの初期値に使用します。")
     @summary("Get {Name} by ID")
     @get
     get(
@@ -71,9 +63,7 @@ namespace BeautySalon.Operations {
       @body error: ProblemDetails;
     };
 
-    /**
-     * Create a new resource
-     */
+    @doc("新規リソースを作成し、作成時のバリデーションや重複チェック結果を返却します。")
     @summary("Create new {Name}")
     @post
     create(
@@ -98,9 +88,7 @@ namespace BeautySalon.Operations {
       @body error: ProblemDetails;
     };
 
-    /**
-     * Update a resource (full update)
-     */
+    @doc("既存リソースを全項目更新し、最新状態とバージョン情報を返却します。")
     @summary("Update {Name}")
     @put
     update(
@@ -129,9 +117,7 @@ namespace BeautySalon.Operations {
       @body error: ProblemDetails;
     };
 
-    /**
-     * Partially update a resource
-     */
+    @doc("必要なフィールドのみを部分更新し、変更差分を効率的に反映します。")
     @summary("Partially update {Name}")
     @patch(#{implicitOptionality: true})
     patch(
@@ -161,9 +147,7 @@ namespace BeautySalon.Operations {
       @body error: ProblemDetails;
     };
 
-    /**
-     * Delete a resource (soft delete by default)
-     */
+    @doc("リソースを削除し、必要に応じて論理削除か物理削除かを選択します。")
     @summary("Delete {Name}")
     @delete
     delete(
@@ -185,14 +169,9 @@ namespace BeautySalon.Operations {
     };
   }
 
-  /**
-   * Bulk operations interface
-   */
-  @doc("Bulk operations for batch processing")
+  @doc("複数リソースをまとめて処理し、業務バッチや大量更新を効率化する操作群です。")
   interface BulkOperations<TEntity, TCreateRequest, TUpdateRequest, TId = string> {
-    /**
-     * Batch get multiple resources
-     */
+    @doc("複数IDをまとめて取得し、一覧画面の遅延読み込みや外部連携に利用します。")
     @summary("Batch get {Name} resources")
     @post
     @route("batch/get")
@@ -210,9 +189,7 @@ namespace BeautySalon.Operations {
       @body error: ProblemDetails;
     };
 
-    /**
-     * Bulk create resources
-     */
+    @doc("複数リソースを一括作成し、結果を成功・失敗に分けて返却します。")
     @summary("Bulk create {Name} resources")
     @post
     @route("bulk")
@@ -231,9 +208,7 @@ namespace BeautySalon.Operations {
       @body error: ProblemDetails;
     };
 
-    /**
-     * Bulk update resources
-     */
+    @doc("複数リソースの更新をまとめて受け付け、バージョン整合性を保ちながら処理します。")
     @summary("Bulk update {Name} resources")
     @put
     @route("bulk")
@@ -251,9 +226,7 @@ namespace BeautySalon.Operations {
       @body error: ProblemDetails;
     };
 
-    /**
-     * Bulk delete resources
-     */
+    @doc("複数リソースを一括削除し、成功可否ごとの結果を返却します。")
     @summary("Bulk delete {Name} resources")
     @delete
     @route("bulk")
@@ -272,14 +245,9 @@ namespace BeautySalon.Operations {
     };
   }
 
-  /**
-   * Search operations interface
-   */
-  @doc("Advanced search and filtering operations")
+  @doc("高度な検索条件や集計を扱い、業務分析や顧客検索を柔軟に実現する操作群です。")
   interface SearchOperations<TEntity, TSearchParams = AdvancedSearchParams> {
-    /**
-     * Advanced search with facets
-     */
+    @doc("ファセットや複合条件を利用してリソースを検索し、結果と統計情報を返却します。")
     @summary("Search {Name} resources")
     @get
     @route("search")
@@ -297,9 +265,7 @@ namespace BeautySalon.Operations {
       @body error: ProblemDetails;
     };
 
-    /**
-     * Export search results
-     */
+    @doc("検索結果を指定形式でエクスポートし、帳票出力や外部共有に活用します。")
     @summary("Export {Name} search results")
     @post
     @route("export")
@@ -327,14 +293,9 @@ namespace BeautySalon.Operations {
     };
   }
 
-  /**
-   * Audit operations interface
-   */
-  @doc("Audit trail and history operations")
+  @doc("操作履歴やバージョン管理を提供し、監査対応や変更追跡を可能にする操作群です。")
   interface AuditOperations<TEntity, TId = string> {
-    /**
-     * Get audit history for a resource
-     */
+    @doc("対象リソースの監査履歴を取得し、変更者や変更内容を追跡します。")
     @summary("Get {Name} audit history")
     @get
     @route("{id}/history")
@@ -353,9 +314,7 @@ namespace BeautySalon.Operations {
       @body error: ProblemDetails;
     };
 
-    /**
-     * Get specific version of a resource
-     */
+    @doc("指定したバージョンのリソース状態を取得し、過去状態の確認や比較に利用します。")
     @summary("Get {Name} version")
     @get
     @route("{id}/versions/{version}")
@@ -374,9 +333,7 @@ namespace BeautySalon.Operations {
       @body error: ProblemDetails;
     };
 
-    /**
-     * Restore a deleted resource
-     */
+    @doc("削除済みリソースを復元し、誤削除への迅速なリカバリを可能にします。")
     @summary("Restore deleted {Name}")
     @post
     @route("{id}/restore")
@@ -398,9 +355,7 @@ namespace BeautySalon.Operations {
     };
   }
 
-  /**
-   * Audit entry model
-   */
+  @doc("監査ログ1件分の詳細を保持するモデルです。誰がいつどのような変更を行ったかを記録します。")
   model AuditEntry {
     @doc("Audit entry ID")
     id: string;
@@ -453,15 +408,11 @@ namespace BeautySalon.Operations {
     newValue?: unknown;
   }
 
-  /**
-   * System operations
-   */
+  @doc("システム全体の状態監視やデプロイ確認に利用する運用系API操作群です。")
   @route("/api/system")
   @tag("System")
   namespace SystemOperations {
-    /**
-     * Health check endpoint
-     */
+    @doc("APIが正常稼働しているかを判定し、監視ツールやロードバランサーから参照します。")
     @summary("Check API health")
     @get
     @route("health")
@@ -473,9 +424,7 @@ namespace BeautySalon.Operations {
       @body response: HealthStatus;
     };
 
-    /**
-     * Readiness check for Kubernetes
-     */
+    @doc("Kubernetes等のオーケストレーターがトラフィック受信可否を判断するための準備完了チェックです。")
     @summary("Check API readiness")
     @get
     @route("ready")
@@ -487,9 +436,7 @@ namespace BeautySalon.Operations {
       @body response: { ready: boolean; reason?: string };
     };
 
-    /**
-     * Liveness check for Kubernetes
-     */
+    @doc("プロセスが生存しているかを判定するエンドポイントで、異常時は再起動判定に利用されます。")
     @summary("Check API liveness")
     @get
     @route("alive")
@@ -498,9 +445,7 @@ namespace BeautySalon.Operations {
       @body response: { alive: true };
     };
 
-    /**
-     * Get API metrics
-     */
+    @doc("Prometheus形式のメトリクスを返却し、監視基盤での可視化やアラート設定に用います。")
     @summary("Get API metrics")
     @get
     @route("metrics")
@@ -514,9 +459,7 @@ namespace BeautySalon.Operations {
       @body error: ProblemDetails;
     };
 
-    /**
-     * Get API version and build information
-     */
+    @doc("APIのバージョンやビルド情報を返し、障害解析やデプロイ確認に活用します。")
     @summary("Get API version")
     @get
     @route("version")

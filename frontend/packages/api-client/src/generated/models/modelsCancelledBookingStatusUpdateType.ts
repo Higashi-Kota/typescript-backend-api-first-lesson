@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 固定値cancelled。キャンセル状態であることを示す。
+ */
 export type ModelsCancelledBookingStatusUpdateType =
   (typeof ModelsCancelledBookingStatusUpdateType)[keyof typeof ModelsCancelledBookingStatusUpdateType]
 

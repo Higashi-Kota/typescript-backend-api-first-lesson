@@ -6,6 +6,14 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 性別区分 - 顧客の性別を表す区分（多様性に配慮した選択肢を含む）
+
+male: 男性
+female: 女性
+other: その他 - 男性・女性以外の性自認を持つ方
+prefer_not_to_say: 回答しない - 性別の回答を希望しない方
+ */
 export type ModelsCustomerGenderType =
   (typeof ModelsCustomerGenderType)[keyof typeof ModelsCustomerGenderType]
 

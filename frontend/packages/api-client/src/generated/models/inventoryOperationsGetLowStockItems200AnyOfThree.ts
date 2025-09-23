@@ -8,7 +8,12 @@
 import type { InventoryOperationsGetLowStockItems200AnyOfThreeStatus } from './inventoryOperationsGetLowStockItems200AnyOfThreeStatus'
 import type { ModelsError } from './modelsError'
 
+/**
+ * 失敗時のエラー情報とステータスを保持するモデル。
+ */
 export type InventoryOperationsGetLowStockItems200AnyOfThree = {
+  /** 固定値error。エラー結果であることを示す。 */
   status: InventoryOperationsGetLowStockItems200AnyOfThreeStatus
+  /** 失敗時に返却するエラー情報。 */
   error: ModelsError
 }

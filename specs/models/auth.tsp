@@ -10,6 +10,15 @@ namespace BeautySalon.Models {
   // Staff Level Enums
   // ============================================================================
 
+  @doc("""
+    スタッフレベル区分 - スタッフの技術レベルや経験を表す階層
+    
+    junior: ジュニア - 新人・見習いレベル、基本的な施術が可能
+    stylist: スタイリスト - 標準レベル、一般的な施術が可能
+    senior: シニア - 上級レベル、高度な技術と経験を保有
+    expert: エキスパート - 専門家レベル、特殊技術や指導が可能
+    director: ディレクター - 管理職レベル、サロンの技術的な指導を担当
+    """)
   enum StaffLevelType {
     junior,
     stylist,
@@ -22,6 +31,14 @@ namespace BeautySalon.Models {
   // Authentication State Types
   // ============================================================================
 
+  @doc("""
+    認証状態区分 - ユーザーの認証状態を表す区分
+    
+    unauthenticated: 未認証 - ログインしていない状態
+    authenticated: 認証済み - 正常にログインしている状態
+    pending_two_factor: 2要素認証待ち - 2要素認証の入力を待っている状態
+    locked: ロック中 - アカウントがロックされている状態
+    """)
   enum AuthenticationStateType {
     unauthenticated,
     authenticated,
@@ -29,13 +46,27 @@ namespace BeautySalon.Models {
     locked,
   }
 
+  @doc("認証状態ごとの詳細情報を格納するモデル。")
   model AuthenticationStateDetail {
+    @doc("現在の認証状態区分。")
     type: AuthenticationStateType;
+
+    @doc("状態に紐づくセッションID。未確立の場合はnull。")
     sessionId?: SessionId;
+
+    @doc("該当状態が失効する日時。")
     expiresAt?: utcDateTime;
+
+    @doc("2要素認証や一時アクセスに利用する暫定トークン。")
     tempToken?: string;
+
+    @doc("ロックや制限状態が解除される予定日時。")
     until?: utcDateTime;
+
+    @doc("認証失敗などの試行回数。")
     attempts?: int32;
+
+    @doc("状態が発生した具体的な理由メッセージ。")
     reason?: string;
   }
 
@@ -43,17 +74,34 @@ namespace BeautySalon.Models {
   // Email Verification State
   // ============================================================================
 
+  @doc("""
+    メール確認状態区分 - メールアドレスの確認状態を表す区分
+    
+    verified: 確認済み - メールアドレスが確認された状態
+    unverified: 未確認 - メールアドレスが未確認の状態
+    pending: 確認中 - 確認メールを送信し、確認待ちの状態
+    """)
   enum EmailVerificationStateType {
     verified,
     unverified,
     pending,
   }
 
+  @doc("メールアドレス確認フローの進行状況を保持するモデル。")
   model EmailVerificationStateDetail {
+    @doc("現在の確認状態区分。")
     type: EmailVerificationStateType;
+
+    @doc("確認完了日時。未確認の場合はnull。")
     verifiedAt?: utcDateTime;
+
+    @doc("確認メールに含めるトークン。再送未実施の場合はnull。")
     token?: string;
+
+    @doc("トークンの有効期限。")
     expiresAt?: utcDateTime;
+
+    @doc("確認メールを送信した日時。")
     sentAt?: utcDateTime;
   }
 
@@ -61,17 +109,34 @@ namespace BeautySalon.Models {
   // Password Reset State
   // ============================================================================
 
+  @doc("""
+    パスワードリセット状態区分 - パスワードリセットの進行状態を表す区分
+    
+    none: なし - パスワードリセットが要求されていない状態
+    requested: リクエスト中 - パスワードリセットが要求された状態
+    completed: 完了 - パスワードリセットが完了した状態
+    """)
   enum PasswordResetStateType {
     none,
     requested,
     completed,
   }
 
+  @doc("パスワード再設定リクエストの状態管理モデル。")
   model PasswordResetStateDetail {
+    @doc("現在のリセット状態区分。")
     type: PasswordResetStateType;
+
+    @doc("リセット手続きに使用するトークン。")
     token?: string;
+
+    @doc("トークンの有効期限。")
     expiresAt?: utcDateTime;
+
+    @doc("リセットを要求した日時。")
     requestedAt?: utcDateTime;
+
+    @doc("リセット完了日時。未完了の場合はnull。")
     completedAt?: utcDateTime;
   }
 
@@ -79,6 +144,15 @@ namespace BeautySalon.Models {
   // Extended User Role Types
   // ============================================================================
 
+  @doc("""
+    ユーザーロール区分 - システム内でのユーザーの役割と権限レベル
+    
+    customer: 顧客 - サービスの予約・利用が可能なユーザー
+    staff: スタッフ - 施術を提供するサロン従業員
+    manager: マネージャー - サロンの管理業務を担当する管理者
+    admin: 管理者 - システム全体の管理権限を持つユーザー
+    owner: オーナー - サロンの所有者、最高権限を保持
+    """)
   enum UserRoleType {
     customer,
     staff,
@@ -87,301 +161,308 @@ namespace BeautySalon.Models {
     owner,
   }
 
+  @doc("ユーザーの詳細な役割情報と所属を表すモデル。")
   model UserRoleDetail {
+    @doc("システム内での基礎的な役割区分。")
     type: UserRoleType;
+
+    @doc("役割が適用されるサロンID。全社権限の場合はnull。")
     salonId?: SalonId;
+
+    @doc("スタッフに対して設定される技術レベル。")
     level?: StaffLevelType;
   }
-  @doc("User roles in the system")
+  @doc("""
+    認証ユーザーロール区分 - 認証システムにおけるユーザーの役割
+    
+    customer: 顧客ロール - サービスの予約が可能
+    staff: スタッフロール - 自身のスケジュールと予約を管理可能
+    admin: 管理者ロール - システムのフルアクセス権限
+    """)
   enum AuthUserRoleType {
-    @doc("Customer role - can book services")
     customer: "customer",
-
-    @doc("Staff role - can manage their schedule and bookings")
     staff: "staff",
-
-    @doc("Admin role - full system access")
     admin: "admin",
   }
 
-  @doc("User account status")
+  @doc("""
+    ユーザーアカウントステータス区分 - アカウントの利用可否状態
+    
+    active: アクティブ - 正常に利用可能なアカウント
+    unverified: メール未確認 - メールアドレスが確認されていないアカウント
+    locked: ロック - ログイン失敗回数超過によりロックされたアカウント
+    suspended: 停止 - 管理者によって停止されたアカウント
+    deleted: 削除済み - 削除されたアカウント
+    """)
   enum UserAccountStatusType {
-    @doc("Active account")
     active: "active",
-
-    @doc("Email not verified")
     unverified: "unverified",
-
-    @doc("Account locked due to failed login attempts")
     locked: "locked",
-
-    @doc("Account suspended by admin")
     suspended: "suspended",
-
-    @doc("Account deleted")
     deleted: "deleted",
   }
 
-  @doc("Two-factor authentication status")
+  @doc("""
+    2要素認証ステータス区分 - 2要素認証の設定状態
+    
+    disabled: 無効 - 2要素認証が設定されていない状態
+    pending: 設定中 - 2要素認証の設定が進行中の状態
+    enabled: 有効 - 2要素認証が有効化されている状態
+    """)
   enum TwoFactorStatusType {
-    @doc("2FA not enabled")
     disabled: "disabled",
-
-    @doc("2FA setup in progress")
     pending: "pending",
-
-    @doc("2FA enabled and active")
     enabled: "enabled",
   }
 
-  @doc("User authentication information")
+  @doc("認証基盤で管理するユーザーアカウント情報。")
   model User {
     @key
-    @doc("Unique identifier for the user")
+    @doc("ユーザーを一意に識別するID。")
     id: string;
 
-    @doc("User's email address (unique)")
+    @doc("ログインに利用するメールアドレス（ユニーク）。")
     email: string;
 
-    @doc("User's display name")
+    @doc("顧客・スタッフの表示名。")
     name: string;
 
-    @doc("User's role in the system")
+    @doc("認証システム上での役割区分。")
     role: AuthUserRoleType;
 
-    @doc("Account status")
+    @doc("アカウントの稼働状態。")
     status: UserAccountStatusType;
 
-    @doc("Email verification status")
+    @doc("メールアドレスが確認済みかどうか。")
     emailVerified: boolean;
 
-    @doc("Email verification token (internal use)")
+    @doc("メール確認に利用するトークン。内部管理用。")
     emailVerificationToken?: string;
 
-    @doc("Email verification token expiry")
+    @doc("メール確認トークンの有効期限。")
     emailVerificationTokenExpiry?: utcDateTime;
 
-    @doc("Two-factor authentication status")
+    @doc("2要素認証の設定状態。")
     twoFactorStatus: TwoFactorStatusType;
 
-    @doc("Two-factor authentication secret (encrypted)")
+    @doc("暗号化された2要素認証シークレット。")
     twoFactorSecret?: string;
 
-    @doc("Backup codes for 2FA recovery")
+    @doc("2要素認証の復旧用バックアップコード一覧。")
     backupCodes?: string[];
 
-    @doc("Number of failed login attempts")
+    @doc("連続したログイン失敗回数。")
     failedLoginAttempts: int32 = 0;
 
-    @doc("Time when the account was locked")
+    @doc("アカウントをロックした日時。未ロックの場合はnull。")
     lockedAt?: utcDateTime;
 
-    @doc("Password reset token (internal use)")
+    @doc("パスワードリセットに利用するトークン。内部管理用。")
     passwordResetToken?: string;
 
-    @doc("Password reset token expiry")
+    @doc("パスワードリセットトークンの有効期限。")
     passwordResetTokenExpiry?: utcDateTime;
 
-    @doc("Last password change timestamp")
+    @doc("最後にパスワードを変更した日時。")
     lastPasswordChangeAt?: utcDateTime;
 
-    @doc("Previous password hashes for history check")
+    @doc("再利用防止のため保持する過去パスワードハッシュ。")
     passwordHistory?: string[];
 
-    @doc("Trusted IP addresses for this user")
+    @doc("信頼済みIPアドレスのリスト。")
     trustedIpAddresses?: string[];
 
-    @doc("Reference to customer profile if user is a customer")
+    @doc("ユーザーが顧客の場合の顧客プロファイルID。")
     customerId?: CustomerId;
 
-    @doc("Reference to staff profile if user is staff")
+    @doc("ユーザーがスタッフの場合のスタッフプロファイルID。")
     staffId?: StaffId;
 
-    @doc("Extended role information")
+    @doc("担当サロンやレベル等を含む拡張ロール情報。")
     roleDetail?: UserRoleDetail;
 
-    @doc("Authentication state")
+    @doc("現在の認証状態区分。")
     authState?: AuthenticationStateType;
 
-    @doc("Email verification state")
+    @doc("メール確認状態区分。")
     emailVerificationState?: EmailVerificationStateType;
 
-    @doc("Password reset state")
+    @doc("パスワードリセット状態区分。")
     passwordResetState?: PasswordResetStateType;
 
-    @doc("Timestamp when the user was created")
+    @doc("ユーザーアカウント作成日時。")
     createdAt: utcDateTime;
 
-    @doc("Timestamp when the user was last updated")
+    @doc("ユーザー情報の最終更新日時。")
     updatedAt: utcDateTime;
 
-    @doc("Last login timestamp")
+    @doc("直近のログイン日時。")
     lastLoginAt?: utcDateTime;
 
-    @doc("Last login IP address")
+    @doc("直近ログイン時のIPアドレス。")
     lastLoginIp?: string;
   }
 
-  @doc("Session information")
+  @doc("ログインセッションの状態と追跡情報。")
   model Session {
     @key
-    @doc("Unique session identifier")
+    @doc("セッションを一意に識別するID。")
     id: string;
 
-    @doc("User ID associated with this session")
+    @doc("セッション所有者のユーザーID。")
     userId: UserId;
 
-    @doc("Refresh token for this session")
+    @doc("アクセストークン再発行に使用するリフレッシュトークン。")
     refreshToken: string;
 
-    @doc("IP address from which the session was created")
+    @doc("セッション発行元のIPアドレス。")
     ipAddress: string;
 
-    @doc("User agent string")
+    @doc("ブラウザやアプリを示すユーザーエージェント文字列。")
     userAgent: string;
 
-    @doc("Session expiry time")
+    @doc("セッションの有効期限。")
     expiresAt: utcDateTime;
 
-    @doc("Remember me flag")
+    @doc("永続化セッション（Remember me）を希望するかのフラグ。")
     rememberMe: boolean = false;
 
-    @doc("Session creation timestamp")
+    @doc("セッション作成日時。")
     createdAt: utcDateTime;
 
-    @doc("Last activity timestamp")
+    @doc("直近のアクティビティ日時。")
     lastActivityAt: utcDateTime;
   }
 
-  @doc("Login request")
+  @doc("ユーザーがログインする際の認証リクエスト。")
   model LoginRequest {
-    @doc("User's email address")
+    @doc("ログインに使用するメールアドレス。")
     email: string;
 
-    @doc("User's password")
+    @doc("ログイン用パスワード。")
     password: string;
 
-    @doc("Remember me flag for extended session")
+    @doc("永続セッションを希望するかどうかのフラグ。")
     rememberMe?: boolean = false;
 
-    @doc("Two-factor authentication code (if 2FA is enabled)")
+    @doc("2要素認証が有効な場合に入力するワンタイムコード。")
     twoFactorCode?: string;
   }
 
-  @doc("Login response")
+  @doc("ログイン成功時に返却するトークン情報。")
   model LoginResponse {
-    @doc("Access token for API requests")
+    @doc("API呼び出しに利用するアクセストークン。")
     accessToken: string;
 
-    @doc("Refresh token for obtaining new access tokens")
+    @doc("アクセストークン再発行に使用するリフレッシュトークン。")
     refreshToken: string;
 
-    @doc("Token type (always 'Bearer')")
+    @doc("トークン種別。常にBearer。")
     token: string = "Bearer";
 
-    @doc("Access token expiry in seconds")
+    @doc("アクセストークンの有効期限（秒）。")
     expiresIn: int32;
 
-    @doc("Logged in user information")
+    @doc("ログインしたユーザーの情報。")
     user: User;
   }
 
-  @doc("Registration request")
+  @doc("新規ユーザー登録時のリクエスト。")
   model RegisterRequest {
-    @doc("User's email address")
+    @doc("登録に使用するメールアドレス。")
     email: string;
 
-    @doc("User's password (must meet security requirements)")
+    @doc("セキュリティ基準を満たすパスワード。")
     password: string;
 
-    @doc("User's display name")
+    @doc("ユーザーの表示名。")
     name: string;
 
-    @doc("User's role (defaults to customer)")
+    @doc("付与するロール。既定はcustomer。")
     role?: AuthUserRoleType = AuthUserRoleType.customer;
   }
 
-  @doc("Password reset request")
+  @doc("パスワード再設定メール送信を要求するリクエスト。")
   model PasswordResetRequest {
-    @doc("Email address of the account")
+    @doc("対象アカウントのメールアドレス。")
     email: string;
   }
 
-  @doc("Password reset confirmation")
+  @doc("パスワード再設定を確定するためのリクエスト。")
   model PasswordResetConfirmRequest {
-    @doc("Password reset token from email")
+    @doc("メールで受け取った再設定トークン。")
     token: string;
 
-    @doc("New password")
+    @doc("新しいパスワード。")
     newPassword: string;
   }
 
-  @doc("Password change request")
+  @doc("ログイン中ユーザーがパスワードを変更するためのリクエスト。")
   model PasswordChangeRequest {
-    @doc("Current password for verification")
+    @doc("本人確認のための現在パスワード。")
     currentPassword: string;
 
-    @doc("New password")
+    @doc("変更後の新しいパスワード。")
     newPassword: string;
   }
 
-  @doc("Email verification request")
+  @doc("メールアドレス確認を完了させるリクエスト。")
   model EmailVerificationRequest {
-    @doc("Email verification token")
+    @doc("メールに記載された確認トークン。")
     token: string;
   }
 
-  @doc("Two-factor authentication enable request")
+  @doc("2要素認証を有効化する際の認証リクエスト。")
   model TwoFactorEnableRequest {
-    @doc("Current password for verification")
+    @doc("本人確認のための現在パスワード。")
     password: string;
   }
 
-  @doc("Two-factor authentication setup response")
+  @doc("2要素認証の設定情報を返すレスポンス。")
   model TwoFactorSetupResponse {
-    @doc("QR code URL for authenticator app")
+    @doc("認証アプリで読み取るQRコードURL。")
     qrCodeUrl: string;
 
-    @doc("Manual entry secret")
+    @doc("手動登録用のシークレットキー。")
     secret: string;
 
-    @doc("Backup codes for recovery")
+    @doc("復旧用バックアップコード一覧。")
     backupCodes: string[];
   }
 
-  @doc("Two-factor authentication verify request")
+  @doc("2要素認証コードを検証するリクエスト。")
   model TwoFactorVerifyRequest {
-    @doc("TOTP code from authenticator app")
+    @doc("認証アプリが生成したTOTPコード。")
     code: string;
   }
 
-  @doc("Two-factor authentication disable request")
+  @doc("2要素認証を無効化する際の確認リクエスト。")
   model TwoFactorDisableRequest {
-    @doc("Current password for verification")
+    @doc("本人確認のための現在パスワード。")
     password: string;
 
-    @doc("Current TOTP code for verification")
+    @doc("無効化確認のための現在TOTPコード。")
     code: string;
   }
 
-  @doc("Token refresh request")
+  @doc("アクセストークンを更新するためのリクエスト。")
   model TokenRefreshRequest {
-    @doc("Refresh token")
+    @doc("認証済みセッションに紐づくリフレッシュトークン。")
     refreshToken: string;
   }
 
-  @doc("Session list response")
+  @doc("アクティブなセッション一覧を返すレスポンス。")
   model SessionListResponse {
-    @doc("Active sessions")
+    @doc("稼働中のセッション配列。")
     sessions: Session[];
 
-    @doc("Total number of sessions")
+    @doc("該当セッションの総数。")
     total: int32;
   }
 
-  @doc("Generic auth success response")
+  @doc("認証系APIで使用する汎用成功レスポンス。")
   model AuthSuccessResponse {
-    @doc("Success message")
+    @doc("完了メッセージ。")
     message: string;
   }
 }

@@ -7,11 +7,11 @@
  */
 
 /**
- * Two-factor authentication disable request
+ * 2要素認証を無効化する際の確認リクエスト。
  */
 export interface ModelsTwoFactorDisableRequest {
-  /** Current password for verification */
+  /** 本人確認のための現在パスワード。 */
   password: string
-  /** Current TOTP code for verification */
+  /** 無効化確認のための現在TOTPコード。 */
   code: string
 }

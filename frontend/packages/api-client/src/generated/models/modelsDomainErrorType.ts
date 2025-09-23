@@ -7,7 +7,17 @@
  */
 
 /**
- * Domain error type classification
+ * ドメインエラータイプ区分 - ビジネスロジック層で発生するエラーの分類
+
+VALIDATION_ERROR: 検証エラー - 入力値の検証で失敗
+NOT_FOUND: 未検出 - 指定されたリソースが存在しない
+ALREADY_EXISTS: 既存 - リソースが既に存在し、重複が許可されない
+BUSINESS_RULE_VIOLATION: ビジネスルール違反 - ビジネスロジックの制約に違反
+UNAUTHORIZED: 未認証 - 認証が必要であるが認証されていない
+FORBIDDEN: 禁止 - 認証されているが権限が不足
+INTERNAL_ERROR: 内部エラー - システム内部で予期しないエラーが発生
+DATABASE_ERROR: データベースエラー - データベース操作中のエラー
+EXTERNAL_SERVICE_ERROR: 外部サービスエラー - 外部APIやサービスでのエラー
  */
 export type ModelsDomainErrorType =
   (typeof ModelsDomainErrorType)[keyof typeof ModelsDomainErrorType]

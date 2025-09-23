@@ -6,7 +6,12 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 金額レンジで絞り込むための共通クエリモデル。
+ */
 export interface ModelsPriceRangeFilter {
+  /** 下限価格。未指定の場合は制限なし。 */
   minPrice?: number
+  /** 上限価格。未指定の場合は制限なし。 */
   maxPrice?: number
 }

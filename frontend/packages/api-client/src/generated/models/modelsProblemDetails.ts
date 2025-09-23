@@ -9,25 +9,26 @@ import type { ModelsErrorCodeType } from './modelsErrorCodeType'
 import type { ModelsValidationError } from './modelsValidationError'
 
 /**
- * Standardized error response following RFC 7807
+ * RFC 7807 に準拠した標準エラーレスポンスモデル。
+美容サロン予約システム全体で一貫したエラー情報を提供し、顧客・スタッフ双方の操作ログと連携する。
  */
 export interface ModelsProblemDetails {
-  /** URI reference that identifies the problem type */
+  /** エラー種別を特定するための URI。参照することで関連ドキュメントに誘導できる。 */
   type: string
-  /** Short, human-readable summary of the problem */
+  /** ユーザーに短く要点を伝えるエラー概要メッセージ。 */
   title: string
-  /** HTTP status code */
+  /** レスポンスに付与される HTTP ステータスコード。 */
   status: number
-  /** Human-readable explanation specific to this occurrence */
+  /** 今回の発生状況に固有の詳細説明。サポート対応時の一次情報となる。 */
   detail?: string
-  /** URI reference that identifies the specific occurrence */
+  /** この事象を一意に識別するための URI。監査ログやダッシュボードと連携する。 */
   instance?: string
-  /** Machine-readable error code for programmatic handling */
+  /** システム全体で共有する機械判読可能なエラーコード。画面表示や分岐処理に使用する。 */
   code: ModelsErrorCodeType
-  /** Additional error context and validation details */
+  /** フィールド単位の検証エラーなど、追加のエラー詳細情報一覧。 */
   errors?: ModelsValidationError[]
-  /** Correlation ID for tracing */
+  /** 障害調査や問い合わせで利用する相関 ID。リクエスト単位で一意。 */
   correlationId?: string
-  /** Timestamp of the error */
+  /** エラー発生日時 (UTC)。サーバーログの検索キーとして使用する。 */
   timestamp: string
 }

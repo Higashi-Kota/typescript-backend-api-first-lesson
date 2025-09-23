@@ -8,7 +8,12 @@
 import type { UserRoleTypeOperationsBulkAssignRoles200AnyOfStatus } from './userRoleTypeOperationsBulkAssignRoles200AnyOfStatus'
 import type { UserRoleTypeOperationsBulkAssignRoles200AnyOfData } from './userRoleTypeOperationsBulkAssignRoles200AnyOfData'
 
+/**
+ * 成功時のデータとステータスを保持するモデル。
+ */
 export type UserRoleTypeOperationsBulkAssignRoles200AnyOf = {
+  /** 固定値success。成功結果であることを示す。 */
   status: UserRoleTypeOperationsBulkAssignRoles200AnyOfStatus
+  /** 成功時に返却するドメインデータ。 */
   data: UserRoleTypeOperationsBulkAssignRoles200AnyOfData
 }

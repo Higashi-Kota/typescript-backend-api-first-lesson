@@ -7,11 +7,12 @@
  */
 
 /**
- * Version information for optimistic locking
+ * 楽観的ロックを実現するためのバージョン管理モデル。
+エンティティの更新競合を検知し、整合性を担保する。
  */
 export interface ModelsVersioned {
-  /** Version number */
+  /** 内部的に管理するバージョン番号。更新ごとにインクリメントする。 */
   version: number
-  /** Last modification timestamp */
+  /** 最終更新日時 (UTC)。キャッシュ制御や監査に利用。 */
   lastModified: string
 }

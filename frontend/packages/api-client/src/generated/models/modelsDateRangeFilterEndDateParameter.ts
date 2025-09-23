@@ -6,4 +6,7 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 検索対象期間の終了日時。
+ */
 export type ModelsDateRangeFilterEndDateParameter = string

@@ -7,6 +7,6 @@
  */
 
 /**
- * Filter by minimum rating
+ * 最低評価値による絞り込み
  */
 export type ModelsSearchSalonRequestMinRatingParameter = number

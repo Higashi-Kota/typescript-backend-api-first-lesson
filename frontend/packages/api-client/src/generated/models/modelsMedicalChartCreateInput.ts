@@ -8,14 +8,26 @@
 import type { ModelsCustomerId } from './modelsCustomerId'
 import type { ModelsPreviousTreatment } from './modelsPreviousTreatment'
 
+/**
+ * カルテを新規作成する入力モデル
+ */
 export interface ModelsMedicalChartCreateInput {
+  /** 対象顧客 ID */
   customerId: ModelsCustomerId
+  /** アレルギー情報 */
   allergies?: string[]
+  /** 頭皮状態 */
   scalpCondition?: string
+  /** 毛髪状態 */
   hairCondition?: string
+  /** 過去施術の履歴 */
   previousTreatments?: ModelsPreviousTreatment[]
+  /** 注意すべき体調・持病 */
   medicalConditions?: string
+  /** 好みの商材 */
   preferredProducts?: string[]
+  /** 避けるべき商材 */
   avoidProducts?: string[]
+  /** その他メモ */
   notes?: string
 }

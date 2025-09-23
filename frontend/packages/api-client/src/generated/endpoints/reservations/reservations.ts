@@ -48,6 +48,7 @@ type Awaited<O> = O extends AwaitedInput<infer T> ? T : never
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 
 /**
+ * サロン、顧客、スタッフなどの条件で予約一覧を取得し、当日の稼働状況を把握します。
  * @summary List reservations
  */
 export type reservationOperationsListResponse200 = {
@@ -247,6 +248,7 @@ export function useReservationOperationsList<
 }
 
 /**
+ * 新しい施術予約を登録し、枠の確保と関連リソースの仮押さえを行います。
  * @summary Create reservation
  */
 export type reservationOperationsCreateResponse201 = {
@@ -360,6 +362,7 @@ export const useReservationOperationsCreate = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
+ * 個別予約の詳細情報を取得し、施術内容や担当者、タイムラインを確認します。
  * @summary Get reservation
  */
 export type reservationOperationsGetResponse200 = {
@@ -556,6 +559,7 @@ export function useReservationOperationsGet<
 }
 
 /**
+ * 予約内容を部分的に更新し、サービス内容や担当スタッフの変更に対応します。
  * @summary Update reservation
  */
 export type reservationOperationsUpdateResponse200 = {
@@ -670,6 +674,7 @@ export const useReservationOperationsUpdate = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
+ * 確定済みの予約をキャンセルし、理由の記録と枠の開放を行います。
  * @summary Cancel reservation
  */
 export type reservationOperationsCancelResponse200 = {
@@ -784,6 +789,7 @@ export const useReservationOperationsCancel = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
+ * 施術完了を登録し、実績データや売上計上に利用するステータスへ更新します。
  * @summary Complete reservation
  */
 export type reservationOperationsCompleteResponse200 = {
@@ -897,6 +903,7 @@ export const useReservationOperationsComplete = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
+ * 予約日時や担当者の調整が必要な際に、新しいスケジュールへ付け替えます。
  * @summary Reschedule reservation
  */
 export type reservationOperationsRescheduleResponse200 = {
@@ -1014,6 +1021,7 @@ export const useReservationOperationsReschedule = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
+ * 指定日の予約可能枠を取得し、空き枠一覧や予約フォームに反映します。
  * @summary Get available slots
  */
 export type availabilityOperationsGetAvailableSlotsResponse200 = {
@@ -1243,6 +1251,7 @@ export function useAvailabilityOperationsGetAvailableSlots<
 }
 
 /**
+ * 希望する日時・スタッフの組み合わせが予約可能か即時判定し、ダブルブッキングを防ぎます。
  * @summary Check availability
  */
 export type availabilityOperationsCheckAvailabilityResponse200 = {

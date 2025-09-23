@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 状態種別（failed 固定値）
+ */
 export type ModelsFailedPaymentStatusType =
   (typeof ModelsFailedPaymentStatusType)[keyof typeof ModelsFailedPaymentStatusType]
 

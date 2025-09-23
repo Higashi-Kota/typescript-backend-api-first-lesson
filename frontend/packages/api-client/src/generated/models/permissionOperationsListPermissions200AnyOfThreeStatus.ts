@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 固定値error。エラー結果であることを示す。
+ */
 export type PermissionOperationsListPermissions200AnyOfThreeStatus =
   (typeof PermissionOperationsListPermissions200AnyOfThreeStatus)[keyof typeof PermissionOperationsListPermissions200AnyOfThreeStatus]
 

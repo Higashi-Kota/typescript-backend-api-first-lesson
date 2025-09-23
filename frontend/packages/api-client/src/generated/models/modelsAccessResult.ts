@@ -7,11 +7,15 @@
  */
 
 /**
- * Access control result
+ * アクセス権限チェックの結果
  */
 export interface ModelsAccessResult {
+  /** 操作が許可されたかどうか */
   allowed: boolean
+  /** 拒否または許可の理由 */
   reason?: string
+  /** 必要な権限キー一覧 */
   requiredPermissions?: string[]
+  /** ユーザーが保有する権限キー一覧 */
   userPermissions?: string[]
 }

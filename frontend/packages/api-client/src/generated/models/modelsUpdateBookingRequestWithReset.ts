@@ -17,27 +17,56 @@ import type { ModelsUpdateBookingRequestWithResetBalanceDue } from './modelsUpda
 import type { ModelsUpdateBookingRequestWithResetMetadata } from './modelsUpdateBookingRequestWithResetMetadata'
 
 /**
- * Booking update request with reset capability
+ * フィールドをnullに戻すことも可能な予約更新リクエスト。
  */
 export interface ModelsUpdateBookingRequestWithReset {
+  /** ステータス詳細の更新またはリセット。 */
   status?: ModelsBookingStatus
+  /** ステータスコードの更新またはリセット。 */
   statusCode?: ModelsBookingStatusCodeType
-  /** @nullable */
+  /**
+   * ウェイティングリスト情報の更新またはリセット。
+   * @nullable
+   */
   waitlistEntry?: ModelsUpdateBookingRequestWithResetWaitlistEntry
-  /** @nullable */
+  /**
+   * デポジット情報の更新またはリセット。
+   * @nullable
+   */
   deposit?: ModelsUpdateBookingRequestWithResetDeposit
-  /** @nullable */
+  /**
+   * 支払い方法の更新またはリセット。
+   * @nullable
+   */
   paymentMethod?: ModelsUpdateBookingRequestWithResetPaymentMethod
-  /** @nullable */
+  /**
+   * 支払いステータスの更新またはリセット。
+   * @nullable
+   */
   paymentStatus?: ModelsUpdateBookingRequestWithResetPaymentStatus
-  /** @nullable */
+  /**
+   * 割引額の更新またはリセット。
+   * @nullable
+   */
   discountAmount?: ModelsUpdateBookingRequestWithResetDiscountAmount
-  /** @nullable */
+  /**
+   * 最終請求額の更新またはリセット。
+   * @nullable
+   */
   finalAmount?: ModelsUpdateBookingRequestWithResetFinalAmount
-  /** @nullable */
+  /**
+   * 未収金額の更新またはリセット。
+   * @nullable
+   */
   balanceDue?: ModelsUpdateBookingRequestWithResetBalanceDue
-  /** @nullable */
+  /**
+   * 備考の更新またはリセット。
+   * @nullable
+   */
   notes?: string | null
-  /** @nullable */
+  /**
+   * 任意メタデータの更新またはリセット。
+   * @nullable
+   */
   metadata?: ModelsUpdateBookingRequestWithResetMetadata
 }

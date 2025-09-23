@@ -15,18 +15,29 @@ import type { ModelsMoneyUpdate } from './modelsMoneyUpdate'
 import type { ModelsUpdateBookingRequestMetadata } from './modelsUpdateBookingRequestMetadata'
 
 /**
- * Booking update request with optional fields for partial updates
+ * 予約情報を部分更新するためのリクエスト。
  */
 export interface ModelsUpdateBookingRequest {
+  /** ステータス詳細の更新。 */
   status?: ModelsBookingStatusUpdate
+  /** ステータスコードの更新。 */
   statusCode?: ModelsBookingStatusCodeType
+  /** ウェイティングリスト情報の更新。 */
   waitlistEntry?: ModelsWaitlistEntryUpdate
+  /** デポジット情報の更新。 */
   deposit?: ModelsBookingDepositUpdate
+  /** 支払い方法の更新。 */
   paymentMethod?: ModelsPaymentMethodType
+  /** 支払いステータスの更新。 */
   paymentStatus?: ModelsPaymentStatusCodeType
+  /** 割引額の更新。 */
   discountAmount?: ModelsMoneyUpdate
+  /** 最終請求額の更新。 */
   finalAmount?: ModelsMoneyUpdate
+  /** 未収金額の更新。 */
   balanceDue?: ModelsMoneyUpdate
+  /** 備考の更新。 */
   notes?: string
+  /** 任意メタデータの更新。 */
   metadata?: ModelsUpdateBookingRequestMetadata
 }

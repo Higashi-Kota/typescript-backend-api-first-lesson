@@ -10,7 +10,7 @@ import type { ModelsDomainErrorFactoryInternalDefaultCode } from './modelsDomain
 import type { ModelsDomainErrorFactoryInternalHttpStatus } from './modelsDomainErrorFactoryInternalHttpStatus'
 
 /**
- * Internal error factory
+ * 内部サーバーエラーを生成するための設定。
  */
 export type ModelsDomainErrorFactoryInternal = {
   type: ModelsDomainErrorFactoryInternalType

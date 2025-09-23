@@ -8,7 +8,12 @@
 import type { PermissionOperationsGetPermissionGroups200AnyOfStatus } from './permissionOperationsGetPermissionGroups200AnyOfStatus'
 import type { PermissionOperationsGetPermissionGroups200AnyOfDataItem } from './permissionOperationsGetPermissionGroups200AnyOfDataItem'
 
+/**
+ * 成功時のデータとステータスを保持するモデル。
+ */
 export type PermissionOperationsGetPermissionGroups200AnyOf = {
+  /** 固定値success。成功結果であることを示す。 */
   status: PermissionOperationsGetPermissionGroups200AnyOfStatus
+  /** 成功時に返却するドメインデータ。 */
   data: PermissionOperationsGetPermissionGroups200AnyOfDataItem[]
 }

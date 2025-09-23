@@ -6,10 +6,18 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * スタッフ資格モデル - 保有資格や認定情報を管理し、サービス提供に必要なスキル証明を保持する
+ */
 export interface ModelsStaffQualification {
+  /** 資格・認定の名称 */
   name: string
+  /** 資格を取得した日付 */
   certificationDate: string
+  /** 資格の有効期限。無期限の場合は省略 */
   expiryDate?: string
+  /** 資格を発行した機関名 */
   issuer?: string
+  /** 資格証明番号などの識別子 */
   credentialId?: string
 }

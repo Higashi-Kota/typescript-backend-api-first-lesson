@@ -7,6 +7,7 @@
  */
 
 /**
+ * 任意メタデータの更新またはリセット。
  * @nullable
  */
 export type ModelsUpdateBookingRequestWithResetMetadata = {

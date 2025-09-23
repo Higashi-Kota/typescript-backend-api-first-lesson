@@ -6,26 +6,30 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * ページ遷移に利用するリンク情報モデル。
+API クライアントや外部連携がRESTフローで次・前のリソースを辿る際に利用する。
+ */
 export interface ModelsPaginationLinks {
-  /** Link to current page */
+  /** 現在ページを指すリンク。 */
   self: string
   /**
-   * Link to first page
+   * 最初のページへのリンク。総件数が確定しない場合は null。
    * @nullable
    */
   first: string | null
   /**
-   * Link to last page
+   * 最後のページへのリンク。カーソル算出ができない場合は null。
    * @nullable
    */
   last: string | null
   /**
-   * Link to next page
+   * 次ページへのリンク。さらに結果がある場合のみ設定される。
    * @nullable
    */
   next: string | null
   /**
-   * Link to previous page
+   * 前ページへのリンク。戻り操作が不要な場合は null。
    * @nullable
    */
   prev: string | null

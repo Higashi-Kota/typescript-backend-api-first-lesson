@@ -7,25 +7,26 @@
  */
 
 /**
- * Complete audit information
+ * 監査情報モデル。
+レコードの作成・更新履歴を保持し、内部統制や変更追跡を実現する。
  */
 export interface ModelsAuditTrail {
-  /** Record creation timestamp */
+  /** レコード作成日時 (UTC)。 */
   createdAt: string
-  /** User who created the record */
+  /** レコードを作成したユーザーID またはサービス名。 */
   createdBy: string
-  /** Last update timestamp */
+  /** 最終更新日時 (UTC)。 */
   updatedAt: string
-  /** User who last updated the record */
+  /** 最後に更新したユーザーID またはサービス名。 */
   updatedBy: string
-  /** Version number for optimistic locking */
+  /** 楽観的ロックに使用するバージョン番号。 */
   version: number
-  /** Whether the record is deleted */
+  /** 論理削除フラグ。true の場合は通常の検索結果から除外する。 */
   isDeleted: boolean
-  /** Deletion timestamp */
+  /** 削除操作が実行された日時 (UTC)。 */
   deletedAt?: string
-  /** User who deleted the record */
+  /** 削除操作を実施したユーザーID またはサービス名。 */
   deletedBy?: string
-  /** Deletion reason */
+  /** 削除理由や補足メモ。カスタマーサポート対応に利用する。 */
   deletionReason?: string
 }

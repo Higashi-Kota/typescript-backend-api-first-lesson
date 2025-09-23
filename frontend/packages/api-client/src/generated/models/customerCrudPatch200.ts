@@ -10,13 +10,14 @@ import type { ModelsResponseMeta } from './modelsResponseMeta'
 import type { CustomerCrudPatch200Links } from './customerCrudPatch200Links'
 
 /**
- * Standard successful response wrapper
+ * API 成功レスポンスの共通ラッパーモデル。
+サロン検索や予約登録など多様なユースケースで応答形式を統一し、クライアント実装を簡潔に保つ。
  */
 export type CustomerCrudPatch200 = {
-  /** Response data */
+  /** レスポンスの主体となるビジネスデータ。 */
   data: ModelsCustomer
-  /** Response metadata */
+  /** リクエスト識別子やバージョン情報など共通メタデータ。 */
   meta?: ModelsResponseMeta
-  /** Related links */
+  /** 関連リソースや次アクションへのリンク情報。 */
   links?: CustomerCrudPatch200Links
 }

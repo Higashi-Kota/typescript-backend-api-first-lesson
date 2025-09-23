@@ -8,18 +8,34 @@
 import type { ModelsServiceOptionType } from './modelsServiceOptionType'
 import type { ModelsServiceId } from './modelsServiceId'
 
+/**
+ * サービスに付随するオプション設定
+ */
 export interface ModelsServiceOptionDetail {
+  /** オプションの種類 */
   type: ModelsServiceOptionType
+  /** オプション名 */
   name?: string
+  /** オプション料金 */
   price?: number
+  /** 追加される施術時間 */
   duration?: number
+  /** オプションの説明 */
   description?: string
+  /** アップグレード元のレベル */
   fromLevel?: string
+  /** アップグレード先のレベル */
   toLevel?: string
+  /** 追加料金 */
   additionalPrice?: number
+  /** 時間延長（分） */
   extension?: number
+  /** 関連商品 ID */
   productId?: string
+  /** 必須オプションかどうか */
   required?: boolean
+  /** 同時予約が必要なサービス ID */
   withService?: ModelsServiceId
+  /** 割引金額 */
   discountAmount?: number
 }

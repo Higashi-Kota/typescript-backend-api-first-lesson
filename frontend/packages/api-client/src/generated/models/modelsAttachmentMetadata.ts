@@ -7,6 +7,6 @@
  */
 
 /**
- * メタデータ
+ * 必要に応じて付加情報を保持する任意メタデータ。
  */
 export type ModelsAttachmentMetadata = { [key: string]: unknown }

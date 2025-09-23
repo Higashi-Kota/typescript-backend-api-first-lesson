@@ -7,9 +7,16 @@
  */
 import type { ModelsDecimal } from './modelsDecimal'
 
+/**
+ * 季節要因の定義
+ */
 export interface ModelsSeason {
+  /** 季節名 */
   name: string
+  /** 開始月 */
   startMonth: number
+  /** 終了月 */
   endMonth: number
+  /** 適用倍率 */
   multiplier: ModelsDecimal
 }

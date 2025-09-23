@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 固定値error。エラー結果であることを示す。
+ */
 export type PaymentOperationsGetPayment200AnyOfThreeStatus =
   (typeof PaymentOperationsGetPayment200AnyOfThreeStatus)[keyof typeof PaymentOperationsGetPayment200AnyOfThreeStatus]
 

@@ -22,7 +22,6 @@ import type {
 } from '@tanstack/react-query'
 
 import type {
-  ModelsSalesReportQuery,
   SalesReportOperationsExportSalesReport200,
   SalesReportOperationsExportSalesReportBody,
   SalesReportOperationsGetDailySales200,
@@ -62,7 +61,7 @@ export type salesReportOperationsGetSalesReportResponse =
   }
 
 export const getSalesReportOperationsGetSalesReportUrl = (
-  params?: SalesReportOperationsGetSalesReportParams
+  params: SalesReportOperationsGetSalesReportParams
 ) => {
   const normalizedParams = new URLSearchParams()
 
@@ -80,8 +79,7 @@ export const getSalesReportOperationsGetSalesReportUrl = (
 }
 
 export const salesReportOperationsGetSalesReport = async (
-  modelsSalesReportQuery: ModelsSalesReportQuery,
-  params?: SalesReportOperationsGetSalesReportParams,
+  params: SalesReportOperationsGetSalesReportParams,
   options?: RequestInit
 ): Promise<salesReportOperationsGetSalesReportResponse> => {
   return customInstance<salesReportOperationsGetSalesReportResponse>(
@@ -89,29 +87,21 @@ export const salesReportOperationsGetSalesReport = async (
     {
       ...options,
       method: 'GET',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsSalesReportQuery),
     }
   )
 }
 
 export const getSalesReportOperationsGetSalesReportQueryKey = (
-  modelsSalesReportQuery: ModelsSalesReportQuery,
-  params?: SalesReportOperationsGetSalesReportParams
+  params: SalesReportOperationsGetSalesReportParams
 ) => {
-  return [
-    `/sales-reports`,
-    ...(params ? [params] : []),
-    modelsSalesReportQuery,
-  ] as const
+  return [`/sales-reports`, ...(params ? [params] : [])] as const
 }
 
 export const getSalesReportOperationsGetSalesReportQueryOptions = <
   TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>,
   TError = unknown,
 >(
-  modelsSalesReportQuery: ModelsSalesReportQuery,
-  params?: SalesReportOperationsGetSalesReportParams,
+  params: SalesReportOperationsGetSalesReportParams,
   options?: {
     query?: Partial<
       UseQueryOptions<
@@ -127,18 +117,12 @@ export const getSalesReportOperationsGetSalesReportQueryOptions = <
 
   const queryKey =
     queryOptions?.queryKey ??
-    getSalesReportOperationsGetSalesReportQueryKey(
-      modelsSalesReportQuery,
-      params
-    )
+    getSalesReportOperationsGetSalesReportQueryKey(params)
 
   const queryFn: QueryFunction<
     Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>
   > = ({ signal }) =>
-    salesReportOperationsGetSalesReport(modelsSalesReportQuery, params, {
-      signal,
-      ...requestOptions,
-    })
+    salesReportOperationsGetSalesReport(params, { signal, ...requestOptions })
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>,
@@ -156,8 +140,7 @@ export function useSalesReportOperationsGetSalesReport<
   TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>,
   TError = unknown,
 >(
-  modelsSalesReportQuery: ModelsSalesReportQuery,
-  params: undefined | SalesReportOperationsGetSalesReportParams,
+  params: SalesReportOperationsGetSalesReportParams,
   options: {
     query: Partial<
       UseQueryOptions<
@@ -184,8 +167,7 @@ export function useSalesReportOperationsGetSalesReport<
   TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>,
   TError = unknown,
 >(
-  modelsSalesReportQuery: ModelsSalesReportQuery,
-  params?: SalesReportOperationsGetSalesReportParams,
+  params: SalesReportOperationsGetSalesReportParams,
   options?: {
     query?: Partial<
       UseQueryOptions<
@@ -212,8 +194,7 @@ export function useSalesReportOperationsGetSalesReport<
   TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>,
   TError = unknown,
 >(
-  modelsSalesReportQuery: ModelsSalesReportQuery,
-  params?: SalesReportOperationsGetSalesReportParams,
+  params: SalesReportOperationsGetSalesReportParams,
   options?: {
     query?: Partial<
       UseQueryOptions<
@@ -233,8 +214,7 @@ export function useSalesReportOperationsGetSalesReport<
   TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>,
   TError = unknown,
 >(
-  modelsSalesReportQuery: ModelsSalesReportQuery,
-  params?: SalesReportOperationsGetSalesReportParams,
+  params: SalesReportOperationsGetSalesReportParams,
   options?: {
     query?: Partial<
       UseQueryOptions<
@@ -250,7 +230,6 @@ export function useSalesReportOperationsGetSalesReport<
   queryKey: DataTag<QueryKey, TData, TError>
 } {
   const queryOptions = getSalesReportOperationsGetSalesReportQueryOptions(
-    modelsSalesReportQuery,
     params,
     options
   )

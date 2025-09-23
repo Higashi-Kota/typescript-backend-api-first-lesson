@@ -1,6 +1,6 @@
 // Generated from TypeSpec/OpenAPI using openapi-typescript
 // DO NOT EDIT MANUALLY
-// Last generated: 2025-09-21T16:33:00.111Z
+// Last generated: 2025-09-23T09:16:42.547Z
 
 // Base types from OpenAPI
 /**
@@ -103,7 +103,7 @@ export interface paths {
     }
     /**
      * Check API liveness
-     * @description Liveness check for Kubernetes
+     * @description プロセスが生存しているかを判定するエンドポイントで、異常時は再起動判定に利用されます。
      */
     get: operations['SystemOperations_alive']
     put?: never
@@ -123,7 +123,7 @@ export interface paths {
     }
     /**
      * Check API health
-     * @description Health check endpoint
+     * @description APIが正常稼働しているかを判定し、監視ツールやロードバランサーから参照します。
      */
     get: operations['SystemOperations_health']
     put?: never
@@ -143,7 +143,7 @@ export interface paths {
     }
     /**
      * Get API metrics
-     * @description Get API metrics
+     * @description Prometheus形式のメトリクスを返却し、監視基盤での可視化やアラート設定に用います。
      */
     get: operations['SystemOperations_metrics']
     put?: never
@@ -163,7 +163,7 @@ export interface paths {
     }
     /**
      * Check API readiness
-     * @description Readiness check for Kubernetes
+     * @description Kubernetes等のオーケストレーターがトラフィック受信可否を判断するための準備完了チェックです。
      */
     get: operations['SystemOperations_ready']
     put?: never
@@ -183,7 +183,7 @@ export interface paths {
     }
     /**
      * Get API version
-     * @description Get API version and build information
+     * @description APIのバージョンやビルド情報を返し、障害解析やデプロイ確認に活用します。
      */
     get: operations['SystemOperations_version']
     put?: never
@@ -236,7 +236,7 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** @description 添付ファイルの一覧取得 */
+    /** @description サロンまたは顧客単位で登録済みの添付ファイルを一覧し、施術履歴の確認や資料整理に活用します。 */
     get: operations['AttachmentOperations_list']
     put?: never
     post?: never
@@ -256,7 +256,7 @@ export interface paths {
     get?: never
     put?: never
     post?: never
-    /** @description 共有リンクの削除 */
+    /** @description 不要になった共有リンクを失効させ、アクセス制御を適切に保ちます。 */
     delete: operations['AttachmentOperations_deleteShareLink']
     options?: never
     head?: never
@@ -272,8 +272,7 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** @description ファイルの直接アップロード
-     *     JSONでファイル情報をアップロード */
+    /** @description スタッフが管理画面からファイル本体を直接アップロードし、予約記録や顧客カルテに紐づけるための操作です。 */
     post: operations['AttachmentOperations_uploadFile']
     delete?: never
     options?: never
@@ -290,8 +289,7 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** @description 署名付きアップロードURLの取得
-     *     クライアントが直接ストレージにアップロードするためのURL */
+    /** @description 顧客やスタッフがブラウザから直接クラウドストレージへアップロードできるよう、短時間だけ有効な署名付きURLを発行します。 */
     post: operations['AttachmentOperations_getUploadUrl']
     delete?: never
     options?: never
@@ -306,11 +304,11 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** @description 添付ファイル情報の取得 */
+    /** @description 指定した添付ファイルの詳細情報を取得し、プレビュー表示や関連予約の確認に用います。 */
     get: operations['AttachmentOperations_get']
     put?: never
     post?: never
-    /** @description 添付ファイルの削除 */
+    /** @description 不要になった添付ファイルを削除し、ストレージ容量の最適化と情報漏えいリスクの低減を図ります。 */
     delete: operations['AttachmentOperations_delete']
     options?: never
     head?: never
@@ -324,7 +322,7 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** @description 署名付きダウンロードURLの取得 */
+    /** @description 閲覧権限を持つ利用者がファイルを安全に取得できるよう、短時間有効なダウンロードURLを発行します。 */
     get: operations['AttachmentOperations_getDownloadUrl']
     put?: never
     post?: never
@@ -341,10 +339,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** @description 共有リンクの一覧取得 */
+    /** @description 対象ファイルに対して発行済みの共有リンクを一覧し、公開状況や有効期限の管理を行います。 */
     get: operations['AttachmentOperations_listShareLinks']
     put?: never
-    /** @description 共有リンクの作成 */
+    /** @description 施術前後の写真や資料を外部パートナーや顧客と共有するためのリンクを発行します。必要に応じてパスワード保護も適用します。 */
     post: operations['AttachmentOperations_createShareLink']
     delete?: never
     options?: never
@@ -682,10 +680,16 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** List bookings */
+    /**
+     * List bookings
+     * @description サロン・顧客・ステータスなどの条件で予約パッケージを一覧表示し、受付状況を俯瞰します。
+     */
     get: operations['BookingOperations_list']
     put?: never
-    /** Create booking */
+    /**
+     * Create booking
+     * @description 新規の予約パッケージを作成し、施術メニューと顧客情報を紐づけて確定します。
+     */
     post: operations['BookingOperations_create']
     delete?: never
     options?: never
@@ -700,15 +704,24 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** Get booking */
+    /**
+     * Get booking
+     * @description 個別の予約パッケージ詳細を取得し、関連する予約枠や支払い状況を確認します。
+     */
     get: operations['BookingOperations_get']
     put?: never
     post?: never
-    /** Delete booking */
+    /**
+     * Delete booking
+     * @description 予約パッケージを削除し、誤登録や無効となった複数予約を整理します。
+     */
     delete: operations['BookingOperations_delete']
     options?: never
     head?: never
-    /** Update booking */
+    /**
+     * Update booking
+     * @description 既存の予約パッケージ内容を部分的に更新し、顧客要望の変更に対応します。
+     */
     patch: operations['BookingOperations_update']
     trace?: never
   }
@@ -721,7 +734,10 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Cancel booking */
+    /**
+     * Cancel booking
+     * @description 確定済みの予約パッケージをキャンセルし、理由と連動予約の取り扱いを記録します。
+     */
     post: operations['BookingOperations_cancel']
     delete?: never
     options?: never
@@ -738,7 +754,10 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Confirm booking */
+    /**
+     * Confirm booking
+     * @description 仮状態の予約パッケージを確定ステータスへ変更し、顧客への案内やリソース確保を開始します。
+     */
     post: operations['BookingOperations_confirm']
     delete?: never
     options?: never
@@ -755,7 +774,10 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Process payment */
+    /**
+     * Process payment
+     * @description 予約パッケージに対する決済を処理し、支払い手段・金額・トランザクションIDを保存します。
+     */
     post: operations['BookingOperations_processPayment']
     delete?: never
     options?: never
@@ -772,7 +794,10 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Add reservation to booking */
+    /**
+     * Add reservation to booking
+     * @description 既存の予約パッケージに個別の予約枠を追加し、まとめて管理します。
+     */
     post: operations['BookingOperations_addReservation']
     delete?: never
     options?: never
@@ -790,7 +815,10 @@ export interface paths {
     get?: never
     put?: never
     post?: never
-    /** Remove reservation from booking */
+    /**
+     * Remove reservation from booking
+     * @description 予約パッケージから紐づく予約枠を外し、構成内容を調整します。
+     */
     delete: operations['BookingOperations_removeReservation']
     options?: never
     head?: never
@@ -806,13 +834,13 @@ export interface paths {
     }
     /**
      * List {Name} resources
-     * @description List resources with pagination and filtering
+     * @description ページネーションやフィルター条件を指定して対象リソースを一覧取得します。業務画面のリスト表示に利用します。
      */
     get: operations['CustomerCrud_list']
     put?: never
     /**
      * Create new {Name}
-     * @description Create a new resource
+     * @description 新規リソースを作成し、作成時のバリデーションや重複チェック結果を返却します。
      */
     post: operations['CustomerCrud_create']
     delete?: never
@@ -832,7 +860,7 @@ export interface paths {
     put?: never
     /**
      * Batch get {Name} resources
-     * @description Batch get multiple resources
+     * @description 複数IDをまとめて取得し、一覧画面の遅延読み込みや外部連携に利用します。
      */
     post: operations['CustomerCrud_batchGet']
     delete?: never
@@ -851,17 +879,17 @@ export interface paths {
     get?: never
     /**
      * Bulk update {Name} resources
-     * @description Bulk update resources
+     * @description 複数リソースの更新をまとめて受け付け、バージョン整合性を保ちながら処理します。
      */
     put: operations['CustomerCrud_bulkUpdate']
     /**
      * Bulk create {Name} resources
-     * @description Bulk create resources
+     * @description 複数リソースを一括作成し、結果を成功・失敗に分けて返却します。
      */
     post: operations['CustomerCrud_bulkCreate']
     /**
      * Bulk delete {Name} resources
-     * @description Bulk delete resources
+     * @description 複数リソースを一括削除し、成功可否ごとの結果を返却します。
      */
     delete: operations['CustomerCrud_bulkDelete']
     options?: never
@@ -880,7 +908,7 @@ export interface paths {
     put?: never
     /**
      * Export {Name} search results
-     * @description Export search results
+     * @description 検索結果を指定形式でエクスポートし、帳票出力や外部共有に活用します。
      */
     post: operations['CustomerCrud_export']
     delete?: never
@@ -900,7 +928,7 @@ export interface paths {
     put?: never
     /**
      * Merge customer records
-     * @description Merge customer records
+     * @description 重複登録された顧客レコードを統合し、履歴やポイントを一本化します。
      */
     post: operations['CustomerOperations_merge']
     delete?: never
@@ -918,7 +946,7 @@ export interface paths {
     }
     /**
      * Search {Name} resources
-     * @description Advanced search with facets
+     * @description ファセットや複合条件を利用してリソースを検索し、結果と統計情報を返却します。
      */
     get: operations['CustomerCrud_search']
     put?: never
@@ -938,25 +966,25 @@ export interface paths {
     }
     /**
      * Get {Name} by ID
-     * @description Get a single resource by ID
+     * @description IDを指定して単一リソースを取得し、詳細表示や編集フォームの初期値に使用します。
      */
     get: operations['CustomerCrud_get']
     /**
      * Update {Name}
-     * @description Update a resource (full update)
+     * @description 既存リソースを全項目更新し、最新状態とバージョン情報を返却します。
      */
     put: operations['CustomerCrud_update']
     post?: never
     /**
      * Delete {Name}
-     * @description Delete a resource (soft delete by default)
+     * @description リソースを削除し、必要に応じて論理削除か物理削除かを選択します。
      */
     delete: operations['CustomerCrud_delete']
     options?: never
     head?: never
     /**
      * Partially update {Name}
-     * @description Partially update a resource
+     * @description 必要なフィールドのみを部分更新し、変更差分を効率的に反映します。
      */
     patch: operations['CustomerCrud_patch']
     trace?: never
@@ -970,7 +998,7 @@ export interface paths {
     }
     /**
      * Get customer bookings
-     * @description Get customer bookings
+     * @description 顧客単位の予約パッケージ情報を取得し、複数施術を跨いだ利用状況を把握します。
      */
     get: operations['CustomerOperations_getBookings']
     put?: never
@@ -992,7 +1020,7 @@ export interface paths {
     put?: never
     /**
      * Request customer data deletion
-     * @description Request customer data deletion (GDPR compliance)
+     * @description 顧客からの削除要請を受け付け、規制に沿った消去フローを開始します。
      */
     post: operations['CustomerOperations_requestDeletion']
     delete?: never
@@ -1010,7 +1038,7 @@ export interface paths {
     }
     /**
      * Export customer data
-     * @description Export customer data (GDPR compliance)
+     * @description 顧客が自身のデータを取得できるようエクスポートし、GDPR等の個人情報規制に対応します。
      */
     get: operations['CustomerOperations_exportData']
     put?: never
@@ -1030,7 +1058,7 @@ export interface paths {
     }
     /**
      * Get {Name} audit history
-     * @description Get audit history for a resource
+     * @description 対象リソースの監査履歴を取得し、変更者や変更内容を追跡します。
      */
     get: operations['CustomerCrud_getHistory']
     put?: never
@@ -1052,7 +1080,7 @@ export interface paths {
     put?: never
     /**
      * Add loyalty points
-     * @description Add loyalty points
+     * @description 来店やキャンペーンに応じてロイヤルティポイントを加算し、顧客維持を促進します。
      */
     post: operations['CustomerOperations_addLoyaltyPoints']
     delete?: never
@@ -1071,7 +1099,7 @@ export interface paths {
     get?: never
     /**
      * Update customer preferences
-     * @description Update customer preferences
+     * @description 顧客の施術好みや連絡手段などの希望設定を更新し、パーソナライズされた提案に反映します。
      */
     put: operations['CustomerOperations_updatePreferences']
     post?: never
@@ -1090,7 +1118,7 @@ export interface paths {
     }
     /**
      * Get customer profile
-     * @description Get customer profile with extended information
+     * @description 顧客の基本情報に加え、嗜好や連絡先など拡張情報を取得し、パーソナライズ対応に活かします。
      */
     get: operations['CustomerOperations_getProfile']
     put?: never
@@ -1110,7 +1138,7 @@ export interface paths {
     }
     /**
      * Get customer reservations
-     * @description Get customer reservations
+     * @description 顧客が保持する予約履歴を取得し、来店予定や過去施術の確認に利用します。
      */
     get: operations['CustomerOperations_getReservations']
     put?: never
@@ -1132,7 +1160,7 @@ export interface paths {
     put?: never
     /**
      * Restore deleted {Name}
-     * @description Restore a deleted resource
+     * @description 削除済みリソースを復元し、誤削除への迅速なリカバリを可能にします。
      */
     post: operations['CustomerCrud_restore']
     delete?: never
@@ -1150,7 +1178,7 @@ export interface paths {
     }
     /**
      * Get customer statistics
-     * @description Get customer statistics
+     * @description 来店頻度や売上貢献度など顧客指標を集計し、セグメント施策やVIP判定に利用します。
      */
     get: operations['CustomerOperations_getStatistics']
     put?: never
@@ -1170,7 +1198,7 @@ export interface paths {
     }
     /**
      * Get {Name} version
-     * @description Get specific version of a resource
+     * @description 指定したバージョンのリソース状態を取得し、過去状態の確認や比較に利用します。
      */
     get: operations['CustomerCrud_getVersion']
     put?: never
@@ -1188,10 +1216,16 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** List reservations */
+    /**
+     * List reservations
+     * @description サロン、顧客、スタッフなどの条件で予約一覧を取得し、当日の稼働状況を把握します。
+     */
     get: operations['ReservationOperations_list']
     put?: never
-    /** Create reservation */
+    /**
+     * Create reservation
+     * @description 新しい施術予約を登録し、枠の確保と関連リソースの仮押さえを行います。
+     */
     post: operations['ReservationOperations_create']
     delete?: never
     options?: never
@@ -1206,14 +1240,20 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** Get reservation */
+    /**
+     * Get reservation
+     * @description 個別予約の詳細情報を取得し、施術内容や担当者、タイムラインを確認します。
+     */
     get: operations['ReservationOperations_get']
     put?: never
     post?: never
     delete?: never
     options?: never
     head?: never
-    /** Update reservation */
+    /**
+     * Update reservation
+     * @description 予約内容を部分的に更新し、サービス内容や担当スタッフの変更に対応します。
+     */
     patch: operations['ReservationOperations_update']
     trace?: never
   }
@@ -1226,7 +1266,10 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Cancel reservation */
+    /**
+     * Cancel reservation
+     * @description 確定済みの予約をキャンセルし、理由の記録と枠の開放を行います。
+     */
     post: operations['ReservationOperations_cancel']
     delete?: never
     options?: never
@@ -1243,7 +1286,10 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Complete reservation */
+    /**
+     * Complete reservation
+     * @description 施術完了を登録し、実績データや売上計上に利用するステータスへ更新します。
+     */
     post: operations['ReservationOperations_complete']
     delete?: never
     options?: never
@@ -1260,7 +1306,10 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Reschedule reservation */
+    /**
+     * Reschedule reservation
+     * @description 予約日時や担当者の調整が必要な際に、新しいスケジュールへ付け替えます。
+     */
     post: operations['ReservationOperations_reschedule']
     delete?: never
     options?: never
@@ -1275,10 +1324,16 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** List reviews */
+    /**
+     * List reviews
+     * @description 顧客やスタッフ、評価点でレビューを絞り込み、店舗運営の改善材料を抽出します。
+     */
     get: operations['ReviewOperations_list']
     put?: never
-    /** Create review */
+    /**
+     * Create review
+     * @description 施術完了後に顧客がレビューを投稿し、サービス品質の可視化と信頼獲得につなげます。
+     */
     post: operations['ReviewOperations_create']
     delete?: never
     options?: never
@@ -1293,15 +1348,24 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** Get review */
+    /**
+     * Get review
+     * @description 単一レビューの詳細を表示し、コメント内容や評価指標を確認します。
+     */
     get: operations['ReviewOperations_get']
     put?: never
     post?: never
-    /** Delete review */
+    /**
+     * Delete review
+     * @description レビューの削除要請に応じて投稿を非表示または除去し、コンプライアンスを維持します。
+     */
     delete: operations['ReviewOperations_delete']
     options?: never
     head?: never
-    /** Update review */
+    /**
+     * Update review
+     * @description 顧客が投稿後のレビューを修正し、誤記修正や追記を反映します。
+     */
     patch: operations['ReviewOperations_update']
     trace?: never
   }
@@ -1314,7 +1378,10 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Mark review as helpful */
+    /**
+     * Mark review as helpful
+     * @description 他の利用者に役立つレビューをマーキングし、信頼性の高い声を強調します。
+     */
     post: operations['ReviewOperations_markHelpful']
     delete?: never
     options?: never
@@ -1331,7 +1398,10 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Report review */
+    /**
+     * Report review
+     * @description 不適切な内容や虚偽が疑われるレビューを通報し、運営による対応フローへ送ります。
+     */
     post: operations['ReviewOperations_report']
     delete?: never
     options?: never
@@ -1348,13 +1418,13 @@ export interface paths {
     }
     /**
      * List {Name} resources
-     * @description List resources with pagination and filtering
+     * @description ページネーションやフィルター条件を指定して対象リソースを一覧取得します。業務画面のリスト表示に利用します。
      */
     get: operations['SalonCrud_list']
     put?: never
     /**
      * Create new {Name}
-     * @description Create a new resource
+     * @description 新規リソースを作成し、作成時のバリデーションや重複チェック結果を返却します。
      */
     post: operations['SalonCrud_create']
     delete?: never
@@ -1374,7 +1444,7 @@ export interface paths {
     put?: never
     /**
      * Batch get {Name} resources
-     * @description Batch get multiple resources
+     * @description 複数IDをまとめて取得し、一覧画面の遅延読み込みや外部連携に利用します。
      */
     post: operations['SalonCrud_batchGet']
     delete?: never
@@ -1393,17 +1463,17 @@ export interface paths {
     get?: never
     /**
      * Bulk update {Name} resources
-     * @description Bulk update resources
+     * @description 複数リソースの更新をまとめて受け付け、バージョン整合性を保ちながら処理します。
      */
     put: operations['SalonCrud_bulkUpdate']
     /**
      * Bulk create {Name} resources
-     * @description Bulk create resources
+     * @description 複数リソースを一括作成し、結果を成功・失敗に分けて返却します。
      */
     post: operations['SalonCrud_bulkCreate']
     /**
      * Bulk delete {Name} resources
-     * @description Bulk delete resources
+     * @description 複数リソースを一括削除し、成功可否ごとの結果を返却します。
      */
     delete: operations['SalonCrud_bulkDelete']
     options?: never
@@ -1422,7 +1492,7 @@ export interface paths {
     put?: never
     /**
      * Export {Name} search results
-     * @description Export search results
+     * @description 検索結果を指定形式でエクスポートし、帳票出力や外部共有に活用します。
      */
     post: operations['SalonCrud_export']
     delete?: never
@@ -1440,7 +1510,7 @@ export interface paths {
     }
     /**
      * Get nearby salons
-     * @description Get nearby salons
+     * @description 位置情報と希望条件から近隣サロンを検索し、顧客に最適な選択肢を提示します。
      */
     get: operations['SalonOperations_getNearby']
     put?: never
@@ -1460,7 +1530,7 @@ export interface paths {
     }
     /**
      * Get personalized salon recommendations
-     * @description Get salon recommendations
+     * @description 顧客の嗜好や履歴にもとづきおすすめサロンを提示し、再来店促進や新規獲得を支援します。
      */
     get: operations['SalonOperations_getRecommendations']
     put?: never
@@ -1480,7 +1550,7 @@ export interface paths {
     }
     /**
      * Search {Name} resources
-     * @description Advanced search with facets
+     * @description ファセットや複合条件を利用してリソースを検索し、結果と統計情報を返却します。
      */
     get: operations['SalonCrud_search']
     put?: never
@@ -1500,25 +1570,25 @@ export interface paths {
     }
     /**
      * Get {Name} by ID
-     * @description Get a single resource by ID
+     * @description IDを指定して単一リソースを取得し、詳細表示や編集フォームの初期値に使用します。
      */
     get: operations['SalonCrud_get']
     /**
      * Update {Name}
-     * @description Update a resource (full update)
+     * @description 既存リソースを全項目更新し、最新状態とバージョン情報を返却します。
      */
     put: operations['SalonCrud_update']
     post?: never
     /**
      * Delete {Name}
-     * @description Delete a resource (soft delete by default)
+     * @description リソースを削除し、必要に応じて論理削除か物理削除かを選択します。
      */
     delete: operations['SalonCrud_delete']
     options?: never
     head?: never
     /**
      * Partially update {Name}
-     * @description Partially update a resource
+     * @description 必要なフィールドのみを部分更新し、変更差分を効率的に反映します。
      */
     patch: operations['SalonCrud_patch']
     trace?: never
@@ -1534,7 +1604,7 @@ export interface paths {
     put?: never
     /**
      * Check salon availability
-     * @description Check salon availability
+     * @description 希望日時にサロン全体で対応可能な枠があるかを判定し、予約導線での可用性表示に利用します。
      */
     post: operations['SalonOperations_checkAvailability']
     delete?: never
@@ -1552,7 +1622,7 @@ export interface paths {
     }
     /**
      * Get {Name} audit history
-     * @description Get audit history for a resource
+     * @description 対象リソースの監査履歴を取得し、変更者や変更内容を追跡します。
      */
     get: operations['SalonCrud_getHistory']
     put?: never
@@ -1575,7 +1645,7 @@ export interface paths {
     post?: never
     /**
      * Delete salon image
-     * @description Delete salon image
+     * @description 掲載中のサロン画像を削除し、ブランドトーンの統一や情報更新を行います。
      */
     delete: operations['SalonOperations_deleteImage']
     options?: never
@@ -1594,7 +1664,7 @@ export interface paths {
     put?: never
     /**
      * Restore deleted {Name}
-     * @description Restore a deleted resource
+     * @description 削除済みリソースを復元し、誤削除への迅速なリカバリを可能にします。
      */
     post: operations['SalonCrud_restore']
     delete?: never
@@ -1613,7 +1683,7 @@ export interface paths {
     get?: never
     /**
      * Update staff schedule
-     * @description Manage salon staff schedule
+     * @description サロン所属スタッフのシフトを更新し、予約枠や勤怠管理との整合を取ります。
      */
     put: operations['SalonOperations_updateStaffSchedule']
     post?: never
@@ -1632,7 +1702,7 @@ export interface paths {
     }
     /**
      * Get salon statistics
-     * @description Get salon statistics
+     * @description サロンの売上や予約件数など主要指標を取得し、経営判断や施策検討に活用します。
      */
     get: operations['SalonOperations_getStatistics']
     put?: never
@@ -1654,7 +1724,7 @@ export interface paths {
     put?: never
     /**
      * Subscribe to salon updates
-     * @description Subscribe to salon updates
+     * @description サロンのニュースやキャンペーン更新を購読登録し、ロイヤル顧客との接点を強化します。
      */
     post: operations['SalonOperations_subscribe']
     delete?: never
@@ -1672,7 +1742,7 @@ export interface paths {
     }
     /**
      * Get {Name} version
-     * @description Get specific version of a resource
+     * @description 指定したバージョンのリソース状態を取得し、過去状態の確認や比較に利用します。
      */
     get: operations['SalonCrud_getVersion']
     put?: never
@@ -1690,7 +1760,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** Get available slots */
+    /**
+     * Get available slots
+     * @description 指定日の予約可能枠を取得し、空き枠一覧や予約フォームに反映します。
+     */
     get: operations['AvailabilityOperations_getAvailableSlots']
     put?: never
     post?: never
@@ -1709,7 +1782,10 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Check availability */
+    /**
+     * Check availability
+     * @description 希望する日時・スタッフの組み合わせが予約可能か即時判定し、ダブルブッキングを防ぎます。
+     */
     post: operations['AvailabilityOperations_checkAvailability']
     delete?: never
     options?: never
@@ -1724,7 +1800,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** Get salon reviews */
+    /**
+     * Get salon reviews
+     * @description サロンに紐づくレビュー一覧を取得し、並び替え条件に応じて顧客の声を提示します。
+     */
     get: operations['SalonReviewOperations_getSalonReviews']
     put?: never
     post?: never
@@ -1741,7 +1820,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** Get salon reviews summary */
+    /**
+     * Get salon reviews summary
+     * @description サロン全体の平均評価や件数などの概要指標を取得し、ダッシュボード表示に利用します。
+     */
     get: operations['SalonReviewOperations_getSummary']
     put?: never
     post?: never
@@ -1758,10 +1840,16 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** List salon services */
+    /**
+     * List salon services
+     * @description サロン内の提供メニューをカテゴリ別に一覧し、予約画面や在庫管理との連携に活用します。
+     */
     get: operations['ServiceOperations_list']
     put?: never
-    /** Create service */
+    /**
+     * Create service
+     * @description 新しい施術メニューを登録し、価格・施術時間・提供条件を設定します。
+     */
     post: operations['ServiceOperations_create']
     delete?: never
     options?: never
@@ -1782,7 +1870,10 @@ export interface paths {
     delete?: never
     options?: never
     head?: never
-    /** Bulk update services */
+    /**
+     * Bulk update services
+     * @description 複数メニューの共通項目を一括更新し、季節キャンペーンや価格調整を効率化します。
+     */
     patch: operations['ServiceOperations_bulkUpdate']
     trace?: never
   }
@@ -1793,12 +1884,21 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** Get service */
+    /**
+     * Get service
+     * @description 特定メニューの詳細情報を取得し、予約システムやスタッフ教育に必要な内容を確認します。
+     */
     get: operations['ServiceOperations_get']
-    /** Update service */
+    /**
+     * Update service
+     * @description 既存メニューの内容を更新し、料金改定や提供条件の変更に対応します。
+     */
     put: operations['ServiceOperations_update']
     post?: never
-    /** Delete service */
+    /**
+     * Delete service
+     * @description 提供終了となったメニューを削除し、予約導線から除外します。
+     */
     delete: operations['ServiceOperations_delete']
     options?: never
     head?: never
@@ -1812,10 +1912,16 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** List staff members */
+    /**
+     * List staff members
+     * @description サロンに所属するスタッフ一覧を取得し、配置状況や担当可能メニューを確認します。
+     */
     get: operations['StaffOperations_list']
     put?: never
-    /** Create staff member */
+    /**
+     * Create staff member
+     * @description 新しいスタッフを登録し、プロフィール情報や担当メニューの設定を開始します。
+     */
     post: operations['StaffOperations_create']
     delete?: never
     options?: never
@@ -1830,12 +1936,21 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** Get staff member */
+    /**
+     * Get staff member
+     * @description 特定スタッフの詳細情報を取得し、顧客向け表示や社内確認に利用します。
+     */
     get: operations['StaffOperations_get']
-    /** Update staff member */
+    /**
+     * Update staff member
+     * @description スタッフのプロフィールや担当メニュー、表示可否を更新します。
+     */
     put: operations['StaffOperations_update']
     post?: never
-    /** Delete staff member */
+    /**
+     * Delete staff member
+     * @description 退職や契約終了に伴いスタッフを削除し、予約導線から除外します。
+     */
     delete: operations['StaffOperations_delete']
     options?: never
     head?: never
@@ -1849,9 +1964,15 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** Get staff availability */
+    /**
+     * Get staff availability
+     * @description 指定日のスタッフ空き状況を取得し、予約枠の提案や調整に活用します。
+     */
     get: operations['StaffOperations_getAvailability']
-    /** Update staff availability */
+    /**
+     * Update staff availability
+     * @description スタッフの稼働予定を更新し、シフト変更や臨時休みを反映します。
+     */
     put: operations['StaffOperations_updateAvailability']
     post?: never
     delete?: never
@@ -1867,10 +1988,16 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** List service categories */
+    /**
+     * List service categories
+     * @description 登録済みのカテゴリ一覧を取得し、メニュー分類や表示順を管理します。
+     */
     get: operations['CategoryOperations_listCategories']
     put?: never
-    /** Create service category */
+    /**
+     * Create service category
+     * @description 新しい施術カテゴリを作成し、階層構造や表示順を定義します。
+     */
     post: operations['CategoryOperations_createCategory']
     delete?: never
     options?: never
@@ -1886,10 +2013,16 @@ export interface paths {
       cookie?: never
     }
     get?: never
-    /** Update service category */
+    /**
+     * Update service category
+     * @description 既存カテゴリを更新し、名称や表示順、親子関係を調整します。
+     */
     put: operations['CategoryOperations_updateCategory']
     post?: never
-    /** Delete service category */
+    /**
+     * Delete service category
+     * @description 利用されなくなったカテゴリを削除し、メニュー構成を整理します。
+     */
     delete: operations['CategoryOperations_deleteCategory']
     options?: never
     head?: never
@@ -1903,7 +2036,7 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** @description 共有リンクからファイル情報を取得 */
+    /** @description 共有リンクとパスワードを確認し、公開対象ファイルのメタ情報を閲覧者に提示します。 */
     get: operations['ShareOperations_getSharedFile']
     put?: never
     post?: never
@@ -1920,7 +2053,7 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** @description 共有リンクからダウンロードURLを取得 */
+    /** @description 共有リンク利用者が安全にファイル本体を取得できるよう、署名付きダウンロードURLを返却します。 */
     get: operations['ShareOperations_downloadSharedFile']
     put?: never
     post?: never
@@ -1937,7 +2070,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** Search staff across all salons */
+    /**
+     * Search staff across all salons
+     * @description 専門分野や地域条件でスタッフを横断検索し、顧客の指名ニーズに応えます。
+     */
     get: operations['GlobalStaffOperations_searchStaff']
     put?: never
     post?: never
@@ -1954,7 +2090,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** Get staff reviews */
+    /**
+     * Get staff reviews
+     * @description 特定スタッフに紐づくレビュー一覧を取得し、個別フィードバックとして活用します。
+     */
     get: operations['StaffReviewOperations_getStaffReviews']
     put?: never
     post?: never
@@ -1971,7 +2110,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** Get staff reviews summary */
+    /**
+     * Get staff reviews summary
+     * @description スタッフ別の平均評価やレビュー数を集計し、人事評価や表彰に用います。
+     */
     get: operations['StaffReviewOperations_getStaffSummary']
     put?: never
     post?: never
@@ -3020,40 +3162,65 @@ export interface paths {
 export type webhooks = Record<string, never>
 export interface components {
   schemas: {
-    /** @description Access control check */
+    /** @description アクセス権限の確認リクエスト */
     'Models.AccessCheck': {
+      /** @description 権限を判定するユーザー ID */
       userId: string
+      /** @description 対象リソースの識別子 */
       resource: string
+      /** @description 実行したい操作区分 */
       action: string
+      /** @description サロン単位での権限チェック時のサロン ID */
       salonId?: components['schemas']['Models.SalonId']
+      /** @description リソース固有の ID */
       resourceId?: string
     }
-    /** @description Access control result */
+    /** @description アクセス権限チェックの結果 */
     'Models.AccessResult': {
+      /** @description 操作が許可されたかどうか */
       allowed: boolean
+      /** @description 拒否または許可の理由 */
       reason?: string
+      /** @description 必要な権限キー一覧 */
       requiredPermissions?: string[]
+      /** @description ユーザーが保有する権限キー一覧 */
       userPermissions?: string[]
     }
-    /** @description 共有リンクアクセスリクエスト */
+    /** @description パスワード保護された共有リンクへアクセスする際のリクエスト。 */
     'Models.AccessShareLinkRequest': {
-      /** @description パスワード（パスワード保護されている場合） */
+      /** @description 共有リンクのパスワード。保護されている場合に入力。 */
       password?: string
     }
+    /** @description サロンや顧客の住所情報を表す共通モデル。 */
     'Models.Address': {
+      /** @description 番地や建物名を含む詳細住所。 */
       street: string
+      /** @description 市区町村名。 */
       city: string
+      /** @description 都道府県名。 */
       prefecture: string
+      /** @description 郵便番号。未設定の場合はnull。 */
       postalCode: string | null
-      /** @default Japan */
+      /**
+       * @description 国名。既定値はJapan。
+       * @default Japan
+       */
       country: string
     }
+    /** @description サロンや顧客の住所情報を表す共通モデル。 */
     'Models.AddressUpdate': {
+      /** @description 番地や建物名を含む詳細住所。 */
       street?: string
+      /** @description 市区町村名。 */
       city?: string
+      /** @description 都道府県名。 */
       prefecture?: string
+      /** @description 郵便番号。未設定の場合はnull。 */
       postalCode?: string | null
-      /** @default Japan */
+      /**
+       * @description 国名。既定値はJapan。
+       * @default Japan
+       */
       country: string
     }
     'Models.AllergyInfo': {
@@ -3065,9 +3232,67 @@ export interface components {
       description: string | null
       severity: components['schemas']['Models.AllergySeverityType']
     }
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * アレルギー重篤度区分 - アレルギー反応の重篤度を表し、対応レベルを決定
+
+         *
+
+         *
+
+         * mild: 軽度 - 軽いかゆみや赤み程度、通常の施術で注意すれば対応可能
+
+         *
+
+         * moderate: 中等度 - 明確な皮膚反応、特別な配慮や代替品の使用が必要
+
+         *
+
+         * severe: 重度 - 激しい反応、特定の施術を避けるべきレベル
+
+         * @enum {string}
+
+         */
+
     'Models.AllergySeverityType': 'mild' | 'moderate' | 'severe'
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * アレルギータイプ区分 - 顧客が持つアレルギーの種類を分類、施術時の注意事項として使用
+
+         *
+
+         *
+
+         * chemical: 化学物質 - カラー剤、パーマ剤等の化学薬品に対するアレルギー
+
+         *
+
+         * fragrance: 香料 - 香水、シャンプー等の香料成分に対するアレルギー
+
+         *
+
+         * metal: 金属 - ヘアピン、ハサミ等の金属製品に対するアレルギー
+
+         *
+
+         * latex: ラテックス - 手袋等のゴム製品に対するアレルギー
+
+         *
+
+         * plant: 植物 - ヘナ、ハーブ等の植物由来成分に対するアレルギー
+
+         *
+
+         * other: その他 - 上記に分類されないアレルギー
+
+         * @enum {string}
+
+         */
+
     'Models.AllergyType':
       | 'chemical'
       | 'fragrance'
@@ -3075,24 +3300,24 @@ export interface components {
       | 'latex'
       | 'plant'
       | 'other'
-    /** @description 添付ファイル情報 */
+    /** @description サロンシステムで管理するアップロード済みファイルのメタ情報を表すモデル。 */
     'Models.Attachment': {
-      /** @description 添付ファイルID (UUID) */
+      /** @description 添付ファイルを一意に識別するID。UUID形式。 */
       id: string
-      /** @description ストレージキー */
+      /** @description オブジェクトストレージでファイルを参照するための内部キー。 */
       key: string
-      /** @description オリジナルファイル名 */
+      /** @description 利用者がアップロードした元のファイル名。 */
       filename: string
-      /** @description Content-Type */
+      /** @description ファイルのMIMEタイプ（Content-Type）。 */
       content: string
       /**
        * Format: int32
-       * @description ファイルサイズ（バイト）
+       * @description ファイルサイズ（バイト単位）。
        */
       size: number
       /**
        * A file in an HTTP request, response, or multipart payload.
-       * @description ファイルタイプ
+       * @description ファイルの実体情報。ダウンロードや共有レスポンスで利用。
        */
       file: {
         /**
@@ -3130,227 +3355,439 @@ export interface components {
          */
         contents: string
       }
-      /** @description アップロードしたユーザーID */
+      /** @description ファイルをアップロードしたユーザーID。 */
       uploadedBy: string
-      /** @description 関連するサロンID（オプション） */
+      /** @description ファイルが紐づくサロンID。任意項目。 */
       salonId?: string
-      /** @description メタデータ */
+      /** @description 必要に応じて付加情報を保持する任意メタデータ。 */
       metadata?: {
         [key: string]: unknown
       }
-      /** @description タグ */
+      /** @description ラベリングや検索に利用するタグ情報のセット。 */
       tags?: {
         [key: string]: string
       }
       /**
        * Format: date-time
-       * @description アップロード日時
+       * @description ファイルがアップロードされた日時。
        */
       uploadedAt: string
       /**
        * Format: date-time
-       * @description 更新日時
+       * @description ファイル情報が最後に更新された日時。
        */
       updatedAt: string
     }
     /**
      * Format: uuid
-     * @description Branded UUID type for Attachment ID
+     * @description 添付ファイル・画像データを識別するブランド付きUUID。
      */
     'Models.AttachmentId': string
+    /** @description 作成・更新ユーザーとタイムスタンプを保持する共通監査情報。 */
     'Models.AuditInfo': {
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード作成日時。
+       */
       createdAt: string
+      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
       createdBy: string | null
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード最終更新日時。
+       */
       updatedAt: string
+      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
       updatedBy: string | null
     }
-    /** @description Complete audit information */
+    /** @description 監査情報モデル。
+     *     レコードの作成・更新履歴を保持し、内部統制や変更追跡を実現する。 */
     'Models.AuditTrail': {
       /**
        * Format: date-time
-       * @description Record creation timestamp
+       * @description レコード作成日時 (UTC)。
        */
       createdAt: string
-      /** @description User who created the record */
+      /** @description レコードを作成したユーザーID またはサービス名。 */
       createdBy: string
       /**
        * Format: date-time
-       * @description Last update timestamp
+       * @description 最終更新日時 (UTC)。
        */
       updatedAt: string
-      /** @description User who last updated the record */
+      /** @description 最後に更新したユーザーID またはサービス名。 */
       updatedBy: string
       /**
        * Format: int32
-       * @description Version number for optimistic locking
+       * @description 楽観的ロックに使用するバージョン番号。
        */
       version: number
       /**
-       * @description Whether the record is deleted
+       * @description 論理削除フラグ。true の場合は通常の検索結果から除外する。
        * @default false
        */
       isDeleted: boolean
       /**
        * Format: date-time
-       * @description Deletion timestamp
+       * @description 削除操作が実行された日時 (UTC)。
        */
       deletedAt?: string
-      /** @description User who deleted the record */
+      /** @description 削除操作を実施したユーザーID またはサービス名。 */
       deletedBy?: string
-      /** @description Deletion reason */
+      /** @description 削除理由や補足メモ。カスタマーサポート対応に利用する。 */
       deletionReason?: string
     }
-    /** @description Generic auth success response */
+    /** @description 認証系APIで使用する汎用成功レスポンス。 */
     'Models.AuthSuccessResponse': {
-      /** @description Success message */
+      /** @description 完了メッセージ。 */
       message: string
     }
     /**
-     * @description User roles in the system
-     * @enum {string}
-     */
+
+         * @description
+
+         * 認証ユーザーロール区分 - 認証システムにおけるユーザーの役割
+
+         *
+
+         *
+
+         * customer: 顧客ロール - サービスの予約が可能
+
+         *
+
+         * staff: スタッフロール - 自身のスケジュールと予約を管理可能
+
+         *
+
+         * admin: 管理者ロール - システムのフルアクセス権限
+
+         * @enum {string}
+
+         */
+
     'Models.AuthUserRoleType': 'customer' | 'staff' | 'admin'
+    /** @description 認証状態ごとの詳細情報を格納するモデル。 */
     'Models.AuthenticationStateDetail': {
+      /** @description 現在の認証状態区分。 */
       type: components['schemas']['Models.AuthenticationStateType']
+      /** @description 状態に紐づくセッションID。未確立の場合はnull。 */
       sessionId?: components['schemas']['Models.SessionId']
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 該当状態が失効する日時。
+       */
       expiresAt?: string
+      /** @description 2要素認証や一時アクセスに利用する暫定トークン。 */
       tempToken?: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description ロックや制限状態が解除される予定日時。
+       */
       until?: string
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 認証失敗などの試行回数。
+       */
       attempts?: number
+      /** @description 状態が発生した具体的な理由メッセージ。 */
       reason?: string
     }
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * 認証状態区分 - ユーザーの認証状態を表す区分
+
+         *
+
+         *
+
+         * unauthenticated: 未認証 - ログインしていない状態
+
+         *
+
+         * authenticated: 認証済み - 正常にログインしている状態
+
+         *
+
+         * pending_two_factor: 2要素認証待ち - 2要素認証の入力を待っている状態
+
+         *
+
+         * locked: ロック中 - アカウントがロックされている状態
+
+         * @enum {string}
+
+         */
+
     'Models.AuthenticationStateType':
       | 'unauthenticated'
       | 'authenticated'
       | 'pending_two_factor'
       | 'locked'
+    /** @description 空き枠情報モデル - スタッフごとの提供可能時間帯を表し、予約可能枠の算出に使用する */
     'Models.AvailableSlot': {
+      /** @description 対象スタッフのID */
       staffId: components['schemas']['Models.StaffId']
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 空き枠の開始日時 (UTC)
+       */
       startTime: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 空き枠の終了日時 (UTC)
+       */
       endTime: string
     }
-    /** @description Available time slot details */
+    /** @description 予約可能な時間帯の詳細情報モデル */
     'Models.AvailableTimeSlot': {
       /**
        * Format: date-time
-       * @description Start time
+       * @description 開始日時
        */
       startTime: string
       /**
        * Format: date-time
-       * @description End time
+       * @description 終了日時
        */
       endTime: string
-      /** @description Available staff members */
+      /** @description 対応可能なスタッフの一覧 */
       availableStaff: components['schemas']['Models.StaffSummary'][]
       /**
        * Format: int32
-       * @description Availability percentage
+       * @description 対応可能枠の充足率（%）
        */
       availability: number
     }
-    /** @description Request for batch retrieval */
+    /** @description 複数リソースをまとめて取得するリクエストモデル。
+     *     顧客IDや予約IDを複数指定して最小回数のAPI呼び出しで情報を取得する用途に利用。  */
     'Models.BatchGetRequest': {
-      /** @description Array of IDs to retrieve */
+      /** @description 取得対象となるリソースIDの配列。1件以上100件以下。 */
       ids: string[]
-      /** @description Fields to include in response */
+      /** @description レスポンスに含めたいフィールドのカンマ区切りリスト。パフォーマンス最適化に活用する。 */
       fields?: string
     }
+    /** @description サロンで確定管理する予約の集約モデル。 */
     'Models.Booking': {
+      /** @description 予約を一意に識別するID。 */
       id: components['schemas']['Models.BookingId']
+      /** @description 予約が紐づくサロンID。 */
       salonId: components['schemas']['Models.SalonId']
+      /** @description 予約を行った顧客ID。 */
       customerId: components['schemas']['Models.CustomerId']
+      /** @description 関連する予約リクエストID一覧。 */
       reservationIds: components['schemas']['Models.ReservationId'][]
+      /** @description 進行状況ごとの詳細情報。 */
       status: components['schemas']['Models.BookingStatus']
+      /** @description 現在のステータスコード。 */
       statusCode: components['schemas']['Models.BookingStatusCodeType']
+      /** @description ウェイティングリスト情報。対象外の場合はnull。 */
       waitlistEntry?: components['schemas']['Models.WaitlistEntry']
+      /** @description 預かり金に関する情報。必要な場合のみ設定。 */
       deposit?: components['schemas']['Models.BookingDeposit']
+      /** @description 割引適用前の合計金額。 */
       totalAmount: components['schemas']['Models.Money']
+      /** @description 適用された割引額。未適用の場合はnull。 */
       discountAmount?: components['schemas']['Models.Money']
+      /** @description 最終的に請求する金額。 */
       finalAmount: components['schemas']['Models.Money']
+      /** @description 未収金額。完済の場合はnull。 */
       balanceDue?: components['schemas']['Models.Money']
+      /** @description 予定している支払い方法。未定の場合はnull。 */
       paymentMethod?: components['schemas']['Models.PaymentMethodType']
+      /** @description 支払いの進捗ステータス。未設定の場合は支払い前。 */
       paymentStatus?: components['schemas']['Models.PaymentStatusCodeType']
+      /** @description スタッフ・顧客間で共有するメモ。 */
       notes?: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード作成日時。
+       */
       createdAt: string
+      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
       createdBy: string | null
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード最終更新日時。
+       */
       updatedAt: string
+      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
       updatedBy: string | null
     }
+    /** @description 予約確定前に預かるデポジット情報。 */
     'Models.BookingDeposit': {
+      /** @description 預かり金額。 */
       amount: components['schemas']['Models.Money']
-      /** @enum {string} */
+      /**
+       * @description デポジットの状態区分（pending: 入金待ち／paid: 入金済み／refunded: 返金済み／forfeited: 没収）。
+       * @enum {string}
+       */
       status: 'pending' | 'paid' | 'refunded' | 'forfeited'
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 支払い期日。未設定の場合は即時支払い不要。
+       */
       dueDate?: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 入金が確認された日時。
+       */
       paidAt?: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 返金した日時。
+       */
       refundedAt?: string
+      /** @description 紐づく決済ID。 */
       paymentId?: components['schemas']['Models.PaymentId']
+      /** @description デポジットに関する備考。 */
       notes?: string
     }
+    /** @description 予約確定前に預かるデポジット情報。 */
     'Models.BookingDepositUpdate': {
+      /** @description 預かり金額。 */
       amount?: components['schemas']['Models.MoneyUpdate']
-      /** @enum {string} */
+      /**
+       * @description デポジットの状態区分（pending: 入金待ち／paid: 入金済み／refunded: 返金済み／forfeited: 没収）。
+       * @enum {string}
+       */
       status?: 'pending' | 'paid' | 'refunded' | 'forfeited'
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 支払い期日。未設定の場合は即時支払い不要。
+       */
       dueDate?: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 入金が確認された日時。
+       */
       paidAt?: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 返金した日時。
+       */
       refundedAt?: string
+      /** @description 紐づく決済ID。 */
       paymentId?: components['schemas']['Models.PaymentId']
+      /** @description デポジットに関する備考。 */
       notes?: string
     }
+    /** @description 予約と関連情報をまとめた詳細ビュー。 */
     'Models.BookingDetail': {
+      /** @description 紐づく予約リクエストの詳細一覧。 */
       reservations: components['schemas']['Models.ReservationDetail'][]
+      /** @description 顧客の表示名。 */
       customerName: string
+      /** @description サロンの表示名。 */
       salonName: string
+      /** @description 決済履歴の一覧。未登録の場合はnull。 */
       paymentHistory?: components['schemas']['Models.PaymentHistory'][]
+      /** @description ウェイティングリストの履歴。未登録の場合はnull。 */
       waitlistHistory?: components['schemas']['Models.WaitlistEntry'][]
     } & components['schemas']['Models.Booking']
     /**
      * Format: uuid
-     * @description Branded UUID type for Booking ID
+     * @description 確定済みの予約（スケジュール確保）を識別するブランド付きUUID。
      */
     'Models.BookingId': string
+    /** @description 顧客単位の予約回数制限 */
     'Models.BookingLimit': {
-      /** @enum {string} */
+      /**
+       * @description 制限期間の単位
+       * @enum {string}
+       */
       period: 'day' | 'week' | 'month'
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 期間内の最大予約可能数
+       */
       count: number
     }
+    /** @description サービス予約時に必要な要件詳細 */
     'Models.BookingRequirementDetail': {
+      /** @description 要件の種類 */
       type: components['schemas']['Models.BookingRequirementType']
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 金額要件（例: デポジット額）
+       */
       amount?: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 割合で設定する要件
+       */
       percentage?: number
+      /** @description 必須かどうか */
       required?: boolean
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 所要時間や準備時間
+       */
       duration?: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 何日前までに対応が必要か
+       */
       daysInAdvance?: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 利用可能な最低年齢
+       */
       minAge?: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 利用可能な最高年齢
+       */
       maxAge?: number
+      /** @description 利用可能な性別の制限 */
       allowedGenders?: string[]
+      /** @description 必要な会員ランク */
       requiredTier?: string
+      /** @description 顧客への具体的な指示 */
       instructions?: string[]
     }
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * 予約要件タイプ区分 - サービス予約時に必要な条件や制約
+
+         *
+
+         *
+
+         * deposit: デポジット - 予約時に支払う予約金
+
+         *
+
+         * consultation: 事前カウンセリング - 施術前の相談・カウンセリング
+
+         *
+
+         * patch_test: パッチテスト - アレルギー確認のための事前テスト
+
+         *
+
+         * age_restriction: 年齢制限 - 年齢による利用制限
+
+         *
+
+         * gender_restriction: 性別制限 - 性別による利用制限
+
+         *
+
+         * membership: 会員限定 - 特定の会員ランク以上の制限
+
+         *
+
+         * preparation: 事前準備 - 顧客が事前に行うべき準備
+
+         * @enum {string}
+
+         */
+
     'Models.BookingRequirementType':
       | 'deposit'
       | 'consultation'
@@ -3359,6 +3796,7 @@ export interface components {
       | 'gender_restriction'
       | 'membership'
       | 'preparation'
+    /** @description 予約の進行状況ごとに保持する詳細情報ユニオン。 */
     'Models.BookingStatus':
       | components['schemas']['Models.DraftBookingStatus']
       | components['schemas']['Models.PendingBookingStatus']
@@ -3367,7 +3805,46 @@ export interface components {
       | components['schemas']['Models.CompletedBookingStatus']
       | components['schemas']['Models.CancelledBookingStatus']
       | components['schemas']['Models.NoShowBookingStatus']
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * 予約ステータスコード区分 - 予約の詳細な進行状態を表す区分
+
+         *
+
+         *
+
+         * draft: 下書き - 予約内容を作成中、まだ確定していない状態
+
+         *
+
+         * pending: 保留中 - 予約リクエストを受付、確認待ちの状態
+
+         *
+
+         * confirmed: 確定 - 予約が確定し、スタッフが割り当てられた状態
+
+         *
+
+         * in_progress: 施術中 - 現在サービスを実施中の状態
+
+         *
+
+         * completed: 完了 - サービス提供が終了した状態
+
+         *
+
+         * cancelled: キャンセル - 予約がキャンセルされた状態
+
+         *
+
+         * no_show: 無断キャンセル - 顧客が連絡なしに来店しなかった状態
+
+         * @enum {string}
+
+         */
+
     'Models.BookingStatusCodeType':
       | 'draft'
       | 'pending'
@@ -3376,6 +3853,7 @@ export interface components {
       | 'completed'
       | 'cancelled'
       | 'no_show'
+    /** @description 予約の進行状況ごとに保持する詳細情報ユニオン。 */
     'Models.BookingStatusUpdate':
       | components['schemas']['Models.DraftBookingStatusUpdate']
       | components['schemas']['Models.PendingBookingStatusUpdate']
@@ -3384,84 +3862,187 @@ export interface components {
       | components['schemas']['Models.CompletedBookingStatusUpdate']
       | components['schemas']['Models.CancelledBookingStatusUpdate']
       | components['schemas']['Models.NoShowBookingStatusUpdate']
+    /** @description 一括処理全体の集計情報モデル。
+     *     成功件数・失敗件数を俯瞰し、運用レポートに反映する。 */
     'Models.BulkSummary': {
       /**
        * Format: int32
-       * @description Total items processed
+       * @description リクエストに含まれていたアイテム総数。
        */
       total: number
       /**
        * Format: int32
-       * @description Number of successful items
+       * @description 成功したアイテム件数。
        */
       succeeded: number
       /**
        * Format: int32
-       * @description Number of failed items
+       * @description 失敗したアイテム件数。
        */
       failed: number
       /**
        * Format: int32
-       * @description Processing duration in milliseconds
+       * @description 処理に要した時間 (ミリ秒)。バッチ最適化の指標。
        */
       duration: number
     }
+    /** @description 曜日単位で管理する営業スケジュール設定。 */
     'Models.BusinessHours': {
+      /** @description 設定の対象となる曜日。 */
       dayOfWeek: components['schemas']['Models.DayOfWeekType']
+      /** @description 営業時間帯の一覧。複数設定で分割営業に対応。 */
       operatingSlots: components['schemas']['Models.TimeSlot'][]
+      /** @description 休憩時間や中断時間帯の一覧。未設定時はnull。 */
       breakSlots: components['schemas']['Models.TimeSlot'][] | null
-      /** @default false */
+      /**
+       * @description 当該曜日を休業扱いとする場合のフラグ。既定値はfalse。
+       * @default false
+       */
       isClosed: boolean
+      /** @description 季節営業などの適用期間。未設定時は通年有効。 */
       effectivePeriod: components['schemas']['Models.DateRange'] | null
+      /** @description 営業基準となるタイムゾーンID。未設定時はサロン既定値。 */
       timezone: string | null
     }
+    /** @description キャンセル料金のルール */
     'Models.CancellationFee': {
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description キャンセル料金を適用する期限（時間）
+       */
       hours: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description キャンセル料金率（%）
+       */
       percentage: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 固定額で設定するキャンセル料金
+       */
       fixedAmount?: number
     }
+    /** @description 予約がキャンセルされた場合の状態情報。 */
     'Models.CancelledBookingStatus': {
-      /** @enum {string} */
+      /**
+       * @description 固定値cancelled。キャンセル状態であることを示す。
+       * @enum {string}
+       */
       type: 'cancelled'
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description キャンセルが登録された日時。
+       */
       cancelledAt: string
+      /** @description キャンセル理由のメモ。未設定の場合はnull。 */
       reason?: string
-      /** @enum {string} */
+      /**
+       * @description キャンセルを実行した主体（customer: 顧客／salon: サロン側／system: システム判断）。
+       * @enum {string}
+       */
       cancelledBy: 'customer' | 'salon' | 'system'
     }
+    /** @description 予約がキャンセルされた場合の状態情報。 */
     'Models.CancelledBookingStatusUpdate': {
-      /** @enum {string} */
+      /**
+       * @description 固定値cancelled。キャンセル状態であることを示す。
+       * @enum {string}
+       */
       type?: 'cancelled'
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description キャンセルが登録された日時。
+       */
       cancelledAt?: string
+      /** @description キャンセル理由のメモ。未設定の場合はnull。 */
       reason?: string
-      /** @enum {string} */
+      /**
+       * @description キャンセルを実行した主体（customer: 顧客／salon: サロン側／system: システム判断）。
+       * @enum {string}
+       */
       cancelledBy?: 'customer' | 'salon' | 'system'
     }
     /**
      * Format: uuid
-     * @description Branded UUID type for Category ID
+     * @description サービスカテゴリやメニュー分類を識別するブランド付きUUID。
      */
     'Models.CategoryId': string
+    /** @description サービスカテゴリの管理モデル */
     'Models.CategoryModel': {
+      /** @description カテゴリ ID */
       id: components['schemas']['Models.CategoryId']
+      /** @description カテゴリ名 */
       name: string
+      /** @description カテゴリ説明 */
       description: string
+      /** @description 親カテゴリ ID */
       parentId?: components['schemas']['Models.CategoryId']
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 表示順序
+       */
       displayOrder: number
+      /** @description 有効フラグ */
       isActive: boolean
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード作成日時。
+       */
       createdAt: string
+      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
       createdBy: string | null
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード最終更新日時。
+       */
       updatedAt: string
+      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
       updatedBy: string | null
     }
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * カラーサブカテゴリー区分 - ヘアカラーリングサービスの詳細分類
+
+         *
+
+         *
+
+         * full_color: フルカラー - 髪全体を染めるサービス
+
+         *
+
+         * root_touch: リタッチ - 根元の伸びた部分のみを染めるサービス
+
+         *
+
+         * highlights: ハイライト - 部分的に明るい色を入れるサービス
+
+         *
+
+         * lowlights: ローライト - 部分的に暗い色を入れるサービス
+
+         *
+
+         * balayage: バレイヤージュ - グラデーション染め技法
+
+         *
+
+         * ombre: オンブレ - 根元から毛先にかけてグラデーション染め
+
+         *
+
+         * bleach: ブリーチ - 髪の色を抜く脱色サービス
+
+         *
+
+         * color_correction: カラーコレクション - 色ムラや失敗したカラーの修正
+
+         * @enum {string}
+
+         */
+
     'Models.ColorSubCategoryType':
       | 'full_color'
       | 'root_touch'
@@ -3471,82 +4052,184 @@ export interface components {
       | 'ombre'
       | 'bleach'
       | 'color_correction'
+    /** @description 施術が完了した場合の状態情報。 */
     'Models.CompletedBookingStatus': {
-      /** @enum {string} */
+      /**
+       * @description 固定値completed。完了状態であることを示す。
+       * @enum {string}
+       */
       type: 'completed'
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 施術が完了した日時。
+       */
       completedAt: string
+      /** @description 関連する決済ID。未決済の場合はnull。 */
       paymentId?: components['schemas']['Models.PaymentId']
+      /** @description 施術内容のサマリーメモ。未設定の場合はnull。 */
       serviceSummary?: string
     }
+    /** @description 施術が完了した場合の状態情報。 */
     'Models.CompletedBookingStatusUpdate': {
-      /** @enum {string} */
+      /**
+       * @description 固定値completed。完了状態であることを示す。
+       * @enum {string}
+       */
       type?: 'completed'
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 施術が完了した日時。
+       */
       completedAt?: string
+      /** @description 関連する決済ID。未決済の場合はnull。 */
       paymentId?: components['schemas']['Models.PaymentId']
+      /** @description 施術内容のサマリーメモ。未設定の場合はnull。 */
       serviceSummary?: string
     }
+    /** @description 支払い完了状態の詳細 */
     'Models.CompletedPaymentStatus': {
-      /** @enum {string} */
+      /**
+       * @description 状態種別（completed 固定値）
+       * @enum {string}
+       */
       type: 'completed'
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 支払い完了日時
+       */
       completedAt: string
+      /** @description 実際に決済された金額 */
       paidAmount: components['schemas']['Models.Money']
+      /** @description 発行されたレシート番号 */
       receiptNumber?: string
     }
+    /** @description 支払い完了状態の詳細 */
     'Models.CompletedPaymentStatusUpdate': {
-      /** @enum {string} */
+      /**
+       * @description 状態種別（completed 固定値）
+       * @enum {string}
+       */
       type?: 'completed'
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 支払い完了日時
+       */
       completedAt?: string
+      /** @description 実際に決済された金額 */
       paidAmount?: components['schemas']['Models.MoneyUpdate']
+      /** @description 発行されたレシート番号 */
       receiptNumber?: string
     }
+    /** @description 予約が確定済みの場合の状態情報。 */
     'Models.ConfirmedBookingStatus': {
-      /** @enum {string} */
+      /**
+       * @description 固定値confirmed。確定状態であることを示す。
+       * @enum {string}
+       */
       type: 'confirmed'
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 予約を確定した日時。
+       */
       confirmedAt: string
+      /** @description 担当するスタッフID。 */
       staffId: components['schemas']['Models.StaffId']
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 施術開始予定日時。
+       */
       expectedStart: string
     }
+    /** @description 予約が確定済みの場合の状態情報。 */
     'Models.ConfirmedBookingStatusUpdate': {
-      /** @enum {string} */
+      /**
+       * @description 固定値confirmed。確定状態であることを示す。
+       * @enum {string}
+       */
       type?: 'confirmed'
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 予約を確定した日時。
+       */
       confirmedAt?: string
+      /** @description 担当するスタッフID。 */
       staffId?: components['schemas']['Models.StaffId']
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 施術開始予定日時。
+       */
       expectedStart?: string
     }
+    /** @description 顧客やサロンの連絡先情報を表す共通モデル。 */
     'Models.ContactInfo': {
+      /** @description 主要連絡先として利用するメールアドレス。 */
       email: string
+      /** @description 主要連絡先として利用する電話番号。 */
       phoneNumber: string
+      /** @description 緊急連絡用などの予備電話番号。未設定時はnull。 */
       alternativePhone: string | null
+      /** @description 公式サイトや予約ページのURL。未設定時はnull。 */
       websiteUrl: string | null
     }
+    /** @description 顧客やサロンの連絡先情報を表す共通モデル。 */
     'Models.ContactInfoUpdate': {
+      /** @description 主要連絡先として利用するメールアドレス。 */
       email?: string
+      /** @description 主要連絡先として利用する電話番号。 */
       phoneNumber?: string
+      /** @description 緊急連絡用などの予備電話番号。未設定時はnull。 */
       alternativePhone?: string | null
+      /** @description 公式サイトや予約ページのURL。未設定時はnull。 */
       websiteUrl?: string | null
     }
     /**
-     * @description Contact method enum
-     * @enum {string}
-     */
+
+         * @description
+
+         * 連絡方法区分 - 顧客との連絡・コミュニケーション手段の優先設定
+
+         *
+
+         *
+
+         * email: Eメール - 電子メールによる連絡方法
+
+         *
+
+         * sms: SMS - ショートメッセージサービスによる連絡方法
+
+         *
+
+         * phone: 電話 - 音声通話による連絡方法
+
+         *
+
+         * push: プッシュ通知 - アプリ内プッシュ通知による連絡方法
+
+         * @enum {string}
+
+         */
+
     'Models.ContactMethodType': 'email' | 'sms' | 'phone' | 'push'
+    /** @description 予約を新規作成する際のリクエスト。 */
     'Models.CreateBookingRequest': {
+      /** @description 予約対象のサロンID。 */
       salonId: components['schemas']['Models.SalonId']
+      /** @description 予約を申し込む顧客ID。 */
       customerId: components['schemas']['Models.CustomerId']
+      /** @description 紐付ける予約リクエストID一覧。 */
       reservationIds: components['schemas']['Models.ReservationId'][]
+      /** @description ウェイティングリスト情報。不要な場合はnull。 */
       waitlistEntry?: components['schemas']['Models.WaitlistEntry']
+      /** @description 預かり金設定。不要な場合はnull。 */
       deposit?: components['schemas']['Models.BookingDeposit']
+      /** @description 適用する割引額。未設定の場合はnull。 */
       discountAmount?: components['schemas']['Models.Money']
+      /** @description 予定している支払い方法。 */
       paymentMethod?: components['schemas']['Models.PaymentMethodType']
+      /** @description スタッフ向けの備考。 */
       notes?: string
+      /** @description 外部連携や業務用に保持する任意メタデータ。 */
       metadata?: {
         [key: string]: unknown
       }
@@ -3561,98 +4244,229 @@ export interface components {
       /** Format: date */
       birthDate?: string
     }
+    /** @description 予約作成リクエスト - 新規予約登録時に必要なサロン・顧客・メニュー・希望日時の情報を受け取る */
     'Models.CreateReservationRequest': {
+      /** @description 予約対象のサロンID */
       salonId: components['schemas']['Models.SalonId']
+      /** @description 予約を申し込む顧客ID */
       customerId: components['schemas']['Models.CustomerId']
+      /** @description 担当予定のスタッフID */
       staffId: components['schemas']['Models.StaffId']
+      /** @description 希望する施術メニューID */
       serviceId: components['schemas']['Models.ServiceId']
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 希望する施術開始日時 (UTC)
+       */
       startTime: string
+      /** @description 顧客要望や注意事項のメモ */
       notes?: string
     }
+    /** @description レビュー作成リクエスト - 顧客が新規レビュー投稿時に入力する評価情報と任意コメント・画像を受け取る */
     'Models.CreateReviewRequest': {
+      /** @description レビュー対象のサロンID */
       salonId: components['schemas']['Models.SalonId']
+      /** @description レビュー投稿者の顧客ID */
       customerId: components['schemas']['Models.CustomerId']
+      /** @description 紐づく来店予約ID (booking_id) */
       bookingId: components['schemas']['Models.BookingId']
+      /** @description 評価対象スタッフのID */
       staffId?: components['schemas']['Models.StaffId']
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 全体満足度の評価値
+       */
       overallRating: number
+      /** @description 自由記述のコメント */
       comment?: string
+      /** @description レビュータイトル */
       title?: string
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description サービス品質に対する評価値
+       */
       serviceRating?: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description スタッフ対応に対する評価値
+       */
       staffRating?: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 清潔さ・衛生状態に対する評価値
+       */
       cleanlinessRating?: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 価格に見合う価値の評価値
+       */
       valueRating?: number
+      /** @description 添付画像のURL一覧 */
       imageUrls?: string[]
     }
-    /** @description Salon creation request - all keys required, values nullable where appropriate */
+    /** @description サロン新規登録リクエスト - 全項目のキーが必須で、値は業務要件に応じてnull許可 */
     'Models.CreateSalonRequest': {
+      /** @description 新規登録時に必須となるサロン名 */
       name: string
+      /** @description サロン紹介文。未設定の場合はnullで送信 */
       description: string | null
+      /** @description 店舗の正規住所・連絡先配送先 */
       address: components['schemas']['Models.Address']
+      /** @description 顧客問い合わせ用の電話やメール情報 */
       contactInfo: components['schemas']['Models.ContactInfo']
+      /** @description 通常営業日の営業時間設定一覧 */
       openingHours: components['schemas']['Models.OpeningHours'][]
+      /** @description 特別営業スケジュールやシフト連動の営業時間。不要な場合はnull */
       businessHours: components['schemas']['Models.BusinessHours'][] | null
+      /** @description 店舗写真やメニュー画像のURL一覧。未登録時はnull */
       imageUrls: string[] | null
+      /** @description バリアフリー対応や個室有無などの特徴タグ一覧。不要な場合はnull */
       features: string[] | null
     }
+    /** @description サービスを新規登録するリクエスト */
     'Models.CreateServiceRequest': {
+      /** @description サービスを登録するサロン ID */
       salonId: components['schemas']['Models.SalonId']
+      /** @description サービス名 */
       name: string
+      /** @description サービスの説明文 */
       description: string
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 施術時間（分）
+       */
       duration: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 料金（税抜）
+       */
       price: number
+      /** @description サービスカテゴリ区分 */
       category: components['schemas']['Models.ServiceCategoryType']
+      /** @description カテゴリ ID */
       categoryId?: components['schemas']['Models.CategoryId']
+      /** @description サービス画像 URL */
       imageUrl?: string
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 必要スタッフレベル
+       */
       requiredStaffLevel?: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 必要なデポジット額
+       */
       depositAmount?: number
+      /** @description 有効フラグ */
       isActive?: boolean
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 最大全日予約可能日数
+       */
       maxAdvanceBookingDays?: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 最短予約受付時間（時間）
+       */
       minAdvanceBookingHours?: number
     }
-    /** @description 共有リンク作成リクエスト */
+    /** @description 添付ファイルの共有リンクを新規発行する際のリクエスト。 */
     'Models.CreateShareLinkRequest': {
       /**
        * Format: date-time
-       * @description 有効期限（オプション）
+       * @description 共有リンクの有効期限。任意設定。
        */
       expiresAt?: string
       /**
        * Format: int32
-       * @description 最大ダウンロード数（オプション）
+       * @description 許可する最大ダウンロード回数。任意設定。
        */
       maxDownloads?: number
-      /** @description パスワード（オプション） */
+      /** @description 共有リンク保護用のパスワード。任意設定。 */
       password?: string
-      /** @description 許可されたメールアドレス（オプション） */
+      /** @description アクセスを許可するメールアドレス一覧。任意設定。 */
       allowedEmails?: string[]
     }
+    /** @description スタッフ作成リクエスト - 新規スタッフ登録時に必要なプロフィール・連絡先・スケジュール情報を受け取る */
     'Models.CreateStaffRequest': {
+      /** @description 所属サロンのID */
       salonId: components['schemas']['Models.SalonId']
+      /** @description スタッフの氏名 */
       name: string
+      /** @description 連絡先情報 */
       contactInfo: components['schemas']['Models.ContactInfo']
+      /** @description 得意分野や専門メニューの一覧 */
       specialties: string[]
+      /** @description プロフィール画像のURL */
       imageUrl?: string
+      /** @description 自己紹介や経歴の概要 */
       bio?: string
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 実務経験年数
+       */
       yearsOfExperience?: number
+      /** @description 保有資格名の一覧 */
       certifications?: string[]
+      /** @description 詳細な資格情報の一覧 */
       qualifications?: components['schemas']['Models.StaffQualification'][]
+      /** @description 通常勤務スケジュールの一覧 */
       schedules?: components['schemas']['Models.StaffSchedule'][]
+      /** @description 付与する権限の一覧 */
       permissions?: components['schemas']['Models.StaffPermission'][]
     }
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * 通貨コード区分 - ISO 4217準拠の通貨コード定義
+
+         *
+
+         *
+
+         * JPY: 日本円 - Japanese Yen
+
+         *
+
+         * USD: 米ドル - United States Dollar
+
+         *
+
+         * EUR: ユーロ - Euro
+
+         *
+
+         * GBP: 英ポンド - British Pound Sterling
+
+         *
+
+         * AUD: 豪ドル - Australian Dollar
+
+         *
+
+         * CAD: カナダドル - Canadian Dollar
+
+         *
+
+         * CNY: 中国人民元 - Chinese Yuan
+
+         *
+
+         * KRW: 韓国ウォン - South Korean Won
+
+         *
+
+         * SGD: シンガポールドル - Singapore Dollar
+
+         *
+
+         * TWD: 台湾ドル - Taiwan Dollar
+
+         * @enum {string}
+
+         */
+
     'Models.CurrencyCodeType':
       | 'JPY'
       | 'USD'
@@ -3724,11 +4538,19 @@ export interface components {
       registrationSource: 'walk_in' | 'online' | 'phone' | 'referral' | null
       /** @description Referrer customer ID */
       referredBy: (string & components['schemas']['Models.CustomerId']) | null
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード作成日時。
+       */
       createdAt: string
+      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
       createdBy: string | null
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード最終更新日時。
+       */
       updatedAt: string
+      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
       updatedBy: string | null
     }
     'Models.CustomerAssociations': {
@@ -3739,7 +4561,34 @@ export interface components {
       referredCustomerIds: components['schemas']['Models.CustomerId'][] | null
       groupId: string | null
     }
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * 性別区分 - 顧客の性別を表す区分（多様性に配慮した選択肢を含む）
+
+         *
+
+         *
+
+         * male: 男性
+
+         *
+
+         * female: 女性
+
+         *
+
+         * other: その他 - 男性・女性以外の性自認を持つ方
+
+         *
+
+         * prefer_not_to_say: 回答しない - 性別の回答を希望しない方
+
+         * @enum {string}
+
+         */
+
     'Models.CustomerGenderType':
       | 'male'
       | 'female'
@@ -3765,7 +4614,7 @@ export interface components {
     }
     /**
      * Format: uuid
-     * @description Branded UUID type for Customer ID
+     * @description 顧客（来店者）を識別するためのブランド付きUUID。
      */
     'Models.CustomerId': string
     'Models.CustomerMetadata': {
@@ -3884,27 +4733,135 @@ export interface components {
       /** Format: date-time */
       deletedAt: string | null
     }
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * 顧客ステータス区分 - 顧客アカウントの活動状態や利用可否を表す区分
+
+         *
+
+         *
+
+         * active: アクティブ - 通常利用可能な状態
+
+         *
+
+         * inactive: 休眠中 - 長期間利用がないがアカウントは維持されている状態
+
+         *
+
+         * suspended: 停止中 - 一時的に利用が停止されている状態
+
+         *
+
+         * deleted: 削除済み - アカウントが論理削除された状態
+
+         *
+
+         * blacklisted: ブラックリスト - 利用を禁止された状態
+
+         * @enum {string}
+
+         */
+
     'Models.CustomerStatusType':
       | 'active'
       | 'inactive'
       | 'suspended'
       | 'deleted'
       | 'blacklisted'
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * カットサブカテゴリー区分 - カットサービスの詳細分類
+
+         *
+
+         *
+
+         * mens_cut: メンズカット - 男性向けヘアカットサービス
+
+         *
+
+         * womens_cut: レディースカット - 女性向けヘアカットサービス
+
+         *
+
+         * kids_cut: キッズカット - 子供向けヘアカットサービス
+
+         *
+
+         * bang_trim: 前髪カット - 前髪のみのカットサービス
+
+         *
+
+         * beard_trim: 髭トリミング - 髭の整えサービス
+
+         * @enum {string}
+
+         */
+
     'Models.CutSubCategoryType':
       | 'mens_cut'
       | 'womens_cut'
       | 'kids_cut'
       | 'bang_trim'
       | 'beard_trim'
+    /** @description 期間指定や有効期間に利用する共通レンジ型。 */
     'Models.DateRange': {
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 期間の開始日時。
+       */
       startDate: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 期間の終了日時。
+       */
       endDate: string
     }
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * 曜日区分 - 営業日やスケジュール管理で使用される曜日の定義
+
+         *
+
+         *
+
+         * monday: 月曜日
+
+         *
+
+         * tuesday: 火曜日
+
+         *
+
+         * wednesday: 水曜日
+
+         *
+
+         * thursday: 木曜日
+
+         *
+
+         * friday: 金曜日
+
+         *
+
+         * saturday: 土曜日
+
+         *
+
+         * sunday: 日曜日
+
+         * @enum {string}
+
+         */
+
     'Models.DayOfWeekType':
       | 'monday'
       | 'tuesday'
@@ -3913,30 +4870,32 @@ export interface components {
       | 'friday'
       | 'saturday'
       | 'sunday'
-    /** @description Domain error details for internal error handling */
+    /** @description ドメインエラーの詳細情報モデル。
+     *     予約・顧客・サロンなどビジネスロジック層で発生したエラーを分類し、運用チームが原因分析しやすい形で保持する。 */
     'Models.DomainErrorDetails': {
-      /** @description Error classification type */
+      /** @description エラー分類タイプ。上位のビジネスルールカテゴリを特定する。 */
       type: components['schemas']['Models.DomainErrorType']
-      /** @description Human-readable error message */
+      /** @description 業務担当者が理解しやすい説明文。ユーザー通知にも使用可能。 */
       message: string
-      /** @description Machine-readable error code */
+      /** @description 機械判読可能なエラーコード。外部連携やログ分析に利用する。 */
       code: string
-      /** @description Additional error context */
+      /** @description 追加のエラー文脈。入力値や関連設定など柔軟に格納する。 */
       details?: {
         [key: string]: unknown
       }
-      /** @description Related entity information */
+      /** @description 関連するエンティティ名。例: `Reservation` や `Customer`。 */
       entity?: string
-      /** @description Related field information */
+      /** @description 問題が発生したフィールド名。入力フォームとの紐付けに利用。 */
       field?: string
-      /** @description Related value information */
+      /** @description 問題があった値。マスキングが不要なケースのみ保持する。 */
       value?: string
-      /** @description Service name for external service errors */
+      /** @description 外部サービスエラー時の対象サービス名。連携先の切り分けに役立つ。 */
       service?: string
     }
-    /** @description Standard domain error factory configuration */
+    /** @description ドメインエラー生成の標準設定モデル。
+     *     各カテゴリごとの既定コードと HTTP ステータスを定義し、再利用可能なエラーファクトリーを構築する。 */
     'Models.DomainErrorFactory': {
-      /** @description Validation error factory */
+      /** @description 検証エラーを生成するための設定。 */
       validation: {
         /** @enum {string} */
         type: 'VALIDATION_ERROR'
@@ -3945,7 +4904,7 @@ export interface components {
         /** @enum {number} */
         httpStatus: 400
       }
-      /** @description Not found error factory */
+      /** @description リソース未検出エラーを生成するための設定。 */
       notFound: {
         /** @enum {string} */
         type: 'NOT_FOUND'
@@ -3954,7 +4913,7 @@ export interface components {
         /** @enum {number} */
         httpStatus: 404
       }
-      /** @description Already exists error factory */
+      /** @description 重複登録エラーを生成するための設定。 */
       alreadyExists: {
         /** @enum {string} */
         type: 'ALREADY_EXISTS'
@@ -3963,7 +4922,7 @@ export interface components {
         /** @enum {number} */
         httpStatus: 409
       }
-      /** @description Business rule violation factory */
+      /** @description ビジネスルール違反エラーを生成するための設定。 */
       businessRule: {
         /** @enum {string} */
         type: 'BUSINESS_RULE_VIOLATION'
@@ -3972,7 +4931,7 @@ export interface components {
         /** @enum {number} */
         httpStatus: 422
       }
-      /** @description Unauthorized error factory */
+      /** @description 未認証エラーを生成するための設定。 */
       unauthorized: {
         /** @enum {string} */
         type: 'UNAUTHORIZED'
@@ -3981,7 +4940,7 @@ export interface components {
         /** @enum {number} */
         httpStatus: 401
       }
-      /** @description Forbidden error factory */
+      /** @description 権限不足エラーを生成するための設定。 */
       forbidden: {
         /** @enum {string} */
         type: 'FORBIDDEN'
@@ -3990,7 +4949,7 @@ export interface components {
         /** @enum {number} */
         httpStatus: 403
       }
-      /** @description Internal error factory */
+      /** @description 内部サーバーエラーを生成するための設定。 */
       internal: {
         /** @enum {string} */
         type: 'INTERNAL_ERROR'
@@ -3999,7 +4958,7 @@ export interface components {
         /** @enum {number} */
         httpStatus: 500
       }
-      /** @description Database error factory */
+      /** @description データベースエラーを生成するための設定。 */
       database: {
         /** @enum {string} */
         type: 'DATABASE_ERROR'
@@ -4008,7 +4967,7 @@ export interface components {
         /** @enum {number} */
         httpStatus: 500
       }
-      /** @description External service error factory */
+      /** @description 外部サービス連携エラーを生成するための設定。 */
       externalService: {
         /** @enum {string} */
         type: 'EXTERNAL_SERVICE_ERROR'
@@ -4018,22 +4977,67 @@ export interface components {
         httpStatus: 502
       }
     }
-    /** @description Mapping between domain error types and error codes */
+    /** @description ドメインエラータイプとシステム標準エラーコードの対応表モデル。
+     *     内部ロジックとHTTPレスポンスの整合性を保つために利用する。 */
     'Models.DomainErrorMapping': {
-      /** @description Domain error type */
+      /** @description ドメインエラータイプ。ビジネス層で識別されるカテゴリ。 */
       domainType: components['schemas']['Models.DomainErrorType']
-      /** @description Corresponding error code */
+      /** @description 対応する標準エラーコード。`ErrorCodeType` を参照する。 */
       errorCode: components['schemas']['Models.ErrorCodeType']
       /**
        * Format: int32
-       * @description HTTP status code
+       * @description レスポンスに適用する HTTP ステータスコード。
        */
       httpStatus: number
     }
     /**
-     * @description Domain error type classification
-     * @enum {string}
-     */
+
+         * @description
+
+         * ドメインエラータイプ区分 - ビジネスロジック層で発生するエラーの分類
+
+         *
+
+         *
+
+         * VALIDATION_ERROR: 検証エラー - 入力値の検証で失敗
+
+         *
+
+         * NOT_FOUND: 未検出 - 指定されたリソースが存在しない
+
+         *
+
+         * ALREADY_EXISTS: 既存 - リソースが既に存在し、重複が許可されない
+
+         *
+
+         * BUSINESS_RULE_VIOLATION: ビジネスルール違反 - ビジネスロジックの制約に違反
+
+         *
+
+         * UNAUTHORIZED: 未認証 - 認証が必要であるが認証されていない
+
+         *
+
+         * FORBIDDEN: 禁止 - 認証されているが権限が不足
+
+         *
+
+         * INTERNAL_ERROR: 内部エラー - システム内部で予期しないエラーが発生
+
+         *
+
+         * DATABASE_ERROR: データベースエラー - データベース操作中のエラー
+
+         *
+
+         * EXTERNAL_SERVICE_ERROR: 外部サービスエラー - 外部APIやサービスでのエラー
+
+         * @enum {string}
+
+         */
+
     'Models.DomainErrorType':
       | 'VALIDATION_ERROR'
       | 'NOT_FOUND'
@@ -4044,76 +5048,248 @@ export interface components {
       | 'INTERNAL_ERROR'
       | 'DATABASE_ERROR'
       | 'EXTERNAL_SERVICE_ERROR'
-    /** @description Error context for domain operations */
+    /** @description ドメイン操作で発生したエラーのコンテキストモデル。
+     *     ビジネス層の例外情報と HTTP レイヤーの問題詳細を紐づけ、ログ出力やモニタリングを容易にする。 */
     'Models.DomainOperationError': {
-      /** @description Domain error details */
+      /** @description ドメインエラーの詳細情報。ビジネスロジック層で発生した要因を保持する。 */
       domainError: components['schemas']['Models.DomainErrorDetails']
-      /** @description Problem details for HTTP response */
+      /** @description HTTP レスポンスとして返却可能な ProblemDetails。クライアントへの通知に使用。 */
       problemDetails: components['schemas']['Models.ProblemDetails']
       /**
        * Format: date-time
-       * @description Occurred at timestamp
+       * @description エラーが発生した日時 (UTC)。再発防止のタイムライン分析に活用。
        */
       occurredAt: string
-      /** @description Operation context */
+      /** @description エラーが発生した操作名やユースケース。例: `CreateReservation`。 */
       operation?: string
-      /** @description Stack trace for debugging (only in development) */
+      /** @description デバッグ用のスタックトレース。開発・検証環境のみで出力する。 */
       stackTrace?: string
     }
-    /** @description 署名付きダウンロードURL取得レスポンス */
+    /** @description 添付ファイルをダウンロードするための署名付きURLを返すレスポンス。 */
     'Models.DownloadUrlResponse': {
-      /** @description 署名付きダウンロードURL */
+      /** @description 一時的に有効なダウンロード用URL。 */
       downloadUrl: string
       /**
        * Format: date-time
-       * @description URL有効期限
+       * @description 署名付きURLの有効期限。
        */
       expiresAt: string
     }
+    /** @description 予約が下書き段階にある場合の状態情報。 */
     'Models.DraftBookingStatus': {
-      /** @enum {string} */
+      /**
+       * @description 固定値draft。下書き状態であることを示す。
+       * @enum {string}
+       */
       type: 'draft'
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 下書きが作成された日時。
+       */
       createdAt: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 下書きの有効期限。未設定の場合は期限なし。
+       */
       expiresAt?: string
     }
+    /** @description 予約が下書き段階にある場合の状態情報。 */
     'Models.DraftBookingStatusUpdate': {
-      /** @enum {string} */
+      /**
+       * @description 固定値draft。下書き状態であることを示す。
+       * @enum {string}
+       */
       type?: 'draft'
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 下書きが作成された日時。
+       */
       createdAt?: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 下書きの有効期限。未設定の場合は期限なし。
+       */
       expiresAt?: string
     }
-    /** @description Email verification request */
+    /** @description メールアドレス確認を完了させるリクエスト。 */
     'Models.EmailVerificationRequest': {
-      /** @description Email verification token */
+      /** @description メールに記載された確認トークン。 */
       token: string
     }
+    /** @description メールアドレス確認フローの進行状況を保持するモデル。 */
     'Models.EmailVerificationStateDetail': {
+      /** @description 現在の確認状態区分。 */
       type: components['schemas']['Models.EmailVerificationStateType']
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 確認完了日時。未確認の場合はnull。
+       */
       verifiedAt?: string
+      /** @description 確認メールに含めるトークン。再送未実施の場合はnull。 */
       token?: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description トークンの有効期限。
+       */
       expiresAt?: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 確認メールを送信した日時。
+       */
       sentAt?: string
     }
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * メール確認状態区分 - メールアドレスの確認状態を表す区分
+
+         *
+
+         *
+
+         * verified: 確認済み - メールアドレスが確認された状態
+
+         *
+
+         * unverified: 未確認 - メールアドレスが未確認の状態
+
+         *
+
+         * pending: 確認中 - 確認メールを送信し、確認待ちの状態
+
+         * @enum {string}
+
+         */
+
     'Models.EmailVerificationStateType': 'verified' | 'unverified' | 'pending'
+    /** @description API全体で共通利用する業務エラーの基本モデル。 */
     'Models.Error': {
+      /** @description エラーの種類を特定するアプリケーション固有コード。 */
       code: string
+      /** @description ユーザーまたはオペレーターに提示するエラーメッセージ。 */
       message: string
+      /** @description デバッグやサポート対応に役立つ追加情報。任意項目。 */
       details?: {
         [key: string]: unknown
       }
     }
     /**
-     * @description Standardized error codes for consistent error handling
-     * @enum {string}
-     */
+
+         * @description
+
+         * エラーコードタイプ区分 - 一貫したエラー処理のための標準化されたエラーコード
+
+         * // 認証・認可 (1xxx)
+
+         *
+
+         *
+
+         * 1001: 認証必須 - アクセスには認証が必要
+
+         *
+
+         * 1002: 無効な資格情報 - ユーザー名またはパスワードが不正
+
+         *
+
+         * 1003: トークン期限切れ - 認証トークンが期限切れ
+
+         *
+
+         * 1004: トークン無効 - 認証トークンが無効または破損
+
+         *
+
+         * 1005: 権限不足 - 操作を実行する権限が不足
+
+         *
+
+         * 1006: アカウントロック - アカウントがロックされている
+
+         *
+
+         * 1007: 2要素認証必須 - 2要素認証の入力が必要
+
+         * // バリデーション (2xxx)
+
+         *
+
+         * 2001: 検証失敗 - 入力データの検証に失敗
+
+         *
+
+         * 2002: 不正な形式 - データ形式が不正
+
+         *
+
+         * 2003: 必須フィールド欠落 - 必須フィールドが入力されていない
+
+         *
+
+         * 2004: 範囲外の値 - 値が許可された範囲を超えている
+
+         *
+
+         * 2005: 重複値 - 一意であるべき値が重複している
+
+         * // ビジネスロジック (3xxx)
+
+         *
+
+         * 3001: リソース未検出 - 指定されたリソースが存在しない
+
+         *
+
+         * 3002: リソース既存 - リソースが既に存在する
+
+         *
+
+         * 3003: 操作不可 - 現在の状態では操作が許可されない
+
+         *
+
+         * 3004: ビジネスルール違反 - ビジネスルールに違反している
+
+         *
+
+         * 3005: 残高不足 - ポイントや残高が不足
+
+         *
+
+         * 3006: 予約競合 - 予約時間が重複している
+
+         *
+
+         * 3007: 容量超過 - 利用可能な容量を超えている
+
+         * // システム (4xxx)
+
+         *
+
+         * 4001: 内部サーバーエラー - サーバー内部でエラーが発生
+
+         *
+
+         * 4002: サービス利用不可 - サービスが一時的に利用できない
+
+         *
+
+         * 4003: データベースエラー - データベース処理中にエラーが発生
+
+         *
+
+         * 4004: 外部サービスエラー - 外部サービスでエラーが発生
+
+         *
+
+         * 4005: レート制限超過 - APIレート制限を超えた
+
+         * @enum {string}
+
+         */
+
     'Models.ErrorCodeType':
       | '1001'
       | '1002'
@@ -4139,37 +5315,81 @@ export interface components {
       | '4003'
       | '4004'
       | '4005'
+    /** @description ファセット集計の単一要素を表すモデル。
+     *     カテゴリや価格帯などの値と、その件数を組みで保持する。 */
     'Models.Facet': {
-      /** @description Facet value */
+      /** @description ファセットの値。例: `メンズ向け` や `個室あり`。 */
       value: string
       /**
        * Format: int32
-       * @description Number of items with this value
+       * @description 該当値に一致する件数。
        */
       count: number
     }
+    /** @description 支払い失敗状態の詳細 */
     'Models.FailedPaymentStatus': {
-      /** @enum {string} */
+      /**
+       * @description 状態種別（failed 固定値）
+       * @enum {string}
+       */
       type: 'failed'
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 支払いが失敗した日時
+       */
       failedAt: string
+      /** @description 失敗理由の説明 */
       reason: string
-      /** @default false */
+      /**
+       * @description 再試行が可能かどうか
+       * @default false
+       */
       retryable: boolean
     }
+    /** @description 支払い失敗状態の詳細 */
     'Models.FailedPaymentStatusUpdate': {
-      /** @enum {string} */
+      /**
+       * @description 状態種別（failed 固定値）
+       * @enum {string}
+       */
       type?: 'failed'
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 支払いが失敗した日時
+       */
       failedAt?: string
+      /** @description 失敗理由の説明 */
       reason?: string
-      /** @default false */
+      /**
+       * @description 再試行が可能かどうか
+       * @default false
+       */
       retryable: boolean
     }
     /**
-     * @description ファイルタイプ
-     * @enum {string}
-     */
+
+         * @description
+
+         * ファイルタイプ区分 - アップロードされるファイルの種類を分類
+
+         *
+
+         *
+
+         * image: 画像 - 写真やイラスト等の画像ファイル（jpg, png, gif等）
+
+         *
+
+         * document: ドキュメント - PDF、Word、Excel等の文書ファイル
+
+         *
+
+         * other: その他 - 上記に分類されないファイル
+
+         * @enum {string}
+
+         */
+
     'Models.FileType': 'image' | 'document' | 'other'
     /** @description Customer bookings filter parameters */
     'Models.GetCustomerBookingsRequest': {
@@ -4183,18 +5403,18 @@ export interface components {
       /** Format: date-time */
       to?: string
     }
-    /** @description 署名付きアップロードURL取得リクエスト */
+    /** @description 外部ストレージへ直接アップロードするための署名付きURLを要求するリクエスト。 */
     'Models.GetUploadUrlRequest': {
-      /** @description ファイル名 */
+      /** @description アップロード予定のファイル名。 */
       filename: string
-      /** @description Content-Type */
+      /** @description アップロード予定ファイルのContent-Type。 */
       content: string
       /**
        * Format: int32
-       * @description ファイルサイズ（バイト）
+       * @description アップロード予定ファイルのサイズ（バイト単位）。
        */
       size: number
-      /** @description サロンID（オプション） */
+      /** @description ファイルをひも付けるサロンID。任意設定。 */
       salonId?: string
     }
     'Models.HairInfo': {
@@ -4204,339 +5424,630 @@ export interface components {
       chemicalHistory: string[]
       notes: string | null
     }
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * 髪の太さ区分 - 髪の毛一本の太さを分類、カットやスタイリングの参考に使用
+
+         *
+
+         *
+
+         * fine: 細毛 - 柔らかく細い髪、ボリュームが出にくい
+
+         *
+
+         * medium: 普通毛 - 平均的な太さの髪、扱いやすい
+
+         *
+
+         * thick: 太毛 - しっかりとした太い髪、ボリュームが出やすい
+
+         * @enum {string}
+
+         */
+
     'Models.HairThicknessType': 'fine' | 'medium' | 'thick'
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * 髪質タイプ区分 - 顧客の髪のクセや形状を分類、適切な施術提案に使用
+
+         *
+
+         *
+
+         * straight: ストレート - 直毛、クセがほとんどない髪質
+
+         *
+
+         * wavy: ウェービー - 緩やかな波状、S字カーブの髪質
+
+         *
+
+         * curly: カーリー - 明確なカール、螺旋状の髪質
+
+         *
+
+         * coily: コイリー - 非常に細かいカール、ジグザグ状の髪質
+
+         * @enum {string}
+
+         */
+
     'Models.HairType': 'straight' | 'wavy' | 'curly' | 'coily'
+    /** @description 個別サービスのヘルスチェック結果モデル。
+     *     外部サービス連携や内部マイクロサービスごとの状態を把握する。 */
     'Models.HealthCheck': {
-      /** @description Service name */
+      /** @description 対象サービス名またはコンポーネント識別子。 */
       name: string
       /**
-       * @description Service status
+       * @description 対象サービスの稼働状態。`up` は正常、`down` は停止、`degraded` は部分的な性能低下を示す。
        * @enum {string}
        */
       status: 'up' | 'down' | 'degraded'
       /**
        * Format: int32
-       * @description Response time in milliseconds
+       * @description ヘルスチェックに要した時間 (ミリ秒)。応答遅延の指標。
        */
       responseTime?: number
-      /** @description Error message if service is down */
+      /** @description 停止時のエラーメッセージや原因メモ。 */
       error?: string
-      /** @description Additional details */
+      /** @description 監視対象固有の追加詳細。再試行回数や依存サービス名などを含める。 */
       details?: {
         [key: string]: unknown
       }
     }
-    /** @description API health status */
+    /** @description API ヘルスチェック結果モデル。
+     *     監視基盤や運用ダッシュボードにシステム状態を提供し、早期異常検知を実現する。 */
     'Models.HealthStatus': {
       /**
-       * @description Overall health status
+       * @description システム全体の稼働状態。`healthy` は正常、`degraded` は性能低下、`unhealthy` は停止を表す。
        * @enum {string}
        */
       status: 'healthy' | 'degraded' | 'unhealthy'
-      /** @description API version */
+      /** @description 稼働中の API バージョン。運用チームのバージョン管理に利用。 */
       version: string
       /**
        * Format: date-time
-       * @description Server timestamp
+       * @description 判定実行時点のサーバー時刻 (UTC)。
        */
       timestamp: string
-      /** @description Individual service health checks */
+      /** @description 各内部サービスや依存コンポーネントのヘルスチェック結果一覧。 */
       checks: components['schemas']['Models.HealthCheck'][]
-      /** @description Additional metadata */
+      /** @description 監視環境固有の追加メタ情報。必要に応じてキーを拡張する。 */
       metadata?: {
         [key: string]: unknown
       }
     }
+    /** @description 施術が進行中の場合の状態情報。 */
     'Models.InProgressBookingStatus': {
-      /** @enum {string} */
+      /**
+       * @description 固定値in_progress。施術中であることを示す。
+       * @enum {string}
+       */
       type: 'in_progress'
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 施術を開始した日時。
+       */
       startedAt: string
+      /** @description 施術を行っているブースや席の名称。未設定の場合はnull。 */
       stationName?: string
     }
+    /** @description 施術が進行中の場合の状態情報。 */
     'Models.InProgressBookingStatusUpdate': {
-      /** @enum {string} */
+      /**
+       * @description 固定値in_progress。施術中であることを示す。
+       * @enum {string}
+       */
       type?: 'in_progress'
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 施術を開始した日時。
+       */
       startedAt?: string
+      /** @description 施術を行っているブースや席の名称。未設定の場合はnull。 */
       stationName?: string
     }
-    /** @description Inventory alert */
+    /** @description 在庫に関するアラート情報 */
     'Models.InventoryAlert': {
+      /** @description 対象在庫 ID */
       itemId: components['schemas']['Models.InventoryId']
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 設定した閾値
+       */
       threshold: number
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 警告発生時の在庫数
+       */
       currentStock: number
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 警告が発生した日時
+       */
       triggeredAt: string
+      /** @description 関連する在庫 ID */
       inventoryId: components['schemas']['Models.InventoryId']
-      /** @enum {string} */
+      /**
+       * @description アラート種別
+       * @enum {string}
+       */
       alert: 'low_stock' | 'expiring' | 'expired' | 'overstock'
+      /** @description 通知メッセージ */
       message: string
-      /** @enum {string} */
+      /**
+       * @description 重要度レベル
+       * @enum {string}
+       */
       severity: 'info' | 'warning' | 'critical'
+      /** @description 確認済みかどうか */
       acknowledged?: boolean
+      /** @description 確認したスタッフ ID */
       acknowledgedBy?: components['schemas']['Models.StaffId']
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 確認日時
+       */
       acknowledgedAt?: string
     }
     /**
      * Format: uuid
-     * @description Branded UUID type for Inventory ID
+     * @description 在庫アイテムや消耗品を識別するブランド付きUUID。
      */
     'Models.InventoryId': string
-    /** @description Inventory item */
+    /** @description サロンで管理する在庫アイテムの基本情報 */
     'Models.InventoryItem': {
+      /** @description 在庫 ID */
       id: components['schemas']['Models.InventoryId']
+      /** @description 在庫を管理するサロン ID */
       salonId: components['schemas']['Models.SalonId']
-      /** @description Product code/SKU */
+      /** @description 商品コード・SKU */
       productCode: string
-      /** @description Product name */
+      /** @description 商品名 */
       productName: string
-      /** @description Product description */
+      /** @description 商品説明文 */
       description?: string
-      /** @description Category */
+      /** @description 分類カテゴリ */
       category: string
-      /** @description Brand */
+      /** @description ブランド名 */
       brand?: string
-      /** @description Supplier information */
+      /** @description 仕入先情報 */
       supplier?: string
       /**
        * Format: float
-       * @description Current stock quantity
+       * @description 現在の在庫数量
        */
       currentStock: number
       /**
        * Format: float
-       * @description Minimum stock level
+       * @description 最低在庫数（警告閾値）
        */
       minimumStock: number
       /**
        * Format: float
-       * @description Maximum stock level
+       * @description 最大在庫数（上限管理用）
        */
       maximumStock?: number
-      /** @description Unit of measurement */
+      /** @description 数量の単位 */
       unit: string
       /**
        * Format: float
-       * @description Unit cost
+       * @description 仕入単価
        */
       unitCost: number
       /**
        * Format: float
-       * @description Selling price (if sold to customers)
+       * @description 顧客販売価格
        */
       sellingPrice?: number
-      /** @description Stock status */
+      /** @description 在庫状態区分 */
       status: components['schemas']['Models.InventoryStatusType']
-      /** @description Location in salon */
+      /** @description サロン内の保管場所 */
       location?: string
       /**
        * Format: date-time
-       * @description Expiration date
+       * @description 賞味・使用期限
        */
       expirationDate?: string
       /**
        * Format: date-time
-       * @description Last restocked date
+       * @description 直近の入庫日時
        */
       lastRestocked?: string
-      /** @description Notes */
+      /** @description 備考メモ */
       notes?: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード作成日時。
+       */
       createdAt: string
+      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
       createdBy: string | null
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード最終更新日時。
+       */
       updatedAt: string
+      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
       updatedBy: string | null
     }
+    /** @description 在庫アイテムを新規登録する入力モデル */
     'Models.InventoryItemCreateInput': {
+      /** @description 在庫を追加するサロン ID */
       salonId: components['schemas']['Models.SalonId']
+      /** @description 商品コード・SKU */
       productCode: string
+      /** @description 商品名 */
       productName: string
+      /** @description 商品説明文 */
       description?: string
+      /** @description 分類カテゴリ */
       category: string
+      /** @description ブランド名 */
       brand?: string
+      /** @description 仕入先情報 */
       supplier?: string
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 登録時点の在庫数量
+       */
       currentStock: number
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 最低在庫数
+       */
       minimumStock: number
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 最大在庫数
+       */
       maximumStock?: number
+      /** @description 数量単位 */
       unit: string
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 仕入単価
+       */
       unitCost: number
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 顧客販売価格
+       */
       sellingPrice?: number
+      /** @description 保管場所 */
       location?: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 賞味・使用期限
+       */
       expirationDate?: string
+      /** @description 備考メモ */
       notes?: string
     }
+    /** @description 在庫アイテムの情報更新入力モデル */
     'Models.InventoryItemUpdateInput': {
+      /** @description 更新後の商品名 */
       productName?: string
+      /** @description 更新後の商品説明 */
       description?: string
+      /** @description 更新後のカテゴリ */
       category?: string
+      /** @description 更新後のブランド名 */
       brand?: string
+      /** @description 更新後の仕入先情報 */
       supplier?: string
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 更新後の最低在庫数
+       */
       minimumStock?: number
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 更新後の最大在庫数
+       */
       maximumStock?: number
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 更新後の仕入単価
+       */
       unitCost?: number
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 更新後の販売価格
+       */
       sellingPrice?: number
+      /** @description 更新後の保管場所 */
       location?: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 更新後の賞味・使用期限
+       */
       expirationDate?: string
+      /** @description 在庫状態の更新 */
       status?: components['schemas']['Models.InventoryStatusType']
+      /** @description 更新後の備考 */
       notes?: string
     }
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * 在庫ステータス区分 - 商品・材料の在庫状態を表す区分
+
+         *
+
+         *
+
+         * in_stock: 在庫あり - 十分な在庫量がある状態
+
+         *
+
+         * low_stock: 在庫僅少 - 在庫量が設定された最小量に近づいている状態
+
+         *
+
+         * out_of_stock: 在庫切れ - 在庫がゼロになった状態
+
+         *
+
+         * ordered: 発注済み - 補充のための発注が行われた状態
+
+         *
+
+         * discontinued: 廃番 - 商品の取り扱いを終了した状態
+
+         * @enum {string}
+
+         */
+
     'Models.InventoryStatusType':
       | 'in_stock'
       | 'low_stock'
       | 'out_of_stock'
       | 'ordered'
       | 'discontinued'
+    /** @description 在庫の入出庫トランザクション */
     'Models.InventoryTransaction': {
+      /** @description トランザクション ID */
       id: string
+      /** @description 対象在庫アイテム ID */
       itemId: components['schemas']['Models.InventoryId']
+      /** @description 処理を行うサロン ID */
       salonId: components['schemas']['Models.SalonId']
-      /** @enum {string} */
+      /**
+       * @description 在庫操作区分（入庫/出庫/調整/移動）
+       * @enum {string}
+       */
       type: 'in' | 'out' | 'adjustment' | 'transfer'
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 操作した数量
+       */
       quantity: number
+      /** @description 操作理由 */
       reason: string
+      /** @description 操作を担当したスタッフ ID */
       performedBy: components['schemas']['Models.StaffId']
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 操作日時
+       */
       occurredAt: string
+      /** @description 関連する外部参照 ID */
       referenceId?: string
+      /** @description 備考メモ */
       notes?: string
+      /** @description 追加のメタデータ */
       metadata?: {
         [key: string]: unknown
       }
     }
-    /** @description Login request */
+    /** @description ユーザーがログインする際の認証リクエスト。 */
     'Models.LoginRequest': {
-      /** @description User's email address */
+      /** @description ログインに使用するメールアドレス。 */
       email: string
-      /** @description User's password */
+      /** @description ログイン用パスワード。 */
       password: string
       /**
-       * @description Remember me flag for extended session
+       * @description 永続セッションを希望するかどうかのフラグ。
        * @default false
        */
       rememberMe: boolean
-      /** @description Two-factor authentication code (if 2FA is enabled) */
+      /** @description 2要素認証が有効な場合に入力するワンタイムコード。 */
       twoFactorCode?: string
     }
-    /** @description Login response */
+    /** @description ログイン成功時に返却するトークン情報。 */
     'Models.LoginResponse': {
-      /** @description Access token for API requests */
+      /** @description API呼び出しに利用するアクセストークン。 */
       accessToken: string
-      /** @description Refresh token for obtaining new access tokens */
+      /** @description アクセストークン再発行に使用するリフレッシュトークン。 */
       refreshToken: string
       /**
-       * @description Token type (always 'Bearer')
+       * @description トークン種別。常にBearer。
        * @default Bearer
        */
       token: string
       /**
        * Format: int32
-       * @description Access token expiry in seconds
+       * @description アクセストークンの有効期限（秒）。
        */
       expiresIn: number
-      /** @description Logged in user information */
+      /** @description ログインしたユーザーの情報。 */
       user: components['schemas']['Models.User']
     }
     /**
      * Format: uuid
-     * @description Branded UUID type for Loyalty Tier ID
+     * @description ロイヤルティプログラムの会員ランクを識別するブランド付きUUID。
      */
     'Models.LoyaltyTierId': string
     /**
-     * @description Loyalty tier enum
-     * @enum {string}
-     */
+
+         * @description
+
+         * ロイヤルティティア区分 - 顧客ロイヤルティプログラムの会員ランク
+
+         *
+
+         *
+
+         * bronze: ブロンズ - 基本会員ランク、初期段階の特典を提供
+
+         *
+
+         * silver: シルバー - 中級会員ランク、標準的な特典を提供
+
+         *
+
+         * gold: ゴールド - 上級会員ランク、優待特典を提供
+
+         *
+
+         * platinum: プラチナ - 最上級会員ランク、最高レベルの特典を提供
+
+         * @enum {string}
+
+         */
+
     'Models.LoyaltyTierType': 'bronze' | 'silver' | 'gold' | 'platinum'
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * メイクアップサブカテゴリー区分 - メイクアップサービスの詳細分類
+
+         *
+
+         *
+
+         * everyday_makeup: デイリーメイク - 普段使いのナチュラルメイク
+
+         *
+
+         * event_makeup: イベントメイク - パーティーやイベント用の華やかなメイク
+
+         *
+
+         * bridal_makeup: ブライダルメイク - 花嫁向けの特別なメイクアップ
+
+         *
+
+         * photoshoot_makeup: 撮影用メイク - 写真撮影用のプロフェッショナルメイク
+
+         * @enum {string}
+
+         */
+
     'Models.MakeupSubCategoryType':
       | 'everyday_makeup'
       | 'event_makeup'
       | 'bridal_makeup'
       | 'photoshoot_makeup'
-    /** @description Material usage record */
+    /** @description 施術で使用した資材の記録 */
     'Models.MaterialUsage': {
+      /** @description 使用した在庫 ID */
       inventoryId: components['schemas']['Models.InventoryId']
+      /** @description 資材名 */
       productName: string
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 使用量
+       */
       quantity: number
+      /** @description 数量単位 */
       unit: string
+      /** @description 備考メモ */
       notes?: string
     }
-    /** @description Medical chart for customer */
+    /** @description 顧客ごとのカルテ情報 */
     'Models.MedicalChart': {
+      /** @description カルテ ID */
       id: components['schemas']['Models.MedicalChartId']
+      /** @description 対象顧客 ID */
       customerId: components['schemas']['Models.CustomerId']
-      /** @description Allergies and sensitivities */
+      /** @description アレルギー・敏感情報 */
       allergies?: string[]
-      /** @description Scalp condition */
+      /** @description 頭皮状態のメモ */
       scalpCondition?: string
-      /** @description Hair condition */
+      /** @description 毛髪状態のメモ */
       hairCondition?: string
-      /** @description Previous chemical treatments */
+      /** @description 過去に実施したケミカル施術履歴 */
       previousTreatments?: components['schemas']['Models.PreviousTreatment'][]
-      /** @description Medical conditions to be aware of */
+      /** @description 注意が必要な持病・体調情報 */
       medicalConditions?: string
-      /** @description Preferred products */
+      /** @description 好みの商材・ブランド */
       preferredProducts?: string[]
-      /** @description Products to avoid */
+      /** @description 避けるべき商材 */
       avoidProducts?: string[]
-      /** @description General notes */
+      /** @description 自由記述メモ */
       notes?: string
       /**
        * Format: date-time
-       * @description Last updated date
+       * @description 最終更新日時
        */
       lastUpdated: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード作成日時。
+       */
       createdAt: string
+      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
       createdBy: string | null
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード最終更新日時。
+       */
       updatedAt: string
+      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
       updatedBy: string | null
     }
+    /** @description カルテを新規作成する入力モデル */
     'Models.MedicalChartCreateInput': {
+      /** @description 対象顧客 ID */
       customerId: components['schemas']['Models.CustomerId']
+      /** @description アレルギー情報 */
       allergies?: string[]
+      /** @description 頭皮状態 */
       scalpCondition?: string
+      /** @description 毛髪状態 */
       hairCondition?: string
+      /** @description 過去施術の履歴 */
       previousTreatments?: components['schemas']['Models.PreviousTreatment'][]
+      /** @description 注意すべき体調・持病 */
       medicalConditions?: string
+      /** @description 好みの商材 */
       preferredProducts?: string[]
+      /** @description 避けるべき商材 */
       avoidProducts?: string[]
+      /** @description その他メモ */
       notes?: string
     }
     /**
      * Format: uuid
-     * @description Branded UUID type for Medical Chart ID
+     * @description カルテ（メディカルチャート）を識別するブランド付きUUID。
      */
     'Models.MedicalChartId': string
+    /** @description カルテ情報を更新する入力モデル */
     'Models.MedicalChartUpdateInput': {
+      /** @description アレルギー情報 */
       allergies?: string[]
+      /** @description 頭皮状態 */
       scalpCondition?: string
+      /** @description 毛髪状態 */
       hairCondition?: string
+      /** @description 過去施術の履歴 */
       previousTreatments?: components['schemas']['Models.PreviousTreatment'][]
+      /** @description 注意すべき体調・持病 */
       medicalConditions?: string
+      /** @description 好みの商材 */
       preferredProducts?: string[]
+      /** @description 避けるべき商材 */
       avoidProducts?: string[]
+      /** @description その他メモ */
       notes?: string
     }
     'Models.MembershipBenefitDetail': {
@@ -4551,7 +6062,42 @@ export interface components {
       value: number | null
       description: string | null
     }
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * 会員特典タイプ区分 - 会員ランクに応じて提供される特典の種類
+
+         *
+
+         *
+
+         * discount_rate: 割引率 - サービス料金に対するパーセンテージ割引
+
+         *
+
+         * point_multiplier: ポイント倍率 - 通常のポイント付与率に対する乗数
+
+         *
+
+         * priority_booking: 優先予約 - 一般公開前の優先的な予約権利
+
+         *
+
+         * free_service: 無料サービス - 特定サービスの無料提供
+
+         *
+
+         * birthday_special: 誕生日特典 - 誕生月に提供される特別サービス
+
+         *
+
+         * exclusive_access: 特別アクセス権 - VIP専用メニューや特別イベントへの参加権
+
+         * @enum {string}
+
+         */
+
     'Models.MembershipBenefitType':
       | 'discount_rate'
       | 'point_multiplier'
@@ -4576,46 +6122,140 @@ export interface components {
       /** Format: date-time */
       pointsExpireAt: string | null
     }
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * 会員ランク区分 - 顧客の会員ランクを表し、特典・優待内容を決定する区分
+
+         *
+
+         *
+
+         * regular: 一般会員 - 基本ランク、標準的なサービスを提供
+
+         *
+
+         * silver: シルバー会員 - 中級ランク、5%の基本割引等の特典付与
+
+         *
+
+         * gold: ゴールド会員 - 上級ランク、10%の割引や優先予約等の特典付与
+
+         *
+
+         * platinum: プラチナ会員 - 最上級ランク、15%の割引や特別サービス提供
+
+         *
+
+         * vip: VIP会員 - 特別会員、完全カスタマイズされた特別待遇を提供
+
+         * @enum {string}
+
+         */
+
     'Models.MembershipTierType':
       | 'regular'
       | 'silver'
       | 'gold'
       | 'platinum'
       | 'vip'
+    /** @description 税抜・税込計算に利用する金額モデル。 */
     'Models.Money': {
-      /** Format: int64 */
+      /**
+       * Format: int64
+       * @description 通貨の最小単位で表現した金額値。
+       */
       value: number
+      /** @description 使用する通貨コード。 */
       currency: components['schemas']['Models.CurrencyCodeType']
+      /** @description 適用税率。任意設定。 */
       taxRate?: components['schemas']['Models.decimal']
     }
+    /** @description 税抜・税込計算に利用する金額モデル。 */
     'Models.MoneyUpdate': {
-      /** Format: int64 */
+      /**
+       * Format: int64
+       * @description 通貨の最小単位で表現した金額値。
+       */
       value?: number
+      /** @description 使用する通貨コード。 */
       currency?: components['schemas']['Models.CurrencyCodeType']
+      /** @description 適用税率。任意設定。 */
       taxRate?: components['schemas']['Models.decimal']
     }
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * ネイルサブカテゴリー区分 - ネイルケアサービスの詳細分類
+
+         *
+
+         *
+
+         * manicure: マニキュア - 手の爪のケアと装飾
+
+         *
+
+         * pedicure: ペディキュア - 足の爪のケアと装飾
+
+         *
+
+         * gel_nail: ジェルネイル - UV/LEDライトで硬化させるジェルネイル
+
+         *
+
+         * nail_art: ネイルアート - デザインや装飾を施したアートネイル
+
+         *
+
+         * nail_removal: ネイルリムーバル - ジェルやマニキュアの除去サービス
+
+         * @enum {string}
+
+         */
+
     'Models.NailSubCategoryType':
       | 'manicure'
       | 'pedicure'
       | 'gel_nail'
       | 'nail_art'
       | 'nail_removal'
+    /** @description 来店が確認できなかった場合の状態情報。 */
     'Models.NoShowBookingStatus': {
-      /** @enum {string} */
+      /**
+       * @description 固定値no_show。無断キャンセル状態であることを示す。
+       * @enum {string}
+       */
       type: 'no_show'
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 無断キャンセルとして記録した日時。
+       */
       recordedAt: string
-      /** @default false */
+      /**
+       * @description ペナルティを適用したかどうか。既定値はfalse。
+       * @default false
+       */
       penaltyApplied: boolean
     }
+    /** @description 来店が確認できなかった場合の状態情報。 */
     'Models.NoShowBookingStatusUpdate': {
-      /** @enum {string} */
+      /**
+       * @description 固定値no_show。無断キャンセル状態であることを示す。
+       * @enum {string}
+       */
       type?: 'no_show'
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 無断キャンセルとして記録した日時。
+       */
       recordedAt?: string
-      /** @default false */
+      /**
+       * @description ペナルティを適用したかどうか。既定値はfalse。
+       * @default false
+       */
       penaltyApplied: boolean
     }
     /** @description Notification preferences model */
@@ -4632,66 +6272,161 @@ export interface components {
        */
       reminderHours: number
     }
+    /** @description 顧客への通知チャネルとリマインダー設定をまとめたモデル。 */
     'Models.NotificationSettings': {
+      /** @description 利用を許可する通知チャネルの一覧。 */
       types: components['schemas']['Models.NotificationType'][]
+      /** @description リマインダー送信タイミングの一覧。 */
       reminderTimings: components['schemas']['Models.ReminderTimingType'][]
+      /** @description 通知機能全体の有効・無効フラグ。 */
       enabled: boolean
     }
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * 通知タイプ区分 - 顧客への通知・連絡手段の種類
+
+         *
+
+         *
+
+         * email: Eメール - 電子メールによる通知
+
+         *
+
+         * sms: SMS - ショートメッセージサービスによる通知
+
+         *
+
+         * push: プッシュ通知 - モバイルアプリのプッシュ通知
+
+         *
+
+         * line: LINE - LINEメッセージングサービスによる通知
+
+         * @enum {string}
+
+         */
+
     'Models.NotificationType': 'email' | 'sms' | 'push' | 'line'
-    /** @description Offset-based pagination parameters */
+    /** @description オフセット方式のページネーション指定モデル。
+     *     既存基盤や BI 連携でカーソル方式に移行できないケース向けの互換パラメータを提供する。 */
     'Models.OffsetPaginationParams': {
       /**
        * Format: int32
-       * @description Maximum number of items to return (1-100)
+       * @description 1ページあたりの取得件数上限 (1〜100)。指定が無い場合は既定値 20 を適用。
        * @default 20
        */
       limit: number
       /**
        * Format: int32
-       * @description Number of items to skip
+       * @description スキップする件数。リスト冒頭からのオフセット値を指定する。
        * @default 0
        */
       offset: number
-      /** @description Field to sort by */
+      /** @description ソート対象フィールド。予約一覧や顧客一覧の表示順を決定する。 */
       sortBy?: string
       /**
-       * @description Sort order
+       * @description ソート順序。`asc` は昇順、`desc` は降順を表す。
        * @default asc
        * @enum {string}
        */
       sortOrder: 'asc' | 'desc'
     }
+    /** @description 曜日別および特定日の営業時間を管理するモデル。 */
     'Models.OpeningHours': {
+      /** @description 対象となる曜日。特定日設定のみの場合はnull。 */
       dayOfWeek: components['schemas']['Models.DayOfWeekType'] | null
-      /** Format: date */
+      /**
+       * Format: date
+       * @description 特別営業日の個別日付。通常スケジュールの場合はnull。
+       */
       date: string | null
+      /** @description 開店時刻（HH:mm形式）。未設定の場合は休業扱い。 */
       openTime: string | null
+      /** @description 閉店時刻（HH:mm形式）。未設定の場合は休業扱い。 */
       closeTime: string | null
+      /** @description 休業日かどうかを示すフラグ。 */
       isHoliday: boolean
+      /** @description 祝日名称や社内呼称などの休業理由。未設定時はnull。 */
       holidayName: string | null
+      /** @description 備考や注意事項。未設定時はnull。 */
       notes: string | null
     }
     /**
      * Format: uuid
-     * @description Branded UUID type for Order ID
+     * @description サプライヤー発注・仕入れオーダーを識別するブランド付きUUID。
      */
     'Models.OrderId': string
-    /** @description Order item detail */
+    /** @description 発注明細の詳細情報 */
     'Models.OrderItem': {
+      /** @description 紐づく在庫 ID */
       inventoryId: components['schemas']['Models.InventoryId']
+      /** @description 商品コード */
       productCode: string
+      /** @description 商品名 */
       productName: string
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 発注数量
+       */
       quantity: number
+      /** @description 数量単位 */
       unit: string
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 単価
+       */
       unitPrice: number
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 明細ごとの金額
+       */
       totalPrice: number
+      /** @description 備考メモ */
       notes?: string
     }
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * 発注ステータス区分 - 商品発注の進行状態を表す区分
+
+         *
+
+         *
+
+         * draft: 下書き - 発注内容を作成中の状態
+
+         *
+
+         * pending: 承認待ち - 発注内容が確定し、承認を待っている状態
+
+         *
+
+         * approved: 承認済み - 責任者により発注が承認された状態
+
+         *
+
+         * ordered: 発注済み - サプライヤーへ正式に発注が行われた状態
+
+         *
+
+         * shipped: 発送済み - サプライヤーから商品が発送された状態
+
+         *
+
+         * delivered: 配送完了 - 商品が到着し、受領が完了した状態
+
+         *
+
+         * cancelled: キャンセル - 発注が取り消された状態
+
+         * @enum {string}
+
+         */
+
     'Models.OrderStatusType':
       | 'draft'
       | 'pending'
@@ -4700,191 +6435,355 @@ export interface components {
       | 'shipped'
       | 'delivered'
       | 'cancelled'
-    /** @description ページネーション付き添付ファイル一覧 */
+    /** @description 添付ファイル一覧をページネーション付きで返すレスポンスモデル。 */
     'Models.PaginatedAttachments': {
-      /** @description 添付ファイル一覧 */
+      /** @description 該当ページの添付ファイル配列。 */
       items: components['schemas']['Models.Attachment'][]
       /**
        * Format: int32
-       * @description 合計件数
+       * @description 全体の添付ファイル件数。
        */
       total: number
       /**
        * Format: int32
-       * @description 現在のページ
+       * @description 現在のページ番号。
        */
       page: number
       /**
        * Format: int32
-       * @description ページあたりの件数
+       * @description 1ページあたりの取得件数。
        */
       limit: number
       /**
        * Format: int32
-       * @description 総ページ数
+       * @description 計算された総ページ数。
        */
       totalPages: number
     }
+    /** @description ページ遷移に利用するリンク情報モデル。
+     *     API クライアントや外部連携がRESTフローで次・前のリソースを辿る際に利用する。 */
     'Models.PaginationLinks': {
-      /** @description Link to current page */
+      /** @description 現在ページを指すリンク。 */
       self: string
-      /** @description Link to first page */
+      /** @description 最初のページへのリンク。総件数が確定しない場合は null。 */
       first: string | null
-      /** @description Link to last page */
+      /** @description 最後のページへのリンク。カーソル算出ができない場合は null。 */
       last: string | null
-      /** @description Link to next page */
+      /** @description 次ページへのリンク。さらに結果がある場合のみ設定される。 */
       next: string | null
-      /** @description Link to previous page */
+      /** @description 前ページへのリンク。戻り操作が不要な場合は null。 */
       prev: string | null
     }
+    /** @description ページネーションに関する統計情報モデル。
+     *     総件数やカーソル位置を保持し、フロントエンドの続き取得や無限スクロールの制御に利用する。 */
     'Models.PaginationMeta': {
       /**
        * Format: int32
-       * @description Total number of items
+       * @description 取得対象全体の総件数。件数計測ができない場合は null。
        */
       total: number | null
       /**
        * Format: int32
-       * @description Number of items per page
+       * @description 1ページあたりの取得件数。クエリパラメータ `limit` と一致する。
        */
       limit: number
-      /** @description Whether there are more pages */
+      /** @description 次ページが存在するかを示すフラグ。無限スクロールの継続判定に使用。 */
       hasMore: boolean
-      /** @description Current cursor position */
+      /** @description 現在ページのカーソル値。次リクエストで `cursor` に指定することで同位置から再開できる。 */
       cursor: string | null
-      /** @description Next cursor for pagination */
+      /** @description 次ページを取得するためのカーソル値。存在しない場合は null。 */
       nextCursor: string | null
-      /** @description Previous cursor for pagination */
+      /** @description 前ページへ戻るためのカーソル値。戻り操作が不要な場合は null。 */
       prevCursor: string | null
     }
+    /** @description 部分返金済み状態の詳細 */
     'Models.PartialRefundPaymentStatus': {
-      /** @enum {string} */
+      /**
+       * @description 状態種別（partial_refund 固定値）
+       * @enum {string}
+       */
       type: 'partial_refund'
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 返金が行われた日時
+       */
       refundedAt: string
+      /** @description 返金された金額 */
       refundAmount: components['schemas']['Models.Money']
+      /** @description 返金後に残る請求金額 */
       remainingAmount: components['schemas']['Models.Money']
+      /** @description 関連する返金 ID */
       refundId: components['schemas']['Models.RefundId']
     }
+    /** @description 部分返金済み状態の詳細 */
     'Models.PartialRefundPaymentStatusUpdate': {
-      /** @enum {string} */
+      /**
+       * @description 状態種別（partial_refund 固定値）
+       * @enum {string}
+       */
       type?: 'partial_refund'
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 返金が行われた日時
+       */
       refundedAt?: string
+      /** @description 返金された金額 */
       refundAmount?: components['schemas']['Models.MoneyUpdate']
+      /** @description 返金後に残る請求金額 */
       remainingAmount?: components['schemas']['Models.MoneyUpdate']
+      /** @description 関連する返金 ID */
       refundId?: components['schemas']['Models.RefundId']
     }
-    /** @description Password change request */
+    /** @description ログイン中ユーザーがパスワードを変更するためのリクエスト。 */
     'Models.PasswordChangeRequest': {
-      /** @description Current password for verification */
+      /** @description 本人確認のための現在パスワード。 */
       currentPassword: string
-      /** @description New password */
+      /** @description 変更後の新しいパスワード。 */
       newPassword: string
     }
-    /** @description Password reset confirmation */
+    /** @description パスワード再設定を確定するためのリクエスト。 */
     'Models.PasswordResetConfirmRequest': {
-      /** @description Password reset token from email */
+      /** @description メールで受け取った再設定トークン。 */
       token: string
-      /** @description New password */
+      /** @description 新しいパスワード。 */
       newPassword: string
     }
-    /** @description Password reset request */
+    /** @description パスワード再設定メール送信を要求するリクエスト。 */
     'Models.PasswordResetRequest': {
-      /** @description Email address of the account */
+      /** @description 対象アカウントのメールアドレス。 */
       email: string
     }
+    /** @description パスワード再設定リクエストの状態管理モデル。 */
     'Models.PasswordResetStateDetail': {
+      /** @description 現在のリセット状態区分。 */
       type: components['schemas']['Models.PasswordResetStateType']
+      /** @description リセット手続きに使用するトークン。 */
       token?: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description トークンの有効期限。
+       */
       expiresAt?: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description リセットを要求した日時。
+       */
       requestedAt?: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description リセット完了日時。未完了の場合はnull。
+       */
       completedAt?: string
     }
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * パスワードリセット状態区分 - パスワードリセットの進行状態を表す区分
+
+         *
+
+         *
+
+         * none: なし - パスワードリセットが要求されていない状態
+
+         *
+
+         * requested: リクエスト中 - パスワードリセットが要求された状態
+
+         *
+
+         * completed: 完了 - パスワードリセットが完了した状態
+
+         * @enum {string}
+
+         */
+
     'Models.PasswordResetStateType': 'none' | 'requested' | 'completed'
-    /** @description Payment record for services */
+    /** @description サロンで発生する支払いを管理する決済記録 */
     'Models.Payment': {
+      /** @description 決済レコード ID */
       id: components['schemas']['Models.PaymentId']
+      /** @description 決済が紐づくサロン ID */
       salonId: components['schemas']['Models.SalonId']
+      /** @description 支払いを行う顧客 ID */
       customerId: components['schemas']['Models.CustomerId']
+      /** @description 関連する予約 ID */
       bookingId?: components['schemas']['Models.BookingId']
+      /** @description 関連する施術記録 ID */
       treatmentRecordId?: components['schemas']['Models.TreatmentRecordId']
+      /** @description 使用した支払い方法 */
       method: components['schemas']['Models.PaymentMethodType']
+      /** @description 現在の支払い状態の詳細 */
       status: components['schemas']['Models.PaymentStatus']
+      /** @description 請求金額の内訳情報 */
       amounts: components['schemas']['Models.PaymentAmounts']
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 使用したポイント数
+       */
       pointsUsed?: number
+      /** @description 予約時に適用した預り金額 */
       depositApplied?: components['schemas']['Models.Money']
+      /** @description 未収残高がある場合の金額 */
       outstandingAmount?: components['schemas']['Models.Money']
+      /** @description 外部決済サービスの参照番号 */
       externalReference?: string
+      /** @description 発行したレシート番号 */
       receiptNumber?: string
+      /** @description 状態変遷の履歴一覧 */
       history: components['schemas']['Models.PaymentHistory'][]
+      /** @description 関連する返金記録の一覧 */
       refunds?: components['schemas']['Models.Refund'][]
+      /** @description 外部サービス連携向けのメタデータ */
       metadata?: {
         [key: string]: unknown
       }
+      /** @description スタッフ用の備考メモ */
       notes?: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード作成日時。
+       */
       createdAt: string
+      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
       createdBy: string | null
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード最終更新日時。
+       */
       updatedAt: string
+      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
       updatedBy: string | null
     }
+    /** @description 請求金額の内訳 */
     'Models.PaymentAmounts': {
+      /** @description サービス代金の税抜合計 */
       billed: components['schemas']['Models.Money']
+      /** @description 課税対象額に対する税額 */
       tax?: components['schemas']['Models.Money']
+      /** @description 割引金額の合計 */
       discount?: components['schemas']['Models.Money']
+      /** @description チップとして受領する金額 */
       tip?: components['schemas']['Models.Money']
+      /** @description 最終的な支払金額 */
       totalPayable: components['schemas']['Models.Money']
     }
+    /** @description 支払金額の内訳プレビュー */
     'Models.PaymentBreakdown': {
+      /** @description 商品の税抜小計 */
       subtotal: components['schemas']['Models.Money']
+      /** @description 適用される税額 */
       tax: components['schemas']['Models.Money']
+      /** @description 割引金額 */
       discount: components['schemas']['Models.Money']
+      /** @description ポイント適用による割引額 */
       pointsDiscount?: components['schemas']['Models.Money']
+      /** @description 支払総額 */
       total: components['schemas']['Models.Money']
     }
+    /** @description 決済登録時に利用する入力モデル */
     'Models.PaymentCreateInput': {
+      /** @description 決済を登録するサロン ID */
       salonId: components['schemas']['Models.SalonId']
+      /** @description 支払う顧客 ID */
       customerId: components['schemas']['Models.CustomerId']
+      /** @description 紐づく予約 ID */
       bookingId?: components['schemas']['Models.BookingId']
+      /** @description 紐づく施術記録 ID */
       treatmentRecordId?: components['schemas']['Models.TreatmentRecordId']
+      /** @description 利用する支払い方法 */
       method: components['schemas']['Models.PaymentMethodType']
+      /** @description 請求金額の内訳 */
       amounts: components['schemas']['Models.PaymentAmounts']
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 使用するポイント数
+       */
       pointsUsed?: number
+      /** @description 適用する預り金額 */
       depositApplied?: components['schemas']['Models.Money']
+      /** @description 外部決済参照番号 */
       externalReference?: string
+      /** @description 備考メモ */
       notes?: string
+      /** @description 外部システム連携向けメタデータ */
       metadata?: {
         [key: string]: unknown
       }
     }
+    /** @description 決済状態の変更履歴 */
     'Models.PaymentHistory': {
+      /** @description 履歴イベント ID */
       eventId: string
+      /** @description 対象となる決済 ID */
       paymentId: components['schemas']['Models.PaymentId']
+      /** @description 変更後の支払い状態 */
       status: components['schemas']['Models.PaymentStatus']
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 変更が発生した日時
+       */
       occurredAt: string
-      /** @enum {string} */
+      /**
+       * @description 操作主体の区分
+       * @enum {string}
+       */
       actor?: 'system' | 'staff' | 'customer'
+      /** @description 操作主体の ID */
       actorId?: string
+      /** @description 変更内容の補足メモ */
       note?: string
+      /** @description 履歴に紐づく追加メタデータ */
       metadata?: {
         [key: string]: unknown
       }
     }
     /**
      * Format: uuid
-     * @description Branded UUID type for Payment ID
+     * @description 決済取引や請求のレコードを識別するブランド付きUUID。
      */
     'Models.PaymentId': string
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * 支払い方法区分 - サロンで利用可能な決済手段の種類
+
+         *
+
+         *
+
+         * cash: 現金 - 現金による支払い
+
+         *
+
+         * credit_card: クレジットカード - クレジットカードによる支払い
+
+         *
+
+         * debit_card: デビットカード - 銀行口座から直接引き落としのカード支払い
+
+         *
+
+         * e_money: 電子マネー - Suica、PASMO等の電子マネーによる支払い
+
+         *
+
+         * qr_payment: QRコード決済 - PayPay、LINE Pay等のQRコード決済
+
+         *
+
+         * bank_transfer: 銀行振込 - 銀行口座への振込による支払い
+
+         *
+
+         * point: ポイント - サロンのポイントを使用した支払い
+
+         * @enum {string}
+
+         */
+
     'Models.PaymentMethodType':
       | 'cash'
       | 'credit_card'
@@ -4893,14 +6792,22 @@ export interface components {
       | 'qr_payment'
       | 'bank_transfer'
       | 'point'
+    /** @description 決済前の支払見積情報 */
     'Models.PaymentPreview': {
+      /** @description 見積対象のサロン ID */
       salonId: components['schemas']['Models.SalonId']
+      /** @description 見積対象の顧客 ID */
       customerId?: components['schemas']['Models.CustomerId']
+      /** @description 関連する予約 ID */
       bookingId?: components['schemas']['Models.BookingId']
+      /** @description 金額内訳のプレビュー */
       breakdown: components['schemas']['Models.PaymentBreakdown']
+      /** @description 推奨する支払い方法の一覧 */
       recommendedMethods: components['schemas']['Models.PaymentMethodType'][]
+      /** @description 顧客・スタッフ向けの備考 */
       notes?: string
     }
+    /** @description 支払い状態の詳細情報を表すユニオン */
     'Models.PaymentStatus':
       | components['schemas']['Models.PendingPaymentStatus']
       | components['schemas']['Models.ProcessingPaymentStatus']
@@ -4908,7 +6815,42 @@ export interface components {
       | components['schemas']['Models.FailedPaymentStatus']
       | components['schemas']['Models.RefundedPaymentStatus']
       | components['schemas']['Models.PartialRefundPaymentStatus']
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * 支払いステータス区分 - 決済処理の進行状態を表す区分
+
+         *
+
+         *
+
+         * pending: 支払い待ち - 支払いが開始されたがまだ完了していない状態
+
+         *
+
+         * processing: 処理中 - 決済処理が進行中の状態
+
+         *
+
+         * completed: 完了 - 支払いが正常に完了した状態
+
+         *
+
+         * failed: 失敗 - 支払い処理が失敗した状態
+
+         *
+
+         * refunded: 返金済み - 全額返金が完了した状態
+
+         *
+
+         * partial_refund: 部分返金 - 一部金額の返金が完了した状態
+
+         * @enum {string}
+
+         */
+
     'Models.PaymentStatusCodeType':
       | 'pending'
       | 'processing'
@@ -4916,6 +6858,7 @@ export interface components {
       | 'failed'
       | 'refunded'
       | 'partial_refund'
+    /** @description 支払い状態の詳細情報を表すユニオン */
     'Models.PaymentStatusUpdate':
       | components['schemas']['Models.PendingPaymentStatusUpdate']
       | components['schemas']['Models.ProcessingPaymentStatusUpdate']
@@ -4923,215 +6866,432 @@ export interface components {
       | components['schemas']['Models.FailedPaymentStatusUpdate']
       | components['schemas']['Models.RefundedPaymentStatusUpdate']
       | components['schemas']['Models.PartialRefundPaymentStatusUpdate']
+    /** @description 決済情報の更新入力モデル */
     'Models.PaymentUpdateInput': {
+      /** @description 変更後の支払い方法 */
       method?: components['schemas']['Models.PaymentMethodType']
+      /** @description 変更後の支払い状態 */
       status?: components['schemas']['Models.PaymentStatusUpdate']
+      /** @description 再計算した未収残高 */
       outstandingAmount?: components['schemas']['Models.MoneyUpdate']
+      /** @description 更新後の預り金額（null 指定で解除） */
       depositApplied?: components['schemas']['Models.MoneyUpdate'] | null
+      /** @description 更新後の外部参照番号（null 指定で解除） */
       externalReference?: string | null
+      /** @description 更新後のレシート番号（null 指定で解除） */
       receiptNumber?: string | null
+      /** @description 更新後の備考（null 指定で解除） */
       notes?: string | null
+      /** @description 更新後のメタデータ（null 指定で解除） */
       metadata?: {
         [key: string]: unknown
       } | null
     }
+    /** @description 予約が確認待ち段階にある場合の状態情報。 */
     'Models.PendingBookingStatus': {
-      /** @enum {string} */
+      /**
+       * @description 固定値pending。保留状態であることを示す。
+       * @enum {string}
+       */
       type: 'pending'
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 顧客から予約リクエストを受け付けた日時。
+       */
       requestedAt: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 保留状態の有効期限。未設定の場合は期限なし。
+       */
       holdExpiresAt?: string
+      /** @description 仮割り当てされたスタッフID。未確定の場合はnull。 */
       assignedStaffId?: components['schemas']['Models.StaffId']
     }
+    /** @description 予約が確認待ち段階にある場合の状態情報。 */
     'Models.PendingBookingStatusUpdate': {
-      /** @enum {string} */
+      /**
+       * @description 固定値pending。保留状態であることを示す。
+       * @enum {string}
+       */
       type?: 'pending'
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 顧客から予約リクエストを受け付けた日時。
+       */
       requestedAt?: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 保留状態の有効期限。未設定の場合は期限なし。
+       */
       holdExpiresAt?: string
+      /** @description 仮割り当てされたスタッフID。未確定の場合はnull。 */
       assignedStaffId?: components['schemas']['Models.StaffId']
     }
+    /** @description 支払い待ち状態の詳細 */
     'Models.PendingPaymentStatus': {
-      /** @enum {string} */
+      /**
+       * @description 状態種別（pending 固定値）
+       * @enum {string}
+       */
       type: 'pending'
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 支払いが登録された日時
+       */
       createdAt: string
     }
+    /** @description 支払い待ち状態の詳細 */
     'Models.PendingPaymentStatusUpdate': {
-      /** @enum {string} */
+      /**
+       * @description 状態種別（pending 固定値）
+       * @enum {string}
+       */
       type?: 'pending'
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 支払いが登録された日時
+       */
       createdAt?: string
     }
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * パーマサブカテゴリー区分 - パーマネントサービスの詳細分類
+
+         *
+
+         *
+
+         * regular_perm: 通常パーマ - コールドパーマ等の標準的なパーマ
+
+         *
+
+         * digital_perm: デジタルパーマ - 熱を使った形状記憶パーマ
+
+         *
+
+         * spiral_perm: スパイラルパーマ - 螺旋状の強いカールを作るパーマ
+
+         *
+
+         * body_wave: ボディウェーブ - 大きなウェーブを作るパーマ
+
+         *
+
+         * straightening: ストレートパーマ - 縮毛矯正や髪をストレートにする施術
+
+         * @enum {string}
+
+         */
+
     'Models.PermSubCategoryType':
       | 'regular_perm'
       | 'digital_perm'
       | 'spiral_perm'
       | 'body_wave'
       | 'straightening'
-    /** @description Permission definition */
+    /** @description 操作権限の定義 */
     'Models.Permission': {
+      /** @description 権限 ID */
       id: components['schemas']['Models.PermissionId']
-      /** @description Permission key (e.g., 'booking.create') */
+      /** @description 権限キー（例: booking.create） */
       key: string
-      /** @description Permission name */
+      /** @description 権限の名称 */
       name: string
-      /** @description Permission description */
+      /** @description 権限の説明 */
       description?: string
-      /** @description Resource type */
+      /** @description 対象リソース種別 */
       resource: string
-      /** @description Action type */
+      /** @description 許可する操作区分 */
       action: string
       /**
-       * @description Scope (own, salon, all)
+       * @description 権限の適用範囲（own/salon/all）
        * @enum {string}
        */
       scope?: 'own' | 'salon' | 'all'
     }
+    /** @description 複数権限の保有状況を確認する入力モデル */
     'Models.PermissionCheckInput': {
+      /** @description 確認対象のユーザー ID */
       userId: string
+      /** @description 確認したい権限キー一覧 */
       permissions: string[]
+      /** @description サロン単位の権限チェック時のサロン ID */
       salonId?: components['schemas']['Models.SalonId']
     }
+    /** @description 権限チェックの結果モデル */
     'Models.PermissionCheckResult': {
+      /** @description 確認対象のユーザー ID */
       userId: string
+      /** @description 各権限の判定結果一覧 */
       permissions: components['schemas']['Models.PermissionStatus'][]
     }
     /**
      * Format: uuid
-     * @description Branded UUID type for Permission ID
+     * @description アクセス許可や操作権限を識別するブランド付きUUID。
      */
     'Models.PermissionId': string
+    /** @description 個別権限の判定結果 */
     'Models.PermissionStatus': {
+      /** @description 権限キー */
       permission: string
+      /** @description 権限が付与されているかどうか */
       granted: boolean
+      /** @description 権限を付与したロール情報 */
       source?: string
     }
+    /** @description 顧客ロイヤルティポイントの累積状況を表すモデル。 */
     'Models.PointInfo': {
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 現在保持している有効ポイント数。
+       */
       currentPoints: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 累計で獲得したポイント総数。
+       */
       totalEarnedPoints: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 累計で利用（消費）したポイント総数。
+       */
       totalUsedPoints: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 失効予定のポイント数。未設定時はnull。
+       */
       expiringPoints: number | null
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 最も早く失効するポイントの失効日。未設定時はnull。
+       */
       expirationDate: string | null
     }
-    /** @description Point transaction record */
+    /** @description 顧客ポイントの付与・利用履歴 */
     'Models.PointTransaction': {
+      /** @description ポイント取引 ID */
       id: components['schemas']['Models.PointTransactionId']
+      /** @description 対象顧客 ID */
       customerId: components['schemas']['Models.CustomerId']
       /**
-       * @description Transaction type: earn or use
+       * @description 取引種別（獲得・利用など）
        * @enum {string}
        */
       type: 'earn' | 'use' | 'expire' | 'adjust'
       /**
        * Format: int32
-       * @description Points amount (positive for earn, negative for use)
+       * @description ポイント変動量（獲得は正、利用は負）
        */
       points: number
       /**
        * Format: int32
-       * @description Balance after transaction
+       * @description 取引後のポイント残高
        */
       balanceAfter: number
-      /** @description Related payment or booking */
+      /** @description 関連する決済 ID */
       paymentId?: components['schemas']['Models.PaymentId']
+      /** @description 関連する予約 ID */
       bookingId?: components['schemas']['Models.BookingId']
-      /** @description Transaction description */
+      /** @description 取引内容の説明 */
       description: string
       /**
        * Format: date-time
-       * @description Expiration date for earned points
+       * @description 獲得ポイントの有効期限
        */
       expiresAt?: string
       /**
        * Format: date-time
-       * @description Transaction timestamp
+       * @description 取引発生日時
        */
       transactedAt: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード作成日時。
+       */
       createdAt: string
+      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
       createdBy: string | null
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード最終更新日時。
+       */
       updatedAt: string
+      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
       updatedBy: string | null
     }
+    /** @description ポイント取引を登録する入力モデル */
     'Models.PointTransactionCreateInput': {
+      /** @description 対象顧客 ID */
       customerId: components['schemas']['Models.CustomerId']
-      /** @enum {string} */
+      /**
+       * @description ポイント取引種別
+       * @enum {string}
+       */
       type: 'earn' | 'use' | 'expire' | 'adjust'
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description ポイント変動量
+       */
       points: number
+      /** @description 関連する決済 ID */
       paymentId?: components['schemas']['Models.PaymentId']
+      /** @description 関連する予約 ID */
       bookingId?: components['schemas']['Models.BookingId']
+      /** @description 取引内容の説明 */
       description: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description ポイントの有効期限
+       */
       expiresAt?: string
     }
     /**
      * Format: uuid
-     * @description Branded UUID type for Point Transaction ID
+     * @description 顧客ポイントの加算・減算履歴を識別するブランド付きUUID。
      */
     'Models.PointTransactionId': string
-    /** @description Previous treatment history */
+    /** @description 過去施術の履歴 */
     'Models.PreviousTreatment': {
+      /** @description 施術タイプ */
       treatment: components['schemas']['Models.TreatmentType']
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 施術日
+       */
       date: string
+      /** @description 施術を受けたサロン名 */
       salonName?: string
+      /** @description 施術に関するメモ */
       notes?: string
     }
+    /** @description 金額レンジで絞り込むための共通クエリモデル。 */
     'Models.PriceRangeFilter': {
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 下限価格。未指定の場合は制限なし。
+       */
       minPrice?: number
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 上限価格。未指定の場合は制限なし。
+       */
       maxPrice?: number
     }
+    /** @description 段階制価格の設定情報 */
     'Models.PriceTier': {
+      /** @description 価格段階の名称 */
       name: string
+      /** @description 段階の説明 */
       description?: string
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 適用価格（税抜）
+       */
       price: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description この段階での施術時間
+       */
       duration?: number
+      /** @description 適用条件の説明リスト */
       conditions?: string[]
     }
+    /** @description 料金調整に使用する変動要因 */
     'Models.PricingFactor': {
-      /** @enum {string} */
+      /**
+       * @description 変動要因の種類
+       * @enum {string}
+       */
       type: 'day_of_week' | 'time_of_day' | 'staff_level' | 'demand' | 'season'
+      /** @description 条件に応じた倍率設定 */
       multipliers?: {
         [key: string]: components['schemas']['Models.decimal']
       }
+      /** @description ピーク時間帯の指定 */
       peakHours?: string[]
+      /** @description ピーク時間帯に適用する倍率 */
       peakMultiplier?: components['schemas']['Models.decimal']
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 需要に応じた閾値設定
+       */
       threshold?: number
+      /** @description 季節要因の詳細設定 */
       seasons?: components['schemas']['Models.Season'][]
     }
+    /** @description 採用している価格戦略の詳細 */
     'Models.PricingStrategyDetail': {
+      /** @description 価格戦略タイプ */
       type: components['schemas']['Models.PricingStrategyType']
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 固定価格型の場合の金額
+       */
       amount?: number
+      /** @description 段階価格の設定一覧 */
       tiers?: components['schemas']['Models.PriceTier'][]
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 基準価格
+       */
       basePrice?: number
+      /** @description 価格変動要因の設定 */
       factors?: components['schemas']['Models.PricingFactor'][]
+      /** @description セット対象となるサービス ID */
       services?: components['schemas']['Models.ServiceId'][]
+      /** @description 割引率（%） */
       discountRate?: components['schemas']['Models.decimal']
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 会員向け特別価格
+       */
       memberPrice?: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 非会員向け価格
+       */
       nonMemberPrice?: number
+      /** @description 戦略の説明 */
       description?: string
     }
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * 価格戦略タイプ区分 - サービスの価格設定方法を定義
+
+         *
+
+         *
+
+         * fixed: 固定価格 - 常に同じ価格で提供
+
+         *
+
+         * tiered: 段階価格 - 条件によって価格が変わる段階制
+
+         *
+
+         * dynamic: 動的価格 - 需要や時間帯によって変動する価格
+
+         *
+
+         * package: パッケージ価格 - 複数サービスをセットで提供
+
+         *
+
+         * membership: 会員価格 - 会員ランクに応じた特別価格
+
+         *
+
+         * custom: カスタム価格 - 個別に設定される特別価格
+
+         * @enum {string}
+
+         */
+
     'Models.PricingStrategyType':
       | 'fixed'
       | 'tiered'
@@ -5139,532 +7299,891 @@ export interface components {
       | 'package'
       | 'membership'
       | 'custom'
-    /** @description Standardized error response following RFC 7807 */
+    /** @description RFC 7807 に準拠した標準エラーレスポンスモデル。
+     *     美容サロン予約システム全体で一貫したエラー情報を提供し、顧客・スタッフ双方の操作ログと連携する。 */
     'Models.ProblemDetails': {
-      /** @description URI reference that identifies the problem type */
+      /** @description エラー種別を特定するための URI。参照することで関連ドキュメントに誘導できる。 */
       type: string
-      /** @description Short, human-readable summary of the problem */
+      /** @description ユーザーに短く要点を伝えるエラー概要メッセージ。 */
       title: string
       /**
        * Format: int32
-       * @description HTTP status code
+       * @description レスポンスに付与される HTTP ステータスコード。
        */
       status: number
-      /** @description Human-readable explanation specific to this occurrence */
+      /** @description 今回の発生状況に固有の詳細説明。サポート対応時の一次情報となる。 */
       detail?: string
-      /** @description URI reference that identifies the specific occurrence */
+      /** @description この事象を一意に識別するための URI。監査ログやダッシュボードと連携する。 */
       instance?: string
-      /** @description Machine-readable error code for programmatic handling */
+      /** @description システム全体で共有する機械判読可能なエラーコード。画面表示や分岐処理に使用する。 */
       code: components['schemas']['Models.ErrorCodeType']
-      /** @description Additional error context and validation details */
+      /** @description フィールド単位の検証エラーなど、追加のエラー詳細情報一覧。 */
       errors?: components['schemas']['Models.ValidationError'][]
-      /** @description Correlation ID for tracing */
+      /** @description 障害調査や問い合わせで利用する相関 ID。リクエスト単位で一意。 */
       correlationId?: string
       /**
        * Format: date-time
-       * @description Timestamp of the error
+       * @description エラー発生日時 (UTC)。サーバーログの検索キーとして使用する。
        */
       timestamp: string
     }
+    /** @description 決済処理中の状態の詳細 */
     'Models.ProcessingPaymentStatus': {
-      /** @enum {string} */
+      /**
+       * @description 状態種別（processing 固定値）
+       * @enum {string}
+       */
       type: 'processing'
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 処理開始日時
+       */
       startedAt: string
+      /** @description 処理を担当しているスタッフ ID */
       processorId?: components['schemas']['Models.StaffId']
     }
+    /** @description 決済処理中の状態の詳細 */
     'Models.ProcessingPaymentStatusUpdate': {
-      /** @enum {string} */
+      /**
+       * @description 状態種別（processing 固定値）
+       * @enum {string}
+       */
       type?: 'processing'
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 処理開始日時
+       */
       startedAt?: string
+      /** @description 処理を担当しているスタッフ ID */
       processorId?: components['schemas']['Models.StaffId']
     }
-    /** @description Purchase order */
+    /** @description 仕入れ発注の基本情報 */
     'Models.PurchaseOrder': {
+      /** @description 発注 ID */
       id: components['schemas']['Models.OrderId']
+      /** @description 発注を行うサロン ID */
       salonId: components['schemas']['Models.SalonId']
-      /** @description Order number */
+      /** @description 発注番号 */
       orderNumber: string
-      /** @description Supplier name */
+      /** @description 仕入先名 */
       supplier: string
-      /** @description Order status */
+      /** @description 発注ステータス区分 */
       status: components['schemas']['Models.OrderStatusType']
-      /** @description Order items */
+      /** @description 発注明細の一覧 */
       items: components['schemas']['Models.OrderItem'][]
       /**
        * Format: float
-       * @description Subtotal amount
+       * @description 税抜小計金額
        */
       subtotal: number
       /**
        * Format: float
-       * @description Tax amount
+       * @description 税額
        */
       taxAmount: number
       /**
        * Format: float
-       * @description Shipping cost
+       * @description 送料
        */
       shippingCost?: number
       /**
        * Format: float
-       * @description Total amount
+       * @description 発注合計金額
        */
       totalAmount: number
       /**
        * Format: date-time
-       * @description Order date
+       * @description 発注日
        */
       orderDate: string
       /**
        * Format: date-time
-       * @description Expected delivery date
+       * @description 予定納期
        */
       expectedDelivery?: string
       /**
        * Format: date-time
-       * @description Actual delivery date
+       * @description 実際の納品日
        */
       actualDelivery?: string
-      /** @description Delivery notes */
+      /** @description 納品に関するメモ */
       deliveryNotes?: string
-      /** @description Payment terms */
+      /** @description 支払条件 */
       paymentTerms?: string
-      /** @description Order notes */
+      /** @description その他備考 */
       notes?: string
-      /** @description Approved by */
+      /** @description 発注承認を行ったスタッフ ID */
       approvedBy?: components['schemas']['Models.StaffId']
       /**
        * Format: date-time
-       * @description Approved date
+       * @description 承認日時
        */
       approvedAt?: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード作成日時。
+       */
       createdAt: string
+      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
       createdBy: string | null
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード最終更新日時。
+       */
       updatedAt: string
+      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
       updatedBy: string | null
     }
+    /** @description 仕入れ発注を作成する入力モデル */
     'Models.PurchaseOrderCreateInput': {
+      /** @description 仕入先名 */
       supplier: string
+      /** @description 発注明細一覧 */
       items: components['schemas']['Models.OrderItem'][]
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 税額
+       */
       taxAmount: number
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 送料
+       */
       shippingCost?: number
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 予定納期
+       */
       expectedDelivery?: string
+      /** @description 支払条件 */
       paymentTerms?: string
+      /** @description 備考メモ */
       notes?: string
     }
+    /** @description 仕入れ発注の更新入力モデル */
     'Models.PurchaseOrderUpdateInput': {
+      /** @description 更新後の発注ステータス */
       status?: components['schemas']['Models.OrderStatusType']
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 更新後の予定納期
+       */
       expectedDelivery?: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 実際の納品日
+       */
       actualDelivery?: string
+      /** @description 納品関連の備考 */
       deliveryNotes?: string
+      /** @description その他の備考 */
       notes?: string
     }
-    /** @description Rate limiting information */
+    /** @description レート制限に関する HTTP ヘッダ情報モデル。
+     *     API 呼び出し頻度をクライアントに通知し、適切なリトライ制御を促す。 */
     'Models.RateLimitInfo': Record<string, never>
+    /** @description 返金処理の記録 */
     'Models.Refund': {
+      /** @description 返金 ID */
       id: components['schemas']['Models.RefundId']
+      /** @description 元となる決済 ID */
       paymentId: components['schemas']['Models.PaymentId']
+      /** @description 返金金額 */
       amount: components['schemas']['Models.Money']
+      /** @description 返金理由 */
       reason: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 返金処理日時
+       */
       refundedAt: string
-      /** @enum {string} */
+      /**
+       * @description 返金処理の進捗状態
+       * @enum {string}
+       */
       status: 'requested' | 'processing' | 'completed' | 'failed'
+      /** @description 返金処理を担当したスタッフ ID */
       processedBy?: components['schemas']['Models.StaffId']
+      /** @description 返金に使用した支払い方法 */
       method?: components['schemas']['Models.PaymentMethodType']
+      /** @description 外部返金参照コード */
       referenceCode?: string
+      /** @description 返金処理に関する備考 */
       notes?: string
     }
     /**
      * Format: uuid
-     * @description Branded UUID type for Refund ID
+     * @description 返金処理のトランザクションを識別するブランド付きUUID。
      */
     'Models.RefundId': string
+    /** @description 返金処理を開始するための入力モデル */
     'Models.RefundInput': {
+      /** @description 対象となる決済 ID */
       paymentId: components['schemas']['Models.PaymentId']
+      /** @description 返金する金額 */
       amount: components['schemas']['Models.Money']
+      /** @description 返金理由の説明 */
       reason: string
+      /** @description 外部返金参照コード */
       referenceCode?: string
+      /** @description 返金を担当するスタッフ ID */
       processedBy?: components['schemas']['Models.StaffId']
+      /** @description 返金に関する備考 */
       notes?: string
     }
+    /** @description 全額返金済み状態の詳細 */
     'Models.RefundedPaymentStatus': {
-      /** @enum {string} */
+      /**
+       * @description 状態種別（refunded 固定値）
+       * @enum {string}
+       */
       type: 'refunded'
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 返金が完了した日時
+       */
       refundedAt: string
+      /** @description 返金金額 */
       refundAmount: components['schemas']['Models.Money']
+      /** @description 関連する返金 ID */
       refundId?: components['schemas']['Models.RefundId']
     }
+    /** @description 全額返金済み状態の詳細 */
     'Models.RefundedPaymentStatusUpdate': {
-      /** @enum {string} */
+      /**
+       * @description 状態種別（refunded 固定値）
+       * @enum {string}
+       */
       type?: 'refunded'
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 返金が完了した日時
+       */
       refundedAt?: string
+      /** @description 返金金額 */
       refundAmount?: components['schemas']['Models.MoneyUpdate']
+      /** @description 関連する返金 ID */
       refundId?: components['schemas']['Models.RefundId']
     }
-    /** @description Registration request */
+    /** @description 新規ユーザー登録時のリクエスト。 */
     'Models.RegisterRequest': {
-      /** @description User's email address */
+      /** @description 登録に使用するメールアドレス。 */
       email: string
-      /** @description User's password (must meet security requirements) */
+      /** @description セキュリティ基準を満たすパスワード。 */
       password: string
-      /** @description User's display name */
+      /** @description ユーザーの表示名。 */
       name: string
       /**
-       * @description User's role (defaults to customer)
+       * @description 付与するロール。既定はcustomer。
        * @default customer
        */
       role: components['schemas']['Models.AuthUserRoleType']
     }
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * リマインダータイミング区分 - 予約リマインダーを送信するタイミングの設定
+
+         *
+
+         *
+
+         * one_day_before: 1日前 - 予約日の24時間前に通知
+
+         *
+
+         * three_hours_before: 3時間前 - 予約時刻の3時間前に通知
+
+         *
+
+         * one_hour_before: 1時間前 - 予約時刻の1時間前に通知
+
+         *
+
+         * thirty_minutes_before: 30分前 - 予約時刻の30分前に通知
+
+         * @enum {string}
+
+         */
+
     'Models.ReminderTimingType':
       | 'one_day_before'
       | 'three_hours_before'
       | 'one_hour_before'
       | 'thirty_minutes_before'
+    /** @description 予約モデル - 顧客がサロンに依頼した施術予約の全情報を保持し、日時・担当者・料金・支払い状態を一元管理する中核レコード */
     'Models.Reservation': {
+      /** @description 予約を一意に識別するID */
       id: components['schemas']['Models.ReservationId']
+      /** @description 予約が紐づくサロンのID */
       salonId: components['schemas']['Models.SalonId']
+      /** @description 予約を行った顧客のID */
       customerId: components['schemas']['Models.CustomerId']
+      /** @description 施術を担当するスタッフのID */
       staffId: components['schemas']['Models.StaffId']
+      /** @description 予約された施術メニューのID */
       serviceId: components['schemas']['Models.ServiceId']
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 施術開始予定日時 (UTC)
+       */
       startTime: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 施術終了予定日時 (UTC)
+       */
       endTime: string
+      /** @description 予約の現在ステータスを表す区分値 */
       status: components['schemas']['Models.ReservationStatusType']
+      /** @description 顧客からの特記事項やサロン側メモ */
       notes?: string
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 施術料金の合計金額 (税・割引適用後)
+       */
       totalAmount: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 事前に受領した内金・デポジット金額
+       */
       depositAmount?: number
+      /** @description 予約に対する決済が完了しているかを示すフラグ */
       isPaid: boolean
+      /** @description キャンセルが発生した場合の理由 */
       cancellationReason?: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード作成日時。
+       */
       createdAt: string
+      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
       createdBy: string | null
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード最終更新日時。
+       */
       updatedAt: string
+      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
       updatedBy: string | null
     }
+    /** @description 予約詳細モデル - 基本予約情報に顧客・スタッフ・メニュー名称やカテゴリなどの表示用情報を付加した拡張ビュー */
     'Models.ReservationDetail': {
+      /** @description 顧客の表示名 */
       customerName: string
+      /** @description 担当スタッフの表示名 */
       staffName: string
+      /** @description 施術メニューの名称 */
       serviceName: string
+      /** @description 施術メニューが属するカテゴリ区分 */
       serviceCategory: components['schemas']['Models.ServiceCategoryType']
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 施術メニューの所要時間 (分)
+       */
       serviceDuration: number
     } & components['schemas']['Models.Reservation']
     /**
      * Format: uuid
-     * @description Branded UUID type for Reservation ID
+     * @description 予約申込レコードを識別するためのブランド付きUUID。
      */
     'Models.ReservationId': string
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * 予約ステータス区分 - 予約の進行状態を表す状態定義
+
+         *
+
+         *
+
+         * pending: 保留中 - 予約申込を受け付けたが、まだ確定していない状態
+
+         *
+
+         * confirmed: 確定済み - サロン側で予約が承認・確定された状態
+
+         *
+
+         * cancelled: キャンセル済み - 顧客またはサロン側により予約が取り消された状態
+
+         *
+
+         * completed: 完了 - 予約された施術が実施され、サービス提供が完了した状態
+
+         *
+
+         * no_show: 無断キャンセル - 顧客が事前連絡なしに来店しなかった状態
+
+         * @enum {string}
+
+         */
+
     'Models.ReservationStatusType':
       | 'pending'
       | 'confirmed'
       | 'cancelled'
       | 'completed'
       | 'no_show'
+    /** @description レスポンス共通メタデータモデル。
+     *     問い合わせ対応やロギングで必要となる識別情報を保持する。 */
     'Models.ResponseMeta': {
-      /** @description Request correlation ID */
+      /** @description リクエストを一意に紐づける相関 ID。ログ横断調査に使用する。 */
       correlationId: string
       /**
        * Format: date-time
-       * @description Response timestamp
+       * @description レスポンス生成日時 (UTC)。障害時のタイムライン整理に利用。
        */
       timestamp: string
-      /** @description API version */
+      /** @description レスポンスを返却した API バージョン。 */
       version: string
     } & {
       [key: string]: unknown
     }
+    /** @description レビューモデル - 施術後の顧客体験を定量・定性的に記録し、サロン品質の改善と信頼性向上に活用する */
     'Models.Review': {
+      /** @description レビューを一意に識別するID */
       id: components['schemas']['Models.ReviewId']
+      /** @description レビュー対象のサロンID */
       salonId: components['schemas']['Models.SalonId']
+      /** @description レビューを投稿した顧客ID */
       customerId: components['schemas']['Models.CustomerId']
+      /** @description 紐づく来店予約を示すID (DBカラム booking_id と整合) */
       bookingId: components['schemas']['Models.BookingId']
+      /** @description 評価対象のスタッフID。スタッフ未指定レビューの場合は省略 */
       staffId?: components['schemas']['Models.StaffId']
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 全体満足度の評価値 (例: 1〜5)
+       */
       overallRating: number
+      /** @description 自由記述のレビューコメント */
       comment?: string
+      /** @description レビュータイトルや要約 */
       title?: string
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 施術サービスそのものに対する評価値
+       */
       serviceRating?: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description スタッフの接客・技術に対する評価値
+       */
       staffRating?: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 店内の清潔さ・衛生面に対する評価値
+       */
       cleanlinessRating?: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 価格に対する価値・コストパフォーマンス評価値
+       */
       valueRating?: number
+      /** @description レビューに添付された画像URLの一覧 */
       imageUrls?: string[]
+      /** @description 実来店が確認済みかを表す検証フラグ */
       isVerified: boolean
       /**
        * Format: int32
+       * @description レビューが「参考になった」と評価された累積回数
        * @default 0
        */
       helpfulCount: number
       /**
        * Format: int32
+       * @description 不適切報告が入った累積回数
        * @default 0
        */
       reportCount: number
+      /** @description サロン運営からの公式返信本文 */
       ownerResponse?: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 運営が返信した日時 (UTC)
+       */
       ownerRespondedAt?: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード作成日時。
+       */
       createdAt: string
+      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
       createdBy: string | null
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード最終更新日時。
+       */
       updatedAt: string
+      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
       updatedBy: string | null
     }
     /**
      * Format: uuid
-     * @description Branded UUID type for Review ID
+     * @description 顧客レビューや口コミを識別するブランド付きUUID。
      */
     'Models.ReviewId': string
+    /** @description レビュー集計モデル - 平均評価や件数分布を保持し、ダッシュボードやランキング表示に活用する */
     'Models.ReviewSummary': {
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 全体平均評価 (小数)
+       */
       averageRating: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description レビュー総件数
+       */
       totalReviews: number
+      /** @description 評価値ごとのレビュー件数分布 */
       ratingDistribution: {
         [key: string]: number
       }
     }
-    /** @description Role definition for access control */
+    /** @description 権限管理におけるロール定義 */
     'Models.Role': {
+      /** @description ロール ID */
       id: components['schemas']['Models.RoleId']
-      /** @description Role name */
+      /** @description ロールのシステム内部名 */
       name: string
-      /** @description Role display name */
+      /** @description 管理画面などで表示する名称 */
       displayName: string
-      /** @description Role description */
+      /** @description ロールの詳細説明 */
       description?: string
-      /** @description Permissions assigned to this role */
+      /** @description 付与されている権限一覧 */
       permissions: components['schemas']['Models.Permission'][]
-      /** @description Is this a system role */
+      /** @description システム標準ロールかどうか */
       isSystem: boolean
-      /** @description Is role active */
+      /** @description ロールが有効状態かどうか */
       isActive: boolean
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード作成日時。
+       */
       createdAt: string
+      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
       createdBy: string | null
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード最終更新日時。
+       */
       updatedAt: string
+      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
       updatedBy: string | null
     }
+    /** @description ロール新規作成時の入力モデル */
     'Models.RoleCreateInput': {
+      /** @description ロールの内部名 */
       name: string
+      /** @description 表示用のロール名 */
       displayName: string
+      /** @description ロール説明文 */
       description?: string
+      /** @description 付与する権限 ID リスト */
       permissions: components['schemas']['Models.PermissionId'][]
     }
     /**
      * Format: uuid
-     * @description Branded UUID type for Role ID
+     * @description ロールベース権限管理で利用する役割IDを識別するブランド付きUUID。
      */
     'Models.RoleId': string
+    /** @description ロール情報の更新入力モデル */
     'Models.RoleUpdateInput': {
+      /** @description 更新後の表示名 */
       displayName?: string
+      /** @description 更新後の説明文 */
       description?: string
+      /** @description 更新後の権限 ID リスト */
       permissions?: components['schemas']['Models.PermissionId'][]
+      /** @description 有効/無効の切り替え */
       isActive?: boolean
     }
-    /** @description Sales breakdown by category */
+    /** @description サービスカテゴリ別の売上集計行 */
     'Models.SalesByCategory': {
+      /** @description サービスカテゴリ区分 */
       category: components['schemas']['Models.ServiceCategoryType']
+      /** @description 売上金額 */
       amount: components['schemas']['Models.Money']
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 提供件数
+       */
       count: number
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 総売上に対する構成比率（%）
+       */
       percentage: number
     }
-    /** @description Sales breakdown by payment method */
+    /** @description 支払い方法別の売上集計行 */
     'Models.SalesByMethod': {
+      /** @description 支払い方法区分 */
       method: components['schemas']['Models.PaymentMethodType']
+      /** @description 売上金額 */
       amount: components['schemas']['Models.Money']
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 取引件数
+       */
       count: number
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 総売上に対する構成比率（%）
+       */
       percentage: number
     }
-    /** @description Sales report summary */
+    /** @description 期間内の売上実績を集計したレポート */
     'Models.SalesReport': {
+      /** @description 対象サロン ID */
       salonId: components['schemas']['Models.SalonId']
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 集計期間の開始日時
+       */
       periodStart: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 集計期間の終了日時
+       */
       periodEnd: string
+      /** @description 総売上額 */
       totalSales: components['schemas']['Models.Money']
+      /** @description 累計税額 */
       totalTax: components['schemas']['Models.Money']
+      /** @description 累計割引額 */
       totalDiscounts: components['schemas']['Models.Money']
+      /** @description 累計返金額 */
       totalRefunds: components['schemas']['Models.Money']
+      /** @description 返金考慮後の純売上額 */
       netSales: components['schemas']['Models.Money']
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 取引件数
+       */
       transactionCount: number
+      /** @description 平均取引単価 */
       averageTransactionValue: components['schemas']['Models.Money']
+      /** @description 支払い方法別の売上内訳 */
       salesByMethod: components['schemas']['Models.SalesByMethod'][]
+      /** @description サービスカテゴリ別の売上内訳 */
       salesByCategory: components['schemas']['Models.SalesByCategory'][]
+      /** @description 売上貢献度の高いスタッフ情報 */
       topStaff: components['schemas']['Models.StaffPerformance'][]
     }
-    'Models.SalesReportQuery': {
-      salonId: components['schemas']['Models.SalonId']
-    }
+    /** @description サロン基本情報モデル - 美容室の店舗情報、顧客向け公開情報、運営に必要な基礎データを一元管理する */
     'Models.Salon': {
+      /** @description サロンを一意に識別するID */
       id: components['schemas']['Models.SalonId']
+      /** @description 公式名称またはブランド名称 */
       name: string
+      /** @description サロンの特徴やコンセプトを伝える説明文。未設定の場合はnull */
       description: string | null
+      /** @description 所在地・アクセス・郵便番号等を含む住所情報 */
       address: components['schemas']['Models.Address']
+      /** @description 電話・メール・SNS等の問い合わせ窓口情報 */
       contactInfo: components['schemas']['Models.ContactInfo']
+      /** @description 曜日別の基本営業時間帯一覧 */
       openingHours: components['schemas']['Models.OpeningHours'][]
+      /** @description 季節やキャンペーン等に合わせた営業スケジュール。未設定時はnull */
       businessHours: components['schemas']['Models.BusinessHours'][] | null
+      /** @description 店舗写真や内装画像のURL一覧。未登録時はnull */
       imageUrls: string[] | null
+      /** @description 設備・サービス・こだわりポイント等の特徴タグ一覧。未設定時はnull */
       features: string[] | null
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 顧客レビューから算出した平均評価。評価が無い場合はnull
+       */
       rating: number | null
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 蓄積されたレビュー件数。レビュー未登録の場合はnull
+       */
       reviewCount: number | null
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード作成日時。
+       */
       createdAt: string
+      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
       createdBy: string | null
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード最終更新日時。
+       */
       updatedAt: string
+      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
       updatedBy: string | null
     }
-    /** @description Salon availability check request */
+    /** @description 指定した条件でサロンの予約枠の空き状況を確認するためのリクエスト */
     'Models.SalonAvailabilityRequest': {
-      /** @description Service ID to check availability for */
+      /** @description 空き状況を確認したいサービスのID */
       serviceId: components['schemas']['Models.ServiceId']
       /**
        * Format: date
-       * @description Preferred date
+       * @description 希望する施術日
        */
       date: string
-      /** @description Preferred time slot */
+      /** @description 希望する時間帯。未指定の場合は全時間帯を対象 */
       timeSlot?: components['schemas']['Models.TimeSlot']
-      /** @description Preferred staff ID */
+      /** @description 指名したいスタッフのID。指名なしの場合はnull */
       staffId?: components['schemas']['Models.StaffId']
       /**
        * Format: int32
-       * @description Number of slots needed
+       * @description 必要な枠数。デフォルトは1枠
        * @default 1
        */
       slots: number
     }
-    /** @description Salon availability check response */
+    /** @description サロンの空き状況照会結果を返すレスポンス */
     'Models.SalonAvailabilityResponse': {
-      /** @description Available time slots */
+      /** @description 予約可能な時間帯候補一覧 */
       availableSlots: components['schemas']['Models.AvailableTimeSlot'][]
       /**
        * Format: date
-       * @description Next available date if requested date is full
+       * @description 希望日が満席の場合に提示する次の空き日
        */
       nextAvailableDate?: string
-      /** @description Waitlist available */
+      /** @description ウェイトリスト登録の可否 */
       waitlistAvailable: boolean
     }
     /**
      * Format: uuid
-     * @description Branded UUID type for Salon ID
+     * @description サロン店舗・拠点を識別するためのブランド付きUUID。
      */
     'Models.SalonId': string
-    /** @description Salon recommendation with scoring */
+    /** @description パーソナライズされたおすすめ度スコアを含むサロン推薦モデル */
     'Models.SalonRecommendation': {
       /**
        * Format: int32
-       * @description Recommendation score (0-100)
+       * @description サロン推薦スコア（0-100）
        */
       score: number
-      /** @description Reasons for recommendation */
+      /** @description 推薦理由のリスト */
       reasons: string[]
-      /** @description Matching services */
+      /** @description 要望に合致したサービス一覧 */
       matchingServices: components['schemas']['Models.ServiceSummary'][]
     } & components['schemas']['Models.SalonSummary']
-    /** @description Salon statistics response */
+    /** @description サロン運営指標を集計したダッシュボード向けレスポンスモデル */
     'Models.SalonStatistics': {
       /**
        * Format: int32
-       * @description Total number of services
+       * @description 登録されている提供メニューの総数
        */
       totalServices: number
       /**
        * Format: int32
-       * @description Total number of staff
+       * @description 在籍スタッフの総数
        */
       totalStaff: number
       /**
        * Format: float
-       * @description Average rating
+       * @description レビューから算出した平均評価
        */
       averageRating?: number
       /**
        * Format: int32
-       * @description Total reviews
+       * @description 累計レビュー件数
        */
       totalReviews: number
       /**
        * Format: int32
-       * @description Total bookings this month
+       * @description 当月の予約件数合計
        */
       monthlyBookings: number
-      /** @description Revenue this month */
+      /** @description 当月の売上総額 */
       monthlyRevenue?: components['schemas']['Models.Money']
-      /** @description Popular services */
+      /** @description 人気の高いサービス一覧 */
       popularServices: components['schemas']['Models.ServiceSummary'][]
-      /** @description Busy hours */
+      /** @description 予約が集中する時間帯の一覧 */
       busyHours: components['schemas']['Models.TimeSlot'][]
     }
-    /** @description Subscription request for salon updates */
+    /** @description サロンからの最新情報通知を希望する顧客の購読リクエスト */
     'Models.SalonSubscriptionRequest': {
+      /** @description 通知を受け取る顧客ID */
       customerId: components['schemas']['Models.CustomerId']
+      /** @description 希望する通知カテゴリの種類一覧 */
       notificationTypes: components['schemas']['Models.NotificationType'][]
+      /** @description 関心の高いサービスカテゴリ。未指定の場合は全カテゴリ対象 */
       categories?: components['schemas']['Models.ServiceCategoryType'][]
     }
-    /** @description Subscription response */
+    /** @description サロン通知購読の作成結果を返すレスポンスモデル */
     'Models.SalonSubscriptionResponse': {
+      /** @description 購読設定を一意に識別するID */
       subscriptionId: string
-      /** @enum {string} */
+      /**
+       * @description 購読状態（常にactiveを返却）
+       * @enum {string}
+       */
       status: 'active'
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 購読の有効期限。無期限の場合はnull
+       */
       expiresAt?: string
     }
+    /** @description サロン概要モデル - リスト表示や検索結果に必要な要約情報を提供 */
     'Models.SalonSummary': {
+      /** @description 対象サロンの一意なID */
       id: components['schemas']['Models.SalonId']
+      /** @description 表示用のサロン名称 */
       name: string
+      /** @description ユーザーに提示する所在地情報 */
       address: components['schemas']['Models.Address']
-      /** Format: float */
+      /**
+       * Format: float
+       * @description レビュー平均値。評価が無い場合はnull
+       */
       rating: number | null
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description レビュー件数。未集計の場合はnull
+       */
       reviewCount: number | null
     }
-    /** @description Salon with distance information */
+    /** @description 検索基準地点からの距離情報を付与したサロンモデル */
     'Models.SalonWithDistance': {
       /**
        * Format: float
-       * @description Distance from reference point in kilometers
+       * @description 基準地点からの距離（km）
        */
       distance: number
       /**
        * Format: int32
-       * @description Estimated travel time in minutes
+       * @description 想定移動時間（分）。計算不能時はnull
        */
       travelTime?: number
     } & components['schemas']['Models.Salon']
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * 頭皮状態区分 - 頭皮の状態を分類、適切なケア方法の選択に使用
+
+         *
+
+         *
+
+         * normal: 正常 - 健康的な頭皮状態、特別なケア不要
+
+         *
+
+         * dry: 乾燥 - 乾燥しやすい頭皮、保湿ケアが必要
+
+         *
+
+         * oily: 脂性 - 皮脂分泌が多い頭皮、洗浄力のあるケアが必要
+
+         *
+
+         * sensitive: 敏感 - 刺激に弱い頭皮、低刺激の製品使用が必要
+
+         * @enum {string}
+
+         */
+
     'Models.ScalpConditionType':
       | 'normal'
       | 'dry'
@@ -5676,117 +8195,209 @@ export interface components {
       sensitivities: string[]
       notes: string | null
     }
-    /** @description Schedule exception for staff */
+    /** @description スタッフに発生する例外スケジュール（休暇・研修等）を表すモデル */
     'Models.ScheduleException': {
-      /** Format: date */
+      /**
+       * Format: date
+       * @description 例外が適用される日付
+       */
       date: string
-      /** @enum {string} */
+      /**
+       * @description 例外の種別（休暇・病欠など）
+       * @enum {string}
+       */
       type: 'holiday' | 'sick_leave' | 'vacation' | 'training' | 'other'
+      /** @description 補足説明や注意事項。不要な場合はnull */
       description?: string
+      /** @description 代替対応するスタッフのID。未手配の場合はnull */
       alternativeStaffId?: components['schemas']['Models.StaffId']
     }
+    /** @description 検索結果の関連度スコア範囲を表すモデル。
+     *     スコアの分布を把握し、しきい値設定を検討する際に利用する。 */
     'Models.ScoreRange': {
       /**
        * Format: float
-       * @description Minimum relevance score
+       * @description 関連度スコアの最小値。
        */
       min: number
       /**
        * Format: float
-       * @description Maximum relevance score
+       * @description 関連度スコアの最大値。
        */
       max: number
     }
+    /** @description 検索処理に関するメタ情報モデル。
+     *     件数や所要時間を記録し、UX 改善やパフォーマンス監視に利用する。 */
     'Models.SearchMeta': {
       /**
        * Format: int32
-       * @description Total matching results
+       * @description 検索条件に一致した総件数。
        */
       total: number
-      /** @description Search query used */
+      /** @description 利用された検索キーワード。ログ分析やABテストで活用する。 */
       query?: string
-      /** @description Applied filters */
+      /** @description 適用されたフィルター一覧。ユーザー選択内容を表示する際に使用。 */
       filters?: string[]
       /**
        * Format: int32
-       * @description Search duration in milliseconds
+       * @description 検索処理に要した時間 (ミリ秒)。パフォーマンスKPIの指標。
        */
       duration: number
-      /** @description Search relevance score range */
+      /** @description 関連度スコアの範囲。ランキング調整やチューニングに活用する。 */
       scoreRange?: components['schemas']['Models.ScoreRange']
     }
+    /** @description 季節要因の定義 */
     'Models.Season': {
+      /** @description 季節名 */
       name: string
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 開始月
+       */
       startMonth: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 終了月
+       */
       endMonth: number
+      /** @description 適用倍率 */
       multiplier: components['schemas']['Models.decimal']
     }
+    /** @description サロンで提供するサービスの統合モデル */
     'Models.Service': {
+      /** @description サービス ID */
       id: components['schemas']['Models.ServiceId']
+      /** @description サービスを提供するサロン ID */
       salonId: components['schemas']['Models.SalonId']
-      /** @description Service basic information */
+      /** @description サービスの紹介情報 */
       info: components['schemas']['Models.ServiceInfo']
-      /** @description Service category and sub-category */
+      /** @description サービスカテゴリ区分 */
       category: components['schemas']['Models.ServiceCategoryType']
+      /** @description カテゴリ ID（分類ツリー連携用） */
       categoryId?: components['schemas']['Models.CategoryId']
-      /** @description Pricing information */
+      /** @description 料金設定情報 */
       pricing: components['schemas']['Models.ServicePricing']
-      /** @description Duration settings */
+      /** @description 提供時間の設定 */
       duration: components['schemas']['Models.ServiceDuration']
-      /** @description Availability settings */
+      /** @description 提供可能条件の設定 */
       availability?: components['schemas']['Models.ServiceAvailabilityDetail']
-      /** @description Booking requirements */
+      /** @description 予約時に必要な要件一覧 */
       requirements?: components['schemas']['Models.BookingRequirementDetail'][]
-      /** @description Service options and addons */
+      /** @description 追加オプション設定 */
       options?: components['schemas']['Models.ServiceOptionDetail'][]
-      /** @description Service restrictions */
+      /** @description 提供上の制約条件 */
       restrictions?: components['schemas']['Models.ServiceRestrictions']
-      /** @description Performance metrics */
+      /** @description サービス実績の指標 */
       performance?: components['schemas']['Models.ServicePerformance']
-      /** @description Service associations */
+      /** @description 関連サービス・担当者情報 */
       associations?: components['schemas']['Models.ServiceAssociations']
-      /** @description Service metadata */
+      /** @description メタデータ・表示設定 */
       metadata?: components['schemas']['Models.ServiceMetadata']
-      /** @description Service status */
+      /** @description 現在の提供ステータス */
       status: components['schemas']['Models.ServiceStatusDetail']
-      /** @description Legacy fields for compatibility */
+      /** @description 互換性維持のための旧項目：サービス名 */
       name: string
+      /** @description 互換性維持のための旧項目：説明文 */
       description: string
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 互換性維持のための旧項目：料金
+       */
       price: number
+      /** @description 互換性維持のための旧項目：画像 URL */
       imageUrl?: string
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 互換性維持のための旧項目：スタッフレベル
+       */
       requiredStaffLevel?: number
+      /** @description 互換性維持のための旧項目：有効フラグ */
       isActive: boolean
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード作成日時。
+       */
       createdAt: string
+      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
       createdBy: string | null
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード最終更新日時。
+       */
       updatedAt: string
+      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
       updatedBy: string | null
     }
+    /** @description サービス間・スタッフとの関連情報 */
     'Models.ServiceAssociations': {
+      /** @description 紐づくカテゴリ ID */
       categoryId: components['schemas']['Models.CategoryId']
+      /** @description 親サービス ID */
       parentServiceId?: components['schemas']['Models.ServiceId']
+      /** @description 子サービス ID 一覧 */
       childServiceIds?: components['schemas']['Models.ServiceId'][]
+      /** @description 予約時に必須のサービス ID */
       requiredServiceIds?: components['schemas']['Models.ServiceId'][]
+      /** @description 併用を推奨するサービス ID */
       recommendedServiceIds?: components['schemas']['Models.ServiceId'][]
+      /** @description 施術資格を持つスタッフ ID */
       qualifiedStaffIds?: components['schemas']['Models.StaffId'][]
+      /** @description 優先的に担当させたいスタッフ ID */
       preferredStaffIds?: components['schemas']['Models.StaffId'][]
     }
+    /** @description サービスの提供可否設定 */
     'Models.ServiceAvailabilityDetail': {
+      /** @description 提供可否タイプ */
       type: components['schemas']['Models.ServiceAvailabilityType']
+      /** @description 曜日・時間帯のスケジュール */
       schedule?: components['schemas']['Models.ServiceSchedule'][]
+      /** @description 事前承認が必要かどうか */
       requiresApproval?: boolean
+      /** @description 季節限定時の季節設定 */
       seasons?: components['schemas']['Models.Season'][]
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 1 日あたりの提供上限
+       */
       maxPerDay?: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 1 週間あたりの提供上限
+       */
       maxPerWeek?: number
     }
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * サービス提供可能性タイプ区分 - サービスが提供される時期や条件
+
+         *
+
+         *
+
+         * always: 常時提供 - いつでも利用可能なサービス
+
+         *
+
+         * scheduled: スケジュール制 - 特定の時間帯のみ提供
+
+         *
+
+         * by_appointment: 予約制 - 事前予約が必要なサービス
+
+         *
+
+         * seasonal: 季節限定 - 特定の季節のみ提供
+
+         *
+
+         * limited: 数量限定 - 提供数に制限があるサービス
+
+         * @enum {string}
+
+         */
+
     'Models.ServiceAvailabilityType':
       | 'always'
       | 'scheduled'
@@ -5794,9 +8405,41 @@ export interface components {
       | 'seasonal'
       | 'limited'
     /**
-     * @description Service category types
-     * @enum {string}
-     */
+
+         * @description
+
+         * サービスカテゴリー区分 - サロンで提供される主要なサービスカテゴリーの定義
+
+         *
+
+         *
+
+         * cut: カット - ヘアカット、トリミング等の切断系サービス
+
+         *
+
+         * color: カラー - ヘアカラー、ハイライト等の染色系サービス
+
+         *
+
+         * perm: パーマ - パーマネント、デジタルパーマ等のウェーブ形成サービス
+
+         *
+
+         * treatment: トリートメント - ヘアトリートメント、ヘアケア等の補修・改善サービス
+
+         *
+
+         * spa: スパ - ヘッドスパ、リラクゼーション等の癒し系サービス
+
+         *
+
+         * other: その他 - 上記カテゴリーに分類されないサービス
+
+         * @enum {string}
+
+         */
+
     'Models.ServiceCategoryType':
       | 'cut'
       | 'color'
@@ -5804,82 +8447,188 @@ export interface components {
       | 'treatment'
       | 'spa'
       | 'other'
+    /** @description サービス提供時間の設定 */
     'Models.ServiceDuration': {
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 標準施術時間（分）
+       */
       standard: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 最短施術時間
+       */
       minimum?: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 最長施術時間
+       */
       maximum?: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 施術前のバッファ時間
+       */
       bufferBefore?: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 施術後のバッファ時間
+       */
       bufferAfter?: number
+      /** @description カウンセリング時間を含むか */
       includesConsultation: boolean
     }
     /**
      * Format: uuid
-     * @description Branded UUID type for Service ID
+     * @description 提供メニュー・施術サービスを識別するためのブランド付きUUID。
      */
     'Models.ServiceId': string
+    /** @description サービスの基本的な紹介情報 */
     'Models.ServiceInfo': {
+      /** @description サービス名称 */
       name: string
+      /** @description サービス名の読み仮名 */
       nameKana?: string
+      /** @description サービス詳細説明文 */
       description: string
+      /** @description 短めの紹介文 */
       shortDescription?: string
+      /** @description 提供価値・メリットの一覧 */
       benefits?: string[]
+      /** @description 主な対象顧客層 */
       targetCustomer?: string
+      /** @description サービス画像の URL 一覧 */
       imageUrls?: string[]
+      /** @description 紹介動画の URL */
       videoUrl?: string
     }
+    /** @description サービスのメタデータ情報 */
     'Models.ServiceMetadata': {
+      /** @description タグ一覧 */
       tags?: string[]
+      /** @description 検索キーワード */
       keywords?: string[]
+      /** @description SEO 用タイトル */
       seoTitle?: string
+      /** @description SEO 用ディスクリプション */
       seoDescription?: string
+      /** @description 内部向けメモ */
       internalNotes?: string
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 表示順序
+       */
       sortOrder?: number
+      /** @description 注目サービスとして表示するか */
       featured?: boolean
+      /** @description メニュー非表示フラグ */
       hideFromMenu?: boolean
     }
+    /** @description サービスに付随するオプション設定 */
     'Models.ServiceOptionDetail': {
+      /** @description オプションの種類 */
       type: components['schemas']['Models.ServiceOptionType']
+      /** @description オプション名 */
       name?: string
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description オプション料金
+       */
       price?: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 追加される施術時間
+       */
       duration?: number
+      /** @description オプションの説明 */
       description?: string
+      /** @description アップグレード元のレベル */
       fromLevel?: string
+      /** @description アップグレード先のレベル */
       toLevel?: string
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 追加料金
+       */
       additionalPrice?: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 時間延長（分）
+       */
       extension?: number
+      /** @description 関連商品 ID */
       productId?: string
+      /** @description 必須オプションかどうか */
       required?: boolean
+      /** @description 同時予約が必要なサービス ID */
       withService?: components['schemas']['Models.ServiceId']
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 割引金額
+       */
       discountAmount?: number
     }
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * サービスオプションタイプ区分 - サービスに追加できるオプションの種類
+
+         *
+
+         *
+
+         * addon: アドオン - 基本サービスに追加できるオプション
+
+         *
+
+         * upgrade: アップグレード - サービスのグレードを上げるオプション
+
+         *
+
+         * duration: 時間延長 - サービス時間を延長するオプション
+
+         *
+
+         * product: 商品追加 - サービスに商品を含めるオプション
+
+         *
+
+         * combo: コンボ - 複数サービスの組み合わせオプション
+
+         * @enum {string}
+
+         */
+
     'Models.ServiceOptionType':
       | 'addon'
       | 'upgrade'
       | 'duration'
       | 'product'
       | 'combo'
+    /** @description サービスの実績指標 */
     'Models.ServicePerformance': {
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 予約件数
+       */
       bookingCount: number
+      /** @description 施術完了率 */
       completionRate: components['schemas']['Models.decimal']
+      /** @description 平均評価スコア */
       averageRating?: components['schemas']['Models.decimal']
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description レビュー件数
+       */
       reviewCount: number
-      /** Format: int64 */
+      /**
+       * Format: int64
+       * @description 売上実績（円）
+       */
       revenue: number
+      /** @description 人気度スコア */
       popularityScore?: components['schemas']['Models.decimal']
+      /** @description リピート率 */
       repeatRate?: components['schemas']['Models.decimal']
     }
     'Models.ServicePreference': {
@@ -5891,53 +8640,141 @@ export interface components {
         | components['schemas']['Models.PriceRangeFilter']
         | null
     }
+    /** @description サービスの料金設定情報 */
     'Models.ServicePricing': {
+      /** @description 採用している価格戦略 */
       strategy: components['schemas']['Models.PricingStrategyDetail']
+      /** @description 税込価格かどうか */
       taxIncluded: boolean
+      /** @description 通貨コード */
       currency: components['schemas']['Models.CurrencyCodeType']
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 設定されている最低料金
+       */
       minimumPrice?: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 設定されている最高料金
+       */
       maximumPrice?: number
+      /** @description 予約時にデポジットが必要か */
       depositRequired: boolean
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 必要なデポジット金額
+       */
       depositAmount?: number
+      /** @description キャンセル料金の設定 */
       cancellationFee?: components['schemas']['Models.CancellationFee']
     }
+    /** @description サービス提供時の制約条件 */
     'Models.ServiceRestrictions': {
+      /** @description 必要なスタッフレベル */
       requiredStaffLevel?: components['schemas']['Models.StaffLevelType']
+      /** @description 必要資格の一覧 */
       requiredCertifications?: string[]
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 同時提供可能な最大件数
+       */
       maxConcurrent?: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 再予約までの最短間隔（日）
+       */
       minIntervalDays?: number
+      /** @description 顧客ごとの予約上限設定 */
       maxBookingsPerCustomer?: components['schemas']['Models.BookingLimit']
+      /** @description 提供不可日（ブラックアウト）一覧 */
       blackoutDates?: string[]
     }
+    /** @description サービス提供スケジュール */
     'Models.ServiceSchedule': {
+      /** @description 曜日 */
       dayOfWeek: components['schemas']['Models.DayOfWeekType']
+      /** @description 提供開始時刻（HH:mm） */
       startTime: string
+      /** @description 提供終了時刻（HH:mm） */
       endTime: string
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 予約受け入れ上限数
+       */
       maxBookings?: number
     }
+    /** @description サービスの提供状態の詳細 */
     'Models.ServiceStatusDetail': {
+      /** @description ステータス区分 */
       type: components['schemas']['Models.ServiceStatusType']
+      /** @description ステータス変更理由 */
       reason?: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description この状態が開始した日時
+       */
       since?: string
+      /** @description 提供可能な月の一覧 */
       availableMonths?: number[]
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 提供終了予定日
+       */
       availableUntil?: string
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 残り提供可能枠数
+       */
       remainingSlots?: number
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 廃止日時
+       */
       discontinuedAt?: string
+      /** @description 代替サービス ID */
       replacementId?: components['schemas']['Models.ServiceId']
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 公開予定日
+       */
       launchDate?: string
     }
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * サービスステータス区分 - サービスの提供状態を表す区分
+
+         *
+
+         *
+
+         * active: 有効 - 現在提供中のサービス
+
+         *
+
+         * inactive: 一時停止 - 一時的に提供を停止しているサービス
+
+         *
+
+         * seasonal: 季節限定 - 特定の季節のみ提供されるサービス
+
+         *
+
+         * limited: 数量限定 - 残りわずかなサービス
+
+         *
+
+         * discontinued: 廃止 - 提供を終了したサービス
+
+         *
+
+         * coming_soon: 近日公開 - 近々提供予定のサービス
+
+         * @enum {string}
+
+         */
+
     'Models.ServiceStatusType':
       | 'active'
       | 'inactive'
@@ -5945,315 +8782,518 @@ export interface components {
       | 'limited'
       | 'discontinued'
       | 'coming_soon'
-    /** @description Service summary for various contexts */
+    /** @description サービスメニューを一覧表示や候補選択で参照する際の要約情報。 */
     'Models.ServiceSummary': {
+      /** @description サービスメニューを識別するID。 */
       id: components['schemas']['Models.ServiceId']
+      /** @description 顧客向けに表示するサービス名称。 */
       name: string
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 対象サービスの予約件数。統計未計算時はnull。
+       */
       bookingCount: number | null
     }
-    /** @description Session information */
+    /** @description ログインセッションの状態と追跡情報。 */
     'Models.Session': {
-      /** @description Unique session identifier */
+      /** @description セッションを一意に識別するID。 */
       id: string
-      /** @description User ID associated with this session */
+      /** @description セッション所有者のユーザーID。 */
       userId: components['schemas']['Models.UserId']
-      /** @description Refresh token for this session */
+      /** @description アクセストークン再発行に使用するリフレッシュトークン。 */
       refreshToken: string
-      /** @description IP address from which the session was created */
+      /** @description セッション発行元のIPアドレス。 */
       ipAddress: string
-      /** @description User agent string */
+      /** @description ブラウザやアプリを示すユーザーエージェント文字列。 */
       userAgent: string
       /**
        * Format: date-time
-       * @description Session expiry time
+       * @description セッションの有効期限。
        */
       expiresAt: string
       /**
-       * @description Remember me flag
+       * @description 永続化セッション（Remember me）を希望するかのフラグ。
        * @default false
        */
       rememberMe: boolean
       /**
        * Format: date-time
-       * @description Session creation timestamp
+       * @description セッション作成日時。
        */
       createdAt: string
       /**
        * Format: date-time
-       * @description Last activity timestamp
+       * @description 直近のアクティビティ日時。
        */
       lastActivityAt: string
     }
     /**
      * Format: uuid
-     * @description Branded UUID type for Session ID
+     * @description ログインセッションを追跡するためのブランド付きUUID。
      */
     'Models.SessionId': string
-    /** @description Session list response */
+    /** @description アクティブなセッション一覧を返すレスポンス。 */
     'Models.SessionListResponse': {
-      /** @description Active sessions */
+      /** @description 稼働中のセッション配列。 */
       sessions: components['schemas']['Models.Session'][]
       /**
        * Format: int32
-       * @description Total number of sessions
+       * @description 該当セッションの総数。
        */
       total: number
     }
-    /** @description 共有リンク */
+    /** @description 外部共有用に発行された添付ファイルの共有リンク情報。 */
     'Models.ShareLink': {
-      /** @description 共有リンクID */
+      /** @description 共有リンクを一意に識別するID。 */
       id: string
-      /** @description 共有トークン */
+      /** @description 共有アクセス時に利用するトークン。 */
       token: string
-      /** @description 添付ファイルID */
+      /** @description 共有対象の添付ファイルID。 */
       attachmentId: string
       /**
        * Format: date-time
-       * @description 有効期限（オプション）
+       * @description 共有リンクの有効期限。任意設定。
        */
       expiresAt?: string
       /**
        * Format: int32
-       * @description 最大ダウンロード数（オプション）
+       * @description 許可する最大ダウンロード回数。任意設定。
        */
       maxDownloads?: number
       /**
        * Format: int32
-       * @description 現在のダウンロード数
+       * @description これまでのダウンロード累計数。
        */
       downloadCount: number
-      /** @description パスワード保護 */
+      /** @description 共有リンクがパスワード保護されているか。 */
       hasPassword: boolean
-      /** @description 許可されたメールアドレス（オプション） */
+      /** @description アクセスを許可するメールアドレス一覧。任意設定。 */
       allowedEmails?: string[]
-      /** @description 作成者ID */
+      /** @description 共有リンクを作成したユーザーID。 */
       createdBy: string
       /**
        * Format: date-time
-       * @description 作成日時
+       * @description 共有リンクを作成した日時。
        */
       createdAt: string
     }
-    /** @description Soft delete information */
+    /** @description ソフトデリート情報モデル。
+     *     論理削除されたレコードの状態や削除理由を記録し、監査ログや復旧オペレーションに活用する。 */
     'Models.SoftDelete': {
       /**
-       * @description Whether the record is deleted
+       * @description 論理削除フラグ。true の場合は通常の検索結果から除外する。
        * @default false
        */
       isDeleted: boolean
       /**
        * Format: date-time
-       * @description Deletion timestamp
+       * @description 削除操作が実行された日時 (UTC)。
        */
       deletedAt?: string
-      /** @description User who deleted the record */
+      /** @description 削除操作を実施したユーザーID またはサービス名。 */
       deletedBy?: string
-      /** @description Deletion reason */
+      /** @description 削除理由や補足メモ。カスタマーサポート対応に利用する。 */
       deletionReason?: string
     }
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * スパサブカテゴリー区分 - スパ・リラクゼーションサービスの詳細分類
+
+         *
+
+         *
+
+         * head_spa: ヘッドスパ - 頭部のマッサージと頭皮ケアを組み合わせたスパ
+
+         *
+
+         * scalp_massage: スカルプマッサージ - 頭皮の血行促進マッサージ
+
+         *
+
+         * aromatherapy: アロマテラピー - アロマオイルを使用したリラクゼーション
+
+         *
+
+         * relaxation: リラクゼーション - ストレス解消を目的とした総合的なケア
+
+         * @enum {string}
+
+         */
+
     'Models.SpaSubCategoryType':
       | 'head_spa'
       | 'scalp_massage'
       | 'aromatherapy'
       | 'relaxation'
+    /** @description スタッフモデル - サロンに所属するスタッフのプロフィール・資格・スケジュール・権限を統合管理する */
     'Models.Staff': {
+      /** @description スタッフを一意に識別するID */
       id: components['schemas']['Models.StaffId']
+      /** @description 所属サロンのID */
       salonId: components['schemas']['Models.SalonId']
+      /** @description スタッフの氏名 */
       name: string
+      /** @description 連絡先情報 (電話・メール等) */
       contactInfo: components['schemas']['Models.ContactInfo']
+      /** @description 得意分野や専門メニューの一覧 */
       specialties: string[]
+      /** @description プロフィール画像のURL */
       imageUrl?: string
+      /** @description 自己紹介や経歴の概要 */
       bio?: string
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 実務経験年数
+       */
       yearsOfExperience?: number
+      /** @description 保有資格名の一覧 (テキスト管理) */
       certifications?: string[]
+      /** @description 詳細な資格情報の一覧 */
       qualifications?: components['schemas']['Models.StaffQualification'][]
+      /** @description 通常勤務スケジュールの一覧 */
       schedules?: components['schemas']['Models.StaffSchedule'][]
+      /** @description 現在スタッフがアクティブに勤務可能かを示すフラグ */
       isActive: boolean
+      /** @description システム上で付与されている追加権限一覧 */
       permissions?: components['schemas']['Models.StaffPermission'][]
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード作成日時。
+       */
       createdAt: string
+      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
       createdBy: string | null
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード最終更新日時。
+       */
       updatedAt: string
+      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
       updatedBy: string | null
     }
+    /** @description スタッフ空き状況モデル - 個別時間帯の空き枠を表し、スポット予約や検索レスポンスに利用する */
     'Models.StaffAvailability': {
+      /** @description 対象スタッフのID */
       staffId: components['schemas']['Models.StaffId']
+      /** @description 対象曜日 */
       dayOfWeek: components['schemas']['Models.DayOfWeekType']
+      /** @description 空き枠の開始時刻 (HH:mm) */
       startTime: string
+      /** @description 空き枠の終了時刻 (HH:mm) */
       endTime: string
+      /** @description 休憩などの開始時刻 */
       breakStart?: string
+      /** @description 休憩などの終了時刻 */
       breakEnd?: string
     }
     /**
      * Format: uuid
-     * @description Branded UUID type for Staff ID
+     * @description 施術スタッフや従業員を識別するためのブランド付きUUID。
      */
     'Models.StaffId': string
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * スタッフレベル区分 - スタッフの技術レベルや経験を表す階層
+
+         *
+
+         *
+
+         * junior: ジュニア - 新人・見習いレベル、基本的な施術が可能
+
+         *
+
+         * stylist: スタイリスト - 標準レベル、一般的な施術が可能
+
+         *
+
+         * senior: シニア - 上級レベル、高度な技術と経験を保有
+
+         *
+
+         * expert: エキスパート - 専門家レベル、特殊技術や指導が可能
+
+         *
+
+         * director: ディレクター - 管理職レベル、サロンの技術的な指導を担当
+
+         * @enum {string}
+
+         */
+
     'Models.StaffLevelType':
       | 'junior'
       | 'stylist'
       | 'senior'
       | 'expert'
       | 'director'
-    /** @description Staff performance metrics */
+    /** @description スタッフ別の売上パフォーマンス指標 */
     'Models.StaffPerformance': {
+      /** @description スタッフ ID */
       staffId: components['schemas']['Models.StaffId']
+      /** @description スタッフ名 */
       staffName: string
+      /** @description 担当した売上金額 */
       totalSales: components['schemas']['Models.Money']
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 提供したサービス件数
+       */
       serviceCount: number
+      /** @description 平均サービス単価 */
       averageServiceValue: components['schemas']['Models.Money']
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 顧客満足度評価（任意）
+       */
       customerSatisfaction?: number
     }
+    /** @description スタッフ権限モデル - スタッフアカウントに付与された操作対象と権限範囲を定義する */
     'Models.StaffPermission': {
+      /** @description 操作対象リソースの識別子 */
       resource: string
+      /** @description 許可されたアクションの一覧 */
       actions: string[]
+      /** @description 権限が適用される範囲や条件 */
       scope?: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 権限の有効期限 (UTC)
+       */
       expiresAt?: string
     }
+    /** @description スタッフ資格モデル - 保有資格や認定情報を管理し、サービス提供に必要なスキル証明を保持する */
     'Models.StaffQualification': {
+      /** @description 資格・認定の名称 */
       name: string
-      /** Format: date */
+      /**
+       * Format: date
+       * @description 資格を取得した日付
+       */
       certificationDate: string
-      /** Format: date */
+      /**
+       * Format: date
+       * @description 資格の有効期限。無期限の場合は省略
+       */
       expiryDate?: string
+      /** @description 資格を発行した機関名 */
       issuer?: string
+      /** @description 資格証明番号などの識別子 */
       credentialId?: string
     }
+    /** @description スタッフシフトモデル - 通常勤務スケジュールと休憩時間、適用期間を定義し、予約可能時間の算出に利用する */
     'Models.StaffSchedule': {
+      /** @description 対象となる曜日 */
       dayOfWeek: components['schemas']['Models.DayOfWeekType']
+      /** @description 勤務開始時刻 (フォーマット例: HH:mm) */
       startTime: string
+      /** @description 勤務終了時刻 (フォーマット例: HH:mm) */
       endTime: string
+      /** @description 当日の休憩時間帯リスト */
       breakTime?: components['schemas']['Models.TimeSlot'][]
+      /** @description シフトが有効となる期間 */
       effectivePeriod?: components['schemas']['Models.DateRange']
     }
-    /** @description Staff schedule management information */
+    /** @description スタッフの勤務スケジュールと例外設定を管理するモデル */
     'Models.StaffScheduleManagement': {
+      /** @description 対象スタッフのID */
       staffId: components['schemas']['Models.StaffId']
+      /** @description 所属サロンのID */
       salonId: components['schemas']['Models.SalonId']
+      /** @description 通常勤務時間帯の一覧 */
       regularHours: components['schemas']['Models.BusinessHours'][]
+      /** @description 休暇や研修などの例外設定一覧 */
       exceptions: components['schemas']['Models.ScheduleException'][]
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description スケジュールが有効になる開始日時
+       */
       effectiveFrom: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description スケジュールの終了日時。無期限の場合はnull
+       */
       effectiveTo?: string
       /**
        * Format: date-time
-       * @description Record creation timestamp
+       * @description レコード作成日時 (UTC)。
        */
       createdAt: string
-      /** @description User who created the record */
+      /** @description レコードを作成したユーザーID またはサービス名。 */
       createdBy: string
       /**
        * Format: date-time
-       * @description Last update timestamp
+       * @description 最終更新日時 (UTC)。
        */
       updatedAt: string
-      /** @description User who last updated the record */
+      /** @description 最後に更新したユーザーID またはサービス名。 */
       updatedBy: string
       /**
        * Format: int32
-       * @description Version number for optimistic locking
+       * @description 楽観的ロックに使用するバージョン番号。
        */
       version: number
       /**
-       * @description Whether the record is deleted
+       * @description 論理削除フラグ。true の場合は通常の検索結果から除外する。
        * @default false
        */
       isDeleted: boolean
       /**
        * Format: date-time
-       * @description Deletion timestamp
+       * @description 削除操作が実行された日時 (UTC)。
        */
       deletedAt?: string
-      /** @description User who deleted the record */
+      /** @description 削除操作を実施したユーザーID またはサービス名。 */
       deletedBy?: string
-      /** @description Deletion reason */
+      /** @description 削除理由や補足メモ。カスタマーサポート対応に利用する。 */
       deletionReason?: string
     }
-    /** @description Staff schedule update request */
+    /** @description スタッフの勤務スケジュールを更新するためのリクエスト */
     'Models.StaffScheduleUpdateRequest': {
+      /** @description 更新後の通常勤務時間帯一覧 */
       regularHours: components['schemas']['Models.BusinessHours'][]
+      /** @description 休暇や特例などの例外設定一覧。変更がない場合はnull */
       exceptions?: components['schemas']['Models.ScheduleException'][]
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 更新内容の適用開始日時
+       */
       effectiveFrom: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 適用終了日時。未定の場合はnull
+       */
       effectiveTo?: string
     }
-    /** @description Staff summary for various contexts */
+    /** @description スタッフ一覧や選択候補で利用する要約情報。 */
     'Models.StaffSummary': {
+      /** @description スタッフを識別するID。 */
       id: components['schemas']['Models.StaffId']
+      /** @description スタッフの表示名。 */
       name: string
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 平均評価スコア。未評価の場合はnull。
+       */
       rating: number | null
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 担当した予約件数。統計未計算時はnull。
+       */
       bookingCount: number | null
     }
+    /** @description 在庫残量の閾値警告 */
     'Models.StockAlert': {
+      /** @description 対象在庫 ID */
       itemId: components['schemas']['Models.InventoryId']
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 設定した閾値
+       */
       threshold: number
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 警告発生時の在庫数
+       */
       currentStock: number
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 警告が発生した日時
+       */
       triggeredAt: string
     }
-    /** @description Stock movement record */
+    /** @description 在庫の移動履歴 */
     'Models.StockMovement': {
+      /** @description トランザクション ID */
       id: string
+      /** @description 対象在庫アイテム ID */
       itemId: components['schemas']['Models.InventoryId']
+      /** @description 処理を行うサロン ID */
       salonId: components['schemas']['Models.SalonId']
-      /** @enum {string} */
+      /**
+       * @description 在庫操作区分（入庫/出庫/調整/移動）
+       * @enum {string}
+       */
       type: 'in' | 'out' | 'adjustment' | 'transfer'
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 操作した数量
+       */
       quantity: number
+      /** @description 操作理由 */
       reason: string
+      /** @description 操作を担当したスタッフ ID */
       performedBy: components['schemas']['Models.StaffId']
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 操作日時
+       */
       occurredAt: string
+      /** @description 関連する外部参照 ID */
       referenceId?: string
+      /** @description 備考メモ */
       notes?: string
+      /** @description 追加のメタデータ */
       metadata?: {
         [key: string]: unknown
       }
+      /** @description 対象在庫アイテム ID */
       inventoryId: components['schemas']['Models.InventoryId']
       /**
        * Format: float
-       * @description Stock level after movement
+       * @description 移動後の在庫数量
        */
       stockAfter: number
-      /** @description Reason for movement */
+      /** @description 紐づく発注 ID */
       orderId?: components['schemas']['Models.OrderId']
-      /** @description Related treatment */
+      /** @description 紐づく施術記録 ID */
       treatmentRecordId?: components['schemas']['Models.TreatmentRecordId']
       /**
        * Format: date-time
-       * @description Movement timestamp
+       * @description 移動が確定した日時
        */
       movedAt: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード作成日時。
+       */
       createdAt: string
+      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
       createdBy: string | null
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード最終更新日時。
+       */
       updatedAt: string
+      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
       updatedBy: string | null
     }
+    /** @description 在庫移動処理を登録する入力モデル */
     'Models.StockMovementInput': {
+      /** @description 対象在庫 ID */
       inventoryId: components['schemas']['Models.InventoryId']
-      /** @enum {string} */
+      /**
+       * @description 在庫操作区分
+       * @enum {string}
+       */
       type: 'in' | 'out' | 'adjustment' | 'transfer'
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 操作数量
+       */
       quantity: number
+      /** @description 操作理由 */
       reason: string
+      /** @description 関連する発注 ID */
       orderId?: components['schemas']['Models.OrderId']
+      /** @description 関連する施術記録 ID */
       treatmentRecordId?: components['schemas']['Models.TreatmentRecordId']
+      /** @description 備考メモ */
       notes?: string
     }
     'Models.StylePreference': {
@@ -6262,14 +9302,88 @@ export interface components {
       avoidStyles: string[] | null
       inspirationImages: string[] | null
     }
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * スタイリングサブカテゴリー区分 - ヘアスタイリングサービスの詳細分類
+
+         *
+
+         *
+
+         * blowout: ブローアウト - ブロードライでボリュームを出すスタイリング
+
+         *
+
+         * updo: アップスタイル - まとめ髪、シニヨン等のヘアアレンジ
+
+         *
+
+         * braiding: 編み込み - 三つ編み、編み込みアレンジ等
+
+         *
+
+         * extensions: エクステンション - ヘアエクステの装着サービス
+
+         *
+
+         * event_styling: イベントスタイリング - 結婚式、パーティー等の特別なスタイリング
+
+         * @enum {string}
+
+         */
+
     'Models.StylingSubCategoryType':
       | 'blowout'
       | 'updo'
       | 'braiding'
       | 'extensions'
       | 'event_styling'
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * システムロールタイプ区分 - システムで事前定義されたロールの種類
+
+         *
+
+         *
+
+         * super_admin: スーパー管理者 - システム全体へのフルアクセス権限
+
+         *
+
+         * salon_owner: サロンオーナー - サロン全体へのフルアクセス権限
+
+         *
+
+         * salon_manager: サロンマネージャー - サロンの管理業務権限
+
+         *
+
+         * senior_staff: シニアスタッフ - 上級スタイリスト・セラピストの権限
+
+         *
+
+         * staff: スタッフ - 一般スタッフの権限
+
+         *
+
+         * receptionist: 受付 - フロントデスク業務の権限
+
+         *
+
+         * customer: 顧客 - 顧客セルフサービスの権限
+
+         *
+
+         * guest: ゲスト - 限定的なゲストアクセス権限
+
+         * @enum {string}
+
+         */
+
     'Models.SystemRoleType':
       | 'super_admin'
       | 'salon_owner'
@@ -6286,109 +9400,238 @@ export interface components {
       /** @description Preferred time slots */
       timeSlots: components['schemas']['Models.TimeSlot'][]
     }
+    /** @description 営業時間や休憩時間を表現する単一の時間帯スロット。 */
     'Models.TimeSlot': {
+      /** @description 開始時刻（HH:mm形式、24時間表記）。 */
       startTime: string
+      /** @description 終了時刻（HH:mm形式、24時間表記）。 */
       endTime: string
     }
-    /** @description Token refresh request */
+    /** @description アクセストークンを更新するためのリクエスト。 */
     'Models.TokenRefreshRequest': {
-      /** @description Refresh token */
+      /** @description 認証済みセッションに紐づくリフレッシュトークン。 */
       refreshToken: string
     }
-    /** @description TreatmentType record for customer visit */
+    /** @description 顧客来店時の施術記録 */
     'Models.TreatmentRecord': {
+      /** @description 施術記録 ID */
       id: components['schemas']['Models.TreatmentRecordId']
+      /** @description 紐づく予約 ID */
       bookingId: components['schemas']['Models.BookingId']
+      /** @description 施術を受けた顧客 ID */
       customerId: components['schemas']['Models.CustomerId']
+      /** @description 施術担当スタッフ ID */
       staffId: components['schemas']['Models.StaffId']
+      /** @description 施術を実施したサロン ID */
       salonId: components['schemas']['Models.SalonId']
-      /** @description Type of treatment performed */
+      /** @description 実施した施術タイプ */
       treatment: components['schemas']['Models.TreatmentType']
-      /** @description Services performed during this treatment */
+      /** @description 施術で提供したサービス ID 一覧 */
       serviceIds: components['schemas']['Models.ServiceId'][]
       /**
        * Format: date-time
-       * @description TreatmentType start time
+       * @description 施術開始日時
        */
       startTime: string
       /**
        * Format: date-time
-       * @description TreatmentType end time
+       * @description 施術終了日時
        */
       endTime: string
-      /** @description Detailed notes about the treatment */
+      /** @description 施術の詳細メモ */
       notes?: string
-      /** @description Materials and products used */
+      /** @description 使用した資材・商材の記録 */
       usedMaterials?: components['schemas']['Models.MaterialUsage'][]
-      /** @description Before/after photos */
+      /** @description 施術前後の写真 ID */
       photos?: components['schemas']['Models.AttachmentId'][]
-      /** @description Customer feedback and notes */
+      /** @description 顧客のフィードバック */
       customerFeedback?: string
-      /** @description Recommendations for next visit */
+      /** @description 次回来店への提案内容 */
       nextRecommendations?: string
       /**
        * Format: float
-       * @description Total amount charged
+       * @description 請求総額
        */
       totalAmount: number
       /**
        * Format: float
-       * @description Discount applied
+       * @description 適用した割引額
        */
       discountAmount?: number
       /**
        * Format: int32
-       * @description Points earned
+       * @description 付与したポイント数
        */
       pointsEarned?: number
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード作成日時。
+       */
       createdAt: string
+      /** @description レコードを作成したユーザーID。匿名作成の場合はnull。 */
       createdBy: string | null
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description レコード最終更新日時。
+       */
       updatedAt: string
+      /** @description レコードを最後に更新したユーザーID。匿名更新の場合はnull。 */
       updatedBy: string | null
     }
+    /** @description 施術記録を新規登録する入力モデル */
     'Models.TreatmentRecordCreateInput': {
+      /** @description 紐づく予約 ID */
       bookingId: components['schemas']['Models.BookingId']
+      /** @description 施術を受けた顧客 ID */
       customerId: components['schemas']['Models.CustomerId']
+      /** @description 施術担当スタッフ ID */
       staffId: components['schemas']['Models.StaffId']
+      /** @description 施術タイプ */
       treatment: components['schemas']['Models.TreatmentType']
+      /** @description 提供したサービス ID 一覧 */
       serviceIds: components['schemas']['Models.ServiceId'][]
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 施術開始日時
+       */
       startTime: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 施術終了日時
+       */
       endTime: string
+      /** @description 施術メモ */
       notes?: string
+      /** @description 使用した資材一覧 */
       usedMaterials?: components['schemas']['Models.MaterialUsage'][]
+      /** @description 顧客フィードバック */
       customerFeedback?: string
+      /** @description 次回来店への提案内容 */
       nextRecommendations?: string
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 請求総額
+       */
       totalAmount: number
-      /** Format: float */
+      /**
+       * Format: float
+       * @description 割引額
+       */
       discountAmount?: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 付与ポイント数
+       */
       pointsEarned?: number
     }
     /**
      * Format: uuid
-     * @description Branded UUID type for TreatmentType Record ID
+     * @description 施術記録やカウンセリングメモを識別するブランド付きUUID。
      */
     'Models.TreatmentRecordId': string
+    /** @description 施術記録を更新する入力モデル */
     'Models.TreatmentRecordUpdateInput': {
+      /** @description 施術メモ */
       notes?: string
+      /** @description 使用した資材一覧 */
       usedMaterials?: components['schemas']['Models.MaterialUsage'][]
+      /** @description 顧客フィードバック */
       customerFeedback?: string
+      /** @description 次回来店への提案内容 */
       nextRecommendations?: string
+      /** @description 施術前後写真 ID */
       photos?: components['schemas']['Models.AttachmentId'][]
     }
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * トリートメントサブカテゴリー区分 - ヘアトリートメントサービスの詳細分類
+
+         *
+
+         *
+
+         * deep_conditioning: ディープコンディショニング - 髪の内部まで栄養を浸透させるトリートメント
+
+         *
+
+         * protein_treatment: プロテイントリートメント - タンパク質を補給し髪を強化するトリートメント
+
+         *
+
+         * scalp_treatment: スカルプトリートメント - 頭皮ケアに特化したトリートメント
+
+         *
+
+         * keratin_treatment: ケラチントリートメント - ケラチンを補充し髪をストレートにするトリートメント
+
+         *
+
+         * olaplex: オラプレックス - ダメージした髪の内部結合を修復するトリートメント
+
+         * @enum {string}
+
+         */
+
     'Models.TreatmentSubCategoryType':
       | 'deep_conditioning'
       | 'protein_treatment'
       | 'scalp_treatment'
       | 'keratin_treatment'
       | 'olaplex'
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * 施術タイプ区分 - サロンで提供される具体的な施術の種類
+
+         *
+
+         *
+
+         * cut: カット - ヘアカット、レイヤーカット等の切断技術
+
+         *
+
+         * color: カラー - ヘアカラー、白髪染め、ハイライト等の染色技術
+
+         *
+
+         * perm: パーマ - コールドパーマ、デジタルパーマ等のウェーブ技術
+
+         *
+
+         * treatment: トリートメント - ダメージケア、栄養補給等の毛髪改善技術
+
+         *
+
+         * head_spa: ヘッドスパ - 頭皮マッサージ、スカルプケア等の頭皮ケア技術
+
+         *
+
+         * styling: スタイリング - セット、アレンジ等のスタイリング技術
+
+         *
+
+         * extension: エクステンション - ヘアエクステ、増毛等の毛髪追加技術
+
+         *
+
+         * nail: ネイル - マニキュア、ジェルネイル等の爪装飾技術
+
+         *
+
+         * eyelash: まつげ - まつげエクステ、まつげパーマ等のまつげ装飾技術
+
+         *
+
+         * other: その他 - 上記に分類されない施術
+
+         * @enum {string}
+
+         */
+
     'Models.TreatmentType':
       | 'cut'
       | 'color'
@@ -6400,72 +9643,119 @@ export interface components {
       | 'nail'
       | 'eyelash'
       | 'other'
-    /** @description Two-factor authentication disable request */
+    /** @description 2要素認証を無効化する際の確認リクエスト。 */
     'Models.TwoFactorDisableRequest': {
-      /** @description Current password for verification */
+      /** @description 本人確認のための現在パスワード。 */
       password: string
-      /** @description Current TOTP code for verification */
+      /** @description 無効化確認のための現在TOTPコード。 */
       code: string
     }
-    /** @description Two-factor authentication enable request */
+    /** @description 2要素認証を有効化する際の認証リクエスト。 */
     'Models.TwoFactorEnableRequest': {
-      /** @description Current password for verification */
+      /** @description 本人確認のための現在パスワード。 */
       password: string
     }
-    /** @description Two-factor authentication setup response */
+    /** @description 2要素認証の設定情報を返すレスポンス。 */
     'Models.TwoFactorSetupResponse': {
-      /** @description QR code URL for authenticator app */
+      /** @description 認証アプリで読み取るQRコードURL。 */
       qrCodeUrl: string
-      /** @description Manual entry secret */
+      /** @description 手動登録用のシークレットキー。 */
       secret: string
-      /** @description Backup codes for recovery */
+      /** @description 復旧用バックアップコード一覧。 */
       backupCodes: string[]
     }
     /**
-     * @description Two-factor authentication status
-     * @enum {string}
-     */
+
+         * @description
+
+         * 2要素認証ステータス区分 - 2要素認証の設定状態
+
+         *
+
+         *
+
+         * disabled: 無効 - 2要素認証が設定されていない状態
+
+         *
+
+         * pending: 設定中 - 2要素認証の設定が進行中の状態
+
+         *
+
+         * enabled: 有効 - 2要素認証が有効化されている状態
+
+         * @enum {string}
+
+         */
+
     'Models.TwoFactorStatusType': 'disabled' | 'pending' | 'enabled'
-    /** @description Two-factor authentication verify request */
+    /** @description 2要素認証コードを検証するリクエスト。 */
     'Models.TwoFactorVerifyRequest': {
-      /** @description TOTP code from authenticator app */
+      /** @description 認証アプリが生成したTOTPコード。 */
       code: string
     }
+    /** @description 認証されていないアクセスを表す標準エラーモデル。 */
     'Models.UnauthorizedError': {
-      /** @enum {string} */
+      /**
+       * @description 固定値UNAUTHORIZED。クライアントでのハンドリングを容易にする識別子。
+       * @enum {string}
+       */
       code: 'UNAUTHORIZED'
+      /** @description エラー内容を伝えるメッセージ。 */
       message: string
     }
-    /** @description Booking update request with optional fields for partial updates */
+    /** @description 予約情報を部分更新するためのリクエスト。 */
     'Models.UpdateBookingRequest': {
+      /** @description ステータス詳細の更新。 */
       status?: components['schemas']['Models.BookingStatusUpdate']
+      /** @description ステータスコードの更新。 */
       statusCode?: components['schemas']['Models.BookingStatusCodeType']
+      /** @description ウェイティングリスト情報の更新。 */
       waitlistEntry?: components['schemas']['Models.WaitlistEntryUpdate']
+      /** @description デポジット情報の更新。 */
       deposit?: components['schemas']['Models.BookingDepositUpdate']
+      /** @description 支払い方法の更新。 */
       paymentMethod?: components['schemas']['Models.PaymentMethodType']
+      /** @description 支払いステータスの更新。 */
       paymentStatus?: components['schemas']['Models.PaymentStatusCodeType']
+      /** @description 割引額の更新。 */
       discountAmount?: components['schemas']['Models.MoneyUpdate']
+      /** @description 最終請求額の更新。 */
       finalAmount?: components['schemas']['Models.MoneyUpdate']
+      /** @description 未収金額の更新。 */
       balanceDue?: components['schemas']['Models.MoneyUpdate']
+      /** @description 備考の更新。 */
       notes?: string
+      /** @description 任意メタデータの更新。 */
       metadata?: {
         [key: string]: unknown
       }
     }
-    /** @description Booking update request with reset capability */
+    /** @description フィールドをnullに戻すことも可能な予約更新リクエスト。 */
     'Models.UpdateBookingRequestWithReset': {
+      /** @description ステータス詳細の更新またはリセット。 */
       status?: components['schemas']['Models.BookingStatus']
+      /** @description ステータスコードの更新またはリセット。 */
       statusCode?: components['schemas']['Models.BookingStatusCodeType']
+      /** @description ウェイティングリスト情報の更新またはリセット。 */
       waitlistEntry?: components['schemas']['Models.WaitlistEntry'] | null
+      /** @description デポジット情報の更新またはリセット。 */
       deposit?: components['schemas']['Models.BookingDeposit'] | null
+      /** @description 支払い方法の更新またはリセット。 */
       paymentMethod?: components['schemas']['Models.PaymentMethodType'] | null
+      /** @description 支払いステータスの更新またはリセット。 */
       paymentStatus?:
         | components['schemas']['Models.PaymentStatusCodeType']
         | null
+      /** @description 割引額の更新またはリセット。 */
       discountAmount?: components['schemas']['Models.Money'] | null
+      /** @description 最終請求額の更新またはリセット。 */
       finalAmount?: components['schemas']['Models.Money'] | null
+      /** @description 未収金額の更新またはリセット。 */
       balanceDue?: components['schemas']['Models.Money'] | null
+      /** @description 備考の更新またはリセット。 */
       notes?: string | null
+      /** @description 任意メタデータの更新またはリセット。 */
       metadata?: {
         [key: string]: unknown
       } | null
@@ -6500,277 +9790,451 @@ export interface components {
       /** Format: date */
       birthDate?: string | null
     }
-    /** @description Reservation update request with optional fields for partial updates */
+    /** @description 予約更新リクエスト - 部分更新に対応した任意項目の変更指示を受け取り、既存予約を調整する */
     'Models.UpdateReservationRequest': {
+      /** @description 更新後の予約ステータス */
       status?: components['schemas']['Models.ReservationStatusType']
+      /** @description 最新の顧客メモや社内備考 */
       notes?: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 調整後の施術開始日時 (UTC)
+       */
       startTime?: string
+      /** @description 再割当先のスタッフID */
       staffId?: components['schemas']['Models.StaffId']
     }
-    /** @description Reservation update request with reset capability */
+    /** @description リセット対応予約更新リクエスト - null指定により備考等を初期化しつつ、予約情報を更新できる */
     'Models.UpdateReservationRequestWithReset': {
+      /** @description 更新後の予約ステータス */
       status?: components['schemas']['Models.ReservationStatusType']
+      /** @description null指定で備考のリセットも可能な顧客メモ */
       notes?: string | null
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 調整後の施術開始日時 (UTC)
+       */
       startTime?: string
+      /** @description 再割当先のスタッフID */
       staffId?: components['schemas']['Models.StaffId']
     }
-    /** @description Review update request with optional fields for partial updates */
+    /** @description レビュー更新リクエスト - 任意項目を部分更新し、既存レビューの評価やコメントを調整する */
     'Models.UpdateReviewRequest': {
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 更新後の全体満足度評価
+       */
       overallRating?: number
+      /** @description 更新後のコメント本文 */
       comment?: string
+      /** @description 更新後のレビュータイトル */
       title?: string
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 更新後のサービス品質評価
+       */
       serviceRating?: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 更新後のスタッフ評価
+       */
       staffRating?: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 更新後の清潔さ評価
+       */
       cleanlinessRating?: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 更新後の価格価値評価
+       */
       valueRating?: number
+      /** @description 画像URL一覧の更新内容 */
       imageUrls?: string[]
     }
-    /** @description Review update request with reset capability */
+    /** @description リセット対応レビュー更新リクエスト - null指定でコメントや画像を初期化しながらレビューを再設定できる */
     'Models.UpdateReviewRequestWithReset': {
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 更新後の全体満足度評価
+       */
       overallRating?: number
+      /** @description null指定も可能なコメント本文 */
       comment?: string | null
+      /** @description null指定も可能なレビュータイトル */
       title?: string | null
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description null指定も可能なサービス品質評価
+       */
       serviceRating?: number | null
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description null指定も可能なスタッフ評価
+       */
       staffRating?: number | null
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description null指定も可能な清潔さ評価
+       */
       cleanlinessRating?: number | null
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description null指定も可能な価格価値評価
+       */
       valueRating?: number | null
+      /** @description null指定も可能な画像URL一覧 */
       imageUrls?: string[] | null
     }
-    /** @description Salon update request with optional fields for partial updates */
+    /** @description サロン情報を部分更新するためのリクエスト */
     'Models.UpdateSalonRequest': {
+      /** @description 名称変更を行う場合に指定 */
       name?: string
+      /** @description 紹介文を更新する場合に指定 */
       description?: string
+      /** @description 住所情報の差し替えが必要な場合に指定 */
       address?: components['schemas']['Models.Address']
+      /** @description 電話番号やメールアドレス等の連絡先を更新する場合に指定 */
       contactInfo?: components['schemas']['Models.ContactInfo']
+      /** @description 通常営業時間の更新が必要な場合に指定 */
       openingHours?: components['schemas']['Models.OpeningHours'][]
+      /** @description 特別営業時間やシフト設定の更新に利用 */
       businessHours?: components['schemas']['Models.BusinessHours'][]
+      /** @description 画像URLリストを更新する場合に指定 */
       imageUrls?: string[]
+      /** @description 特徴タグの追加・削除を行う場合に指定 */
       features?: string[]
     }
-    /** @description Salon update request with optional fields for partial updates */
+    /** @description サロン情報を部分更新するためのリクエスト */
     'Models.UpdateSalonRequestUpdate': {
+      /** @description 名称変更を行う場合に指定 */
       name?: string
+      /** @description 紹介文を更新する場合に指定 */
       description?: string
+      /** @description 住所情報の差し替えが必要な場合に指定 */
       address?: components['schemas']['Models.AddressUpdate']
+      /** @description 電話番号やメールアドレス等の連絡先を更新する場合に指定 */
       contactInfo?: components['schemas']['Models.ContactInfoUpdate']
+      /** @description 通常営業時間の更新が必要な場合に指定 */
       openingHours?: components['schemas']['Models.OpeningHours'][]
+      /** @description 特別営業時間やシフト設定の更新に利用 */
       businessHours?: components['schemas']['Models.BusinessHours'][]
+      /** @description 画像URLリストを更新する場合に指定 */
       imageUrls?: string[]
+      /** @description 特徴タグの追加・削除を行う場合に指定 */
       features?: string[]
     }
-    /** @description Salon update request with reset capability */
+    /** @description サロン情報を部分更新しつつ値のリセットにも対応したリクエスト */
     'Models.UpdateSalonRequestWithReset': {
+      /** @description 名称更新または未設定化を行う場合に指定 */
       name?: string | null
+      /** @description 紹介文の更新またはリセットを行う場合に指定 */
       description?: string | null
+      /** @description 住所情報を更新または未設定に戻す場合に指定 */
       address?: components['schemas']['Models.Address'] | null
+      /** @description 連絡先情報を更新または未設定化する場合に指定 */
       contactInfo?: components['schemas']['Models.ContactInfo'] | null
+      /** @description 通常営業時間を更新または削除する場合に指定 */
       openingHours?: components['schemas']['Models.OpeningHours'][] | null
+      /** @description 特別営業時間を更新またはリセットする場合に指定 */
       businessHours?: components['schemas']['Models.BusinessHours'][] | null
+      /** @description 画像URLリストを更新またはクリアする場合に指定 */
       imageUrls?: string[] | null
+      /** @description 特徴タグの更新またはリセットを行う場合に指定 */
       features?: string[] | null
     }
-    /** @description Service update request with optional fields for partial updates */
+    /** @description サービス情報を部分更新するリクエスト */
     'Models.UpdateServiceRequest': {
+      /** @description 更新後のサービス名 */
       name?: string
+      /** @description 更新後の説明文 */
       description?: string
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 更新後の施術時間
+       */
       duration?: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 更新後の料金
+       */
       price?: number
+      /** @description 更新後のサービスカテゴリ */
       category?: components['schemas']['Models.ServiceCategoryType']
+      /** @description 更新後のカテゴリ ID */
       categoryId?: components['schemas']['Models.CategoryId']
+      /** @description 更新後の画像 URL */
       imageUrl?: string
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 更新後の必要スタッフレベル
+       */
       requiredStaffLevel?: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 更新後のデポジット額
+       */
       depositAmount?: number
+      /** @description 更新後の有効フラグ */
       isActive?: boolean
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 更新後の最大予約日数
+       */
       maxAdvanceBookingDays?: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 更新後の最短予約受付時間
+       */
       minAdvanceBookingHours?: number
     }
-    /** @description Service update request with reset capability */
+    /** @description 値のリセットを含むサービス更新リクエスト */
     'Models.UpdateServiceRequestWithReset': {
+      /** @description 更新後のサービス名 */
       name?: string
+      /** @description 更新後の説明文 */
       description?: string
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 更新後の施術時間
+       */
       duration?: number
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 更新後の料金
+       */
       price?: number
+      /** @description 更新後のサービスカテゴリ */
       category?: components['schemas']['Models.ServiceCategoryType']
+      /** @description 更新後のカテゴリ ID（null 指定で解除） */
       categoryId?: (string & components['schemas']['Models.CategoryId']) | null
+      /** @description 更新後の画像 URL（null 指定で解除） */
       imageUrl?: string | null
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 更新後の必要スタッフレベル（null 指定で解除）
+       */
       requiredStaffLevel?: number | null
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 更新後のデポジット額（null 指定で解除）
+       */
       depositAmount?: number | null
+      /** @description 更新後の有効フラグ */
       isActive?: boolean
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 更新後の最大予約日数（null 指定で解除）
+       */
       maxAdvanceBookingDays?: number | null
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 更新後の最短予約受付時間（null 指定で解除）
+       */
       minAdvanceBookingHours?: number | null
     }
-    /** @description Staff update request with optional fields for partial updates */
+    /** @description スタッフ更新リクエスト - 任意項目を部分更新し、プロフィールや勤務状況を柔軟に調整する */
     'Models.UpdateStaffRequest': {
+      /** @description スタッフ名の更新 */
       name?: string
+      /** @description 連絡先情報の更新 */
       contactInfo?: components['schemas']['Models.ContactInfo']
+      /** @description 得意分野一覧の更新 */
       specialties?: string[]
+      /** @description プロフィール画像URLの更新 */
       imageUrl?: string
+      /** @description 自己紹介文の更新 */
       bio?: string
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 経験年数の更新
+       */
       yearsOfExperience?: number
+      /** @description 資格名一覧の更新 */
       certifications?: string[]
+      /** @description 資格詳細一覧の更新 */
       qualifications?: components['schemas']['Models.StaffQualification'][]
+      /** @description 勤務スケジュール一覧の更新 */
       schedules?: components['schemas']['Models.StaffSchedule'][]
+      /** @description 付与権限一覧の更新 */
       permissions?: components['schemas']['Models.StaffPermission'][]
+      /** @description アクティブ状態の更新 */
       isActive?: boolean
     }
-    /** @description Staff update request with reset capability */
+    /** @description リセット対応スタッフ更新リクエスト - null指定を許可しつつプロフィールやスケジュールを再設定する */
     'Models.UpdateStaffRequestWithReset': {
+      /** @description スタッフ名の更新 */
       name?: string
+      /** @description 連絡先情報の更新 */
       contactInfo?: components['schemas']['Models.ContactInfo']
+      /** @description 得意分野一覧の更新 */
       specialties?: string[]
+      /** @description null指定も可能なプロフィール画像URL */
       imageUrl?: string | null
+      /** @description null指定も可能な自己紹介文 */
       bio?: string | null
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description null指定も可能な経験年数
+       */
       yearsOfExperience?: number | null
+      /** @description null指定も可能な資格名一覧 */
       certifications?: string[] | null
+      /** @description null指定も可能な資格詳細一覧 */
       qualifications?:
         | components['schemas']['Models.StaffQualification'][]
         | null
+      /** @description null指定も可能な勤務スケジュール一覧 */
       schedules?: components['schemas']['Models.StaffSchedule'][] | null
+      /** @description null指定も可能な付与権限一覧 */
       permissions?: components['schemas']['Models.StaffPermission'][] | null
+      /** @description アクティブ状態の更新 */
       isActive?: boolean
     }
-    /** @description ファイルアップロードリクエスト（マルチパート） */
+    /** @description マルチパートアップロードで添付ファイルを登録するためのリクエスト。 */
     'Models.UploadAttachmentRequest': {
       /**
        * Format: byte
-       * @description ファイル本体
+       * @description HTTPリクエストで送信されるファイル本体。
        */
       file: string
-      /** @description ファイル名 */
+      /** @description アップロード時に指定されたファイル名。 */
       filename: string
-      /** @description Content-Type */
+      /** @description ファイルのContent-Type。 */
       content: string
-      /** @description サロンID（オプション） */
+      /** @description ファイルを関連付けるサロンID。任意設定。 */
       salonId?: string
-      /** @description タグ（オプション） */
+      /** @description タグ情報を表すJSON文字列。任意設定。 */
       tags?: string
     }
-    /** @description 署名付きアップロードURLレスポンス */
+    /** @description 署名付きアップロードURLと関連情報を返すレスポンス。 */
     'Models.UploadUrlResponse': {
-      /** @description 署名付きアップロードURL */
+      /** @description 一時的に有効なアップロード用URL。 */
       uploadUrl: string
-      /** @description ストレージキー */
+      /** @description 生成されたストレージキー。アップロード完了後の識別に使用。 */
       key: string
       /**
        * Format: date-time
-       * @description URL有効期限
+       * @description 署名付きURLの有効期限。
        */
       expiresAt: string
     }
-    /** @description User authentication information */
+    /** @description 認証基盤で管理するユーザーアカウント情報。 */
     'Models.User': {
-      /** @description Unique identifier for the user */
+      /** @description ユーザーを一意に識別するID。 */
       id: string
-      /** @description User's email address (unique) */
+      /** @description ログインに利用するメールアドレス（ユニーク）。 */
       email: string
-      /** @description User's display name */
+      /** @description 顧客・スタッフの表示名。 */
       name: string
-      /** @description User's role in the system */
+      /** @description 認証システム上での役割区分。 */
       role: components['schemas']['Models.AuthUserRoleType']
-      /** @description Account status */
+      /** @description アカウントの稼働状態。 */
       status: components['schemas']['Models.UserAccountStatusType']
-      /** @description Email verification status */
+      /** @description メールアドレスが確認済みかどうか。 */
       emailVerified: boolean
-      /** @description Email verification token (internal use) */
+      /** @description メール確認に利用するトークン。内部管理用。 */
       emailVerificationToken?: string
       /**
        * Format: date-time
-       * @description Email verification token expiry
+       * @description メール確認トークンの有効期限。
        */
       emailVerificationTokenExpiry?: string
-      /** @description Two-factor authentication status */
+      /** @description 2要素認証の設定状態。 */
       twoFactorStatus: components['schemas']['Models.TwoFactorStatusType']
-      /** @description Two-factor authentication secret (encrypted) */
+      /** @description 暗号化された2要素認証シークレット。 */
       twoFactorSecret?: string
-      /** @description Backup codes for 2FA recovery */
+      /** @description 2要素認証の復旧用バックアップコード一覧。 */
       backupCodes?: string[]
       /**
        * Format: int32
-       * @description Number of failed login attempts
+       * @description 連続したログイン失敗回数。
        * @default 0
        */
       failedLoginAttempts: number
       /**
        * Format: date-time
-       * @description Time when the account was locked
+       * @description アカウントをロックした日時。未ロックの場合はnull。
        */
       lockedAt?: string
-      /** @description Password reset token (internal use) */
+      /** @description パスワードリセットに利用するトークン。内部管理用。 */
       passwordResetToken?: string
       /**
        * Format: date-time
-       * @description Password reset token expiry
+       * @description パスワードリセットトークンの有効期限。
        */
       passwordResetTokenExpiry?: string
       /**
        * Format: date-time
-       * @description Last password change timestamp
+       * @description 最後にパスワードを変更した日時。
        */
       lastPasswordChangeAt?: string
-      /** @description Previous password hashes for history check */
+      /** @description 再利用防止のため保持する過去パスワードハッシュ。 */
       passwordHistory?: string[]
-      /** @description Trusted IP addresses for this user */
+      /** @description 信頼済みIPアドレスのリスト。 */
       trustedIpAddresses?: string[]
-      /** @description Reference to customer profile if user is a customer */
+      /** @description ユーザーが顧客の場合の顧客プロファイルID。 */
       customerId?: components['schemas']['Models.CustomerId']
-      /** @description Reference to staff profile if user is staff */
+      /** @description ユーザーがスタッフの場合のスタッフプロファイルID。 */
       staffId?: components['schemas']['Models.StaffId']
-      /** @description Extended role information */
+      /** @description 担当サロンやレベル等を含む拡張ロール情報。 */
       roleDetail?: components['schemas']['Models.UserRoleDetail']
-      /** @description Authentication state */
+      /** @description 現在の認証状態区分。 */
       authState?: components['schemas']['Models.AuthenticationStateType']
-      /** @description Email verification state */
+      /** @description メール確認状態区分。 */
       emailVerificationState?: components['schemas']['Models.EmailVerificationStateType']
-      /** @description Password reset state */
+      /** @description パスワードリセット状態区分。 */
       passwordResetState?: components['schemas']['Models.PasswordResetStateType']
       /**
        * Format: date-time
-       * @description Timestamp when the user was created
+       * @description ユーザーアカウント作成日時。
        */
       createdAt: string
       /**
        * Format: date-time
-       * @description Timestamp when the user was last updated
+       * @description ユーザー情報の最終更新日時。
        */
       updatedAt: string
       /**
        * Format: date-time
-       * @description Last login timestamp
+       * @description 直近のログイン日時。
        */
       lastLoginAt?: string
-      /** @description Last login IP address */
+      /** @description 直近ログイン時のIPアドレス。 */
       lastLoginIp?: string
     }
     /**
-     * @description User account status
-     * @enum {string}
-     */
+
+         * @description
+
+         * ユーザーアカウントステータス区分 - アカウントの利用可否状態
+
+         *
+
+         *
+
+         * active: アクティブ - 正常に利用可能なアカウント
+
+         *
+
+         * unverified: メール未確認 - メールアドレスが確認されていないアカウント
+
+         *
+
+         * locked: ロック - ログイン失敗回数超過によりロックされたアカウント
+
+         *
+
+         * suspended: 停止 - 管理者によって停止されたアカウント
+
+         *
+
+         * deleted: 削除済み - 削除されたアカウント
+
+         * @enum {string}
+
+         */
+
     'Models.UserAccountStatusType':
       | 'active'
       | 'unverified'
@@ -6779,66 +10243,113 @@ export interface components {
       | 'deleted'
     /**
      * Format: uuid
-     * @description Branded UUID type for User ID
+     * @description システム利用者（顧客・スタッフ・管理者）を一意に識別するブランド付きUUID。
      */
     'Models.UserId': string
+    /** @description ユーザーへロールを割り当てる入力モデル */
     'Models.UserRoleAssignInput': {
+      /** @description 対象ユーザー ID */
       userId: string
+      /** @description 割当対象のロール ID */
       roleId: components['schemas']['Models.RoleId']
-      salonId?: components['schemas']['Models.SalonId']
-      /** Format: date-time */
-      expiresAt?: string
-    }
-    /** @description User role assignment */
-    'Models.UserRoleAssignment': {
-      userId: string
-      roleId: components['schemas']['Models.RoleId']
+      /** @description サロン単位の場合のサロン ID */
       salonId?: components['schemas']['Models.SalonId']
       /**
        * Format: date-time
-       * @description Assignment date
+       * @description 割当の有効期限
+       */
+      expiresAt?: string
+    }
+    /** @description ユーザーへのロール割当情報 */
+    'Models.UserRoleAssignment': {
+      /** @description 対象ユーザー ID（スタッフ/顧客いずれも可） */
+      userId: string
+      /** @description 割り当てるロール ID */
+      roleId: components['schemas']['Models.RoleId']
+      /** @description サロン単位のロールの場合の対象サロン ID */
+      salonId?: components['schemas']['Models.SalonId']
+      /**
+       * Format: date-time
+       * @description 割当日時
        */
       assignedAt: string
-      /** @description Assigned by */
+      /** @description 割当を実施したユーザー ID */
       assignedBy: string
       /**
        * Format: date-time
-       * @description Expiration date
+       * @description ロール割当の有効期限
        */
       expiresAt?: string
-      /** @description Is active */
+      /** @description 割当が現在有効かどうか */
       isActive: boolean
     }
+    /** @description ユーザーの詳細な役割情報と所属を表すモデル。 */
     'Models.UserRoleDetail': {
+      /** @description システム内での基礎的な役割区分。 */
       type: components['schemas']['Models.UserRoleType']
+      /** @description 役割が適用されるサロンID。全社権限の場合はnull。 */
       salonId?: components['schemas']['Models.SalonId']
+      /** @description スタッフに対して設定される技術レベル。 */
       level?: components['schemas']['Models.StaffLevelType']
     }
-    /** @enum {string} */
+    /**
+
+         * @description
+
+         * ユーザーロール区分 - システム内でのユーザーの役割と権限レベル
+
+         *
+
+         *
+
+         * customer: 顧客 - サービスの予約・利用が可能なユーザー
+
+         *
+
+         * staff: スタッフ - 施術を提供するサロン従業員
+
+         *
+
+         * manager: マネージャー - サロンの管理業務を担当する管理者
+
+         *
+
+         * admin: 管理者 - システム全体の管理権限を持つユーザー
+
+         *
+
+         * owner: オーナー - サロンの所有者、最高権限を保持
+
+         * @enum {string}
+
+         */
+
     'Models.UserRoleType': 'customer' | 'staff' | 'manager' | 'admin' | 'owner'
-    /** @description Validation error details */
+    /** @description 入力検証での失敗内容を表すモデル。
+     *     画面入力フォームやAPI連携時のフィールド単位のエラー詳細を格納し、顧客やスタッフへのフィードバックに利用する。 */
     'Models.ValidationError': {
-      /** @description Field path that failed validation */
+      /** @description 検証に失敗したフィールドパス。ネストしたキーをドット記法で表現する。 */
       field: string
-      /** @description Validation rule that failed */
+      /** @description 違反した検証ルール名またはコード。 */
       rule: string
-      /** @description Human-readable error message */
+      /** @description ユーザーに提示する具体的なエラーメッセージ。 */
       message: string
-      /** @description Actual value that failed validation */
+      /** @description 検証対象となった実際の値。セキュリティ観点で出力が許容される場合のみ利用する。 */
       value?: unknown
-      /** @description Expected value or constraint */
+      /** @description 期待される値や制約条件。入力補助やUI表示のガイダンスに使用する。 */
       constraint?: unknown
     }
-    /** @description Version information for optimistic locking */
+    /** @description 楽観的ロックを実現するためのバージョン管理モデル。
+     *     エンティティの更新競合を検知し、整合性を担保する。 */
     'Models.Versioned': {
       /**
        * Format: int32
-       * @description Version number
+       * @description 内部的に管理するバージョン番号。更新ごとにインクリメントする。
        */
       version: number
       /**
        * Format: date-time
-       * @description Last modification timestamp
+       * @description 最終更新日時 (UTC)。キャッシュ制御や監査に利用。
        */
       lastModified: string
     }
@@ -6860,39 +10371,80 @@ export interface components {
       /** Format: int32 */
       completedServices: number
     }
+    /** @description ウェイティングリストに登録された顧客情報。 */
     'Models.WaitlistEntry': {
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 現在の待機順序。
+       */
       position: number
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 呼び出し予想時刻。未確定の場合はnull。
+       */
       estimatedTime?: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description ウェイティングリストに参加した日時。
+       */
       joinedAt: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 待機権が失効する日時。
+       */
       expiresAt?: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 呼び出し通知を送信した日時。
+       */
       notifiedAt?: string
+      /** @description 希望スタッフID。任意指定。 */
       preferredStaffId?: components['schemas']['Models.StaffId']
+      /** @description 希望サービスID。任意指定。 */
       preferredServiceId?: components['schemas']['Models.ServiceId']
+      /** @description 追加メモ。 */
       notes?: string
     }
+    /** @description ウェイティングリストに登録された顧客情報。 */
     'Models.WaitlistEntryUpdate': {
-      /** Format: int32 */
+      /**
+       * Format: int32
+       * @description 現在の待機順序。
+       */
       position?: number
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 呼び出し予想時刻。未確定の場合はnull。
+       */
       estimatedTime?: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description ウェイティングリストに参加した日時。
+       */
       joinedAt?: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 待機権が失効する日時。
+       */
       expiresAt?: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description 呼び出し通知を送信した日時。
+       */
       notifiedAt?: string
+      /** @description 希望スタッフID。任意指定。 */
       preferredStaffId?: components['schemas']['Models.StaffId']
+      /** @description 希望サービスID。任意指定。 */
       preferredServiceId?: components['schemas']['Models.ServiceId']
+      /** @description 追加メモ。 */
       notes?: string
     }
-    /** Format: double */
+    /**
+     * Format: double
+     * @description 税率や金額計算で用いる汎用小数型。
+     */
     'Models.decimal': number
-    /** @description Audit entry model */
+    /** @description 監査ログ1件分の詳細を保持するモデルです。誰がいつどのような変更を行ったかを記録します。 */
     'Operations.AuditEntry': {
       /** @description Audit entry ID */
       id: string
@@ -6940,34 +10492,42 @@ export interface components {
   }
   responses: never
   parameters: {
-    /** @description Fields to exclude from response */
+    /** @description レスポンスから除外したいフィールドのカンマ区切りリスト。不要情報を除く場合に利用。 */
     'Models.AdvancedSearchParams.exclude': string
-    /** @description Facet fields to aggregate */
+    /** @description 集計対象とするファセットフィールドの一覧。カテゴリや価格帯などを指定する。 */
     'Models.AdvancedSearchParams.facetFields': string[]
-    /** @description Enable faceted search results */
+    /** @description ファセット集計を有効化するかどうか。true で各項目の件数を集計する。 */
     'Models.AdvancedSearchParams.facets': boolean
-    /** @description Fields to include in response */
+    /** @description レスポンスに含めるフィールドのカンマ区切りリスト。データ転送量の最適化に活用。 */
     'Models.AdvancedSearchParams.fields': string
-    /** @description Filter expression (e.g., 'status:active AND category:premium') */
+    /** @description フィルター式。例: `status:active AND category:premium`。属性条件を組み合わせた絞り込みに使用。 */
     'Models.AdvancedSearchParams.filter': string
-    /** @description Full-text search query */
+    /** @description 全文検索キーワード。名称や説明文を横断的に検索する。 */
     'Models.AdvancedSearchParams.q': string
-    /** @description Cursor for the next page */
+    /** @description 次ページを指し示すカーソル。前回レスポンスの `meta.nextCursor` を設定する。 */
     'Models.CursorPaginationParams.cursor': string
-    /** @description Maximum number of items to return (1-100) */
+    /** @description 1ページあたりの取得件数上限 (1〜100)。指定が無い場合は既定値 20 を適用。 */
     'Models.CursorPaginationParams.limit': number
-    /** @description Field to sort by */
+    /** @description ソート対象フィールド。予約日時や作成日時など業務軸を指定する。 */
     'Models.CursorPaginationParams.sortBy': string
-    /** @description Sort order */
+    /** @description ソート順序。`asc` は昇順、`desc` は降順を表す。 */
     'Models.CursorPaginationParams.sortOrder': 'asc' | 'desc'
+    /** @description 検索対象期間の終了日時。 */
     'Models.DateRangeFilter.endDate': string
+    /** @description 検索対象期間の開始日時。 */
     'Models.DateRangeFilter.startDate': string
-    /** @description Comma-separated list of field paths to update */
+    /** @description 更新対象フィールドをカンマ区切りで列挙した文字列。例: `name,address.street`。 */
     'Models.FieldMask': string
+    /** @description 1ページあたりの取得件数。省略時は20件。 */
     'Models.PaginationParams.limit': number
+    /** @description 取得開始位置を表すオフセット。省略時は0。 */
     'Models.PaginationParams.offset': number
+    /** @description 集計粒度（日/週/月） */
     'Models.SalesReportQuery.groupBy': 'day' | 'week' | 'month'
+    /** @description 返金取引を集計に含めるかどうか */
     'Models.SalesReportQuery.includeRefunds': boolean
+    /** @description 集計対象のサロン ID */
+    'Models.SalesReportQuery.salonId': components['schemas']['Models.SalonId']
     /** @description Filter by loyalty tier */
     'Models.SearchCustomerRequest.loyaltyTier': components['schemas']['Models.LoyaltyTierType']
     /** @description Filter by registration date from */
@@ -6980,37 +10540,45 @@ export interface components {
     'Models.SearchCustomerRequest.status': components['schemas']['Models.CustomerStatusType']
     /** @description Filter by customer tags */
     'Models.SearchCustomerRequest.tags': string[]
+    /** @description カテゴリでの絞り込み */
     'Models.SearchInventoryRequest.category': string
+    /** @description 期限切れ間近の在庫を取得するか */
     'Models.SearchInventoryRequest.expiringSoon': boolean
+    /** @description 最低在庫を下回るもののみ取得するか */
     'Models.SearchInventoryRequest.lowStock': boolean
+    /** @description 検索対象のサロン ID */
     'Models.SearchInventoryRequest.salonId': components['schemas']['Models.SalonId']
+    /** @description 在庫状態での絞り込み */
     'Models.SearchInventoryRequest.status': components['schemas']['Models.InventoryStatusType']
+    /** @description フリーワード検索用キーワード。 */
     'Models.SearchParams.q': string
+    /** @description 並び替え対象カラム名。 */
     'Models.SearchParams.sortBy': string
+    /** @description 昇順ascまたは降順descの指定。 */
     'Models.SearchParams.sortOrder': 'asc' | 'desc'
-    /** @description Filter by service categories */
+    /** @description サービスカテゴリ（カット・カラー等）による絞り込み */
     'Models.SearchSalonRequest.categories': components['schemas']['Models.ServiceCategoryType'][]
-    /** @description Filter by city name */
+    /** @description 市区町村名による絞り込み */
     'Models.SearchSalonRequest.city': string
-    /** @description Filter by features (array) */
+    /** @description 設備やこだわり条件などの特徴タグによる絞り込み */
     'Models.SearchSalonRequest.features': string[]
-    /** @description Filter by active status */
+    /** @description 営業中サロンのみを対象にするかどうか */
     'Models.SearchSalonRequest.isActive': boolean
-    /** @description Search keyword (alias for q) */
+    /** @description 検索キーワード。qパラメータのエイリアス */
     'Models.SearchSalonRequest.keyword': string
-    /** @description Reference latitude for distance calculation */
+    /** @description 距離計算に使用する基準緯度 */
     'Models.SearchSalonRequest.lat': number
-    /** @description Reference longitude for distance calculation */
+    /** @description 距離計算に使用する基準経度 */
     'Models.SearchSalonRequest.lon': number
-    /** @description Maximum distance in kilometers */
+    /** @description 検索基点からの最大距離（km） */
     'Models.SearchSalonRequest.maxDistance': number
-    /** @description Filter by minimum rating */
+    /** @description 最低評価値による絞り込み */
     'Models.SearchSalonRequest.minRating': number
-    /** @description Filter by specific day and time */
+    /** @description 特定日時に営業しているサロンを探すための基準日時 */
     'Models.SearchSalonRequest.openAt': string
-    /** @description Filter by opening hours */
+    /** @description 現在営業中かどうかで絞り込むフラグ */
     'Models.SearchSalonRequest.openNow': boolean
-    /** @description Filter by prefecture name */
+    /** @description 都道府県名による絞り込み */
     'Models.SearchSalonRequest.prefecture': string
   }
   requestBodies: never
@@ -7040,13 +10608,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.AccessResult']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -7074,13 +10650,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.PermissionCheckResult']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -7109,8 +10693,12 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: {
                   userId: string
                   userName?: string
@@ -7119,8 +10707,12 @@ export interface operations {
                 }[]
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -7148,8 +10740,12 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: {
                   userId: string
                   permissions: string[]
@@ -7161,8 +10757,12 @@ export interface operations {
                 }
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -7193,8 +10793,12 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: {
                   isValid: boolean
                   missingPermissions: string[]
@@ -7202,8 +10806,12 @@ export interface operations {
                 }
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -8562,7 +12170,9 @@ export interface operations {
         status?: components['schemas']['Models.BookingStatusCodeType']
         from?: string
         to?: string
+        /** @description 1ページあたりの取得件数。省略時は20件。 */
         limit?: components['parameters']['Models.PaginationParams.limit']
+        /** @description 取得開始位置を表すオフセット。省略時は0。 */
         offset?: components['parameters']['Models.PaginationParams.offset']
       }
       header?: never
@@ -8578,12 +12188,22 @@ export interface operations {
         }
         content: {
           'application/json': {
+            /** @description 取得した要素の配列。 */
             data: components['schemas']['Models.BookingDetail'][]
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 条件に一致する全件数。
+             */
             total: number
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 1ページあたりの件数。
+             */
             limit: number
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 取得開始位置のオフセット。
+             */
             offset: number
           }
         }
@@ -8977,25 +12597,25 @@ export interface operations {
         status?: components['parameters']['Models.SearchCustomerRequest.status']
         /** @description Filter by loyalty tier */
         loyaltyTier?: components['parameters']['Models.SearchCustomerRequest.loyaltyTier']
-        /** @description Full-text search query */
+        /** @description 全文検索キーワード。名称や説明文を横断的に検索する。 */
         q?: components['parameters']['Models.AdvancedSearchParams.q']
-        /** @description Filter expression (e.g., 'status:active AND category:premium') */
+        /** @description フィルター式。例: `status:active AND category:premium`。属性条件を組み合わせた絞り込みに使用。 */
         filter?: components['parameters']['Models.AdvancedSearchParams.filter']
-        /** @description Fields to include in response */
+        /** @description レスポンスに含めるフィールドのカンマ区切りリスト。データ転送量の最適化に活用。 */
         fields?: components['parameters']['Models.AdvancedSearchParams.fields']
-        /** @description Fields to exclude from response */
+        /** @description レスポンスから除外したいフィールドのカンマ区切りリスト。不要情報を除く場合に利用。 */
         exclude?: components['parameters']['Models.AdvancedSearchParams.exclude']
-        /** @description Enable faceted search results */
+        /** @description ファセット集計を有効化するかどうか。true で各項目の件数を集計する。 */
         facets?: components['parameters']['Models.AdvancedSearchParams.facets']
-        /** @description Facet fields to aggregate */
+        /** @description 集計対象とするファセットフィールドの一覧。カテゴリや価格帯などを指定する。 */
         facetFields?: components['parameters']['Models.AdvancedSearchParams.facetFields']
-        /** @description Maximum number of items to return (1-100) */
+        /** @description 1ページあたりの取得件数上限 (1〜100)。指定が無い場合は既定値 20 を適用。 */
         limit?: components['parameters']['Models.CursorPaginationParams.limit']
-        /** @description Cursor for the next page */
+        /** @description 次ページを指し示すカーソル。前回レスポンスの `meta.nextCursor` を設定する。 */
         cursor?: components['parameters']['Models.CursorPaginationParams.cursor']
-        /** @description Field to sort by */
+        /** @description ソート対象フィールド。予約日時や作成日時など業務軸を指定する。 */
         sortBy?: components['parameters']['Models.CursorPaginationParams.sortBy']
-        /** @description Sort order */
+        /** @description ソート順序。`asc` は昇順、`desc` は降順を表す。 */
         sortOrder?: components['parameters']['Models.CursorPaginationParams.sortOrder']
       }
       header?: {
@@ -9009,23 +12629,23 @@ export interface operations {
       /** @description The request has succeeded. */
       200: {
         headers: {
-          /** @description Request limit per window */
+          /** @description 一定期間内に許可されるリクエスト上限値。 */
           'X-RateLimit-Limit': number
-          /** @description Remaining requests in current window */
+          /** @description 現在のウィンドウで残っているリクエスト回数。 */
           'X-RateLimit-Remaining': number
-          /** @description Window reset timestamp */
+          /** @description リミットがリセットされる時刻 (UNIX 時間)。 */
           'X-RateLimit-Reset': number
-          /** @description Retry after (seconds) when rate limited */
+          /** @description レート制限に達した際に再試行可能となるまでの秒数。 */
           'Retry-After'?: number
           [name: string]: unknown
         }
         content: {
           'application/json': {
-            /** @description Array of items for current page */
+            /** @description 現在ページで取得したデータ配列。サロン一覧や予約履歴の実データを格納する。 */
             data: components['schemas']['Models.Customer'][]
-            /** @description Pagination metadata */
+            /** @description ページング状態を示すメタ情報。次ページの有無やカーソル値を含む。 */
             meta: components['schemas']['Models.PaginationMeta']
-            /** @description Navigation links */
+            /** @description 関連するページ遷移リンク。HATEOAS 連携や外部連携向けに利用する。 */
             links: components['schemas']['Models.PaginationLinks']
           }
         }
@@ -9051,13 +12671,13 @@ export interface operations {
       /** @description Client error */
       429: {
         headers: {
-          /** @description Request limit per window */
+          /** @description 一定期間内に許可されるリクエスト上限値。 */
           'X-RateLimit-Limit': number
-          /** @description Remaining requests in current window */
+          /** @description 現在のウィンドウで残っているリクエスト回数。 */
           'X-RateLimit-Remaining': number
-          /** @description Window reset timestamp */
+          /** @description リミットがリセットされる時刻 (UNIX 時間)。 */
           'X-RateLimit-Reset': number
-          /** @description Retry after (seconds) when rate limited */
+          /** @description レート制限に達した際に再試行可能となるまでの秒数。 */
           'Retry-After'?: number
           [name: string]: unknown
         }
@@ -9091,11 +12711,11 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Response data */
+            /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.Customer']
-            /** @description Response metadata */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
             meta?: components['schemas']['Models.ResponseMeta']
-            /** @description Related links */
+            /** @description 関連リソースや次アクションへのリンク情報。 */
             links?: {
               [key: string]: string
             }
@@ -9162,11 +12782,11 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Response data */
+            /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.Customer'][]
-            /** @description Response metadata */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
             meta?: components['schemas']['Models.ResponseMeta']
-            /** @description Related links */
+            /** @description 関連リソースや次アクションへのリンク情報。 */
             links?: {
               [key: string]: string
             }
@@ -9205,7 +12825,7 @@ export interface operations {
     requestBody: {
       content: {
         'application/json': {
-          /** @description Array of items to process */
+          /** @description 処理対象となるアイテムの配列。1件以上100件以下に制限する。 */
           items: {
             name?: string
             contactInfo?: components['schemas']['Models.ContactInfo']
@@ -9217,12 +12837,12 @@ export interface operations {
             id: components['schemas']['Models.CustomerId']
           }[]
           /**
-           * @description Whether to continue on error
+           * @description 途中でエラーが発生しても処理を継続するかどうか。既定は false。
            * @default false
            */
           continueOnError?: boolean
           /**
-           * @description Whether to process in transaction
+           * @description トランザクション内で一括処理を行うかどうか。既定は true。
            * @default true
            */
           transactional?: boolean
@@ -9237,27 +12857,27 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Successfully processed items */
+            /** @description 正常に処理されたアイテムの一覧。ビジネス結果を含む。 */
             succeeded: {
               /**
                * Format: int32
-               * @description Index in the original request
+               * @description 元リクエスト内でのインデックス。0 始まり。
                */
               index: number
-              /** @description Processed result */
+              /** @description 処理後のビジネス結果。ID 付与や更新後の値などを含む。 */
               result: components['schemas']['Models.Customer']
             }[]
-            /** @description Failed items */
+            /** @description エラーとなったアイテムの一覧。問題の詳細を確認できる。 */
             failed: {
               /**
                * Format: int32
-               * @description Index in the original request
+               * @description 元リクエスト内でのインデックス。0 始まり。
                */
               index: number
-              /** @description Error details */
+              /** @description 発生したエラー詳細。既定では `ProblemDetails` を使用する。 */
               error: components['schemas']['Models.ProblemDetails']
             }[]
-            /** @description Summary statistics */
+            /** @description 処理件数や所要時間をまとめた統計情報。 */
             summary: components['schemas']['Models.BulkSummary']
           }
         }
@@ -9295,15 +12915,15 @@ export interface operations {
     requestBody: {
       content: {
         'application/json': {
-          /** @description Array of items to process */
+          /** @description 処理対象となるアイテムの配列。1件以上100件以下に制限する。 */
           items: components['schemas']['Models.CreateCustomerRequest'][]
           /**
-           * @description Whether to continue on error
+           * @description 途中でエラーが発生しても処理を継続するかどうか。既定は false。
            * @default false
            */
           continueOnError?: boolean
           /**
-           * @description Whether to process in transaction
+           * @description トランザクション内で一括処理を行うかどうか。既定は true。
            * @default true
            */
           transactional?: boolean
@@ -9318,27 +12938,27 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Successfully processed items */
+            /** @description 正常に処理されたアイテムの一覧。ビジネス結果を含む。 */
             succeeded: {
               /**
                * Format: int32
-               * @description Index in the original request
+               * @description 元リクエスト内でのインデックス。0 始まり。
                */
               index: number
-              /** @description Processed result */
+              /** @description 処理後のビジネス結果。ID 付与や更新後の値などを含む。 */
               result: components['schemas']['Models.Customer']
             }[]
-            /** @description Failed items */
+            /** @description エラーとなったアイテムの一覧。問題の詳細を確認できる。 */
             failed: {
               /**
                * Format: int32
-               * @description Index in the original request
+               * @description 元リクエスト内でのインデックス。0 始まり。
                */
               index: number
-              /** @description Error details */
+              /** @description 発生したエラー詳細。既定では `ProblemDetails` を使用する。 */
               error: components['schemas']['Models.ProblemDetails']
             }[]
-            /** @description Summary statistics */
+            /** @description 処理件数や所要時間をまとめた統計情報。 */
             summary: components['schemas']['Models.BulkSummary']
           }
         }
@@ -9388,30 +13008,30 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Successfully processed items */
+            /** @description 正常に処理されたアイテムの一覧。ビジネス結果を含む。 */
             succeeded: {
               /**
                * Format: int32
-               * @description Index in the original request
+               * @description 元リクエスト内でのインデックス。0 始まり。
                */
               index: number
-              /** @description Processed result */
+              /** @description 処理後のビジネス結果。ID 付与や更新後の値などを含む。 */
               result: {
                 id: components['schemas']['Models.CustomerId']
                 deleted: boolean
               }
             }[]
-            /** @description Failed items */
+            /** @description エラーとなったアイテムの一覧。問題の詳細を確認できる。 */
             failed: {
               /**
                * Format: int32
-               * @description Index in the original request
+               * @description 元リクエスト内でのインデックス。0 始まり。
                */
               index: number
-              /** @description Error details */
+              /** @description 発生したエラー詳細。既定では `ProblemDetails` を使用する。 */
               error: components['schemas']['Models.ProblemDetails']
             }[]
-            /** @description Summary statistics */
+            /** @description 処理件数や所要時間をまとめた統計情報。 */
             summary: components['schemas']['Models.BulkSummary']
           }
         }
@@ -9477,33 +13097,33 @@ export interface operations {
            * @enum {string}
            */
           loyaltyTier?: 'bronze' | 'silver' | 'gold' | 'platinum'
-          /** @description Full-text search query */
+          /** @description 全文検索キーワード。名称や説明文を横断的に検索する。 */
           q?: string
-          /** @description Filter expression (e.g., 'status:active AND category:premium') */
+          /** @description フィルター式。例: `status:active AND category:premium`。属性条件を組み合わせた絞り込みに使用。 */
           filter?: string
-          /** @description Fields to include in response */
+          /** @description レスポンスに含めるフィールドのカンマ区切りリスト。データ転送量の最適化に活用。 */
           fields?: string
-          /** @description Fields to exclude from response */
+          /** @description レスポンスから除外したいフィールドのカンマ区切りリスト。不要情報を除く場合に利用。 */
           exclude?: string
           /**
-           * @description Enable faceted search results
+           * @description ファセット集計を有効化するかどうか。true で各項目の件数を集計する。
            * @default false
            */
           facets?: boolean
-          /** @description Facet fields to aggregate */
+          /** @description 集計対象とするファセットフィールドの一覧。カテゴリや価格帯などを指定する。 */
           facetFields?: string[]
           /**
            * Format: int32
-           * @description Maximum number of items to return (1-100)
+           * @description 1ページあたりの取得件数上限 (1〜100)。指定が無い場合は既定値 20 を適用。
            * @default 20
            */
           limit?: number
-          /** @description Cursor for the next page */
+          /** @description 次ページを指し示すカーソル。前回レスポンスの `meta.nextCursor` を設定する。 */
           cursor?: string
-          /** @description Field to sort by */
+          /** @description ソート対象フィールド。予約日時や作成日時など業務軸を指定する。 */
           sortBy?: string
           /**
-           * @description Sort order
+           * @description ソート順序。`asc` は昇順、`desc` は降順を表す。
            * @default asc
            * @enum {string}
            */
@@ -9563,12 +13183,12 @@ export interface operations {
     requestBody: {
       content: {
         'application/json': {
-          /** @description Primary customer ID to keep */
+          /** @description 統合後も残すメイン顧客ID */
           primaryCustomerId: components['schemas']['Models.CustomerId']
-          /** @description Secondary customer ID to merge and delete */
+          /** @description 統合して削除するサブ顧客ID */
           secondaryCustomerId: components['schemas']['Models.CustomerId']
           /**
-           * @description Strategy for handling conflicts
+           * @description 重複データの優先ルール
            * @enum {string}
            */
           conflictResolution?: 'keep_primary' | 'keep_secondary' | 'keep_newest'
@@ -9583,11 +13203,11 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Response data */
+            /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.Customer']
-            /** @description Response metadata */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
             meta?: components['schemas']['Models.ResponseMeta']
-            /** @description Related links */
+            /** @description 関連リソースや次アクションへのリンク情報。 */
             links?: {
               [key: string]: string
             }
@@ -9647,25 +13267,25 @@ export interface operations {
         status?: components['parameters']['Models.SearchCustomerRequest.status']
         /** @description Filter by loyalty tier */
         loyaltyTier?: components['parameters']['Models.SearchCustomerRequest.loyaltyTier']
-        /** @description Full-text search query */
+        /** @description 全文検索キーワード。名称や説明文を横断的に検索する。 */
         q?: components['parameters']['Models.AdvancedSearchParams.q']
-        /** @description Filter expression (e.g., 'status:active AND category:premium') */
+        /** @description フィルター式。例: `status:active AND category:premium`。属性条件を組み合わせた絞り込みに使用。 */
         filter?: components['parameters']['Models.AdvancedSearchParams.filter']
-        /** @description Fields to include in response */
+        /** @description レスポンスに含めるフィールドのカンマ区切りリスト。データ転送量の最適化に活用。 */
         fields?: components['parameters']['Models.AdvancedSearchParams.fields']
-        /** @description Fields to exclude from response */
+        /** @description レスポンスから除外したいフィールドのカンマ区切りリスト。不要情報を除く場合に利用。 */
         exclude?: components['parameters']['Models.AdvancedSearchParams.exclude']
-        /** @description Enable faceted search results */
+        /** @description ファセット集計を有効化するかどうか。true で各項目の件数を集計する。 */
         facets?: components['parameters']['Models.AdvancedSearchParams.facets']
-        /** @description Facet fields to aggregate */
+        /** @description 集計対象とするファセットフィールドの一覧。カテゴリや価格帯などを指定する。 */
         facetFields?: components['parameters']['Models.AdvancedSearchParams.facetFields']
-        /** @description Maximum number of items to return (1-100) */
+        /** @description 1ページあたりの取得件数上限 (1〜100)。指定が無い場合は既定値 20 を適用。 */
         limit?: components['parameters']['Models.CursorPaginationParams.limit']
-        /** @description Cursor for the next page */
+        /** @description 次ページを指し示すカーソル。前回レスポンスの `meta.nextCursor` を設定する。 */
         cursor?: components['parameters']['Models.CursorPaginationParams.cursor']
-        /** @description Field to sort by */
+        /** @description ソート対象フィールド。予約日時や作成日時など業務軸を指定する。 */
         sortBy?: components['parameters']['Models.CursorPaginationParams.sortBy']
-        /** @description Sort order */
+        /** @description ソート順序。`asc` は昇順、`desc` は降順を表す。 */
         sortOrder?: components['parameters']['Models.CursorPaginationParams.sortOrder']
       }
       header?: {
@@ -9683,11 +13303,11 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Search results */
+            /** @description 検索でヒットした結果一覧。サロンカードやメニュー一覧に利用。 */
             results: components['schemas']['Models.Customer'][]
-            /** @description Search metadata */
+            /** @description 検索条件や件数などのメタ情報。ページングやログ解析に活用する。 */
             meta: components['schemas']['Models.SearchMeta']
-            /** @description Faceted aggregations */
+            /** @description ファセット集計結果。各フィールドごとの件数分布を保持する。 */
             facets?: {
               [key: string]: components['schemas']['Models.Facet'][]
             }
@@ -9739,11 +13359,11 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Response data */
+            /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.Customer']
-            /** @description Response metadata */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
             meta?: components['schemas']['Models.ResponseMeta']
-            /** @description Related links */
+            /** @description 関連リソースや次アクションへのリンク情報。 */
             links?: {
               [key: string]: string
             }
@@ -9803,11 +13423,11 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Response data */
+            /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.Customer']
-            /** @description Response metadata */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
             meta?: components['schemas']['Models.ResponseMeta']
-            /** @description Related links */
+            /** @description 関連リソースや次アクションへのリンク情報。 */
             links?: {
               [key: string]: string
             }
@@ -9916,7 +13536,7 @@ export interface operations {
   CustomerCrud_patch: {
     parameters: {
       query?: {
-        /** @description Comma-separated list of field paths to update */
+        /** @description 更新対象フィールドをカンマ区切りで列挙した文字列。例: `name,address.street`。 */
         updateMask?: components['parameters']['Models.FieldMask']
       }
       header?: {
@@ -9942,11 +13562,11 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Response data */
+            /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.Customer']
-            /** @description Response metadata */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
             meta?: components['schemas']['Models.ResponseMeta']
-            /** @description Related links */
+            /** @description 関連リソースや次アクションへのリンク情報。 */
             links?: {
               [key: string]: string
             }
@@ -10004,15 +13624,17 @@ export interface operations {
     parameters: {
       query?: {
         status?: components['schemas']['Models.BookingStatusCodeType']
+        /** @description 取得対象期間の開始日時 */
         from?: string
+        /** @description 取得対象期間の終了日時 */
         to?: string
-        /** @description Maximum number of items to return (1-100) */
+        /** @description 1ページあたりの取得件数上限 (1〜100)。指定が無い場合は既定値 20 を適用。 */
         limit?: components['parameters']['Models.CursorPaginationParams.limit']
-        /** @description Cursor for the next page */
+        /** @description 次ページを指し示すカーソル。前回レスポンスの `meta.nextCursor` を設定する。 */
         cursor?: components['parameters']['Models.CursorPaginationParams.cursor']
-        /** @description Field to sort by */
+        /** @description ソート対象フィールド。予約日時や作成日時など業務軸を指定する。 */
         sortBy?: components['parameters']['Models.CursorPaginationParams.sortBy']
-        /** @description Sort order */
+        /** @description ソート順序。`asc` は昇順、`desc` は降順を表す。 */
         sortOrder?: components['parameters']['Models.CursorPaginationParams.sortOrder']
       }
       header?: {
@@ -10032,11 +13654,11 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Array of items for current page */
+            /** @description 現在ページで取得したデータ配列。サロン一覧や予約履歴の実データを格納する。 */
             data: components['schemas']['Models.BookingDetail'][]
-            /** @description Pagination metadata */
+            /** @description ページング状態を示すメタ情報。次ページの有無やカーソル値を含む。 */
             meta: components['schemas']['Models.PaginationMeta']
-            /** @description Navigation links */
+            /** @description 関連するページ遷移リンク。HATEOAS 連携や外部連携向けに利用する。 */
             links: components['schemas']['Models.PaginationLinks']
           }
         }
@@ -10075,9 +13697,9 @@ export interface operations {
     requestBody: {
       content: {
         'application/json': {
-          /** @description Reason for deletion */
+          /** @description 削除を希望する理由 */
           reason: string
-          /** @description Confirm understanding of consequences */
+          /** @description 削除に伴う影響を理解しているか */
           confirmed: boolean
         }
       }
@@ -10090,24 +13712,24 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Response data */
+            /** @description レスポンスの主体となるビジネスデータ。 */
             data: {
-              /** @description Deletion request ID */
+              /** @description 削除リクエストID */
               requestId: string
               /**
                * Format: date-time
-               * @description Scheduled deletion date
+               * @description 予定される削除日
                */
               scheduledDate: string
               /**
                * Format: int32
-               * @description Grace period in days
+               * @description 猶予期間（日数）
                */
               gracePeriodDays: number
             }
-            /** @description Response metadata */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
             meta?: components['schemas']['Models.ResponseMeta']
-            /** @description Related links */
+            /** @description 関連リソースや次アクションへのリンク情報。 */
             links?: {
               [key: string]: string
             }
@@ -10146,7 +13768,7 @@ export interface operations {
   CustomerOperations_exportData: {
     parameters: {
       query?: {
-        /** @description Export format */
+        /** @description エクスポート形式 */
         format?: 'json' | 'csv' | 'pdf'
       }
       header?: {
@@ -10192,13 +13814,13 @@ export interface operations {
   CustomerCrud_getHistory: {
     parameters: {
       query?: {
-        /** @description Maximum number of items to return (1-100) */
+        /** @description 1ページあたりの取得件数上限 (1〜100)。指定が無い場合は既定値 20 を適用。 */
         limit?: components['parameters']['Models.CursorPaginationParams.limit']
-        /** @description Cursor for the next page */
+        /** @description 次ページを指し示すカーソル。前回レスポンスの `meta.nextCursor` を設定する。 */
         cursor?: components['parameters']['Models.CursorPaginationParams.cursor']
-        /** @description Field to sort by */
+        /** @description ソート対象フィールド。予約日時や作成日時など業務軸を指定する。 */
         sortBy?: components['parameters']['Models.CursorPaginationParams.sortBy']
-        /** @description Sort order */
+        /** @description ソート順序。`asc` は昇順、`desc` は降順を表す。 */
         sortOrder?: components['parameters']['Models.CursorPaginationParams.sortOrder']
       }
       header?: {
@@ -10218,11 +13840,11 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Array of items for current page */
+            /** @description 現在ページで取得したデータ配列。サロン一覧や予約履歴の実データを格納する。 */
             data: components['schemas']['Operations.AuditEntry'][]
-            /** @description Pagination metadata */
+            /** @description ページング状態を示すメタ情報。次ページの有無やカーソル値を含む。 */
             meta: components['schemas']['Models.PaginationMeta']
-            /** @description Navigation links */
+            /** @description 関連するページ遷移リンク。HATEOAS 連携や外部連携向けに利用する。 */
             links: components['schemas']['Models.PaginationLinks']
           }
         }
@@ -10263,12 +13885,12 @@ export interface operations {
         'application/json': {
           /**
            * Format: int32
-           * @description Points to add
+           * @description 加算するポイント数
            */
           points: number
-          /** @description Reason for adding points */
+          /** @description ポイント加算の理由 */
           reason: string
-          /** @description Reference ID (e.g., booking ID) */
+          /** @description 関連する参照ID（例: 予約ID） */
           referenceId?: string
         }
       }
@@ -10281,19 +13903,19 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Response data */
+            /** @description レスポンスの主体となるビジネスデータ。 */
             data: {
               /**
                * Format: int32
-               * @description New points balance
+               * @description 更新後のポイント残高
                */
               balance: number
-              /** @description Transaction ID */
+              /** @description トランザクションID */
               transactionId: string
             }
-            /** @description Response metadata */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
             meta?: components['schemas']['Models.ResponseMeta']
-            /** @description Related links */
+            /** @description 関連リソースや次アクションへのリンク情報。 */
             links?: {
               [key: string]: string
             }
@@ -10353,11 +13975,11 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Response data */
+            /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.CustomerPreferences']
-            /** @description Response metadata */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
             meta?: components['schemas']['Models.ResponseMeta']
-            /** @description Related links */
+            /** @description 関連リソースや次アクションへのリンク情報。 */
             links?: {
               [key: string]: string
             }
@@ -10413,11 +14035,11 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Response data */
+            /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.CustomerProfile']
-            /** @description Response metadata */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
             meta?: components['schemas']['Models.ResponseMeta']
-            /** @description Related links */
+            /** @description 関連リソースや次アクションへのリンク情報。 */
             links?: {
               [key: string]: string
             }
@@ -10448,15 +14070,17 @@ export interface operations {
     parameters: {
       query?: {
         status?: components['schemas']['Models.ReservationStatusType']
+        /** @description 取得対象期間の開始日時 */
         from?: string
+        /** @description 取得対象期間の終了日時 */
         to?: string
-        /** @description Maximum number of items to return (1-100) */
+        /** @description 1ページあたりの取得件数上限 (1〜100)。指定が無い場合は既定値 20 を適用。 */
         limit?: components['parameters']['Models.CursorPaginationParams.limit']
-        /** @description Cursor for the next page */
+        /** @description 次ページを指し示すカーソル。前回レスポンスの `meta.nextCursor` を設定する。 */
         cursor?: components['parameters']['Models.CursorPaginationParams.cursor']
-        /** @description Field to sort by */
+        /** @description ソート対象フィールド。予約日時や作成日時など業務軸を指定する。 */
         sortBy?: components['parameters']['Models.CursorPaginationParams.sortBy']
-        /** @description Sort order */
+        /** @description ソート順序。`asc` は昇順、`desc` は降順を表す。 */
         sortOrder?: components['parameters']['Models.CursorPaginationParams.sortOrder']
       }
       header?: {
@@ -10476,11 +14100,11 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Array of items for current page */
+            /** @description 現在ページで取得したデータ配列。サロン一覧や予約履歴の実データを格納する。 */
             data: components['schemas']['Models.ReservationDetail'][]
-            /** @description Pagination metadata */
+            /** @description ページング状態を示すメタ情報。次ページの有無やカーソル値を含む。 */
             meta: components['schemas']['Models.PaginationMeta']
-            /** @description Navigation links */
+            /** @description 関連するページ遷移リンク。HATEOAS 連携や外部連携向けに利用する。 */
             links: components['schemas']['Models.PaginationLinks']
           }
         }
@@ -10525,11 +14149,11 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Response data */
+            /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.Customer']
-            /** @description Response metadata */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
             meta?: components['schemas']['Models.ResponseMeta']
-            /** @description Related links */
+            /** @description 関連リソースや次アクションへのリンク情報。 */
             links?: {
               [key: string]: string
             }
@@ -10568,7 +14192,7 @@ export interface operations {
   CustomerOperations_getStatistics: {
     parameters: {
       query?: {
-        /** @description Period for statistics (e.g., '7d', '1m', '3m', '1y') */
+        /** @description 集計対象期間（例: '7d', '1m', '3m', '1y'） */
         period?: string
       }
       header?: {
@@ -10588,11 +14212,11 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Response data */
+            /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.CustomerStatistics']
-            /** @description Response metadata */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
             meta?: components['schemas']['Models.ResponseMeta']
-            /** @description Related links */
+            /** @description 関連リソースや次アクションへのリンク情報。 */
             links?: {
               [key: string]: string
             }
@@ -10640,11 +14264,11 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Response data */
+            /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.Customer']
-            /** @description Response metadata */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
             meta?: components['schemas']['Models.ResponseMeta']
-            /** @description Related links */
+            /** @description 関連リソースや次アクションへのリンク情報。 */
             links?: {
               [key: string]: string
             }
@@ -10680,7 +14304,9 @@ export interface operations {
         status?: components['schemas']['Models.ReservationStatusType']
         from?: string
         to?: string
+        /** @description 1ページあたりの取得件数。省略時は20件。 */
         limit?: components['parameters']['Models.PaginationParams.limit']
+        /** @description 取得開始位置を表すオフセット。省略時は0。 */
         offset?: components['parameters']['Models.PaginationParams.offset']
       }
       header?: never
@@ -10696,12 +14322,22 @@ export interface operations {
         }
         content: {
           'application/json': {
+            /** @description 取得した要素の配列。 */
             data: components['schemas']['Models.ReservationDetail'][]
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 条件に一致する全件数。
+             */
             total: number
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 1ページあたりの件数。
+             */
             limit: number
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 取得開始位置のオフセット。
+             */
             offset: number
           }
         }
@@ -10978,7 +14614,9 @@ export interface operations {
         staffId?: components['schemas']['Models.StaffId']
         minRating?: number
         isVerified?: boolean
+        /** @description 1ページあたりの取得件数。省略時は20件。 */
         limit?: components['parameters']['Models.PaginationParams.limit']
+        /** @description 取得開始位置を表すオフセット。省略時は0。 */
         offset?: components['parameters']['Models.PaginationParams.offset']
       }
       header?: never
@@ -10994,12 +14632,22 @@ export interface operations {
         }
         content: {
           'application/json': {
+            /** @description 取得した要素の配列。 */
             data: components['schemas']['Models.Review'][]
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 条件に一致する全件数。
+             */
             total: number
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 1ページあたりの件数。
+             */
             limit: number
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 取得開始位置のオフセット。
+             */
             offset: number
           }
         }
@@ -11239,49 +14887,49 @@ export interface operations {
   SalonCrud_list: {
     parameters: {
       query?: {
-        /** @description Search keyword (alias for q) */
+        /** @description 検索キーワード。qパラメータのエイリアス */
         keyword?: components['parameters']['Models.SearchSalonRequest.keyword']
-        /** @description Filter by city name */
+        /** @description 市区町村名による絞り込み */
         city?: components['parameters']['Models.SearchSalonRequest.city']
-        /** @description Filter by prefecture name */
+        /** @description 都道府県名による絞り込み */
         prefecture?: components['parameters']['Models.SearchSalonRequest.prefecture']
-        /** @description Filter by service categories */
+        /** @description サービスカテゴリ（カット・カラー等）による絞り込み */
         categories?: components['parameters']['Models.SearchSalonRequest.categories']
-        /** @description Filter by features (array) */
+        /** @description 設備やこだわり条件などの特徴タグによる絞り込み */
         features?: components['parameters']['Models.SearchSalonRequest.features']
-        /** @description Filter by active status */
+        /** @description 営業中サロンのみを対象にするかどうか */
         isActive?: components['parameters']['Models.SearchSalonRequest.isActive']
-        /** @description Filter by minimum rating */
+        /** @description 最低評価値による絞り込み */
         minRating?: components['parameters']['Models.SearchSalonRequest.minRating']
-        /** @description Maximum distance in kilometers */
+        /** @description 検索基点からの最大距離（km） */
         maxDistance?: components['parameters']['Models.SearchSalonRequest.maxDistance']
-        /** @description Reference latitude for distance calculation */
+        /** @description 距離計算に使用する基準緯度 */
         lat?: components['parameters']['Models.SearchSalonRequest.lat']
-        /** @description Reference longitude for distance calculation */
+        /** @description 距離計算に使用する基準経度 */
         lon?: components['parameters']['Models.SearchSalonRequest.lon']
-        /** @description Filter by opening hours */
+        /** @description 現在営業中かどうかで絞り込むフラグ */
         openNow?: components['parameters']['Models.SearchSalonRequest.openNow']
-        /** @description Filter by specific day and time */
+        /** @description 特定日時に営業しているサロンを探すための基準日時 */
         openAt?: components['parameters']['Models.SearchSalonRequest.openAt']
-        /** @description Full-text search query */
+        /** @description 全文検索キーワード。名称や説明文を横断的に検索する。 */
         q?: components['parameters']['Models.AdvancedSearchParams.q']
-        /** @description Filter expression (e.g., 'status:active AND category:premium') */
+        /** @description フィルター式。例: `status:active AND category:premium`。属性条件を組み合わせた絞り込みに使用。 */
         filter?: components['parameters']['Models.AdvancedSearchParams.filter']
-        /** @description Fields to include in response */
+        /** @description レスポンスに含めるフィールドのカンマ区切りリスト。データ転送量の最適化に活用。 */
         fields?: components['parameters']['Models.AdvancedSearchParams.fields']
-        /** @description Fields to exclude from response */
+        /** @description レスポンスから除外したいフィールドのカンマ区切りリスト。不要情報を除く場合に利用。 */
         exclude?: components['parameters']['Models.AdvancedSearchParams.exclude']
-        /** @description Enable faceted search results */
+        /** @description ファセット集計を有効化するかどうか。true で各項目の件数を集計する。 */
         facets?: components['parameters']['Models.AdvancedSearchParams.facets']
-        /** @description Facet fields to aggregate */
+        /** @description 集計対象とするファセットフィールドの一覧。カテゴリや価格帯などを指定する。 */
         facetFields?: components['parameters']['Models.AdvancedSearchParams.facetFields']
-        /** @description Maximum number of items to return (1-100) */
+        /** @description 1ページあたりの取得件数上限 (1〜100)。指定が無い場合は既定値 20 を適用。 */
         limit?: components['parameters']['Models.CursorPaginationParams.limit']
-        /** @description Cursor for the next page */
+        /** @description 次ページを指し示すカーソル。前回レスポンスの `meta.nextCursor` を設定する。 */
         cursor?: components['parameters']['Models.CursorPaginationParams.cursor']
-        /** @description Field to sort by */
+        /** @description ソート対象フィールド。予約日時や作成日時など業務軸を指定する。 */
         sortBy?: components['parameters']['Models.CursorPaginationParams.sortBy']
-        /** @description Sort order */
+        /** @description ソート順序。`asc` は昇順、`desc` は降順を表す。 */
         sortOrder?: components['parameters']['Models.CursorPaginationParams.sortOrder']
       }
       header?: {
@@ -11295,23 +14943,23 @@ export interface operations {
       /** @description The request has succeeded. */
       200: {
         headers: {
-          /** @description Request limit per window */
+          /** @description 一定期間内に許可されるリクエスト上限値。 */
           'X-RateLimit-Limit': number
-          /** @description Remaining requests in current window */
+          /** @description 現在のウィンドウで残っているリクエスト回数。 */
           'X-RateLimit-Remaining': number
-          /** @description Window reset timestamp */
+          /** @description リミットがリセットされる時刻 (UNIX 時間)。 */
           'X-RateLimit-Reset': number
-          /** @description Retry after (seconds) when rate limited */
+          /** @description レート制限に達した際に再試行可能となるまでの秒数。 */
           'Retry-After'?: number
           [name: string]: unknown
         }
         content: {
           'application/json': {
-            /** @description Array of items for current page */
+            /** @description 現在ページで取得したデータ配列。サロン一覧や予約履歴の実データを格納する。 */
             data: components['schemas']['Models.Salon'][]
-            /** @description Pagination metadata */
+            /** @description ページング状態を示すメタ情報。次ページの有無やカーソル値を含む。 */
             meta: components['schemas']['Models.PaginationMeta']
-            /** @description Navigation links */
+            /** @description 関連するページ遷移リンク。HATEOAS 連携や外部連携向けに利用する。 */
             links: components['schemas']['Models.PaginationLinks']
           }
         }
@@ -11337,13 +14985,13 @@ export interface operations {
       /** @description Client error */
       429: {
         headers: {
-          /** @description Request limit per window */
+          /** @description 一定期間内に許可されるリクエスト上限値。 */
           'X-RateLimit-Limit': number
-          /** @description Remaining requests in current window */
+          /** @description 現在のウィンドウで残っているリクエスト回数。 */
           'X-RateLimit-Remaining': number
-          /** @description Window reset timestamp */
+          /** @description リミットがリセットされる時刻 (UNIX 時間)。 */
           'X-RateLimit-Reset': number
-          /** @description Retry after (seconds) when rate limited */
+          /** @description レート制限に達した際に再試行可能となるまでの秒数。 */
           'Retry-After'?: number
           [name: string]: unknown
         }
@@ -11377,11 +15025,11 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Response data */
+            /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.Salon']
-            /** @description Response metadata */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
             meta?: components['schemas']['Models.ResponseMeta']
-            /** @description Related links */
+            /** @description 関連リソースや次アクションへのリンク情報。 */
             links?: {
               [key: string]: string
             }
@@ -11448,11 +15096,11 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Response data */
+            /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.Salon'][]
-            /** @description Response metadata */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
             meta?: components['schemas']['Models.ResponseMeta']
-            /** @description Related links */
+            /** @description 関連リソースや次アクションへのリンク情報。 */
             links?: {
               [key: string]: string
             }
@@ -11491,25 +15139,33 @@ export interface operations {
     requestBody: {
       content: {
         'application/json': {
-          /** @description Array of items to process */
+          /** @description 処理対象となるアイテムの配列。1件以上100件以下に制限する。 */
           items: {
+            /** @description 名称変更を行う場合に指定 */
             name?: string
+            /** @description 紹介文を更新する場合に指定 */
             description?: string
+            /** @description 住所情報の差し替えが必要な場合に指定 */
             address?: components['schemas']['Models.Address']
+            /** @description 電話番号やメールアドレス等の連絡先を更新する場合に指定 */
             contactInfo?: components['schemas']['Models.ContactInfo']
+            /** @description 通常営業時間の更新が必要な場合に指定 */
             openingHours?: components['schemas']['Models.OpeningHours'][]
+            /** @description 特別営業時間やシフト設定の更新に利用 */
             businessHours?: components['schemas']['Models.BusinessHours'][]
+            /** @description 画像URLリストを更新する場合に指定 */
             imageUrls?: string[]
+            /** @description 特徴タグの追加・削除を行う場合に指定 */
             features?: string[]
             id: components['schemas']['Models.SalonId']
           }[]
           /**
-           * @description Whether to continue on error
+           * @description 途中でエラーが発生しても処理を継続するかどうか。既定は false。
            * @default false
            */
           continueOnError?: boolean
           /**
-           * @description Whether to process in transaction
+           * @description トランザクション内で一括処理を行うかどうか。既定は true。
            * @default true
            */
           transactional?: boolean
@@ -11524,27 +15180,27 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Successfully processed items */
+            /** @description 正常に処理されたアイテムの一覧。ビジネス結果を含む。 */
             succeeded: {
               /**
                * Format: int32
-               * @description Index in the original request
+               * @description 元リクエスト内でのインデックス。0 始まり。
                */
               index: number
-              /** @description Processed result */
+              /** @description 処理後のビジネス結果。ID 付与や更新後の値などを含む。 */
               result: components['schemas']['Models.Salon']
             }[]
-            /** @description Failed items */
+            /** @description エラーとなったアイテムの一覧。問題の詳細を確認できる。 */
             failed: {
               /**
                * Format: int32
-               * @description Index in the original request
+               * @description 元リクエスト内でのインデックス。0 始まり。
                */
               index: number
-              /** @description Error details */
+              /** @description 発生したエラー詳細。既定では `ProblemDetails` を使用する。 */
               error: components['schemas']['Models.ProblemDetails']
             }[]
-            /** @description Summary statistics */
+            /** @description 処理件数や所要時間をまとめた統計情報。 */
             summary: components['schemas']['Models.BulkSummary']
           }
         }
@@ -11582,15 +15238,15 @@ export interface operations {
     requestBody: {
       content: {
         'application/json': {
-          /** @description Array of items to process */
+          /** @description 処理対象となるアイテムの配列。1件以上100件以下に制限する。 */
           items: components['schemas']['Models.CreateSalonRequest'][]
           /**
-           * @description Whether to continue on error
+           * @description 途中でエラーが発生しても処理を継続するかどうか。既定は false。
            * @default false
            */
           continueOnError?: boolean
           /**
-           * @description Whether to process in transaction
+           * @description トランザクション内で一括処理を行うかどうか。既定は true。
            * @default true
            */
           transactional?: boolean
@@ -11605,27 +15261,27 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Successfully processed items */
+            /** @description 正常に処理されたアイテムの一覧。ビジネス結果を含む。 */
             succeeded: {
               /**
                * Format: int32
-               * @description Index in the original request
+               * @description 元リクエスト内でのインデックス。0 始まり。
                */
               index: number
-              /** @description Processed result */
+              /** @description 処理後のビジネス結果。ID 付与や更新後の値などを含む。 */
               result: components['schemas']['Models.Salon']
             }[]
-            /** @description Failed items */
+            /** @description エラーとなったアイテムの一覧。問題の詳細を確認できる。 */
             failed: {
               /**
                * Format: int32
-               * @description Index in the original request
+               * @description 元リクエスト内でのインデックス。0 始まり。
                */
               index: number
-              /** @description Error details */
+              /** @description 発生したエラー詳細。既定では `ProblemDetails` を使用する。 */
               error: components['schemas']['Models.ProblemDetails']
             }[]
-            /** @description Summary statistics */
+            /** @description 処理件数や所要時間をまとめた統計情報。 */
             summary: components['schemas']['Models.BulkSummary']
           }
         }
@@ -11675,30 +15331,30 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Successfully processed items */
+            /** @description 正常に処理されたアイテムの一覧。ビジネス結果を含む。 */
             succeeded: {
               /**
                * Format: int32
-               * @description Index in the original request
+               * @description 元リクエスト内でのインデックス。0 始まり。
                */
               index: number
-              /** @description Processed result */
+              /** @description 処理後のビジネス結果。ID 付与や更新後の値などを含む。 */
               result: {
                 id: components['schemas']['Models.SalonId']
                 deleted: boolean
               }
             }[]
-            /** @description Failed items */
+            /** @description エラーとなったアイテムの一覧。問題の詳細を確認できる。 */
             failed: {
               /**
                * Format: int32
-               * @description Index in the original request
+               * @description 元リクエスト内でのインデックス。0 始まり。
                */
               index: number
-              /** @description Error details */
+              /** @description 発生したエラー詳細。既定では `ProblemDetails` を使用する。 */
               error: components['schemas']['Models.ProblemDetails']
             }[]
-            /** @description Summary statistics */
+            /** @description 処理件数や所要時間をまとめた統計情報。 */
             summary: components['schemas']['Models.BulkSummary']
           }
         }
@@ -11735,72 +15391,72 @@ export interface operations {
     requestBody: {
       content: {
         'application/json': {
-          /** @description Search keyword (alias for q) */
+          /** @description 検索キーワード。qパラメータのエイリアス */
           keyword?: string
-          /** @description Filter by city name */
+          /** @description 市区町村名による絞り込み */
           city?: string
-          /** @description Filter by prefecture name */
+          /** @description 都道府県名による絞り込み */
           prefecture?: string
-          /** @description Filter by service categories */
+          /** @description サービスカテゴリ（カット・カラー等）による絞り込み */
           categories?: components['schemas']['Models.ServiceCategoryType'][]
-          /** @description Filter by features (array) */
+          /** @description 設備やこだわり条件などの特徴タグによる絞り込み */
           features?: string[]
-          /** @description Filter by active status */
+          /** @description 営業中サロンのみを対象にするかどうか */
           isActive?: boolean
           /**
            * Format: float
-           * @description Filter by minimum rating
+           * @description 最低評価値による絞り込み
            */
           minRating?: number
           /**
            * Format: float
-           * @description Maximum distance in kilometers
+           * @description 検索基点からの最大距離（km）
            */
           maxDistance?: number
           /**
            * Format: double
-           * @description Reference latitude for distance calculation
+           * @description 距離計算に使用する基準緯度
            */
           lat?: number
           /**
            * Format: double
-           * @description Reference longitude for distance calculation
+           * @description 距離計算に使用する基準経度
            */
           lon?: number
-          /** @description Filter by opening hours */
+          /** @description 現在営業中かどうかで絞り込むフラグ */
           openNow?: boolean
           /**
            * Format: date-time
-           * @description Filter by specific day and time
+           * @description 特定日時に営業しているサロンを探すための基準日時
            */
           openAt?: string
-          /** @description Full-text search query */
+          /** @description 全文検索キーワード。名称や説明文を横断的に検索する。 */
           q?: string
-          /** @description Filter expression (e.g., 'status:active AND category:premium') */
+          /** @description フィルター式。例: `status:active AND category:premium`。属性条件を組み合わせた絞り込みに使用。 */
           filter?: string
-          /** @description Fields to include in response */
+          /** @description レスポンスに含めるフィールドのカンマ区切りリスト。データ転送量の最適化に活用。 */
           fields?: string
-          /** @description Fields to exclude from response */
+          /** @description レスポンスから除外したいフィールドのカンマ区切りリスト。不要情報を除く場合に利用。 */
           exclude?: string
           /**
-           * @description Enable faceted search results
+           * @description ファセット集計を有効化するかどうか。true で各項目の件数を集計する。
            * @default false
            */
           facets?: boolean
-          /** @description Facet fields to aggregate */
+          /** @description 集計対象とするファセットフィールドの一覧。カテゴリや価格帯などを指定する。 */
           facetFields?: string[]
           /**
            * Format: int32
-           * @description Maximum number of items to return (1-100)
+           * @description 1ページあたりの取得件数上限 (1〜100)。指定が無い場合は既定値 20 を適用。
            * @default 20
            */
           limit?: number
-          /** @description Cursor for the next page */
+          /** @description 次ページを指し示すカーソル。前回レスポンスの `meta.nextCursor` を設定する。 */
           cursor?: string
-          /** @description Field to sort by */
+          /** @description ソート対象フィールド。予約日時や作成日時など業務軸を指定する。 */
           sortBy?: string
           /**
-           * @description Sort order
+           * @description ソート順序。`asc` は昇順、`desc` は降順を表す。
            * @default asc
            * @enum {string}
            */
@@ -11851,21 +15507,21 @@ export interface operations {
   SalonOperations_getNearby: {
     parameters: {
       query: {
-        /** @description Latitude */
+        /** @description 緯度 */
         lat: number
-        /** @description Longitude */
+        /** @description 経度 */
         lon: number
-        /** @description Radius in kilometers */
+        /** @description 検索半径（キロメートル） */
         radius?: number
-        /** @description Filter by service categories */
+        /** @description 対象サービスカテゴリのフィルター */
         categories?: components['schemas']['Models.ServiceCategoryType'][]
-        /** @description Maximum number of items to return (1-100) */
+        /** @description 1ページあたりの取得件数上限 (1〜100)。指定が無い場合は既定値 20 を適用。 */
         limit?: components['parameters']['Models.CursorPaginationParams.limit']
-        /** @description Cursor for the next page */
+        /** @description 次ページを指し示すカーソル。前回レスポンスの `meta.nextCursor` を設定する。 */
         cursor?: components['parameters']['Models.CursorPaginationParams.cursor']
-        /** @description Field to sort by */
+        /** @description ソート対象フィールド。予約日時や作成日時など業務軸を指定する。 */
         sortBy?: components['parameters']['Models.CursorPaginationParams.sortBy']
-        /** @description Sort order */
+        /** @description ソート順序。`asc` は昇順、`desc` は降順を表す。 */
         sortOrder?: components['parameters']['Models.CursorPaginationParams.sortOrder']
       }
       header?: {
@@ -11883,11 +15539,11 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Array of items for current page */
+            /** @description 現在ページで取得したデータ配列。サロン一覧や予約履歴の実データを格納する。 */
             data: components['schemas']['Models.SalonWithDistance'][]
-            /** @description Pagination metadata */
+            /** @description ページング状態を示すメタ情報。次ページの有無やカーソル値を含む。 */
             meta: components['schemas']['Models.PaginationMeta']
-            /** @description Navigation links */
+            /** @description 関連するページ遷移リンク。HATEOAS 連携や外部連携向けに利用する。 */
             links: components['schemas']['Models.PaginationLinks']
           }
         }
@@ -11906,19 +15562,19 @@ export interface operations {
   SalonOperations_getRecommendations: {
     parameters: {
       query?: {
-        /** @description Customer ID for personalization */
+        /** @description パーソナライズ対象となる顧客ID */
         customerId?: components['schemas']['Models.CustomerId']
-        /** @description Service categories of interest */
+        /** @description 興味のあるサービスカテゴリ */
         categories?: components['schemas']['Models.ServiceCategoryType'][]
-        /** @description Price range preference */
+        /** @description 希望する価格帯 */
         priceRange?: 'budget' | 'medium' | 'premium'
-        /** @description Maximum number of items to return (1-100) */
+        /** @description 1ページあたりの取得件数上限 (1〜100)。指定が無い場合は既定値 20 を適用。 */
         limit?: components['parameters']['Models.CursorPaginationParams.limit']
-        /** @description Cursor for the next page */
+        /** @description 次ページを指し示すカーソル。前回レスポンスの `meta.nextCursor` を設定する。 */
         cursor?: components['parameters']['Models.CursorPaginationParams.cursor']
-        /** @description Field to sort by */
+        /** @description ソート対象フィールド。予約日時や作成日時など業務軸を指定する。 */
         sortBy?: components['parameters']['Models.CursorPaginationParams.sortBy']
-        /** @description Sort order */
+        /** @description ソート順序。`asc` は昇順、`desc` は降順を表す。 */
         sortOrder?: components['parameters']['Models.CursorPaginationParams.sortOrder']
       }
       header?: {
@@ -11936,11 +15592,11 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Array of items for current page */
+            /** @description 現在ページで取得したデータ配列。サロン一覧や予約履歴の実データを格納する。 */
             data: components['schemas']['Models.SalonRecommendation'][]
-            /** @description Pagination metadata */
+            /** @description ページング状態を示すメタ情報。次ページの有無やカーソル値を含む。 */
             meta: components['schemas']['Models.PaginationMeta']
-            /** @description Navigation links */
+            /** @description 関連するページ遷移リンク。HATEOAS 連携や外部連携向けに利用する。 */
             links: components['schemas']['Models.PaginationLinks']
           }
         }
@@ -11959,49 +15615,49 @@ export interface operations {
   SalonCrud_search: {
     parameters: {
       query?: {
-        /** @description Search keyword (alias for q) */
+        /** @description 検索キーワード。qパラメータのエイリアス */
         keyword?: components['parameters']['Models.SearchSalonRequest.keyword']
-        /** @description Filter by city name */
+        /** @description 市区町村名による絞り込み */
         city?: components['parameters']['Models.SearchSalonRequest.city']
-        /** @description Filter by prefecture name */
+        /** @description 都道府県名による絞り込み */
         prefecture?: components['parameters']['Models.SearchSalonRequest.prefecture']
-        /** @description Filter by service categories */
+        /** @description サービスカテゴリ（カット・カラー等）による絞り込み */
         categories?: components['parameters']['Models.SearchSalonRequest.categories']
-        /** @description Filter by features (array) */
+        /** @description 設備やこだわり条件などの特徴タグによる絞り込み */
         features?: components['parameters']['Models.SearchSalonRequest.features']
-        /** @description Filter by active status */
+        /** @description 営業中サロンのみを対象にするかどうか */
         isActive?: components['parameters']['Models.SearchSalonRequest.isActive']
-        /** @description Filter by minimum rating */
+        /** @description 最低評価値による絞り込み */
         minRating?: components['parameters']['Models.SearchSalonRequest.minRating']
-        /** @description Maximum distance in kilometers */
+        /** @description 検索基点からの最大距離（km） */
         maxDistance?: components['parameters']['Models.SearchSalonRequest.maxDistance']
-        /** @description Reference latitude for distance calculation */
+        /** @description 距離計算に使用する基準緯度 */
         lat?: components['parameters']['Models.SearchSalonRequest.lat']
-        /** @description Reference longitude for distance calculation */
+        /** @description 距離計算に使用する基準経度 */
         lon?: components['parameters']['Models.SearchSalonRequest.lon']
-        /** @description Filter by opening hours */
+        /** @description 現在営業中かどうかで絞り込むフラグ */
         openNow?: components['parameters']['Models.SearchSalonRequest.openNow']
-        /** @description Filter by specific day and time */
+        /** @description 特定日時に営業しているサロンを探すための基準日時 */
         openAt?: components['parameters']['Models.SearchSalonRequest.openAt']
-        /** @description Full-text search query */
+        /** @description 全文検索キーワード。名称や説明文を横断的に検索する。 */
         q?: components['parameters']['Models.AdvancedSearchParams.q']
-        /** @description Filter expression (e.g., 'status:active AND category:premium') */
+        /** @description フィルター式。例: `status:active AND category:premium`。属性条件を組み合わせた絞り込みに使用。 */
         filter?: components['parameters']['Models.AdvancedSearchParams.filter']
-        /** @description Fields to include in response */
+        /** @description レスポンスに含めるフィールドのカンマ区切りリスト。データ転送量の最適化に活用。 */
         fields?: components['parameters']['Models.AdvancedSearchParams.fields']
-        /** @description Fields to exclude from response */
+        /** @description レスポンスから除外したいフィールドのカンマ区切りリスト。不要情報を除く場合に利用。 */
         exclude?: components['parameters']['Models.AdvancedSearchParams.exclude']
-        /** @description Enable faceted search results */
+        /** @description ファセット集計を有効化するかどうか。true で各項目の件数を集計する。 */
         facets?: components['parameters']['Models.AdvancedSearchParams.facets']
-        /** @description Facet fields to aggregate */
+        /** @description 集計対象とするファセットフィールドの一覧。カテゴリや価格帯などを指定する。 */
         facetFields?: components['parameters']['Models.AdvancedSearchParams.facetFields']
-        /** @description Maximum number of items to return (1-100) */
+        /** @description 1ページあたりの取得件数上限 (1〜100)。指定が無い場合は既定値 20 を適用。 */
         limit?: components['parameters']['Models.CursorPaginationParams.limit']
-        /** @description Cursor for the next page */
+        /** @description 次ページを指し示すカーソル。前回レスポンスの `meta.nextCursor` を設定する。 */
         cursor?: components['parameters']['Models.CursorPaginationParams.cursor']
-        /** @description Field to sort by */
+        /** @description ソート対象フィールド。予約日時や作成日時など業務軸を指定する。 */
         sortBy?: components['parameters']['Models.CursorPaginationParams.sortBy']
-        /** @description Sort order */
+        /** @description ソート順序。`asc` は昇順、`desc` は降順を表す。 */
         sortOrder?: components['parameters']['Models.CursorPaginationParams.sortOrder']
       }
       header?: {
@@ -12019,11 +15675,11 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Search results */
+            /** @description 検索でヒットした結果一覧。サロンカードやメニュー一覧に利用。 */
             results: components['schemas']['Models.Salon'][]
-            /** @description Search metadata */
+            /** @description 検索条件や件数などのメタ情報。ページングやログ解析に活用する。 */
             meta: components['schemas']['Models.SearchMeta']
-            /** @description Faceted aggregations */
+            /** @description ファセット集計結果。各フィールドごとの件数分布を保持する。 */
             facets?: {
               [key: string]: components['schemas']['Models.Facet'][]
             }
@@ -12075,11 +15731,11 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Response data */
+            /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.Salon']
-            /** @description Response metadata */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
             meta?: components['schemas']['Models.ResponseMeta']
-            /** @description Related links */
+            /** @description 関連リソースや次アクションへのリンク情報。 */
             links?: {
               [key: string]: string
             }
@@ -12139,11 +15795,11 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Response data */
+            /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.Salon']
-            /** @description Response metadata */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
             meta?: components['schemas']['Models.ResponseMeta']
-            /** @description Related links */
+            /** @description 関連リソースや次アクションへのリンク情報。 */
             links?: {
               [key: string]: string
             }
@@ -12252,7 +15908,7 @@ export interface operations {
   SalonCrud_patch: {
     parameters: {
       query?: {
-        /** @description Comma-separated list of field paths to update */
+        /** @description 更新対象フィールドをカンマ区切りで列挙した文字列。例: `name,address.street`。 */
         updateMask?: components['parameters']['Models.FieldMask']
       }
       header?: {
@@ -12278,11 +15934,11 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Response data */
+            /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.Salon']
-            /** @description Response metadata */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
             meta?: components['schemas']['Models.ResponseMeta']
-            /** @description Related links */
+            /** @description 関連リソースや次アクションへのリンク情報。 */
             links?: {
               [key: string]: string
             }
@@ -12360,11 +16016,11 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Response data */
+            /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.SalonAvailabilityResponse']
-            /** @description Response metadata */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
             meta?: components['schemas']['Models.ResponseMeta']
-            /** @description Related links */
+            /** @description 関連リソースや次アクションへのリンク情報。 */
             links?: {
               [key: string]: string
             }
@@ -12394,13 +16050,13 @@ export interface operations {
   SalonCrud_getHistory: {
     parameters: {
       query?: {
-        /** @description Maximum number of items to return (1-100) */
+        /** @description 1ページあたりの取得件数上限 (1〜100)。指定が無い場合は既定値 20 を適用。 */
         limit?: components['parameters']['Models.CursorPaginationParams.limit']
-        /** @description Cursor for the next page */
+        /** @description 次ページを指し示すカーソル。前回レスポンスの `meta.nextCursor` を設定する。 */
         cursor?: components['parameters']['Models.CursorPaginationParams.cursor']
-        /** @description Field to sort by */
+        /** @description ソート対象フィールド。予約日時や作成日時など業務軸を指定する。 */
         sortBy?: components['parameters']['Models.CursorPaginationParams.sortBy']
-        /** @description Sort order */
+        /** @description ソート順序。`asc` は昇順、`desc` は降順を表す。 */
         sortOrder?: components['parameters']['Models.CursorPaginationParams.sortOrder']
       }
       header?: {
@@ -12420,11 +16076,11 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Array of items for current page */
+            /** @description 現在ページで取得したデータ配列。サロン一覧や予約履歴の実データを格納する。 */
             data: components['schemas']['Operations.AuditEntry'][]
-            /** @description Pagination metadata */
+            /** @description ページング状態を示すメタ情報。次ページの有無やカーソル値を含む。 */
             meta: components['schemas']['Models.PaginationMeta']
-            /** @description Navigation links */
+            /** @description 関連するページ遷移リンク。HATEOAS 連携や外部連携向けに利用する。 */
             links: components['schemas']['Models.PaginationLinks']
           }
         }
@@ -12510,11 +16166,11 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Response data */
+            /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.Salon']
-            /** @description Response metadata */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
             meta?: components['schemas']['Models.ResponseMeta']
-            /** @description Related links */
+            /** @description 関連リソースや次アクションへのリンク情報。 */
             links?: {
               [key: string]: string
             }
@@ -12575,11 +16231,11 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Response data */
+            /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.StaffScheduleManagement']
-            /** @description Response metadata */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
             meta?: components['schemas']['Models.ResponseMeta']
-            /** @description Related links */
+            /** @description 関連リソースや次アクションへのリンク情報。 */
             links?: {
               [key: string]: string
             }
@@ -12627,7 +16283,7 @@ export interface operations {
   SalonOperations_getStatistics: {
     parameters: {
       query?: {
-        /** @description Period for statistics (e.g., '7d', '1m', '3m') */
+        /** @description 集計期間（例: '7d', '1m', '3m'） */
         period?: string
       }
       header?: {
@@ -12647,11 +16303,11 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Response data */
+            /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.SalonStatistics']
-            /** @description Response metadata */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
             meta?: components['schemas']['Models.ResponseMeta']
-            /** @description Related links */
+            /** @description 関連リソースや次アクションへのリンク情報。 */
             links?: {
               [key: string]: string
             }
@@ -12702,11 +16358,11 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Response data */
+            /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.SalonSubscriptionResponse']
-            /** @description Response metadata */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
             meta?: components['schemas']['Models.ResponseMeta']
-            /** @description Related links */
+            /** @description 関連リソースや次アクションへのリンク情報。 */
             links?: {
               [key: string]: string
             }
@@ -12772,11 +16428,11 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Response data */
+            /** @description レスポンスの主体となるビジネスデータ。 */
             data: components['schemas']['Models.Salon']
-            /** @description Response metadata */
+            /** @description リクエスト識別子やバージョン情報など共通メタデータ。 */
             meta?: components['schemas']['Models.ResponseMeta']
-            /** @description Related links */
+            /** @description 関連リソースや次アクションへのリンク情報。 */
             links?: {
               [key: string]: string
             }
@@ -12877,7 +16533,9 @@ export interface operations {
     parameters: {
       query?: {
         sortBy?: 'recent' | 'rating' | 'helpful'
+        /** @description 1ページあたりの取得件数。省略時は20件。 */
         limit?: components['parameters']['Models.PaginationParams.limit']
+        /** @description 取得開始位置を表すオフセット。省略時は0。 */
         offset?: components['parameters']['Models.PaginationParams.offset']
       }
       header?: never
@@ -12895,12 +16553,22 @@ export interface operations {
         }
         content: {
           'application/json': {
+            /** @description 取得した要素の配列。 */
             data: components['schemas']['Models.Review'][]
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 条件に一致する全件数。
+             */
             total: number
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 1ページあたりの件数。
+             */
             limit: number
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 取得開始位置のオフセット。
+             */
             offset: number
           }
         }
@@ -12933,7 +16601,9 @@ export interface operations {
     parameters: {
       query?: {
         category?: components['schemas']['Models.ServiceCategoryType']
+        /** @description 1ページあたりの取得件数。省略時は20件。 */
         limit?: components['parameters']['Models.PaginationParams.limit']
+        /** @description 取得開始位置を表すオフセット。省略時は0。 */
         offset?: components['parameters']['Models.PaginationParams.offset']
       }
       header?: never
@@ -12951,12 +16621,22 @@ export interface operations {
         }
         content: {
           'application/json': {
+            /** @description 取得した要素の配列。 */
             data: components['schemas']['Models.Service'][]
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 条件に一致する全件数。
+             */
             total: number
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 1ページあたりの件数。
+             */
             limit: number
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 取得開始位置のオフセット。
+             */
             offset: number
           }
         }
@@ -13144,7 +16824,9 @@ export interface operations {
   StaffOperations_list: {
     parameters: {
       query?: {
+        /** @description 1ページあたりの取得件数。省略時は20件。 */
         limit?: components['parameters']['Models.PaginationParams.limit']
+        /** @description 取得開始位置を表すオフセット。省略時は0。 */
         offset?: components['parameters']['Models.PaginationParams.offset']
       }
       header?: never
@@ -13162,12 +16844,22 @@ export interface operations {
         }
         content: {
           'application/json': {
+            /** @description 取得した要素の配列。 */
             data: components['schemas']['Models.Staff'][]
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 条件に一致する全件数。
+             */
             total: number
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 1ページあたりの件数。
+             */
             limit: number
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 取得開始位置のオフセット。
+             */
             offset: number
           }
         }
@@ -13381,7 +17073,9 @@ export interface operations {
   CategoryOperations_listCategories: {
     parameters: {
       query?: {
+        /** @description 1ページあたりの取得件数。省略時は20件。 */
         limit?: components['parameters']['Models.PaginationParams.limit']
+        /** @description 取得開始位置を表すオフセット。省略時は0。 */
         offset?: components['parameters']['Models.PaginationParams.offset']
       }
       header?: never
@@ -13397,12 +17091,22 @@ export interface operations {
         }
         content: {
           'application/json': {
+            /** @description 取得した要素の配列。 */
             data: components['schemas']['Models.CategoryModel'][]
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 条件に一致する全件数。
+             */
             total: number
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 1ページあたりの件数。
+             */
             limit: number
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 取得開始位置のオフセット。
+             */
             offset: number
           }
         }
@@ -13589,7 +17293,9 @@ export interface operations {
       query?: {
         specialty?: string
         city?: string
+        /** @description 1ページあたりの取得件数。省略時は20件。 */
         limit?: components['parameters']['Models.PaginationParams.limit']
+        /** @description 取得開始位置を表すオフセット。省略時は0。 */
         offset?: components['parameters']['Models.PaginationParams.offset']
       }
       header?: never
@@ -13605,12 +17311,22 @@ export interface operations {
         }
         content: {
           'application/json': {
+            /** @description 取得した要素の配列。 */
             data: components['schemas']['Models.Staff'][]
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 条件に一致する全件数。
+             */
             total: number
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 1ページあたりの件数。
+             */
             limit: number
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 取得開始位置のオフセット。
+             */
             offset: number
           }
         }
@@ -13620,7 +17336,9 @@ export interface operations {
   StaffReviewOperations_getStaffReviews: {
     parameters: {
       query?: {
+        /** @description 1ページあたりの取得件数。省略時は20件。 */
         limit?: components['parameters']['Models.PaginationParams.limit']
+        /** @description 取得開始位置を表すオフセット。省略時は0。 */
         offset?: components['parameters']['Models.PaginationParams.offset']
       }
       header?: never
@@ -13638,12 +17356,22 @@ export interface operations {
         }
         content: {
           'application/json': {
+            /** @description 取得した要素の配列。 */
             data: components['schemas']['Models.Review'][]
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 条件に一致する全件数。
+             */
             total: number
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 1ページあたりの件数。
+             */
             limit: number
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 取得開始位置のオフセット。
+             */
             offset: number
           }
         }
@@ -13675,15 +17403,25 @@ export interface operations {
   InventoryOperations_listInventoryItems: {
     parameters: {
       query: {
+        /** @description 検索対象のサロン ID */
         salonId: components['parameters']['Models.SearchInventoryRequest.salonId']
+        /** @description カテゴリでの絞り込み */
         category?: components['parameters']['Models.SearchInventoryRequest.category']
+        /** @description 在庫状態での絞り込み */
         status?: components['parameters']['Models.SearchInventoryRequest.status']
+        /** @description 最低在庫を下回るもののみ取得するか */
         lowStock?: components['parameters']['Models.SearchInventoryRequest.lowStock']
+        /** @description 期限切れ間近の在庫を取得するか */
         expiringSoon?: components['parameters']['Models.SearchInventoryRequest.expiringSoon']
+        /** @description フリーワード検索用キーワード。 */
         q?: components['parameters']['Models.SearchParams.q']
+        /** @description 並び替え対象カラム名。 */
         sortBy?: components['parameters']['Models.SearchParams.sortBy']
+        /** @description 昇順ascまたは降順descの指定。 */
         sortOrder?: components['parameters']['Models.SearchParams.sortOrder']
+        /** @description 1ページあたりの取得件数。省略時は20件。 */
         limit?: components['parameters']['Models.PaginationParams.limit']
+        /** @description 取得開始位置を表すオフセット。省略時は0。 */
         offset?: components['parameters']['Models.PaginationParams.offset']
       }
       header?: never
@@ -13700,21 +17438,39 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: {
+                  /** @description 取得した要素の配列。 */
                   data: components['schemas']['Models.InventoryItem'][]
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 条件に一致する全件数。
+                   */
                   total: number
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 1ページあたりの件数。
+                   */
                   limit: number
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 取得開始位置のオフセット。
+                   */
                   offset: number
                 }
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -13742,13 +17498,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.InventoryItem']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -13776,13 +17540,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.InventoryAlert'][]
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -13808,8 +17580,12 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: {
                   /** Format: int32 */
                   totalAlerts: number
@@ -13824,8 +17600,12 @@ export interface operations {
                 }
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -13858,13 +17638,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.InventoryAlert']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -13891,13 +17679,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.InventoryItem'][]
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -13924,13 +17720,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.InventoryItem'][]
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -13958,13 +17762,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.StockMovement']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -14000,8 +17812,12 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: {
                   adjustments: components['schemas']['Models.StockMovement'][]
                   discrepancies: {
@@ -14016,8 +17832,12 @@ export interface operations {
                 }
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -14044,8 +17864,12 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: {
                   /** Format: float */
                   totalValue: number
@@ -14061,8 +17885,12 @@ export interface operations {
                 }
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -14088,13 +17916,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.InventoryItem']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -14120,13 +17956,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: Record<string, never>
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -14156,13 +18000,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.InventoryItem']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -14172,9 +18024,13 @@ export interface operations {
   InventoryOperations_getStockMovements: {
     parameters: {
       query?: {
+        /** @description 検索対象期間の開始日時。 */
         startDate?: components['parameters']['Models.DateRangeFilter.startDate']
+        /** @description 検索対象期間の終了日時。 */
         endDate?: components['parameters']['Models.DateRangeFilter.endDate']
+        /** @description 1ページあたりの取得件数。省略時は20件。 */
         limit?: components['parameters']['Models.PaginationParams.limit']
+        /** @description 取得開始位置を表すオフセット。省略時は0。 */
         offset?: components['parameters']['Models.PaginationParams.offset']
       }
       header?: never
@@ -14193,21 +18049,39 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: {
+                  /** @description 取得した要素の配列。 */
                   data: components['schemas']['Models.StockMovement'][]
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 条件に一致する全件数。
+                   */
                   total: number
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 1ページあたりの件数。
+                   */
                   limit: number
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 取得開始位置のオフセット。
+                   */
                   offset: number
                 }
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -14219,7 +18093,9 @@ export interface operations {
       query?: {
         search?: string
         hasAllergies?: boolean
+        /** @description 1ページあたりの取得件数。省略時は20件。 */
         limit?: components['parameters']['Models.PaginationParams.limit']
+        /** @description 取得開始位置を表すオフセット。省略時は0。 */
         offset?: components['parameters']['Models.PaginationParams.offset']
       }
       header?: never
@@ -14236,21 +18112,39 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: {
+                  /** @description 取得した要素の配列。 */
                   data: components['schemas']['Models.MedicalChart'][]
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 条件に一致する全件数。
+                   */
                   total: number
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 1ページあたりの件数。
+                   */
                   limit: number
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 取得開始位置のオフセット。
+                   */
                   offset: number
                 }
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -14278,13 +18172,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.MedicalChart']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -14310,13 +18212,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.MedicalChart']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -14342,8 +18252,12 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: {
                   customerId: components['schemas']['Models.CustomerId']
                   allergies: string[]
@@ -14353,8 +18267,12 @@ export interface operations {
                 }
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -14384,13 +18302,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.MedicalChart']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -14404,9 +18330,13 @@ export interface operations {
         customerId?: components['schemas']['Models.CustomerId']
         status?: components['schemas']['Models.PaymentStatusCodeType']
         method?: components['schemas']['Models.PaymentMethodType']
+        /** @description 検索対象期間の開始日時。 */
         startDate?: components['parameters']['Models.DateRangeFilter.startDate']
+        /** @description 検索対象期間の終了日時。 */
         endDate?: components['parameters']['Models.DateRangeFilter.endDate']
+        /** @description 1ページあたりの取得件数。省略時は20件。 */
         limit?: components['parameters']['Models.PaginationParams.limit']
+        /** @description 取得開始位置を表すオフセット。省略時は0。 */
         offset?: components['parameters']['Models.PaginationParams.offset']
       }
       header?: never
@@ -14423,21 +18353,39 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: {
+                  /** @description 取得した要素の配列。 */
                   data: components['schemas']['Models.Payment'][]
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 条件に一致する全件数。
+                   */
                   total: number
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 1ページあたりの件数。
+                   */
                   limit: number
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 取得開始位置のオフセット。
+                   */
                   offset: number
                 }
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -14465,13 +18413,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.Payment']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -14506,13 +18462,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.PaymentPreview']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -14522,9 +18486,13 @@ export interface operations {
   PaymentOperations_getCustomerPayments: {
     parameters: {
       query?: {
+        /** @description 検索対象期間の開始日時。 */
         startDate?: components['parameters']['Models.DateRangeFilter.startDate']
+        /** @description 検索対象期間の終了日時。 */
         endDate?: components['parameters']['Models.DateRangeFilter.endDate']
+        /** @description 1ページあたりの取得件数。省略時は20件。 */
         limit?: components['parameters']['Models.PaginationParams.limit']
+        /** @description 取得開始位置を表すオフセット。省略時は0。 */
         offset?: components['parameters']['Models.PaginationParams.offset']
       }
       header?: never
@@ -14543,21 +18511,39 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: {
+                  /** @description 取得した要素の配列。 */
                   data: components['schemas']['Models.Payment'][]
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 条件に一致する全件数。
+                   */
                   total: number
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 1ページあたりの件数。
+                   */
                   limit: number
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 取得開始位置のオフセット。
+                   */
                   offset: number
                 }
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -14583,13 +18569,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.Payment']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -14619,13 +18613,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.Payment']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -14657,13 +18659,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.Payment']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -14689,13 +18699,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.Payment']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -14721,8 +18739,12 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: {
                   receiptNumber: string
                   payment: components['schemas']['Models.Payment']
@@ -14734,8 +18756,12 @@ export interface operations {
                 }
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -14765,13 +18791,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.Payment']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -14798,13 +18832,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.Permission'][]
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -14830,13 +18872,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.Permission'][]
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -14860,16 +18910,24 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: {
                   resource: string
                   permissions: components['schemas']['Models.Permission'][]
                 }[]
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -14897,13 +18955,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.PointTransaction']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -14929,13 +18995,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.PointInfo']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -14963,8 +19037,12 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: {
                   customerId: components['schemas']['Models.CustomerId']
                   /** Format: int32 */
@@ -14975,8 +19053,12 @@ export interface operations {
                 }
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -14986,9 +19068,13 @@ export interface operations {
   PointOperations_getPointTransactions: {
     parameters: {
       query?: {
+        /** @description 検索対象期間の開始日時。 */
         startDate?: components['parameters']['Models.DateRangeFilter.startDate']
+        /** @description 検索対象期間の終了日時。 */
         endDate?: components['parameters']['Models.DateRangeFilter.endDate']
+        /** @description 1ページあたりの取得件数。省略時は20件。 */
         limit?: components['parameters']['Models.PaginationParams.limit']
+        /** @description 取得開始位置を表すオフセット。省略時は0。 */
         offset?: components['parameters']['Models.PaginationParams.offset']
       }
       header?: never
@@ -15007,21 +19093,39 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: {
+                  /** @description 取得した要素の配列。 */
                   data: components['schemas']['Models.PointTransaction'][]
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 条件に一致する全件数。
+                   */
                   total: number
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 1ページあたりの件数。
+                   */
                   limit: number
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 取得開始位置のオフセット。
+                   */
                   offset: number
                 }
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -15049,13 +19153,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.PointTransaction']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -15087,8 +19199,12 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: {
                   /** Format: int32 */
                   processedCount: number
@@ -15097,8 +19213,12 @@ export interface operations {
                 }
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -15126,13 +19246,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.PointTransaction']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -15145,9 +19273,13 @@ export interface operations {
         salonId: components['schemas']['Models.SalonId']
         status?: components['schemas']['Models.OrderStatusType']
         supplier?: string
+        /** @description 検索対象期間の開始日時。 */
         startDate?: components['parameters']['Models.DateRangeFilter.startDate']
+        /** @description 検索対象期間の終了日時。 */
         endDate?: components['parameters']['Models.DateRangeFilter.endDate']
+        /** @description 1ページあたりの取得件数。省略時は20件。 */
         limit?: components['parameters']['Models.PaginationParams.limit']
+        /** @description 取得開始位置を表すオフセット。省略時は0。 */
         offset?: components['parameters']['Models.PaginationParams.offset']
       }
       header?: never
@@ -15164,21 +19296,39 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: {
+                  /** @description 取得した要素の配列。 */
                   data: components['schemas']['Models.PurchaseOrder'][]
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 条件に一致する全件数。
+                   */
                   total: number
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 1ページあたりの件数。
+                   */
                   limit: number
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 取得開始位置のオフセット。
+                   */
                   offset: number
                 }
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -15206,13 +19356,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.PurchaseOrder']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -15238,8 +19396,12 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: {
                   inventoryId: components['schemas']['Models.InventoryId']
                   productName: string
@@ -15255,8 +19417,12 @@ export interface operations {
                 }[]
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -15282,13 +19448,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.PurchaseOrder']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -15318,13 +19492,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.PurchaseOrder']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -15357,13 +19539,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.PurchaseOrder']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -15395,13 +19585,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.PurchaseOrder']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -15439,13 +19637,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.PurchaseOrder']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -15457,7 +19663,9 @@ export interface operations {
       query?: {
         isSystem?: boolean
         isActive?: boolean
+        /** @description 1ページあたりの取得件数。省略時は20件。 */
         limit?: components['parameters']['Models.PaginationParams.limit']
+        /** @description 取得開始位置を表すオフセット。省略時は0。 */
         offset?: components['parameters']['Models.PaginationParams.offset']
       }
       header?: never
@@ -15474,21 +19682,39 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: {
+                  /** @description 取得した要素の配列。 */
                   data: components['schemas']['Models.Role'][]
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 条件に一致する全件数。
+                   */
                   total: number
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 1ページあたりの件数。
+                   */
                   limit: number
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 取得開始位置のオフセット。
+                   */
                   offset: number
                 }
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -15516,13 +19742,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.Role']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -15546,13 +19780,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.Role'][]
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -15578,13 +19820,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.Role']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -15610,13 +19860,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: Record<string, never>
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -15646,13 +19904,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.Role']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -15685,13 +19951,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.Role']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -15700,21 +19974,23 @@ export interface operations {
   }
   SalesReportOperations_getSalesReport: {
     parameters: {
-      query?: {
+      query: {
+        /** @description 集計対象のサロン ID */
+        salonId: components['parameters']['Models.SalesReportQuery.salonId']
+        /** @description 検索対象期間の開始日時。 */
         startDate?: components['parameters']['Models.DateRangeFilter.startDate']
+        /** @description 検索対象期間の終了日時。 */
         endDate?: components['parameters']['Models.DateRangeFilter.endDate']
+        /** @description 集計粒度（日/週/月） */
         groupBy?: components['parameters']['Models.SalesReportQuery.groupBy']
+        /** @description 返金取引を集計に含めるかどうか */
         includeRefunds?: components['parameters']['Models.SalesReportQuery.includeRefunds']
       }
       header?: never
       path?: never
       cookie?: never
     }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['Models.SalesReportQuery']
-      }
-    }
+    requestBody?: never
     responses: {
       /** @description The request has succeeded. */
       200: {
@@ -15724,13 +20000,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.SalesReport']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -15741,7 +20025,9 @@ export interface operations {
     parameters: {
       query: {
         salonId: components['schemas']['Models.SalonId']
+        /** @description 検索対象期間の開始日時。 */
         startDate?: components['parameters']['Models.DateRangeFilter.startDate']
+        /** @description 検索対象期間の終了日時。 */
         endDate?: components['parameters']['Models.DateRangeFilter.endDate']
       }
       header?: never
@@ -15758,13 +20044,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.SalesByCategory'][]
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -15775,7 +20069,9 @@ export interface operations {
     parameters: {
       query: {
         salonId: components['schemas']['Models.SalonId']
+        /** @description 検索対象期間の開始日時。 */
         startDate?: components['parameters']['Models.DateRangeFilter.startDate']
+        /** @description 検索対象期間の終了日時。 */
         endDate?: components['parameters']['Models.DateRangeFilter.endDate']
       }
       header?: never
@@ -15792,13 +20088,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.StaffPerformance'][]
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -15825,8 +20129,12 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: {
                   /** Format: date */
                   date: string
@@ -15838,8 +20146,12 @@ export interface operations {
                 }
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -15875,15 +20187,23 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: {
                   downloadUrl: string
                 }
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -15895,7 +20215,9 @@ export interface operations {
       query: {
         salonId: components['schemas']['Models.SalonId']
         period: 'daily' | 'weekly' | 'monthly'
+        /** @description 検索対象期間の開始日時。 */
         startDate?: components['parameters']['Models.DateRangeFilter.startDate']
+        /** @description 検索対象期間の終了日時。 */
         endDate?: components['parameters']['Models.DateRangeFilter.endDate']
       }
       header?: never
@@ -15912,8 +20234,12 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: {
                   labels: string[]
                   sales: components['schemas']['Models.Money'][]
@@ -15922,8 +20248,12 @@ export interface operations {
                 }
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -15937,9 +20267,13 @@ export interface operations {
         customerId?: components['schemas']['Models.CustomerId']
         staffId?: components['schemas']['Models.StaffId']
         treatment?: components['schemas']['Models.TreatmentType']
+        /** @description 検索対象期間の開始日時。 */
         startDate?: components['parameters']['Models.DateRangeFilter.startDate']
+        /** @description 検索対象期間の終了日時。 */
         endDate?: components['parameters']['Models.DateRangeFilter.endDate']
+        /** @description 1ページあたりの取得件数。省略時は20件。 */
         limit?: components['parameters']['Models.PaginationParams.limit']
+        /** @description 取得開始位置を表すオフセット。省略時は0。 */
         offset?: components['parameters']['Models.PaginationParams.offset']
       }
       header?: never
@@ -15956,21 +20290,39 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: {
+                  /** @description 取得した要素の配列。 */
                   data: components['schemas']['Models.TreatmentRecord'][]
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 条件に一致する全件数。
+                   */
                   total: number
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 1ページあたりの件数。
+                   */
                   limit: number
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 取得開始位置のオフセット。
+                   */
                   offset: number
                 }
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -15998,13 +20350,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.TreatmentRecord']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -16014,9 +20374,13 @@ export interface operations {
   TreatmentOperations_getCustomerTreatmentHistory: {
     parameters: {
       query?: {
+        /** @description 検索対象期間の開始日時。 */
         startDate?: components['parameters']['Models.DateRangeFilter.startDate']
+        /** @description 検索対象期間の終了日時。 */
         endDate?: components['parameters']['Models.DateRangeFilter.endDate']
+        /** @description 1ページあたりの取得件数。省略時は20件。 */
         limit?: components['parameters']['Models.PaginationParams.limit']
+        /** @description 取得開始位置を表すオフセット。省略時は0。 */
         offset?: components['parameters']['Models.PaginationParams.offset']
       }
       header?: never
@@ -16035,21 +20399,39 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: {
+                  /** @description 取得した要素の配列。 */
                   data: components['schemas']['Models.TreatmentRecord'][]
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 条件に一致する全件数。
+                   */
                   total: number
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 1ページあたりの件数。
+                   */
                   limit: number
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 取得開始位置のオフセット。
+                   */
                   offset: number
                 }
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -16059,9 +20441,13 @@ export interface operations {
   TreatmentOperations_getStaffTreatments: {
     parameters: {
       query?: {
+        /** @description 検索対象期間の開始日時。 */
         startDate?: components['parameters']['Models.DateRangeFilter.startDate']
+        /** @description 検索対象期間の終了日時。 */
         endDate?: components['parameters']['Models.DateRangeFilter.endDate']
+        /** @description 1ページあたりの取得件数。省略時は20件。 */
         limit?: components['parameters']['Models.PaginationParams.limit']
+        /** @description 取得開始位置を表すオフセット。省略時は0。 */
         offset?: components['parameters']['Models.PaginationParams.offset']
       }
       header?: never
@@ -16080,21 +20466,39 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: {
+                  /** @description 取得した要素の配列。 */
                   data: components['schemas']['Models.TreatmentRecord'][]
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 条件に一致する全件数。
+                   */
                   total: number
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 1ページあたりの件数。
+                   */
                   limit: number
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 取得開始位置のオフセット。
+                   */
                   offset: number
                 }
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -16105,7 +20509,9 @@ export interface operations {
     parameters: {
       query: {
         salonId: components['schemas']['Models.SalonId']
+        /** @description 検索対象期間の開始日時。 */
         startDate?: components['parameters']['Models.DateRangeFilter.startDate']
+        /** @description 検索対象期間の終了日時。 */
         endDate?: components['parameters']['Models.DateRangeFilter.endDate']
       }
       header?: never
@@ -16122,8 +20528,12 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: {
                   /** Format: int32 */
                   totalTreatments: number
@@ -16136,8 +20546,12 @@ export interface operations {
                 }
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -16163,13 +20577,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.TreatmentRecord']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -16195,13 +20617,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: Record<string, never>
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -16231,13 +20661,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.TreatmentRecord']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -16267,13 +20705,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.TreatmentRecord']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -16301,13 +20747,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.UserRoleType']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -16339,8 +20793,12 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: {
                   /** Format: int32 */
                   assigned: number
@@ -16350,8 +20808,12 @@ export interface operations {
                 }
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -16362,7 +20824,9 @@ export interface operations {
     parameters: {
       query?: {
         salonId?: components['schemas']['Models.SalonId']
+        /** @description 1ページあたりの取得件数。省略時は20件。 */
         limit?: components['parameters']['Models.PaginationParams.limit']
+        /** @description 取得開始位置を表すオフセット。省略時は0。 */
         offset?: components['parameters']['Models.PaginationParams.offset']
       }
       header?: never
@@ -16381,9 +20845,14 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: {
+                  /** @description 取得した要素の配列。 */
                   data: {
                     userId: string
                     userName?: string
@@ -16392,17 +20861,30 @@ export interface operations {
                     /** Format: date-time */
                     expiresAt?: string
                   }[]
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 条件に一致する全件数。
+                   */
                   total: number
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 1ページあたりの件数。
+                   */
                   limit: number
-                  /** Format: int32 */
+                  /**
+                   * Format: int32
+                   * @description 取得開始位置のオフセット。
+                   */
                   offset: number
                 }
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -16430,13 +20912,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.UserRoleType'][]
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -16465,13 +20955,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: Record<string, never>
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }
@@ -16506,13 +21004,21 @@ export interface operations {
         content: {
           'application/json':
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値success。成功結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'success'
+                /** @description 成功時に返却するドメインデータ。 */
                 data: components['schemas']['Models.UserRoleType']
               }
             | {
-                /** @enum {string} */
+                /**
+                 * @description 固定値error。エラー結果であることを示す。
+                 * @enum {string}
+                 */
                 status: 'error'
+                /** @description 失敗時に返却するエラー情報。 */
                 error: components['schemas']['Models.Error']
               }
         }

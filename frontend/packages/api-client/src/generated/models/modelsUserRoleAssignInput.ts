@@ -8,9 +8,16 @@
 import type { ModelsRoleId } from './modelsRoleId'
 import type { ModelsSalonId } from './modelsSalonId'
 
+/**
+ * ユーザーへロールを割り当てる入力モデル
+ */
 export interface ModelsUserRoleAssignInput {
+  /** 対象ユーザー ID */
   userId: string
+  /** 割当対象のロール ID */
   roleId: ModelsRoleId
+  /** サロン単位の場合のサロン ID */
   salonId?: ModelsSalonId
+  /** 割当の有効期限 */
   expiresAt?: string
 }

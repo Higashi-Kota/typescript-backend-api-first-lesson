@@ -7,7 +7,11 @@
  */
 
 /**
- * User roles in the system
+ * 認証ユーザーロール区分 - 認証システムにおけるユーザーの役割
+
+customer: 顧客ロール - サービスの予約が可能
+staff: スタッフロール - 自身のスケジュールと予約を管理可能
+admin: 管理者ロール - システムのフルアクセス権限
  */
 export type ModelsAuthUserRoleType =
   (typeof ModelsAuthUserRoleType)[keyof typeof ModelsAuthUserRoleType]

@@ -6,4 +6,7 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 追加のメタデータ
+ */
 export type ModelsStockMovementMetadata = { [key: string]: unknown }

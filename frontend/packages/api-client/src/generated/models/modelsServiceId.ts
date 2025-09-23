@@ -7,6 +7,6 @@
  */
 
 /**
- * Branded UUID type for Service ID
+ * 提供メニュー・施術サービスを識別するためのブランド付きUUID。
  */
 export type ModelsServiceId = string

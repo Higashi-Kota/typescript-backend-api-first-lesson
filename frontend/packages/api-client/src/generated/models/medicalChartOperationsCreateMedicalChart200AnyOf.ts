@@ -8,7 +8,12 @@
 import type { MedicalChartOperationsCreateMedicalChart200AnyOfStatus } from './medicalChartOperationsCreateMedicalChart200AnyOfStatus'
 import type { ModelsMedicalChart } from './modelsMedicalChart'
 
+/**
+ * 成功時のデータとステータスを保持するモデル。
+ */
 export type MedicalChartOperationsCreateMedicalChart200AnyOf = {
+  /** 固定値success。成功結果であることを示す。 */
   status: MedicalChartOperationsCreateMedicalChart200AnyOfStatus
+  /** 成功時に返却するドメインデータ。 */
   data: ModelsMedicalChart
 }

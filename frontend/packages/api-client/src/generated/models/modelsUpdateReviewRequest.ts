@@ -7,15 +7,23 @@
  */
 
 /**
- * Review update request with optional fields for partial updates
+ * レビュー更新リクエスト - 任意項目を部分更新し、既存レビューの評価やコメントを調整する
  */
 export interface ModelsUpdateReviewRequest {
+  /** 更新後の全体満足度評価 */
   overallRating?: number
+  /** 更新後のコメント本文 */
   comment?: string
+  /** 更新後のレビュータイトル */
   title?: string
+  /** 更新後のサービス品質評価 */
   serviceRating?: number
+  /** 更新後のスタッフ評価 */
   staffRating?: number
+  /** 更新後の清潔さ評価 */
   cleanlinessRating?: number
+  /** 更新後の価格価値評価 */
   valueRating?: number
+  /** 画像URL一覧の更新内容 */
   imageUrls?: string[]
 }

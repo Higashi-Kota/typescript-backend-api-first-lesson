@@ -40,53 +40,64 @@ export type CustomerCrudSearchParams = {
    */
   registeredTo?: ModelsSearchCustomerRequestRegisteredToParameter
   /**
-   * Filter by customer status
-   */
+ * 顧客ステータス区分 - 顧客アカウントの活動状態や利用可否を表す区分
+
+active: アクティブ - 通常利用可能な状態
+inactive: 休眠中 - 長期間利用がないがアカウントは維持されている状態
+suspended: 停止中 - 一時的に利用が停止されている状態
+deleted: 削除済み - アカウントが論理削除された状態
+blacklisted: ブラックリスト - 利用を禁止された状態
+ */
   status?: ModelsSearchCustomerRequestStatusParameter
   /**
-   * Loyalty tier enum
-   */
+ * ロイヤルティティア区分 - 顧客ロイヤルティプログラムの会員ランク
+
+bronze: ブロンズ - 基本会員ランク、初期段階の特典を提供
+silver: シルバー - 中級会員ランク、標準的な特典を提供
+gold: ゴールド - 上級会員ランク、優待特典を提供
+platinum: プラチナ - 最上級会員ランク、最高レベルの特典を提供
+ */
   loyaltyTier?: ModelsSearchCustomerRequestLoyaltyTierParameter
   /**
-   * Full-text search query
+   * 全文検索キーワード。名称や説明文を横断的に検索する。
    */
   q?: ModelsAdvancedSearchParamsQParameter
   /**
-   * Filter expression (e.g., 'status:active AND category:premium')
+   * フィルター式。例: `status:active AND category:premium`。属性条件を組み合わせた絞り込みに使用。
    */
   filter?: ModelsAdvancedSearchParamsFilterParameter
   /**
-   * Fields to include in response
+   * レスポンスに含めるフィールドのカンマ区切りリスト。データ転送量の最適化に活用。
    */
   fields?: ModelsAdvancedSearchParamsFieldsParameter
   /**
-   * Fields to exclude from response
+   * レスポンスから除外したいフィールドのカンマ区切りリスト。不要情報を除く場合に利用。
    */
   exclude?: ModelsAdvancedSearchParamsExcludeParameter
   /**
-   * Enable faceted search results
+   * ファセット集計を有効化するかどうか。true で各項目の件数を集計する。
    */
   facets?: ModelsAdvancedSearchParamsFacetsParameter
   /**
-   * Facet fields to aggregate
+   * 集計対象とするファセットフィールドの一覧。カテゴリや価格帯などを指定する。
    */
   facetFields?: ModelsAdvancedSearchParamsFacetFieldsParameter
   /**
-   * Maximum number of items to return (1-100)
+   * 1ページあたりの取得件数上限 (1〜100)。指定が無い場合は既定値 20 を適用。
    * @minimum 1
    * @maximum 100
    */
   limit?: ModelsCursorPaginationParamsLimitParameter
   /**
-   * Cursor for the next page
+   * 次ページを指し示すカーソル。前回レスポンスの `meta.nextCursor` を設定する。
    */
   cursor?: ModelsCursorPaginationParamsCursorParameter
   /**
-   * Field to sort by
+   * ソート対象フィールド。予約日時や作成日時など業務軸を指定する。
    */
   sortBy?: ModelsCursorPaginationParamsSortByParameter
   /**
-   * Sort order
+   * ソート順序。`asc` は昇順、`desc` は降順を表す。
    */
   sortOrder?: ModelsCursorPaginationParamsSortOrderParameter
 }

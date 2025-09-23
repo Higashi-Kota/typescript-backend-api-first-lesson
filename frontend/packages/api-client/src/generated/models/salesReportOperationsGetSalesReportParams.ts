@@ -5,14 +5,31 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
+import type { ModelsSalesReportQuerySalonIdParameter } from './modelsSalesReportQuerySalonIdParameter'
 import type { ModelsDateRangeFilterStartDateParameter } from './modelsDateRangeFilterStartDateParameter'
 import type { ModelsDateRangeFilterEndDateParameter } from './modelsDateRangeFilterEndDateParameter'
 import type { ModelsSalesReportQueryGroupByParameter } from './modelsSalesReportQueryGroupByParameter'
 import type { ModelsSalesReportQueryIncludeRefundsParameter } from './modelsSalesReportQueryIncludeRefundsParameter'
 
 export type SalesReportOperationsGetSalesReportParams = {
+  /**
+   * サロン店舗・拠点を識別するためのブランド付きUUID。
+   */
+  salonId: ModelsSalesReportQuerySalonIdParameter
+  /**
+   * 検索対象期間の開始日時。
+   */
   startDate?: ModelsDateRangeFilterStartDateParameter
+  /**
+   * 検索対象期間の終了日時。
+   */
   endDate?: ModelsDateRangeFilterEndDateParameter
+  /**
+   * 集計粒度（日/週/月）
+   */
   groupBy?: ModelsSalesReportQueryGroupByParameter
+  /**
+   * 返金取引を集計に含めるかどうか
+   */
   includeRefunds?: ModelsSalesReportQueryIncludeRefundsParameter
 }

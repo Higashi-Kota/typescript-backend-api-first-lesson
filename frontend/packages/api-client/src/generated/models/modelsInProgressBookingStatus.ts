@@ -7,8 +7,14 @@
  */
 import type { ModelsInProgressBookingStatusType } from './modelsInProgressBookingStatusType'
 
+/**
+ * 施術が進行中の場合の状態情報。
+ */
 export interface ModelsInProgressBookingStatus {
+  /** 固定値in_progress。施術中であることを示す。 */
   type: ModelsInProgressBookingStatusType
+  /** 施術を開始した日時。 */
   startedAt: string
+  /** 施術を行っているブースや席の名称。未設定の場合はnull。 */
   stationName?: string
 }

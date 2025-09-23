@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 固定値success。成功結果であることを示す。
+ */
 export type InventoryOperationsGetLowStockItems200AnyOfStatus =
   (typeof InventoryOperationsGetLowStockItems200AnyOfStatus)[keyof typeof InventoryOperationsGetLowStockItems200AnyOfStatus]
 

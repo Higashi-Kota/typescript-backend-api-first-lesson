@@ -8,11 +8,16 @@
 import type { ModelsServiceId } from './modelsServiceId'
 
 /**
- * Service summary for various contexts
+ * サービスメニューを一覧表示や候補選択で参照する際の要約情報。
  */
 export interface ModelsServiceSummary {
+  /** サービスメニューを識別するID。 */
   id: ModelsServiceId
+  /** 顧客向けに表示するサービス名称。 */
   name: string
-  /** @nullable */
+  /**
+   * 対象サービスの予約件数。統計未計算時はnull。
+   * @nullable
+   */
   bookingCount: number | null
 }

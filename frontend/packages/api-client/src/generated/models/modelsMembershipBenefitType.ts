@@ -6,6 +6,16 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 会員特典タイプ区分 - 会員ランクに応じて提供される特典の種類
+
+discount_rate: 割引率 - サービス料金に対するパーセンテージ割引
+point_multiplier: ポイント倍率 - 通常のポイント付与率に対する乗数
+priority_booking: 優先予約 - 一般公開前の優先的な予約権利
+free_service: 無料サービス - 特定サービスの無料提供
+birthday_special: 誕生日特典 - 誕生月に提供される特別サービス
+exclusive_access: 特別アクセス権 - VIP専用メニューや特別イベントへの参加権
+ */
 export type ModelsMembershipBenefitType =
   (typeof ModelsMembershipBenefitType)[keyof typeof ModelsMembershipBenefitType]
 

@@ -10,12 +10,22 @@ import type { ModelsStockMovementInputType } from './modelsStockMovementInputTyp
 import type { ModelsOrderId } from './modelsOrderId'
 import type { ModelsTreatmentRecordId } from './modelsTreatmentRecordId'
 
+/**
+ * 在庫移動処理を登録する入力モデル
+ */
 export interface ModelsStockMovementInput {
+  /** 対象在庫 ID */
   inventoryId: ModelsInventoryId
+  /** 在庫操作区分 */
   type: ModelsStockMovementInputType
+  /** 操作数量 */
   quantity: number
+  /** 操作理由 */
   reason: string
+  /** 関連する発注 ID */
   orderId?: ModelsOrderId
+  /** 関連する施術記録 ID */
   treatmentRecordId?: ModelsTreatmentRecordId
+  /** 備考メモ */
   notes?: string
 }

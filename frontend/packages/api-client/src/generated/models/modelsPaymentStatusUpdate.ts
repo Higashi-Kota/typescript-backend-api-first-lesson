@@ -12,6 +12,9 @@ import type { ModelsFailedPaymentStatusUpdate } from './modelsFailedPaymentStatu
 import type { ModelsRefundedPaymentStatusUpdate } from './modelsRefundedPaymentStatusUpdate'
 import type { ModelsPartialRefundPaymentStatusUpdate } from './modelsPartialRefundPaymentStatusUpdate'
 
+/**
+ * 支払い状態の詳細情報を表すユニオン
+ */
 export type ModelsPaymentStatusUpdate =
   | ModelsPendingPaymentStatusUpdate
   | ModelsProcessingPaymentStatusUpdate

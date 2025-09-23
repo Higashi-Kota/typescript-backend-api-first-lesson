@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 成功時に返却するドメインデータ。
+ */
 export type TreatmentOperationsDeleteTreatment200AnyOfData = {
   [key: string]: unknown
 }

@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 固定値no_show。無断キャンセル状態であることを示す。
+ */
 export type ModelsNoShowBookingStatusUpdateType =
   (typeof ModelsNoShowBookingStatusUpdateType)[keyof typeof ModelsNoShowBookingStatusUpdateType]
 

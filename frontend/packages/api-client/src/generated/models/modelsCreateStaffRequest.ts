@@ -11,16 +11,30 @@ import type { ModelsStaffQualification } from './modelsStaffQualification'
 import type { ModelsStaffSchedule } from './modelsStaffSchedule'
 import type { ModelsStaffPermission } from './modelsStaffPermission'
 
+/**
+ * スタッフ作成リクエスト - 新規スタッフ登録時に必要なプロフィール・連絡先・スケジュール情報を受け取る
+ */
 export interface ModelsCreateStaffRequest {
+  /** 所属サロンのID */
   salonId: ModelsSalonId
+  /** スタッフの氏名 */
   name: string
+  /** 連絡先情報 */
   contactInfo: ModelsContactInfo
+  /** 得意分野や専門メニューの一覧 */
   specialties: string[]
+  /** プロフィール画像のURL */
   imageUrl?: string
+  /** 自己紹介や経歴の概要 */
   bio?: string
+  /** 実務経験年数 */
   yearsOfExperience?: number
+  /** 保有資格名の一覧 */
   certifications?: string[]
+  /** 詳細な資格情報の一覧 */
   qualifications?: ModelsStaffQualification[]
+  /** 通常勤務スケジュールの一覧 */
   schedules?: ModelsStaffSchedule[]
+  /** 付与する権限の一覧 */
   permissions?: ModelsStaffPermission[]
 }

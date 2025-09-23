@@ -79,7 +79,7 @@ type Awaited<O> = O extends AwaitedInput<infer T> ? T : never
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 
 /**
- * List resources with pagination and filtering
+ * ページネーションやフィルター条件を指定して対象リソースを一覧取得します。業務画面のリスト表示に利用します。
  * @summary List {Name} resources
  */
 export type customerCrudListResponse200 = {
@@ -280,7 +280,7 @@ export function useCustomerCrudList<
 }
 
 /**
- * Create a new resource
+ * 新規リソースを作成し、作成時のバリデーションや重複チェック結果を返却します。
  * @summary Create new {Name}
  */
 export type customerCrudCreateResponse201 = {
@@ -392,7 +392,7 @@ export const useCustomerCrudCreate = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * Batch get multiple resources
+ * 複数IDをまとめて取得し、一覧画面の遅延読み込みや外部連携に利用します。
  * @summary Batch get {Name} resources
  */
 export type customerCrudBatchGetResponse200 = {
@@ -505,7 +505,7 @@ export const useCustomerCrudBatchGet = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * Bulk create resources
+ * 複数リソースを一括作成し、結果を成功・失敗に分けて返却します。
  * @summary Bulk create {Name} resources
  */
 export type customerCrudBulkCreateResponse207 = {
@@ -618,7 +618,7 @@ export const useCustomerCrudBulkCreate = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * Bulk update resources
+ * 複数リソースの更新をまとめて受け付け、バージョン整合性を保ちながら処理します。
  * @summary Bulk update {Name} resources
  */
 export type customerCrudBulkUpdateResponse207 = {
@@ -731,7 +731,7 @@ export const useCustomerCrudBulkUpdate = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * Bulk delete resources
+ * 複数リソースを一括削除し、成功可否ごとの結果を返却します。
  * @summary Bulk delete {Name} resources
  */
 export type customerCrudBulkDeleteResponse207 = {
@@ -844,7 +844,7 @@ export const useCustomerCrudBulkDelete = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * Export search results
+ * 検索結果を指定形式でエクスポートし、帳票出力や外部共有に活用します。
  * @summary Export {Name} search results
  */
 export type customerCrudExportResponse202 = {
@@ -956,7 +956,7 @@ export const useCustomerCrudExport = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * Merge customer records
+ * 重複登録された顧客レコードを統合し、履歴やポイントを一本化します。
  * @summary Merge customer records
  */
 export type customerOperationsMergeResponse200 = {
@@ -1069,7 +1069,7 @@ export const useCustomerOperationsMerge = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * Advanced search with facets
+ * ファセットや複合条件を利用してリソースを検索し、結果と統計情報を返却します。
  * @summary Search {Name} resources
  */
 export type customerCrudSearchResponse200 = {
@@ -1271,7 +1271,7 @@ export function useCustomerCrudSearch<
 }
 
 /**
- * Get a single resource by ID
+ * IDを指定して単一リソースを取得し、詳細表示や編集フォームの初期値に使用します。
  * @summary Get {Name} by ID
  */
 export type customerCrudGetResponse200 = {
@@ -1494,7 +1494,7 @@ export function useCustomerCrudGet<
 }
 
 /**
- * Update a resource (full update)
+ * 既存リソースを全項目更新し、最新状態とバージョン情報を返却します。
  * @summary Update {Name}
  */
 export type customerCrudUpdateResponse200 = {
@@ -1607,7 +1607,7 @@ export const useCustomerCrudUpdate = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * Partially update a resource
+ * 必要なフィールドのみを部分更新し、変更差分を効率的に反映します。
  * @summary Partially update {Name}
  */
 export type customerCrudPatchResponse200 = {
@@ -1756,7 +1756,7 @@ export const useCustomerCrudPatch = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * Delete a resource (soft delete by default)
+ * リソースを削除し、必要に応じて論理削除か物理削除かを選択します。
  * @summary Delete {Name}
  */
 export type customerCrudDeleteResponse204 = {
@@ -1882,7 +1882,7 @@ export const useCustomerCrudDelete = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * Get customer bookings
+ * 顧客単位の予約パッケージ情報を取得し、複数施術を跨いだ利用状況を把握します。
  * @summary Get customer bookings
  */
 export type customerOperationsGetBookingsResponse200 = {
@@ -2109,7 +2109,7 @@ export function useCustomerOperationsGetBookings<
 }
 
 /**
- * Request customer data deletion (GDPR compliance)
+ * 顧客からの削除要請を受け付け、規制に沿った消去フローを開始します。
  * @summary Request customer data deletion
  */
 export type customerOperationsRequestDeletionResponse202 = {
@@ -2228,7 +2228,7 @@ export const useCustomerOperationsRequestDeletion = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * Export customer data (GDPR compliance)
+ * 顧客が自身のデータを取得できるようエクスポートし、GDPR等の個人情報規制に対応します。
  * @summary Export customer data
  */
 export type customerOperationsExportDataResponse200 = {
@@ -2455,7 +2455,7 @@ export function useCustomerOperationsExportData<
 }
 
 /**
- * Get audit history for a resource
+ * 対象リソースの監査履歴を取得し、変更者や変更内容を追跡します。
  * @summary Get {Name} audit history
  */
 export type customerCrudGetHistoryResponse200 = {
@@ -2681,7 +2681,7 @@ export function useCustomerCrudGetHistory<
 }
 
 /**
- * Add loyalty points
+ * 来店やキャンペーンに応じてロイヤルティポイントを加算し、顧客維持を促進します。
  * @summary Add loyalty points
  */
 export type customerOperationsAddLoyaltyPointsResponse200 = {
@@ -2800,7 +2800,7 @@ export const useCustomerOperationsAddLoyaltyPoints = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * Update customer preferences
+ * 顧客の施術好みや連絡手段などの希望設定を更新し、パーソナライズされた提案に反映します。
  * @summary Update customer preferences
  */
 export type customerOperationsUpdatePreferencesResponse200 = {
@@ -2919,7 +2919,7 @@ export const useCustomerOperationsUpdatePreferences = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * Get customer profile with extended information
+ * 顧客の基本情報に加え、嗜好や連絡先など拡張情報を取得し、パーソナライズ対応に活かします。
  * @summary Get customer profile
  */
 export type customerOperationsGetProfileResponse200 = {
@@ -3116,7 +3116,7 @@ export function useCustomerOperationsGetProfile<
 }
 
 /**
- * Get customer reservations
+ * 顧客が保持する予約履歴を取得し、来店予定や過去施術の確認に利用します。
  * @summary Get customer reservations
  */
 export type customerOperationsGetReservationsResponse200 = {
@@ -3343,7 +3343,7 @@ export function useCustomerOperationsGetReservations<
 }
 
 /**
- * Restore a deleted resource
+ * 削除済みリソースを復元し、誤削除への迅速なリカバリを可能にします。
  * @summary Restore deleted {Name}
  */
 export type customerCrudRestoreResponse200 = {
@@ -3454,7 +3454,7 @@ export const useCustomerCrudRestore = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * Get customer statistics
+ * 来店頻度や売上貢献度など顧客指標を集計し、セグメント施策やVIP判定に利用します。
  * @summary Get customer statistics
  */
 export type customerOperationsGetStatisticsResponse200 = {
@@ -3681,7 +3681,7 @@ export function useCustomerOperationsGetStatistics<
 }
 
 /**
- * Get specific version of a resource
+ * 指定したバージョンのリソース状態を取得し、過去状態の確認や比較に利用します。
  * @summary Get {Name} version
  */
 export type customerCrudGetVersionResponse200 = {

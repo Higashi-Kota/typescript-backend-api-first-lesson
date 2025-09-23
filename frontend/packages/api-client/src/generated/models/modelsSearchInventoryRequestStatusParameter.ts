@@ -6,6 +6,15 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 在庫ステータス区分 - 商品・材料の在庫状態を表す区分
+
+in_stock: 在庫あり - 十分な在庫量がある状態
+low_stock: 在庫僅少 - 在庫量が設定された最小量に近づいている状態
+out_of_stock: 在庫切れ - 在庫がゼロになった状態
+ordered: 発注済み - 補充のための発注が行われた状態
+discontinued: 廃番 - 商品の取り扱いを終了した状態
+ */
 export type ModelsSearchInventoryRequestStatusParameter =
   (typeof ModelsSearchInventoryRequestStatusParameter)[keyof typeof ModelsSearchInventoryRequestStatusParameter]
 

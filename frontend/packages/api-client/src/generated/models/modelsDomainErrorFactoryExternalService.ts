@@ -10,7 +10,7 @@ import type { ModelsDomainErrorFactoryExternalServiceDefaultCode } from './model
 import type { ModelsDomainErrorFactoryExternalServiceHttpStatus } from './modelsDomainErrorFactoryExternalServiceHttpStatus'
 
 /**
- * External service error factory
+ * 外部サービス連携エラーを生成するための設定。
  */
 export type ModelsDomainErrorFactoryExternalService = {
   type: ModelsDomainErrorFactoryExternalServiceType

@@ -10,7 +10,7 @@ import type { ModelsDomainErrorFactoryNotFoundDefaultCode } from './modelsDomain
 import type { ModelsDomainErrorFactoryNotFoundHttpStatus } from './modelsDomainErrorFactoryNotFoundHttpStatus'
 
 /**
- * Not found error factory
+ * リソース未検出エラーを生成するための設定。
  */
 export type ModelsDomainErrorFactoryNotFound = {
   type: ModelsDomainErrorFactoryNotFoundType

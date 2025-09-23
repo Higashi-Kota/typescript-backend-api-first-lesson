@@ -76,7 +76,7 @@ type Awaited<O> = O extends AwaitedInput<infer T> ? T : never
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 
 /**
- * List resources with pagination and filtering
+ * ページネーションやフィルター条件を指定して対象リソースを一覧取得します。業務画面のリスト表示に利用します。
  * @summary List {Name} resources
  */
 export type salonCrudListResponse200 = {
@@ -252,7 +252,7 @@ export function useSalonCrudList<
 }
 
 /**
- * Create a new resource
+ * 新規リソースを作成し、作成時のバリデーションや重複チェック結果を返却します。
  * @summary Create new {Name}
  */
 export type salonCrudCreateResponse201 = {
@@ -361,7 +361,7 @@ export const useSalonCrudCreate = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * Batch get multiple resources
+ * 複数IDをまとめて取得し、一覧画面の遅延読み込みや外部連携に利用します。
  * @summary Batch get {Name} resources
  */
 export type salonCrudBatchGetResponse200 = {
@@ -470,7 +470,7 @@ export const useSalonCrudBatchGet = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * Bulk create resources
+ * 複数リソースを一括作成し、結果を成功・失敗に分けて返却します。
  * @summary Bulk create {Name} resources
  */
 export type salonCrudBulkCreateResponse207 = {
@@ -583,7 +583,7 @@ export const useSalonCrudBulkCreate = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * Bulk update resources
+ * 複数リソースの更新をまとめて受け付け、バージョン整合性を保ちながら処理します。
  * @summary Bulk update {Name} resources
  */
 export type salonCrudBulkUpdateResponse207 = {
@@ -696,7 +696,7 @@ export const useSalonCrudBulkUpdate = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * Bulk delete resources
+ * 複数リソースを一括削除し、成功可否ごとの結果を返却します。
  * @summary Bulk delete {Name} resources
  */
 export type salonCrudBulkDeleteResponse207 = {
@@ -809,7 +809,7 @@ export const useSalonCrudBulkDelete = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * Export search results
+ * 検索結果を指定形式でエクスポートし、帳票出力や外部共有に活用します。
  * @summary Export {Name} search results
  */
 export type salonCrudExportResponse202 = {
@@ -918,7 +918,7 @@ export const useSalonCrudExport = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * Get nearby salons
+ * 位置情報と希望条件から近隣サロンを検索し、顧客に最適な選択肢を提示します。
  * @summary Get nearby salons
  */
 export type salonOperationsGetNearbyResponse200 = {
@@ -1124,7 +1124,7 @@ export function useSalonOperationsGetNearby<
 }
 
 /**
- * Get salon recommendations
+ * 顧客の嗜好や履歴にもとづきおすすめサロンを提示し、再来店促進や新規獲得を支援します。
  * @summary Get personalized salon recommendations
  */
 export type salonOperationsGetRecommendationsResponse200 = {
@@ -1337,7 +1337,7 @@ export function useSalonOperationsGetRecommendations<
 }
 
 /**
- * Advanced search with facets
+ * ファセットや複合条件を利用してリソースを検索し、結果と統計情報を返却します。
  * @summary Search {Name} resources
  */
 export type salonCrudSearchResponse200 = {
@@ -1536,7 +1536,7 @@ export function useSalonCrudSearch<
 }
 
 /**
- * Get a single resource by ID
+ * IDを指定して単一リソースを取得し、詳細表示や編集フォームの初期値に使用します。
  * @summary Get {Name} by ID
  */
 export type salonCrudGetResponse200 = {
@@ -1735,7 +1735,7 @@ export function useSalonCrudGet<
 }
 
 /**
- * Update a resource (full update)
+ * 既存リソースを全項目更新し、最新状態とバージョン情報を返却します。
  * @summary Update {Name}
  */
 export type salonCrudUpdateResponse200 = {
@@ -1845,7 +1845,7 @@ export const useSalonCrudUpdate = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * Partially update a resource
+ * 必要なフィールドのみを部分更新し、変更差分を効率的に反映します。
  * @summary Partially update {Name}
  */
 export type salonCrudPatchResponse200 = {
@@ -1994,7 +1994,7 @@ export const useSalonCrudPatch = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * Delete a resource (soft delete by default)
+ * リソースを削除し、必要に応じて論理削除か物理削除かを選択します。
  * @summary Delete {Name}
  */
 export type salonCrudDeleteResponse204 = {
@@ -2120,7 +2120,7 @@ export const useSalonCrudDelete = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * Check salon availability
+ * 希望日時にサロン全体で対応可能な枠があるかを判定し、予約導線での可用性表示に利用します。
  * @summary Check salon availability
  */
 export type salonOperationsCheckAvailabilityResponse200 = {
@@ -2236,7 +2236,7 @@ export const useSalonOperationsCheckAvailability = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * Get audit history for a resource
+ * 対象リソースの監査履歴を取得し、変更者や変更内容を追跡します。
  * @summary Get {Name} audit history
  */
 export type salonCrudGetHistoryResponse200 = {
@@ -2455,7 +2455,7 @@ export function useSalonCrudGetHistory<
 }
 
 /**
- * Delete salon image
+ * 掲載中のサロン画像を削除し、ブランドトーンの統一や情報更新を行います。
  * @summary Delete salon image
  */
 export type salonOperationsDeleteImageResponse204 = {
@@ -2570,7 +2570,7 @@ export const useSalonOperationsDeleteImage = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * Restore a deleted resource
+ * 削除済みリソースを復元し、誤削除への迅速なリカバリを可能にします。
  * @summary Restore deleted {Name}
  */
 export type salonCrudRestoreResponse200 = {
@@ -2677,7 +2677,7 @@ export const useSalonCrudRestore = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * Manage salon staff schedule
+ * サロン所属スタッフのシフトを更新し、予約枠や勤怠管理との整合を取ります。
  * @summary Update staff schedule
  */
 export type salonOperationsUpdateStaffScheduleResponse200 = {
@@ -2818,7 +2818,7 @@ export const useSalonOperationsUpdateStaffSchedule = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * Get salon statistics
+ * サロンの売上や予約件数など主要指標を取得し、経営判断や施策検討に活用します。
  * @summary Get salon statistics
  */
 export type salonOperationsGetStatisticsResponse200 = {
@@ -3045,7 +3045,7 @@ export function useSalonOperationsGetStatistics<
 }
 
 /**
- * Subscribe to salon updates
+ * サロンのニュースやキャンペーン更新を購読登録し、ロイヤル顧客との接点を強化します。
  * @summary Subscribe to salon updates
  */
 export type salonOperationsSubscribeResponse201 = {
@@ -3160,7 +3160,7 @@ export const useSalonOperationsSubscribe = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * Get specific version of a resource
+ * 指定したバージョンのリソース状態を取得し、過去状態の確認や比較に利用します。
  * @summary Get {Name} version
  */
 export type salonCrudGetVersionResponse200 = {

@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 固定値success。成功結果であることを示す。
+ */
 export type PointOperationsEarnPoints200AnyOfStatus =
   (typeof PointOperationsEarnPoints200AnyOfStatus)[keyof typeof PointOperationsEarnPoints200AnyOfStatus]
 

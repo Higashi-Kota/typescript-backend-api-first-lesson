@@ -13,6 +13,9 @@ import type { ModelsCompletedBookingStatusUpdate } from './modelsCompletedBookin
 import type { ModelsCancelledBookingStatusUpdate } from './modelsCancelledBookingStatusUpdate'
 import type { ModelsNoShowBookingStatusUpdate } from './modelsNoShowBookingStatusUpdate'
 
+/**
+ * 予約の進行状況ごとに保持する詳細情報ユニオン。
+ */
 export type ModelsBookingStatusUpdate =
   | ModelsDraftBookingStatusUpdate
   | ModelsPendingBookingStatusUpdate

@@ -9,23 +9,24 @@ import type { ModelsDomainErrorType } from './modelsDomainErrorType'
 import type { ModelsDomainErrorDetailsDetails } from './modelsDomainErrorDetailsDetails'
 
 /**
- * Domain error details for internal error handling
+ * ドメインエラーの詳細情報モデル。
+予約・顧客・サロンなどビジネスロジック層で発生したエラーを分類し、運用チームが原因分析しやすい形で保持する。
  */
 export interface ModelsDomainErrorDetails {
-  /** Error classification type */
+  /** エラー分類タイプ。上位のビジネスルールカテゴリを特定する。 */
   type: ModelsDomainErrorType
-  /** Human-readable error message */
+  /** 業務担当者が理解しやすい説明文。ユーザー通知にも使用可能。 */
   message: string
-  /** Machine-readable error code */
+  /** 機械判読可能なエラーコード。外部連携やログ分析に利用する。 */
   code: string
-  /** Additional error context */
+  /** 追加のエラー文脈。入力値や関連設定など柔軟に格納する。 */
   details?: ModelsDomainErrorDetailsDetails
-  /** Related entity information */
+  /** 関連するエンティティ名。例: `Reservation` や `Customer`。 */
   entity?: string
-  /** Related field information */
+  /** 問題が発生したフィールド名。入力フォームとの紐付けに利用。 */
   field?: string
-  /** Related value information */
+  /** 問題があった値。マスキングが不要なケースのみ保持する。 */
   value?: string
-  /** Service name for external service errors */
+  /** 外部サービスエラー時の対象サービス名。連携先の切り分けに役立つ。 */
   service?: string
 }

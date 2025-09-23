@@ -18,16 +18,49 @@ import type { ModelsPaginationParamsOffsetParameter } from './modelsPaginationPa
 
 export type InventoryOperationsListInventoryItemsParams = {
   /**
-   * Branded UUID type for Salon ID
+   * サロン店舗・拠点を識別するためのブランド付きUUID。
    */
   salonId: ModelsSearchInventoryRequestSalonIdParameter
+  /**
+   * カテゴリでの絞り込み
+   */
   category?: ModelsSearchInventoryRequestCategoryParameter
+  /**
+ * 在庫ステータス区分 - 商品・材料の在庫状態を表す区分
+
+in_stock: 在庫あり - 十分な在庫量がある状態
+low_stock: 在庫僅少 - 在庫量が設定された最小量に近づいている状態
+out_of_stock: 在庫切れ - 在庫がゼロになった状態
+ordered: 発注済み - 補充のための発注が行われた状態
+discontinued: 廃番 - 商品の取り扱いを終了した状態
+ */
   status?: ModelsSearchInventoryRequestStatusParameter
+  /**
+   * 最低在庫を下回るもののみ取得するか
+   */
   lowStock?: ModelsSearchInventoryRequestLowStockParameter
+  /**
+   * 期限切れ間近の在庫を取得するか
+   */
   expiringSoon?: ModelsSearchInventoryRequestExpiringSoonParameter
+  /**
+   * フリーワード検索用キーワード。
+   */
   q?: ModelsSearchParamsQParameter
+  /**
+   * 並び替え対象カラム名。
+   */
   sortBy?: ModelsSearchParamsSortByParameter
+  /**
+   * 昇順ascまたは降順descの指定。
+   */
   sortOrder?: ModelsSearchParamsSortOrderParameter
+  /**
+   * 1ページあたりの取得件数。省略時は20件。
+   */
   limit?: ModelsPaginationParamsLimitParameter
+  /**
+   * 取得開始位置を表すオフセット。省略時は0。
+   */
   offset?: ModelsPaginationParamsOffsetParameter
 }

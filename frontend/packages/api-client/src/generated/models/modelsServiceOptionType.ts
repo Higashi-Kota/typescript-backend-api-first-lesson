@@ -6,6 +6,15 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * サービスオプションタイプ区分 - サービスに追加できるオプションの種類
+
+addon: アドオン - 基本サービスに追加できるオプション
+upgrade: アップグレード - サービスのグレードを上げるオプション
+duration: 時間延長 - サービス時間を延長するオプション
+product: 商品追加 - サービスに商品を含めるオプション
+combo: コンボ - 複数サービスの組み合わせオプション
+ */
 export type ModelsServiceOptionType =
   (typeof ModelsServiceOptionType)[keyof typeof ModelsServiceOptionType]
 

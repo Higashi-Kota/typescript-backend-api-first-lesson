@@ -10,60 +10,60 @@ import type { SalonCrudExportBodySortOrder } from './salonCrudExportBodySortOrde
 import type { SalonCrudExportBodyFormat } from './salonCrudExportBodyFormat'
 
 export type SalonCrudExportBody = {
-  /** Search keyword (alias for q) */
+  /** 検索キーワード。qパラメータのエイリアス */
   keyword?: string
-  /** Filter by city name */
+  /** 市区町村名による絞り込み */
   city?: string
-  /** Filter by prefecture name */
+  /** 都道府県名による絞り込み */
   prefecture?: string
-  /** Filter by service categories */
+  /** サービスカテゴリ（カット・カラー等）による絞り込み */
   categories?: ModelsServiceCategoryType[]
-  /** Filter by features (array) */
+  /** 設備やこだわり条件などの特徴タグによる絞り込み */
   features?: string[]
-  /** Filter by active status */
+  /** 営業中サロンのみを対象にするかどうか */
   isActive?: boolean
   /**
-   * Filter by minimum rating
+   * 最低評価値による絞り込み
    * @minimum 0
    * @maximum 5
    */
   minRating?: number
   /**
-   * Maximum distance in kilometers
+   * 検索基点からの最大距離（km）
    * @minimum 0
    */
   maxDistance?: number
-  /** Reference latitude for distance calculation */
+  /** 距離計算に使用する基準緯度 */
   lat?: number
-  /** Reference longitude for distance calculation */
+  /** 距離計算に使用する基準経度 */
   lon?: number
-  /** Filter by opening hours */
+  /** 現在営業中かどうかで絞り込むフラグ */
   openNow?: boolean
-  /** Filter by specific day and time */
+  /** 特定日時に営業しているサロンを探すための基準日時 */
   openAt?: string
-  /** Full-text search query */
+  /** 全文検索キーワード。名称や説明文を横断的に検索する。 */
   q?: string
-  /** Filter expression (e.g., 'status:active AND category:premium') */
+  /** フィルター式。例: `status:active AND category:premium`。属性条件を組み合わせた絞り込みに使用。 */
   filter?: string
-  /** Fields to include in response */
+  /** レスポンスに含めるフィールドのカンマ区切りリスト。データ転送量の最適化に活用。 */
   fields?: string
-  /** Fields to exclude from response */
+  /** レスポンスから除外したいフィールドのカンマ区切りリスト。不要情報を除く場合に利用。 */
   exclude?: string
-  /** Enable faceted search results */
+  /** ファセット集計を有効化するかどうか。true で各項目の件数を集計する。 */
   facets?: boolean
-  /** Facet fields to aggregate */
+  /** 集計対象とするファセットフィールドの一覧。カテゴリや価格帯などを指定する。 */
   facetFields?: string[]
   /**
-   * Maximum number of items to return (1-100)
+   * 1ページあたりの取得件数上限 (1〜100)。指定が無い場合は既定値 20 を適用。
    * @minimum 1
    * @maximum 100
    */
   limit?: number
-  /** Cursor for the next page */
+  /** 次ページを指し示すカーソル。前回レスポンスの `meta.nextCursor` を設定する。 */
   cursor?: string
-  /** Field to sort by */
+  /** ソート対象フィールド。予約日時や作成日時など業務軸を指定する。 */
   sortBy?: string
-  /** Sort order */
+  /** ソート順序。`asc` は昇順、`desc` は降順を表す。 */
   sortOrder?: SalonCrudExportBodySortOrder
   format: SalonCrudExportBodyFormat
   exportFields?: string[]

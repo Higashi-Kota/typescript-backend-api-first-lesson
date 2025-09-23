@@ -10,10 +10,13 @@ import type { ModelsNotificationType } from './modelsNotificationType'
 import type { ModelsServiceCategoryType } from './modelsServiceCategoryType'
 
 /**
- * Subscription request for salon updates
+ * サロンからの最新情報通知を希望する顧客の購読リクエスト
  */
 export interface ModelsSalonSubscriptionRequest {
+  /** 通知を受け取る顧客ID */
   customerId: ModelsCustomerId
+  /** 希望する通知カテゴリの種類一覧 */
   notificationTypes: ModelsNotificationType[]
+  /** 関心の高いサービスカテゴリ。未指定の場合は全カテゴリ対象 */
   categories?: ModelsServiceCategoryType[]
 }

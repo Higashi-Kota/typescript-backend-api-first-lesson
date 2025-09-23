@@ -8,7 +8,12 @@
 import type { PaymentOperationsCreatePayment200AnyOfStatus } from './paymentOperationsCreatePayment200AnyOfStatus'
 import type { ModelsPayment } from './modelsPayment'
 
+/**
+ * 成功時のデータとステータスを保持するモデル。
+ */
 export type PaymentOperationsCreatePayment200AnyOf = {
+  /** 固定値success。成功結果であることを示す。 */
   status: PaymentOperationsCreatePayment200AnyOfStatus
+  /** 成功時に返却するドメインデータ。 */
   data: ModelsPayment
 }

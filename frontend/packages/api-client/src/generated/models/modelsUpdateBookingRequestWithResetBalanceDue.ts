@@ -8,6 +8,7 @@
 import type { ModelsMoney } from './modelsMoney'
 
 /**
+ * 未収金額の更新またはリセット。
  * @nullable
  */
 export type ModelsUpdateBookingRequestWithResetBalanceDue = ModelsMoney | null

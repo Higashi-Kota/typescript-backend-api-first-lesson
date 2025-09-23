@@ -7,6 +7,6 @@
  */
 
 /**
- * Branded UUID type for Customer ID
+ * 顧客（来店者）を識別するためのブランド付きUUID。
  */
 export type ModelsCustomerId = string

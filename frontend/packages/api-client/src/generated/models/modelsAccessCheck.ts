@@ -8,12 +8,17 @@
 import type { ModelsSalonId } from './modelsSalonId'
 
 /**
- * Access control check
+ * アクセス権限の確認リクエスト
  */
 export interface ModelsAccessCheck {
+  /** 権限を判定するユーザー ID */
   userId: string
+  /** 対象リソースの識別子 */
   resource: string
+  /** 実行したい操作区分 */
   action: string
+  /** サロン単位での権限チェック時のサロン ID */
   salonId?: ModelsSalonId
+  /** リソース固有の ID */
   resourceId?: string
 }

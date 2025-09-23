@@ -532,9 +532,9 @@ model Salon {
 2. **database-schema-architect**: DB定義との整合性確認、マイグレーション作成
 3. **design-review-architect**: 全レイヤーでの型一貫性レビュー
 
-### Enum命名規則
+### Enum命名規則と日本語ドキュメンテーション
 
-プロジェクトでは、すべてのEnum型名の末尾に`Type`サフィックスを付けることを標準規則としています。
+プロジェクトでは、すべてのEnum型名の末尾に`Type`サフィックスを付け、包括的な日本語の@docアノテーションを付与することを標準規則としています。
 
 #### 標準命名パターン
 ```typespec
@@ -545,6 +545,30 @@ enum PaymentMethodType { ... }
 enum ReservationStatusType { ... }
 enum LoyaltyTierType { ... }
 ```
+
+#### 日本語@docアノテーション標準
+すべてのEnum型には、以下の形式で日本語の@docアノテーションを付与します：
+
+```typespec
+@doc("""
+  アレルギー重篤度区分 - アレルギー反応の重篤度を表し、対応レベルを決定
+
+  mild: 軽度 - 軽いかゆみや赤み程度、通常の施術で注意すれば対応可能
+  moderate: 中等度 - 明確な皮膚反応、特別な配慮や代替品の使用が必要
+  severe: 重度 - 激しい反応、特定の施術を避けるべきレベル
+  """)
+enum AllergySeverityType {
+  mild,
+  moderate,
+  severe,
+}
+```
+
+**フォーマット規則：**
+1. 最初の行：Enum全体の説明（目的と用途）
+2. 空行を1行挿入
+3. 各値の説明：`値名: 日本語名 - 詳細説明`の形式
+4. 値の説明は1行ずつ記載
 
 #### 既知の問題と対処
 TypeSpec v1.2.1およびv1.4.0では、OpenAPI生成時にEnum名の末尾に`Type`を付けると重複エラーの警告が発生します：
@@ -647,6 +671,54 @@ model GoodResponse {
 | 値設定 | `{ field: "value" }` | 新しい値で更新 | DBに値を設定 |
 
 この規約に従うことで、型安全で一貫性のあるAPIを実装できます。
+
+## Spread演算子の使用制限
+
+### 基本ルール
+TypeSpecでは、spread演算子(`...`)を使用する際に@docアノテーションを付けることができません。これはTypeSpecコンパイラの制限事項です。
+
+```typespec
+// ❌ エラー: Cannot decorate spread property
+model MyModel {
+  @doc("共通プロパティ")  // エラー
+  ...CommonProperties;
+}
+
+// ✅ 正しい: spread演算子には@docを付けない
+model MyModel {
+  ...CommonProperties;  // 参照先のモデルに@docがあれば十分
+}
+```
+
+### 対処方法
+1. **参照先モデルに@docを付ける**: spread元のモデルで各プロパティに@docアノテーションを付ける
+2. **モデル全体の説明**: spreadを含むモデル自体に@docアノテーションで説明を追加
+3. **個別プロパティの説明**: spread以外のプロパティには通常通り@docを付ける
+
+```typespec
+// 参照元モデル（ここで@docを定義）
+@doc("監査情報の共通プロパティ")
+model AuditInfo {
+  @doc("作成日時")
+  createdAt: utcDateTime;
+
+  @doc("更新日時")
+  updatedAt: utcDateTime;
+}
+
+// 使用側モデル
+@doc("サロン情報を管理するモデル")
+model Salon {
+  @doc("サロンID")
+  id: SalonId;
+
+  @doc("サロン名")
+  name: string;
+
+  // spread演算子には@docを付けない
+  ...AuditInfo;
+}
+```
 
 ## モデル定義の標準化ルール
 

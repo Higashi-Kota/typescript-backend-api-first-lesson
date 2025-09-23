@@ -7,6 +7,6 @@
  */
 
 /**
- * Branded UUID type for Permission ID
+ * アクセス許可や操作権限を識別するブランド付きUUID。
  */
 export type ModelsPermissionId = string

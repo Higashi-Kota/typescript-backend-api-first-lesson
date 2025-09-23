@@ -8,6 +8,7 @@
 import type { ModelsPaymentStatusCodeType } from './modelsPaymentStatusCodeType'
 
 /**
+ * 支払いステータスの更新またはリセット。
  * @nullable
  */
 export type ModelsUpdateBookingRequestWithResetPaymentStatus =

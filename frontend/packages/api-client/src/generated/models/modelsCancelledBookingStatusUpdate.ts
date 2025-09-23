@@ -8,9 +8,16 @@
 import type { ModelsCancelledBookingStatusUpdateType } from './modelsCancelledBookingStatusUpdateType'
 import type { ModelsCancelledBookingStatusUpdateCancelledBy } from './modelsCancelledBookingStatusUpdateCancelledBy'
 
+/**
+ * 予約がキャンセルされた場合の状態情報。
+ */
 export interface ModelsCancelledBookingStatusUpdate {
+  /** 固定値cancelled。キャンセル状態であることを示す。 */
   type?: ModelsCancelledBookingStatusUpdateType
+  /** キャンセルが登録された日時。 */
   cancelledAt?: string
+  /** キャンセル理由のメモ。未設定の場合はnull。 */
   reason?: string
+  /** キャンセルを実行した主体（customer: 顧客／salon: サロン側／system: システム判断）。 */
   cancelledBy?: ModelsCancelledBookingStatusUpdateCancelledBy
 }

@@ -10,23 +10,23 @@ import type { ModelsServiceSummary } from './modelsServiceSummary'
 import type { ModelsTimeSlot } from './modelsTimeSlot'
 
 /**
- * Salon statistics response
+ * サロン運営指標を集計したダッシュボード向けレスポンスモデル
  */
 export interface ModelsSalonStatistics {
-  /** Total number of services */
+  /** 登録されている提供メニューの総数 */
   totalServices: number
-  /** Total number of staff */
+  /** 在籍スタッフの総数 */
   totalStaff: number
-  /** Average rating */
+  /** レビューから算出した平均評価 */
   averageRating?: number
-  /** Total reviews */
+  /** 累計レビュー件数 */
   totalReviews: number
-  /** Total bookings this month */
+  /** 当月の予約件数合計 */
   monthlyBookings: number
-  /** Revenue this month */
+  /** 当月の売上総額 */
   monthlyRevenue?: ModelsMoney
-  /** Popular services */
+  /** 人気の高いサービス一覧 */
   popularServices: ModelsServiceSummary[]
-  /** Busy hours */
+  /** 予約が集中する時間帯の一覧 */
   busyHours: ModelsTimeSlot[]
 }

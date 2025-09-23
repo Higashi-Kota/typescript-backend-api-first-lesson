@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 固定値draft。下書き状態であることを示す。
+ */
 export type ModelsDraftBookingStatusType =
   (typeof ModelsDraftBookingStatusType)[keyof typeof ModelsDraftBookingStatusType]
 

@@ -7,11 +7,11 @@
  */
 
 /**
- * Response data
+ * レスポンスの主体となるビジネスデータ。
  */
 export type CustomerOperationsAddLoyaltyPoints200Data = {
-  /** New points balance */
+  /** 更新後のポイント残高 */
   balance: number
-  /** Transaction ID */
+  /** トランザクションID */
   transactionId: string
 }

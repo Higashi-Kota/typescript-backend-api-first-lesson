@@ -11,18 +11,29 @@ import type { ModelsStaffSchedule } from './modelsStaffSchedule'
 import type { ModelsStaffPermission } from './modelsStaffPermission'
 
 /**
- * Staff update request with optional fields for partial updates
+ * スタッフ更新リクエスト - 任意項目を部分更新し、プロフィールや勤務状況を柔軟に調整する
  */
 export interface ModelsUpdateStaffRequest {
+  /** スタッフ名の更新 */
   name?: string
+  /** 連絡先情報の更新 */
   contactInfo?: ModelsContactInfo
+  /** 得意分野一覧の更新 */
   specialties?: string[]
+  /** プロフィール画像URLの更新 */
   imageUrl?: string
+  /** 自己紹介文の更新 */
   bio?: string
+  /** 経験年数の更新 */
   yearsOfExperience?: number
+  /** 資格名一覧の更新 */
   certifications?: string[]
+  /** 資格詳細一覧の更新 */
   qualifications?: ModelsStaffQualification[]
+  /** 勤務スケジュール一覧の更新 */
   schedules?: ModelsStaffSchedule[]
+  /** 付与権限一覧の更新 */
   permissions?: ModelsStaffPermission[]
+  /** アクティブ状態の更新 */
   isActive?: boolean
 }

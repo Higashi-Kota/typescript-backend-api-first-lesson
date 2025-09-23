@@ -8,6 +8,9 @@
 import type { ModelsPayment } from './modelsPayment'
 import type { PaymentOperationsGetReceipt200AnyOfDataItemsItem } from './paymentOperationsGetReceipt200AnyOfDataItemsItem'
 
+/**
+ * 成功時に返却するドメインデータ。
+ */
 export type PaymentOperationsGetReceipt200AnyOfData = {
   receiptNumber: string
   payment: ModelsPayment

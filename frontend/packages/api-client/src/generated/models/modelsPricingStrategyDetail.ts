@@ -11,15 +11,28 @@ import type { ModelsPricingFactor } from './modelsPricingFactor'
 import type { ModelsServiceId } from './modelsServiceId'
 import type { ModelsDecimal } from './modelsDecimal'
 
+/**
+ * 採用している価格戦略の詳細
+ */
 export interface ModelsPricingStrategyDetail {
+  /** 価格戦略タイプ */
   type: ModelsPricingStrategyType
+  /** 固定価格型の場合の金額 */
   amount?: number
+  /** 段階価格の設定一覧 */
   tiers?: ModelsPriceTier[]
+  /** 基準価格 */
   basePrice?: number
+  /** 価格変動要因の設定 */
   factors?: ModelsPricingFactor[]
+  /** セット対象となるサービス ID */
   services?: ModelsServiceId[]
+  /** 割引率（%） */
   discountRate?: ModelsDecimal
+  /** 会員向け特別価格 */
   memberPrice?: number
+  /** 非会員向け価格 */
   nonMemberPrice?: number
+  /** 戦略の説明 */
   description?: string
 }

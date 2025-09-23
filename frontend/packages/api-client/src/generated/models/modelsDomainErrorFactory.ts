@@ -16,25 +16,26 @@ import type { ModelsDomainErrorFactoryDatabase } from './modelsDomainErrorFactor
 import type { ModelsDomainErrorFactoryExternalService } from './modelsDomainErrorFactoryExternalService'
 
 /**
- * Standard domain error factory configuration
+ * ドメインエラー生成の標準設定モデル。
+各カテゴリごとの既定コードと HTTP ステータスを定義し、再利用可能なエラーファクトリーを構築する。
  */
 export interface ModelsDomainErrorFactory {
-  /** Validation error factory */
+  /** 検証エラーを生成するための設定。 */
   validation: ModelsDomainErrorFactoryValidation
-  /** Not found error factory */
+  /** リソース未検出エラーを生成するための設定。 */
   notFound: ModelsDomainErrorFactoryNotFound
-  /** Already exists error factory */
+  /** 重複登録エラーを生成するための設定。 */
   alreadyExists: ModelsDomainErrorFactoryAlreadyExists
-  /** Business rule violation factory */
+  /** ビジネスルール違反エラーを生成するための設定。 */
   businessRule: ModelsDomainErrorFactoryBusinessRule
-  /** Unauthorized error factory */
+  /** 未認証エラーを生成するための設定。 */
   unauthorized: ModelsDomainErrorFactoryUnauthorized
-  /** Forbidden error factory */
+  /** 権限不足エラーを生成するための設定。 */
   forbidden: ModelsDomainErrorFactoryForbidden
-  /** Internal error factory */
+  /** 内部サーバーエラーを生成するための設定。 */
   internal: ModelsDomainErrorFactoryInternal
-  /** Database error factory */
+  /** データベースエラーを生成するための設定。 */
   database: ModelsDomainErrorFactoryDatabase
-  /** External service error factory */
+  /** 外部サービス連携エラーを生成するための設定。 */
   externalService: ModelsDomainErrorFactoryExternalService
 }

@@ -7,9 +7,16 @@
  */
 import type { ModelsPermissionId } from './modelsPermissionId'
 
+/**
+ * ロール情報の更新入力モデル
+ */
 export interface ModelsRoleUpdateInput {
+  /** 更新後の表示名 */
   displayName?: string
+  /** 更新後の説明文 */
   description?: string
+  /** 更新後の権限 ID リスト */
   permissions?: ModelsPermissionId[]
+  /** 有効/無効の切り替え */
   isActive?: boolean
 }

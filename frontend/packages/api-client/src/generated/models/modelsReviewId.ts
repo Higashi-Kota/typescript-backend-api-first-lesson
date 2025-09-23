@@ -7,6 +7,6 @@
  */
 
 /**
- * Branded UUID type for Review ID
+ * 顧客レビューや口コミを識別するブランド付きUUID。
  */
 export type ModelsReviewId = string

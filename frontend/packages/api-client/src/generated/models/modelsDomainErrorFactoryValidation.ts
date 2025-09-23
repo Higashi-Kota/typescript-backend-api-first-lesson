@@ -10,7 +10,7 @@ import type { ModelsDomainErrorFactoryValidationDefaultCode } from './modelsDoma
 import type { ModelsDomainErrorFactoryValidationHttpStatus } from './modelsDomainErrorFactoryValidationHttpStatus'
 
 /**
- * Validation error factory
+ * 検証エラーを生成するための設定。
  */
 export type ModelsDomainErrorFactoryValidation = {
   type: ModelsDomainErrorFactoryValidationType

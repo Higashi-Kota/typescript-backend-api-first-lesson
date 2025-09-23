@@ -8,8 +8,14 @@
 import type { ModelsProcessingPaymentStatusType } from './modelsProcessingPaymentStatusType'
 import type { ModelsStaffId } from './modelsStaffId'
 
+/**
+ * 決済処理中の状態の詳細
+ */
 export interface ModelsProcessingPaymentStatus {
+  /** 状態種別（processing 固定値） */
   type: ModelsProcessingPaymentStatusType
+  /** 処理開始日時 */
   startedAt: string
+  /** 処理を担当しているスタッフ ID */
   processorId?: ModelsStaffId
 }

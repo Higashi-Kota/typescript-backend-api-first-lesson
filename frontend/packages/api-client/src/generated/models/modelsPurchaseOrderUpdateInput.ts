@@ -7,10 +7,18 @@
  */
 import type { ModelsOrderStatusType } from './modelsOrderStatusType'
 
+/**
+ * 仕入れ発注の更新入力モデル
+ */
 export interface ModelsPurchaseOrderUpdateInput {
+  /** 更新後の発注ステータス */
   status?: ModelsOrderStatusType
+  /** 更新後の予定納期 */
   expectedDelivery?: string
+  /** 実際の納品日 */
   actualDelivery?: string
+  /** 納品関連の備考 */
   deliveryNotes?: string
+  /** その他の備考 */
   notes?: string
 }

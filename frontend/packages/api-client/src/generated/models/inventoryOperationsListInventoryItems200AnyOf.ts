@@ -8,7 +8,12 @@
 import type { InventoryOperationsListInventoryItems200AnyOfStatus } from './inventoryOperationsListInventoryItems200AnyOfStatus'
 import type { InventoryOperationsListInventoryItems200AnyOfData } from './inventoryOperationsListInventoryItems200AnyOfData'
 
+/**
+ * 成功時のデータとステータスを保持するモデル。
+ */
 export type InventoryOperationsListInventoryItems200AnyOf = {
+  /** 固定値success。成功結果であることを示す。 */
   status: InventoryOperationsListInventoryItems200AnyOfStatus
+  /** 成功時に返却するドメインデータ。 */
   data: InventoryOperationsListInventoryItems200AnyOfData
 }

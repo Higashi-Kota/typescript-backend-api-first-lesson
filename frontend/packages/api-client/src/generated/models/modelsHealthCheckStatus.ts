@@ -7,7 +7,7 @@
  */
 
 /**
- * Service status
+ * 対象サービスの稼働状態。`up` は正常、`down` は停止、`degraded` は部分的な性能低下を示す。
  */
 export type ModelsHealthCheckStatus =
   (typeof ModelsHealthCheckStatus)[keyof typeof ModelsHealthCheckStatus]

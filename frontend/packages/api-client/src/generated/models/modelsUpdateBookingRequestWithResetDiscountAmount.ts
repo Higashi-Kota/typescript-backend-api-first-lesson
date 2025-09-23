@@ -8,6 +8,7 @@
 import type { ModelsMoney } from './modelsMoney'
 
 /**
+ * 割引額の更新またはリセット。
  * @nullable
  */
 export type ModelsUpdateBookingRequestWithResetDiscountAmount =

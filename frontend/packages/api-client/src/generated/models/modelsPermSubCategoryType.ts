@@ -6,6 +6,15 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * パーマサブカテゴリー区分 - パーマネントサービスの詳細分類
+
+regular_perm: 通常パーマ - コールドパーマ等の標準的なパーマ
+digital_perm: デジタルパーマ - 熱を使った形状記憶パーマ
+spiral_perm: スパイラルパーマ - 螺旋状の強いカールを作るパーマ
+body_wave: ボディウェーブ - 大きなウェーブを作るパーマ
+straightening: ストレートパーマ - 縮毛矯正や髪をストレートにする施術
+ */
 export type ModelsPermSubCategoryType =
   (typeof ModelsPermSubCategoryType)[keyof typeof ModelsPermSubCategoryType]
 

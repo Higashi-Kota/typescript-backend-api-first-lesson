@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 状態種別（completed 固定値）
+ */
 export type ModelsCompletedPaymentStatusUpdateType =
   (typeof ModelsCompletedPaymentStatusUpdateType)[keyof typeof ModelsCompletedPaymentStatusUpdateType]
 

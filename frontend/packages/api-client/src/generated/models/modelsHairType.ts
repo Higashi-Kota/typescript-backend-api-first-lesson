@@ -6,6 +6,14 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 髪質タイプ区分 - 顧客の髪のクセや形状を分類、適切な施術提案に使用
+
+straight: ストレート - 直毛、クセがほとんどない髪質
+wavy: ウェービー - 緩やかな波状、S字カーブの髪質
+curly: カーリー - 明確なカール、螺旋状の髪質
+coily: コイリー - 非常に細かいカール、ジグザグ状の髪質
+ */
 export type ModelsHairType =
   (typeof ModelsHairType)[keyof typeof ModelsHairType]
 

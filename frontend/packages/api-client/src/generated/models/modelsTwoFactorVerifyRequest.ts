@@ -7,9 +7,9 @@
  */
 
 /**
- * Two-factor authentication verify request
+ * 2要素認証コードを検証するリクエスト。
  */
 export interface ModelsTwoFactorVerifyRequest {
-  /** TOTP code from authenticator app */
+  /** 認証アプリが生成したTOTPコード。 */
   code: string
 }

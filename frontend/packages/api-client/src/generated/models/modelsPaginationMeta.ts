@@ -6,28 +6,32 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * ページネーションに関する統計情報モデル。
+総件数やカーソル位置を保持し、フロントエンドの続き取得や無限スクロールの制御に利用する。
+ */
 export interface ModelsPaginationMeta {
   /**
-   * Total number of items
+   * 取得対象全体の総件数。件数計測ができない場合は null。
    * @nullable
    */
   total: number | null
-  /** Number of items per page */
+  /** 1ページあたりの取得件数。クエリパラメータ `limit` と一致する。 */
   limit: number
-  /** Whether there are more pages */
+  /** 次ページが存在するかを示すフラグ。無限スクロールの継続判定に使用。 */
   hasMore: boolean
   /**
-   * Current cursor position
+   * 現在ページのカーソル値。次リクエストで `cursor` に指定することで同位置から再開できる。
    * @nullable
    */
   cursor: string | null
   /**
-   * Next cursor for pagination
+   * 次ページを取得するためのカーソル値。存在しない場合は null。
    * @nullable
    */
   nextCursor: string | null
   /**
-   * Previous cursor for pagination
+   * 前ページへ戻るためのカーソル値。戻り操作が不要な場合は null。
    * @nullable
    */
   prevCursor: string | null

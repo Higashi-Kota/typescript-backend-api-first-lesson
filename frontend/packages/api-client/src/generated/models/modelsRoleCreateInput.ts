@@ -7,9 +7,16 @@
  */
 import type { ModelsPermissionId } from './modelsPermissionId'
 
+/**
+ * ロール新規作成時の入力モデル
+ */
 export interface ModelsRoleCreateInput {
+  /** ロールの内部名 */
   name: string
+  /** 表示用のロール名 */
   displayName: string
+  /** ロール説明文 */
   description?: string
+  /** 付与する権限 ID リスト */
   permissions: ModelsPermissionId[]
 }

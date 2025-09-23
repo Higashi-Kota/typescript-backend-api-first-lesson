@@ -7,8 +7,14 @@
  */
 import type { ModelsDraftBookingStatusType } from './modelsDraftBookingStatusType'
 
+/**
+ * 予約が下書き段階にある場合の状態情報。
+ */
 export interface ModelsDraftBookingStatus {
+  /** 固定値draft。下書き状態であることを示す。 */
   type: ModelsDraftBookingStatusType
+  /** 下書きが作成された日時。 */
   createdAt: string
+  /** 下書きの有効期限。未設定の場合は期限なし。 */
   expiresAt?: string
 }

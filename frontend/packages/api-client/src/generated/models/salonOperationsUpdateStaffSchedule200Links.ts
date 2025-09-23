@@ -7,7 +7,7 @@
  */
 
 /**
- * Related links
+ * 関連リソースや次アクションへのリンク情報。
  */
 export type SalonOperationsUpdateStaffSchedule200Links = {
   [key: string]: string

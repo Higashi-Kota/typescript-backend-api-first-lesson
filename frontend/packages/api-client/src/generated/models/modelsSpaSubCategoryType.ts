@@ -6,6 +6,14 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * スパサブカテゴリー区分 - スパ・リラクゼーションサービスの詳細分類
+
+head_spa: ヘッドスパ - 頭部のマッサージと頭皮ケアを組み合わせたスパ
+scalp_massage: スカルプマッサージ - 頭皮の血行促進マッサージ
+aromatherapy: アロマテラピー - アロマオイルを使用したリラクゼーション
+relaxation: リラクゼーション - ストレス解消を目的とした総合的なケア
+ */
 export type ModelsSpaSubCategoryType =
   (typeof ModelsSpaSubCategoryType)[keyof typeof ModelsSpaSubCategoryType]
 

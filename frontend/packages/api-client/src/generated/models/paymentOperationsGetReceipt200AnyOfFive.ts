@@ -8,7 +8,12 @@
 import type { PaymentOperationsGetReceipt200AnyOfFiveStatus } from './paymentOperationsGetReceipt200AnyOfFiveStatus'
 import type { ModelsError } from './modelsError'
 
+/**
+ * 失敗時のエラー情報とステータスを保持するモデル。
+ */
 export type PaymentOperationsGetReceipt200AnyOfFive = {
+  /** 固定値error。エラー結果であることを示す。 */
   status: PaymentOperationsGetReceipt200AnyOfFiveStatus
+  /** 失敗時に返却するエラー情報。 */
   error: ModelsError
 }

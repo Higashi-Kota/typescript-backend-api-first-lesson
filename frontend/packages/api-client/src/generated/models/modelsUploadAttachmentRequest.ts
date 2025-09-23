@@ -7,17 +7,17 @@
  */
 
 /**
- * ファイルアップロードリクエスト（マルチパート）
+ * マルチパートアップロードで添付ファイルを登録するためのリクエスト。
  */
 export interface ModelsUploadAttachmentRequest {
-  /** ファイル本体 */
+  /** HTTPリクエストで送信されるファイル本体。 */
   file: string
-  /** ファイル名 */
+  /** アップロード時に指定されたファイル名。 */
   filename: string
-  /** Content-Type */
+  /** ファイルのContent-Type。 */
   content: string
-  /** サロンID（オプション） */
+  /** ファイルを関連付けるサロンID。任意設定。 */
   salonId?: string
-  /** タグ（オプション） */
+  /** タグ情報を表すJSON文字列。任意設定。 */
   tags?: string
 }

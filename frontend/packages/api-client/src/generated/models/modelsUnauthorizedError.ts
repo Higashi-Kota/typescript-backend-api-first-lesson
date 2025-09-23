@@ -7,7 +7,12 @@
  */
 import type { ModelsUnauthorizedErrorCode } from './modelsUnauthorizedErrorCode'
 
+/**
+ * 認証されていないアクセスを表す標準エラーモデル。
+ */
 export interface ModelsUnauthorizedError {
+  /** 固定値UNAUTHORIZED。クライアントでのハンドリングを容易にする識別子。 */
   code: ModelsUnauthorizedErrorCode
+  /** エラー内容を伝えるメッセージ。 */
   message: string
 }

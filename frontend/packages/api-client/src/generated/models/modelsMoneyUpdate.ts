@@ -8,8 +8,14 @@
 import type { ModelsCurrencyCodeType } from './modelsCurrencyCodeType'
 import type { ModelsDecimal } from './modelsDecimal'
 
+/**
+ * 税抜・税込計算に利用する金額モデル。
+ */
 export interface ModelsMoneyUpdate {
+  /** 通貨の最小単位で表現した金額値。 */
   value?: number
+  /** 使用する通貨コード。 */
   currency?: ModelsCurrencyCodeType
+  /** 適用税率。任意設定。 */
   taxRate?: ModelsDecimal
 }

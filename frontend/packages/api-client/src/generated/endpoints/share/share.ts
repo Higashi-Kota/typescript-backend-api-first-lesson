@@ -34,7 +34,7 @@ type Awaited<O> = O extends AwaitedInput<infer T> ? T : never
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 
 /**
- * 共有リンクからファイル情報を取得
+ * 共有リンクとパスワードを確認し、公開対象ファイルのメタ情報を閲覧者に提示します。
  */
 export type shareOperationsGetSharedFileResponse200 = {
   data: ShareOperationsGetSharedFile200
@@ -251,7 +251,7 @@ export function useShareOperationsGetSharedFile<
 }
 
 /**
- * 共有リンクからダウンロードURLを取得
+ * 共有リンク利用者が安全にファイル本体を取得できるよう、署名付きダウンロードURLを返却します。
  */
 export type shareOperationsDownloadSharedFileResponse200 = {
   data: ShareOperationsDownloadSharedFile200

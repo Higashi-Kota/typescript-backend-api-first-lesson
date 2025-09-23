@@ -6,8 +6,14 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 個別権限の判定結果
+ */
 export interface ModelsPermissionStatus {
+  /** 権限キー */
   permission: string
+  /** 権限が付与されているかどうか */
   granted: boolean
+  /** 権限を付与したロール情報 */
   source?: string
 }

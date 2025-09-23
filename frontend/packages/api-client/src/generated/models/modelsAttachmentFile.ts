@@ -7,7 +7,7 @@
  */
 
 /**
- * ファイルタイプ
+ * ファイルの実体情報。ダウンロードや共有レスポンスで利用。
  */
 export type ModelsAttachmentFile = {
   /** The allowed media (MIME) types of the file contents.

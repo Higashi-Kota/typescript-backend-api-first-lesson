@@ -8,11 +8,20 @@
 import type { ModelsStaffLevelType } from './modelsStaffLevelType'
 import type { ModelsBookingLimit } from './modelsBookingLimit'
 
+/**
+ * サービス提供時の制約条件
+ */
 export interface ModelsServiceRestrictions {
+  /** 必要なスタッフレベル */
   requiredStaffLevel?: ModelsStaffLevelType
+  /** 必要資格の一覧 */
   requiredCertifications?: string[]
+  /** 同時提供可能な最大件数 */
   maxConcurrent?: number
+  /** 再予約までの最短間隔（日） */
   minIntervalDays?: number
+  /** 顧客ごとの予約上限設定 */
   maxBookingsPerCustomer?: ModelsBookingLimit
+  /** 提供不可日（ブラックアウト）一覧 */
   blackoutDates?: string[]
 }

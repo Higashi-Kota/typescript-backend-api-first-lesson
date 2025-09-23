@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 例外の種別（休暇・病欠など）
+ */
 export type ModelsScheduleExceptionType =
   (typeof ModelsScheduleExceptionType)[keyof typeof ModelsScheduleExceptionType]
 

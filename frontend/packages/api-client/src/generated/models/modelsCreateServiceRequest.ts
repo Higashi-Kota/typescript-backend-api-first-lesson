@@ -9,18 +9,34 @@ import type { ModelsSalonId } from './modelsSalonId'
 import type { ModelsServiceCategoryType } from './modelsServiceCategoryType'
 import type { ModelsCategoryId } from './modelsCategoryId'
 
+/**
+ * サービスを新規登録するリクエスト
+ */
 export interface ModelsCreateServiceRequest {
+  /** サービスを登録するサロン ID */
   salonId: ModelsSalonId
+  /** サービス名 */
   name: string
+  /** サービスの説明文 */
   description: string
+  /** 施術時間（分） */
   duration: number
+  /** 料金（税抜） */
   price: number
+  /** サービスカテゴリ区分 */
   category: ModelsServiceCategoryType
+  /** カテゴリ ID */
   categoryId?: ModelsCategoryId
+  /** サービス画像 URL */
   imageUrl?: string
+  /** 必要スタッフレベル */
   requiredStaffLevel?: number
+  /** 必要なデポジット額 */
   depositAmount?: number
+  /** 有効フラグ */
   isActive?: boolean
+  /** 最大全日予約可能日数 */
   maxAdvanceBookingDays?: number
+  /** 最短予約受付時間（時間） */
   minAdvanceBookingHours?: number
 }

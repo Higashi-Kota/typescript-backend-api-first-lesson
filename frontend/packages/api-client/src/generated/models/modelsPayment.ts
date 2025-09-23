@@ -19,30 +19,55 @@ import type { ModelsRefund } from './modelsRefund'
 import type { ModelsPaymentMetadata } from './modelsPaymentMetadata'
 
 /**
- * Payment record for services
+ * サロンで発生する支払いを管理する決済記録
  */
 export interface ModelsPayment {
+  /** 決済レコード ID */
   id: ModelsPaymentId
+  /** 決済が紐づくサロン ID */
   salonId: ModelsSalonId
+  /** 支払いを行う顧客 ID */
   customerId: ModelsCustomerId
+  /** 関連する予約 ID */
   bookingId?: ModelsBookingId
+  /** 関連する施術記録 ID */
   treatmentRecordId?: ModelsTreatmentRecordId
+  /** 使用した支払い方法 */
   method: ModelsPaymentMethodType
+  /** 現在の支払い状態の詳細 */
   status: ModelsPaymentStatus
+  /** 請求金額の内訳情報 */
   amounts: ModelsPaymentAmounts
+  /** 使用したポイント数 */
   pointsUsed?: number
+  /** 予約時に適用した預り金額 */
   depositApplied?: ModelsMoney
+  /** 未収残高がある場合の金額 */
   outstandingAmount?: ModelsMoney
+  /** 外部決済サービスの参照番号 */
   externalReference?: string
+  /** 発行したレシート番号 */
   receiptNumber?: string
+  /** 状態変遷の履歴一覧 */
   history: ModelsPaymentHistory[]
+  /** 関連する返金記録の一覧 */
   refunds?: ModelsRefund[]
+  /** 外部サービス連携向けのメタデータ */
   metadata?: ModelsPaymentMetadata
+  /** スタッフ用の備考メモ */
   notes?: string
+  /** レコード作成日時。 */
   createdAt: string
-  /** @nullable */
+  /**
+   * レコードを作成したユーザーID。匿名作成の場合はnull。
+   * @nullable
+   */
   createdBy: string | null
+  /** レコード最終更新日時。 */
   updatedAt: string
-  /** @nullable */
+  /**
+   * レコードを最後に更新したユーザーID。匿名更新の場合はnull。
+   * @nullable
+   */
   updatedBy: string | null
 }

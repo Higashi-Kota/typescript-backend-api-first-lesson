@@ -7,15 +7,19 @@
  */
 import type { ModelsScoreRange } from './modelsScoreRange'
 
+/**
+ * 検索処理に関するメタ情報モデル。
+件数や所要時間を記録し、UX 改善やパフォーマンス監視に利用する。
+ */
 export interface ModelsSearchMeta {
-  /** Total matching results */
+  /** 検索条件に一致した総件数。 */
   total: number
-  /** Search query used */
+  /** 利用された検索キーワード。ログ分析やABテストで活用する。 */
   query?: string
-  /** Applied filters */
+  /** 適用されたフィルター一覧。ユーザー選択内容を表示する際に使用。 */
   filters?: string[]
-  /** Search duration in milliseconds */
+  /** 検索処理に要した時間 (ミリ秒)。パフォーマンスKPIの指標。 */
   duration: number
-  /** Search relevance score range */
+  /** 関連度スコアの範囲。ランキング調整やチューニングに活用する。 */
   scoreRange?: ModelsScoreRange
 }

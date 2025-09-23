@@ -7,15 +7,15 @@
  */
 
 /**
- * 署名付きアップロードURL取得リクエスト
+ * 外部ストレージへ直接アップロードするための署名付きURLを要求するリクエスト。
  */
 export interface ModelsGetUploadUrlRequest {
-  /** ファイル名 */
+  /** アップロード予定のファイル名。 */
   filename: string
-  /** Content-Type */
+  /** アップロード予定ファイルのContent-Type。 */
   content: string
-  /** ファイルサイズ（バイト） */
+  /** アップロード予定ファイルのサイズ（バイト単位）。 */
   size: number
-  /** サロンID（オプション） */
+  /** ファイルをひも付けるサロンID。任意設定。 */
   salonId?: string
 }

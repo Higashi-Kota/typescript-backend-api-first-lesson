@@ -7,6 +7,6 @@
  */
 
 /**
- * Branded UUID type for Session ID
+ * ログインセッションを追跡するためのブランド付きUUID。
  */
 export type ModelsSessionId = string

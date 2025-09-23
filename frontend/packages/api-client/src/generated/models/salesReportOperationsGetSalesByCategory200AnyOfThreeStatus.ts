@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 固定値error。エラー結果であることを示す。
+ */
 export type SalesReportOperationsGetSalesByCategory200AnyOfThreeStatus =
   (typeof SalesReportOperationsGetSalesByCategory200AnyOfThreeStatus)[keyof typeof SalesReportOperationsGetSalesByCategory200AnyOfThreeStatus]
 

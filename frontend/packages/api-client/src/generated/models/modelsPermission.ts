@@ -9,20 +9,21 @@ import type { ModelsPermissionId } from './modelsPermissionId'
 import type { ModelsPermissionScope } from './modelsPermissionScope'
 
 /**
- * Permission definition
+ * 操作権限の定義
  */
 export interface ModelsPermission {
+  /** 権限 ID */
   id: ModelsPermissionId
-  /** Permission key (e.g., 'booking.create') */
+  /** 権限キー（例: booking.create） */
   key: string
-  /** Permission name */
+  /** 権限の名称 */
   name: string
-  /** Permission description */
+  /** 権限の説明 */
   description?: string
-  /** Resource type */
+  /** 対象リソース種別 */
   resource: string
-  /** Action type */
+  /** 許可する操作区分 */
   action: string
-  /** Scope (own, salon, all) */
+  /** 権限の適用範囲（own/salon/all） */
   scope?: ModelsPermissionScope
 }

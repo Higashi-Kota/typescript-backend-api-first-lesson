@@ -6,13 +6,24 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * サービスの基本的な紹介情報
+ */
 export interface ModelsServiceInfo {
+  /** サービス名称 */
   name: string
+  /** サービス名の読み仮名 */
   nameKana?: string
+  /** サービス詳細説明文 */
   description: string
+  /** 短めの紹介文 */
   shortDescription?: string
+  /** 提供価値・メリットの一覧 */
   benefits?: string[]
+  /** 主な対象顧客層 */
   targetCustomer?: string
+  /** サービス画像の URL 一覧 */
   imageUrls?: string[]
+  /** 紹介動画の URL */
   videoUrl?: string
 }

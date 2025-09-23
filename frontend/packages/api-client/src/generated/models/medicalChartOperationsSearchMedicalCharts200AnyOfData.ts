@@ -7,9 +7,16 @@
  */
 import type { ModelsMedicalChart } from './modelsMedicalChart'
 
+/**
+ * 成功時に返却するドメインデータ。
+ */
 export type MedicalChartOperationsSearchMedicalCharts200AnyOfData = {
+  /** 取得した要素の配列。 */
   data: ModelsMedicalChart[]
+  /** 条件に一致する全件数。 */
   total: number
+  /** 1ページあたりの件数。 */
   limit: number
+  /** 取得開始位置のオフセット。 */
   offset: number
 }

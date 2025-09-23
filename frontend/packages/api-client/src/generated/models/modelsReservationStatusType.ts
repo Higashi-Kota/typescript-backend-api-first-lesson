@@ -6,6 +6,15 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 予約ステータス区分 - 予約の進行状態を表す状態定義
+
+pending: 保留中 - 予約申込を受け付けたが、まだ確定していない状態
+confirmed: 確定済み - サロン側で予約が承認・確定された状態
+cancelled: キャンセル済み - 顧客またはサロン側により予約が取り消された状態
+completed: 完了 - 予約された施術が実施され、サービス提供が完了した状態
+no_show: 無断キャンセル - 顧客が事前連絡なしに来店しなかった状態
+ */
 export type ModelsReservationStatusType =
   (typeof ModelsReservationStatusType)[keyof typeof ModelsReservationStatusType]
 

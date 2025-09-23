@@ -6,4 +6,7 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 返金取引を集計に含めるかどうか
+ */
 export type ModelsSalesReportQueryIncludeRefundsParameter = boolean

@@ -7,10 +7,18 @@
  */
 import type { ModelsMoney } from './modelsMoney'
 
+/**
+ * 支払金額の内訳プレビュー
+ */
 export interface ModelsPaymentBreakdown {
+  /** 商品の税抜小計 */
   subtotal: ModelsMoney
+  /** 適用される税額 */
   tax: ModelsMoney
+  /** 割引金額 */
   discount: ModelsMoney
+  /** ポイント適用による割引額 */
   pointsDiscount?: ModelsMoney
+  /** 支払総額 */
   total: ModelsMoney
 }

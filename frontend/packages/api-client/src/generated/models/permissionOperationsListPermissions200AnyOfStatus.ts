@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 固定値success。成功結果であることを示す。
+ */
 export type PermissionOperationsListPermissions200AnyOfStatus =
   (typeof PermissionOperationsListPermissions200AnyOfStatus)[keyof typeof PermissionOperationsListPermissions200AnyOfStatus]
 

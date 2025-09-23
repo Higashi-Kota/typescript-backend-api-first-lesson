@@ -8,11 +8,11 @@
 import type { ModelsSession } from './modelsSession'
 
 /**
- * Session list response
+ * アクティブなセッション一覧を返すレスポンス。
  */
 export interface ModelsSessionListResponse {
-  /** Active sessions */
+  /** 稼働中のセッション配列。 */
   sessions: ModelsSession[]
-  /** Total number of sessions */
+  /** 該当セッションの総数。 */
   total: number
 }

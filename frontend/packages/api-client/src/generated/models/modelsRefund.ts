@@ -12,15 +12,28 @@ import type { ModelsRefundStatus } from './modelsRefundStatus'
 import type { ModelsStaffId } from './modelsStaffId'
 import type { ModelsPaymentMethodType } from './modelsPaymentMethodType'
 
+/**
+ * 返金処理の記録
+ */
 export interface ModelsRefund {
+  /** 返金 ID */
   id: ModelsRefundId
+  /** 元となる決済 ID */
   paymentId: ModelsPaymentId
+  /** 返金金額 */
   amount: ModelsMoney
+  /** 返金理由 */
   reason: string
+  /** 返金処理日時 */
   refundedAt: string
+  /** 返金処理の進捗状態 */
   status: ModelsRefundStatus
+  /** 返金処理を担当したスタッフ ID */
   processedBy?: ModelsStaffId
+  /** 返金に使用した支払い方法 */
   method?: ModelsPaymentMethodType
+  /** 外部返金参照コード */
   referenceCode?: string
+  /** 返金処理に関する備考 */
   notes?: string
 }

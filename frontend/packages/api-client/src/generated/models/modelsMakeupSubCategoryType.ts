@@ -6,6 +6,14 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * メイクアップサブカテゴリー区分 - メイクアップサービスの詳細分類
+
+everyday_makeup: デイリーメイク - 普段使いのナチュラルメイク
+event_makeup: イベントメイク - パーティーやイベント用の華やかなメイク
+bridal_makeup: ブライダルメイク - 花嫁向けの特別なメイクアップ
+photoshoot_makeup: 撮影用メイク - 写真撮影用のプロフェッショナルメイク
+ */
 export type ModelsMakeupSubCategoryType =
   (typeof ModelsMakeupSubCategoryType)[keyof typeof ModelsMakeupSubCategoryType]
 

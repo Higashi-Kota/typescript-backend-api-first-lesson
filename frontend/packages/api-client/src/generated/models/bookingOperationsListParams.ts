@@ -17,6 +17,12 @@ export type BookingOperationsListParams = {
   status?: ModelsBookingStatusCodeType
   from?: string
   to?: string
+  /**
+   * 1ページあたりの取得件数。省略時は20件。
+   */
   limit?: ModelsPaginationParamsLimitParameter
+  /**
+   * 取得開始位置を表すオフセット。省略時は0。
+   */
   offset?: ModelsPaginationParamsOffsetParameter
 }

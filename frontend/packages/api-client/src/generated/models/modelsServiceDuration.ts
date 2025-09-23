@@ -6,11 +6,20 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * サービス提供時間の設定
+ */
 export interface ModelsServiceDuration {
+  /** 標準施術時間（分） */
   standard: number
+  /** 最短施術時間 */
   minimum?: number
+  /** 最長施術時間 */
   maximum?: number
+  /** 施術前のバッファ時間 */
   bufferBefore?: number
+  /** 施術後のバッファ時間 */
   bufferAfter?: number
+  /** カウンセリング時間を含むか */
   includesConsultation: boolean
 }

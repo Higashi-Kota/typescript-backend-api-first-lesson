@@ -7,9 +7,16 @@
  */
 import type { ModelsReview } from './modelsReview'
 
+/**
+ * ページネーションされた一覧レスポンスの共通構造。
+ */
 export type SalonReviewOperationsGetSalonReviews200 = {
+  /** 取得した要素の配列。 */
   data: ModelsReview[]
+  /** 条件に一致する全件数。 */
   total: number
+  /** 1ページあたりの件数。 */
   limit: number
+  /** 取得開始位置のオフセット。 */
   offset: number
 }

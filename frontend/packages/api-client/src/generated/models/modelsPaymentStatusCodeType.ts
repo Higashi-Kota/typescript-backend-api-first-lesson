@@ -6,6 +6,16 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 支払いステータス区分 - 決済処理の進行状態を表す区分
+
+pending: 支払い待ち - 支払いが開始されたがまだ完了していない状態
+processing: 処理中 - 決済処理が進行中の状態
+completed: 完了 - 支払いが正常に完了した状態
+failed: 失敗 - 支払い処理が失敗した状態
+refunded: 返金済み - 全額返金が完了した状態
+partial_refund: 部分返金 - 一部金額の返金が完了した状態
+ */
 export type ModelsPaymentStatusCodeType =
   (typeof ModelsPaymentStatusCodeType)[keyof typeof ModelsPaymentStatusCodeType]
 

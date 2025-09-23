@@ -8,7 +8,12 @@
 import type { TreatmentOperationsGetTreatment200AnyOfThreeStatus } from './treatmentOperationsGetTreatment200AnyOfThreeStatus'
 import type { ModelsError } from './modelsError'
 
+/**
+ * 失敗時のエラー情報とステータスを保持するモデル。
+ */
 export type TreatmentOperationsGetTreatment200AnyOfThree = {
+  /** 固定値error。エラー結果であることを示す。 */
   status: TreatmentOperationsGetTreatment200AnyOfThreeStatus
+  /** 失敗時に返却するエラー情報。 */
   error: ModelsError
 }

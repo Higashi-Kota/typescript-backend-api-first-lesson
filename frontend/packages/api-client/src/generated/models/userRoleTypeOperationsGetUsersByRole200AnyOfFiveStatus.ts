@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 固定値error。エラー結果であることを示す。
+ */
 export type UserRoleTypeOperationsGetUsersByRole200AnyOfFiveStatus =
   (typeof UserRoleTypeOperationsGetUsersByRole200AnyOfFiveStatus)[keyof typeof UserRoleTypeOperationsGetUsersByRole200AnyOfFiveStatus]
 

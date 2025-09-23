@@ -9,19 +9,31 @@ import type { ModelsServiceCategoryType } from './modelsServiceCategoryType'
 import type { ModelsCategoryId } from './modelsCategoryId'
 
 /**
- * Service update request with optional fields for partial updates
+ * サービス情報を部分更新するリクエスト
  */
 export interface ModelsUpdateServiceRequest {
+  /** 更新後のサービス名 */
   name?: string
+  /** 更新後の説明文 */
   description?: string
+  /** 更新後の施術時間 */
   duration?: number
+  /** 更新後の料金 */
   price?: number
+  /** 更新後のサービスカテゴリ */
   category?: ModelsServiceCategoryType
+  /** 更新後のカテゴリ ID */
   categoryId?: ModelsCategoryId
+  /** 更新後の画像 URL */
   imageUrl?: string
+  /** 更新後の必要スタッフレベル */
   requiredStaffLevel?: number
+  /** 更新後のデポジット額 */
   depositAmount?: number
+  /** 更新後の有効フラグ */
   isActive?: boolean
+  /** 更新後の最大予約日数 */
   maxAdvanceBookingDays?: number
+  /** 更新後の最短予約受付時間 */
   minAdvanceBookingHours?: number
 }

@@ -8,9 +8,16 @@
 import type { ModelsCompletedBookingStatusType } from './modelsCompletedBookingStatusType'
 import type { ModelsPaymentId } from './modelsPaymentId'
 
+/**
+ * 施術が完了した場合の状態情報。
+ */
 export interface ModelsCompletedBookingStatus {
+  /** 固定値completed。完了状態であることを示す。 */
   type: ModelsCompletedBookingStatusType
+  /** 施術が完了した日時。 */
   completedAt: string
+  /** 関連する決済ID。未決済の場合はnull。 */
   paymentId?: ModelsPaymentId
+  /** 施術内容のサマリーメモ。未設定の場合はnull。 */
   serviceSummary?: string
 }

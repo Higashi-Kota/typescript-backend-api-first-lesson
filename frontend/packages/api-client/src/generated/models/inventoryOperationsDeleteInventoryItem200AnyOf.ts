@@ -8,7 +8,12 @@
 import type { InventoryOperationsDeleteInventoryItem200AnyOfStatus } from './inventoryOperationsDeleteInventoryItem200AnyOfStatus'
 import type { InventoryOperationsDeleteInventoryItem200AnyOfData } from './inventoryOperationsDeleteInventoryItem200AnyOfData'
 
+/**
+ * 成功時のデータとステータスを保持するモデル。
+ */
 export type InventoryOperationsDeleteInventoryItem200AnyOf = {
+  /** 固定値success。成功結果であることを示す。 */
   status: InventoryOperationsDeleteInventoryItem200AnyOfStatus
+  /** 成功時に返却するドメインデータ。 */
   data: InventoryOperationsDeleteInventoryItem200AnyOfData
 }

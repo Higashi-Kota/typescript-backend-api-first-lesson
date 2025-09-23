@@ -8,17 +8,17 @@
 import type { ModelsAttachment } from './modelsAttachment'
 
 /**
- * ページネーション付き添付ファイル一覧
+ * 添付ファイル一覧をページネーション付きで返すレスポンスモデル。
  */
 export interface ModelsPaginatedAttachments {
-  /** 添付ファイル一覧 */
+  /** 該当ページの添付ファイル配列。 */
   items: ModelsAttachment[]
-  /** 合計件数 */
+  /** 全体の添付ファイル件数。 */
   total: number
-  /** 現在のページ */
+  /** 現在のページ番号。 */
   page: number
-  /** ページあたりの件数 */
+  /** 1ページあたりの取得件数。 */
   limit: number
-  /** 総ページ数 */
+  /** 計算された総ページ数。 */
   totalPages: number
 }

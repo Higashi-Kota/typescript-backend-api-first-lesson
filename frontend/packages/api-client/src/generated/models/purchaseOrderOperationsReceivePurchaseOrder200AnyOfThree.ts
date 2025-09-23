@@ -8,7 +8,12 @@
 import type { PurchaseOrderOperationsReceivePurchaseOrder200AnyOfThreeStatus } from './purchaseOrderOperationsReceivePurchaseOrder200AnyOfThreeStatus'
 import type { ModelsError } from './modelsError'
 
+/**
+ * 失敗時のエラー情報とステータスを保持するモデル。
+ */
 export type PurchaseOrderOperationsReceivePurchaseOrder200AnyOfThree = {
+  /** 固定値error。エラー結果であることを示す。 */
   status: PurchaseOrderOperationsReceivePurchaseOrder200AnyOfThreeStatus
+  /** 失敗時に返却するエラー情報。 */
   error: ModelsError
 }

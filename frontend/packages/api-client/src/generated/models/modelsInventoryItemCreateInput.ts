@@ -7,21 +7,40 @@
  */
 import type { ModelsSalonId } from './modelsSalonId'
 
+/**
+ * 在庫アイテムを新規登録する入力モデル
+ */
 export interface ModelsInventoryItemCreateInput {
+  /** 在庫を追加するサロン ID */
   salonId: ModelsSalonId
+  /** 商品コード・SKU */
   productCode: string
+  /** 商品名 */
   productName: string
+  /** 商品説明文 */
   description?: string
+  /** 分類カテゴリ */
   category: string
+  /** ブランド名 */
   brand?: string
+  /** 仕入先情報 */
   supplier?: string
+  /** 登録時点の在庫数量 */
   currentStock: number
+  /** 最低在庫数 */
   minimumStock: number
+  /** 最大在庫数 */
   maximumStock?: number
+  /** 数量単位 */
   unit: string
+  /** 仕入単価 */
   unitCost: number
+  /** 顧客販売価格 */
   sellingPrice?: number
+  /** 保管場所 */
   location?: string
+  /** 賞味・使用期限 */
   expirationDate?: string
+  /** 備考メモ */
   notes?: string
 }

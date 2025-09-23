@@ -8,7 +8,12 @@
 import type { MedicalChartOperationsGetCustomerAllergies200AnyOfStatus } from './medicalChartOperationsGetCustomerAllergies200AnyOfStatus'
 import type { MedicalChartOperationsGetCustomerAllergies200AnyOfData } from './medicalChartOperationsGetCustomerAllergies200AnyOfData'
 
+/**
+ * 成功時のデータとステータスを保持するモデル。
+ */
 export type MedicalChartOperationsGetCustomerAllergies200AnyOf = {
+  /** 固定値success。成功結果であることを示す。 */
   status: MedicalChartOperationsGetCustomerAllergies200AnyOfStatus
+  /** 成功時に返却するドメインデータ。 */
   data: MedicalChartOperationsGetCustomerAllergies200AnyOfData
 }

@@ -9,23 +9,23 @@ import type { ModelsSalonSummary } from './modelsSalonSummary'
 import type { ModelsServiceSummary } from './modelsServiceSummary'
 
 /**
- * Salon recommendation with scoring
+ * パーソナライズされたおすすめ度スコアを含むサロン推薦モデル
  */
 export type ModelsSalonRecommendation = ModelsSalonSummary & {
-  /** Recommendation score (0-100) */
+  /** サロン推薦スコア（0-100） */
   score: number
-  /** Reasons for recommendation */
+  /** 推薦理由のリスト */
   reasons: string[]
-  /** Matching services */
+  /** 要望に合致したサービス一覧 */
   matchingServices: ModelsServiceSummary[]
 } & Required<
     Pick<
       ModelsSalonSummary & {
-        /** Recommendation score (0-100) */
+        /** サロン推薦スコア（0-100） */
         score: number
-        /** Reasons for recommendation */
+        /** 推薦理由のリスト */
         reasons: string[]
-        /** Matching services */
+        /** 要望に合致したサービス一覧 */
         matchingServices: ModelsServiceSummary[]
       },
       'score' | 'reasons' | 'matchingServices'

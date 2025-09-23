@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 固定値success。成功結果であることを示す。
+ */
 export type MedicalChartOperationsCreateMedicalChart200AnyOfStatus =
   (typeof MedicalChartOperationsCreateMedicalChart200AnyOfStatus)[keyof typeof MedicalChartOperationsCreateMedicalChart200AnyOfStatus]
 

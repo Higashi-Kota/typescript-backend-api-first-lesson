@@ -16,63 +16,63 @@ import type { ModelsEmailVerificationStateType } from './modelsEmailVerification
 import type { ModelsPasswordResetStateType } from './modelsPasswordResetStateType'
 
 /**
- * User authentication information
+ * 認証基盤で管理するユーザーアカウント情報。
  */
 export interface ModelsUser {
-  /** Unique identifier for the user */
+  /** ユーザーを一意に識別するID。 */
   id: string
-  /** User's email address (unique) */
+  /** ログインに利用するメールアドレス（ユニーク）。 */
   email: string
-  /** User's display name */
+  /** 顧客・スタッフの表示名。 */
   name: string
-  /** User's role in the system */
+  /** 認証システム上での役割区分。 */
   role: ModelsAuthUserRoleType
-  /** Account status */
+  /** アカウントの稼働状態。 */
   status: ModelsUserAccountStatusType
-  /** Email verification status */
+  /** メールアドレスが確認済みかどうか。 */
   emailVerified: boolean
-  /** Email verification token (internal use) */
+  /** メール確認に利用するトークン。内部管理用。 */
   emailVerificationToken?: string
-  /** Email verification token expiry */
+  /** メール確認トークンの有効期限。 */
   emailVerificationTokenExpiry?: string
-  /** Two-factor authentication status */
+  /** 2要素認証の設定状態。 */
   twoFactorStatus: ModelsTwoFactorStatusType
-  /** Two-factor authentication secret (encrypted) */
+  /** 暗号化された2要素認証シークレット。 */
   twoFactorSecret?: string
-  /** Backup codes for 2FA recovery */
+  /** 2要素認証の復旧用バックアップコード一覧。 */
   backupCodes?: string[]
-  /** Number of failed login attempts */
+  /** 連続したログイン失敗回数。 */
   failedLoginAttempts: number
-  /** Time when the account was locked */
+  /** アカウントをロックした日時。未ロックの場合はnull。 */
   lockedAt?: string
-  /** Password reset token (internal use) */
+  /** パスワードリセットに利用するトークン。内部管理用。 */
   passwordResetToken?: string
-  /** Password reset token expiry */
+  /** パスワードリセットトークンの有効期限。 */
   passwordResetTokenExpiry?: string
-  /** Last password change timestamp */
+  /** 最後にパスワードを変更した日時。 */
   lastPasswordChangeAt?: string
-  /** Previous password hashes for history check */
+  /** 再利用防止のため保持する過去パスワードハッシュ。 */
   passwordHistory?: string[]
-  /** Trusted IP addresses for this user */
+  /** 信頼済みIPアドレスのリスト。 */
   trustedIpAddresses?: string[]
-  /** Reference to customer profile if user is a customer */
+  /** ユーザーが顧客の場合の顧客プロファイルID。 */
   customerId?: ModelsCustomerId
-  /** Reference to staff profile if user is staff */
+  /** ユーザーがスタッフの場合のスタッフプロファイルID。 */
   staffId?: ModelsStaffId
-  /** Extended role information */
+  /** 担当サロンやレベル等を含む拡張ロール情報。 */
   roleDetail?: ModelsUserRoleDetail
-  /** Authentication state */
+  /** 現在の認証状態区分。 */
   authState?: ModelsAuthenticationStateType
-  /** Email verification state */
+  /** メール確認状態区分。 */
   emailVerificationState?: ModelsEmailVerificationStateType
-  /** Password reset state */
+  /** パスワードリセット状態区分。 */
   passwordResetState?: ModelsPasswordResetStateType
-  /** Timestamp when the user was created */
+  /** ユーザーアカウント作成日時。 */
   createdAt: string
-  /** Timestamp when the user was last updated */
+  /** ユーザー情報の最終更新日時。 */
   updatedAt: string
-  /** Last login timestamp */
+  /** 直近のログイン日時。 */
   lastLoginAt?: string
-  /** Last login IP address */
+  /** 直近ログイン時のIPアドレス。 */
   lastLoginIp?: string
 }

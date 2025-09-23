@@ -7,6 +7,6 @@
  */
 
 /**
- * Branded UUID type for Loyalty Tier ID
+ * ロイヤルティプログラムの会員ランクを識別するブランド付きUUID。
  */
 export type ModelsLoyaltyTierId = string

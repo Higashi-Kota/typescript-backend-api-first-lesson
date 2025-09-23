@@ -7,12 +7,22 @@
  */
 import type { ModelsOrderItem } from './modelsOrderItem'
 
+/**
+ * 仕入れ発注を作成する入力モデル
+ */
 export interface ModelsPurchaseOrderCreateInput {
+  /** 仕入先名 */
   supplier: string
+  /** 発注明細一覧 */
   items: ModelsOrderItem[]
+  /** 税額 */
   taxAmount: number
+  /** 送料 */
   shippingCost?: number
+  /** 予定納期 */
   expectedDelivery?: string
+  /** 支払条件 */
   paymentTerms?: string
+  /** 備考メモ */
   notes?: string
 }

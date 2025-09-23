@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 操作主体の区分
+ */
 export type ModelsPaymentHistoryActor =
   (typeof ModelsPaymentHistoryActor)[keyof typeof ModelsPaymentHistoryActor]
 

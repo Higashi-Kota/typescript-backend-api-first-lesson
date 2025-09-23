@@ -36,7 +36,7 @@ type Awaited<O> = O extends AwaitedInput<infer T> ? T : never
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 
 /**
- * Liveness check for Kubernetes
+ * プロセスが生存しているかを判定するエンドポイントで、異常時は再起動判定に利用されます。
  * @summary Check API liveness
  */
 export type systemOperationsAliveResponse200 = {
@@ -210,7 +210,7 @@ export function useSystemOperationsAlive<
 }
 
 /**
- * Health check endpoint
+ * APIが正常稼働しているかを判定し、監視ツールやロードバランサーから参照します。
  * @summary Check API health
  */
 export type systemOperationsHealthResponse200 = {
@@ -390,7 +390,7 @@ export function useSystemOperationsHealth<
 }
 
 /**
- * Get API metrics
+ * Prometheus形式のメトリクスを返却し、監視基盤での可視化やアラート設定に用います。
  * @summary Get API metrics
  */
 export type systemOperationsMetricsResponse200 = {
@@ -571,7 +571,7 @@ export function useSystemOperationsMetrics<
 }
 
 /**
- * Readiness check for Kubernetes
+ * Kubernetes等のオーケストレーターがトラフィック受信可否を判断するための準備完了チェックです。
  * @summary Check API readiness
  */
 export type systemOperationsReadyResponse200 = {
@@ -751,7 +751,7 @@ export function useSystemOperationsReady<
 }
 
 /**
- * Get API version and build information
+ * APIのバージョンやビルド情報を返し、障害解析やデプロイ確認に活用します。
  * @summary Get API version
  */
 export type systemOperationsVersionResponse200 = {

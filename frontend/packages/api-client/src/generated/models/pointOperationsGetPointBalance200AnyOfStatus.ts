@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 固定値success。成功結果であることを示す。
+ */
 export type PointOperationsGetPointBalance200AnyOfStatus =
   (typeof PointOperationsGetPointBalance200AnyOfStatus)[keyof typeof PointOperationsGetPointBalance200AnyOfStatus]
 

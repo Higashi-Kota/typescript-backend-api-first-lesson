@@ -8,7 +8,12 @@
 import type { AccessControlOperationsValidatePermissions200AnyOfStatus } from './accessControlOperationsValidatePermissions200AnyOfStatus'
 import type { AccessControlOperationsValidatePermissions200AnyOfData } from './accessControlOperationsValidatePermissions200AnyOfData'
 
+/**
+ * 成功時のデータとステータスを保持するモデル。
+ */
 export type AccessControlOperationsValidatePermissions200AnyOf = {
+  /** 固定値success。成功結果であることを示す。 */
   status: AccessControlOperationsValidatePermissions200AnyOfStatus
+  /** 成功時に返却するドメインデータ。 */
   data: AccessControlOperationsValidatePermissions200AnyOfData
 }

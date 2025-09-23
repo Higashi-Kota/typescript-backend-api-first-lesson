@@ -6,6 +6,15 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * スタッフレベル区分 - スタッフの技術レベルや経験を表す階層
+
+junior: ジュニア - 新人・見習いレベル、基本的な施術が可能
+stylist: スタイリスト - 標準レベル、一般的な施術が可能
+senior: シニア - 上級レベル、高度な技術と経験を保有
+expert: エキスパート - 専門家レベル、特殊技術や指導が可能
+director: ディレクター - 管理職レベル、サロンの技術的な指導を担当
+ */
 export type ModelsStaffLevelType =
   (typeof ModelsStaffLevelType)[keyof typeof ModelsStaffLevelType]
 

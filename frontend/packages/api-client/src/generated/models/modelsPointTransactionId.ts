@@ -7,6 +7,6 @@
  */
 
 /**
- * Branded UUID type for Point Transaction ID
+ * 顧客ポイントの加算・減算履歴を識別するブランド付きUUID。
  */
 export type ModelsPointTransactionId = string

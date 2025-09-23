@@ -7,6 +7,6 @@
  */
 
 /**
- * Fields to include in response
+ * レスポンスに含めるフィールドのカンマ区切りリスト。データ転送量の最適化に活用。
  */
 export type ModelsAdvancedSearchParamsFieldsParameter = string

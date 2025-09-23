@@ -12,24 +12,48 @@ import type { ModelsStaffId } from './modelsStaffId'
 import type { ModelsServiceId } from './modelsServiceId'
 import type { ModelsReservationStatusType } from './modelsReservationStatusType'
 
+/**
+ * 予約モデル - 顧客がサロンに依頼した施術予約の全情報を保持し、日時・担当者・料金・支払い状態を一元管理する中核レコード
+ */
 export interface ModelsReservation {
+  /** 予約を一意に識別するID */
   id: ModelsReservationId
+  /** 予約が紐づくサロンのID */
   salonId: ModelsSalonId
+  /** 予約を行った顧客のID */
   customerId: ModelsCustomerId
+  /** 施術を担当するスタッフのID */
   staffId: ModelsStaffId
+  /** 予約された施術メニューのID */
   serviceId: ModelsServiceId
+  /** 施術開始予定日時 (UTC) */
   startTime: string
+  /** 施術終了予定日時 (UTC) */
   endTime: string
+  /** 予約の現在ステータスを表す区分値 */
   status: ModelsReservationStatusType
+  /** 顧客からの特記事項やサロン側メモ */
   notes?: string
+  /** 施術料金の合計金額 (税・割引適用後) */
   totalAmount: number
+  /** 事前に受領した内金・デポジット金額 */
   depositAmount?: number
+  /** 予約に対する決済が完了しているかを示すフラグ */
   isPaid: boolean
+  /** キャンセルが発生した場合の理由 */
   cancellationReason?: string
+  /** レコード作成日時。 */
   createdAt: string
-  /** @nullable */
+  /**
+   * レコードを作成したユーザーID。匿名作成の場合はnull。
+   * @nullable
+   */
   createdBy: string | null
+  /** レコード最終更新日時。 */
   updatedAt: string
-  /** @nullable */
+  /**
+   * レコードを最後に更新したユーザーID。匿名更新の場合はnull。
+   * @nullable
+   */
   updatedBy: string | null
 }

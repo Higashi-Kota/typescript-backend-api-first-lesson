@@ -11,18 +11,29 @@ import type { ModelsInventoryAlertSeverity } from './modelsInventoryAlertSeverit
 import type { ModelsStaffId } from './modelsStaffId'
 
 /**
- * Inventory alert
+ * 在庫に関するアラート情報
  */
 export interface ModelsInventoryAlert {
+  /** 対象在庫 ID */
   itemId: ModelsInventoryId
+  /** 設定した閾値 */
   threshold: number
+  /** 警告発生時の在庫数 */
   currentStock: number
+  /** 警告が発生した日時 */
   triggeredAt: string
+  /** 関連する在庫 ID */
   inventoryId: ModelsInventoryId
+  /** アラート種別 */
   alert: ModelsInventoryAlertAlert
+  /** 通知メッセージ */
   message: string
+  /** 重要度レベル */
   severity: ModelsInventoryAlertSeverity
+  /** 確認済みかどうか */
   acknowledged?: boolean
+  /** 確認したスタッフ ID */
   acknowledgedBy?: ModelsStaffId
+  /** 確認日時 */
   acknowledgedAt?: string
 }

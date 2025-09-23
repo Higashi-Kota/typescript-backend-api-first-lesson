@@ -8,7 +8,12 @@
 import type { SalesReportOperationsGetSalesTrends200AnyOfFourStatus } from './salesReportOperationsGetSalesTrends200AnyOfFourStatus'
 import type { ModelsError } from './modelsError'
 
+/**
+ * 失敗時のエラー情報とステータスを保持するモデル。
+ */
 export type SalesReportOperationsGetSalesTrends200AnyOfFour = {
+  /** 固定値error。エラー結果であることを示す。 */
   status: SalesReportOperationsGetSalesTrends200AnyOfFourStatus
+  /** 失敗時に返却するエラー情報。 */
   error: ModelsError
 }

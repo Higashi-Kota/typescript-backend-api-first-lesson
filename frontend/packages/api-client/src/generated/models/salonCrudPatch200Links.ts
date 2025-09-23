@@ -7,6 +7,6 @@
  */
 
 /**
- * Related links
+ * 関連リソースや次アクションへのリンク情報。
  */
 export type SalonCrudPatch200Links = { [key: string]: string }

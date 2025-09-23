@@ -12,24 +12,48 @@ import type { ModelsStaffQualification } from './modelsStaffQualification'
 import type { ModelsStaffSchedule } from './modelsStaffSchedule'
 import type { ModelsStaffPermission } from './modelsStaffPermission'
 
+/**
+ * スタッフモデル - サロンに所属するスタッフのプロフィール・資格・スケジュール・権限を統合管理する
+ */
 export interface ModelsStaff {
+  /** スタッフを一意に識別するID */
   id: ModelsStaffId
+  /** 所属サロンのID */
   salonId: ModelsSalonId
+  /** スタッフの氏名 */
   name: string
+  /** 連絡先情報 (電話・メール等) */
   contactInfo: ModelsContactInfo
+  /** 得意分野や専門メニューの一覧 */
   specialties: string[]
+  /** プロフィール画像のURL */
   imageUrl?: string
+  /** 自己紹介や経歴の概要 */
   bio?: string
+  /** 実務経験年数 */
   yearsOfExperience?: number
+  /** 保有資格名の一覧 (テキスト管理) */
   certifications?: string[]
+  /** 詳細な資格情報の一覧 */
   qualifications?: ModelsStaffQualification[]
+  /** 通常勤務スケジュールの一覧 */
   schedules?: ModelsStaffSchedule[]
+  /** 現在スタッフがアクティブに勤務可能かを示すフラグ */
   isActive: boolean
+  /** システム上で付与されている追加権限一覧 */
   permissions?: ModelsStaffPermission[]
+  /** レコード作成日時。 */
   createdAt: string
-  /** @nullable */
+  /**
+   * レコードを作成したユーザーID。匿名作成の場合はnull。
+   * @nullable
+   */
   createdBy: string | null
+  /** レコード最終更新日時。 */
   updatedAt: string
-  /** @nullable */
+  /**
+   * レコードを最後に更新したユーザーID。匿名更新の場合はnull。
+   * @nullable
+   */
   updatedBy: string | null
 }

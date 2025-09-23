@@ -6,7 +6,12 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 期間指定や有効期間に利用する共通レンジ型。
+ */
 export interface ModelsDateRange {
+  /** 期間の開始日時。 */
   startDate: string
+  /** 期間の終了日時。 */
   endDate: string
 }

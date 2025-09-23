@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 固定値completed。完了状態であることを示す。
+ */
 export type ModelsCompletedBookingStatusUpdateType =
   (typeof ModelsCompletedBookingStatusUpdateType)[keyof typeof ModelsCompletedBookingStatusUpdateType]
 

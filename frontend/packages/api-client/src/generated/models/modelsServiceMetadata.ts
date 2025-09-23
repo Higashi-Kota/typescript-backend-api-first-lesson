@@ -6,13 +6,24 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * サービスのメタデータ情報
+ */
 export interface ModelsServiceMetadata {
+  /** タグ一覧 */
   tags?: string[]
+  /** 検索キーワード */
   keywords?: string[]
+  /** SEO 用タイトル */
   seoTitle?: string
+  /** SEO 用ディスクリプション */
   seoDescription?: string
+  /** 内部向けメモ */
   internalNotes?: string
+  /** 表示順序 */
   sortOrder?: number
+  /** 注目サービスとして表示するか */
   featured?: boolean
+  /** メニュー非表示フラグ */
   hideFromMenu?: boolean
 }

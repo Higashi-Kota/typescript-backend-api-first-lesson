@@ -8,6 +8,7 @@
 import type { ModelsBookingDeposit } from './modelsBookingDeposit'
 
 /**
+ * デポジット情報の更新またはリセット。
  * @nullable
  */
 export type ModelsUpdateBookingRequestWithResetDeposit =

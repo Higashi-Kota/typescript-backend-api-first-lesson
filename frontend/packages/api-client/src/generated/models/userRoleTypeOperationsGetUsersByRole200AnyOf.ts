@@ -8,7 +8,12 @@
 import type { UserRoleTypeOperationsGetUsersByRole200AnyOfStatus } from './userRoleTypeOperationsGetUsersByRole200AnyOfStatus'
 import type { UserRoleTypeOperationsGetUsersByRole200AnyOfData } from './userRoleTypeOperationsGetUsersByRole200AnyOfData'
 
+/**
+ * 成功時のデータとステータスを保持するモデル。
+ */
 export type UserRoleTypeOperationsGetUsersByRole200AnyOf = {
+  /** 固定値success。成功結果であることを示す。 */
   status: UserRoleTypeOperationsGetUsersByRole200AnyOfStatus
+  /** 成功時に返却するドメインデータ。 */
   data: UserRoleTypeOperationsGetUsersByRole200AnyOfData
 }

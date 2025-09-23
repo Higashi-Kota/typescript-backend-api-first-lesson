@@ -6,6 +6,20 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 通貨コード区分 - ISO 4217準拠の通貨コード定義
+
+JPY: 日本円 - Japanese Yen
+USD: 米ドル - United States Dollar
+EUR: ユーロ - Euro
+GBP: 英ポンド - British Pound Sterling
+AUD: 豪ドル - Australian Dollar
+CAD: カナダドル - Canadian Dollar
+CNY: 中国人民元 - Chinese Yuan
+KRW: 韓国ウォン - South Korean Won
+SGD: シンガポールドル - Singapore Dollar
+TWD: 台湾ドル - Taiwan Dollar
+ */
 export type ModelsCurrencyCodeType =
   (typeof ModelsCurrencyCodeType)[keyof typeof ModelsCurrencyCodeType]
 

@@ -6,6 +6,15 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 会員ランク区分 - 顧客の会員ランクを表し、特典・優待内容を決定する区分
+
+regular: 一般会員 - 基本ランク、標準的なサービスを提供
+silver: シルバー会員 - 中級ランク、5%の基本割引等の特典付与
+gold: ゴールド会員 - 上級ランク、10%の割引や優先予約等の特典付与
+platinum: プラチナ会員 - 最上級ランク、15%の割引や特別サービス提供
+vip: VIP会員 - 特別会員、完全カスタマイズされた特別待遇を提供
+ */
 export type ModelsMembershipTierType =
   (typeof ModelsMembershipTierType)[keyof typeof ModelsMembershipTierType]
 

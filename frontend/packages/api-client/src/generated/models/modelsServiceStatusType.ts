@@ -6,6 +6,16 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * サービスステータス区分 - サービスの提供状態を表す区分
+
+active: 有効 - 現在提供中のサービス
+inactive: 一時停止 - 一時的に提供を停止しているサービス
+seasonal: 季節限定 - 特定の季節のみ提供されるサービス
+limited: 数量限定 - 残りわずかなサービス
+discontinued: 廃止 - 提供を終了したサービス
+coming_soon: 近日公開 - 近々提供予定のサービス
+ */
 export type ModelsServiceStatusType =
   (typeof ModelsServiceStatusType)[keyof typeof ModelsServiceStatusType]
 

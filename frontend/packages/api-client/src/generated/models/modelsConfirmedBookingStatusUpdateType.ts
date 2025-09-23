@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 固定値confirmed。確定状態であることを示す。
+ */
 export type ModelsConfirmedBookingStatusUpdateType =
   (typeof ModelsConfirmedBookingStatusUpdateType)[keyof typeof ModelsConfirmedBookingStatusUpdateType]
 

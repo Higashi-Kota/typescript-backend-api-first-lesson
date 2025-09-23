@@ -7,6 +7,6 @@
  */
 
 /**
- * Fields to exclude from response
+ * レスポンスから除外したいフィールドのカンマ区切りリスト。不要情報を除く場合に利用。
  */
 export type ModelsAdvancedSearchParamsExcludeParameter = string

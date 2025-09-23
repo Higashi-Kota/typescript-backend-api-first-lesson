@@ -9,12 +9,22 @@ import type { ModelsCategoryId } from './modelsCategoryId'
 import type { ModelsServiceId } from './modelsServiceId'
 import type { ModelsStaffId } from './modelsStaffId'
 
+/**
+ * サービス間・スタッフとの関連情報
+ */
 export interface ModelsServiceAssociations {
+  /** 紐づくカテゴリ ID */
   categoryId: ModelsCategoryId
+  /** 親サービス ID */
   parentServiceId?: ModelsServiceId
+  /** 子サービス ID 一覧 */
   childServiceIds?: ModelsServiceId[]
+  /** 予約時に必須のサービス ID */
   requiredServiceIds?: ModelsServiceId[]
+  /** 併用を推奨するサービス ID */
   recommendedServiceIds?: ModelsServiceId[]
+  /** 施術資格を持つスタッフ ID */
   qualifiedStaffIds?: ModelsStaffId[]
+  /** 優先的に担当させたいスタッフ ID */
   preferredStaffIds?: ModelsStaffId[]
 }

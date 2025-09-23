@@ -47,7 +47,7 @@ type Awaited<O> = O extends AwaitedInput<infer T> ? T : never
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 
 /**
- * 添付ファイルの一覧取得
+ * サロンまたは顧客単位で登録済みの添付ファイルを一覧し、施術履歴の確認や資料整理に活用します。
  */
 export type attachmentOperationsListResponse200 = {
   data: AttachmentOperationsList200
@@ -243,7 +243,7 @@ export function useAttachmentOperationsList<
 }
 
 /**
- * 共有リンクの削除
+ * 不要になった共有リンクを失効させ、アクセス制御を適切に保ちます。
  */
 export type attachmentOperationsDeleteShareLinkResponse200 = {
   data: AttachmentOperationsDeleteShareLink200
@@ -353,8 +353,7 @@ export const useAttachmentOperationsDeleteShareLink = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * ファイルの直接アップロード
-JSONでファイル情報をアップロード
+ * スタッフが管理画面からファイル本体を直接アップロードし、予約記録や顧客カルテに紐づけるための操作です。
  */
 export type attachmentOperationsUploadFileResponse200 = {
   data: AttachmentOperationsUploadFile200
@@ -459,8 +458,7 @@ export const useAttachmentOperationsUploadFile = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * 署名付きアップロードURLの取得
-クライアントが直接ストレージにアップロードするためのURL
+ * 顧客やスタッフがブラウザから直接クラウドストレージへアップロードできるよう、短時間だけ有効な署名付きURLを発行します。
  */
 export type attachmentOperationsGetUploadUrlResponse200 = {
   data: AttachmentOperationsGetUploadUrl200
@@ -565,7 +563,7 @@ export const useAttachmentOperationsGetUploadUrl = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * 添付ファイル情報の取得
+ * 指定した添付ファイルの詳細情報を取得し、プレビュー表示や関連予約の確認に用います。
  */
 export type attachmentOperationsGetResponse200 = {
   data: AttachmentOperationsGet200
@@ -753,7 +751,7 @@ export function useAttachmentOperationsGet<
 }
 
 /**
- * 添付ファイルの削除
+ * 不要になった添付ファイルを削除し、ストレージ容量の最適化と情報漏えいリスクの低減を図ります。
  */
 export type attachmentOperationsDeleteResponse200 = {
   data: AttachmentOperationsDelete200
@@ -860,7 +858,7 @@ export const useAttachmentOperationsDelete = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * 署名付きダウンロードURLの取得
+ * 閲覧権限を持つ利用者がファイルを安全に取得できるよう、短時間有効なダウンロードURLを発行します。
  */
 export type attachmentOperationsGetDownloadUrlResponse200 = {
   data: AttachmentOperationsGetDownloadUrl200
@@ -1080,7 +1078,7 @@ export function useAttachmentOperationsGetDownloadUrl<
 }
 
 /**
- * 共有リンクの作成
+ * 施術前後の写真や資料を外部パートナーや顧客と共有するためのリンクを発行します。必要に応じてパスワード保護も適用します。
  */
 export type attachmentOperationsCreateShareLinkResponse200 = {
   data: AttachmentOperationsCreateShareLink200
@@ -1192,7 +1190,7 @@ export const useAttachmentOperationsCreateShareLink = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
- * 共有リンクの一覧取得
+ * 対象ファイルに対して発行済みの共有リンクを一覧し、公開状況や有効期限の管理を行います。
  */
 export type attachmentOperationsListShareLinksResponse200 = {
   data: AttachmentOperationsListShareLinks200

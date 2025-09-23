@@ -7,8 +7,14 @@
  */
 import type { ModelsSalonId } from './modelsSalonId'
 
+/**
+ * 複数権限の保有状況を確認する入力モデル
+ */
 export interface ModelsPermissionCheckInput {
+  /** 確認対象のユーザー ID */
   userId: string
+  /** 確認したい権限キー一覧 */
   permissions: string[]
+  /** サロン単位の権限チェック時のサロン ID */
   salonId?: ModelsSalonId
 }

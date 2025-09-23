@@ -8,7 +8,12 @@
 import type { MedicalChartOperationsGetCustomerMedicalChart200AnyOfThreeStatus } from './medicalChartOperationsGetCustomerMedicalChart200AnyOfThreeStatus'
 import type { ModelsError } from './modelsError'
 
+/**
+ * 失敗時のエラー情報とステータスを保持するモデル。
+ */
 export type MedicalChartOperationsGetCustomerMedicalChart200AnyOfThree = {
+  /** 固定値error。エラー結果であることを示す。 */
   status: MedicalChartOperationsGetCustomerMedicalChart200AnyOfThreeStatus
+  /** 失敗時に返却するエラー情報。 */
   error: ModelsError
 }

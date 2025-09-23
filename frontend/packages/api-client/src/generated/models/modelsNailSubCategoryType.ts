@@ -6,6 +6,15 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * ネイルサブカテゴリー区分 - ネイルケアサービスの詳細分類
+
+manicure: マニキュア - 手の爪のケアと装飾
+pedicure: ペディキュア - 足の爪のケアと装飾
+gel_nail: ジェルネイル - UV/LEDライトで硬化させるジェルネイル
+nail_art: ネイルアート - デザインや装飾を施したアートネイル
+nail_removal: ネイルリムーバル - ジェルやマニキュアの除去サービス
+ */
 export type ModelsNailSubCategoryType =
   (typeof ModelsNailSubCategoryType)[keyof typeof ModelsNailSubCategoryType]
 

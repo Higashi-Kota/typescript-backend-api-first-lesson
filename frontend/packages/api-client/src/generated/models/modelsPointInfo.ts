@@ -6,12 +6,24 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 顧客ロイヤルティポイントの累積状況を表すモデル。
+ */
 export interface ModelsPointInfo {
+  /** 現在保持している有効ポイント数。 */
   currentPoints: number
+  /** 累計で獲得したポイント総数。 */
   totalEarnedPoints: number
+  /** 累計で利用（消費）したポイント総数。 */
   totalUsedPoints: number
-  /** @nullable */
+  /**
+   * 失効予定のポイント数。未設定時はnull。
+   * @nullable
+   */
   expiringPoints: number | null
-  /** @nullable */
+  /**
+   * 最も早く失効するポイントの失効日。未設定時はnull。
+   * @nullable
+   */
   expirationDate: string | null
 }

@@ -7,9 +7,9 @@
  */
 
 /**
- * Generic auth success response
+ * 認証系APIで使用する汎用成功レスポンス。
  */
 export interface ModelsAuthSuccessResponse {
-  /** Success message */
+  /** 完了メッセージ。 */
   message: string
 }

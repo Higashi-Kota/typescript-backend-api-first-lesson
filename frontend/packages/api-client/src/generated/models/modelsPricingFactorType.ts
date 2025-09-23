@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 変動要因の種類
+ */
 export type ModelsPricingFactorType =
   (typeof ModelsPricingFactorType)[keyof typeof ModelsPricingFactorType]
 

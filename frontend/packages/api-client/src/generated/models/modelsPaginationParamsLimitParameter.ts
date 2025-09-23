@@ -6,4 +6,7 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * 1ページあたりの取得件数。省略時は20件。
+ */
 export type ModelsPaginationParamsLimitParameter = number

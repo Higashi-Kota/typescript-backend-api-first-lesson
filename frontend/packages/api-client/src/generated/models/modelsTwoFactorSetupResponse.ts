@@ -7,13 +7,13 @@
  */
 
 /**
- * Two-factor authentication setup response
+ * 2要素認証の設定情報を返すレスポンス。
  */
 export interface ModelsTwoFactorSetupResponse {
-  /** QR code URL for authenticator app */
+  /** 認証アプリで読み取るQRコードURL。 */
   qrCodeUrl: string
-  /** Manual entry secret */
+  /** 手動登録用のシークレットキー。 */
   secret: string
-  /** Backup codes for recovery */
+  /** 復旧用バックアップコード一覧。 */
   backupCodes: string[]
 }

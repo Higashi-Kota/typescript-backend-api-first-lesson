@@ -7,13 +7,13 @@
  */
 
 /**
- * 署名付きアップロードURLレスポンス
+ * 署名付きアップロードURLと関連情報を返すレスポンス。
  */
 export interface ModelsUploadUrlResponse {
-  /** 署名付きアップロードURL */
+  /** 一時的に有効なアップロード用URL。 */
   uploadUrl: string
-  /** ストレージキー */
+  /** 生成されたストレージキー。アップロード完了後の識別に使用。 */
   key: string
-  /** URL有効期限 */
+  /** 署名付きURLの有効期限。 */
   expiresAt: string
 }

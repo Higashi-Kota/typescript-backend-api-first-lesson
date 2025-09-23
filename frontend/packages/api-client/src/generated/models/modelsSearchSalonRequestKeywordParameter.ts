@@ -7,6 +7,6 @@
  */
 
 /**
- * Search keyword (alias for q)
+ * 検索キーワード。qパラメータのエイリアス
  */
 export type ModelsSearchSalonRequestKeywordParameter = string

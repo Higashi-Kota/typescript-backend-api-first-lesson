@@ -11,25 +11,50 @@ import type { ModelsStaffSchedule } from './modelsStaffSchedule'
 import type { ModelsStaffPermission } from './modelsStaffPermission'
 
 /**
- * Staff update request with reset capability
+ * リセット対応スタッフ更新リクエスト - null指定を許可しつつプロフィールやスケジュールを再設定する
  */
 export interface ModelsUpdateStaffRequestWithReset {
+  /** スタッフ名の更新 */
   name?: string
+  /** 連絡先情報の更新 */
   contactInfo?: ModelsContactInfo
+  /** 得意分野一覧の更新 */
   specialties?: string[]
-  /** @nullable */
+  /**
+   * null指定も可能なプロフィール画像URL
+   * @nullable
+   */
   imageUrl?: string | null
-  /** @nullable */
+  /**
+   * null指定も可能な自己紹介文
+   * @nullable
+   */
   bio?: string | null
-  /** @nullable */
+  /**
+   * null指定も可能な経験年数
+   * @nullable
+   */
   yearsOfExperience?: number | null
-  /** @nullable */
+  /**
+   * null指定も可能な資格名一覧
+   * @nullable
+   */
   certifications?: string[] | null
-  /** @nullable */
+  /**
+   * null指定も可能な資格詳細一覧
+   * @nullable
+   */
   qualifications?: ModelsStaffQualification[] | null
-  /** @nullable */
+  /**
+   * null指定も可能な勤務スケジュール一覧
+   * @nullable
+   */
   schedules?: ModelsStaffSchedule[] | null
-  /** @nullable */
+  /**
+   * null指定も可能な付与権限一覧
+   * @nullable
+   */
   permissions?: ModelsStaffPermission[] | null
+  /** アクティブ状態の更新 */
   isActive?: boolean
 }

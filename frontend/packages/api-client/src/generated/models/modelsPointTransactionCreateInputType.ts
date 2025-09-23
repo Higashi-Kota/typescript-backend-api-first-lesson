@@ -6,6 +6,9 @@
  * OpenAPI spec version: 2.0
  */
 
+/**
+ * ポイント取引種別
+ */
 export type ModelsPointTransactionCreateInputType =
   (typeof ModelsPointTransactionCreateInputType)[keyof typeof ModelsPointTransactionCreateInputType]
 
