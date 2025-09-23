@@ -1,7 +1,7 @@
 import "@typespec/http";
 import "@typespec/rest";
 import "../models/auth.tsp";
-import "../models/common.tsp";
+import "../models/_shared/common.tsp";
 
 using TypeSpec.Http;
 using TypeSpec.Rest;

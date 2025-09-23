@@ -1,6 +1,6 @@
 import "@typespec/http";
 import "../models/attachment.tsp";
-import "../models/common.tsp";
+import "../models/_shared/common.tsp";
 
 using TypeSpec.Http;
 

@@ -1,5 +1,5 @@
 import "@typespec/http";
-import "./common.tsp";
+import "./_shared/common.tsp";
 
 using TypeSpec.Http;
 using BeautySalon.Models;

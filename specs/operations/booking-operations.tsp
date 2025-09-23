@@ -2,7 +2,7 @@ import "@typespec/http";
 import "@typespec/rest";
 import "@typespec/openapi3";
 import "../models/booking.tsp";
-import "../models/common.tsp";
+import "../models/_shared/common.tsp";
 import "../models/payment.tsp";
 
 using TypeSpec.Http;

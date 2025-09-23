@@ -1,7 +1,7 @@
 import "@typespec/http";
 import "@typespec/rest";
 import "@typespec/openapi3";
-import "../../models/common.tsp";
+import "../../models/_shared/common.tsp";
 import "../../models/_shared/common-api-patterns.tsp";
 
 using TypeSpec.Http;

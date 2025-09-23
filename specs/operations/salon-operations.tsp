@@ -2,7 +2,7 @@ import "@typespec/http";
 import "@typespec/rest";
 import "@typespec/openapi3";
 import "../models/salon.tsp";
-import "../models/common.tsp";
+import "../models/_shared/common.tsp";
 import "../models/_shared/common-api-patterns.tsp";
 import "./_shared/base-operations.tsp";
 

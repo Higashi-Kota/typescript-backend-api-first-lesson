@@ -4,7 +4,7 @@ import "@typespec/openapi3";
 import "../models/customer.tsp";
 import "../models/reservation.tsp";
 import "../models/booking.tsp";
-import "../models/common.tsp";
+import "../models/_shared/common.tsp";
 import "../models/_shared/common-api-patterns.tsp";
 import "./_shared/base-operations.tsp";
 

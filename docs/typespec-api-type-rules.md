@@ -793,11 +793,14 @@ interface SalonCrud
 ```
 specs/
 ├── models/                    # すべてのモデル定義
+│   ├── _shared/              # 共通定義
+│   │   ├── common.tsp        # 基本型、ID、Enum、共通モデル
+│   │   ├── common-api-patterns.tsp  # APIパターン定義
+│   │   └── domain-errors.tsp # ドメインエラー定義
 │   ├── salon.tsp             # Salonドメインのモデル
 │   ├── customer.tsp          # Customerドメインのモデル
 │   ├── staff.tsp             # Staffドメインのモデル
-│   ├── service.tsp           # Serviceドメインのモデル
-│   └── common.tsp            # 共通モデル
+│   └── service.tsp           # Serviceドメインのモデル
 └── operations/               # オペレーション定義のみ
     ├── salon-operations.tsp  # モデルを含まない、オペレーションのみ
     └── customer-operations.tsp

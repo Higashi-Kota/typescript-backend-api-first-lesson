@@ -1,6 +1,6 @@
 import "@typespec/http";
 import "@typespec/rest";
-import "../models/common.tsp";
+import "../models/_shared/common.tsp";
 import "../models/payment.tsp";
 
 using TypeSpec.Http;

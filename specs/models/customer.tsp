@@ -1,5 +1,5 @@
 import "@typespec/http";
-import "./common.tsp";
+import "./_shared/common.tsp";
 import "./booking.tsp";
 import "./_shared/common-api-patterns.tsp";
 

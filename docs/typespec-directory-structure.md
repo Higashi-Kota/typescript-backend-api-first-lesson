@@ -10,10 +10,11 @@ TypeSpec定義ファイルは`specs`ディレクトリに配置され、モジ�
 specs/
 ├── models/                     # データモデル定義
 │   ├── _shared/                # 共通モデルパターン
-│   │   └── common-api-patterns.tsp  # 汎用APIパターン（ページネーション、エラー等）
+│   │   ├── common.tsp         # 基本型定義（ID、Enum、共通モデル等）
+│   │   ├── common-api-patterns.tsp  # 汎用APIパターン（ページネーション、エラー等）
+│   │   └── domain-errors.tsp  # ドメインエラー定義
 │   ├── auth.tsp               # 認証モデル
 │   ├── booking.tsp            # 予約モデル
-│   ├── common.tsp             # 基本型定義
 │   ├── customer.tsp           # 顧客モデル
 │   ├── inventory.tsp          # 在庫モデル
 │   ├── payment.tsp            # 支払いモデル
@@ -56,6 +57,16 @@ specs/
 
 ## `_shared`フォルダの役割
 
+### models/_shared/common.tsp
+
+基本型と共通定義:
+- **ブランド型ID**: 各エンティティの型安全なID定義（CustomerId、SalonId等）
+- **共通Enum**: ServiceCategoryType、ReservationStatusType、CurrencyCodeType等
+- **基本モデル**: Money、Address、ContactInfo等の共通データ構造
+- **監査情報**: AuditInfo、AuditTrail等の作成・更新履歴
+- **ページネーション**: PaginationParams、SearchParams等の検索パラメータ
+- **レスポンス形式**: Result、ErrorResponse等の統一レスポンス
+
 ### models/_shared/common-api-patterns.tsp
 
 APIの汎用パターンを定義:
@@ -83,7 +94,8 @@ APIの汎用パターンを定義:
 ```typespec
 // main.tsp
 import "./models/_shared/common-api-patterns.tsp";
-import "./models/common.tsp";
+import "./models/_shared/domain-errors.tsp";
+// common.tspは各モデルファイル内でimportされるため、ここでは不要
 import "./models/customer.tsp";
 // ... 他のモデル
 
@@ -99,6 +111,7 @@ import "./operations/customer-operations.tsp";
 import "@typespec/http";
 import "@typespec/rest";
 import "../models/customer.tsp";
+import "../models/_shared/common.tsp";
 import "../models/_shared/common-api-patterns.tsp";
 import "./_shared/base-operations.tsp";
 
@@ -116,7 +129,7 @@ interface CustomerCrud extends
 // operations/_shared/base-operations.tsp
 import "@typespec/http";
 import "@typespec/rest";
-import "../../models/common.tsp";
+import "../../models/_shared/common.tsp";
 import "../../models/_shared/common-api-patterns.tsp";
 ```
 
@@ -168,7 +181,9 @@ TypeSpec構造の変更は以下の手順で型生成に反映されます:
 ### ファイル命名規則
 
 - `_shared/`内のファイルは役割を明確にする名前を使用
+  - `common.tsp`: 基本型定義、ID、Enum、共通モデル
   - `common-api-patterns.tsp`: API全体の共通パターン
+  - `domain-errors.tsp`: ドメイン層のエラー定義
   - `base-operations.tsp`: 操作の基底定義
   - 将来的: `validation-rules.tsp`, `security-patterns.tsp`など
 
@@ -200,11 +215,6 @@ import "../models/booking.tsp";
 - **Enum型**: 区分値の定義と各値の詳細説明
 - **オペレーション**: APIエンドポイントの目的と動作説明
 - **インターフェース**: 機能グループの説明
-
-#### 統計情報（2025年1月時点）
-- モデルファイル: 1,592個の@docアノテーション
-- オペレーションファイル: 267個の@docアノテーション
-- 合計: 1,859個の包括的な日本語ドキュメント
 
 ### Enum型の@doc形式
 
