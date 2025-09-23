@@ -15,14 +15,23 @@ export interface ModelsServicePerformance {
   bookingCount: number
   /** 施術完了率 */
   completionRate: ModelsDecimal
-  /** 平均評価スコア */
-  averageRating?: ModelsDecimal
+  /**
+   * 平均評価スコア
+   * @nullable
+   */
+  averageRating: number | null
   /** レビュー件数 */
   reviewCount: number
   /** 売上実績（円） */
   revenue: number
-  /** 人気度スコア */
-  popularityScore?: ModelsDecimal
-  /** リピート率 */
-  repeatRate?: ModelsDecimal
+  /**
+   * 人気度スコア
+   * @nullable
+   */
+  popularityScore: number | null
+  /**
+   * リピート率
+   * @nullable
+   */
+  repeatRate: number | null
 }

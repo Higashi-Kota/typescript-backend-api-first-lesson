@@ -6,7 +6,6 @@
  * OpenAPI spec version: 2.0
  */
 import type { ModelsCurrencyCodeType } from './modelsCurrencyCodeType'
-import type { ModelsDecimal } from './modelsDecimal'
 
 /**
  * 税抜・税込計算に利用する金額モデル。
@@ -16,6 +15,9 @@ export interface ModelsMoneyUpdate {
   value?: number
   /** 使用する通貨コード。 */
   currency?: ModelsCurrencyCodeType
-  /** 適用税率。任意設定。 */
-  taxRate?: ModelsDecimal
+  /**
+   * 適用税率。任意設定。
+   * @nullable
+   */
+  taxRate?: number | null
 }

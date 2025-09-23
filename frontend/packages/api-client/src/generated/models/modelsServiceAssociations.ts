@@ -15,16 +15,34 @@ import type { ModelsStaffId } from './modelsStaffId'
 export interface ModelsServiceAssociations {
   /** 紐づくカテゴリ ID */
   categoryId: ModelsCategoryId
-  /** 親サービス ID */
-  parentServiceId?: ModelsServiceId
-  /** 子サービス ID 一覧 */
-  childServiceIds?: ModelsServiceId[]
-  /** 予約時に必須のサービス ID */
-  requiredServiceIds?: ModelsServiceId[]
-  /** 併用を推奨するサービス ID */
-  recommendedServiceIds?: ModelsServiceId[]
-  /** 施術資格を持つスタッフ ID */
-  qualifiedStaffIds?: ModelsStaffId[]
-  /** 優先的に担当させたいスタッフ ID */
-  preferredStaffIds?: ModelsStaffId[]
+  /**
+   * 親サービス ID
+   * @nullable
+   */
+  parentServiceId: string | null
+  /**
+   * 子サービス ID 一覧
+   * @nullable
+   */
+  childServiceIds: ModelsServiceId[] | null
+  /**
+   * 予約時に必須のサービス ID
+   * @nullable
+   */
+  requiredServiceIds: ModelsServiceId[] | null
+  /**
+   * 併用を推奨するサービス ID
+   * @nullable
+   */
+  recommendedServiceIds: ModelsServiceId[] | null
+  /**
+   * 施術資格を持つスタッフ ID
+   * @nullable
+   */
+  qualifiedStaffIds: ModelsStaffId[] | null
+  /**
+   * 優先的に担当させたいスタッフ ID
+   * @nullable
+   */
+  preferredStaffIds: ModelsStaffId[] | null
 }

@@ -6,7 +6,6 @@
  * OpenAPI spec version: 2.0
  */
 import type { ModelsServiceStatusType } from './modelsServiceStatusType'
-import type { ModelsServiceId } from './modelsServiceId'
 
 /**
  * サービスの提供状態の詳細
@@ -14,20 +13,44 @@ import type { ModelsServiceId } from './modelsServiceId'
 export interface ModelsServiceStatusDetail {
   /** ステータス区分 */
   type: ModelsServiceStatusType
-  /** ステータス変更理由 */
-  reason?: string
-  /** この状態が開始した日時 */
-  since?: string
-  /** 提供可能な月の一覧 */
-  availableMonths?: number[]
-  /** 提供終了予定日 */
-  availableUntil?: string
-  /** 残り提供可能枠数 */
-  remainingSlots?: number
-  /** 廃止日時 */
-  discontinuedAt?: string
-  /** 代替サービス ID */
-  replacementId?: ModelsServiceId
-  /** 公開予定日 */
-  launchDate?: string
+  /**
+   * ステータス変更理由
+   * @nullable
+   */
+  reason: string | null
+  /**
+   * この状態が開始した日時
+   * @nullable
+   */
+  since: string | null
+  /**
+   * 提供可能な月の一覧
+   * @nullable
+   */
+  availableMonths: number[] | null
+  /**
+   * 提供終了予定日
+   * @nullable
+   */
+  availableUntil: string | null
+  /**
+   * 残り提供可能枠数
+   * @nullable
+   */
+  remainingSlots: number | null
+  /**
+   * 廃止日時
+   * @nullable
+   */
+  discontinuedAt: string | null
+  /**
+   * 代替サービス ID
+   * @nullable
+   */
+  replacementId: string | null
+  /**
+   * 公開予定日
+   * @nullable
+   */
+  launchDate: string | null
 }

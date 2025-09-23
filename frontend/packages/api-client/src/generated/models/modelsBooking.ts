@@ -11,11 +11,12 @@ import type { ModelsCustomerId } from './modelsCustomerId'
 import type { ModelsReservationId } from './modelsReservationId'
 import type { ModelsBookingStatus } from './modelsBookingStatus'
 import type { ModelsBookingStatusCodeType } from './modelsBookingStatusCodeType'
-import type { ModelsWaitlistEntry } from './modelsWaitlistEntry'
-import type { ModelsBookingDeposit } from './modelsBookingDeposit'
+import type { ModelsBookingWaitlistEntry } from './modelsBookingWaitlistEntry'
+import type { ModelsBookingDepositProperty } from './modelsBookingDepositProperty'
 import type { ModelsMoney } from './modelsMoney'
-import type { ModelsPaymentMethodType } from './modelsPaymentMethodType'
-import type { ModelsPaymentStatusCodeType } from './modelsPaymentStatusCodeType'
+import type { ModelsBookingBalanceDue } from './modelsBookingBalanceDue'
+import type { ModelsBookingPaymentMethod } from './modelsBookingPaymentMethod'
+import type { ModelsBookingPaymentStatus } from './modelsBookingPaymentStatus'
 
 /**
  * サロンで確定管理する予約の集約モデル。
@@ -33,24 +34,42 @@ export interface ModelsBooking {
   status: ModelsBookingStatus
   /** 現在のステータスコード。 */
   statusCode: ModelsBookingStatusCodeType
-  /** ウェイティングリスト情報。対象外の場合はnull。 */
-  waitlistEntry?: ModelsWaitlistEntry
-  /** 預かり金に関する情報。必要な場合のみ設定。 */
-  deposit?: ModelsBookingDeposit
+  /**
+   * ウェイティングリスト情報。対象外の場合はnull。
+   * @nullable
+   */
+  waitlistEntry: ModelsBookingWaitlistEntry
+  /**
+   * 預かり金に関する情報。必要な場合のみ設定。
+   * @nullable
+   */
+  deposit: ModelsBookingDepositProperty
   /** 割引適用前の合計金額。 */
   totalAmount: ModelsMoney
-  /** 適用された割引額。未適用の場合はnull。 */
-  discountAmount?: ModelsMoney
+  /** 適用された割引額 */
+  discountAmount: ModelsMoney
   /** 最終的に請求する金額。 */
   finalAmount: ModelsMoney
-  /** 未収金額。完済の場合はnull。 */
-  balanceDue?: ModelsMoney
-  /** 予定している支払い方法。未定の場合はnull。 */
-  paymentMethod?: ModelsPaymentMethodType
-  /** 支払いの進捗ステータス。未設定の場合は支払い前。 */
-  paymentStatus?: ModelsPaymentStatusCodeType
-  /** スタッフ・顧客間で共有するメモ。 */
-  notes?: string
+  /**
+   * 未収金額。完済の場合はnull。
+   * @nullable
+   */
+  balanceDue: ModelsBookingBalanceDue
+  /**
+   * 予定している支払い方法。未定の場合はnull。
+   * @nullable
+   */
+  paymentMethod: ModelsBookingPaymentMethod
+  /**
+   * 支払いの進捗ステータス。未設定の場合は支払い前。
+   * @nullable
+   */
+  paymentStatus: ModelsBookingPaymentStatus
+  /**
+   * スタッフ・顧客間で共有するメモ。
+   * @nullable
+   */
+  notes: string | null
   /** レコード作成日時。 */
   createdAt: string
   /**

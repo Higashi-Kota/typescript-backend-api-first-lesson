@@ -40,9 +40,9 @@ import type {
   InventoryOperationsRecordStockMovement200,
   InventoryOperationsUpdateInventoryItem200,
   ModelsInventoryId,
-  ModelsInventoryItemCreateInput,
-  ModelsInventoryItemUpdateInput,
-  ModelsStockMovementInput,
+  ModelsInventoryItemCreateRequest,
+  ModelsInventoryItemUpdateRequest,
+  ModelsStockMovementCreateRequest,
 } from '../../models'
 
 import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher'
@@ -274,7 +274,7 @@ export const getInventoryOperationsCreateInventoryItemUrl = () => {
 }
 
 export const inventoryOperationsCreateInventoryItem = async (
-  modelsInventoryItemCreateInput: ModelsInventoryItemCreateInput,
+  modelsInventoryItemCreateRequest: ModelsInventoryItemCreateRequest,
   options?: RequestInit
 ): Promise<inventoryOperationsCreateInventoryItemResponse> => {
   return customInstance<inventoryOperationsCreateInventoryItemResponse>(
@@ -283,7 +283,7 @@ export const inventoryOperationsCreateInventoryItem = async (
       ...options,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsInventoryItemCreateInput),
+      body: JSON.stringify(modelsInventoryItemCreateRequest),
     }
   )
 }
@@ -295,14 +295,14 @@ export const getInventoryOperationsCreateInventoryItemMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof inventoryOperationsCreateInventoryItem>>,
     TError,
-    { data: ModelsInventoryItemCreateInput },
+    { data: ModelsInventoryItemCreateRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof inventoryOperationsCreateInventoryItem>>,
   TError,
-  { data: ModelsInventoryItemCreateInput },
+  { data: ModelsInventoryItemCreateRequest },
   TContext
 > => {
   const mutationKey = ['inventoryOperationsCreateInventoryItem']
@@ -316,7 +316,7 @@ export const getInventoryOperationsCreateInventoryItemMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof inventoryOperationsCreateInventoryItem>>,
-    { data: ModelsInventoryItemCreateInput }
+    { data: ModelsInventoryItemCreateRequest }
   > = (props) => {
     const { data } = props ?? {}
 
@@ -330,7 +330,7 @@ export type InventoryOperationsCreateInventoryItemMutationResult = NonNullable<
   Awaited<ReturnType<typeof inventoryOperationsCreateInventoryItem>>
 >
 export type InventoryOperationsCreateInventoryItemMutationBody =
-  ModelsInventoryItemCreateInput
+  ModelsInventoryItemCreateRequest
 export type InventoryOperationsCreateInventoryItemMutationError = unknown
 
 export const useInventoryOperationsCreateInventoryItem = <
@@ -341,7 +341,7 @@ export const useInventoryOperationsCreateInventoryItem = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof inventoryOperationsCreateInventoryItem>>,
       TError,
-      { data: ModelsInventoryItemCreateInput },
+      { data: ModelsInventoryItemCreateRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -350,7 +350,7 @@ export const useInventoryOperationsCreateInventoryItem = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof inventoryOperationsCreateInventoryItem>>,
   TError,
-  { data: ModelsInventoryItemCreateInput },
+  { data: ModelsInventoryItemCreateRequest },
   TContext
 > => {
   const mutationOptions =
@@ -779,7 +779,7 @@ export const getInventoryOperationsRecordStockMovementUrl = () => {
 }
 
 export const inventoryOperationsRecordStockMovement = async (
-  modelsStockMovementInput: ModelsStockMovementInput,
+  modelsStockMovementCreateRequest: ModelsStockMovementCreateRequest,
   options?: RequestInit
 ): Promise<inventoryOperationsRecordStockMovementResponse> => {
   return customInstance<inventoryOperationsRecordStockMovementResponse>(
@@ -788,7 +788,7 @@ export const inventoryOperationsRecordStockMovement = async (
       ...options,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsStockMovementInput),
+      body: JSON.stringify(modelsStockMovementCreateRequest),
     }
   )
 }
@@ -800,14 +800,14 @@ export const getInventoryOperationsRecordStockMovementMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof inventoryOperationsRecordStockMovement>>,
     TError,
-    { data: ModelsStockMovementInput },
+    { data: ModelsStockMovementCreateRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof inventoryOperationsRecordStockMovement>>,
   TError,
-  { data: ModelsStockMovementInput },
+  { data: ModelsStockMovementCreateRequest },
   TContext
 > => {
   const mutationKey = ['inventoryOperationsRecordStockMovement']
@@ -821,7 +821,7 @@ export const getInventoryOperationsRecordStockMovementMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof inventoryOperationsRecordStockMovement>>,
-    { data: ModelsStockMovementInput }
+    { data: ModelsStockMovementCreateRequest }
   > = (props) => {
     const { data } = props ?? {}
 
@@ -835,7 +835,7 @@ export type InventoryOperationsRecordStockMovementMutationResult = NonNullable<
   Awaited<ReturnType<typeof inventoryOperationsRecordStockMovement>>
 >
 export type InventoryOperationsRecordStockMovementMutationBody =
-  ModelsStockMovementInput
+  ModelsStockMovementCreateRequest
 export type InventoryOperationsRecordStockMovementMutationError = unknown
 
 export const useInventoryOperationsRecordStockMovement = <
@@ -846,7 +846,7 @@ export const useInventoryOperationsRecordStockMovement = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof inventoryOperationsRecordStockMovement>>,
       TError,
-      { data: ModelsStockMovementInput },
+      { data: ModelsStockMovementCreateRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -855,7 +855,7 @@ export const useInventoryOperationsRecordStockMovement = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof inventoryOperationsRecordStockMovement>>,
   TError,
-  { data: ModelsStockMovementInput },
+  { data: ModelsStockMovementCreateRequest },
   TContext
 > => {
   const mutationOptions =
@@ -1399,7 +1399,7 @@ export const getInventoryOperationsUpdateInventoryItemUrl = (
 
 export const inventoryOperationsUpdateInventoryItem = async (
   id: ModelsInventoryId,
-  modelsInventoryItemUpdateInput: ModelsInventoryItemUpdateInput,
+  modelsInventoryItemUpdateRequest: ModelsInventoryItemUpdateRequest,
   options?: RequestInit
 ): Promise<inventoryOperationsUpdateInventoryItemResponse> => {
   return customInstance<inventoryOperationsUpdateInventoryItemResponse>(
@@ -1408,7 +1408,7 @@ export const inventoryOperationsUpdateInventoryItem = async (
       ...options,
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsInventoryItemUpdateInput),
+      body: JSON.stringify(modelsInventoryItemUpdateRequest),
     }
   )
 }
@@ -1420,14 +1420,14 @@ export const getInventoryOperationsUpdateInventoryItemMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof inventoryOperationsUpdateInventoryItem>>,
     TError,
-    { id: ModelsInventoryId; data: ModelsInventoryItemUpdateInput },
+    { id: ModelsInventoryId; data: ModelsInventoryItemUpdateRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof inventoryOperationsUpdateInventoryItem>>,
   TError,
-  { id: ModelsInventoryId; data: ModelsInventoryItemUpdateInput },
+  { id: ModelsInventoryId; data: ModelsInventoryItemUpdateRequest },
   TContext
 > => {
   const mutationKey = ['inventoryOperationsUpdateInventoryItem']
@@ -1441,7 +1441,7 @@ export const getInventoryOperationsUpdateInventoryItemMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof inventoryOperationsUpdateInventoryItem>>,
-    { id: ModelsInventoryId; data: ModelsInventoryItemUpdateInput }
+    { id: ModelsInventoryId; data: ModelsInventoryItemUpdateRequest }
   > = (props) => {
     const { id, data } = props ?? {}
 
@@ -1455,7 +1455,7 @@ export type InventoryOperationsUpdateInventoryItemMutationResult = NonNullable<
   Awaited<ReturnType<typeof inventoryOperationsUpdateInventoryItem>>
 >
 export type InventoryOperationsUpdateInventoryItemMutationBody =
-  ModelsInventoryItemUpdateInput
+  ModelsInventoryItemUpdateRequest
 export type InventoryOperationsUpdateInventoryItemMutationError = unknown
 
 export const useInventoryOperationsUpdateInventoryItem = <
@@ -1466,7 +1466,7 @@ export const useInventoryOperationsUpdateInventoryItem = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof inventoryOperationsUpdateInventoryItem>>,
       TError,
-      { id: ModelsInventoryId; data: ModelsInventoryItemUpdateInput },
+      { id: ModelsInventoryId; data: ModelsInventoryItemUpdateRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -1475,7 +1475,7 @@ export const useInventoryOperationsUpdateInventoryItem = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof inventoryOperationsUpdateInventoryItem>>,
   TError,
-  { id: ModelsInventoryId; data: ModelsInventoryItemUpdateInput },
+  { id: ModelsInventoryId; data: ModelsInventoryItemUpdateRequest },
   TContext
 > => {
   const mutationOptions =

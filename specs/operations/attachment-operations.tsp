@@ -14,14 +14,14 @@ interface AttachmentOperations {
   @post
   @route("/upload")
   uploadFile(
-    @body body: Models.UploadAttachmentRequest,
+    @body body: Models.AttachmentCreateRequest,
   ): Models.Attachment | Models.Error;
 
   @doc("顧客やスタッフがブラウザから直接クラウドストレージへアップロードできるよう、短時間だけ有効な署名付きURLを発行します。")
   @post
   @route("/upload-url")
-  getUploadUrl(@body request: Models.GetUploadUrlRequest):
-    | Models.UploadUrlResponse
+  getUploadUrl(@body request: Models.AttachmentUploadUrlGetRequest):
+    | Models.AttachmentUploadUrlResponse
     | Models.Error
     | Models.Error
     | Models.Error;
@@ -47,7 +47,7 @@ interface AttachmentOperations {
   @get
   @route("/{attachmentId}/download-url")
   getDownloadUrl(@path attachmentId: string, @query inline?: boolean = false):
-    | Models.DownloadUrlResponse
+    | Models.AttachmentDownloadUrlResponse
     | Models.Error
     | Models.Error
     | Models.Error;
@@ -66,7 +66,7 @@ interface AttachmentOperations {
   @route("/{attachmentId}/share-links")
   createShareLink(
     @path attachmentId: string,
-    @body request: Models.CreateShareLinkRequest,
+    @body request: Models.ShareLinkCreateRequest,
   ):
     | Models.ShareLink
     | Models.Error
@@ -110,7 +110,7 @@ interface ShareOperations {
   @get
   @route("/{shareToken}/download")
   downloadSharedFile(@path shareToken: string, @query password?: string):
-    | Models.DownloadUrlResponse
+    | Models.AttachmentDownloadUrlResponse
     | Models.Error
     | Models.Error
     | Models.Error;

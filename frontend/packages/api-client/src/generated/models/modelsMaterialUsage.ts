@@ -19,6 +19,9 @@ export interface ModelsMaterialUsage {
   quantity: number
   /** 数量単位 */
   unit: string
-  /** 備考メモ */
-  notes?: string
+  /**
+   * 備考メモ
+   * @nullable
+   */
+  notes: string | null
 }

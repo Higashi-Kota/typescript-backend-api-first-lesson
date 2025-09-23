@@ -14,8 +14,14 @@ export interface ModelsStaffPermission {
   resource: string
   /** 許可されたアクションの一覧 */
   actions: string[]
-  /** 権限が適用される範囲や条件 */
-  scope?: string
-  /** 権限の有効期限 (UTC) */
-  expiresAt?: string
+  /**
+   * 権限が適用される範囲や条件
+   * @nullable
+   */
+  scope: string | null
+  /**
+   * 権限の有効期限 (UTC)
+   * @nullable
+   */
+  expiresAt: string | null
 }

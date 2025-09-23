@@ -8,5 +8,6 @@
 
 /**
  * デバッグやサポート対応に役立つ追加情報。任意項目。
+ * @nullable
  */
-export type ModelsErrorDetails = { [key: string]: unknown }
+export type ModelsErrorDetails = { [key: string]: unknown } | null

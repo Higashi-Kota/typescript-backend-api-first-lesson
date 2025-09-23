@@ -13,12 +13,24 @@ import type { ModelsEmailVerificationStateType } from './modelsEmailVerification
 export interface ModelsEmailVerificationStateDetail {
   /** 現在の確認状態区分。 */
   type: ModelsEmailVerificationStateType
-  /** 確認完了日時。未確認の場合はnull。 */
-  verifiedAt?: string
-  /** 確認メールに含めるトークン。再送未実施の場合はnull。 */
-  token?: string
-  /** トークンの有効期限。 */
-  expiresAt?: string
-  /** 確認メールを送信した日時。 */
-  sentAt?: string
+  /**
+   * 確認完了日時。未確認の場合はnull。
+   * @nullable
+   */
+  verifiedAt: string | null
+  /**
+   * 確認メールに含めるトークン。再送未実施の場合はnull。
+   * @nullable
+   */
+  token: string | null
+  /**
+   * トークンの有効期限。
+   * @nullable
+   */
+  expiresAt: string | null
+  /**
+   * 確認メールを送信した日時。
+   * @nullable
+   */
+  sentAt: string | null
 }

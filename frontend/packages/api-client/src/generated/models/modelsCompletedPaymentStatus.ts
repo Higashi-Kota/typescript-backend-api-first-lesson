@@ -18,6 +18,9 @@ export interface ModelsCompletedPaymentStatus {
   completedAt: string
   /** 実際に決済された金額 */
   paidAmount: ModelsMoney
-  /** 発行されたレシート番号 */
-  receiptNumber?: string
+  /**
+   * 発行されたレシート番号
+   * @nullable
+   */
+  receiptNumber: string | null
 }

@@ -7,7 +7,6 @@
  */
 import type { ModelsRefundedPaymentStatusType } from './modelsRefundedPaymentStatusType'
 import type { ModelsMoney } from './modelsMoney'
-import type { ModelsRefundId } from './modelsRefundId'
 
 /**
  * 全額返金済み状態の詳細
@@ -19,6 +18,9 @@ export interface ModelsRefundedPaymentStatus {
   refundedAt: string
   /** 返金金額 */
   refundAmount: ModelsMoney
-  /** 関連する返金 ID */
-  refundId?: ModelsRefundId
+  /**
+   * 関連する返金 ID
+   * @nullable
+   */
+  refundId: string | null
 }

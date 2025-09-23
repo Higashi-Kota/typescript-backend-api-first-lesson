@@ -9,13 +9,16 @@ import type { ModelsReservationStatusType } from './modelsReservationStatusType'
 import type { ModelsStaffId } from './modelsStaffId'
 
 /**
- * 予約更新リクエスト - 部分更新に対応した任意項目の変更指示を受け取り、既存予約を調整する
+ * 予約更新リクエスト - 部分更新に対応した任意項目の変更指示を受け取り、既存予約を調整する。null指定で値をリセット可能
  */
 export interface ModelsUpdateReservationRequest {
   /** 更新後の予約ステータス */
   status?: ModelsReservationStatusType
-  /** 最新の顧客メモや社内備考 */
-  notes?: string
+  /**
+   * 最新の顧客メモや社内備考（null指定で初期化可能）
+   * @nullable
+   */
+  notes?: string | null
   /** 調整後の施術開始日時 (UTC) */
   startTime?: string
   /** 再割当先のスタッフID */

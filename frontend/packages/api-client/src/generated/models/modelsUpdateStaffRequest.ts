@@ -11,7 +11,7 @@ import type { ModelsStaffSchedule } from './modelsStaffSchedule'
 import type { ModelsStaffPermission } from './modelsStaffPermission'
 
 /**
- * スタッフ更新リクエスト - 任意項目を部分更新し、プロフィールや勤務状況を柔軟に調整する
+ * スタッフ更新リクエスト - 任意項目を部分更新し、プロフィールや勤務状況を柔軟に調整する。null指定で値をリセット可能
  */
 export interface ModelsUpdateStaffRequest {
   /** スタッフ名の更新 */
@@ -20,20 +20,41 @@ export interface ModelsUpdateStaffRequest {
   contactInfo?: ModelsContactInfo
   /** 得意分野一覧の更新 */
   specialties?: string[]
-  /** プロフィール画像URLの更新 */
-  imageUrl?: string
-  /** 自己紹介文の更新 */
-  bio?: string
-  /** 経験年数の更新 */
-  yearsOfExperience?: number
-  /** 資格名一覧の更新 */
-  certifications?: string[]
-  /** 資格詳細一覧の更新 */
-  qualifications?: ModelsStaffQualification[]
-  /** 勤務スケジュール一覧の更新 */
-  schedules?: ModelsStaffSchedule[]
-  /** 付与権限一覧の更新 */
-  permissions?: ModelsStaffPermission[]
+  /**
+   * プロフィール画像URLの更新（null指定で初期化可能）
+   * @nullable
+   */
+  imageUrl?: string | null
+  /**
+   * 自己紹介文の更新（null指定で初期化可能）
+   * @nullable
+   */
+  bio?: string | null
+  /**
+   * 経験年数の更新（null指定で初期化可能）
+   * @nullable
+   */
+  yearsOfExperience?: number | null
+  /**
+   * 資格名一覧の更新（null指定で初期化可能）
+   * @nullable
+   */
+  certifications?: string[] | null
+  /**
+   * 資格詳細一覧の更新（null指定で初期化可能）
+   * @nullable
+   */
+  qualifications?: ModelsStaffQualification[] | null
+  /**
+   * 勤務スケジュール一覧の更新（null指定で初期化可能）
+   * @nullable
+   */
+  schedules?: ModelsStaffSchedule[] | null
+  /**
+   * 付与権限一覧の更新（null指定で初期化可能）
+   * @nullable
+   */
+  permissions?: ModelsStaffPermission[] | null
   /** アクティブ状態の更新 */
   isActive?: boolean
 }

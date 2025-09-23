@@ -17,8 +17,11 @@ export interface ModelsCategoryModel {
   name: string
   /** カテゴリ説明 */
   description: string
-  /** 親カテゴリ ID */
-  parentId?: ModelsCategoryId
+  /**
+   * 親カテゴリ ID
+   * @nullable
+   */
+  parentId: string | null
   /** 表示順序 */
   displayOrder: number
   /** 有効フラグ */

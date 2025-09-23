@@ -5,11 +5,11 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsSearchInventoryRequestSalonIdParameter } from './modelsSearchInventoryRequestSalonIdParameter'
-import type { ModelsSearchInventoryRequestCategoryParameter } from './modelsSearchInventoryRequestCategoryParameter'
-import type { ModelsSearchInventoryRequestStatusParameter } from './modelsSearchInventoryRequestStatusParameter'
-import type { ModelsSearchInventoryRequestLowStockParameter } from './modelsSearchInventoryRequestLowStockParameter'
-import type { ModelsSearchInventoryRequestExpiringSoonParameter } from './modelsSearchInventoryRequestExpiringSoonParameter'
+import type { ModelsInventorySearchRequestSalonIdParameter } from './modelsInventorySearchRequestSalonIdParameter'
+import type { ModelsInventorySearchRequestCategoryParameter } from './modelsInventorySearchRequestCategoryParameter'
+import type { ModelsInventorySearchRequestStatusParameter } from './modelsInventorySearchRequestStatusParameter'
+import type { ModelsInventorySearchRequestLowStockParameter } from './modelsInventorySearchRequestLowStockParameter'
+import type { ModelsInventorySearchRequestExpiringSoonParameter } from './modelsInventorySearchRequestExpiringSoonParameter'
 import type { ModelsSearchParamsQParameter } from './modelsSearchParamsQParameter'
 import type { ModelsSearchParamsSortByParameter } from './modelsSearchParamsSortByParameter'
 import type { ModelsSearchParamsSortOrderParameter } from './modelsSearchParamsSortOrderParameter'
@@ -20,11 +20,11 @@ export type InventoryOperationsListInventoryItemsParams = {
   /**
    * サロン店舗・拠点を識別するためのブランド付きUUID。
    */
-  salonId: ModelsSearchInventoryRequestSalonIdParameter
+  salonId: ModelsInventorySearchRequestSalonIdParameter
   /**
    * カテゴリでの絞り込み
    */
-  category?: ModelsSearchInventoryRequestCategoryParameter
+  category?: ModelsInventorySearchRequestCategoryParameter
   /**
  * 在庫ステータス区分 - 商品・材料の在庫状態を表す区分
 
@@ -34,15 +34,15 @@ out_of_stock: 在庫切れ - 在庫がゼロになった状態
 ordered: 発注済み - 補充のための発注が行われた状態
 discontinued: 廃番 - 商品の取り扱いを終了した状態
  */
-  status?: ModelsSearchInventoryRequestStatusParameter
+  status?: ModelsInventorySearchRequestStatusParameter
   /**
    * 最低在庫を下回るもののみ取得するか
    */
-  lowStock?: ModelsSearchInventoryRequestLowStockParameter
+  lowStock?: ModelsInventorySearchRequestLowStockParameter
   /**
    * 期限切れ間近の在庫を取得するか
    */
-  expiringSoon?: ModelsSearchInventoryRequestExpiringSoonParameter
+  expiringSoon?: ModelsInventorySearchRequestExpiringSoonParameter
   /**
    * フリーワード検索用キーワード。
    */

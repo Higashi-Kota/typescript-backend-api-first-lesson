@@ -8,5 +8,8 @@
 
 /**
  * 関連リソースや次アクションへのリンク情報。
+ * @nullable
  */
-export type SalonOperationsCheckAvailability200Links = { [key: string]: string }
+export type SalonOperationsCheckAvailability200Links = {
+  [key: string]: string
+} | null

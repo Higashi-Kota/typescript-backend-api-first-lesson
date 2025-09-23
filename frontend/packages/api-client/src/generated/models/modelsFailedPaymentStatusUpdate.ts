@@ -17,6 +17,9 @@ export interface ModelsFailedPaymentStatusUpdate {
   failedAt?: string
   /** 失敗理由の説明 */
   reason?: string
-  /** 再試行が可能かどうか */
-  retryable?: boolean
+  /**
+   * 再試行が可能かどうか
+   * @nullable
+   */
+  retryable?: boolean | null
 }

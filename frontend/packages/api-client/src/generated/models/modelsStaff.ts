@@ -26,22 +26,43 @@ export interface ModelsStaff {
   contactInfo: ModelsContactInfo
   /** 得意分野や専門メニューの一覧 */
   specialties: string[]
-  /** プロフィール画像のURL */
-  imageUrl?: string
-  /** 自己紹介や経歴の概要 */
-  bio?: string
-  /** 実務経験年数 */
-  yearsOfExperience?: number
-  /** 保有資格名の一覧 (テキスト管理) */
-  certifications?: string[]
-  /** 詳細な資格情報の一覧 */
-  qualifications?: ModelsStaffQualification[]
-  /** 通常勤務スケジュールの一覧 */
-  schedules?: ModelsStaffSchedule[]
+  /**
+   * プロフィール画像のURL
+   * @nullable
+   */
+  imageUrl: string | null
+  /**
+   * 自己紹介や経歴の概要
+   * @nullable
+   */
+  bio: string | null
+  /**
+   * 実務経験年数
+   * @nullable
+   */
+  yearsOfExperience: number | null
+  /**
+   * 保有資格名の一覧 (テキスト管理)
+   * @nullable
+   */
+  certifications: string[] | null
+  /**
+   * 詳細な資格情報の一覧
+   * @nullable
+   */
+  qualifications: ModelsStaffQualification[] | null
+  /**
+   * 通常勤務スケジュールの一覧
+   * @nullable
+   */
+  schedules: ModelsStaffSchedule[] | null
   /** 現在スタッフがアクティブに勤務可能かを示すフラグ */
   isActive: boolean
-  /** システム上で付与されている追加権限一覧 */
-  permissions?: ModelsStaffPermission[]
+  /**
+   * システム上で付与されている追加権限一覧
+   * @nullable
+   */
+  permissions: ModelsStaffPermission[] | null
   /** レコード作成日時。 */
   createdAt: string
   /**

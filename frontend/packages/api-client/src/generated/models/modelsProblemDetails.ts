@@ -19,16 +19,28 @@ export interface ModelsProblemDetails {
   title: string
   /** レスポンスに付与される HTTP ステータスコード。 */
   status: number
-  /** 今回の発生状況に固有の詳細説明。サポート対応時の一次情報となる。 */
-  detail?: string
-  /** この事象を一意に識別するための URI。監査ログやダッシュボードと連携する。 */
-  instance?: string
+  /**
+   * 今回の発生状況に固有の詳細説明。サポート対応時の一次情報となる。
+   * @nullable
+   */
+  detail: string | null
+  /**
+   * この事象を一意に識別するための URI。監査ログやダッシュボードと連携する。
+   * @nullable
+   */
+  instance: string | null
   /** システム全体で共有する機械判読可能なエラーコード。画面表示や分岐処理に使用する。 */
   code: ModelsErrorCodeType
-  /** フィールド単位の検証エラーなど、追加のエラー詳細情報一覧。 */
-  errors?: ModelsValidationError[]
-  /** 障害調査や問い合わせで利用する相関 ID。リクエスト単位で一意。 */
-  correlationId?: string
+  /**
+   * フィールド単位の検証エラーなど、追加のエラー詳細情報一覧。
+   * @nullable
+   */
+  errors: ModelsValidationError[] | null
+  /**
+   * 障害調査や問い合わせで利用する相関 ID。リクエスト単位で一意。
+   * @nullable
+   */
+  correlationId: string | null
   /** エラー発生日時 (UTC)。サーバーログの検索キーとして使用する。 */
   timestamp: string
 }

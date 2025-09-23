@@ -6,7 +6,6 @@
  * OpenAPI spec version: 2.0
  */
 import type { ModelsProcessingPaymentStatusType } from './modelsProcessingPaymentStatusType'
-import type { ModelsStaffId } from './modelsStaffId'
 
 /**
  * 決済処理中の状態の詳細
@@ -16,6 +15,9 @@ export interface ModelsProcessingPaymentStatus {
   type: ModelsProcessingPaymentStatusType
   /** 処理開始日時 */
   startedAt: string
-  /** 処理を担当しているスタッフ ID */
-  processorId?: ModelsStaffId
+  /**
+   * 処理を担当しているスタッフ ID
+   * @nullable
+   */
+  processorId: string | null
 }

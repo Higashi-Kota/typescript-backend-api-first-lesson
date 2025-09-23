@@ -23,8 +23,8 @@ import type {
 
 import type {
   ModelsOrderId,
-  ModelsPurchaseOrderCreateInput,
-  ModelsPurchaseOrderUpdateInput,
+  ModelsPurchaseOrderCreateRequest,
+  ModelsPurchaseOrderUpdateRequest,
   PurchaseOrderOperationsApprovePurchaseOrder200,
   PurchaseOrderOperationsApprovePurchaseOrderBody,
   PurchaseOrderOperationsCancelPurchaseOrder200,
@@ -272,7 +272,7 @@ export const getPurchaseOrderOperationsCreatePurchaseOrderUrl = () => {
 }
 
 export const purchaseOrderOperationsCreatePurchaseOrder = async (
-  modelsPurchaseOrderCreateInput: ModelsPurchaseOrderCreateInput,
+  modelsPurchaseOrderCreateRequest: ModelsPurchaseOrderCreateRequest,
   options?: RequestInit
 ): Promise<purchaseOrderOperationsCreatePurchaseOrderResponse> => {
   return customInstance<purchaseOrderOperationsCreatePurchaseOrderResponse>(
@@ -281,7 +281,7 @@ export const purchaseOrderOperationsCreatePurchaseOrder = async (
       ...options,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsPurchaseOrderCreateInput),
+      body: JSON.stringify(modelsPurchaseOrderCreateRequest),
     }
   )
 }
@@ -293,14 +293,14 @@ export const getPurchaseOrderOperationsCreatePurchaseOrderMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof purchaseOrderOperationsCreatePurchaseOrder>>,
     TError,
-    { data: ModelsPurchaseOrderCreateInput },
+    { data: ModelsPurchaseOrderCreateRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof purchaseOrderOperationsCreatePurchaseOrder>>,
   TError,
-  { data: ModelsPurchaseOrderCreateInput },
+  { data: ModelsPurchaseOrderCreateRequest },
   TContext
 > => {
   const mutationKey = ['purchaseOrderOperationsCreatePurchaseOrder']
@@ -314,7 +314,7 @@ export const getPurchaseOrderOperationsCreatePurchaseOrderMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof purchaseOrderOperationsCreatePurchaseOrder>>,
-    { data: ModelsPurchaseOrderCreateInput }
+    { data: ModelsPurchaseOrderCreateRequest }
   > = (props) => {
     const { data } = props ?? {}
 
@@ -329,7 +329,7 @@ export type PurchaseOrderOperationsCreatePurchaseOrderMutationResult =
     Awaited<ReturnType<typeof purchaseOrderOperationsCreatePurchaseOrder>>
   >
 export type PurchaseOrderOperationsCreatePurchaseOrderMutationBody =
-  ModelsPurchaseOrderCreateInput
+  ModelsPurchaseOrderCreateRequest
 export type PurchaseOrderOperationsCreatePurchaseOrderMutationError = unknown
 
 export const usePurchaseOrderOperationsCreatePurchaseOrder = <
@@ -340,7 +340,7 @@ export const usePurchaseOrderOperationsCreatePurchaseOrder = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof purchaseOrderOperationsCreatePurchaseOrder>>,
       TError,
-      { data: ModelsPurchaseOrderCreateInput },
+      { data: ModelsPurchaseOrderCreateRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -349,7 +349,7 @@ export const usePurchaseOrderOperationsCreatePurchaseOrder = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof purchaseOrderOperationsCreatePurchaseOrder>>,
   TError,
-  { data: ModelsPurchaseOrderCreateInput },
+  { data: ModelsPurchaseOrderCreateRequest },
   TContext
 > => {
   const mutationOptions =
@@ -807,7 +807,7 @@ export const getPurchaseOrderOperationsUpdatePurchaseOrderUrl = (
 
 export const purchaseOrderOperationsUpdatePurchaseOrder = async (
   id: ModelsOrderId,
-  modelsPurchaseOrderUpdateInput: ModelsPurchaseOrderUpdateInput,
+  modelsPurchaseOrderUpdateRequest: ModelsPurchaseOrderUpdateRequest,
   options?: RequestInit
 ): Promise<purchaseOrderOperationsUpdatePurchaseOrderResponse> => {
   return customInstance<purchaseOrderOperationsUpdatePurchaseOrderResponse>(
@@ -816,7 +816,7 @@ export const purchaseOrderOperationsUpdatePurchaseOrder = async (
       ...options,
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsPurchaseOrderUpdateInput),
+      body: JSON.stringify(modelsPurchaseOrderUpdateRequest),
     }
   )
 }
@@ -828,14 +828,14 @@ export const getPurchaseOrderOperationsUpdatePurchaseOrderMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof purchaseOrderOperationsUpdatePurchaseOrder>>,
     TError,
-    { id: ModelsOrderId; data: ModelsPurchaseOrderUpdateInput },
+    { id: ModelsOrderId; data: ModelsPurchaseOrderUpdateRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof purchaseOrderOperationsUpdatePurchaseOrder>>,
   TError,
-  { id: ModelsOrderId; data: ModelsPurchaseOrderUpdateInput },
+  { id: ModelsOrderId; data: ModelsPurchaseOrderUpdateRequest },
   TContext
 > => {
   const mutationKey = ['purchaseOrderOperationsUpdatePurchaseOrder']
@@ -849,7 +849,7 @@ export const getPurchaseOrderOperationsUpdatePurchaseOrderMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof purchaseOrderOperationsUpdatePurchaseOrder>>,
-    { id: ModelsOrderId; data: ModelsPurchaseOrderUpdateInput }
+    { id: ModelsOrderId; data: ModelsPurchaseOrderUpdateRequest }
   > = (props) => {
     const { id, data } = props ?? {}
 
@@ -864,7 +864,7 @@ export type PurchaseOrderOperationsUpdatePurchaseOrderMutationResult =
     Awaited<ReturnType<typeof purchaseOrderOperationsUpdatePurchaseOrder>>
   >
 export type PurchaseOrderOperationsUpdatePurchaseOrderMutationBody =
-  ModelsPurchaseOrderUpdateInput
+  ModelsPurchaseOrderUpdateRequest
 export type PurchaseOrderOperationsUpdatePurchaseOrderMutationError = unknown
 
 export const usePurchaseOrderOperationsUpdatePurchaseOrder = <
@@ -875,7 +875,7 @@ export const usePurchaseOrderOperationsUpdatePurchaseOrder = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof purchaseOrderOperationsUpdatePurchaseOrder>>,
       TError,
-      { id: ModelsOrderId; data: ModelsPurchaseOrderUpdateInput },
+      { id: ModelsOrderId; data: ModelsPurchaseOrderUpdateRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -884,7 +884,7 @@ export const usePurchaseOrderOperationsUpdatePurchaseOrder = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof purchaseOrderOperationsUpdatePurchaseOrder>>,
   TError,
-  { id: ModelsOrderId; data: ModelsPurchaseOrderUpdateInput },
+  { id: ModelsOrderId; data: ModelsPurchaseOrderUpdateRequest },
   TContext
 > => {
   const mutationOptions =

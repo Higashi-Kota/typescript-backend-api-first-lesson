@@ -8,7 +8,8 @@
 
 /**
  * 関連リソースや次アクションへのリンク情報。
+ * @nullable
  */
 export type CustomerOperationsRequestDeletion202Links = {
   [key: string]: string
-}
+} | null

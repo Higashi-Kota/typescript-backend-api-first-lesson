@@ -18,8 +18,11 @@ export interface ModelsRole {
   name: string
   /** 管理画面などで表示する名称 */
   displayName: string
-  /** ロールの詳細説明 */
-  description?: string
+  /**
+   * ロールの詳細説明
+   * @nullable
+   */
+  description: string | null
   /** 付与されている権限一覧 */
   permissions: ModelsPermission[]
   /** システム標準ロールかどうか */

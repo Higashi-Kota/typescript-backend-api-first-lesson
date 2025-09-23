@@ -18,12 +18,18 @@ export interface ModelsPermission {
   key: string
   /** 権限の名称 */
   name: string
-  /** 権限の説明 */
-  description?: string
+  /**
+   * 権限の説明
+   * @nullable
+   */
+  description: string | null
   /** 対象リソース種別 */
   resource: string
   /** 許可する操作区分 */
   action: string
-  /** 権限の適用範囲（own/salon/all） */
-  scope?: ModelsPermissionScope
+  /**
+   * 権限の適用範囲（own/salon/all）
+   * @nullable
+   */
+  scope: ModelsPermissionScope
 }

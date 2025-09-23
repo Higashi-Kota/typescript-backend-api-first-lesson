@@ -8,5 +8,6 @@
 
 /**
  * 追加のエラー文脈。入力値や関連設定など柔軟に格納する。
+ * @nullable
  */
-export type ModelsDomainErrorDetailsDetails = { [key: string]: unknown }
+export type ModelsDomainErrorDetailsDetails = { [key: string]: unknown } | null

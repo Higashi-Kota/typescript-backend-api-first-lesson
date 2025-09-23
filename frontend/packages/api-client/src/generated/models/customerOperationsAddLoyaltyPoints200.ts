@@ -6,7 +6,7 @@
  * OpenAPI spec version: 2.0
  */
 import type { CustomerOperationsAddLoyaltyPoints200Data } from './customerOperationsAddLoyaltyPoints200Data'
-import type { ModelsResponseMeta } from './modelsResponseMeta'
+import type { CustomerOperationsAddLoyaltyPoints200Meta } from './customerOperationsAddLoyaltyPoints200Meta'
 import type { CustomerOperationsAddLoyaltyPoints200Links } from './customerOperationsAddLoyaltyPoints200Links'
 
 /**
@@ -16,8 +16,14 @@ import type { CustomerOperationsAddLoyaltyPoints200Links } from './customerOpera
 export type CustomerOperationsAddLoyaltyPoints200 = {
   /** レスポンスの主体となるビジネスデータ。 */
   data: CustomerOperationsAddLoyaltyPoints200Data
-  /** リクエスト識別子やバージョン情報など共通メタデータ。 */
-  meta?: ModelsResponseMeta
-  /** 関連リソースや次アクションへのリンク情報。 */
-  links?: CustomerOperationsAddLoyaltyPoints200Links
+  /**
+   * リクエスト識別子やバージョン情報など共通メタデータ。
+   * @nullable
+   */
+  meta: CustomerOperationsAddLoyaltyPoints200Meta
+  /**
+   * 関連リソースや次アクションへのリンク情報。
+   * @nullable
+   */
+  links: CustomerOperationsAddLoyaltyPoints200Links
 }

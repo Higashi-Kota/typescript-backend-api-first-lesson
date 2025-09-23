@@ -6,7 +6,6 @@
  * OpenAPI spec version: 2.0
  */
 import type { ModelsAuthenticationStateType } from './modelsAuthenticationStateType'
-import type { ModelsSessionId } from './modelsSessionId'
 
 /**
  * 認証状態ごとの詳細情報を格納するモデル。
@@ -14,16 +13,34 @@ import type { ModelsSessionId } from './modelsSessionId'
 export interface ModelsAuthenticationStateDetail {
   /** 現在の認証状態区分。 */
   type: ModelsAuthenticationStateType
-  /** 状態に紐づくセッションID。未確立の場合はnull。 */
-  sessionId?: ModelsSessionId
-  /** 該当状態が失効する日時。 */
-  expiresAt?: string
-  /** 2要素認証や一時アクセスに利用する暫定トークン。 */
-  tempToken?: string
-  /** ロックや制限状態が解除される予定日時。 */
-  until?: string
-  /** 認証失敗などの試行回数。 */
-  attempts?: number
-  /** 状態が発生した具体的な理由メッセージ。 */
-  reason?: string
+  /**
+   * 状態に紐づくセッションID。未確立の場合はnull。
+   * @nullable
+   */
+  sessionId: string | null
+  /**
+   * 該当状態が失効する日時。
+   * @nullable
+   */
+  expiresAt: string | null
+  /**
+   * 2要素認証や一時アクセスに利用する暫定トークン。
+   * @nullable
+   */
+  tempToken: string | null
+  /**
+   * ロックや制限状態が解除される予定日時。
+   * @nullable
+   */
+  until: string | null
+  /**
+   * 認証失敗などの試行回数。
+   * @nullable
+   */
+  attempts: number | null
+  /**
+   * 状態が発生した具体的な理由メッセージ。
+   * @nullable
+   */
+  reason: string | null
 }

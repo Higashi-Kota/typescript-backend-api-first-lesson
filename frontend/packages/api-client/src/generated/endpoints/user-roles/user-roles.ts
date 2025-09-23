@@ -23,7 +23,7 @@ import type {
 
 import type {
   ModelsRoleId,
-  ModelsUserRoleAssignInput,
+  ModelsUserRoleAssignRequest,
   UserRoleTypeOperationsAssignUserRoleType200,
   UserRoleTypeOperationsBulkAssignRoles200,
   UserRoleTypeOperationsBulkAssignRolesBody,
@@ -66,7 +66,7 @@ export const getUserRoleTypeOperationsAssignUserRoleTypeUrl = () => {
 }
 
 export const userRoleTypeOperationsAssignUserRoleType = async (
-  modelsUserRoleAssignInput: ModelsUserRoleAssignInput,
+  modelsUserRoleAssignRequest: ModelsUserRoleAssignRequest,
   options?: RequestInit
 ): Promise<userRoleTypeOperationsAssignUserRoleTypeResponse> => {
   return customInstance<userRoleTypeOperationsAssignUserRoleTypeResponse>(
@@ -75,7 +75,7 @@ export const userRoleTypeOperationsAssignUserRoleType = async (
       ...options,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsUserRoleAssignInput),
+      body: JSON.stringify(modelsUserRoleAssignRequest),
     }
   )
 }
@@ -87,14 +87,14 @@ export const getUserRoleTypeOperationsAssignUserRoleTypeMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof userRoleTypeOperationsAssignUserRoleType>>,
     TError,
-    { data: ModelsUserRoleAssignInput },
+    { data: ModelsUserRoleAssignRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof userRoleTypeOperationsAssignUserRoleType>>,
   TError,
-  { data: ModelsUserRoleAssignInput },
+  { data: ModelsUserRoleAssignRequest },
   TContext
 > => {
   const mutationKey = ['userRoleTypeOperationsAssignUserRoleType']
@@ -108,7 +108,7 @@ export const getUserRoleTypeOperationsAssignUserRoleTypeMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof userRoleTypeOperationsAssignUserRoleType>>,
-    { data: ModelsUserRoleAssignInput }
+    { data: ModelsUserRoleAssignRequest }
   > = (props) => {
     const { data } = props ?? {}
 
@@ -123,7 +123,7 @@ export type UserRoleTypeOperationsAssignUserRoleTypeMutationResult =
     Awaited<ReturnType<typeof userRoleTypeOperationsAssignUserRoleType>>
   >
 export type UserRoleTypeOperationsAssignUserRoleTypeMutationBody =
-  ModelsUserRoleAssignInput
+  ModelsUserRoleAssignRequest
 export type UserRoleTypeOperationsAssignUserRoleTypeMutationError = unknown
 
 export const useUserRoleTypeOperationsAssignUserRoleType = <
@@ -134,7 +134,7 @@ export const useUserRoleTypeOperationsAssignUserRoleType = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof userRoleTypeOperationsAssignUserRoleType>>,
       TError,
-      { data: ModelsUserRoleAssignInput },
+      { data: ModelsUserRoleAssignRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -143,7 +143,7 @@ export const useUserRoleTypeOperationsAssignUserRoleType = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof userRoleTypeOperationsAssignUserRoleType>>,
   TError,
-  { data: ModelsUserRoleAssignInput },
+  { data: ModelsUserRoleAssignRequest },
   TContext
 > => {
   const mutationOptions =

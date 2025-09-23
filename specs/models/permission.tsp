@@ -16,7 +16,7 @@ namespace BeautySalon.Models {
     displayName: string;
 
     @doc("ロールの詳細説明")
-    description?: string;
+    description: string | null;
 
     @doc("付与されている権限一覧")
     permissions: Permission[];
@@ -42,7 +42,7 @@ namespace BeautySalon.Models {
     name: string;
 
     @doc("権限の説明")
-    description?: string;
+    description: string | null;
 
     @doc("対象リソース種別")
     resource: string;
@@ -51,7 +51,7 @@ namespace BeautySalon.Models {
     action: string;
 
     @doc("権限の適用範囲（own/salon/all）")
-    scope?: "own" | "salon" | "all";
+    scope: "own" | "salon" | "all" | null;
   }
 
   @doc("ユーザーへのロール割当情報")
@@ -63,7 +63,7 @@ namespace BeautySalon.Models {
     roleId: RoleId;
 
     @doc("サロン単位のロールの場合の対象サロン ID")
-    salonId?: SalonId;
+    salonId: SalonId | null;
 
     @doc("割当日時")
     assignedAt: utcDateTime;
@@ -72,7 +72,7 @@ namespace BeautySalon.Models {
     assignedBy: string;
 
     @doc("ロール割当の有効期限")
-    expiresAt?: utcDateTime;
+    expiresAt: utcDateTime | null;
 
     @doc("割当が現在有効かどうか")
     isActive: boolean;
@@ -90,10 +90,10 @@ namespace BeautySalon.Models {
     action: string;
 
     @doc("サロン単位での権限チェック時のサロン ID")
-    salonId?: SalonId;
+    salonId: SalonId | null;
 
     @doc("リソース固有の ID")
-    resourceId?: string;
+    resourceId: string | null;
   }
 
   @doc("アクセス権限チェックの結果")
@@ -102,13 +102,13 @@ namespace BeautySalon.Models {
     allowed: boolean;
 
     @doc("拒否または許可の理由")
-    reason?: string;
+    reason: string | null;
 
     @doc("必要な権限キー一覧")
-    requiredPermissions?: string[];
+    requiredPermissions: string[] | null;
 
     @doc("ユーザーが保有する権限キー一覧")
-    userPermissions?: string[];
+    userPermissions: string[] | null;
   }
 
   @doc("""
@@ -135,7 +135,7 @@ namespace BeautySalon.Models {
   }
 
   @doc("ロール新規作成時の入力モデル")
-  model RoleCreateInput {
+  model RoleCreateRequest {
     @doc("ロールの内部名")
     name: string;
 
@@ -150,7 +150,7 @@ namespace BeautySalon.Models {
   }
 
   @doc("ロール情報の更新入力モデル")
-  model RoleUpdateInput {
+  model RoleUpdateRequest {
     @doc("更新後の表示名")
     displayName?: string;
 
@@ -165,7 +165,7 @@ namespace BeautySalon.Models {
   }
 
   @doc("ユーザーへロールを割り当てる入力モデル")
-  model UserRoleAssignInput {
+  model UserRoleAssignRequest {
     @doc("対象ユーザー ID")
     userId: string;
 
@@ -180,7 +180,7 @@ namespace BeautySalon.Models {
   }
 
   @doc("複数権限の保有状況を確認する入力モデル")
-  model PermissionCheckInput {
+  model PermissionCheckRequest {
     @doc("確認対象のユーザー ID")
     userId: string;
 
@@ -209,6 +209,6 @@ namespace BeautySalon.Models {
     granted: boolean;
 
     @doc("権限を付与したロール情報")
-    source?: string;
+    source: string | null;
   }
 }

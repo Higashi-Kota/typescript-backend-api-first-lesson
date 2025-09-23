@@ -6,15 +6,18 @@
  * OpenAPI spec version: 2.0
  */
 import type { ModelsContactInfo } from './modelsContactInfo'
+import type { ModelsUpdateCustomerRequestPreferences } from './modelsUpdateCustomerRequestPreferences'
 
 /**
- * Customer update request with optional fields for partial updates
+ * Customer update request with optional fields for partial updates. null指定で値をリセット可能
  */
 export interface ModelsUpdateCustomerRequest {
   name?: string
   contactInfo?: ModelsContactInfo
-  preferences?: string
-  notes?: string
+  preferences?: ModelsUpdateCustomerRequestPreferences
+  /** @nullable */
+  notes?: string | null
   tags?: string[]
-  birthDate?: string
+  /** @nullable */
+  birthDate?: string | null
 }

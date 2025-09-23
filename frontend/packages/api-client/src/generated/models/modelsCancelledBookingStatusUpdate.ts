@@ -16,8 +16,11 @@ export interface ModelsCancelledBookingStatusUpdate {
   type?: ModelsCancelledBookingStatusUpdateType
   /** キャンセルが登録された日時。 */
   cancelledAt?: string
-  /** キャンセル理由のメモ。未設定の場合はnull。 */
-  reason?: string
+  /**
+   * キャンセル理由のメモ。未設定の場合はnull。
+   * @nullable
+   */
+  reason?: string | null
   /** キャンセルを実行した主体（customer: 顧客／salon: サロン側／system: システム判断）。 */
   cancelledBy?: ModelsCancelledBookingStatusUpdateCancelledBy
 }

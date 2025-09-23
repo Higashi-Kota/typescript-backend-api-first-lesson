@@ -8,5 +8,8 @@
 
 /**
  * 外部連携や業務用に保持する任意メタデータ。
+ * @nullable
  */
-export type ModelsCreateBookingRequestMetadata = { [key: string]: unknown }
+export type ModelsCreateBookingRequestMetadata = {
+  [key: string]: unknown
+} | null

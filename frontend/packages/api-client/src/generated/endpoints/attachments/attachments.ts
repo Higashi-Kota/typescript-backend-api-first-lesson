@@ -33,9 +33,9 @@ import type {
   AttachmentOperationsListParams,
   AttachmentOperationsListShareLinks200,
   AttachmentOperationsUploadFile200,
-  ModelsCreateShareLinkRequest,
-  ModelsGetUploadUrlRequest,
-  ModelsUploadAttachmentRequest,
+  ModelsAttachmentCreateRequest,
+  ModelsAttachmentUploadUrlGetRequest,
+  ModelsShareLinkCreateRequest,
 } from '../../models'
 
 import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher'
@@ -373,7 +373,7 @@ export const getAttachmentOperationsUploadFileUrl = () => {
 }
 
 export const attachmentOperationsUploadFile = async (
-  modelsUploadAttachmentRequest: ModelsUploadAttachmentRequest,
+  modelsAttachmentCreateRequest: ModelsAttachmentCreateRequest,
   options?: RequestInit
 ): Promise<attachmentOperationsUploadFileResponse> => {
   return customInstance<attachmentOperationsUploadFileResponse>(
@@ -382,7 +382,7 @@ export const attachmentOperationsUploadFile = async (
       ...options,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsUploadAttachmentRequest),
+      body: JSON.stringify(modelsAttachmentCreateRequest),
     }
   )
 }
@@ -394,14 +394,14 @@ export const getAttachmentOperationsUploadFileMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof attachmentOperationsUploadFile>>,
     TError,
-    { data: ModelsUploadAttachmentRequest },
+    { data: ModelsAttachmentCreateRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof attachmentOperationsUploadFile>>,
   TError,
-  { data: ModelsUploadAttachmentRequest },
+  { data: ModelsAttachmentCreateRequest },
   TContext
 > => {
   const mutationKey = ['attachmentOperationsUploadFile']
@@ -415,7 +415,7 @@ export const getAttachmentOperationsUploadFileMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof attachmentOperationsUploadFile>>,
-    { data: ModelsUploadAttachmentRequest }
+    { data: ModelsAttachmentCreateRequest }
   > = (props) => {
     const { data } = props ?? {}
 
@@ -429,7 +429,7 @@ export type AttachmentOperationsUploadFileMutationResult = NonNullable<
   Awaited<ReturnType<typeof attachmentOperationsUploadFile>>
 >
 export type AttachmentOperationsUploadFileMutationBody =
-  ModelsUploadAttachmentRequest
+  ModelsAttachmentCreateRequest
 export type AttachmentOperationsUploadFileMutationError = unknown
 
 export const useAttachmentOperationsUploadFile = <
@@ -440,7 +440,7 @@ export const useAttachmentOperationsUploadFile = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof attachmentOperationsUploadFile>>,
       TError,
-      { data: ModelsUploadAttachmentRequest },
+      { data: ModelsAttachmentCreateRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -449,7 +449,7 @@ export const useAttachmentOperationsUploadFile = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof attachmentOperationsUploadFile>>,
   TError,
-  { data: ModelsUploadAttachmentRequest },
+  { data: ModelsAttachmentCreateRequest },
   TContext
 > => {
   const mutationOptions =
@@ -478,7 +478,7 @@ export const getAttachmentOperationsGetUploadUrlUrl = () => {
 }
 
 export const attachmentOperationsGetUploadUrl = async (
-  modelsGetUploadUrlRequest: ModelsGetUploadUrlRequest,
+  modelsAttachmentUploadUrlGetRequest: ModelsAttachmentUploadUrlGetRequest,
   options?: RequestInit
 ): Promise<attachmentOperationsGetUploadUrlResponse> => {
   return customInstance<attachmentOperationsGetUploadUrlResponse>(
@@ -487,7 +487,7 @@ export const attachmentOperationsGetUploadUrl = async (
       ...options,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsGetUploadUrlRequest),
+      body: JSON.stringify(modelsAttachmentUploadUrlGetRequest),
     }
   )
 }
@@ -499,14 +499,14 @@ export const getAttachmentOperationsGetUploadUrlMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof attachmentOperationsGetUploadUrl>>,
     TError,
-    { data: ModelsGetUploadUrlRequest },
+    { data: ModelsAttachmentUploadUrlGetRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof attachmentOperationsGetUploadUrl>>,
   TError,
-  { data: ModelsGetUploadUrlRequest },
+  { data: ModelsAttachmentUploadUrlGetRequest },
   TContext
 > => {
   const mutationKey = ['attachmentOperationsGetUploadUrl']
@@ -520,7 +520,7 @@ export const getAttachmentOperationsGetUploadUrlMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof attachmentOperationsGetUploadUrl>>,
-    { data: ModelsGetUploadUrlRequest }
+    { data: ModelsAttachmentUploadUrlGetRequest }
   > = (props) => {
     const { data } = props ?? {}
 
@@ -534,7 +534,7 @@ export type AttachmentOperationsGetUploadUrlMutationResult = NonNullable<
   Awaited<ReturnType<typeof attachmentOperationsGetUploadUrl>>
 >
 export type AttachmentOperationsGetUploadUrlMutationBody =
-  ModelsGetUploadUrlRequest
+  ModelsAttachmentUploadUrlGetRequest
 export type AttachmentOperationsGetUploadUrlMutationError = unknown
 
 export const useAttachmentOperationsGetUploadUrl = <
@@ -545,7 +545,7 @@ export const useAttachmentOperationsGetUploadUrl = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof attachmentOperationsGetUploadUrl>>,
       TError,
-      { data: ModelsGetUploadUrlRequest },
+      { data: ModelsAttachmentUploadUrlGetRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -554,7 +554,7 @@ export const useAttachmentOperationsGetUploadUrl = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof attachmentOperationsGetUploadUrl>>,
   TError,
-  { data: ModelsGetUploadUrlRequest },
+  { data: ModelsAttachmentUploadUrlGetRequest },
   TContext
 > => {
   const mutationOptions =
@@ -1101,7 +1101,7 @@ export const getAttachmentOperationsCreateShareLinkUrl = (
 
 export const attachmentOperationsCreateShareLink = async (
   attachmentId: string,
-  modelsCreateShareLinkRequest: ModelsCreateShareLinkRequest,
+  modelsShareLinkCreateRequest: ModelsShareLinkCreateRequest,
   options?: RequestInit
 ): Promise<attachmentOperationsCreateShareLinkResponse> => {
   return customInstance<attachmentOperationsCreateShareLinkResponse>(
@@ -1110,7 +1110,7 @@ export const attachmentOperationsCreateShareLink = async (
       ...options,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsCreateShareLinkRequest),
+      body: JSON.stringify(modelsShareLinkCreateRequest),
     }
   )
 }
@@ -1122,14 +1122,14 @@ export const getAttachmentOperationsCreateShareLinkMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof attachmentOperationsCreateShareLink>>,
     TError,
-    { attachmentId: string; data: ModelsCreateShareLinkRequest },
+    { attachmentId: string; data: ModelsShareLinkCreateRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof attachmentOperationsCreateShareLink>>,
   TError,
-  { attachmentId: string; data: ModelsCreateShareLinkRequest },
+  { attachmentId: string; data: ModelsShareLinkCreateRequest },
   TContext
 > => {
   const mutationKey = ['attachmentOperationsCreateShareLink']
@@ -1143,7 +1143,7 @@ export const getAttachmentOperationsCreateShareLinkMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof attachmentOperationsCreateShareLink>>,
-    { attachmentId: string; data: ModelsCreateShareLinkRequest }
+    { attachmentId: string; data: ModelsShareLinkCreateRequest }
   > = (props) => {
     const { attachmentId, data } = props ?? {}
 
@@ -1161,7 +1161,7 @@ export type AttachmentOperationsCreateShareLinkMutationResult = NonNullable<
   Awaited<ReturnType<typeof attachmentOperationsCreateShareLink>>
 >
 export type AttachmentOperationsCreateShareLinkMutationBody =
-  ModelsCreateShareLinkRequest
+  ModelsShareLinkCreateRequest
 export type AttachmentOperationsCreateShareLinkMutationError = unknown
 
 export const useAttachmentOperationsCreateShareLink = <
@@ -1172,7 +1172,7 @@ export const useAttachmentOperationsCreateShareLink = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof attachmentOperationsCreateShareLink>>,
       TError,
-      { attachmentId: string; data: ModelsCreateShareLinkRequest },
+      { attachmentId: string; data: ModelsShareLinkCreateRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -1181,7 +1181,7 @@ export const useAttachmentOperationsCreateShareLink = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof attachmentOperationsCreateShareLink>>,
   TError,
-  { attachmentId: string; data: ModelsCreateShareLinkRequest },
+  { attachmentId: string; data: ModelsShareLinkCreateRequest },
   TContext
 > => {
   const mutationOptions =

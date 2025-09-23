@@ -34,19 +34,19 @@ namespace BeautySalon.Models {
     status: ReservationStatusType;
 
     @doc("顧客からの特記事項やサロン側メモ")
-    notes?: string;
+    notes: string | null;
 
     @doc("施術料金の合計金額 (税・割引適用後)")
     totalAmount: int32;
 
     @doc("事前に受領した内金・デポジット金額")
-    depositAmount?: int32;
+    depositAmount: int32 | null;
 
     @doc("予約に対する決済が完了しているかを示すフラグ")
     isPaid: boolean;
 
     @doc("キャンセルが発生した場合の理由")
-    cancellationReason?: string;
+    cancellationReason: string | null;
 
     ...AuditInfo;
   }
@@ -71,34 +71,17 @@ namespace BeautySalon.Models {
     startTime: utcDateTime;
 
     @doc("顧客要望や注意事項のメモ")
-    notes?: string;
+    notes: string | null;
   }
 
   @doc("""
-    予約更新リクエスト - 部分更新に対応した任意項目の変更指示を受け取り、既存予約を調整する
+    予約更新リクエスト - 部分更新に対応した任意項目の変更指示を受け取り、既存予約を調整する。null指定で値をリセット可能
     """)
   model UpdateReservationRequest {
     @doc("更新後の予約ステータス")
     status?: ReservationStatusType;
 
-    @doc("最新の顧客メモや社内備考")
-    notes?: string;
-
-    @doc("調整後の施術開始日時 (UTC)")
-    startTime?: utcDateTime;
-
-    @doc("再割当先のスタッフID")
-    staffId?: StaffId;
-  }
-
-  @doc("""
-    リセット対応予約更新リクエスト - null指定により備考等を初期化しつつ、予約情報を更新できる
-    """)
-  model UpdateReservationRequestWithReset {
-    @doc("更新後の予約ステータス")
-    status?: ReservationStatusType;
-
-    @doc("null指定で備考のリセットも可能な顧客メモ")
+    @doc("最新の顧客メモや社内備考（null指定で初期化可能）")
     notes?: string | null;
 
     @doc("調整後の施術開始日時 (UTC)")

@@ -8,5 +8,6 @@
 
 /**
  * 関連リソースや次アクションへのリンク情報。
+ * @nullable
  */
-export type CustomerCrudGetVersion200Links = { [key: string]: string }
+export type CustomerCrudGetVersion200Links = { [key: string]: string } | null

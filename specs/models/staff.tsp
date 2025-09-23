@@ -19,10 +19,10 @@ namespace BeautySalon.Models {
     endTime: string;
 
     @doc("当日の休憩時間帯リスト")
-    breakTime?: TimeSlot[];
+    breakTime: TimeSlot[] | null;
 
     @doc("シフトが有効となる期間")
-    effectivePeriod?: DateRange;
+    effectivePeriod: DateRange | null;
   }
 
   @doc("""
@@ -36,13 +36,13 @@ namespace BeautySalon.Models {
     certificationDate: plainDate;
 
     @doc("資格の有効期限。無期限の場合は省略")
-    expiryDate?: plainDate;
+    expiryDate: plainDate | null;
 
     @doc("資格を発行した機関名")
-    issuer?: string;
+    issuer: string | null;
 
     @doc("資格証明番号などの識別子")
-    credentialId?: string;
+    credentialId: string | null;
   }
 
   @doc("""
@@ -56,10 +56,10 @@ namespace BeautySalon.Models {
     actions: string[];
 
     @doc("権限が適用される範囲や条件")
-    scope?: string;
+    scope: string | null;
 
     @doc("権限の有効期限 (UTC)")
-    expiresAt?: utcDateTime;
+    expiresAt: utcDateTime | null;
   }
 
   @doc("""
@@ -82,28 +82,28 @@ namespace BeautySalon.Models {
     specialties: string[];
 
     @doc("プロフィール画像のURL")
-    imageUrl?: string;
+    imageUrl: string | null;
 
     @doc("自己紹介や経歴の概要")
-    bio?: string;
+    bio: string | null;
 
     @doc("実務経験年数")
-    yearsOfExperience?: int32;
+    yearsOfExperience: int32 | null;
 
     @doc("保有資格名の一覧 (テキスト管理)")
-    certifications?: string[];
+    certifications: string[] | null;
 
     @doc("詳細な資格情報の一覧")
-    qualifications?: StaffQualification[];
+    qualifications: StaffQualification[] | null;
 
     @doc("通常勤務スケジュールの一覧")
-    schedules?: StaffSchedule[];
+    schedules: StaffSchedule[] | null;
 
     @doc("現在スタッフがアクティブに勤務可能かを示すフラグ")
     isActive: boolean;
 
     @doc("システム上で付与されている追加権限一覧")
-    permissions?: StaffPermission[];
+    permissions: StaffPermission[] | null;
 
     ...AuditInfo;
   }
@@ -125,29 +125,29 @@ namespace BeautySalon.Models {
     specialties: string[];
 
     @doc("プロフィール画像のURL")
-    imageUrl?: string;
+    imageUrl: string | null;
 
     @doc("自己紹介や経歴の概要")
-    bio?: string;
+    bio: string | null;
 
     @doc("実務経験年数")
-    yearsOfExperience?: int32;
+    yearsOfExperience: int32 | null;
 
     @doc("保有資格名の一覧")
-    certifications?: string[];
+    certifications: string[] | null;
 
     @doc("詳細な資格情報の一覧")
-    qualifications?: StaffQualification[];
+    qualifications: StaffQualification[] | null;
 
     @doc("通常勤務スケジュールの一覧")
-    schedules?: StaffSchedule[];
+    schedules: StaffSchedule[] | null;
 
     @doc("付与する権限の一覧")
-    permissions?: StaffPermission[];
+    permissions: StaffPermission[] | null;
   }
 
   @doc("""
-    スタッフ更新リクエスト - 任意項目を部分更新し、プロフィールや勤務状況を柔軟に調整する
+    スタッフ更新リクエスト - 任意項目を部分更新し、プロフィールや勤務状況を柔軟に調整する。null指定で値をリセット可能
     """)
   model UpdateStaffRequest {
     @doc("スタッフ名の更新")
@@ -159,63 +159,25 @@ namespace BeautySalon.Models {
     @doc("得意分野一覧の更新")
     specialties?: string[];
 
-    @doc("プロフィール画像URLの更新")
-    imageUrl?: string;
-
-    @doc("自己紹介文の更新")
-    bio?: string;
-
-    @doc("経験年数の更新")
-    yearsOfExperience?: int32;
-
-    @doc("資格名一覧の更新")
-    certifications?: string[];
-
-    @doc("資格詳細一覧の更新")
-    qualifications?: StaffQualification[];
-
-    @doc("勤務スケジュール一覧の更新")
-    schedules?: StaffSchedule[];
-
-    @doc("付与権限一覧の更新")
-    permissions?: StaffPermission[];
-
-    @doc("アクティブ状態の更新")
-    isActive?: boolean;
-  }
-
-  @doc("""
-    リセット対応スタッフ更新リクエスト - null指定を許可しつつプロフィールやスケジュールを再設定する
-    """)
-  model UpdateStaffRequestWithReset {
-    @doc("スタッフ名の更新")
-    name?: string;
-
-    @doc("連絡先情報の更新")
-    contactInfo?: ContactInfo;
-
-    @doc("得意分野一覧の更新")
-    specialties?: string[];
-
-    @doc("null指定も可能なプロフィール画像URL")
+    @doc("プロフィール画像URLの更新（null指定で初期化可能）")
     imageUrl?: string | null;
 
-    @doc("null指定も可能な自己紹介文")
+    @doc("自己紹介文の更新（null指定で初期化可能）")
     bio?: string | null;
 
-    @doc("null指定も可能な経験年数")
+    @doc("経験年数の更新（null指定で初期化可能）")
     yearsOfExperience?: int32 | null;
 
-    @doc("null指定も可能な資格名一覧")
+    @doc("資格名一覧の更新（null指定で初期化可能）")
     certifications?: string[] | null;
 
-    @doc("null指定も可能な資格詳細一覧")
+    @doc("資格詳細一覧の更新（null指定で初期化可能）")
     qualifications?: StaffQualification[] | null;
 
-    @doc("null指定も可能な勤務スケジュール一覧")
+    @doc("勤務スケジュール一覧の更新（null指定で初期化可能）")
     schedules?: StaffSchedule[] | null;
 
-    @doc("null指定も可能な付与権限一覧")
+    @doc("付与権限一覧の更新（null指定で初期化可能）")
     permissions?: StaffPermission[] | null;
 
     @doc("アクティブ状態の更新")
@@ -239,9 +201,9 @@ namespace BeautySalon.Models {
     endTime: string;
 
     @doc("休憩などの開始時刻")
-    breakStart?: string;
+    breakStart: string | null;
 
     @doc("休憩などの終了時刻")
-    breakEnd?: string;
+    breakEnd: string | null;
   }
 }

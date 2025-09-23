@@ -9,5 +9,8 @@ import type { ModelsDecimal } from './modelsDecimal'
 
 /**
  * 条件に応じた倍率設定
+ * @nullable
  */
-export type ModelsPricingFactorMultipliers = { [key: string]: ModelsDecimal }
+export type ModelsPricingFactorMultipliers = {
+  [key: string]: ModelsDecimal
+} | null

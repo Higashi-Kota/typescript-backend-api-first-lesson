@@ -15,7 +15,7 @@ namespace BeautySalon.Operations {
     @post
     @route("/register")
     @useAuth(NoAuth)
-    op register(@body request: RegisterRequest): {
+    op register(@body request: AuthRegisterRequest): {
       @statusCode statusCode: 201;
       @body response: User;
     } | {
@@ -30,10 +30,10 @@ namespace BeautySalon.Operations {
     @post
     @route("/login")
     @useAuth(NoAuth)
-    op login(@body request: LoginRequest):
+    op login(@body request: AuthLoginRequest):
       | {
           @statusCode statusCode: 200;
-          @body response: LoginResponse;
+          @body response: AuthLoginResponse;
         }
       | {
           @statusCode statusCode: 401;
@@ -56,9 +56,9 @@ namespace BeautySalon.Operations {
     @post
     @route("/refresh")
     @useAuth(NoAuth)
-    op refreshToken(@body request: TokenRefreshRequest): {
+    op refreshToken(@body request: AuthTokenRefreshRequest): {
       @statusCode statusCode: 200;
-      @body response: LoginResponse;
+      @body response: AuthLoginResponse;
     } | {
       @statusCode statusCode: 401;
       @body error: Error;
@@ -90,7 +90,7 @@ namespace BeautySalon.Operations {
     @post
     @route("/forgot-password")
     @useAuth(NoAuth)
-    op forgotPassword(@body request: PasswordResetRequest): {
+    op forgotPassword(@body request: AuthPasswordResetRequest): {
       @statusCode statusCode: 200;
       @body response: AuthSuccessResponse;
     } | {
@@ -117,7 +117,7 @@ namespace BeautySalon.Operations {
     @post
     @route("/reset-password")
     @useAuth(NoAuth)
-    op resetPassword(@body request: PasswordResetConfirmRequest):
+    op resetPassword(@body request: AuthPasswordResetConfirmRequest):
       | {
           @statusCode statusCode: 200;
           @body response: AuthSuccessResponse;
@@ -160,7 +160,7 @@ namespace BeautySalon.Operations {
     @post
     @route("/verify-email/confirm")
     @useAuth(NoAuth)
-    op confirmEmailVerification(@body request: EmailVerificationRequest): {
+    op confirmEmailVerification(@body request: AuthEmailVerificationRequest): {
       @statusCode statusCode: 200;
       @body response: AuthSuccessResponse;
     } | {
@@ -173,7 +173,7 @@ namespace BeautySalon.Operations {
     @route("/change-password")
     op changePassword(
       @header("Authorization") authorization: string,
-      @body request: PasswordChangeRequest,
+      @body request: AuthPasswordChangeRequest,
     ):
       | {
           @statusCode statusCode: 200;
@@ -201,11 +201,11 @@ namespace BeautySalon.Operations {
     @route("/2fa/enable")
     op enableTwoFactor(
       @header("Authorization") authorization: string,
-      @body request: TwoFactorEnableRequest,
+      @body request: AuthTwoFactorEnableRequest,
     ):
       | {
           @statusCode statusCode: 200;
-          @body response: TwoFactorSetupResponse;
+          @body response: AuthTwoFactorSetupResponse;
         }
       | {
           @statusCode statusCode: 401;
@@ -225,7 +225,7 @@ namespace BeautySalon.Operations {
     @route("/2fa/qr-code")
     op getTwoFactorQRCode(@header("Authorization") authorization: string): {
       @statusCode statusCode: 200;
-      @body response: TwoFactorSetupResponse;
+      @body response: AuthTwoFactorSetupResponse;
     } | {
       @statusCode statusCode: 401;
       @body error: Error;
@@ -239,7 +239,7 @@ namespace BeautySalon.Operations {
     @route("/2fa/verify")
     op verifyTwoFactor(
       @header("Authorization") authorization: string,
-      @body request: TwoFactorVerifyRequest,
+      @body request: AuthTwoFactorVerifyRequest,
     ):
       | {
           @statusCode statusCode: 200;
@@ -263,7 +263,7 @@ namespace BeautySalon.Operations {
     @route("/2fa/disable")
     op disableTwoFactor(
       @header("Authorization") authorization: string,
-      @body request: TwoFactorDisableRequest,
+      @body request: AuthTwoFactorDisableRequest,
     ):
       | {
           @statusCode statusCode: 200;
@@ -291,7 +291,7 @@ namespace BeautySalon.Operations {
     @route("/2fa/backup-codes")
     op generateBackupCodes(
       @header("Authorization") authorization: string,
-      @body request: TwoFactorVerifyRequest,
+      @body request: AuthTwoFactorVerifyRequest,
     ):
       | {
           @statusCode statusCode: 200;
@@ -317,7 +317,7 @@ namespace BeautySalon.Operations {
     @route("/sessions")
     op getSessions(@header("Authorization") authorization: string): {
       @statusCode statusCode: 200;
-      @body response: SessionListResponse;
+      @body response: AuthSessionListResponse;
     } | {
       @statusCode statusCode: 401;
       @body error: Error;

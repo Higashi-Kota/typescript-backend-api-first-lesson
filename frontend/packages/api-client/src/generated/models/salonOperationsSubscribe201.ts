@@ -6,7 +6,7 @@
  * OpenAPI spec version: 2.0
  */
 import type { ModelsSalonSubscriptionResponse } from './modelsSalonSubscriptionResponse'
-import type { ModelsResponseMeta } from './modelsResponseMeta'
+import type { SalonOperationsSubscribe201Meta } from './salonOperationsSubscribe201Meta'
 import type { SalonOperationsSubscribe201Links } from './salonOperationsSubscribe201Links'
 
 /**
@@ -16,8 +16,14 @@ import type { SalonOperationsSubscribe201Links } from './salonOperationsSubscrib
 export type SalonOperationsSubscribe201 = {
   /** レスポンスの主体となるビジネスデータ。 */
   data: ModelsSalonSubscriptionResponse
-  /** リクエスト識別子やバージョン情報など共通メタデータ。 */
-  meta?: ModelsResponseMeta
-  /** 関連リソースや次アクションへのリンク情報。 */
-  links?: SalonOperationsSubscribe201Links
+  /**
+   * リクエスト識別子やバージョン情報など共通メタデータ。
+   * @nullable
+   */
+  meta: SalonOperationsSubscribe201Meta
+  /**
+   * 関連リソースや次アクションへのリンク情報。
+   * @nullable
+   */
+  links: SalonOperationsSubscribe201Links
 }

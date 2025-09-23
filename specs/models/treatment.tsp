@@ -34,28 +34,28 @@ namespace BeautySalon.Models {
     endTime: utcDateTime;
 
     @doc("施術の詳細メモ")
-    notes?: string;
+    notes: string | null;
 
     @doc("使用した資材・商材の記録")
-    usedMaterials?: MaterialUsage[];
+    usedMaterials: MaterialUsage[] | null;
 
     @doc("施術前後の写真 ID")
-    photos?: AttachmentId[];
+    photos: AttachmentId[] | null;
 
     @doc("顧客のフィードバック")
-    customerFeedback?: string;
+    customerFeedback: string | null;
 
     @doc("次回来店への提案内容")
-    nextRecommendations?: string;
+    nextRecommendations: string | null;
 
     @doc("請求総額")
     totalAmount: float32;
 
     @doc("適用した割引額")
-    discountAmount?: float32;
+    discountAmount: float32 | null;
 
     @doc("付与したポイント数")
-    pointsEarned?: int32;
+    pointsEarned: int32 | null;
 
     ...AuditInfo;
   }
@@ -75,7 +75,7 @@ namespace BeautySalon.Models {
     unit: string;
 
     @doc("備考メモ")
-    notes?: string;
+    notes: string | null;
   }
 
   @doc("顧客ごとのカルテ情報")
@@ -87,28 +87,28 @@ namespace BeautySalon.Models {
     customerId: CustomerId;
 
     @doc("アレルギー・敏感情報")
-    allergies?: string[];
+    allergies: string[] | null;
 
     @doc("頭皮状態のメモ")
-    scalpCondition?: string;
+    scalpCondition: string | null;
 
     @doc("毛髪状態のメモ")
-    hairCondition?: string;
+    hairCondition: string | null;
 
     @doc("過去に実施したケミカル施術履歴")
-    previousTreatments?: PreviousTreatment[];
+    previousTreatments: PreviousTreatment[] | null;
 
     @doc("注意が必要な持病・体調情報")
-    medicalConditions?: string;
+    medicalConditions: string | null;
 
     @doc("好みの商材・ブランド")
-    preferredProducts?: string[];
+    preferredProducts: string[] | null;
 
     @doc("避けるべき商材")
-    avoidProducts?: string[];
+    avoidProducts: string[] | null;
 
     @doc("自由記述メモ")
-    notes?: string;
+    notes: string | null;
 
     @doc("最終更新日時")
     lastUpdated: utcDateTime;
@@ -125,14 +125,14 @@ namespace BeautySalon.Models {
     date: utcDateTime;
 
     @doc("施術を受けたサロン名")
-    salonName?: string;
+    salonName: string | null;
 
     @doc("施術に関するメモ")
-    notes?: string;
+    notes: string | null;
   }
 
   @doc("施術記録を新規登録する入力モデル")
-  model TreatmentRecordCreateInput {
+  model TreatmentRecordCreateRequest {
     @doc("紐づく予約 ID")
     bookingId: BookingId;
 
@@ -155,99 +155,99 @@ namespace BeautySalon.Models {
     endTime: utcDateTime;
 
     @doc("施術メモ")
-    notes?: string;
+    notes: string | null;
 
     @doc("使用した資材一覧")
-    usedMaterials?: MaterialUsage[];
+    usedMaterials: MaterialUsage[] | null;
 
     @doc("顧客フィードバック")
-    customerFeedback?: string;
+    customerFeedback: string | null;
 
     @doc("次回来店への提案内容")
-    nextRecommendations?: string;
+    nextRecommendations: string | null;
 
     @doc("請求総額")
     totalAmount: float32;
 
     @doc("割引額")
-    discountAmount?: float32;
+    discountAmount: float32 | null;
 
     @doc("付与ポイント数")
-    pointsEarned?: int32;
+    pointsEarned: int32 | null;
   }
 
   @doc("施術記録を更新する入力モデル")
-  model TreatmentRecordUpdateInput {
+  model TreatmentRecordUpdateRequest {
     @doc("施術メモ")
-    notes?: string;
+    notes?: string | null;
 
     @doc("使用した資材一覧")
-    usedMaterials?: MaterialUsage[];
+    usedMaterials?: MaterialUsage[] | null;
 
     @doc("顧客フィードバック")
-    customerFeedback?: string;
+    customerFeedback?: string | null;
 
     @doc("次回来店への提案内容")
-    nextRecommendations?: string;
+    nextRecommendations?: string | null;
 
     @doc("施術前後写真 ID")
-    photos?: AttachmentId[];
+    photos?: AttachmentId[] | null;
   }
 
   @doc("カルテを新規作成する入力モデル")
-  model MedicalChartCreateInput {
+  model MedicalChartCreateRequest {
     @doc("対象顧客 ID")
     customerId: CustomerId;
 
     @doc("アレルギー情報")
-    allergies?: string[];
+    allergies: string[] | null;
 
     @doc("頭皮状態")
-    scalpCondition?: string;
+    scalpCondition: string | null;
 
     @doc("毛髪状態")
-    hairCondition?: string;
+    hairCondition: string | null;
 
     @doc("過去施術の履歴")
-    previousTreatments?: PreviousTreatment[];
+    previousTreatments: PreviousTreatment[] | null;
 
     @doc("注意すべき体調・持病")
-    medicalConditions?: string;
+    medicalConditions: string | null;
 
     @doc("好みの商材")
-    preferredProducts?: string[];
+    preferredProducts: string[] | null;
 
     @doc("避けるべき商材")
-    avoidProducts?: string[];
+    avoidProducts: string[] | null;
 
     @doc("その他メモ")
-    notes?: string;
+    notes: string | null;
   }
 
   @doc("カルテ情報を更新する入力モデル")
-  model MedicalChartUpdateInput {
+  model MedicalChartUpdateRequest {
     @doc("アレルギー情報")
-    allergies?: string[];
+    allergies?: string[] | null;
 
     @doc("頭皮状態")
-    scalpCondition?: string;
+    scalpCondition?: string | null;
 
     @doc("毛髪状態")
-    hairCondition?: string;
+    hairCondition?: string | null;
 
     @doc("過去施術の履歴")
-    previousTreatments?: PreviousTreatment[];
+    previousTreatments?: PreviousTreatment[] | null;
 
     @doc("注意すべき体調・持病")
-    medicalConditions?: string;
+    medicalConditions?: string | null;
 
     @doc("好みの商材")
-    preferredProducts?: string[];
+    preferredProducts?: string[] | null;
 
     @doc("避けるべき商材")
-    avoidProducts?: string[];
+    avoidProducts?: string[] | null;
 
     @doc("その他メモ")
-    notes?: string;
+    notes?: string | null;
   }
 }

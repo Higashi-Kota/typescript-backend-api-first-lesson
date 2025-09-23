@@ -128,7 +128,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.PermissionCheckInput"
+              $ref: "#/components/schemas/Models.PermissionCheckRequest"
   /access-control/resource/{resource}/access:
     get:
       operationId: AccessControlOperations_getResourceAccess
@@ -731,7 +731,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.UploadAttachmentRequest"
+              $ref: "#/components/schemas/Models.AttachmentCreateRequest"
   /api/v1/attachments/upload-url:
     post:
       operationId: AttachmentOperations_getUploadUrl
@@ -744,7 +744,7 @@ paths:
             application/json:
               schema:
                 anyOf:
-                  - $ref: "#/components/schemas/Models.UploadUrlResponse"
+                  - $ref: "#/components/schemas/Models.AttachmentUploadUrlResponse"
                   - $ref: "#/components/schemas/Models.Error"
                   - $ref: "#/components/schemas/Models.Error"
                   - $ref: "#/components/schemas/Models.Error"
@@ -755,7 +755,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.GetUploadUrlRequest"
+              $ref: "#/components/schemas/Models.AttachmentUploadUrlGetRequest"
   /api/v1/attachments/{attachmentId}:
     get:
       operationId: AttachmentOperations_get
@@ -826,7 +826,7 @@ paths:
             application/json:
               schema:
                 anyOf:
-                  - $ref: "#/components/schemas/Models.DownloadUrlResponse"
+                  - $ref: "#/components/schemas/Models.AttachmentDownloadUrlResponse"
                   - $ref: "#/components/schemas/Models.Error"
                   - $ref: "#/components/schemas/Models.Error"
                   - $ref: "#/components/schemas/Models.Error"
@@ -861,7 +861,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.CreateShareLinkRequest"
+              $ref: "#/components/schemas/Models.ShareLinkCreateRequest"
     get:
       operationId: AttachmentOperations_listShareLinks
       description: 対象ファイルに対して発行済みの共有リンクを一覧し、公開状況や有効期限の管理を行います。
@@ -931,7 +931,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.TwoFactorVerifyRequest"
+              $ref: "#/components/schemas/Models.AuthTwoFactorVerifyRequest"
   /api/v1/auth/2fa/disable:
     post:
       operationId: AuthOperations_disableTwoFactor
@@ -971,7 +971,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.TwoFactorDisableRequest"
+              $ref: "#/components/schemas/Models.AuthTwoFactorDisableRequest"
   /api/v1/auth/2fa/enable:
     post:
       operationId: AuthOperations_enableTwoFactor
@@ -988,7 +988,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Models.TwoFactorSetupResponse"
+                $ref: "#/components/schemas/Models.AuthTwoFactorSetupResponse"
         "400":
           description: The server could not understand the request due to invalid syntax.
           content:
@@ -1010,7 +1010,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.TwoFactorEnableRequest"
+              $ref: "#/components/schemas/Models.AuthTwoFactorEnableRequest"
   /api/v1/auth/2fa/qr-code:
     get:
       operationId: AuthOperations_getTwoFactorQRCode
@@ -1027,7 +1027,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Models.TwoFactorSetupResponse"
+                $ref: "#/components/schemas/Models.AuthTwoFactorSetupResponse"
         "400":
           description: The server could not understand the request due to invalid syntax.
           content:
@@ -1080,7 +1080,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.TwoFactorVerifyRequest"
+              $ref: "#/components/schemas/Models.AuthTwoFactorVerifyRequest"
   /api/v1/auth/change-password:
     post:
       operationId: AuthOperations_changePassword
@@ -1120,7 +1120,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.PasswordChangeRequest"
+              $ref: "#/components/schemas/Models.AuthPasswordChangeRequest"
   /api/v1/auth/forgot-password:
     post:
       operationId: AuthOperations_forgotPassword
@@ -1152,7 +1152,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.PasswordResetRequest"
+              $ref: "#/components/schemas/Models.AuthPasswordResetRequest"
       security:
         - {}
   /api/v1/auth/login:
@@ -1166,7 +1166,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Models.LoginResponse"
+                $ref: "#/components/schemas/Models.AuthLoginResponse"
         "400":
           description: The server could not understand the request due to invalid syntax.
           content:
@@ -1198,7 +1198,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.LoginRequest"
+              $ref: "#/components/schemas/Models.AuthLoginRequest"
       security:
         - {}
   /api/v1/auth/logout:
@@ -1287,7 +1287,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Models.LoginResponse"
+                $ref: "#/components/schemas/Models.AuthLoginResponse"
         "401":
           description: Access is unauthorized.
           content:
@@ -1301,7 +1301,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.TokenRefreshRequest"
+              $ref: "#/components/schemas/Models.AuthTokenRefreshRequest"
       security:
         - {}
   /api/v1/auth/register:
@@ -1335,7 +1335,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.RegisterRequest"
+              $ref: "#/components/schemas/Models.AuthRegisterRequest"
       security:
         - {}
   /api/v1/auth/reset-password:
@@ -1366,7 +1366,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.PasswordResetConfirmRequest"
+              $ref: "#/components/schemas/Models.AuthPasswordResetConfirmRequest"
       security:
         - {}
   /api/v1/auth/reset-password/verify:
@@ -1413,7 +1413,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Models.SessionListResponse"
+                $ref: "#/components/schemas/Models.AuthSessionListResponse"
         "401":
           description: Access is unauthorized.
           content:
@@ -1483,7 +1483,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.EmailVerificationRequest"
+              $ref: "#/components/schemas/Models.AuthEmailVerificationRequest"
       security:
         - {}
   /api/v1/auth/verify-email/send:
@@ -2082,19 +2082,24 @@ paths:
                 type: object
                 required:
                   - data
+                  - meta
+                  - links
                 properties:
                   data:
                     allOf:
                       - $ref: "#/components/schemas/Models.Customer"
                     description: レスポンスの主体となるビジネスデータ。
                   meta:
+                    type: object
                     allOf:
                       - $ref: "#/components/schemas/Models.ResponseMeta"
+                    nullable: true
                     description: リクエスト識別子やバージョン情報など共通メタデータ。
                   links:
                     type: object
                     additionalProperties:
                       type: string
+                    nullable: true
                     description: 関連リソースや次アクションへのリンク情報。
                 description: |-
                   API 成功レスポンスの共通ラッパーモデル。
@@ -2151,6 +2156,8 @@ paths:
                 type: object
                 required:
                   - data
+                  - meta
+                  - links
                 properties:
                   data:
                     type: array
@@ -2158,13 +2165,16 @@ paths:
                       $ref: "#/components/schemas/Models.Customer"
                     description: レスポンスの主体となるビジネスデータ。
                   meta:
+                    type: object
                     allOf:
                       - $ref: "#/components/schemas/Models.ResponseMeta"
+                    nullable: true
                     description: リクエスト識別子やバージョン情報など共通メタデータ。
                   links:
                     type: object
                     additionalProperties:
                       type: string
+                    nullable: true
                     description: 関連リソースや次アクションへのリンク情報。
                 description: |-
                   API 成功レスポンスの共通ラッパーモデル。
@@ -2407,9 +2417,11 @@ paths:
                       contactInfo:
                         $ref: "#/components/schemas/Models.ContactInfo"
                       preferences:
-                        type: string
+                        type: object
+                        additionalProperties: {}
                       notes:
                         type: string
+                        nullable: true
                       tags:
                         type: array
                         items:
@@ -2417,6 +2429,7 @@ paths:
                       birthDate:
                         type: string
                         format: date
+                        nullable: true
                       id:
                         $ref: "#/components/schemas/Models.CustomerId"
                     required:
@@ -2703,19 +2716,24 @@ paths:
                 type: object
                 required:
                   - data
+                  - meta
+                  - links
                 properties:
                   data:
                     allOf:
                       - $ref: "#/components/schemas/Models.Customer"
                     description: レスポンスの主体となるビジネスデータ。
                   meta:
+                    type: object
                     allOf:
                       - $ref: "#/components/schemas/Models.ResponseMeta"
+                    nullable: true
                     description: リクエスト識別子やバージョン情報など共通メタデータ。
                   links:
                     type: object
                     additionalProperties:
                       type: string
+                    nullable: true
                     description: 関連リソースや次アクションへのリンク情報。
                 description: |-
                   API 成功レスポンスの共通ラッパーモデル。
@@ -2887,19 +2905,24 @@ paths:
                 type: object
                 required:
                   - data
+                  - meta
+                  - links
                 properties:
                   data:
                     allOf:
                       - $ref: "#/components/schemas/Models.Customer"
                     description: レスポンスの主体となるビジネスデータ。
                   meta:
+                    type: object
                     allOf:
                       - $ref: "#/components/schemas/Models.ResponseMeta"
+                    nullable: true
                     description: リクエスト識別子やバージョン情報など共通メタデータ。
                   links:
                     type: object
                     additionalProperties:
                       type: string
+                    nullable: true
                     description: 関連リソースや次アクションへのリンク情報。
                 description: |-
                   API 成功レスポンスの共通ラッパーモデル。
@@ -2954,19 +2977,24 @@ paths:
                 type: object
                 required:
                   - data
+                  - meta
+                  - links
                 properties:
                   data:
                     allOf:
                       - $ref: "#/components/schemas/Models.Customer"
                     description: レスポンスの主体となるビジネスデータ。
                   meta:
+                    type: object
                     allOf:
                       - $ref: "#/components/schemas/Models.ResponseMeta"
+                    nullable: true
                     description: リクエスト識別子やバージョン情報など共通メタデータ。
                   links:
                     type: object
                     additionalProperties:
                       type: string
+                    nullable: true
                     description: 関連リソースや次アクションへのリンク情報。
                 description: |-
                   API 成功レスポンスの共通ラッパーモデル。
@@ -3044,19 +3072,24 @@ paths:
                 type: object
                 required:
                   - data
+                  - meta
+                  - links
                 properties:
                   data:
                     allOf:
                       - $ref: "#/components/schemas/Models.Customer"
                     description: レスポンスの主体となるビジネスデータ。
                   meta:
+                    type: object
                     allOf:
                       - $ref: "#/components/schemas/Models.ResponseMeta"
+                    nullable: true
                     description: リクエスト識別子やバージョン情報など共通メタデータ。
                   links:
                     type: object
                     additionalProperties:
                       type: string
+                    nullable: true
                     description: 関連リソースや次アクションへのリンク情報。
                 description: |-
                   API 成功レスポンスの共通ラッパーモデル。
@@ -3258,6 +3291,8 @@ paths:
                 type: object
                 required:
                   - data
+                  - meta
+                  - links
                 properties:
                   data:
                     type: object
@@ -3279,13 +3314,16 @@ paths:
                       - gracePeriodDays
                     description: レスポンスの主体となるビジネスデータ。
                   meta:
+                    type: object
                     allOf:
                       - $ref: "#/components/schemas/Models.ResponseMeta"
+                    nullable: true
                     description: リクエスト識別子やバージョン情報など共通メタデータ。
                   links:
                     type: object
                     additionalProperties:
                       type: string
+                    nullable: true
                     description: 関連リソースや次アクションへのリンク情報。
                 description: |-
                   API 成功レスポンスの共通ラッパーモデル。
@@ -3468,6 +3506,8 @@ paths:
                 type: object
                 required:
                   - data
+                  - meta
+                  - links
                 properties:
                   data:
                     type: object
@@ -3484,13 +3524,16 @@ paths:
                       - transactionId
                     description: レスポンスの主体となるビジネスデータ。
                   meta:
+                    type: object
                     allOf:
                       - $ref: "#/components/schemas/Models.ResponseMeta"
+                    nullable: true
                     description: リクエスト識別子やバージョン情報など共通メタデータ。
                   links:
                     type: object
                     additionalProperties:
                       type: string
+                    nullable: true
                     description: 関連リソースや次アクションへのリンク情報。
                 description: |-
                   API 成功レスポンスの共通ラッパーモデル。
@@ -3561,19 +3604,24 @@ paths:
                 type: object
                 required:
                   - data
+                  - meta
+                  - links
                 properties:
                   data:
                     allOf:
                       - $ref: "#/components/schemas/Models.CustomerPreferences"
                     description: レスポンスの主体となるビジネスデータ。
                   meta:
+                    type: object
                     allOf:
                       - $ref: "#/components/schemas/Models.ResponseMeta"
+                    nullable: true
                     description: リクエスト識別子やバージョン情報など共通メタデータ。
                   links:
                     type: object
                     additionalProperties:
                       type: string
+                    nullable: true
                     description: 関連リソースや次アクションへのリンク情報。
                 description: |-
                   API 成功レスポンスの共通ラッパーモデル。
@@ -3603,7 +3651,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.CustomerPreferencesUpdate"
+              $ref: "#/components/schemas/Models.CustomerPreferencesUpdateRequest"
   /api/v1/customers/{id}/profile:
     get:
       operationId: CustomerOperations_getProfile
@@ -3629,19 +3677,24 @@ paths:
                 type: object
                 required:
                   - data
+                  - meta
+                  - links
                 properties:
                   data:
                     allOf:
                       - $ref: "#/components/schemas/Models.CustomerProfile"
                     description: レスポンスの主体となるビジネスデータ。
                   meta:
+                    type: object
                     allOf:
                       - $ref: "#/components/schemas/Models.ResponseMeta"
+                    nullable: true
                     description: リクエスト識別子やバージョン情報など共通メタデータ。
                   links:
                     type: object
                     additionalProperties:
                       type: string
+                    nullable: true
                     description: 関連リソースや次アクションへのリンク情報。
                 description: |-
                   API 成功レスポンスの共通ラッパーモデル。
@@ -3769,19 +3822,24 @@ paths:
                 type: object
                 required:
                   - data
+                  - meta
+                  - links
                 properties:
                   data:
                     allOf:
                       - $ref: "#/components/schemas/Models.Customer"
                     description: レスポンスの主体となるビジネスデータ。
                   meta:
+                    type: object
                     allOf:
                       - $ref: "#/components/schemas/Models.ResponseMeta"
+                    nullable: true
                     description: リクエスト識別子やバージョン情報など共通メタデータ。
                   links:
                     type: object
                     additionalProperties:
                       type: string
+                    nullable: true
                     description: 関連リソースや次アクションへのリンク情報。
                 description: |-
                   API 成功レスポンスの共通ラッパーモデル。
@@ -3839,19 +3897,24 @@ paths:
                 type: object
                 required:
                   - data
+                  - meta
+                  - links
                 properties:
                   data:
                     allOf:
                       - $ref: "#/components/schemas/Models.CustomerStatistics"
                     description: レスポンスの主体となるビジネスデータ。
                   meta:
+                    type: object
                     allOf:
                       - $ref: "#/components/schemas/Models.ResponseMeta"
+                    nullable: true
                     description: リクエスト識別子やバージョン情報など共通メタデータ。
                   links:
                     type: object
                     additionalProperties:
                       type: string
+                    nullable: true
                     description: 関連リソースや次アクションへのリンク情報。
                 description: |-
                   API 成功レスポンスの共通ラッパーモデル。
@@ -3901,19 +3964,24 @@ paths:
                 type: object
                 required:
                   - data
+                  - meta
+                  - links
                 properties:
                   data:
                     allOf:
                       - $ref: "#/components/schemas/Models.Customer"
                     description: レスポンスの主体となるビジネスデータ。
                   meta:
+                    type: object
                     allOf:
                       - $ref: "#/components/schemas/Models.ResponseMeta"
+                    nullable: true
                     description: リクエスト識別子やバージョン情報など共通メタデータ。
                   links:
                     type: object
                     additionalProperties:
                       type: string
+                    nullable: true
                     description: 関連リソースや次アクションへのリンク情報。
                 description: |-
                   API 成功レスポンスの共通ラッパーモデル。
@@ -4350,7 +4418,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.CreateReviewRequest"
+              $ref: "#/components/schemas/Models.ReviewCreateRequest"
   /api/v1/reviews/{id}:
     get:
       operationId: ReviewOperations_get
@@ -4413,7 +4481,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.UpdateReviewRequest"
+              $ref: "#/components/schemas/Models.ReviewUpdateRequest"
     delete:
       operationId: ReviewOperations_delete
       summary: Delete review
@@ -4677,19 +4745,24 @@ paths:
                 type: object
                 required:
                   - data
+                  - meta
+                  - links
                 properties:
                   data:
                     allOf:
                       - $ref: "#/components/schemas/Models.Salon"
                     description: レスポンスの主体となるビジネスデータ。
                   meta:
+                    type: object
                     allOf:
                       - $ref: "#/components/schemas/Models.ResponseMeta"
+                    nullable: true
                     description: リクエスト識別子やバージョン情報など共通メタデータ。
                   links:
                     type: object
                     additionalProperties:
                       type: string
+                    nullable: true
                     description: 関連リソースや次アクションへのリンク情報。
                 description: |-
                   API 成功レスポンスの共通ラッパーモデル。
@@ -4746,6 +4819,8 @@ paths:
                 type: object
                 required:
                   - data
+                  - meta
+                  - links
                 properties:
                   data:
                     type: array
@@ -4753,13 +4828,16 @@ paths:
                       $ref: "#/components/schemas/Models.Salon"
                     description: レスポンスの主体となるビジネスデータ。
                   meta:
+                    type: object
                     allOf:
                       - $ref: "#/components/schemas/Models.ResponseMeta"
+                    nullable: true
                     description: リクエスト識別子やバージョン情報など共通メタデータ。
                   links:
                     type: object
                     additionalProperties:
                       type: string
+                    nullable: true
                     description: 関連リソースや次アクションへのリンク情報。
                 description: |-
                   API 成功レスポンスの共通ラッパーモデル。
@@ -5002,7 +5080,8 @@ paths:
                         description: 名称変更を行う場合に指定
                       description:
                         type: string
-                        description: 紹介文を更新する場合に指定
+                        nullable: true
+                        description: 紹介文を更新する場合に指定（null指定で初期化可能）
                       address:
                         allOf:
                           - $ref: "#/components/schemas/Models.Address"
@@ -5020,7 +5099,8 @@ paths:
                         type: array
                         items:
                           $ref: "#/components/schemas/Models.BusinessHours"
-                        description: 特別営業時間やシフト設定の更新に利用
+                        nullable: true
+                        description: 特別営業時間やシフト設定の更新に利用（null指定で初期化可能）
                       imageUrls:
                         type: array
                         items:
@@ -5599,19 +5679,24 @@ paths:
                 type: object
                 required:
                   - data
+                  - meta
+                  - links
                 properties:
                   data:
                     allOf:
                       - $ref: "#/components/schemas/Models.Salon"
                     description: レスポンスの主体となるビジネスデータ。
                   meta:
+                    type: object
                     allOf:
                       - $ref: "#/components/schemas/Models.ResponseMeta"
+                    nullable: true
                     description: リクエスト識別子やバージョン情報など共通メタデータ。
                   links:
                     type: object
                     additionalProperties:
                       type: string
+                    nullable: true
                     description: 関連リソースや次アクションへのリンク情報。
                 description: |-
                   API 成功レスポンスの共通ラッパーモデル。
@@ -5666,19 +5751,24 @@ paths:
                 type: object
                 required:
                   - data
+                  - meta
+                  - links
                 properties:
                   data:
                     allOf:
                       - $ref: "#/components/schemas/Models.Salon"
                     description: レスポンスの主体となるビジネスデータ。
                   meta:
+                    type: object
                     allOf:
                       - $ref: "#/components/schemas/Models.ResponseMeta"
+                    nullable: true
                     description: リクエスト識別子やバージョン情報など共通メタデータ。
                   links:
                     type: object
                     additionalProperties:
                       type: string
+                    nullable: true
                     description: 関連リソースや次アクションへのリンク情報。
                 description: |-
                   API 成功レスポンスの共通ラッパーモデル。
@@ -5756,19 +5846,24 @@ paths:
                 type: object
                 required:
                   - data
+                  - meta
+                  - links
                 properties:
                   data:
                     allOf:
                       - $ref: "#/components/schemas/Models.Salon"
                     description: レスポンスの主体となるビジネスデータ。
                   meta:
+                    type: object
                     allOf:
                       - $ref: "#/components/schemas/Models.ResponseMeta"
+                    nullable: true
                     description: リクエスト識別子やバージョン情報など共通メタデータ。
                   links:
                     type: object
                     additionalProperties:
                       type: string
+                    nullable: true
                     description: 関連リソースや次アクションへのリンク情報。
                 description: |-
                   API 成功レスポンスの共通ラッパーモデル。
@@ -5886,19 +5981,24 @@ paths:
                 type: object
                 required:
                   - data
+                  - meta
+                  - links
                 properties:
                   data:
                     allOf:
                       - $ref: "#/components/schemas/Models.SalonAvailabilityResponse"
                     description: レスポンスの主体となるビジネスデータ。
                   meta:
+                    type: object
                     allOf:
                       - $ref: "#/components/schemas/Models.ResponseMeta"
+                    nullable: true
                     description: リクエスト識別子やバージョン情報など共通メタデータ。
                   links:
                     type: object
                     additionalProperties:
                       type: string
+                    nullable: true
                     description: 関連リソースや次アクションへのリンク情報。
                 description: |-
                   API 成功レスポンスの共通ラッパーモデル。
@@ -6048,19 +6148,24 @@ paths:
                 type: object
                 required:
                   - data
+                  - meta
+                  - links
                 properties:
                   data:
                     allOf:
                       - $ref: "#/components/schemas/Models.Salon"
                     description: レスポンスの主体となるビジネスデータ。
                   meta:
+                    type: object
                     allOf:
                       - $ref: "#/components/schemas/Models.ResponseMeta"
+                    nullable: true
                     description: リクエスト識別子やバージョン情報など共通メタデータ。
                   links:
                     type: object
                     additionalProperties:
                       type: string
+                    nullable: true
                     description: 関連リソースや次アクションへのリンク情報。
                 description: |-
                   API 成功レスポンスの共通ラッパーモデル。
@@ -6115,19 +6220,24 @@ paths:
                 type: object
                 required:
                   - data
+                  - meta
+                  - links
                 properties:
                   data:
                     allOf:
                       - $ref: "#/components/schemas/Models.StaffScheduleManagement"
                     description: レスポンスの主体となるビジネスデータ。
                   meta:
+                    type: object
                     allOf:
                       - $ref: "#/components/schemas/Models.ResponseMeta"
+                    nullable: true
                     description: リクエスト識別子やバージョン情報など共通メタデータ。
                   links:
                     type: object
                     additionalProperties:
                       type: string
+                    nullable: true
                     description: 関連リソースや次アクションへのリンク情報。
                 description: |-
                   API 成功レスポンスの共通ラッパーモデル。
@@ -6197,19 +6307,24 @@ paths:
                 type: object
                 required:
                   - data
+                  - meta
+                  - links
                 properties:
                   data:
                     allOf:
                       - $ref: "#/components/schemas/Models.SalonStatistics"
                     description: レスポンスの主体となるビジネスデータ。
                   meta:
+                    type: object
                     allOf:
                       - $ref: "#/components/schemas/Models.ResponseMeta"
+                    nullable: true
                     description: リクエスト識別子やバージョン情報など共通メタデータ。
                   links:
                     type: object
                     additionalProperties:
                       type: string
+                    nullable: true
                     description: 関連リソースや次アクションへのリンク情報。
                 description: |-
                   API 成功レスポンスの共通ラッパーモデル。
@@ -6253,19 +6368,24 @@ paths:
                 type: object
                 required:
                   - data
+                  - meta
+                  - links
                 properties:
                   data:
                     allOf:
                       - $ref: "#/components/schemas/Models.SalonSubscriptionResponse"
                     description: レスポンスの主体となるビジネスデータ。
                   meta:
+                    type: object
                     allOf:
                       - $ref: "#/components/schemas/Models.ResponseMeta"
+                    nullable: true
                     description: リクエスト識別子やバージョン情報など共通メタデータ。
                   links:
                     type: object
                     additionalProperties:
                       type: string
+                    nullable: true
                     description: 関連リソースや次アクションへのリンク情報。
                 description: |-
                   API 成功レスポンスの共通ラッパーモデル。
@@ -6333,19 +6453,24 @@ paths:
                 type: object
                 required:
                   - data
+                  - meta
+                  - links
                 properties:
                   data:
                     allOf:
                       - $ref: "#/components/schemas/Models.Salon"
                     description: レスポンスの主体となるビジネスデータ。
                   meta:
+                    type: object
                     allOf:
                       - $ref: "#/components/schemas/Models.ResponseMeta"
+                    nullable: true
                     description: リクエスト識別子やバージョン情報など共通メタデータ。
                   links:
                     type: object
                     additionalProperties:
                       type: string
+                    nullable: true
                     description: 関連リソースや次アクションへのリンク情報。
                 description: |-
                   API 成功レスポンスの共通ラッパーモデル。
@@ -6681,7 +6806,7 @@ paths:
                   items:
                     $ref: "#/components/schemas/Models.ServiceId"
                 updates:
-                  $ref: "#/components/schemas/Models.UpdateServiceRequest"
+                  $ref: "#/components/schemas/Models.UpdateServiceRequestUpdate"
   /api/v1/salons/{salonId}/services/{id}:
     get:
       operationId: ServiceOperations_get
@@ -7240,7 +7365,7 @@ paths:
             application/json:
               schema:
                 anyOf:
-                  - $ref: "#/components/schemas/Models.DownloadUrlResponse"
+                  - $ref: "#/components/schemas/Models.AttachmentDownloadUrlResponse"
                   - $ref: "#/components/schemas/Models.Error"
                   - $ref: "#/components/schemas/Models.Error"
                   - $ref: "#/components/schemas/Models.Error"
@@ -7370,11 +7495,11 @@ paths:
       operationId: InventoryOperations_listInventoryItems
       description: List inventory items with filters
       parameters:
-        - $ref: "#/components/parameters/Models.SearchInventoryRequest.salonId"
-        - $ref: "#/components/parameters/Models.SearchInventoryRequest.category"
-        - $ref: "#/components/parameters/Models.SearchInventoryRequest.status"
-        - $ref: "#/components/parameters/Models.SearchInventoryRequest.lowStock"
-        - $ref: "#/components/parameters/Models.SearchInventoryRequest.expiringSoon"
+        - $ref: "#/components/parameters/Models.InventorySearchRequest.salonId"
+        - $ref: "#/components/parameters/Models.InventorySearchRequest.category"
+        - $ref: "#/components/parameters/Models.InventorySearchRequest.status"
+        - $ref: "#/components/parameters/Models.InventorySearchRequest.lowStock"
+        - $ref: "#/components/parameters/Models.InventorySearchRequest.expiringSoon"
         - $ref: "#/components/parameters/Models.SearchParams.q"
         - $ref: "#/components/parameters/Models.SearchParams.sortBy"
         - $ref: "#/components/parameters/Models.SearchParams.sortOrder"
@@ -7489,7 +7614,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.InventoryItemCreateInput"
+              $ref: "#/components/schemas/Models.InventoryItemCreateRequest"
   /inventory-alerts:
     get:
       operationId: InventoryAlertOperations_getActiveAlerts
@@ -7861,7 +7986,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.StockMovementInput"
+              $ref: "#/components/schemas/Models.StockMovementCreateRequest"
   /inventory/stock-count:
     post:
       operationId: InventoryOperations_performStockCount
@@ -8146,7 +8271,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.InventoryItemUpdateInput"
+              $ref: "#/components/schemas/Models.InventoryItemUpdateRequest"
     delete:
       operationId: InventoryOperations_deleteInventoryItem
       description: Delete inventory item
@@ -8318,7 +8443,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.MedicalChartCreateInput"
+              $ref: "#/components/schemas/Models.MedicalChartCreateRequest"
     get:
       operationId: MedicalChartOperations_searchMedicalCharts
       description: Search medical charts
@@ -8568,7 +8693,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.MedicalChartUpdateInput"
+              $ref: "#/components/schemas/Models.MedicalChartUpdateRequest"
   /payments:
     get:
       operationId: PaymentOperations_listPayments
@@ -8711,7 +8836,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.PaymentCreateInput"
+              $ref: "#/components/schemas/Models.PaymentCreateRequest"
   /payments/calculate:
     post:
       operationId: PaymentOperations_calculatePayment
@@ -8955,7 +9080,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.PaymentUpdateInput"
+              $ref: "#/components/schemas/Models.PaymentUpdateRequest"
   /payments/{id}/cancel:
     post:
       operationId: PaymentOperations_cancelPayment
@@ -9185,7 +9310,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.RefundInput"
+              $ref: "#/components/schemas/Models.RefundCreateRequest"
   /permissions:
     get:
       operationId: PermissionOperations_listPermissions
@@ -9397,7 +9522,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.PointTransactionCreateInput"
+              $ref: "#/components/schemas/Models.PointTransactionCreateRequest"
   /points/customer/{customerId}/balance:
     get:
       operationId: PointOperations_getPointBalance
@@ -9645,7 +9770,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.PointTransactionCreateInput"
+              $ref: "#/components/schemas/Models.PointTransactionCreateRequest"
   /points/expire:
     post:
       operationId: PointOperations_processExpiredPoints
@@ -9760,7 +9885,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.PointTransactionCreateInput"
+              $ref: "#/components/schemas/Models.PointTransactionCreateRequest"
   /purchase-orders:
     get:
       operationId: PurchaseOrderOperations_listPurchaseOrders
@@ -9897,7 +10022,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.PurchaseOrderCreateInput"
+              $ref: "#/components/schemas/Models.PurchaseOrderCreateRequest"
   /purchase-orders/reorder-suggestions:
     get:
       operationId: PurchaseOrderOperations_getReorderSuggestions
@@ -10076,7 +10201,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.PurchaseOrderUpdateInput"
+              $ref: "#/components/schemas/Models.PurchaseOrderUpdateRequest"
   /purchase-orders/{id}/approve:
     post:
       operationId: PurchaseOrderOperations_approvePurchaseOrder
@@ -10402,7 +10527,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.RoleCreateInput"
+              $ref: "#/components/schemas/Models.RoleCreateRequest"
   /roles/system:
     get:
       operationId: RoleOperations_getSystemRoles
@@ -10550,7 +10675,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.RoleUpdateInput"
+              $ref: "#/components/schemas/Models.RoleUpdateRequest"
     delete:
       operationId: RoleOperations_deleteRole
       description: Delete role
@@ -11191,7 +11316,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.TreatmentRecordCreateInput"
+              $ref: "#/components/schemas/Models.TreatmentRecordCreateRequest"
   /treatments/customer/{customerId}/history:
     get:
       operationId: TreatmentOperations_getCustomerTreatmentHistory
@@ -11516,7 +11641,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.TreatmentRecordUpdateInput"
+              $ref: "#/components/schemas/Models.TreatmentRecordUpdateRequest"
     delete:
       operationId: TreatmentOperations_deleteTreatment
       description: Delete treatment record
@@ -11670,7 +11795,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Models.UserRoleAssignInput"
+              $ref: "#/components/schemas/Models.UserRoleAssignRequest"
   /user-roles/bulk-assign:
     post:
       operationId: UserRoleTypeOperations_bulkAssignRoles
@@ -12142,6 +12267,46 @@ components:
       schema:
         type: string
       explode: false
+    Models.InventorySearchRequest.category:
+      name: category
+      in: query
+      required: false
+      description: カテゴリでの絞り込み
+      schema:
+        type: string
+      explode: false
+    Models.InventorySearchRequest.expiringSoon:
+      name: expiringSoon
+      in: query
+      required: false
+      description: 期限切れ間近の在庫を取得するか
+      schema:
+        type: boolean
+      explode: false
+    Models.InventorySearchRequest.lowStock:
+      name: lowStock
+      in: query
+      required: false
+      description: 最低在庫を下回るもののみ取得するか
+      schema:
+        type: boolean
+      explode: false
+    Models.InventorySearchRequest.salonId:
+      name: salonId
+      in: query
+      required: true
+      description: 検索対象のサロン ID
+      schema:
+        $ref: "#/components/schemas/Models.SalonId"
+      explode: false
+    Models.InventorySearchRequest.status:
+      name: status
+      in: query
+      required: false
+      description: 在庫状態での絞り込み
+      schema:
+        $ref: "#/components/schemas/Models.InventoryStatusType"
+      explode: false
     Models.PaginationParams.limit:
       name: limit
       in: query
@@ -12242,46 +12407,6 @@ components:
         type: array
         items:
           type: string
-      explode: false
-    Models.SearchInventoryRequest.category:
-      name: category
-      in: query
-      required: false
-      description: カテゴリでの絞り込み
-      schema:
-        type: string
-      explode: false
-    Models.SearchInventoryRequest.expiringSoon:
-      name: expiringSoon
-      in: query
-      required: false
-      description: 期限切れ間近の在庫を取得するか
-      schema:
-        type: boolean
-      explode: false
-    Models.SearchInventoryRequest.lowStock:
-      name: lowStock
-      in: query
-      required: false
-      description: 最低在庫を下回るもののみ取得するか
-      schema:
-        type: boolean
-      explode: false
-    Models.SearchInventoryRequest.salonId:
-      name: salonId
-      in: query
-      required: true
-      description: 検索対象のサロン ID
-      schema:
-        $ref: "#/components/schemas/Models.SalonId"
-      explode: false
-    Models.SearchInventoryRequest.status:
-      name: status
-      in: query
-      required: false
-      description: 在庫状態での絞り込み
-      schema:
-        $ref: "#/components/schemas/Models.InventoryStatusType"
       explode: false
     Models.SearchParams.q:
       name: q
@@ -12425,6 +12550,8 @@ components:
         - userId
         - resource
         - action
+        - salonId
+        - resourceId
       properties:
         userId:
           type: string
@@ -12436,42 +12563,44 @@ components:
           type: string
           description: 実行したい操作区分
         salonId:
+          type: string
           allOf:
             - $ref: "#/components/schemas/Models.SalonId"
+          nullable: true
           description: サロン単位での権限チェック時のサロン ID
         resourceId:
           type: string
+          nullable: true
           description: リソース固有の ID
       description: アクセス権限の確認リクエスト
     Models.AccessResult:
       type: object
       required:
         - allowed
+        - reason
+        - requiredPermissions
+        - userPermissions
       properties:
         allowed:
           type: boolean
           description: 操作が許可されたかどうか
         reason:
           type: string
+          nullable: true
           description: 拒否または許可の理由
         requiredPermissions:
           type: array
           items:
             type: string
+          nullable: true
           description: 必要な権限キー一覧
         userPermissions:
           type: array
           items:
             type: string
+          nullable: true
           description: ユーザーが保有する権限キー一覧
       description: アクセス権限チェックの結果
-    Models.AccessShareLinkRequest:
-      type: object
-      properties:
-        password:
-          type: string
-          description: 共有リンクのパスワード。保護されている場合に入力。
-      description: パスワード保護された共有リンクへアクセスする際のリクエスト。
     Models.Address:
       type: object
       required:
@@ -12598,6 +12727,9 @@ components:
         - size
         - file
         - uploadedBy
+        - salonId
+        - metadata
+        - tags
         - uploadedAt
         - updatedAt
       properties:
@@ -12663,15 +12795,18 @@ components:
           description: ファイルをアップロードしたユーザーID。
         salonId:
           type: string
+          nullable: true
           description: ファイルが紐づくサロンID。任意項目。
         metadata:
           type: object
           additionalProperties: {}
+          nullable: true
           description: 必要に応じて付加情報を保持する任意メタデータ。
         tags:
           type: object
           additionalProperties:
             type: string
+          nullable: true
           description: ラベリングや検索に利用するタグ情報のセット。
         uploadedAt:
           type: string
@@ -12682,10 +12817,93 @@ components:
           format: date-time
           description: ファイル情報が最後に更新された日時。
       description: サロンシステムで管理するアップロード済みファイルのメタ情報を表すモデル。
+    Models.AttachmentCreateRequest:
+      type: object
+      required:
+        - file
+        - filename
+        - content
+        - salonId
+        - tags
+      properties:
+        file:
+          type: string
+          format: byte
+          description: HTTPリクエストで送信されるファイル本体。
+        filename:
+          type: string
+          description: アップロード時に指定されたファイル名。
+        content:
+          type: string
+          description: ファイルのContent-Type。
+        salonId:
+          type: string
+          nullable: true
+          description: ファイルを関連付けるサロンID。任意設定。
+        tags:
+          type: string
+          nullable: true
+          description: タグ情報を表すJSON文字列。任意設定。
+      description: マルチパートアップロードで添付ファイルを登録するためのリクエスト。
+    Models.AttachmentDownloadUrlResponse:
+      type: object
+      required:
+        - downloadUrl
+        - expiresAt
+      properties:
+        downloadUrl:
+          type: string
+          description: 一時的に有効なダウンロード用URL。
+        expiresAt:
+          type: string
+          format: date-time
+          description: 署名付きURLの有効期限。
+      description: 添付ファイルをダウンロードするための署名付きURLを返すレスポンス。
     Models.AttachmentId:
       type: string
       format: uuid
       description: 添付ファイル・画像データを識別するブランド付きUUID。
+    Models.AttachmentUploadUrlGetRequest:
+      type: object
+      required:
+        - filename
+        - content
+        - size
+        - salonId
+      properties:
+        filename:
+          type: string
+          description: アップロード予定のファイル名。
+        content:
+          type: string
+          description: アップロード予定ファイルのContent-Type。
+        size:
+          type: integer
+          format: int32
+          description: アップロード予定ファイルのサイズ（バイト単位）。
+        salonId:
+          type: string
+          nullable: true
+          description: ファイルをひも付けるサロンID。任意設定。
+      description: 外部ストレージへ直接アップロードするための署名付きURLを要求するリクエスト。
+    Models.AttachmentUploadUrlResponse:
+      type: object
+      required:
+        - uploadUrl
+        - key
+        - expiresAt
+      properties:
+        uploadUrl:
+          type: string
+          description: 一時的に有効なアップロード用URL。
+        key:
+          type: string
+          description: 生成されたストレージキー。アップロード完了後の識別に使用。
+        expiresAt:
+          type: string
+          format: date-time
+          description: 署名付きURLの有効期限。
+      description: 署名付きアップロードURLと関連情報を返すレスポンス。
     Models.AuditInfo:
       type: object
       required:
@@ -12720,6 +12938,9 @@ components:
         - updatedBy
         - version
         - isDeleted
+        - deletedAt
+        - deletedBy
+        - deletionReason
       properties:
         createdAt:
           type: string
@@ -12746,16 +12967,149 @@ components:
         deletedAt:
           type: string
           format: date-time
+          nullable: true
           description: 削除操作が実行された日時 (UTC)。
         deletedBy:
           type: string
+          nullable: true
           description: 削除操作を実施したユーザーID またはサービス名。
         deletionReason:
           type: string
+          nullable: true
           description: 削除理由や補足メモ。カスタマーサポート対応に利用する。
       description: |-
         監査情報モデル。
         レコードの作成・更新履歴を保持し、内部統制や変更追跡を実現する。
+    Models.AuthEmailVerificationRequest:
+      type: object
+      required:
+        - token
+      properties:
+        token:
+          type: string
+          description: メールに記載された確認トークン。
+      description: メールアドレス確認を完了させるリクエスト。
+    Models.AuthLoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          description: ログインに使用するメールアドレス。
+        password:
+          type: string
+          description: ログイン用パスワード。
+        rememberMe:
+          type: boolean
+          description: 永続セッションを希望するかどうかのフラグ。
+          default: false
+        twoFactorCode:
+          type: string
+          description: 2要素認証が有効な場合に入力するワンタイムコード。
+      description: ユーザーがログインする際の認証リクエスト。
+    Models.AuthLoginResponse:
+      type: object
+      required:
+        - accessToken
+        - refreshToken
+        - token
+        - expiresIn
+        - user
+      properties:
+        accessToken:
+          type: string
+          description: API呼び出しに利用するアクセストークン。
+        refreshToken:
+          type: string
+          description: アクセストークン再発行に使用するリフレッシュトークン。
+        token:
+          type: string
+          description: トークン種別。常にBearer。
+          default: Bearer
+        expiresIn:
+          type: integer
+          format: int32
+          description: アクセストークンの有効期限（秒）。
+        user:
+          allOf:
+            - $ref: "#/components/schemas/Models.User"
+          description: ログインしたユーザーの情報。
+      description: ログイン成功時に返却するトークン情報。
+    Models.AuthPasswordChangeRequest:
+      type: object
+      required:
+        - currentPassword
+        - newPassword
+      properties:
+        currentPassword:
+          type: string
+          description: 本人確認のための現在パスワード。
+        newPassword:
+          type: string
+          description: 変更後の新しいパスワード。
+      description: ログイン中ユーザーがパスワードを変更するためのリクエスト。
+    Models.AuthPasswordResetConfirmRequest:
+      type: object
+      required:
+        - token
+        - newPassword
+      properties:
+        token:
+          type: string
+          description: メールで受け取った再設定トークン。
+        newPassword:
+          type: string
+          description: 新しいパスワード。
+      description: パスワード再設定を確定するためのリクエスト。
+    Models.AuthPasswordResetRequest:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          description: 対象アカウントのメールアドレス。
+      description: パスワード再設定メール送信を要求するリクエスト。
+    Models.AuthRegisterRequest:
+      type: object
+      required:
+        - email
+        - password
+        - name
+      properties:
+        email:
+          type: string
+          description: 登録に使用するメールアドレス。
+        password:
+          type: string
+          description: セキュリティ基準を満たすパスワード。
+        name:
+          type: string
+          description: ユーザーの表示名。
+        role:
+          allOf:
+            - $ref: "#/components/schemas/Models.AuthUserRoleType"
+          description: 付与するロール。既定はcustomer。
+          default: customer
+      description: 新規ユーザー登録時のリクエスト。
+    Models.AuthSessionListResponse:
+      type: object
+      required:
+        - sessions
+        - total
+      properties:
+        sessions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Models.Session"
+          description: 稼働中のセッション配列。
+        total:
+          type: integer
+          format: int32
+          description: 該当セッションの総数。
+      description: アクティブなセッション一覧を返すレスポンス。
     Models.AuthSuccessResponse:
       type: object
       required:
@@ -12765,6 +13119,65 @@ components:
           type: string
           description: 完了メッセージ。
       description: 認証系APIで使用する汎用成功レスポンス。
+    Models.AuthTokenRefreshRequest:
+      type: object
+      required:
+        - refreshToken
+      properties:
+        refreshToken:
+          type: string
+          description: 認証済みセッションに紐づくリフレッシュトークン。
+      description: アクセストークンを更新するためのリクエスト。
+    Models.AuthTwoFactorDisableRequest:
+      type: object
+      required:
+        - password
+        - code
+      properties:
+        password:
+          type: string
+          description: 本人確認のための現在パスワード。
+        code:
+          type: string
+          description: 無効化確認のための現在TOTPコード。
+      description: 2要素認証を無効化する際の確認リクエスト。
+    Models.AuthTwoFactorEnableRequest:
+      type: object
+      required:
+        - password
+      properties:
+        password:
+          type: string
+          description: 本人確認のための現在パスワード。
+      description: 2要素認証を有効化する際の認証リクエスト。
+    Models.AuthTwoFactorSetupResponse:
+      type: object
+      required:
+        - qrCodeUrl
+        - secret
+        - backupCodes
+      properties:
+        qrCodeUrl:
+          type: string
+          description: 認証アプリで読み取るQRコードURL。
+        secret:
+          type: string
+          description: 手動登録用のシークレットキー。
+        backupCodes:
+          type: array
+          items:
+            type: string
+          description: 復旧用バックアップコード一覧。
+      description: 2要素認証の設定情報を返すレスポンス。
+    Models.AuthTwoFactorVerifyRequest:
+      type: object
+      required:
+        - code
+      properties:
+        code:
+          type: string
+          description: 認証アプリが生成したTOTPコード。
+      description: 2要素認証コードを検証するリクエスト。
     Models.AuthUserRoleType:
       type: string
       enum:
@@ -12781,32 +13194,45 @@ components:
       type: object
       required:
         - type
+        - sessionId
+        - expiresAt
+        - tempToken
+        - until
+        - attempts
+        - reason
       properties:
         type:
           allOf:
             - $ref: "#/components/schemas/Models.AuthenticationStateType"
           description: 現在の認証状態区分。
         sessionId:
+          type: string
           allOf:
             - $ref: "#/components/schemas/Models.SessionId"
+          nullable: true
           description: 状態に紐づくセッションID。未確立の場合はnull。
         expiresAt:
           type: string
           format: date-time
+          nullable: true
           description: 該当状態が失効する日時。
         tempToken:
           type: string
+          nullable: true
           description: 2要素認証や一時アクセスに利用する暫定トークン。
         until:
           type: string
           format: date-time
+          nullable: true
           description: ロックや制限状態が解除される予定日時。
         attempts:
           type: integer
           format: int32
+          nullable: true
           description: 認証失敗などの試行回数。
         reason:
           type: string
+          nullable: true
           description: 状態が発生した具体的な理由メッセージ。
       description: 認証状態ごとの詳細情報を格納するモデル。
     Models.AuthenticationStateType:
@@ -12896,8 +13322,15 @@ components:
         - reservationIds
         - status
         - statusCode
+        - waitlistEntry
+        - deposit
         - totalAmount
+        - discountAmount
         - finalAmount
+        - balanceDue
+        - paymentMethod
+        - paymentStatus
+        - notes
         - createdAt
         - createdBy
         - updatedAt
@@ -12929,12 +13362,16 @@ components:
             - $ref: "#/components/schemas/Models.BookingStatusCodeType"
           description: 現在のステータスコード。
         waitlistEntry:
+          type: object
           allOf:
             - $ref: "#/components/schemas/Models.WaitlistEntry"
+          nullable: true
           description: ウェイティングリスト情報。対象外の場合はnull。
         deposit:
+          type: object
           allOf:
             - $ref: "#/components/schemas/Models.BookingDeposit"
+          nullable: true
           description: 預かり金に関する情報。必要な場合のみ設定。
         totalAmount:
           allOf:
@@ -12943,25 +13380,30 @@ components:
         discountAmount:
           allOf:
             - $ref: "#/components/schemas/Models.Money"
-          description: 適用された割引額。未適用の場合はnull。
+          description: 適用された割引額
         finalAmount:
           allOf:
             - $ref: "#/components/schemas/Models.Money"
           description: 最終的に請求する金額。
         balanceDue:
+          type: object
           allOf:
             - $ref: "#/components/schemas/Models.Money"
+          nullable: true
           description: 未収金額。完済の場合はnull。
         paymentMethod:
           allOf:
             - $ref: "#/components/schemas/Models.PaymentMethodType"
+          nullable: true
           description: 予定している支払い方法。未定の場合はnull。
         paymentStatus:
           allOf:
             - $ref: "#/components/schemas/Models.PaymentStatusCodeType"
+          nullable: true
           description: 支払いの進捗ステータス。未設定の場合は支払い前。
         notes:
           type: string
+          nullable: true
           description: スタッフ・顧客間で共有するメモ。
         createdAt:
           type: string
@@ -12985,6 +13427,11 @@ components:
       required:
         - amount
         - status
+        - dueDate
+        - paidAt
+        - refundedAt
+        - paymentId
+        - notes
       properties:
         amount:
           allOf:
@@ -13001,21 +13448,27 @@ components:
         dueDate:
           type: string
           format: date-time
+          nullable: true
           description: 支払い期日。未設定の場合は即時支払い不要。
         paidAt:
           type: string
           format: date-time
+          nullable: true
           description: 入金が確認された日時。
         refundedAt:
           type: string
           format: date-time
+          nullable: true
           description: 返金した日時。
         paymentId:
+          type: string
           allOf:
             - $ref: "#/components/schemas/Models.PaymentId"
+          nullable: true
           description: 紐づく決済ID。
         notes:
           type: string
+          nullable: true
           description: デポジットに関する備考。
       description: 予約確定前に預かるデポジット情報。
     Models.BookingDepositUpdate:
@@ -13036,21 +13489,27 @@ components:
         dueDate:
           type: string
           format: date-time
+          nullable: true
           description: 支払い期日。未設定の場合は即時支払い不要。
         paidAt:
           type: string
           format: date-time
+          nullable: true
           description: 入金が確認された日時。
         refundedAt:
           type: string
           format: date-time
+          nullable: true
           description: 返金した日時。
         paymentId:
+          type: string
           allOf:
             - $ref: "#/components/schemas/Models.PaymentId"
+          nullable: true
           description: 紐づく決済ID。
         notes:
           type: string
+          nullable: true
           description: デポジットに関する備考。
       description: 予約確定前に預かるデポジット情報。
     Models.BookingDetail:
@@ -13059,6 +13518,8 @@ components:
         - reservations
         - customerName
         - salonName
+        - paymentHistory
+        - waitlistHistory
       properties:
         reservations:
           type: array
@@ -13075,11 +13536,13 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Models.PaymentHistory"
+          nullable: true
           description: 決済履歴の一覧。未登録の場合はnull。
         waitlistHistory:
           type: array
           items:
             $ref: "#/components/schemas/Models.WaitlistEntry"
+          nullable: true
           description: ウェイティングリストの履歴。未登録の場合はnull。
       allOf:
         - $ref: "#/components/schemas/Models.Booking"
@@ -13110,6 +13573,16 @@ components:
       type: object
       required:
         - type
+        - amount
+        - percentage
+        - required
+        - duration
+        - daysInAdvance
+        - minAge
+        - maxAge
+        - allowedGenders
+        - requiredTier
+        - instructions
       properties:
         type:
           allOf:
@@ -13118,42 +13591,52 @@ components:
         amount:
           type: integer
           format: int32
+          nullable: true
           description: "金額要件（例: デポジット額）"
         percentage:
           type: integer
           format: int32
+          nullable: true
           description: 割合で設定する要件
         required:
           type: boolean
+          nullable: true
           description: 必須かどうか
         duration:
           type: integer
           format: int32
+          nullable: true
           description: 所要時間や準備時間
         daysInAdvance:
           type: integer
           format: int32
+          nullable: true
           description: 何日前までに対応が必要か
         minAge:
           type: integer
           format: int32
+          nullable: true
           description: 利用可能な最低年齢
         maxAge:
           type: integer
           format: int32
+          nullable: true
           description: 利用可能な最高年齢
         allowedGenders:
           type: array
           items:
             type: string
+          nullable: true
           description: 利用可能な性別の制限
         requiredTier:
           type: string
+          nullable: true
           description: 必要な会員ランク
         instructions:
           type: array
           items:
             type: string
+          nullable: true
           description: 顧客への具体的な指示
       description: サービス予約時に必要な要件詳細
     Models.BookingRequirementType:
@@ -13288,6 +13771,7 @@ components:
       required:
         - hours
         - percentage
+        - fixedAmount
       properties:
         hours:
           type: integer
@@ -13300,6 +13784,7 @@ components:
         fixedAmount:
           type: integer
           format: int32
+          nullable: true
           description: 固定額で設定するキャンセル料金
       description: キャンセル料金のルール
     Models.CancelledBookingStatus:
@@ -13307,6 +13792,7 @@ components:
       required:
         - type
         - cancelledAt
+        - reason
         - cancelledBy
       properties:
         type:
@@ -13320,6 +13806,7 @@ components:
           description: キャンセルが登録された日時。
         reason:
           type: string
+          nullable: true
           description: キャンセル理由のメモ。未設定の場合はnull。
         cancelledBy:
           type: string
@@ -13343,6 +13830,7 @@ components:
           description: キャンセルが登録された日時。
         reason:
           type: string
+          nullable: true
           description: キャンセル理由のメモ。未設定の場合はnull。
         cancelledBy:
           type: string
@@ -13362,6 +13850,7 @@ components:
         - id
         - name
         - description
+        - parentId
         - displayOrder
         - isActive
         - createdAt
@@ -13380,8 +13869,10 @@ components:
           type: string
           description: カテゴリ説明
         parentId:
+          type: string
           allOf:
             - $ref: "#/components/schemas/Models.CategoryId"
+          nullable: true
           description: 親カテゴリ ID
         displayOrder:
           type: integer
@@ -13434,6 +13925,8 @@ components:
       required:
         - type
         - completedAt
+        - paymentId
+        - serviceSummary
       properties:
         type:
           type: string
@@ -13445,11 +13938,14 @@ components:
           format: date-time
           description: 施術が完了した日時。
         paymentId:
+          type: string
           allOf:
             - $ref: "#/components/schemas/Models.PaymentId"
+          nullable: true
           description: 関連する決済ID。未決済の場合はnull。
         serviceSummary:
           type: string
+          nullable: true
           description: 施術内容のサマリーメモ。未設定の場合はnull。
       description: 施術が完了した場合の状態情報。
     Models.CompletedBookingStatusUpdate:
@@ -13465,11 +13961,14 @@ components:
           format: date-time
           description: 施術が完了した日時。
         paymentId:
+          type: string
           allOf:
             - $ref: "#/components/schemas/Models.PaymentId"
+          nullable: true
           description: 関連する決済ID。未決済の場合はnull。
         serviceSummary:
           type: string
+          nullable: true
           description: 施術内容のサマリーメモ。未設定の場合はnull。
       description: 施術が完了した場合の状態情報。
     Models.CompletedPaymentStatus:
@@ -13478,6 +13977,7 @@ components:
         - type
         - completedAt
         - paidAmount
+        - receiptNumber
       properties:
         type:
           type: string
@@ -13494,6 +13994,7 @@ components:
           description: 実際に決済された金額
         receiptNumber:
           type: string
+          nullable: true
           description: 発行されたレシート番号
       description: 支払い完了状態の詳細
     Models.CompletedPaymentStatusUpdate:
@@ -13514,6 +14015,7 @@ components:
           description: 実際に決済された金額
         receiptNumber:
           type: string
+          nullable: true
           description: 発行されたレシート番号
       description: 支払い完了状態の詳細
     Models.ConfirmedBookingStatus:
@@ -13624,6 +14126,12 @@ components:
         - salonId
         - customerId
         - reservationIds
+        - waitlistEntry
+        - deposit
+        - discountAmount
+        - paymentMethod
+        - notes
+        - metadata
       properties:
         salonId:
           allOf:
@@ -13639,27 +14147,34 @@ components:
             $ref: "#/components/schemas/Models.ReservationId"
           description: 紐付ける予約リクエストID一覧。
         waitlistEntry:
+          type: object
           allOf:
             - $ref: "#/components/schemas/Models.WaitlistEntry"
+          nullable: true
           description: ウェイティングリスト情報。不要な場合はnull。
         deposit:
+          type: object
           allOf:
             - $ref: "#/components/schemas/Models.BookingDeposit"
+          nullable: true
           description: 預かり金設定。不要な場合はnull。
         discountAmount:
           allOf:
             - $ref: "#/components/schemas/Models.Money"
-          description: 適用する割引額。未設定の場合はnull。
+          description: 適用する割引額
         paymentMethod:
           allOf:
             - $ref: "#/components/schemas/Models.PaymentMethodType"
+          nullable: true
           description: 予定している支払い方法。
         notes:
           type: string
+          nullable: true
           description: スタッフ向けの備考。
         metadata:
           type: object
           additionalProperties: {}
+          nullable: true
           description: 外部連携や業務用に保持する任意メタデータ。
       description: 予約を新規作成する際のリクエスト。
     Models.CreateCustomerRequest:
@@ -13667,15 +14182,21 @@ components:
       required:
         - name
         - contactInfo
+        - preferences
+        - notes
+        - tags
+        - birthDate
       properties:
         name:
           type: string
         contactInfo:
           $ref: "#/components/schemas/Models.ContactInfo"
         preferences:
-          type: string
+          type: object
+          additionalProperties: {}
         notes:
           type: string
+          nullable: true
         tags:
           type: array
           items:
@@ -13683,6 +14204,7 @@ components:
         birthDate:
           type: string
           format: date
+          nullable: true
       description: Customer creation request with required and optional fields
     Models.CreateReservationRequest:
       type: object
@@ -13692,6 +14214,7 @@ components:
         - staffId
         - serviceId
         - startTime
+        - notes
       properties:
         salonId:
           allOf:
@@ -13715,64 +14238,9 @@ components:
           description: 希望する施術開始日時 (UTC)
         notes:
           type: string
+          nullable: true
           description: 顧客要望や注意事項のメモ
       description: 予約作成リクエスト - 新規予約登録時に必要なサロン・顧客・メニュー・希望日時の情報を受け取る
-    Models.CreateReviewRequest:
-      type: object
-      required:
-        - salonId
-        - customerId
-        - bookingId
-        - overallRating
-      properties:
-        salonId:
-          allOf:
-            - $ref: "#/components/schemas/Models.SalonId"
-          description: レビュー対象のサロンID
-        customerId:
-          allOf:
-            - $ref: "#/components/schemas/Models.CustomerId"
-          description: レビュー投稿者の顧客ID
-        bookingId:
-          allOf:
-            - $ref: "#/components/schemas/Models.BookingId"
-          description: 紐づく来店予約ID (booking_id)
-        staffId:
-          allOf:
-            - $ref: "#/components/schemas/Models.StaffId"
-          description: 評価対象スタッフのID
-        overallRating:
-          type: integer
-          format: int32
-          description: 全体満足度の評価値
-        comment:
-          type: string
-          description: 自由記述のコメント
-        title:
-          type: string
-          description: レビュータイトル
-        serviceRating:
-          type: integer
-          format: int32
-          description: サービス品質に対する評価値
-        staffRating:
-          type: integer
-          format: int32
-          description: スタッフ対応に対する評価値
-        cleanlinessRating:
-          type: integer
-          format: int32
-          description: 清潔さ・衛生状態に対する評価値
-        valueRating:
-          type: integer
-          format: int32
-          description: 価格に見合う価値の評価値
-        imageUrls:
-          type: array
-          items:
-            type: string
-          description: 添付画像のURL一覧
-      description: レビュー作成リクエスト - 顧客が新規レビュー投稿時に入力する評価情報と任意コメント・画像を受け取る
     Models.CreateSalonRequest:
       type: object
       required:
@@ -13815,14 +14283,12 @@ components:
           type: array
           items:
             type: string
-          nullable: true
-          description: 店舗写真やメニュー画像のURL一覧。未登録時はnull
+          description: 店舗写真やメニュー画像のURL一覧
         features:
           type: array
           items:
             type: string
-          nullable: true
-          description: バリアフリー対応や個室有無などの特徴タグ一覧。不要な場合はnull
+          description: バリアフリー対応や個室有無などの特徴タグ一覧
       description: サロン新規登録リクエスト - 全項目のキーが必須で、値は業務要件に応じてnull許可
     Models.CreateServiceRequest:
       type: object
@@ -13833,6 +14299,13 @@ components:
         - duration
         - price
         - category
+        - categoryId
+        - imageUrl
+        - requiredStaffLevel
+        - depositAmount
+        - isActive
+        - maxAdvanceBookingDays
+        - minAdvanceBookingHours
       properties:
         salonId:
           allOf:
@@ -13857,52 +14330,40 @@ components:
             - $ref: "#/components/schemas/Models.ServiceCategoryType"
           description: サービスカテゴリ区分
         categoryId:
+          type: string
           allOf:
             - $ref: "#/components/schemas/Models.CategoryId"
+          nullable: true
           description: カテゴリ ID
         imageUrl:
           type: string
+          nullable: true
           description: サービス画像 URL
         requiredStaffLevel:
           type: integer
           format: int32
+          nullable: true
           description: 必要スタッフレベル
         depositAmount:
           type: integer
           format: int32
+          nullable: true
           description: 必要なデポジット額
         isActive:
           type: boolean
+          nullable: true
           description: 有効フラグ
         maxAdvanceBookingDays:
           type: integer
           format: int32
+          nullable: true
           description: 最大全日予約可能日数
         minAdvanceBookingHours:
           type: integer
           format: int32
+          nullable: true
           description: 最短予約受付時間（時間）
       description: サービスを新規登録するリクエスト
-    Models.CreateShareLinkRequest:
-      type: object
-      properties:
-        expiresAt:
-          type: string
-          format: date-time
-          description: 共有リンクの有効期限。任意設定。
-        maxDownloads:
-          type: integer
-          format: int32
-          description: 許可する最大ダウンロード回数。任意設定。
-        password:
-          type: string
-          description: 共有リンク保護用のパスワード。任意設定。
-        allowedEmails:
-          type: array
-          items:
-            type: string
-          description: アクセスを許可するメールアドレス一覧。任意設定。
-      description: 添付ファイルの共有リンクを新規発行する際のリクエスト。
     Models.CreateStaffRequest:
       type: object
       required:
@@ -13910,6 +14371,13 @@ components:
         - name
         - contactInfo
         - specialties
+        - imageUrl
+        - bio
+        - yearsOfExperience
+        - certifications
+        - qualifications
+        - schedules
+        - permissions
       properties:
         salonId:
           allOf:
@@ -13929,33 +14397,40 @@ components:
           description: 得意分野や専門メニューの一覧
         imageUrl:
           type: string
+          nullable: true
           description: プロフィール画像のURL
         bio:
           type: string
+          nullable: true
           description: 自己紹介や経歴の概要
         yearsOfExperience:
           type: integer
           format: int32
+          nullable: true
           description: 実務経験年数
         certifications:
           type: array
           items:
             type: string
+          nullable: true
           description: 保有資格名の一覧
         qualifications:
           type: array
           items:
             $ref: "#/components/schemas/Models.StaffQualification"
+          nullable: true
           description: 詳細な資格情報の一覧
         schedules:
           type: array
           items:
             $ref: "#/components/schemas/Models.StaffSchedule"
+          nullable: true
           description: 通常勤務スケジュールの一覧
         permissions:
           type: array
           items:
             $ref: "#/components/schemas/Models.StaffPermission"
+          nullable: true
           description: 付与する権限の一覧
       description: スタッフ作成リクエスト - 新規スタッフ登録時に必要なプロフィール・連絡先・スケジュール情報を受け取る
     Models.CurrencyCodeType:
@@ -14037,8 +14512,8 @@ components:
           nullable: true
           description: Address
         preferences:
-          type: string
-          nullable: true
+          type: object
+          additionalProperties: {}
           description: Preferences and requirements
         notes:
           type: string
@@ -14048,12 +14523,10 @@ components:
           type: array
           items:
             type: string
-          nullable: true
           description: Tags for categorization
         loyaltyPoints:
           type: integer
           format: int32
-          nullable: true
           description: Current loyalty points
         membership:
           type: object
@@ -14181,6 +14654,12 @@ components:
         groupId:
           type: string
           nullable: true
+    Models.CustomerBookingsGetRequest:
+      type: object
+      properties:
+        status:
+          $ref: "#/components/schemas/Models.BookingStatusCodeType"
+      description: Customer bookings filter parameters
     Models.CustomerGenderType:
       type: string
       enum:
@@ -14385,7 +14864,7 @@ components:
         language:
           type: string
           nullable: true
-    Models.CustomerPreferencesUpdate:
+    Models.CustomerPreferencesUpdateRequest:
       type: object
       required:
         - contactMethod
@@ -14453,6 +14932,18 @@ components:
           format: int32
       allOf:
         - $ref: "#/components/schemas/Models.Customer"
+    Models.CustomerReservationsGetRequest:
+      type: object
+      properties:
+        status:
+          $ref: "#/components/schemas/Models.ReservationStatusType"
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+      description: Customer reservations filter parameters
     Models.CustomerStatistics:
       type: object
       required:
@@ -14612,6 +15103,11 @@ components:
         - type
         - message
         - code
+        - details
+        - entity
+        - field
+        - value
+        - service
       properties:
         type:
           allOf:
@@ -14626,18 +15122,23 @@ components:
         details:
           type: object
           additionalProperties: {}
+          nullable: true
           description: 追加のエラー文脈。入力値や関連設定など柔軟に格納する。
         entity:
           type: string
+          nullable: true
           description: "関連するエンティティ名。例: `Reservation` や `Customer`。"
         field:
           type: string
+          nullable: true
           description: 問題が発生したフィールド名。入力フォームとの紐付けに利用。
         value:
           type: string
+          nullable: true
           description: 問題があった値。マスキングが不要なケースのみ保持する。
         service:
           type: string
+          nullable: true
           description: 外部サービスエラー時の対象サービス名。連携先の切り分けに役立つ。
       description: |-
         ドメインエラーの詳細情報モデル。
@@ -14890,6 +15391,8 @@ components:
         - domainError
         - problemDetails
         - occurredAt
+        - operation
+        - stackTrace
       properties:
         domainError:
           allOf:
@@ -14905,32 +15408,21 @@ components:
           description: エラーが発生した日時 (UTC)。再発防止のタイムライン分析に活用。
         operation:
           type: string
+          nullable: true
           description: "エラーが発生した操作名やユースケース。例: `CreateReservation`。"
         stackTrace:
           type: string
+          nullable: true
           description: デバッグ用のスタックトレース。開発・検証環境のみで出力する。
       description: |-
         ドメイン操作で発生したエラーのコンテキストモデル。
         ビジネス層の例外情報と HTTP レイヤーの問題詳細を紐づけ、ログ出力やモニタリングを容易にする。
-    Models.DownloadUrlResponse:
-      type: object
-      required:
-        - downloadUrl
-        - expiresAt
-      properties:
-        downloadUrl:
-          type: string
-          description: 一時的に有効なダウンロード用URL。
-        expiresAt:
-          type: string
-          format: date-time
-          description: 署名付きURLの有効期限。
-      description: 添付ファイルをダウンロードするための署名付きURLを返すレスポンス。
     Models.DraftBookingStatus:
       type: object
       required:
         - type
         - createdAt
+        - expiresAt
       properties:
         type:
           type: string
@@ -14944,6 +15436,7 @@ components:
         expiresAt:
           type: string
           format: date-time
+          nullable: true
           description: 下書きの有効期限。未設定の場合は期限なし。
       description: 予約が下書き段階にある場合の状態情報。
     Models.DraftBookingStatusUpdate:
@@ -14961,21 +15454,17 @@ components:
         expiresAt:
           type: string
           format: date-time
+          nullable: true
           description: 下書きの有効期限。未設定の場合は期限なし。
       description: 予約が下書き段階にある場合の状態情報。
-    Models.EmailVerificationRequest:
-      type: object
-      required:
-        - token
-      properties:
-        token:
-          type: string
-          description: メールに記載された確認トークン。
-      description: メールアドレス確認を完了させるリクエスト。
     Models.EmailVerificationStateDetail:
       type: object
       required:
         - type
+        - verifiedAt
+        - token
+        - expiresAt
+        - sentAt
       properties:
         type:
           allOf:
@@ -14984,17 +15473,21 @@ components:
         verifiedAt:
           type: string
           format: date-time
+          nullable: true
           description: 確認完了日時。未確認の場合はnull。
         token:
           type: string
+          nullable: true
           description: 確認メールに含めるトークン。再送未実施の場合はnull。
         expiresAt:
           type: string
           format: date-time
+          nullable: true
           description: トークンの有効期限。
         sentAt:
           type: string
           format: date-time
+          nullable: true
           description: 確認メールを送信した日時。
       description: メールアドレス確認フローの進行状況を保持するモデル。
     Models.EmailVerificationStateType:
@@ -15014,6 +15507,7 @@ components:
       required:
         - code
         - message
+        - details
       properties:
         code:
           type: string
@@ -15024,6 +15518,7 @@ components:
         details:
           type: object
           additionalProperties: {}
+          nullable: true
           description: デバッグやサポート対応に役立つ追加情報。任意項目。
       description: API全体で共通利用する業務エラーの基本モデル。
     Models.ErrorCodeType:
@@ -15109,6 +15604,7 @@ components:
         - type
         - failedAt
         - reason
+        - retryable
       properties:
         type:
           type: string
@@ -15124,6 +15620,7 @@ components:
           description: 失敗理由の説明
         retryable:
           type: boolean
+          nullable: true
           description: 再試行が可能かどうか
           default: false
       description: 支払い失敗状態の詳細
@@ -15144,6 +15641,7 @@ components:
           description: 失敗理由の説明
         retryable:
           type: boolean
+          nullable: true
           description: 再試行が可能かどうか
           default: false
       description: 支払い失敗状態の詳細
@@ -15159,45 +15657,6 @@ components:
         image: 画像 - 写真やイラスト等の画像ファイル（jpg, png, gif等）
         document: ドキュメント - PDF、Word、Excel等の文書ファイル
         other: その他 - 上記に分類されないファイル
-    Models.GetCustomerBookingsRequest:
-      type: object
-      properties:
-        status:
-          $ref: "#/components/schemas/Models.BookingStatusCodeType"
-      description: Customer bookings filter parameters
-    Models.GetCustomerReservationsRequest:
-      type: object
-      properties:
-        status:
-          $ref: "#/components/schemas/Models.ReservationStatusType"
-        from:
-          type: string
-          format: date-time
-        to:
-          type: string
-          format: date-time
-      description: Customer reservations filter parameters
-    Models.GetUploadUrlRequest:
-      type: object
-      required:
-        - filename
-        - content
-        - size
-      properties:
-        filename:
-          type: string
-          description: アップロード予定のファイル名。
-        content:
-          type: string
-          description: アップロード予定ファイルのContent-Type。
-        size:
-          type: integer
-          format: int32
-          description: アップロード予定ファイルのサイズ（バイト単位）。
-        salonId:
-          type: string
-          description: ファイルをひも付けるサロンID。任意設定。
-      description: 外部ストレージへ直接アップロードするための署名付きURLを要求するリクエスト。
     Models.HairInfo:
       type: object
       required:
@@ -15253,6 +15712,9 @@ components:
       required:
         - name
         - status
+        - responseTime
+        - error
+        - details
       properties:
         name:
           type: string
@@ -15267,13 +15729,16 @@ components:
         responseTime:
           type: integer
           format: int32
+          nullable: true
           description: ヘルスチェックに要した時間 (ミリ秒)。応答遅延の指標。
         error:
           type: string
+          nullable: true
           description: 停止時のエラーメッセージや原因メモ。
         details:
           type: object
           additionalProperties: {}
+          nullable: true
           description: 監視対象固有の追加詳細。再試行回数や依存サービス名などを含める。
       description: |-
         個別サービスのヘルスチェック結果モデル。
@@ -15317,6 +15782,7 @@ components:
       required:
         - type
         - startedAt
+        - stationName
       properties:
         type:
           type: string
@@ -15329,6 +15795,7 @@ components:
           description: 施術を開始した日時。
         stationName:
           type: string
+          nullable: true
           description: 施術を行っているブースや席の名称。未設定の場合はnull。
       description: 施術が進行中の場合の状態情報。
     Models.InProgressBookingStatusUpdate:
@@ -15345,6 +15812,7 @@ components:
           description: 施術を開始した日時。
         stationName:
           type: string
+          nullable: true
           description: 施術を行っているブースや席の名称。未設定の場合はnull。
       description: 施術が進行中の場合の状態情報。
     Models.InventoryAlert:
@@ -15515,17 +15983,25 @@ components:
           nullable: true
           description: レコードを最後に更新したユーザーID。匿名更新の場合はnull。
       description: サロンで管理する在庫アイテムの基本情報
-    Models.InventoryItemCreateInput:
+    Models.InventoryItemCreateRequest:
       type: object
       required:
         - salonId
         - productCode
         - productName
+        - description
         - category
+        - brand
+        - supplier
         - currentStock
         - minimumStock
+        - maximumStock
         - unit
         - unitCost
+        - sellingPrice
+        - location
+        - expirationDate
+        - notes
       properties:
         salonId:
           allOf:
@@ -15539,15 +16015,18 @@ components:
           description: 商品名
         description:
           type: string
+          nullable: true
           description: 商品説明文
         category:
           type: string
           description: 分類カテゴリ
         brand:
           type: string
+          nullable: true
           description: ブランド名
         supplier:
           type: string
+          nullable: true
           description: 仕入先情報
         currentStock:
           type: number
@@ -15560,6 +16039,7 @@ components:
         maximumStock:
           type: number
           format: float
+          nullable: true
           description: 最大在庫数
         unit:
           type: string
@@ -15571,19 +16051,23 @@ components:
         sellingPrice:
           type: number
           format: float
+          nullable: true
           description: 顧客販売価格
         location:
           type: string
+          nullable: true
           description: 保管場所
         expirationDate:
           type: string
           format: date-time
+          nullable: true
           description: 賞味・使用期限
         notes:
           type: string
+          nullable: true
           description: 備考メモ
       description: 在庫アイテムを新規登録する入力モデル
-    Models.InventoryItemUpdateInput:
+    Models.InventoryItemUpdateRequest:
       type: object
       properties:
         productName:
@@ -15591,15 +16075,18 @@ components:
           description: 更新後の商品名
         description:
           type: string
+          nullable: true
           description: 更新後の商品説明
         category:
           type: string
           description: 更新後のカテゴリ
         brand:
           type: string
+          nullable: true
           description: 更新後のブランド名
         supplier:
           type: string
+          nullable: true
           description: 更新後の仕入先情報
         minimumStock:
           type: number
@@ -15608,6 +16095,7 @@ components:
         maximumStock:
           type: number
           format: float
+          nullable: true
           description: 更新後の最大在庫数
         unitCost:
           type: number
@@ -15616,13 +16104,16 @@ components:
         sellingPrice:
           type: number
           format: float
+          nullable: true
           description: 更新後の販売価格
         location:
           type: string
+          nullable: true
           description: 更新後の保管場所
         expirationDate:
           type: string
           format: date-time
+          nullable: true
           description: 更新後の賞味・使用期限
         status:
           allOf:
@@ -15630,6 +16121,7 @@ components:
           description: 在庫状態の更新
         notes:
           type: string
+          nullable: true
           description: 更新後の備考
       description: 在庫アイテムの情報更新入力モデル
     Models.InventoryStatusType:
@@ -15705,54 +16197,6 @@ components:
           additionalProperties: {}
           description: 追加のメタデータ
       description: 在庫の入出庫トランザクション
-    Models.LoginRequest:
-      type: object
-      required:
-        - email
-        - password
-      properties:
-        email:
-          type: string
-          description: ログインに使用するメールアドレス。
-        password:
-          type: string
-          description: ログイン用パスワード。
-        rememberMe:
-          type: boolean
-          description: 永続セッションを希望するかどうかのフラグ。
-          default: false
-        twoFactorCode:
-          type: string
-          description: 2要素認証が有効な場合に入力するワンタイムコード。
-      description: ユーザーがログインする際の認証リクエスト。
-    Models.LoginResponse:
-      type: object
-      required:
-        - accessToken
-        - refreshToken
-        - token
-        - expiresIn
-        - user
-      properties:
-        accessToken:
-          type: string
-          description: API呼び出しに利用するアクセストークン。
-        refreshToken:
-          type: string
-          description: アクセストークン再発行に使用するリフレッシュトークン。
-        token:
-          type: string
-          description: トークン種別。常にBearer。
-          default: Bearer
-        expiresIn:
-          type: integer
-          format: int32
-          description: アクセストークンの有効期限（秒）。
-        user:
-          allOf:
-            - $ref: "#/components/schemas/Models.User"
-          description: ログインしたユーザーの情報。
-      description: ログイン成功時に返却するトークン情報。
     Models.LoyaltyTierId:
       type: string
       format: uuid
@@ -15792,6 +16236,7 @@ components:
         - productName
         - quantity
         - unit
+        - notes
       properties:
         inventoryId:
           allOf:
@@ -15809,6 +16254,7 @@ components:
           description: 数量単位
         notes:
           type: string
+          nullable: true
           description: 備考メモ
       description: 施術で使用した資材の記録
     Models.MedicalChart:
@@ -15816,6 +16262,14 @@ components:
       required:
         - id
         - customerId
+        - allergies
+        - scalpCondition
+        - hairCondition
+        - previousTreatments
+        - medicalConditions
+        - preferredProducts
+        - avoidProducts
+        - notes
         - lastUpdated
         - createdAt
         - createdBy
@@ -15834,33 +16288,41 @@ components:
           type: array
           items:
             type: string
+          nullable: true
           description: アレルギー・敏感情報
         scalpCondition:
           type: string
+          nullable: true
           description: 頭皮状態のメモ
         hairCondition:
           type: string
+          nullable: true
           description: 毛髪状態のメモ
         previousTreatments:
           type: array
           items:
             $ref: "#/components/schemas/Models.PreviousTreatment"
+          nullable: true
           description: 過去に実施したケミカル施術履歴
         medicalConditions:
           type: string
+          nullable: true
           description: 注意が必要な持病・体調情報
         preferredProducts:
           type: array
           items:
             type: string
+          nullable: true
           description: 好みの商材・ブランド
         avoidProducts:
           type: array
           items:
             type: string
+          nullable: true
           description: 避けるべき商材
         notes:
           type: string
+          nullable: true
           description: 自由記述メモ
         lastUpdated:
           type: string
@@ -15883,10 +16345,18 @@ components:
           nullable: true
           description: レコードを最後に更新したユーザーID。匿名更新の場合はnull。
       description: 顧客ごとのカルテ情報
-    Models.MedicalChartCreateInput:
+    Models.MedicalChartCreateRequest:
       type: object
       required:
         - customerId
+        - allergies
+        - scalpCondition
+        - hairCondition
+        - previousTreatments
+        - medicalConditions
+        - preferredProducts
+        - avoidProducts
+        - notes
       properties:
         customerId:
           allOf:
@@ -15896,73 +16366,89 @@ components:
           type: array
           items:
             type: string
+          nullable: true
           description: アレルギー情報
         scalpCondition:
           type: string
+          nullable: true
           description: 頭皮状態
         hairCondition:
           type: string
+          nullable: true
           description: 毛髪状態
         previousTreatments:
           type: array
           items:
             $ref: "#/components/schemas/Models.PreviousTreatment"
+          nullable: true
           description: 過去施術の履歴
         medicalConditions:
           type: string
+          nullable: true
           description: 注意すべき体調・持病
         preferredProducts:
           type: array
           items:
             type: string
+          nullable: true
           description: 好みの商材
         avoidProducts:
           type: array
           items:
             type: string
+          nullable: true
           description: 避けるべき商材
         notes:
           type: string
+          nullable: true
           description: その他メモ
       description: カルテを新規作成する入力モデル
     Models.MedicalChartId:
       type: string
       format: uuid
       description: カルテ（メディカルチャート）を識別するブランド付きUUID。
-    Models.MedicalChartUpdateInput:
+    Models.MedicalChartUpdateRequest:
       type: object
       properties:
         allergies:
           type: array
           items:
             type: string
+          nullable: true
           description: アレルギー情報
         scalpCondition:
           type: string
+          nullable: true
           description: 頭皮状態
         hairCondition:
           type: string
+          nullable: true
           description: 毛髪状態
         previousTreatments:
           type: array
           items:
             $ref: "#/components/schemas/Models.PreviousTreatment"
+          nullable: true
           description: 過去施術の履歴
         medicalConditions:
           type: string
+          nullable: true
           description: 注意すべき体調・持病
         preferredProducts:
           type: array
           items:
             type: string
+          nullable: true
           description: 好みの商材
         avoidProducts:
           type: array
           items:
             type: string
+          nullable: true
           description: 避けるべき商材
         notes:
           type: string
+          nullable: true
           description: その他メモ
       description: カルテ情報を更新する入力モデル
     Models.MembershipBenefitDetail:
@@ -16085,6 +16571,7 @@ components:
       required:
         - value
         - currency
+        - taxRate
       properties:
         value:
           type: integer
@@ -16095,8 +16582,10 @@ components:
             - $ref: "#/components/schemas/Models.CurrencyCodeType"
           description: 使用する通貨コード。
         taxRate:
+          type: number
           allOf:
             - $ref: "#/components/schemas/Models.decimal"
+          nullable: true
           description: 適用税率。任意設定。
       description: 税抜・税込計算に利用する金額モデル。
     Models.MoneyUpdate:
@@ -16111,8 +16600,10 @@ components:
             - $ref: "#/components/schemas/Models.CurrencyCodeType"
           description: 使用する通貨コード。
         taxRate:
+          type: number
           allOf:
             - $ref: "#/components/schemas/Models.decimal"
+          nullable: true
           description: 適用税率。任意設定。
       description: 税抜・税込計算に利用する金額モデル。
     Models.NailSubCategoryType:
@@ -16136,6 +16627,7 @@ components:
       required:
         - type
         - recordedAt
+        - penaltyApplied
       properties:
         type:
           type: string
@@ -16514,45 +17006,14 @@ components:
             - $ref: "#/components/schemas/Models.RefundId"
           description: 関連する返金 ID
       description: 部分返金済み状態の詳細
-    Models.PasswordChangeRequest:
-      type: object
-      required:
-        - currentPassword
-        - newPassword
-      properties:
-        currentPassword:
-          type: string
-          description: 本人確認のための現在パスワード。
-        newPassword:
-          type: string
-          description: 変更後の新しいパスワード。
-      description: ログイン中ユーザーがパスワードを変更するためのリクエスト。
-    Models.PasswordResetConfirmRequest:
-      type: object
-      required:
-        - token
-        - newPassword
-      properties:
-        token:
-          type: string
-          description: メールで受け取った再設定トークン。
-        newPassword:
-          type: string
-          description: 新しいパスワード。
-      description: パスワード再設定を確定するためのリクエスト。
-    Models.PasswordResetRequest:
-      type: object
-      required:
-        - email
-      properties:
-        email:
-          type: string
-          description: 対象アカウントのメールアドレス。
-      description: パスワード再設定メール送信を要求するリクエスト。
     Models.PasswordResetStateDetail:
       type: object
       required:
         - type
+        - token
+        - expiresAt
+        - requestedAt
+        - completedAt
       properties:
         type:
           allOf:
@@ -16560,18 +17021,22 @@ components:
           description: 現在のリセット状態区分。
         token:
           type: string
+          nullable: true
           description: リセット手続きに使用するトークン。
         expiresAt:
           type: string
           format: date-time
+          nullable: true
           description: トークンの有効期限。
         requestedAt:
           type: string
           format: date-time
+          nullable: true
           description: リセットを要求した日時。
         completedAt:
           type: string
           format: date-time
+          nullable: true
           description: リセット完了日時。未完了の場合はnull。
       description: パスワード再設定リクエストの状態管理モデル。
     Models.PasswordResetStateType:
@@ -16741,7 +17206,7 @@ components:
             - $ref: "#/components/schemas/Models.Money"
           description: 支払総額
       description: 支払金額の内訳プレビュー
-    Models.PaymentCreateInput:
+    Models.PaymentCreateRequest:
       type: object
       required:
         - salonId
@@ -16925,7 +17390,7 @@ components:
         - $ref: "#/components/schemas/Models.RefundedPaymentStatusUpdate"
         - $ref: "#/components/schemas/Models.PartialRefundPaymentStatusUpdate"
       description: 支払い状態の詳細情報を表すユニオン
-    Models.PaymentUpdateInput:
+    Models.PaymentUpdateRequest:
       type: object
       properties:
         method:
@@ -16969,6 +17434,8 @@ components:
       required:
         - type
         - requestedAt
+        - holdExpiresAt
+        - assignedStaffId
       properties:
         type:
           type: string
@@ -16982,10 +17449,13 @@ components:
         holdExpiresAt:
           type: string
           format: date-time
+          nullable: true
           description: 保留状態の有効期限。未設定の場合は期限なし。
         assignedStaffId:
+          type: string
           allOf:
             - $ref: "#/components/schemas/Models.StaffId"
+          nullable: true
           description: 仮割り当てされたスタッフID。未確定の場合はnull。
       description: 予約が確認待ち段階にある場合の状態情報。
     Models.PendingBookingStatusUpdate:
@@ -17003,10 +17473,13 @@ components:
         holdExpiresAt:
           type: string
           format: date-time
+          nullable: true
           description: 保留状態の有効期限。未設定の場合は期限なし。
         assignedStaffId:
+          type: string
           allOf:
             - $ref: "#/components/schemas/Models.StaffId"
+          nullable: true
           description: 仮割り当てされたスタッフID。未確定の場合はnull。
       description: 予約が確認待ち段階にある場合の状態情報。
     Models.PendingPaymentStatus:
@@ -17060,8 +17533,10 @@ components:
         - id
         - key
         - name
+        - description
         - resource
         - action
+        - scope
       properties:
         id:
           allOf:
@@ -17075,6 +17550,7 @@ components:
           description: 権限の名称
         description:
           type: string
+          nullable: true
           description: 権限の説明
         resource:
           type: string
@@ -17088,9 +17564,10 @@ components:
             - own
             - salon
             - all
+          nullable: true
           description: 権限の適用範囲（own/salon/all）
       description: 操作権限の定義
-    Models.PermissionCheckInput:
+    Models.PermissionCheckRequest:
       type: object
       required:
         - userId
@@ -17133,6 +17610,7 @@ components:
       required:
         - permission
         - granted
+        - source
       properties:
         permission:
           type: string
@@ -17142,6 +17620,7 @@ components:
           description: 権限が付与されているかどうか
         source:
           type: string
+          nullable: true
           description: 権限を付与したロール情報
       description: 個別権限の判定結果
     Models.PointInfo:
@@ -17251,7 +17730,7 @@ components:
           nullable: true
           description: レコードを最後に更新したユーザーID。匿名更新の場合はnull。
       description: 顧客ポイントの付与・利用履歴
-    Models.PointTransactionCreateInput:
+    Models.PointTransactionCreateRequest:
       type: object
       required:
         - customerId
@@ -17300,6 +17779,8 @@ components:
       required:
         - treatment
         - date
+        - salonName
+        - notes
       properties:
         treatment:
           allOf:
@@ -17311,9 +17792,11 @@ components:
           description: 施術日
         salonName:
           type: string
+          nullable: true
           description: 施術を受けたサロン名
         notes:
           type: string
+          nullable: true
           description: 施術に関するメモ
       description: 過去施術の履歴
     Models.PriceRangeFilter:
@@ -17332,13 +17815,17 @@ components:
       type: object
       required:
         - name
+        - description
         - price
+        - duration
+        - conditions
       properties:
         name:
           type: string
           description: 価格段階の名称
         description:
           type: string
+          nullable: true
           description: 段階の説明
         price:
           type: integer
@@ -17347,17 +17834,24 @@ components:
         duration:
           type: integer
           format: int32
+          nullable: true
           description: この段階での施術時間
         conditions:
           type: array
           items:
             type: string
+          nullable: true
           description: 適用条件の説明リスト
       description: 段階制価格の設定情報
     Models.PricingFactor:
       type: object
       required:
         - type
+        - multipliers
+        - peakHours
+        - peakMultiplier
+        - threshold
+        - seasons
       properties:
         type:
           type: string
@@ -17372,30 +17866,45 @@ components:
           type: object
           additionalProperties:
             $ref: "#/components/schemas/Models.decimal"
+          nullable: true
           description: 条件に応じた倍率設定
         peakHours:
           type: array
           items:
             type: string
+          nullable: true
           description: ピーク時間帯の指定
         peakMultiplier:
+          type: number
           allOf:
             - $ref: "#/components/schemas/Models.decimal"
+          nullable: true
           description: ピーク時間帯に適用する倍率
         threshold:
           type: integer
           format: int32
+          nullable: true
           description: 需要に応じた閾値設定
         seasons:
           type: array
           items:
             $ref: "#/components/schemas/Models.Season"
+          nullable: true
           description: 季節要因の詳細設定
       description: 料金調整に使用する変動要因
     Models.PricingStrategyDetail:
       type: object
       required:
         - type
+        - amount
+        - tiers
+        - basePrice
+        - factors
+        - services
+        - discountRate
+        - memberPrice
+        - nonMemberPrice
+        - description
       properties:
         type:
           allOf:
@@ -17404,40 +17913,50 @@ components:
         amount:
           type: integer
           format: int32
+          nullable: true
           description: 固定価格型の場合の金額
         tiers:
           type: array
           items:
             $ref: "#/components/schemas/Models.PriceTier"
+          nullable: true
           description: 段階価格の設定一覧
         basePrice:
           type: integer
           format: int32
+          nullable: true
           description: 基準価格
         factors:
           type: array
           items:
             $ref: "#/components/schemas/Models.PricingFactor"
+          nullable: true
           description: 価格変動要因の設定
         services:
           type: array
           items:
             $ref: "#/components/schemas/Models.ServiceId"
+          nullable: true
           description: セット対象となるサービス ID
         discountRate:
+          type: number
           allOf:
             - $ref: "#/components/schemas/Models.decimal"
+          nullable: true
           description: 割引率（%）
         memberPrice:
           type: integer
           format: int32
+          nullable: true
           description: 会員向け特別価格
         nonMemberPrice:
           type: integer
           format: int32
+          nullable: true
           description: 非会員向け価格
         description:
           type: string
+          nullable: true
           description: 戦略の説明
       description: 採用している価格戦略の詳細
     Models.PricingStrategyType:
@@ -17464,7 +17983,11 @@ components:
         - type
         - title
         - status
+        - detail
+        - instance
         - code
+        - errors
+        - correlationId
         - timestamp
       properties:
         type:
@@ -17479,9 +18002,11 @@ components:
           description: レスポンスに付与される HTTP ステータスコード。
         detail:
           type: string
+          nullable: true
           description: 今回の発生状況に固有の詳細説明。サポート対応時の一次情報となる。
         instance:
           type: string
+          nullable: true
           description: この事象を一意に識別するための URI。監査ログやダッシュボードと連携する。
         code:
           allOf:
@@ -17491,9 +18016,11 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Models.ValidationError"
+          nullable: true
           description: フィールド単位の検証エラーなど、追加のエラー詳細情報一覧。
         correlationId:
           type: string
+          nullable: true
           description: 障害調査や問い合わせで利用する相関 ID。リクエスト単位で一意。
         timestamp:
           type: string
@@ -17507,6 +18034,7 @@ components:
       required:
         - type
         - startedAt
+        - processorId
       properties:
         type:
           type: string
@@ -17518,8 +18046,10 @@ components:
           format: date-time
           description: 処理開始日時
         processorId:
+          type: string
           allOf:
             - $ref: "#/components/schemas/Models.StaffId"
+          nullable: true
           description: 処理を担当しているスタッフ ID
       description: 決済処理中の状態の詳細
     Models.ProcessingPaymentStatusUpdate:
@@ -17535,8 +18065,10 @@ components:
           format: date-time
           description: 処理開始日時
         processorId:
+          type: string
           allOf:
             - $ref: "#/components/schemas/Models.StaffId"
+          nullable: true
           description: 処理を担当しているスタッフ ID
       description: 決済処理中の状態の詳細
     Models.PurchaseOrder:
@@ -17642,12 +18174,16 @@ components:
           nullable: true
           description: レコードを最後に更新したユーザーID。匿名更新の場合はnull。
       description: 仕入れ発注の基本情報
-    Models.PurchaseOrderCreateInput:
+    Models.PurchaseOrderCreateRequest:
       type: object
       required:
         - supplier
         - items
         - taxAmount
+        - shippingCost
+        - expectedDelivery
+        - paymentTerms
+        - notes
       properties:
         supplier:
           type: string
@@ -17664,19 +18200,23 @@ components:
         shippingCost:
           type: number
           format: float
+          nullable: true
           description: 送料
         expectedDelivery:
           type: string
           format: date-time
+          nullable: true
           description: 予定納期
         paymentTerms:
           type: string
+          nullable: true
           description: 支払条件
         notes:
           type: string
+          nullable: true
           description: 備考メモ
       description: 仕入れ発注を作成する入力モデル
-    Models.PurchaseOrderUpdateInput:
+    Models.PurchaseOrderUpdateRequest:
       type: object
       properties:
         status:
@@ -17755,11 +18295,7 @@ components:
           type: string
           description: 返金処理に関する備考
       description: 返金処理の記録
-    Models.RefundId:
-      type: string
-      format: uuid
-      description: 返金処理のトランザクションを識別するブランド付きUUID。
-    Models.RefundInput:
+    Models.RefundCreateRequest:
       type: object
       required:
         - paymentId
@@ -17788,12 +18324,17 @@ components:
           type: string
           description: 返金に関する備考
       description: 返金処理を開始するための入力モデル
+    Models.RefundId:
+      type: string
+      format: uuid
+      description: 返金処理のトランザクションを識別するブランド付きUUID。
     Models.RefundedPaymentStatus:
       type: object
       required:
         - type
         - refundedAt
         - refundAmount
+        - refundId
       properties:
         type:
           type: string
@@ -17809,8 +18350,10 @@ components:
             - $ref: "#/components/schemas/Models.Money"
           description: 返金金額
         refundId:
+          type: string
           allOf:
             - $ref: "#/components/schemas/Models.RefundId"
+          nullable: true
           description: 関連する返金 ID
       description: 全額返金済み状態の詳細
     Models.RefundedPaymentStatusUpdate:
@@ -17830,32 +18373,12 @@ components:
             - $ref: "#/components/schemas/Models.MoneyUpdate"
           description: 返金金額
         refundId:
+          type: string
           allOf:
             - $ref: "#/components/schemas/Models.RefundId"
+          nullable: true
           description: 関連する返金 ID
       description: 全額返金済み状態の詳細
-    Models.RegisterRequest:
-      type: object
-      required:
-        - email
-        - password
-        - name
-      properties:
-        email:
-          type: string
-          description: 登録に使用するメールアドレス。
-        password:
-          type: string
-          description: セキュリティ基準を満たすパスワード。
-        name:
-          type: string
-          description: ユーザーの表示名。
-        role:
-          allOf:
-            - $ref: "#/components/schemas/Models.AuthUserRoleType"
-          description: 付与するロール。既定はcustomer。
-          default: customer
-      description: 新規ユーザー登録時のリクエスト。
     Models.ReminderTimingType:
       type: string
       enum:
@@ -17881,8 +18404,11 @@ components:
         - startTime
         - endTime
         - status
+        - notes
         - totalAmount
+        - depositAmount
         - isPaid
+        - cancellationReason
         - createdAt
         - createdBy
         - updatedAt
@@ -17922,6 +18448,7 @@ components:
           description: 予約の現在ステータスを表す区分値
         notes:
           type: string
+          nullable: true
           description: 顧客からの特記事項やサロン側メモ
         totalAmount:
           type: integer
@@ -17930,12 +18457,14 @@ components:
         depositAmount:
           type: integer
           format: int32
+          nullable: true
           description: 事前に受領した内金・デポジット金額
         isPaid:
           type: boolean
           description: 予約に対する決済が完了しているかを示すフラグ
         cancellationReason:
           type: string
+          nullable: true
           description: キャンセルが発生した場合の理由
         createdAt:
           type: string
@@ -18031,10 +18560,20 @@ components:
         - salonId
         - customerId
         - bookingId
+        - staffId
         - overallRating
+        - comment
+        - title
+        - serviceRating
+        - staffRating
+        - cleanlinessRating
+        - valueRating
+        - imageUrls
         - isVerified
         - helpfulCount
         - reportCount
+        - ownerResponse
+        - ownerRespondedAt
         - createdAt
         - createdBy
         - updatedAt
@@ -18057,8 +18596,10 @@ components:
             - $ref: "#/components/schemas/Models.BookingId"
           description: 紐づく来店予約を示すID (DBカラム booking_id と整合)
         staffId:
+          type: string
           allOf:
             - $ref: "#/components/schemas/Models.StaffId"
+          nullable: true
           description: 評価対象のスタッフID。スタッフ未指定レビューの場合は省略
         overallRating:
           type: integer
@@ -18066,30 +18607,37 @@ components:
           description: "全体満足度の評価値 (例: 1〜5)"
         comment:
           type: string
+          nullable: true
           description: 自由記述のレビューコメント
         title:
           type: string
+          nullable: true
           description: レビュータイトルや要約
         serviceRating:
           type: integer
           format: int32
+          nullable: true
           description: 施術サービスそのものに対する評価値
         staffRating:
           type: integer
           format: int32
+          nullable: true
           description: スタッフの接客・技術に対する評価値
         cleanlinessRating:
           type: integer
           format: int32
+          nullable: true
           description: 店内の清潔さ・衛生面に対する評価値
         valueRating:
           type: integer
           format: int32
+          nullable: true
           description: 価格に対する価値・コストパフォーマンス評価値
         imageUrls:
           type: array
           items:
             type: string
+          nullable: true
           description: レビューに添付された画像URLの一覧
         isVerified:
           type: boolean
@@ -18106,10 +18654,12 @@ components:
           default: 0
         ownerResponse:
           type: string
+          nullable: true
           description: サロン運営からの公式返信本文
         ownerRespondedAt:
           type: string
           format: date-time
+          nullable: true
           description: 運営が返信した日時 (UTC)
         createdAt:
           type: string
@@ -18128,6 +18678,79 @@ components:
           nullable: true
           description: レコードを最後に更新したユーザーID。匿名更新の場合はnull。
       description: レビューモデル - 施術後の顧客体験を定量・定性的に記録し、サロン品質の改善と信頼性向上に活用する
+    Models.ReviewCreateRequest:
+      type: object
+      required:
+        - salonId
+        - customerId
+        - bookingId
+        - staffId
+        - overallRating
+        - comment
+        - title
+        - serviceRating
+        - staffRating
+        - cleanlinessRating
+        - valueRating
+        - imageUrls
+      properties:
+        salonId:
+          allOf:
+            - $ref: "#/components/schemas/Models.SalonId"
+          description: レビュー対象のサロンID
+        customerId:
+          allOf:
+            - $ref: "#/components/schemas/Models.CustomerId"
+          description: レビュー投稿者の顧客ID
+        bookingId:
+          allOf:
+            - $ref: "#/components/schemas/Models.BookingId"
+          description: 紐づく来店予約ID (booking_id)
+        staffId:
+          type: string
+          allOf:
+            - $ref: "#/components/schemas/Models.StaffId"
+          nullable: true
+          description: 評価対象スタッフのID
+        overallRating:
+          type: integer
+          format: int32
+          description: 全体満足度の評価値
+        comment:
+          type: string
+          nullable: true
+          description: 自由記述のコメント
+        title:
+          type: string
+          nullable: true
+          description: レビュータイトル
+        serviceRating:
+          type: integer
+          format: int32
+          nullable: true
+          description: サービス品質に対する評価値
+        staffRating:
+          type: integer
+          format: int32
+          nullable: true
+          description: スタッフ対応に対する評価値
+        cleanlinessRating:
+          type: integer
+          format: int32
+          nullable: true
+          description: 清潔さ・衛生状態に対する評価値
+        valueRating:
+          type: integer
+          format: int32
+          nullable: true
+          description: 価格に見合う価値の評価値
+        imageUrls:
+          type: array
+          items:
+            type: string
+          nullable: true
+          description: 添付画像のURL一覧
+      description: レビュー作成リクエスト - 顧客が新規レビュー投稿時に入力する評価情報と任意コメント・画像を受け取る
     Models.ReviewId:
       type: string
       format: uuid
@@ -18154,12 +18777,55 @@ components:
             format: int32
           description: 評価値ごとのレビュー件数分布
       description: レビュー集計モデル - 平均評価や件数分布を保持し、ダッシュボードやランキング表示に活用する
+    Models.ReviewUpdateRequest:
+      type: object
+      properties:
+        overallRating:
+          type: integer
+          format: int32
+          description: 更新後の全体満足度評価
+        comment:
+          type: string
+          nullable: true
+          description: 更新後のコメント本文（null指定で初期化可能）
+        title:
+          type: string
+          nullable: true
+          description: 更新後のレビュータイトル（null指定で初期化可能）
+        serviceRating:
+          type: integer
+          format: int32
+          nullable: true
+          description: 更新後のサービス品質評価（null指定で初期化可能）
+        staffRating:
+          type: integer
+          format: int32
+          nullable: true
+          description: 更新後のスタッフ評価（null指定で初期化可能）
+        cleanlinessRating:
+          type: integer
+          format: int32
+          nullable: true
+          description: 更新後の清潔さ評価（null指定で初期化可能）
+        valueRating:
+          type: integer
+          format: int32
+          nullable: true
+          description: 更新後の価格価値評価（null指定で初期化可能）
+        imageUrls:
+          type: array
+          items:
+            type: string
+          nullable: true
+          description: 画像URL一覧の更新内容（null指定で初期化可能）
+      description: レビュー更新リクエスト - 任意項目を部分更新し、既存レビューの評価やコメントを調整する。null指定で値をリセット可能
     Models.Role:
       type: object
       required:
         - id
         - name
         - displayName
+        - description
         - permissions
         - isSystem
         - isActive
@@ -18180,6 +18846,7 @@ components:
           description: 管理画面などで表示する名称
         description:
           type: string
+          nullable: true
           description: ロールの詳細説明
         permissions:
           type: array
@@ -18209,7 +18876,7 @@ components:
           nullable: true
           description: レコードを最後に更新したユーザーID。匿名更新の場合はnull。
       description: 権限管理におけるロール定義
-    Models.RoleCreateInput:
+    Models.RoleCreateRequest:
       type: object
       required:
         - name
@@ -18235,7 +18902,7 @@ components:
       type: string
       format: uuid
       description: ロールベース権限管理で利用する役割IDを識別するブランド付きUUID。
-    Models.RoleUpdateInput:
+    Models.RoleUpdateRequest:
       type: object
       properties:
         displayName:
@@ -18429,14 +19096,12 @@ components:
           type: array
           items:
             type: string
-          nullable: true
-          description: 店舗写真や内装画像のURL一覧。未登録時はnull
+          description: 店舗写真や内装画像のURL一覧
         features:
           type: array
           items:
             type: string
-          nullable: true
-          description: 設備・サービス・こだわりポイント等の特徴タグ一覧。未設定時はnull
+          description: 設備・サービス・こだわりポイント等の特徴タグ一覧
         rating:
           type: number
           format: float
@@ -18807,12 +19472,22 @@ components:
         - salonId
         - info
         - category
+        - categoryId
         - pricing
         - duration
+        - availability
+        - requirements
+        - options
+        - restrictions
+        - performance
+        - associations
+        - metadata
         - status
         - name
         - description
         - price
+        - imageUrl
+        - requiredStaffLevel
         - isActive
         - createdAt
         - createdBy
@@ -18836,8 +19511,10 @@ components:
             - $ref: "#/components/schemas/Models.ServiceCategoryType"
           description: サービスカテゴリ区分
         categoryId:
+          type: string
           allOf:
             - $ref: "#/components/schemas/Models.CategoryId"
+          nullable: true
           description: カテゴリ ID（分類ツリー連携用）
         pricing:
           allOf:
@@ -18848,34 +19525,46 @@ components:
             - $ref: "#/components/schemas/Models.ServiceDuration"
           description: 提供時間の設定
         availability:
+          type: object
           allOf:
             - $ref: "#/components/schemas/Models.ServiceAvailabilityDetail"
+          nullable: true
           description: 提供可能条件の設定
         requirements:
           type: array
           items:
             $ref: "#/components/schemas/Models.BookingRequirementDetail"
+          nullable: true
           description: 予約時に必要な要件一覧
         options:
           type: array
           items:
             $ref: "#/components/schemas/Models.ServiceOptionDetail"
+          nullable: true
           description: 追加オプション設定
         restrictions:
+          type: object
           allOf:
             - $ref: "#/components/schemas/Models.ServiceRestrictions"
+          nullable: true
           description: 提供上の制約条件
         performance:
+          type: object
           allOf:
             - $ref: "#/components/schemas/Models.ServicePerformance"
+          nullable: true
           description: サービス実績の指標
         associations:
+          type: object
           allOf:
             - $ref: "#/components/schemas/Models.ServiceAssociations"
+          nullable: true
           description: 関連サービス・担当者情報
         metadata:
+          type: object
           allOf:
             - $ref: "#/components/schemas/Models.ServiceMetadata"
+          nullable: true
           description: メタデータ・表示設定
         status:
           allOf:
@@ -18893,10 +19582,12 @@ components:
           description: 互換性維持のための旧項目：料金
         imageUrl:
           type: string
+          nullable: true
           description: 互換性維持のための旧項目：画像 URL
         requiredStaffLevel:
           type: integer
           format: int32
+          nullable: true
           description: 互換性維持のための旧項目：スタッフレベル
         isActive:
           type: boolean
@@ -18922,45 +19613,63 @@ components:
       type: object
       required:
         - categoryId
+        - parentServiceId
+        - childServiceIds
+        - requiredServiceIds
+        - recommendedServiceIds
+        - qualifiedStaffIds
+        - preferredStaffIds
       properties:
         categoryId:
           allOf:
             - $ref: "#/components/schemas/Models.CategoryId"
           description: 紐づくカテゴリ ID
         parentServiceId:
+          type: string
           allOf:
             - $ref: "#/components/schemas/Models.ServiceId"
+          nullable: true
           description: 親サービス ID
         childServiceIds:
           type: array
           items:
             $ref: "#/components/schemas/Models.ServiceId"
+          nullable: true
           description: 子サービス ID 一覧
         requiredServiceIds:
           type: array
           items:
             $ref: "#/components/schemas/Models.ServiceId"
+          nullable: true
           description: 予約時に必須のサービス ID
         recommendedServiceIds:
           type: array
           items:
             $ref: "#/components/schemas/Models.ServiceId"
+          nullable: true
           description: 併用を推奨するサービス ID
         qualifiedStaffIds:
           type: array
           items:
             $ref: "#/components/schemas/Models.StaffId"
+          nullable: true
           description: 施術資格を持つスタッフ ID
         preferredStaffIds:
           type: array
           items:
             $ref: "#/components/schemas/Models.StaffId"
+          nullable: true
           description: 優先的に担当させたいスタッフ ID
       description: サービス間・スタッフとの関連情報
     Models.ServiceAvailabilityDetail:
       type: object
       required:
         - type
+        - schedule
+        - requiresApproval
+        - seasons
+        - maxPerDay
+        - maxPerWeek
       properties:
         type:
           allOf:
@@ -18970,22 +19679,27 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Models.ServiceSchedule"
+          nullable: true
           description: 曜日・時間帯のスケジュール
         requiresApproval:
           type: boolean
+          nullable: true
           description: 事前承認が必要かどうか
         seasons:
           type: array
           items:
             $ref: "#/components/schemas/Models.Season"
+          nullable: true
           description: 季節限定時の季節設定
         maxPerDay:
           type: integer
           format: int32
+          nullable: true
           description: 1 日あたりの提供上限
         maxPerWeek:
           type: integer
           format: int32
+          nullable: true
           description: 1 週間あたりの提供上限
       description: サービスの提供可否設定
     Models.ServiceAvailabilityType:
@@ -19026,6 +19740,10 @@ components:
       type: object
       required:
         - standard
+        - minimum
+        - maximum
+        - bufferBefore
+        - bufferAfter
         - includesConsultation
       properties:
         standard:
@@ -19035,18 +19753,22 @@ components:
         minimum:
           type: integer
           format: int32
+          nullable: true
           description: 最短施術時間
         maximum:
           type: integer
           format: int32
+          nullable: true
           description: 最長施術時間
         bufferBefore:
           type: integer
           format: int32
+          nullable: true
           description: 施術前のバッファ時間
         bufferAfter:
           type: integer
           format: int32
+          nullable: true
           description: 施術後のバッファ時間
         includesConsultation:
           type: boolean
@@ -19060,74 +19782,115 @@ components:
       type: object
       required:
         - name
+        - nameKana
         - description
+        - shortDescription
+        - benefits
+        - targetCustomer
+        - imageUrls
+        - videoUrl
       properties:
         name:
           type: string
           description: サービス名称
         nameKana:
           type: string
+          nullable: true
           description: サービス名の読み仮名
         description:
           type: string
           description: サービス詳細説明文
         shortDescription:
           type: string
+          nullable: true
           description: 短めの紹介文
         benefits:
           type: array
           items:
             type: string
+          nullable: true
           description: 提供価値・メリットの一覧
         targetCustomer:
           type: string
+          nullable: true
           description: 主な対象顧客層
         imageUrls:
           type: array
           items:
             type: string
+          nullable: true
           description: サービス画像の URL 一覧
         videoUrl:
           type: string
+          nullable: true
           description: 紹介動画の URL
       description: サービスの基本的な紹介情報
     Models.ServiceMetadata:
       type: object
+      required:
+        - tags
+        - keywords
+        - seoTitle
+        - seoDescription
+        - internalNotes
+        - sortOrder
+        - featured
+        - hideFromMenu
       properties:
         tags:
           type: array
           items:
             type: string
+          nullable: true
           description: タグ一覧
         keywords:
           type: array
           items:
             type: string
+          nullable: true
           description: 検索キーワード
         seoTitle:
           type: string
+          nullable: true
           description: SEO 用タイトル
         seoDescription:
           type: string
+          nullable: true
           description: SEO 用ディスクリプション
         internalNotes:
           type: string
+          nullable: true
           description: 内部向けメモ
         sortOrder:
           type: integer
           format: int32
+          nullable: true
           description: 表示順序
         featured:
           type: boolean
+          nullable: true
           description: 注目サービスとして表示するか
         hideFromMenu:
           type: boolean
+          nullable: true
           description: メニュー非表示フラグ
       description: サービスのメタデータ情報
     Models.ServiceOptionDetail:
       type: object
       required:
         - type
+        - name
+        - price
+        - duration
+        - description
+        - fromLevel
+        - toLevel
+        - additionalPrice
+        - extension
+        - productId
+        - required
+        - withService
+        - discountAmount
       properties:
         type:
           allOf:
@@ -19135,45 +19898,58 @@ components:
           description: オプションの種類
         name:
           type: string
+          nullable: true
           description: オプション名
         price:
           type: integer
           format: int32
+          nullable: true
           description: オプション料金
         duration:
           type: integer
           format: int32
+          nullable: true
           description: 追加される施術時間
         description:
           type: string
+          nullable: true
           description: オプションの説明
         fromLevel:
           type: string
+          nullable: true
           description: アップグレード元のレベル
         toLevel:
           type: string
+          nullable: true
           description: アップグレード先のレベル
         additionalPrice:
           type: integer
           format: int32
+          nullable: true
           description: 追加料金
         extension:
           type: integer
           format: int32
+          nullable: true
           description: 時間延長（分）
         productId:
           type: string
+          nullable: true
           description: 関連商品 ID
         required:
           type: boolean
+          nullable: true
           description: 必須オプションかどうか
         withService:
+          type: string
           allOf:
             - $ref: "#/components/schemas/Models.ServiceId"
+          nullable: true
           description: 同時予約が必要なサービス ID
         discountAmount:
           type: integer
           format: int32
+          nullable: true
           description: 割引金額
       description: サービスに付随するオプション設定
     Models.ServiceOptionType:
@@ -19197,8 +19973,11 @@ components:
       required:
         - bookingCount
         - completionRate
+        - averageRating
         - reviewCount
         - revenue
+        - popularityScore
+        - repeatRate
       properties:
         bookingCount:
           type: integer
@@ -19209,8 +19988,10 @@ components:
             - $ref: "#/components/schemas/Models.decimal"
           description: 施術完了率
         averageRating:
+          type: number
           allOf:
             - $ref: "#/components/schemas/Models.decimal"
+          nullable: true
           description: 平均評価スコア
         reviewCount:
           type: integer
@@ -19221,12 +20002,16 @@ components:
           format: int64
           description: 売上実績（円）
         popularityScore:
+          type: number
           allOf:
             - $ref: "#/components/schemas/Models.decimal"
+          nullable: true
           description: 人気度スコア
         repeatRate:
+          type: number
           allOf:
             - $ref: "#/components/schemas/Models.decimal"
+          nullable: true
           description: リピート率
       description: サービスの実績指標
     Models.ServicePreference:
@@ -19262,7 +20047,11 @@ components:
         - strategy
         - taxIncluded
         - currency
+        - minimumPrice
+        - maximumPrice
         - depositRequired
+        - depositAmount
+        - cancellationFee
       properties:
         strategy:
           allOf:
@@ -19278,10 +20067,12 @@ components:
         minimumPrice:
           type: integer
           format: int32
+          nullable: true
           description: 設定されている最低料金
         maximumPrice:
           type: integer
           format: int32
+          nullable: true
           description: 設定されている最高料金
         depositRequired:
           type: boolean
@@ -19289,41 +20080,58 @@ components:
         depositAmount:
           type: integer
           format: int32
+          nullable: true
           description: 必要なデポジット金額
         cancellationFee:
+          type: object
           allOf:
             - $ref: "#/components/schemas/Models.CancellationFee"
+          nullable: true
           description: キャンセル料金の設定
       description: サービスの料金設定情報
     Models.ServiceRestrictions:
       type: object
+      required:
+        - requiredStaffLevel
+        - requiredCertifications
+        - maxConcurrent
+        - minIntervalDays
+        - maxBookingsPerCustomer
+        - blackoutDates
       properties:
         requiredStaffLevel:
           allOf:
             - $ref: "#/components/schemas/Models.StaffLevelType"
+          nullable: true
           description: 必要なスタッフレベル
         requiredCertifications:
           type: array
           items:
             type: string
+          nullable: true
           description: 必要資格の一覧
         maxConcurrent:
           type: integer
           format: int32
+          nullable: true
           description: 同時提供可能な最大件数
         minIntervalDays:
           type: integer
           format: int32
+          nullable: true
           description: 再予約までの最短間隔（日）
         maxBookingsPerCustomer:
+          type: object
           allOf:
             - $ref: "#/components/schemas/Models.BookingLimit"
+          nullable: true
           description: 顧客ごとの予約上限設定
         blackoutDates:
           type: array
           items:
             type: string
             format: date-time
+          nullable: true
           description: 提供不可日（ブラックアウト）一覧
       description: サービス提供時の制約条件
     Models.ServiceSchedule:
@@ -19332,6 +20140,7 @@ components:
         - dayOfWeek
         - startTime
         - endTime
+        - maxBookings
       properties:
         dayOfWeek:
           allOf:
@@ -19346,12 +20155,21 @@ components:
         maxBookings:
           type: integer
           format: int32
+          nullable: true
           description: 予約受け入れ上限数
       description: サービス提供スケジュール
     Models.ServiceStatusDetail:
       type: object
       required:
         - type
+        - reason
+        - since
+        - availableMonths
+        - availableUntil
+        - remainingSlots
+        - discontinuedAt
+        - replacementId
+        - launchDate
       properties:
         type:
           allOf:
@@ -19359,36 +20177,45 @@ components:
           description: ステータス区分
         reason:
           type: string
+          nullable: true
           description: ステータス変更理由
         since:
           type: string
           format: date-time
+          nullable: true
           description: この状態が開始した日時
         availableMonths:
           type: array
           items:
             type: integer
             format: int32
+          nullable: true
           description: 提供可能な月の一覧
         availableUntil:
           type: string
           format: date-time
+          nullable: true
           description: 提供終了予定日
         remainingSlots:
           type: integer
           format: int32
+          nullable: true
           description: 残り提供可能枠数
         discontinuedAt:
           type: string
           format: date-time
+          nullable: true
           description: 廃止日時
         replacementId:
+          type: string
           allOf:
             - $ref: "#/components/schemas/Models.ServiceId"
+          nullable: true
           description: 代替サービス ID
         launchDate:
           type: string
           format: date-time
+          nullable: true
           description: 公開予定日
       description: サービスの提供状態の詳細
     Models.ServiceStatusType:
@@ -19479,30 +20306,17 @@ components:
       type: string
       format: uuid
       description: ログインセッションを追跡するためのブランド付きUUID。
-    Models.SessionListResponse:
-      type: object
-      required:
-        - sessions
-        - total
-      properties:
-        sessions:
-          type: array
-          items:
-            $ref: "#/components/schemas/Models.Session"
-          description: 稼働中のセッション配列。
-        total:
-          type: integer
-          format: int32
-          description: 該当セッションの総数。
-      description: アクティブなセッション一覧を返すレスポンス。
     Models.ShareLink:
       type: object
       required:
         - id
         - token
         - attachmentId
+        - expiresAt
+        - maxDownloads
         - downloadCount
         - hasPassword
+        - allowedEmails
         - createdBy
         - createdAt
       properties:
@@ -19518,10 +20332,12 @@ components:
         expiresAt:
           type: string
           format: date-time
+          nullable: true
           description: 共有リンクの有効期限。任意設定。
         maxDownloads:
           type: integer
           format: int32
+          nullable: true
           description: 許可する最大ダウンロード回数。任意設定。
         downloadCount:
           type: integer
@@ -19534,6 +20350,7 @@ components:
           type: array
           items:
             type: string
+          nullable: true
           description: アクセスを許可するメールアドレス一覧。任意設定。
         createdBy:
           type: string
@@ -19543,10 +20360,52 @@ components:
           format: date-time
           description: 共有リンクを作成した日時。
       description: 外部共有用に発行された添付ファイルの共有リンク情報。
+    Models.ShareLinkAccessRequest:
+      type: object
+      required:
+        - password
+      properties:
+        password:
+          type: string
+          nullable: true
+          description: 共有リンクのパスワード。保護されている場合に入力。
+      description: パスワード保護された共有リンクへアクセスする際のリクエスト。
+    Models.ShareLinkCreateRequest:
+      type: object
+      required:
+        - expiresAt
+        - maxDownloads
+        - password
+        - allowedEmails
+      properties:
+        expiresAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: 共有リンクの有効期限。任意設定。
+        maxDownloads:
+          type: integer
+          format: int32
+          nullable: true
+          description: 許可する最大ダウンロード回数。任意設定。
+        password:
+          type: string
+          nullable: true
+          description: 共有リンク保護用のパスワード。任意設定。
+        allowedEmails:
+          type: array
+          items:
+            type: string
+          nullable: true
+          description: アクセスを許可するメールアドレス一覧。任意設定。
+      description: 添付ファイルの共有リンクを新規発行する際のリクエスト。
     Models.SoftDelete:
       type: object
       required:
         - isDeleted
+        - deletedAt
+        - deletedBy
+        - deletionReason
       properties:
         isDeleted:
           type: boolean
@@ -19555,12 +20414,15 @@ components:
         deletedAt:
           type: string
           format: date-time
+          nullable: true
           description: 削除操作が実行された日時 (UTC)。
         deletedBy:
           type: string
+          nullable: true
           description: 削除操作を実施したユーザーID またはサービス名。
         deletionReason:
           type: string
+          nullable: true
           description: 削除理由や補足メモ。カスタマーサポート対応に利用する。
       description: |-
         ソフトデリート情報モデル。
@@ -19587,7 +20449,14 @@ components:
         - name
         - contactInfo
         - specialties
+        - imageUrl
+        - bio
+        - yearsOfExperience
+        - certifications
+        - qualifications
+        - schedules
         - isActive
+        - permissions
         - createdAt
         - createdBy
         - updatedAt
@@ -19615,28 +20484,34 @@ components:
           description: 得意分野や専門メニューの一覧
         imageUrl:
           type: string
+          nullable: true
           description: プロフィール画像のURL
         bio:
           type: string
+          nullable: true
           description: 自己紹介や経歴の概要
         yearsOfExperience:
           type: integer
           format: int32
+          nullable: true
           description: 実務経験年数
         certifications:
           type: array
           items:
             type: string
+          nullable: true
           description: 保有資格名の一覧 (テキスト管理)
         qualifications:
           type: array
           items:
             $ref: "#/components/schemas/Models.StaffQualification"
+          nullable: true
           description: 詳細な資格情報の一覧
         schedules:
           type: array
           items:
             $ref: "#/components/schemas/Models.StaffSchedule"
+          nullable: true
           description: 通常勤務スケジュールの一覧
         isActive:
           type: boolean
@@ -19645,6 +20520,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Models.StaffPermission"
+          nullable: true
           description: システム上で付与されている追加権限一覧
         createdAt:
           type: string
@@ -19670,6 +20546,8 @@ components:
         - dayOfWeek
         - startTime
         - endTime
+        - breakStart
+        - breakEnd
       properties:
         staffId:
           allOf:
@@ -19687,9 +20565,11 @@ components:
           description: 空き枠の終了時刻 (HH:mm)
         breakStart:
           type: string
+          nullable: true
           description: 休憩などの開始時刻
         breakEnd:
           type: string
+          nullable: true
           description: 休憩などの終了時刻
       description: スタッフ空き状況モデル - 個別時間帯の空き枠を表し、スポット予約や検索レスポンスに利用する
     Models.StaffId:
@@ -19750,6 +20630,8 @@ components:
       required:
         - resource
         - actions
+        - scope
+        - expiresAt
       properties:
         resource:
           type: string
@@ -19761,10 +20643,12 @@ components:
           description: 許可されたアクションの一覧
         scope:
           type: string
+          nullable: true
           description: 権限が適用される範囲や条件
         expiresAt:
           type: string
           format: date-time
+          nullable: true
           description: 権限の有効期限 (UTC)
       description: スタッフ権限モデル - スタッフアカウントに付与された操作対象と権限範囲を定義する
     Models.StaffQualification:
@@ -19772,6 +20656,9 @@ components:
       required:
         - name
         - certificationDate
+        - expiryDate
+        - issuer
+        - credentialId
       properties:
         name:
           type: string
@@ -19783,12 +20670,15 @@ components:
         expiryDate:
           type: string
           format: date
+          nullable: true
           description: 資格の有効期限。無期限の場合は省略
         issuer:
           type: string
+          nullable: true
           description: 資格を発行した機関名
         credentialId:
           type: string
+          nullable: true
           description: 資格証明番号などの識別子
       description: スタッフ資格モデル - 保有資格や認定情報を管理し、サービス提供に必要なスキル証明を保持する
     Models.StaffSchedule:
@@ -19797,6 +20687,8 @@ components:
         - dayOfWeek
         - startTime
         - endTime
+        - breakTime
+        - effectivePeriod
       properties:
         dayOfWeek:
           allOf:
@@ -19812,10 +20704,13 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Models.TimeSlot"
+          nullable: true
           description: 当日の休憩時間帯リスト
         effectivePeriod:
+          type: object
           allOf:
             - $ref: "#/components/schemas/Models.DateRange"
+          nullable: true
           description: シフトが有効となる期間
       description: スタッフシフトモデル - 通常勤務スケジュールと休憩時間、適用期間を定義し、予約可能時間の算出に利用する
     Models.StaffScheduleManagement:
@@ -19826,12 +20721,16 @@ components:
         - regularHours
         - exceptions
         - effectiveFrom
+        - effectiveTo
         - createdAt
         - createdBy
         - updatedAt
         - updatedBy
         - version
         - isDeleted
+        - deletedAt
+        - deletedBy
+        - deletionReason
       properties:
         staffId:
           allOf:
@@ -19858,6 +20757,7 @@ components:
         effectiveTo:
           type: string
           format: date-time
+          nullable: true
           description: スケジュールの終了日時。無期限の場合はnull
         createdAt:
           type: string
@@ -19884,19 +20784,24 @@ components:
         deletedAt:
           type: string
           format: date-time
+          nullable: true
           description: 削除操作が実行された日時 (UTC)。
         deletedBy:
           type: string
+          nullable: true
           description: 削除操作を実施したユーザーID またはサービス名。
         deletionReason:
           type: string
+          nullable: true
           description: 削除理由や補足メモ。カスタマーサポート対応に利用する。
       description: スタッフの勤務スケジュールと例外設定を管理するモデル
     Models.StaffScheduleUpdateRequest:
       type: object
       required:
         - regularHours
+        - exceptions
         - effectiveFrom
+        - effectiveTo
       properties:
         regularHours:
           type: array
@@ -19907,6 +20812,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Models.ScheduleException"
+          nullable: true
           description: 休暇や特例などの例外設定一覧。変更がない場合はnull
         effectiveFrom:
           type: string
@@ -19915,6 +20821,7 @@ components:
         effectiveTo:
           type: string
           format: date-time
+          nullable: true
           description: 適用終了日時。未定の場合はnull
       description: スタッフの勤務スケジュールを更新するためのリクエスト
     Models.StaffSummary:
@@ -20068,13 +20975,16 @@ components:
           nullable: true
           description: レコードを最後に更新したユーザーID。匿名更新の場合はnull。
       description: 在庫の移動履歴
-    Models.StockMovementInput:
+    Models.StockMovementCreateRequest:
       type: object
       required:
         - inventoryId
         - type
         - quantity
         - reason
+        - orderId
+        - treatmentRecordId
+        - notes
       properties:
         inventoryId:
           allOf:
@@ -20096,15 +21006,20 @@ components:
           type: string
           description: 操作理由
         orderId:
+          type: string
           allOf:
             - $ref: "#/components/schemas/Models.OrderId"
+          nullable: true
           description: 関連する発注 ID
         treatmentRecordId:
+          type: string
           allOf:
             - $ref: "#/components/schemas/Models.TreatmentRecordId"
+          nullable: true
           description: 関連する施術記録 ID
         notes:
           type: string
+          nullable: true
           description: 備考メモ
       description: 在庫移動処理を登録する入力モデル
     Models.StylePreference:
@@ -20200,15 +21115,6 @@ components:
           type: string
           description: 終了時刻（HH:mm形式、24時間表記）。
       description: 営業時間や休憩時間を表現する単一の時間帯スロット。
-    Models.TokenRefreshRequest:
-      type: object
-      required:
-        - refreshToken
-      properties:
-        refreshToken:
-          type: string
-          description: 認証済みセッションに紐づくリフレッシュトークン。
-      description: アクセストークンを更新するためのリクエスト。
     Models.TreatmentRecord:
       type: object
       required:
@@ -20221,7 +21127,14 @@ components:
         - serviceIds
         - startTime
         - endTime
+        - notes
+        - usedMaterials
+        - photos
+        - customerFeedback
+        - nextRecommendations
         - totalAmount
+        - discountAmount
+        - pointsEarned
         - createdAt
         - createdBy
         - updatedAt
@@ -20266,22 +21179,27 @@ components:
           description: 施術終了日時
         notes:
           type: string
+          nullable: true
           description: 施術の詳細メモ
         usedMaterials:
           type: array
           items:
             $ref: "#/components/schemas/Models.MaterialUsage"
+          nullable: true
           description: 使用した資材・商材の記録
         photos:
           type: array
           items:
             $ref: "#/components/schemas/Models.AttachmentId"
+          nullable: true
           description: 施術前後の写真 ID
         customerFeedback:
           type: string
+          nullable: true
           description: 顧客のフィードバック
         nextRecommendations:
           type: string
+          nullable: true
           description: 次回来店への提案内容
         totalAmount:
           type: number
@@ -20290,10 +21208,12 @@ components:
         discountAmount:
           type: number
           format: float
+          nullable: true
           description: 適用した割引額
         pointsEarned:
           type: integer
           format: int32
+          nullable: true
           description: 付与したポイント数
         createdAt:
           type: string
@@ -20312,7 +21232,7 @@ components:
           nullable: true
           description: レコードを最後に更新したユーザーID。匿名更新の場合はnull。
       description: 顧客来店時の施術記録
-    Models.TreatmentRecordCreateInput:
+    Models.TreatmentRecordCreateRequest:
       type: object
       required:
         - bookingId
@@ -20322,7 +21242,13 @@ components:
         - serviceIds
         - startTime
         - endTime
+        - notes
+        - usedMaterials
+        - customerFeedback
+        - nextRecommendations
         - totalAmount
+        - discountAmount
+        - pointsEarned
       properties:
         bookingId:
           allOf:
@@ -20355,17 +21281,21 @@ components:
           description: 施術終了日時
         notes:
           type: string
+          nullable: true
           description: 施術メモ
         usedMaterials:
           type: array
           items:
             $ref: "#/components/schemas/Models.MaterialUsage"
+          nullable: true
           description: 使用した資材一覧
         customerFeedback:
           type: string
+          nullable: true
           description: 顧客フィードバック
         nextRecommendations:
           type: string
+          nullable: true
           description: 次回来店への提案内容
         totalAmount:
           type: number
@@ -20374,37 +21304,44 @@ components:
         discountAmount:
           type: number
           format: float
+          nullable: true
           description: 割引額
         pointsEarned:
           type: integer
           format: int32
+          nullable: true
           description: 付与ポイント数
       description: 施術記録を新規登録する入力モデル
     Models.TreatmentRecordId:
       type: string
       format: uuid
       description: 施術記録やカウンセリングメモを識別するブランド付きUUID。
-    Models.TreatmentRecordUpdateInput:
+    Models.TreatmentRecordUpdateRequest:
       type: object
       properties:
         notes:
           type: string
+          nullable: true
           description: 施術メモ
         usedMaterials:
           type: array
           items:
             $ref: "#/components/schemas/Models.MaterialUsage"
+          nullable: true
           description: 使用した資材一覧
         customerFeedback:
           type: string
+          nullable: true
           description: 顧客フィードバック
         nextRecommendations:
           type: string
+          nullable: true
           description: 次回来店への提案内容
         photos:
           type: array
           items:
             $ref: "#/components/schemas/Models.AttachmentId"
+          nullable: true
           description: 施術前後写真 ID
       description: 施術記録を更新する入力モデル
     Models.TreatmentSubCategoryType:
@@ -20449,47 +21386,6 @@ components:
         nail: ネイル - マニキュア、ジェルネイル等の爪装飾技術
         eyelash: まつげ - まつげエクステ、まつげパーマ等のまつげ装飾技術
         other: その他 - 上記に分類されない施術
-    Models.TwoFactorDisableRequest:
-      type: object
-      required:
-        - password
-        - code
-      properties:
-        password:
-          type: string
-          description: 本人確認のための現在パスワード。
-        code:
-          type: string
-          description: 無効化確認のための現在TOTPコード。
-      description: 2要素認証を無効化する際の確認リクエスト。
-    Models.TwoFactorEnableRequest:
-      type: object
-      required:
-        - password
-      properties:
-        password:
-          type: string
-          description: 本人確認のための現在パスワード。
-      description: 2要素認証を有効化する際の認証リクエスト。
-    Models.TwoFactorSetupResponse:
-      type: object
-      required:
-        - qrCodeUrl
-        - secret
-        - backupCodes
-      properties:
-        qrCodeUrl:
-          type: string
-          description: 認証アプリで読み取るQRコードURL。
-        secret:
-          type: string
-          description: 手動登録用のシークレットキー。
-        backupCodes:
-          type: array
-          items:
-            type: string
-          description: 復旧用バックアップコード一覧。
-      description: 2要素認証の設定情報を返すレスポンス。
     Models.TwoFactorStatusType:
       type: string
       enum:
@@ -20502,15 +21398,6 @@ components:
         disabled: 無効 - 2要素認証が設定されていない状態
         pending: 設定中 - 2要素認証の設定が進行中の状態
         enabled: 有効 - 2要素認証が有効化されている状態
-    Models.TwoFactorVerifyRequest:
-      type: object
-      required:
-        - code
-      properties:
-        code:
-          type: string
-          description: 認証アプリが生成したTOTPコード。
-      description: 2要素認証コードを検証するリクエスト。
     Models.UnauthorizedError:
       type: object
       required:
@@ -20538,62 +21425,15 @@ components:
             - $ref: "#/components/schemas/Models.BookingStatusCodeType"
           description: ステータスコードの更新。
         waitlistEntry:
+          type: object
           allOf:
             - $ref: "#/components/schemas/Models.WaitlistEntryUpdate"
-          description: ウェイティングリスト情報の更新。
-        deposit:
-          allOf:
-            - $ref: "#/components/schemas/Models.BookingDepositUpdate"
-          description: デポジット情報の更新。
-        paymentMethod:
-          allOf:
-            - $ref: "#/components/schemas/Models.PaymentMethodType"
-          description: 支払い方法の更新。
-        paymentStatus:
-          allOf:
-            - $ref: "#/components/schemas/Models.PaymentStatusCodeType"
-          description: 支払いステータスの更新。
-        discountAmount:
-          allOf:
-            - $ref: "#/components/schemas/Models.MoneyUpdate"
-          description: 割引額の更新。
-        finalAmount:
-          allOf:
-            - $ref: "#/components/schemas/Models.MoneyUpdate"
-          description: 最終請求額の更新。
-        balanceDue:
-          allOf:
-            - $ref: "#/components/schemas/Models.MoneyUpdate"
-          description: 未収金額の更新。
-        notes:
-          type: string
-          description: 備考の更新。
-        metadata:
-          type: object
-          additionalProperties: {}
-          description: 任意メタデータの更新。
-      description: 予約情報を部分更新するためのリクエスト。
-    Models.UpdateBookingRequestWithReset:
-      type: object
-      properties:
-        status:
-          allOf:
-            - $ref: "#/components/schemas/Models.BookingStatus"
-          description: ステータス詳細の更新またはリセット。
-        statusCode:
-          allOf:
-            - $ref: "#/components/schemas/Models.BookingStatusCodeType"
-          description: ステータスコードの更新またはリセット。
-        waitlistEntry:
-          type: object
-          allOf:
-            - $ref: "#/components/schemas/Models.WaitlistEntry"
           nullable: true
           description: ウェイティングリスト情報の更新またはリセット。
         deposit:
           type: object
           allOf:
-            - $ref: "#/components/schemas/Models.BookingDeposit"
+            - $ref: "#/components/schemas/Models.BookingDepositUpdate"
           nullable: true
           description: デポジット情報の更新またはリセット。
         paymentMethod:
@@ -20607,21 +21447,17 @@ components:
           nullable: true
           description: 支払いステータスの更新またはリセット。
         discountAmount:
-          type: object
           allOf:
-            - $ref: "#/components/schemas/Models.Money"
-          nullable: true
-          description: 割引額の更新またはリセット。
+            - $ref: "#/components/schemas/Models.MoneyUpdate"
+          description: 割引額の更新
         finalAmount:
-          type: object
           allOf:
-            - $ref: "#/components/schemas/Models.Money"
-          nullable: true
-          description: 最終請求額の更新またはリセット。
+            - $ref: "#/components/schemas/Models.MoneyUpdate"
+          description: 最終請求額の更新。
         balanceDue:
           type: object
           allOf:
-            - $ref: "#/components/schemas/Models.Money"
+            - $ref: "#/components/schemas/Models.MoneyUpdate"
           nullable: true
           description: 未収金額の更新またはリセット。
         notes:
@@ -20631,9 +21467,8 @@ components:
         metadata:
           type: object
           additionalProperties: {}
-          nullable: true
-          description: 任意メタデータの更新またはリセット。
-      description: フィールドをnullに戻すことも可能な予約更新リクエスト。
+          description: 任意メタデータの更新。
+      description: 予約情報を部分更新するためのリクエスト。null指定で値をリセット可能。
     Models.UpdateCustomerRequest:
       type: object
       properties:
@@ -20642,9 +21477,11 @@ components:
         contactInfo:
           $ref: "#/components/schemas/Models.ContactInfo"
         preferences:
-          type: string
+          type: object
+          additionalProperties: {}
         notes:
           type: string
+          nullable: true
         tags:
           type: array
           items:
@@ -20652,7 +21489,8 @@ components:
         birthDate:
           type: string
           format: date
-      description: Customer update request with optional fields for partial updates
+          nullable: true
+      description: Customer update request with optional fields for partial updates. null指定で値をリセット可能
     Models.UpdateCustomerRequestUpdate:
       type: object
       properties:
@@ -20661,27 +21499,8 @@ components:
         contactInfo:
           $ref: "#/components/schemas/Models.ContactInfoUpdate"
         preferences:
-          type: string
-        notes:
-          type: string
-        tags:
-          type: array
-          items:
-            type: string
-        birthDate:
-          type: string
-          format: date
-      description: Customer update request with optional fields for partial updates
-    Models.UpdateCustomerRequestWithReset:
-      type: object
-      properties:
-        name:
-          type: string
-        contactInfo:
-          $ref: "#/components/schemas/Models.ContactInfo"
-        preferences:
-          type: string
-          nullable: true
+          type: object
+          additionalProperties: {}
         notes:
           type: string
           nullable: true
@@ -20689,12 +21508,11 @@ components:
           type: array
           items:
             type: string
-          nullable: true
         birthDate:
           type: string
           format: date
           nullable: true
-      description: Customer update request with reset capability
+      description: Customer update request with optional fields for partial updates. null指定で値をリセット可能
     Models.UpdateReservationRequest:
       type: object
       properties:
@@ -20704,7 +21522,8 @@ components:
           description: 更新後の予約ステータス
         notes:
           type: string
-          description: 最新の顧客メモや社内備考
+          nullable: true
+          description: 最新の顧客メモや社内備考（null指定で初期化可能）
         startTime:
           type: string
           format: date-time
@@ -20713,104 +21532,7 @@ components:
           allOf:
             - $ref: "#/components/schemas/Models.StaffId"
           description: 再割当先のスタッフID
-      description: 予約更新リクエスト - 部分更新に対応した任意項目の変更指示を受け取り、既存予約を調整する
-    Models.UpdateReservationRequestWithReset:
-      type: object
-      properties:
-        status:
-          allOf:
-            - $ref: "#/components/schemas/Models.ReservationStatusType"
-          description: 更新後の予約ステータス
-        notes:
-          type: string
-          nullable: true
-          description: null指定で備考のリセットも可能な顧客メモ
-        startTime:
-          type: string
-          format: date-time
-          description: 調整後の施術開始日時 (UTC)
-        staffId:
-          allOf:
-            - $ref: "#/components/schemas/Models.StaffId"
-          description: 再割当先のスタッフID
-      description: リセット対応予約更新リクエスト - null指定により備考等を初期化しつつ、予約情報を更新できる
-    Models.UpdateReviewRequest:
-      type: object
-      properties:
-        overallRating:
-          type: integer
-          format: int32
-          description: 更新後の全体満足度評価
-        comment:
-          type: string
-          description: 更新後のコメント本文
-        title:
-          type: string
-          description: 更新後のレビュータイトル
-        serviceRating:
-          type: integer
-          format: int32
-          description: 更新後のサービス品質評価
-        staffRating:
-          type: integer
-          format: int32
-          description: 更新後のスタッフ評価
-        cleanlinessRating:
-          type: integer
-          format: int32
-          description: 更新後の清潔さ評価
-        valueRating:
-          type: integer
-          format: int32
-          description: 更新後の価格価値評価
-        imageUrls:
-          type: array
-          items:
-            type: string
-          description: 画像URL一覧の更新内容
-      description: レビュー更新リクエスト - 任意項目を部分更新し、既存レビューの評価やコメントを調整する
-    Models.UpdateReviewRequestWithReset:
-      type: object
-      properties:
-        overallRating:
-          type: integer
-          format: int32
-          description: 更新後の全体満足度評価
-        comment:
-          type: string
-          nullable: true
-          description: null指定も可能なコメント本文
-        title:
-          type: string
-          nullable: true
-          description: null指定も可能なレビュータイトル
-        serviceRating:
-          type: integer
-          format: int32
-          nullable: true
-          description: null指定も可能なサービス品質評価
-        staffRating:
-          type: integer
-          format: int32
-          nullable: true
-          description: null指定も可能なスタッフ評価
-        cleanlinessRating:
-          type: integer
-          format: int32
-          nullable: true
-          description: null指定も可能な清潔さ評価
-        valueRating:
-          type: integer
-          format: int32
-          nullable: true
-          description: null指定も可能な価格価値評価
-        imageUrls:
-          type: array
-          items:
-            type: string
-          nullable: true
-          description: null指定も可能な画像URL一覧
-      description: リセット対応レビュー更新リクエスト - null指定でコメントや画像を初期化しながらレビューを再設定できる
+      description: 予約更新リクエスト - 部分更新に対応した任意項目の変更指示を受け取り、既存予約を調整する。null指定で値をリセット可能
     Models.UpdateSalonRequest:
       type: object
       properties:
@@ -20819,7 +21541,8 @@ components:
           description: 名称変更を行う場合に指定
         description:
           type: string
-          description: 紹介文を更新する場合に指定
+          nullable: true
+          description: 紹介文を更新する場合に指定（null指定で初期化可能）
         address:
           allOf:
             - $ref: "#/components/schemas/Models.Address"
@@ -20837,7 +21560,8 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Models.BusinessHours"
-          description: 特別営業時間やシフト設定の更新に利用
+          nullable: true
+          description: 特別営業時間やシフト設定の更新に利用（null指定で初期化可能）
         imageUrls:
           type: array
           items:
@@ -20848,7 +21572,7 @@ components:
           items:
             type: string
           description: 特徴タグの追加・削除を行う場合に指定
-      description: サロン情報を部分更新するためのリクエスト
+      description: サロン情報を部分更新するためのリクエスト。null指定で値をリセット可能
     Models.UpdateSalonRequestUpdate:
       type: object
       properties:
@@ -20857,7 +21581,8 @@ components:
           description: 名称変更を行う場合に指定
         description:
           type: string
-          description: 紹介文を更新する場合に指定
+          nullable: true
+          description: 紹介文を更新する場合に指定（null指定で初期化可能）
         address:
           allOf:
             - $ref: "#/components/schemas/Models.AddressUpdate"
@@ -20875,7 +21600,8 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Models.BusinessHours"
-          description: 特別営業時間やシフト設定の更新に利用
+          nullable: true
+          description: 特別営業時間やシフト設定の更新に利用（null指定で初期化可能）
         imageUrls:
           type: array
           items:
@@ -20886,115 +21612,24 @@ components:
           items:
             type: string
           description: 特徴タグの追加・削除を行う場合に指定
-      description: サロン情報を部分更新するためのリクエスト
-    Models.UpdateSalonRequestWithReset:
-      type: object
-      properties:
-        name:
-          type: string
-          nullable: true
-          description: 名称更新または未設定化を行う場合に指定
-        description:
-          type: string
-          nullable: true
-          description: 紹介文の更新またはリセットを行う場合に指定
-        address:
-          type: object
-          allOf:
-            - $ref: "#/components/schemas/Models.Address"
-          nullable: true
-          description: 住所情報を更新または未設定に戻す場合に指定
-        contactInfo:
-          type: object
-          allOf:
-            - $ref: "#/components/schemas/Models.ContactInfo"
-          nullable: true
-          description: 連絡先情報を更新または未設定化する場合に指定
-        openingHours:
-          type: array
-          items:
-            $ref: "#/components/schemas/Models.OpeningHours"
-          nullable: true
-          description: 通常営業時間を更新または削除する場合に指定
-        businessHours:
-          type: array
-          items:
-            $ref: "#/components/schemas/Models.BusinessHours"
-          nullable: true
-          description: 特別営業時間を更新またはリセットする場合に指定
-        imageUrls:
-          type: array
-          items:
-            type: string
-          nullable: true
-          description: 画像URLリストを更新またはクリアする場合に指定
-        features:
-          type: array
-          items:
-            type: string
-          nullable: true
-          description: 特徴タグの更新またはリセットを行う場合に指定
-      description: サロン情報を部分更新しつつ値のリセットにも対応したリクエスト
+      description: サロン情報を部分更新するためのリクエスト。null指定で値をリセット可能
     Models.UpdateServiceRequest:
       type: object
+      required:
+        - description
+        - duration
       properties:
         name:
           type: string
           description: 更新後のサービス名
         description:
           type: string
+          nullable: true
           description: 更新後の説明文
         duration:
           type: integer
           format: int32
-          description: 更新後の施術時間
-        price:
-          type: integer
-          format: int32
-          description: 更新後の料金
-        category:
-          allOf:
-            - $ref: "#/components/schemas/Models.ServiceCategoryType"
-          description: 更新後のサービスカテゴリ
-        categoryId:
-          allOf:
-            - $ref: "#/components/schemas/Models.CategoryId"
-          description: 更新後のカテゴリ ID
-        imageUrl:
-          type: string
-          description: 更新後の画像 URL
-        requiredStaffLevel:
-          type: integer
-          format: int32
-          description: 更新後の必要スタッフレベル
-        depositAmount:
-          type: integer
-          format: int32
-          description: 更新後のデポジット額
-        isActive:
-          type: boolean
-          description: 更新後の有効フラグ
-        maxAdvanceBookingDays:
-          type: integer
-          format: int32
-          description: 更新後の最大予約日数
-        minAdvanceBookingHours:
-          type: integer
-          format: int32
-          description: 更新後の最短予約受付時間
-      description: サービス情報を部分更新するリクエスト
-    Models.UpdateServiceRequestWithReset:
-      type: object
-      properties:
-        name:
-          type: string
-          description: 更新後のサービス名
-        description:
-          type: string
-          description: 更新後の説明文
-        duration:
-          type: integer
-          format: int32
+          nullable: true
           description: 更新後の施術時間
         price:
           type: integer
@@ -21037,7 +21672,64 @@ components:
           format: int32
           nullable: true
           description: 更新後の最短予約受付時間（null 指定で解除）
-      description: 値のリセットを含むサービス更新リクエスト
+      description: サービス情報を部分更新するリクエスト。null指定で値をリセット可能
+    Models.UpdateServiceRequestUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 更新後のサービス名
+        description:
+          type: string
+          nullable: true
+          description: 更新後の説明文
+        duration:
+          type: integer
+          format: int32
+          nullable: true
+          description: 更新後の施術時間
+        price:
+          type: integer
+          format: int32
+          description: 更新後の料金
+        category:
+          allOf:
+            - $ref: "#/components/schemas/Models.ServiceCategoryType"
+          description: 更新後のサービスカテゴリ
+        categoryId:
+          type: string
+          allOf:
+            - $ref: "#/components/schemas/Models.CategoryId"
+          nullable: true
+          description: 更新後のカテゴリ ID（null 指定で解除）
+        imageUrl:
+          type: string
+          nullable: true
+          description: 更新後の画像 URL（null 指定で解除）
+        requiredStaffLevel:
+          type: integer
+          format: int32
+          nullable: true
+          description: 更新後の必要スタッフレベル（null 指定で解除）
+        depositAmount:
+          type: integer
+          format: int32
+          nullable: true
+          description: 更新後のデポジット額（null 指定で解除）
+        isActive:
+          type: boolean
+          description: 更新後の有効フラグ
+        maxAdvanceBookingDays:
+          type: integer
+          format: int32
+          nullable: true
+          description: 更新後の最大予約日数（null 指定で解除）
+        minAdvanceBookingHours:
+          type: integer
+          format: int32
+          nullable: true
+          description: 更新後の最短予約受付時間（null 指定で解除）
+      description: サービス情報を部分更新するリクエスト。null指定で値をリセット可能
     Models.UpdateStaffRequest:
       type: object
       properties:
@@ -21055,136 +21747,45 @@ components:
           description: 得意分野一覧の更新
         imageUrl:
           type: string
-          description: プロフィール画像URLの更新
-        bio:
-          type: string
-          description: 自己紹介文の更新
-        yearsOfExperience:
-          type: integer
-          format: int32
-          description: 経験年数の更新
-        certifications:
-          type: array
-          items:
-            type: string
-          description: 資格名一覧の更新
-        qualifications:
-          type: array
-          items:
-            $ref: "#/components/schemas/Models.StaffQualification"
-          description: 資格詳細一覧の更新
-        schedules:
-          type: array
-          items:
-            $ref: "#/components/schemas/Models.StaffSchedule"
-          description: 勤務スケジュール一覧の更新
-        permissions:
-          type: array
-          items:
-            $ref: "#/components/schemas/Models.StaffPermission"
-          description: 付与権限一覧の更新
-        isActive:
-          type: boolean
-          description: アクティブ状態の更新
-      description: スタッフ更新リクエスト - 任意項目を部分更新し、プロフィールや勤務状況を柔軟に調整する
-    Models.UpdateStaffRequestWithReset:
-      type: object
-      properties:
-        name:
-          type: string
-          description: スタッフ名の更新
-        contactInfo:
-          allOf:
-            - $ref: "#/components/schemas/Models.ContactInfo"
-          description: 連絡先情報の更新
-        specialties:
-          type: array
-          items:
-            type: string
-          description: 得意分野一覧の更新
-        imageUrl:
-          type: string
           nullable: true
-          description: null指定も可能なプロフィール画像URL
+          description: プロフィール画像URLの更新（null指定で初期化可能）
         bio:
           type: string
           nullable: true
-          description: null指定も可能な自己紹介文
+          description: 自己紹介文の更新（null指定で初期化可能）
         yearsOfExperience:
           type: integer
           format: int32
           nullable: true
-          description: null指定も可能な経験年数
+          description: 経験年数の更新（null指定で初期化可能）
         certifications:
           type: array
           items:
             type: string
           nullable: true
-          description: null指定も可能な資格名一覧
+          description: 資格名一覧の更新（null指定で初期化可能）
         qualifications:
           type: array
           items:
             $ref: "#/components/schemas/Models.StaffQualification"
           nullable: true
-          description: null指定も可能な資格詳細一覧
+          description: 資格詳細一覧の更新（null指定で初期化可能）
         schedules:
           type: array
           items:
             $ref: "#/components/schemas/Models.StaffSchedule"
           nullable: true
-          description: null指定も可能な勤務スケジュール一覧
+          description: 勤務スケジュール一覧の更新（null指定で初期化可能）
         permissions:
           type: array
           items:
             $ref: "#/components/schemas/Models.StaffPermission"
           nullable: true
-          description: null指定も可能な付与権限一覧
+          description: 付与権限一覧の更新（null指定で初期化可能）
         isActive:
           type: boolean
           description: アクティブ状態の更新
-      description: リセット対応スタッフ更新リクエスト - null指定を許可しつつプロフィールやスケジュールを再設定する
-    Models.UploadAttachmentRequest:
-      type: object
-      required:
-        - file
-        - filename
-        - content
-      properties:
-        file:
-          type: string
-          format: byte
-          description: HTTPリクエストで送信されるファイル本体。
-        filename:
-          type: string
-          description: アップロード時に指定されたファイル名。
-        content:
-          type: string
-          description: ファイルのContent-Type。
-        salonId:
-          type: string
-          description: ファイルを関連付けるサロンID。任意設定。
-        tags:
-          type: string
-          description: タグ情報を表すJSON文字列。任意設定。
-      description: マルチパートアップロードで添付ファイルを登録するためのリクエスト。
-    Models.UploadUrlResponse:
-      type: object
-      required:
-        - uploadUrl
-        - key
-        - expiresAt
-      properties:
-        uploadUrl:
-          type: string
-          description: 一時的に有効なアップロード用URL。
-        key:
-          type: string
-          description: 生成されたストレージキー。アップロード完了後の識別に使用。
-        expiresAt:
-          type: string
-          format: date-time
-          description: 署名付きURLの有効期限。
-      description: 署名付きアップロードURLと関連情報を返すレスポンス。
+      description: スタッフ更新リクエスト - 任意項目を部分更新し、プロフィールや勤務状況を柔軟に調整する。null指定で値をリセット可能
     Models.User:
       type: object
       required:
@@ -21194,10 +21795,28 @@ components:
         - role
         - status
         - emailVerified
+        - emailVerificationToken
+        - emailVerificationTokenExpiry
         - twoFactorStatus
+        - twoFactorSecret
+        - backupCodes
         - failedLoginAttempts
+        - lockedAt
+        - passwordResetToken
+        - passwordResetTokenExpiry
+        - lastPasswordChangeAt
+        - passwordHistory
+        - trustedIpAddresses
+        - customerId
+        - staffId
+        - roleDetail
+        - authState
+        - emailVerificationState
+        - passwordResetState
         - createdAt
         - updatedAt
+        - lastLoginAt
+        - lastLoginIp
       properties:
         id:
           type: string
@@ -21221,10 +21840,12 @@ components:
           description: メールアドレスが確認済みかどうか。
         emailVerificationToken:
           type: string
+          nullable: true
           description: メール確認に利用するトークン。内部管理用。
         emailVerificationTokenExpiry:
           type: string
           format: date-time
+          nullable: true
           description: メール確認トークンの有効期限。
         twoFactorStatus:
           allOf:
@@ -21232,11 +21853,13 @@ components:
           description: 2要素認証の設定状態。
         twoFactorSecret:
           type: string
+          nullable: true
           description: 暗号化された2要素認証シークレット。
         backupCodes:
           type: array
           items:
             type: string
+          nullable: true
           description: 2要素認証の復旧用バックアップコード一覧。
         failedLoginAttempts:
           type: integer
@@ -21246,51 +21869,66 @@ components:
         lockedAt:
           type: string
           format: date-time
+          nullable: true
           description: アカウントをロックした日時。未ロックの場合はnull。
         passwordResetToken:
           type: string
+          nullable: true
           description: パスワードリセットに利用するトークン。内部管理用。
         passwordResetTokenExpiry:
           type: string
           format: date-time
+          nullable: true
           description: パスワードリセットトークンの有効期限。
         lastPasswordChangeAt:
           type: string
           format: date-time
+          nullable: true
           description: 最後にパスワードを変更した日時。
         passwordHistory:
           type: array
           items:
             type: string
+          nullable: true
           description: 再利用防止のため保持する過去パスワードハッシュ。
         trustedIpAddresses:
           type: array
           items:
             type: string
+          nullable: true
           description: 信頼済みIPアドレスのリスト。
         customerId:
+          type: string
           allOf:
             - $ref: "#/components/schemas/Models.CustomerId"
+          nullable: true
           description: ユーザーが顧客の場合の顧客プロファイルID。
         staffId:
+          type: string
           allOf:
             - $ref: "#/components/schemas/Models.StaffId"
+          nullable: true
           description: ユーザーがスタッフの場合のスタッフプロファイルID。
         roleDetail:
+          type: object
           allOf:
             - $ref: "#/components/schemas/Models.UserRoleDetail"
+          nullable: true
           description: 担当サロンやレベル等を含む拡張ロール情報。
         authState:
           allOf:
             - $ref: "#/components/schemas/Models.AuthenticationStateType"
+          nullable: true
           description: 現在の認証状態区分。
         emailVerificationState:
           allOf:
             - $ref: "#/components/schemas/Models.EmailVerificationStateType"
+          nullable: true
           description: メール確認状態区分。
         passwordResetState:
           allOf:
             - $ref: "#/components/schemas/Models.PasswordResetStateType"
+          nullable: true
           description: パスワードリセット状態区分。
         createdAt:
           type: string
@@ -21303,9 +21941,11 @@ components:
         lastLoginAt:
           type: string
           format: date-time
+          nullable: true
           description: 直近のログイン日時。
         lastLoginIp:
           type: string
+          nullable: true
           description: 直近ログイン時のIPアドレス。
       description: 認証基盤で管理するユーザーアカウント情報。
     Models.UserAccountStatusType:
@@ -21328,7 +21968,7 @@ components:
       type: string
       format: uuid
       description: システム利用者（顧客・スタッフ・管理者）を一意に識別するブランド付きUUID。
-    Models.UserRoleAssignInput:
+    Models.UserRoleAssignRequest:
       type: object
       required:
         - userId
@@ -21355,8 +21995,10 @@ components:
       required:
         - userId
         - roleId
+        - salonId
         - assignedAt
         - assignedBy
+        - expiresAt
         - isActive
       properties:
         userId:
@@ -21367,8 +22009,10 @@ components:
             - $ref: "#/components/schemas/Models.RoleId"
           description: 割り当てるロール ID
         salonId:
+          type: string
           allOf:
             - $ref: "#/components/schemas/Models.SalonId"
+          nullable: true
           description: サロン単位のロールの場合の対象サロン ID
         assignedAt:
           type: string
@@ -21380,6 +22024,7 @@ components:
         expiresAt:
           type: string
           format: date-time
+          nullable: true
           description: ロール割当の有効期限
         isActive:
           type: boolean
@@ -21389,18 +22034,23 @@ components:
       type: object
       required:
         - type
+        - salonId
+        - level
       properties:
         type:
           allOf:
             - $ref: "#/components/schemas/Models.UserRoleType"
           description: システム内での基礎的な役割区分。
         salonId:
+          type: string
           allOf:
             - $ref: "#/components/schemas/Models.SalonId"
+          nullable: true
           description: 役割が適用されるサロンID。全社権限の場合はnull。
         level:
           allOf:
             - $ref: "#/components/schemas/Models.StaffLevelType"
+          nullable: true
           description: スタッフに対して設定される技術レベル。
       description: ユーザーの詳細な役割情報と所属を表すモデル。
     Models.UserRoleType:
@@ -21425,6 +22075,8 @@ components:
         - field
         - rule
         - message
+        - value
+        - constraint
       properties:
         field:
           type: string
@@ -21436,8 +22088,10 @@ components:
           type: string
           description: ユーザーに提示する具体的なエラーメッセージ。
         value:
+          nullable: true
           description: 検証対象となった実際の値。セキュリティ観点で出力が許容される場合のみ利用する。
         constraint:
+          nullable: true
           description: 期待される値や制約条件。入力補助やUI表示のガイダンスに使用する。
       description: |-
         入力検証での失敗内容を表すモデル。
@@ -21502,7 +22156,13 @@ components:
       type: object
       required:
         - position
+        - estimatedTime
         - joinedAt
+        - expiresAt
+        - notifiedAt
+        - preferredStaffId
+        - preferredServiceId
+        - notes
       properties:
         position:
           type: integer
@@ -21511,6 +22171,7 @@ components:
         estimatedTime:
           type: string
           format: date-time
+          nullable: true
           description: 呼び出し予想時刻。未確定の場合はnull。
         joinedAt:
           type: string
@@ -21519,21 +22180,28 @@ components:
         expiresAt:
           type: string
           format: date-time
+          nullable: true
           description: 待機権が失効する日時。
         notifiedAt:
           type: string
           format: date-time
+          nullable: true
           description: 呼び出し通知を送信した日時。
         preferredStaffId:
+          type: string
           allOf:
             - $ref: "#/components/schemas/Models.StaffId"
+          nullable: true
           description: 希望スタッフID。任意指定。
         preferredServiceId:
+          type: string
           allOf:
             - $ref: "#/components/schemas/Models.ServiceId"
+          nullable: true
           description: 希望サービスID。任意指定。
         notes:
           type: string
+          nullable: true
           description: 追加メモ。
       description: ウェイティングリストに登録された顧客情報。
     Models.WaitlistEntryUpdate:
@@ -21546,6 +22214,7 @@ components:
         estimatedTime:
           type: string
           format: date-time
+          nullable: true
           description: 呼び出し予想時刻。未確定の場合はnull。
         joinedAt:
           type: string
@@ -21554,21 +22223,28 @@ components:
         expiresAt:
           type: string
           format: date-time
+          nullable: true
           description: 待機権が失効する日時。
         notifiedAt:
           type: string
           format: date-time
+          nullable: true
           description: 呼び出し通知を送信した日時。
         preferredStaffId:
+          type: string
           allOf:
             - $ref: "#/components/schemas/Models.StaffId"
+          nullable: true
           description: 希望スタッフID。任意指定。
         preferredServiceId:
+          type: string
           allOf:
             - $ref: "#/components/schemas/Models.ServiceId"
+          nullable: true
           description: 希望サービスID。任意指定。
         notes:
           type: string
+          nullable: true
           description: 追加メモ。
       description: ウェイティングリストに登録された顧客情報。
     Models.decimal:

@@ -27,12 +27,21 @@ export interface ModelsAttachment {
   file: ModelsAttachmentFile
   /** ファイルをアップロードしたユーザーID。 */
   uploadedBy: string
-  /** ファイルが紐づくサロンID。任意項目。 */
-  salonId?: string
-  /** 必要に応じて付加情報を保持する任意メタデータ。 */
-  metadata?: ModelsAttachmentMetadata
-  /** ラベリングや検索に利用するタグ情報のセット。 */
-  tags?: ModelsAttachmentTags
+  /**
+   * ファイルが紐づくサロンID。任意項目。
+   * @nullable
+   */
+  salonId: string | null
+  /**
+   * 必要に応じて付加情報を保持する任意メタデータ。
+   * @nullable
+   */
+  metadata: ModelsAttachmentMetadata
+  /**
+   * ラベリングや検索に利用するタグ情報のセット。
+   * @nullable
+   */
+  tags: ModelsAttachmentTags
   /** ファイルがアップロードされた日時。 */
   uploadedAt: string
   /** ファイル情報が最後に更新された日時。 */

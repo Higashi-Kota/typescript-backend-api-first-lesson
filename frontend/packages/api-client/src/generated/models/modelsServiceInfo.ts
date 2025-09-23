@@ -12,18 +12,36 @@
 export interface ModelsServiceInfo {
   /** サービス名称 */
   name: string
-  /** サービス名の読み仮名 */
-  nameKana?: string
+  /**
+   * サービス名の読み仮名
+   * @nullable
+   */
+  nameKana: string | null
   /** サービス詳細説明文 */
   description: string
-  /** 短めの紹介文 */
-  shortDescription?: string
-  /** 提供価値・メリットの一覧 */
-  benefits?: string[]
-  /** 主な対象顧客層 */
-  targetCustomer?: string
-  /** サービス画像の URL 一覧 */
-  imageUrls?: string[]
-  /** 紹介動画の URL */
-  videoUrl?: string
+  /**
+   * 短めの紹介文
+   * @nullable
+   */
+  shortDescription: string | null
+  /**
+   * 提供価値・メリットの一覧
+   * @nullable
+   */
+  benefits: string[] | null
+  /**
+   * 主な対象顧客層
+   * @nullable
+   */
+  targetCustomer: string | null
+  /**
+   * サービス画像の URL 一覧
+   * @nullable
+   */
+  imageUrls: string[] | null
+  /**
+   * 紹介動画の URL
+   * @nullable
+   */
+  videoUrl: string | null
 }

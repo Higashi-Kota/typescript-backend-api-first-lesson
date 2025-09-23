@@ -60,7 +60,7 @@ namespace BeautySalon.Models {
     createdAt: utcDateTime;
 
     @doc("下書きの有効期限。未設定の場合は期限なし。")
-    expiresAt?: utcDateTime;
+    expiresAt: utcDateTime | null;
   }
 
   @doc("予約が確認待ち段階にある場合の状態情報。")
@@ -72,10 +72,10 @@ namespace BeautySalon.Models {
     requestedAt: utcDateTime;
 
     @doc("保留状態の有効期限。未設定の場合は期限なし。")
-    holdExpiresAt?: utcDateTime;
+    holdExpiresAt: utcDateTime | null;
 
     @doc("仮割り当てされたスタッフID。未確定の場合はnull。")
-    assignedStaffId?: StaffId;
+    assignedStaffId: StaffId | null;
   }
 
   @doc("予約が確定済みの場合の状態情報。")
@@ -102,7 +102,7 @@ namespace BeautySalon.Models {
     startedAt: utcDateTime;
 
     @doc("施術を行っているブースや席の名称。未設定の場合はnull。")
-    stationName?: string;
+    stationName: string | null;
   }
 
   @doc("施術が完了した場合の状態情報。")
@@ -114,10 +114,10 @@ namespace BeautySalon.Models {
     completedAt: utcDateTime;
 
     @doc("関連する決済ID。未決済の場合はnull。")
-    paymentId?: PaymentId;
+    paymentId: PaymentId | null;
 
     @doc("施術内容のサマリーメモ。未設定の場合はnull。")
-    serviceSummary?: string;
+    serviceSummary: string | null;
   }
 
   @doc("予約がキャンセルされた場合の状態情報。")
@@ -129,7 +129,7 @@ namespace BeautySalon.Models {
     cancelledAt: utcDateTime;
 
     @doc("キャンセル理由のメモ。未設定の場合はnull。")
-    reason?: string;
+    reason: string | null;
 
     @doc("キャンセルを実行した主体（customer: 顧客／salon: サロン側／system: システム判断）。")
     cancelledBy: "customer" | "salon" | "system";
@@ -144,7 +144,7 @@ namespace BeautySalon.Models {
     recordedAt: utcDateTime;
 
     @doc("ペナルティを適用したかどうか。既定値はfalse。")
-    penaltyApplied?: boolean = false;
+    penaltyApplied: boolean = false;
   }
 
   @doc("予約確定前に預かるデポジット情報。")
@@ -156,19 +156,19 @@ namespace BeautySalon.Models {
     status: "pending" | "paid" | "refunded" | "forfeited";
 
     @doc("支払い期日。未設定の場合は即時支払い不要。")
-    dueDate?: utcDateTime;
+    dueDate: utcDateTime | null;
 
     @doc("入金が確認された日時。")
-    paidAt?: utcDateTime;
+    paidAt: utcDateTime | null;
 
     @doc("返金した日時。")
-    refundedAt?: utcDateTime;
+    refundedAt: utcDateTime | null;
 
     @doc("紐づく決済ID。")
-    paymentId?: PaymentId;
+    paymentId: PaymentId | null;
 
     @doc("デポジットに関する備考。")
-    notes?: string;
+    notes: string | null;
   }
 
   @doc("ウェイティングリストに登録された顧客情報。")
@@ -177,25 +177,25 @@ namespace BeautySalon.Models {
     position: int32;
 
     @doc("呼び出し予想時刻。未確定の場合はnull。")
-    estimatedTime?: utcDateTime;
+    estimatedTime: utcDateTime | null;
 
     @doc("ウェイティングリストに参加した日時。")
     joinedAt: utcDateTime;
 
     @doc("待機権が失効する日時。")
-    expiresAt?: utcDateTime;
+    expiresAt: utcDateTime | null;
 
     @doc("呼び出し通知を送信した日時。")
-    notifiedAt?: utcDateTime;
+    notifiedAt: utcDateTime | null;
 
     @doc("希望スタッフID。任意指定。")
-    preferredStaffId?: StaffId;
+    preferredStaffId: StaffId | null;
 
     @doc("希望サービスID。任意指定。")
-    preferredServiceId?: ServiceId;
+    preferredServiceId: ServiceId | null;
 
     @doc("追加メモ。")
-    notes?: string;
+    notes: string | null;
   }
 
   @doc("サロンで確定管理する予約の集約モデル。")
@@ -219,31 +219,31 @@ namespace BeautySalon.Models {
     statusCode: BookingStatusCodeType;
 
     @doc("ウェイティングリスト情報。対象外の場合はnull。")
-    waitlistEntry?: WaitlistEntry;
+    waitlistEntry: WaitlistEntry | null;
 
     @doc("預かり金に関する情報。必要な場合のみ設定。")
-    deposit?: BookingDeposit;
+    deposit: BookingDeposit | null;
 
     @doc("割引適用前の合計金額。")
     totalAmount: Money;
 
-    @doc("適用された割引額。未適用の場合はnull。")
-    discountAmount?: Money;
+    @doc("適用された割引額")
+    discountAmount: Money;
 
     @doc("最終的に請求する金額。")
     finalAmount: Money;
 
     @doc("未収金額。完済の場合はnull。")
-    balanceDue?: Money;
+    balanceDue: Money | null;
 
     @doc("予定している支払い方法。未定の場合はnull。")
-    paymentMethod?: PaymentMethodType;
+    paymentMethod: PaymentMethodType | null;
 
     @doc("支払いの進捗ステータス。未設定の場合は支払い前。")
-    paymentStatus?: PaymentStatusCodeType;
+    paymentStatus: PaymentStatusCodeType | null;
 
     @doc("スタッフ・顧客間で共有するメモ。")
-    notes?: string;
+    notes: string | null;
 
     ...AuditInfo;
   }
@@ -260,66 +260,30 @@ namespace BeautySalon.Models {
     reservationIds: ReservationId[];
 
     @doc("ウェイティングリスト情報。不要な場合はnull。")
-    waitlistEntry?: WaitlistEntry;
+    waitlistEntry: WaitlistEntry | null;
 
     @doc("預かり金設定。不要な場合はnull。")
-    deposit?: BookingDeposit;
+    deposit: BookingDeposit | null;
 
-    @doc("適用する割引額。未設定の場合はnull。")
-    discountAmount?: Money;
+    @doc("適用する割引額")
+    discountAmount: Money;
 
     @doc("予定している支払い方法。")
-    paymentMethod?: PaymentMethodType;
+    paymentMethod: PaymentMethodType | null;
 
     @doc("スタッフ向けの備考。")
-    notes?: string;
+    notes: string | null;
 
     @doc("外部連携や業務用に保持する任意メタデータ。")
-    metadata?: Record<unknown>;
+    metadata: Record<unknown> | null;
   }
 
-  @doc("予約情報を部分更新するためのリクエスト。")
+  @doc("予約情報を部分更新するためのリクエスト。null指定で値をリセット可能。")
   model UpdateBookingRequest {
     @doc("ステータス詳細の更新。")
     status?: BookingStatus;
 
     @doc("ステータスコードの更新。")
-    statusCode?: BookingStatusCodeType;
-
-    @doc("ウェイティングリスト情報の更新。")
-    waitlistEntry?: WaitlistEntry;
-
-    @doc("デポジット情報の更新。")
-    deposit?: BookingDeposit;
-
-    @doc("支払い方法の更新。")
-    paymentMethod?: PaymentMethodType;
-
-    @doc("支払いステータスの更新。")
-    paymentStatus?: PaymentStatusCodeType;
-
-    @doc("割引額の更新。")
-    discountAmount?: Money;
-
-    @doc("最終請求額の更新。")
-    finalAmount?: Money;
-
-    @doc("未収金額の更新。")
-    balanceDue?: Money;
-
-    @doc("備考の更新。")
-    notes?: string;
-
-    @doc("任意メタデータの更新。")
-    metadata?: Record<unknown>;
-  }
-
-  @doc("フィールドをnullに戻すことも可能な予約更新リクエスト。")
-  model UpdateBookingRequestWithReset {
-    @doc("ステータス詳細の更新またはリセット。")
-    status?: BookingStatus;
-
-    @doc("ステータスコードの更新またはリセット。")
     statusCode?: BookingStatusCodeType;
 
     @doc("ウェイティングリスト情報の更新またはリセット。")
@@ -334,11 +298,11 @@ namespace BeautySalon.Models {
     @doc("支払いステータスの更新またはリセット。")
     paymentStatus?: PaymentStatusCodeType | null;
 
-    @doc("割引額の更新またはリセット。")
-    discountAmount?: Money | null;
+    @doc("割引額の更新")
+    discountAmount?: Money;
 
-    @doc("最終請求額の更新またはリセット。")
-    finalAmount?: Money | null;
+    @doc("最終請求額の更新。")
+    finalAmount?: Money;
 
     @doc("未収金額の更新またはリセット。")
     balanceDue?: Money | null;
@@ -346,8 +310,8 @@ namespace BeautySalon.Models {
     @doc("備考の更新またはリセット。")
     notes?: string | null;
 
-    @doc("任意メタデータの更新またはリセット。")
-    metadata?: Record<unknown> | null;
+    @doc("任意メタデータの更新。")
+    metadata?: Record<unknown>;
   }
 
   @doc("予約と関連情報をまとめた詳細ビュー。")
@@ -362,9 +326,9 @@ namespace BeautySalon.Models {
     salonName: string;
 
     @doc("決済履歴の一覧。未登録の場合はnull。")
-    paymentHistory?: PaymentHistory[];
+    paymentHistory: PaymentHistory[] | null;
 
     @doc("ウェイティングリストの履歴。未登録の場合はnull。")
-    waitlistHistory?: WaitlistEntry[];
+    waitlistHistory: WaitlistEntry[] | null;
   }
 }

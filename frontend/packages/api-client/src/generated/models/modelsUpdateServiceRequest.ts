@@ -6,34 +6,57 @@
  * OpenAPI spec version: 2.0
  */
 import type { ModelsServiceCategoryType } from './modelsServiceCategoryType'
-import type { ModelsCategoryId } from './modelsCategoryId'
 
 /**
- * サービス情報を部分更新するリクエスト
+ * サービス情報を部分更新するリクエスト。null指定で値をリセット可能
  */
 export interface ModelsUpdateServiceRequest {
   /** 更新後のサービス名 */
   name?: string
-  /** 更新後の説明文 */
-  description?: string
-  /** 更新後の施術時間 */
-  duration?: number
+  /**
+   * 更新後の説明文
+   * @nullable
+   */
+  description: string | null
+  /**
+   * 更新後の施術時間
+   * @nullable
+   */
+  duration: number | null
   /** 更新後の料金 */
   price?: number
   /** 更新後のサービスカテゴリ */
   category?: ModelsServiceCategoryType
-  /** 更新後のカテゴリ ID */
-  categoryId?: ModelsCategoryId
-  /** 更新後の画像 URL */
-  imageUrl?: string
-  /** 更新後の必要スタッフレベル */
-  requiredStaffLevel?: number
-  /** 更新後のデポジット額 */
-  depositAmount?: number
+  /**
+   * 更新後のカテゴリ ID（null 指定で解除）
+   * @nullable
+   */
+  categoryId?: string | null
+  /**
+   * 更新後の画像 URL（null 指定で解除）
+   * @nullable
+   */
+  imageUrl?: string | null
+  /**
+   * 更新後の必要スタッフレベル（null 指定で解除）
+   * @nullable
+   */
+  requiredStaffLevel?: number | null
+  /**
+   * 更新後のデポジット額（null 指定で解除）
+   * @nullable
+   */
+  depositAmount?: number | null
   /** 更新後の有効フラグ */
   isActive?: boolean
-  /** 更新後の最大予約日数 */
-  maxAdvanceBookingDays?: number
-  /** 更新後の最短予約受付時間 */
-  minAdvanceBookingHours?: number
+  /**
+   * 更新後の最大予約日数（null 指定で解除）
+   * @nullable
+   */
+  maxAdvanceBookingDays?: number | null
+  /**
+   * 更新後の最短予約受付時間（null 指定で解除）
+   * @nullable
+   */
+  minAdvanceBookingHours?: number | null
 }

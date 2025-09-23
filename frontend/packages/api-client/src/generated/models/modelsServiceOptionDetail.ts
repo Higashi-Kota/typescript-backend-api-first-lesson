@@ -6,7 +6,6 @@
  * OpenAPI spec version: 2.0
  */
 import type { ModelsServiceOptionType } from './modelsServiceOptionType'
-import type { ModelsServiceId } from './modelsServiceId'
 
 /**
  * サービスに付随するオプション設定
@@ -14,28 +13,64 @@ import type { ModelsServiceId } from './modelsServiceId'
 export interface ModelsServiceOptionDetail {
   /** オプションの種類 */
   type: ModelsServiceOptionType
-  /** オプション名 */
-  name?: string
-  /** オプション料金 */
-  price?: number
-  /** 追加される施術時間 */
-  duration?: number
-  /** オプションの説明 */
-  description?: string
-  /** アップグレード元のレベル */
-  fromLevel?: string
-  /** アップグレード先のレベル */
-  toLevel?: string
-  /** 追加料金 */
-  additionalPrice?: number
-  /** 時間延長（分） */
-  extension?: number
-  /** 関連商品 ID */
-  productId?: string
-  /** 必須オプションかどうか */
-  required?: boolean
-  /** 同時予約が必要なサービス ID */
-  withService?: ModelsServiceId
-  /** 割引金額 */
-  discountAmount?: number
+  /**
+   * オプション名
+   * @nullable
+   */
+  name: string | null
+  /**
+   * オプション料金
+   * @nullable
+   */
+  price: number | null
+  /**
+   * 追加される施術時間
+   * @nullable
+   */
+  duration: number | null
+  /**
+   * オプションの説明
+   * @nullable
+   */
+  description: string | null
+  /**
+   * アップグレード元のレベル
+   * @nullable
+   */
+  fromLevel: string | null
+  /**
+   * アップグレード先のレベル
+   * @nullable
+   */
+  toLevel: string | null
+  /**
+   * 追加料金
+   * @nullable
+   */
+  additionalPrice: number | null
+  /**
+   * 時間延長（分）
+   * @nullable
+   */
+  extension: number | null
+  /**
+   * 関連商品 ID
+   * @nullable
+   */
+  productId: string | null
+  /**
+   * 必須オプションかどうか
+   * @nullable
+   */
+  required: boolean | null
+  /**
+   * 同時予約が必要なサービス ID
+   * @nullable
+   */
+  withService: string | null
+  /**
+   * 割引金額
+   * @nullable
+   */
+  discountAmount: number | null
 }

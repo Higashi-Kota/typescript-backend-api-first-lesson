@@ -8,10 +8,10 @@
 import type { ModelsSalonId } from './modelsSalonId'
 import type { ModelsCustomerId } from './modelsCustomerId'
 import type { ModelsReservationId } from './modelsReservationId'
-import type { ModelsWaitlistEntry } from './modelsWaitlistEntry'
-import type { ModelsBookingDeposit } from './modelsBookingDeposit'
+import type { ModelsCreateBookingRequestWaitlistEntry } from './modelsCreateBookingRequestWaitlistEntry'
+import type { ModelsCreateBookingRequestDeposit } from './modelsCreateBookingRequestDeposit'
 import type { ModelsMoney } from './modelsMoney'
-import type { ModelsPaymentMethodType } from './modelsPaymentMethodType'
+import type { ModelsCreateBookingRequestPaymentMethod } from './modelsCreateBookingRequestPaymentMethod'
 import type { ModelsCreateBookingRequestMetadata } from './modelsCreateBookingRequestMetadata'
 
 /**
@@ -24,16 +24,31 @@ export interface ModelsCreateBookingRequest {
   customerId: ModelsCustomerId
   /** 紐付ける予約リクエストID一覧。 */
   reservationIds: ModelsReservationId[]
-  /** ウェイティングリスト情報。不要な場合はnull。 */
-  waitlistEntry?: ModelsWaitlistEntry
-  /** 預かり金設定。不要な場合はnull。 */
-  deposit?: ModelsBookingDeposit
-  /** 適用する割引額。未設定の場合はnull。 */
-  discountAmount?: ModelsMoney
-  /** 予定している支払い方法。 */
-  paymentMethod?: ModelsPaymentMethodType
-  /** スタッフ向けの備考。 */
-  notes?: string
-  /** 外部連携や業務用に保持する任意メタデータ。 */
-  metadata?: ModelsCreateBookingRequestMetadata
+  /**
+   * ウェイティングリスト情報。不要な場合はnull。
+   * @nullable
+   */
+  waitlistEntry: ModelsCreateBookingRequestWaitlistEntry
+  /**
+   * 預かり金設定。不要な場合はnull。
+   * @nullable
+   */
+  deposit: ModelsCreateBookingRequestDeposit
+  /** 適用する割引額 */
+  discountAmount: ModelsMoney
+  /**
+   * 予定している支払い方法。
+   * @nullable
+   */
+  paymentMethod: ModelsCreateBookingRequestPaymentMethod
+  /**
+   * スタッフ向けの備考。
+   * @nullable
+   */
+  notes: string | null
+  /**
+   * 外部連携や業務用に保持する任意メタデータ。
+   * @nullable
+   */
+  metadata: ModelsCreateBookingRequestMetadata
 }

@@ -8,12 +8,10 @@
 import type { ModelsAuthUserRoleType } from './modelsAuthUserRoleType'
 import type { ModelsUserAccountStatusType } from './modelsUserAccountStatusType'
 import type { ModelsTwoFactorStatusType } from './modelsTwoFactorStatusType'
-import type { ModelsCustomerId } from './modelsCustomerId'
-import type { ModelsStaffId } from './modelsStaffId'
-import type { ModelsUserRoleDetail } from './modelsUserRoleDetail'
-import type { ModelsAuthenticationStateType } from './modelsAuthenticationStateType'
-import type { ModelsEmailVerificationStateType } from './modelsEmailVerificationStateType'
-import type { ModelsPasswordResetStateType } from './modelsPasswordResetStateType'
+import type { ModelsUserRoleDetailProperty } from './modelsUserRoleDetailProperty'
+import type { ModelsUserAuthState } from './modelsUserAuthState'
+import type { ModelsUserEmailVerificationState } from './modelsUserEmailVerificationState'
+import type { ModelsUserPasswordResetState } from './modelsUserPasswordResetState'
 
 /**
  * 認証基盤で管理するユーザーアカウント情報。
@@ -31,48 +29,102 @@ export interface ModelsUser {
   status: ModelsUserAccountStatusType
   /** メールアドレスが確認済みかどうか。 */
   emailVerified: boolean
-  /** メール確認に利用するトークン。内部管理用。 */
-  emailVerificationToken?: string
-  /** メール確認トークンの有効期限。 */
-  emailVerificationTokenExpiry?: string
+  /**
+   * メール確認に利用するトークン。内部管理用。
+   * @nullable
+   */
+  emailVerificationToken: string | null
+  /**
+   * メール確認トークンの有効期限。
+   * @nullable
+   */
+  emailVerificationTokenExpiry: string | null
   /** 2要素認証の設定状態。 */
   twoFactorStatus: ModelsTwoFactorStatusType
-  /** 暗号化された2要素認証シークレット。 */
-  twoFactorSecret?: string
-  /** 2要素認証の復旧用バックアップコード一覧。 */
-  backupCodes?: string[]
+  /**
+   * 暗号化された2要素認証シークレット。
+   * @nullable
+   */
+  twoFactorSecret: string | null
+  /**
+   * 2要素認証の復旧用バックアップコード一覧。
+   * @nullable
+   */
+  backupCodes: string[] | null
   /** 連続したログイン失敗回数。 */
   failedLoginAttempts: number
-  /** アカウントをロックした日時。未ロックの場合はnull。 */
-  lockedAt?: string
-  /** パスワードリセットに利用するトークン。内部管理用。 */
-  passwordResetToken?: string
-  /** パスワードリセットトークンの有効期限。 */
-  passwordResetTokenExpiry?: string
-  /** 最後にパスワードを変更した日時。 */
-  lastPasswordChangeAt?: string
-  /** 再利用防止のため保持する過去パスワードハッシュ。 */
-  passwordHistory?: string[]
-  /** 信頼済みIPアドレスのリスト。 */
-  trustedIpAddresses?: string[]
-  /** ユーザーが顧客の場合の顧客プロファイルID。 */
-  customerId?: ModelsCustomerId
-  /** ユーザーがスタッフの場合のスタッフプロファイルID。 */
-  staffId?: ModelsStaffId
-  /** 担当サロンやレベル等を含む拡張ロール情報。 */
-  roleDetail?: ModelsUserRoleDetail
-  /** 現在の認証状態区分。 */
-  authState?: ModelsAuthenticationStateType
-  /** メール確認状態区分。 */
-  emailVerificationState?: ModelsEmailVerificationStateType
-  /** パスワードリセット状態区分。 */
-  passwordResetState?: ModelsPasswordResetStateType
+  /**
+   * アカウントをロックした日時。未ロックの場合はnull。
+   * @nullable
+   */
+  lockedAt: string | null
+  /**
+   * パスワードリセットに利用するトークン。内部管理用。
+   * @nullable
+   */
+  passwordResetToken: string | null
+  /**
+   * パスワードリセットトークンの有効期限。
+   * @nullable
+   */
+  passwordResetTokenExpiry: string | null
+  /**
+   * 最後にパスワードを変更した日時。
+   * @nullable
+   */
+  lastPasswordChangeAt: string | null
+  /**
+   * 再利用防止のため保持する過去パスワードハッシュ。
+   * @nullable
+   */
+  passwordHistory: string[] | null
+  /**
+   * 信頼済みIPアドレスのリスト。
+   * @nullable
+   */
+  trustedIpAddresses: string[] | null
+  /**
+   * ユーザーが顧客の場合の顧客プロファイルID。
+   * @nullable
+   */
+  customerId: string | null
+  /**
+   * ユーザーがスタッフの場合のスタッフプロファイルID。
+   * @nullable
+   */
+  staffId: string | null
+  /**
+   * 担当サロンやレベル等を含む拡張ロール情報。
+   * @nullable
+   */
+  roleDetail: ModelsUserRoleDetailProperty
+  /**
+   * 現在の認証状態区分。
+   * @nullable
+   */
+  authState: ModelsUserAuthState
+  /**
+   * メール確認状態区分。
+   * @nullable
+   */
+  emailVerificationState: ModelsUserEmailVerificationState
+  /**
+   * パスワードリセット状態区分。
+   * @nullable
+   */
+  passwordResetState: ModelsUserPasswordResetState
   /** ユーザーアカウント作成日時。 */
   createdAt: string
   /** ユーザー情報の最終更新日時。 */
   updatedAt: string
-  /** 直近のログイン日時。 */
-  lastLoginAt?: string
-  /** 直近ログイン時のIPアドレス。 */
-  lastLoginIp?: string
+  /**
+   * 直近のログイン日時。
+   * @nullable
+   */
+  lastLoginAt: string | null
+  /**
+   * 直近ログイン時のIPアドレス。
+   * @nullable
+   */
+  lastLoginIp: string | null
 }

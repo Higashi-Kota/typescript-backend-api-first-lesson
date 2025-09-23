@@ -9,7 +9,6 @@ import type { ModelsPricingStrategyType } from './modelsPricingStrategyType'
 import type { ModelsPriceTier } from './modelsPriceTier'
 import type { ModelsPricingFactor } from './modelsPricingFactor'
 import type { ModelsServiceId } from './modelsServiceId'
-import type { ModelsDecimal } from './modelsDecimal'
 
 /**
  * 採用している価格戦略の詳細
@@ -17,22 +16,49 @@ import type { ModelsDecimal } from './modelsDecimal'
 export interface ModelsPricingStrategyDetail {
   /** 価格戦略タイプ */
   type: ModelsPricingStrategyType
-  /** 固定価格型の場合の金額 */
-  amount?: number
-  /** 段階価格の設定一覧 */
-  tiers?: ModelsPriceTier[]
-  /** 基準価格 */
-  basePrice?: number
-  /** 価格変動要因の設定 */
-  factors?: ModelsPricingFactor[]
-  /** セット対象となるサービス ID */
-  services?: ModelsServiceId[]
-  /** 割引率（%） */
-  discountRate?: ModelsDecimal
-  /** 会員向け特別価格 */
-  memberPrice?: number
-  /** 非会員向け価格 */
-  nonMemberPrice?: number
-  /** 戦略の説明 */
-  description?: string
+  /**
+   * 固定価格型の場合の金額
+   * @nullable
+   */
+  amount: number | null
+  /**
+   * 段階価格の設定一覧
+   * @nullable
+   */
+  tiers: ModelsPriceTier[] | null
+  /**
+   * 基準価格
+   * @nullable
+   */
+  basePrice: number | null
+  /**
+   * 価格変動要因の設定
+   * @nullable
+   */
+  factors: ModelsPricingFactor[] | null
+  /**
+   * セット対象となるサービス ID
+   * @nullable
+   */
+  services: ModelsServiceId[] | null
+  /**
+   * 割引率（%）
+   * @nullable
+   */
+  discountRate: number | null
+  /**
+   * 会員向け特別価格
+   * @nullable
+   */
+  memberPrice: number | null
+  /**
+   * 非会員向け価格
+   * @nullable
+   */
+  nonMemberPrice: number | null
+  /**
+   * 戦略の説明
+   * @nullable
+   */
+  description: string | null
 }

@@ -20,19 +20,19 @@ namespace BeautySalon.Models {
     status: int32;
 
     @doc("今回の発生状況に固有の詳細説明。サポート対応時の一次情報となる。")
-    detail?: string;
+    detail: string | null;
 
     @doc("この事象を一意に識別するための URI。監査ログやダッシュボードと連携する。")
-    instance?: string;
+    instance: string | null;
 
     @doc("システム全体で共有する機械判読可能なエラーコード。画面表示や分岐処理に使用する。")
     code: ErrorCodeType;
 
     @doc("フィールド単位の検証エラーなど、追加のエラー詳細情報一覧。")
-    errors?: ValidationError[];
+    errors: ValidationError[] | null;
 
     @doc("障害調査や問い合わせで利用する相関 ID。リクエスト単位で一意。")
-    correlationId?: string;
+    correlationId: string | null;
 
     @doc("エラー発生日時 (UTC)。サーバーログの検索キーとして使用する。")
     timestamp: utcDateTime;
@@ -122,10 +122,10 @@ namespace BeautySalon.Models {
     message: string;
 
     @doc("検証対象となった実際の値。セキュリティ観点で出力が許容される場合のみ利用する。")
-    value?: unknown;
+    value: unknown | null;
 
     @doc("期待される値や制約条件。入力補助やUI表示のガイダンスに使用する。")
-    constraint?: unknown;
+    constraint: unknown | null;
   }
 
   @doc("""
@@ -254,10 +254,10 @@ namespace BeautySalon.Models {
     data: T;
 
     @doc("リクエスト識別子やバージョン情報など共通メタデータ。")
-    meta?: ResponseMeta;
+    meta: ResponseMeta | null;
 
     @doc("関連リソースや次アクションへのリンク情報。")
-    links?: Record<string>;
+    links: Record<string> | null;
   }
 
   @doc("""
@@ -361,13 +361,13 @@ namespace BeautySalon.Models {
     isDeleted: boolean = false;
 
     @doc("削除操作が実行された日時 (UTC)。")
-    deletedAt?: utcDateTime;
+    deletedAt: utcDateTime | null;
 
     @doc("削除操作を実施したユーザーID またはサービス名。")
-    deletedBy?: string;
+    deletedBy: string | null;
 
     @doc("削除理由や補足メモ。カスタマーサポート対応に利用する。")
-    deletionReason?: string;
+    deletionReason: string | null;
   }
 
   @doc("""
@@ -455,13 +455,13 @@ namespace BeautySalon.Models {
     status: "up" | "down" | "degraded";
 
     @doc("ヘルスチェックに要した時間 (ミリ秒)。応答遅延の指標。")
-    responseTime?: int32;
+    responseTime: int32 | null;
 
     @doc("停止時のエラーメッセージや原因メモ。")
-    error?: string;
+    error: string | null;
 
     @doc("監視対象固有の追加詳細。再試行回数や依存サービス名などを含める。")
-    details?: Record<unknown>;
+    details: Record<unknown> | null;
   }
 
   @doc("""

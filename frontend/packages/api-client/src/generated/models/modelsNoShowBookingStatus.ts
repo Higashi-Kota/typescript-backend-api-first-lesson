@@ -16,5 +16,5 @@ export interface ModelsNoShowBookingStatus {
   /** 無断キャンセルとして記録した日時。 */
   recordedAt: string
   /** ペナルティを適用したかどうか。既定値はfalse。 */
-  penaltyApplied?: boolean
+  penaltyApplied: boolean
 }

@@ -6,7 +6,7 @@
  * OpenAPI spec version: 2.0
  */
 import type { ModelsSalonStatistics } from './modelsSalonStatistics'
-import type { ModelsResponseMeta } from './modelsResponseMeta'
+import type { SalonOperationsGetStatistics200Meta } from './salonOperationsGetStatistics200Meta'
 import type { SalonOperationsGetStatistics200Links } from './salonOperationsGetStatistics200Links'
 
 /**
@@ -16,8 +16,14 @@ import type { SalonOperationsGetStatistics200Links } from './salonOperationsGetS
 export type SalonOperationsGetStatistics200 = {
   /** レスポンスの主体となるビジネスデータ。 */
   data: ModelsSalonStatistics
-  /** リクエスト識別子やバージョン情報など共通メタデータ。 */
-  meta?: ModelsResponseMeta
-  /** 関連リソースや次アクションへのリンク情報。 */
-  links?: SalonOperationsGetStatistics200Links
+  /**
+   * リクエスト識別子やバージョン情報など共通メタデータ。
+   * @nullable
+   */
+  meta: SalonOperationsGetStatistics200Meta
+  /**
+   * 関連リソースや次アクションへのリンク情報。
+   * @nullable
+   */
+  links: SalonOperationsGetStatistics200Links
 }

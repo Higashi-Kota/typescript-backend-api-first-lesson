@@ -9,16 +9,15 @@ import type { ModelsServiceId } from './modelsServiceId'
 import type { ModelsSalonId } from './modelsSalonId'
 import type { ModelsServiceInfo } from './modelsServiceInfo'
 import type { ModelsServiceCategoryType } from './modelsServiceCategoryType'
-import type { ModelsCategoryId } from './modelsCategoryId'
 import type { ModelsServicePricing } from './modelsServicePricing'
 import type { ModelsServiceDuration } from './modelsServiceDuration'
-import type { ModelsServiceAvailabilityDetail } from './modelsServiceAvailabilityDetail'
+import type { ModelsServiceAvailability } from './modelsServiceAvailability'
 import type { ModelsBookingRequirementDetail } from './modelsBookingRequirementDetail'
 import type { ModelsServiceOptionDetail } from './modelsServiceOptionDetail'
-import type { ModelsServiceRestrictions } from './modelsServiceRestrictions'
-import type { ModelsServicePerformance } from './modelsServicePerformance'
-import type { ModelsServiceAssociations } from './modelsServiceAssociations'
-import type { ModelsServiceMetadata } from './modelsServiceMetadata'
+import type { ModelsServiceRestrictionsProperty } from './modelsServiceRestrictionsProperty'
+import type { ModelsServicePerformanceProperty } from './modelsServicePerformanceProperty'
+import type { ModelsServiceAssociationsProperty } from './modelsServiceAssociationsProperty'
+import type { ModelsServiceMetadataProperty } from './modelsServiceMetadataProperty'
 import type { ModelsServiceStatusDetail } from './modelsServiceStatusDetail'
 
 /**
@@ -33,26 +32,50 @@ export interface ModelsService {
   info: ModelsServiceInfo
   /** サービスカテゴリ区分 */
   category: ModelsServiceCategoryType
-  /** カテゴリ ID（分類ツリー連携用） */
-  categoryId?: ModelsCategoryId
+  /**
+   * カテゴリ ID（分類ツリー連携用）
+   * @nullable
+   */
+  categoryId: string | null
   /** 料金設定情報 */
   pricing: ModelsServicePricing
   /** 提供時間の設定 */
   duration: ModelsServiceDuration
-  /** 提供可能条件の設定 */
-  availability?: ModelsServiceAvailabilityDetail
-  /** 予約時に必要な要件一覧 */
-  requirements?: ModelsBookingRequirementDetail[]
-  /** 追加オプション設定 */
-  options?: ModelsServiceOptionDetail[]
-  /** 提供上の制約条件 */
-  restrictions?: ModelsServiceRestrictions
-  /** サービス実績の指標 */
-  performance?: ModelsServicePerformance
-  /** 関連サービス・担当者情報 */
-  associations?: ModelsServiceAssociations
-  /** メタデータ・表示設定 */
-  metadata?: ModelsServiceMetadata
+  /**
+   * 提供可能条件の設定
+   * @nullable
+   */
+  availability: ModelsServiceAvailability
+  /**
+   * 予約時に必要な要件一覧
+   * @nullable
+   */
+  requirements: ModelsBookingRequirementDetail[] | null
+  /**
+   * 追加オプション設定
+   * @nullable
+   */
+  options: ModelsServiceOptionDetail[] | null
+  /**
+   * 提供上の制約条件
+   * @nullable
+   */
+  restrictions: ModelsServiceRestrictionsProperty
+  /**
+   * サービス実績の指標
+   * @nullable
+   */
+  performance: ModelsServicePerformanceProperty
+  /**
+   * 関連サービス・担当者情報
+   * @nullable
+   */
+  associations: ModelsServiceAssociationsProperty
+  /**
+   * メタデータ・表示設定
+   * @nullable
+   */
+  metadata: ModelsServiceMetadataProperty
   /** 現在の提供ステータス */
   status: ModelsServiceStatusDetail
   /** 互換性維持のための旧項目：サービス名 */
@@ -61,10 +84,16 @@ export interface ModelsService {
   description: string
   /** 互換性維持のための旧項目：料金 */
   price: number
-  /** 互換性維持のための旧項目：画像 URL */
-  imageUrl?: string
-  /** 互換性維持のための旧項目：スタッフレベル */
-  requiredStaffLevel?: number
+  /**
+   * 互換性維持のための旧項目：画像 URL
+   * @nullable
+   */
+  imageUrl: string | null
+  /**
+   * 互換性維持のための旧項目：スタッフレベル
+   * @nullable
+   */
+  requiredStaffLevel: number | null
   /** 互換性維持のための旧項目：有効フラグ */
   isActive: boolean
   /** レコード作成日時。 */

@@ -94,7 +94,7 @@ export class UpdateSalonUseCase extends BaseSalonUseCase {
     }
 
     if (
-      request.description !== undefined &&
+      request.description != null &&
       request.description.trim().length === 0
     ) {
       errors.push('Description cannot be empty')

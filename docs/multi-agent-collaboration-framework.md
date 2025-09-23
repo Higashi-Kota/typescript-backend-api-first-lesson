@@ -153,6 +153,49 @@ interface MapperArtifact {
 }
 ```
 
+### Documentation Artifact
+
+[Documentation Specialist](../.claude/agents/documentation-specialist.md)が生成する成果物：
+
+```typescript
+interface DocumentationArtifact {
+  implementationPatterns: {
+    [patternName: string]: {
+      category: "api" | "database" | "business-logic" | "integration" | "testing"
+      description: string
+      applicability: string[]  // どのドメインで適用可能か
+      template: {
+        genericForm: string  // 汎用的なパターン
+        exampleImplementation: string  // 具体的な実装例
+        adaptationPoints: Array<{
+          aspect: string
+          considerations: string[]
+        }>
+      }
+    }
+  }
+  referenceGuides: {
+    [guideName: string]: {
+      targetAudience: "backend" | "frontend" | "fullstack"
+      prerequisites: string[]
+      steps: Array<{
+        title: string
+        description: string
+        codeExample?: string
+        checkpoints: string[]
+      }>
+    }
+  }
+  lessonsLearned: {
+    [domainName: string]: Array<{
+      challenge: string
+      solution: string
+      reusableApproach: boolean
+    }>
+  }
+}
+```
+
 ## 🔄 Agent Interaction Protocol
 
 ### Phase 1: Initial Design Generation
@@ -188,6 +231,26 @@ interface MapperArtifact {
 ```
 
 [Senior UI Designer](../.claude/agents/senior-ui-designer.md)は、UIコンポーネントの設計においてフロントエンド型定義との整合性を確認します。
+
+### Phase 4: Implementation Documentation
+```
+[All Implementation Agents] (並行実装)
+    ↓ [Implementation Changes via git commit]
+[Documentation Specialist](../.claude/agents/documentation-specialist.md)
+    ↓ [Change Analysis via git status/diff]
+    ├→ [Pattern Extraction]
+    ├→ [Reference Guide Creation]
+    └→ [Documentation Updates]
+    ↓ [Updated Documentation]
+[Design Review Architect](../.claude/agents/design-review-architect.md)
+    ↓ [Documentation Review & Validation]
+```
+
+[Documentation Specialist](../.claude/agents/documentation-specialist.md)は、実装完了後に以下を実施：
+- 実装変更の分析と パターン抽出
+- リファレンス実装ガイドの作成
+- 他ドメイン実装時に活用可能なテンプレート化
+- 既存ドキュメントとの整合性確認と更新
 
 ## 🔍 Validation Rules
 
@@ -234,10 +297,41 @@ interface FieldMappingValidation {
     requiredConsistency: (dbRequired: boolean, apiRequired: boolean) =>
       !dbRequired || apiRequired
 
-    // Nullable in DB → Optional/Nullable in API
-    nullableConsistency: (dbNullable: boolean, apiOptional: boolean) =>
-      !dbNullable || apiOptional
+    // Nullable in DB → Nullable in API (All models)
+    nullableConsistency: (dbNullable: boolean, apiNullable: boolean) =>
+      dbNullable === apiNullable
+
+    // Update models: Optional + Nullable for nullable base fields
+    updateModelConsistency: (baseNullable: boolean, updateOptional: boolean, updateNullable: boolean) =>
+      updateOptional && (baseNullable ? updateNullable : !updateNullable)
   }
+}
+```
+
+### Level 4: Nullable Field Rules
+
+全モデルタイプにおけるnullable制約の統一ルール：
+
+```typescript
+interface NullableFieldValidation {
+  // 基本モデル: DBのnullable制約と完全一致
+  baseModel: (dbNullable: boolean, apiField: string) =>
+    dbNullable ? `${apiField}: Type | null` : `${apiField}: Type`
+
+  // 作成リクエスト: 全フィールド必須、nullable値許可
+  createRequest: (dbNullable: boolean, apiField: string) =>
+    dbNullable ? `${apiField}: Type | null` : `${apiField}: Type`
+
+  // 更新リクエスト: 全フィールドOptional、基本モデルnullableならnull許可
+  updateRequest: (dbNullable: boolean, apiField: string) =>
+    dbNullable ? `${apiField}?: Type | null` : `${apiField}?: Type`
+
+  // 検索パラメータ: フィルター項目のみOptional（nullableは不要）
+  searchParams: (apiField: string) => `${apiField}?: Type`
+
+  // ラッパーモデル: 基本モデルと同じルール適用
+  wrapperModel: (nullable: boolean, apiField: string) =>
+    nullable ? `${apiField}: Type | null` : `${apiField}: Type`
 }
 ```
 
@@ -317,10 +411,24 @@ interface EscalationRequest {
 - [ ] Optional + Nullableの組み合わせが適切（更新APIでのリセット機能）
 
 #### 4. Optional制約チェック（TypeSpec API Architect）
+- [ ] 基本モデル: Optionalフィールドなし、DBのnullable制約に応じて `| null`
 - [ ] 作成API: Optionalフィールドなし（全て必須、値はnullable）
-- [ ] 更新API: 全フィールドOptional（部分更新）
+- [ ] 更新API: 全フィールドOptional（部分更新）、基本モデルでnullableなフィールドは `| null` 追加
 - [ ] 検索API: フィルター項目のみOptional
 - [ ] レスポンス: Optionalフィールドなし（全て必須）
+- [ ] ラッパーモデル（ApiResponse等）: 基本モデルと同じnullableルール適用
+
+#### 5. 更新モデル統合チェック（Design Review Architect）
+- [ ] 各ドメインにUpdateRequestモデルが1つだけ存在する
+- [ ] 基本モデルでnullableなフィールドのみ `| null` が付与されている
+- [ ] @docコメントに「null指定で値をリセット可能」が記載されている（該当する場合）
+
+#### 6. Nullable整合性チェック（全エージェント）
+- [ ] 基本モデル: 全フィールドがDBのnullable制約と一致
+- [ ] 作成モデル: 基本モデルのnullable制約を継承
+- [ ] 更新モデル: Optional + 条件付きnullable（基本モデル準拠）
+- [ ] ラッパーモデル: nullable制約が基本モデルルールに従う
+- [ ] Optionalのみの不正なフィールドが存在しない
 
 ### Checkpoint 1: DB-API Type Alignment
 ```typescript
@@ -387,6 +495,41 @@ interface MapperCompletenessCheck {
 }
 ```
 
+### Checkpoint 4: Documentation Consistency
+```typescript
+interface DocumentationConsistencyCheck {
+  validate(): CheckResult {
+    // Check if patterns are documented
+    for (const pattern of implementedPatterns) {
+      if (!documentationArtifact.implementationPatterns[pattern.name]) {
+        return { pass: false, error: `Undocumented pattern: ${pattern.name}` }
+      }
+    }
+
+    // Check if reference guides cover all domains
+    for (const domain of implementedDomains) {
+      const hasGuide = Object.values(documentationArtifact.referenceGuides)
+        .some(guide => guide.steps.some(step => step.codeExample?.includes(domain)))
+
+      if (!hasGuide) {
+        return { pass: false, error: `Missing reference guide for ${domain}` }
+      }
+    }
+
+    // Check if documentation reflects actual implementation
+    const codePatterns = extractPatternsFromCode()
+    const docPatterns = Object.keys(documentationArtifact.implementationPatterns)
+    const undocumented = codePatterns.filter(p => !docPatterns.includes(p))
+
+    if (undocumented.length > 0) {
+      return { pass: false, error: `Undocumented patterns: ${undocumented.join(', ')}` }
+    }
+
+    return { pass: true }
+  }
+}
+```
+
 ## 📊 Validation State Machine
 
 ```typescript
@@ -438,6 +581,7 @@ interface DesignCompletionCriteria {
   mappersComplete: boolean              // 全エンティティにマッパー定義
   validationsPassed: boolean            // 全チェックポイント通過
   noBlockingErrors: boolean            // 解決不能エラーなし
+  documentationUpdated: boolean        // ドキュメントが実装と同期
 }
 
 const isDesignComplete = (criteria: DesignCompletionCriteria): boolean =>
@@ -475,7 +619,23 @@ class DesignValidationOrchestrator {
       }
     }
 
+    // 6. Document implementation patterns
+    await this.documentImplementation()
+
     return { status: "VALIDATED", artifacts: this.finalArtifacts }
+  }
+
+  async documentImplementation(): Promise<void> {
+    // Documentation Specialist analyzes and documents patterns
+    const docArtifact = await this.documentationSpecialist.analyze({
+      implementations: this.getImplementationChanges(),
+      existingDocs: this.getCurrentDocumentation()
+    })
+
+    // Update relevant documentation files
+    await this.updateDocumentation(docArtifact)
+
+    this.criteria.documentationUpdated = true
   }
 }
 ```
@@ -512,6 +672,7 @@ class DesignValidationOrchestrator {
 - [Backend TypeScript Architect](../.claude/agents/backend-typescript-architect.md) - バックエンドTypeScriptアーキテクト
 - [Database Schema Architect](../.claude/agents/database-schema-architect.md) - データベーススキーマアーキテクト
 - [Design Review Architect](../.claude/agents/design-review-architect.md) - 設計レビューアーキテクト
+- [Documentation Specialist](../.claude/agents/documentation-specialist.md) - ドキュメンテーションスペシャリスト
 - [Salon Business Expert](../.claude/agents/salon-business-expert.md) - サロンビジネスエキスパート
 - [Senior Frontend Architect](../.claude/agents/senior-frontend-architect.md) - シニアフロントエンドアーキテクト
 - [Senior UI Designer](../.claude/agents/senior-ui-designer.md) - シニアUIデザイナー

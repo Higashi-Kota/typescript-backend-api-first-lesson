@@ -6,7 +6,7 @@
  * OpenAPI spec version: 2.0
  */
 import type { ModelsCustomerPreferences } from './modelsCustomerPreferences'
-import type { ModelsResponseMeta } from './modelsResponseMeta'
+import type { CustomerOperationsUpdatePreferences200Meta } from './customerOperationsUpdatePreferences200Meta'
 import type { CustomerOperationsUpdatePreferences200Links } from './customerOperationsUpdatePreferences200Links'
 
 /**
@@ -16,8 +16,14 @@ import type { CustomerOperationsUpdatePreferences200Links } from './customerOper
 export type CustomerOperationsUpdatePreferences200 = {
   /** レスポンスの主体となるビジネスデータ。 */
   data: ModelsCustomerPreferences
-  /** リクエスト識別子やバージョン情報など共通メタデータ。 */
-  meta?: ModelsResponseMeta
-  /** 関連リソースや次アクションへのリンク情報。 */
-  links?: CustomerOperationsUpdatePreferences200Links
+  /**
+   * リクエスト識別子やバージョン情報など共通メタデータ。
+   * @nullable
+   */
+  meta: CustomerOperationsUpdatePreferences200Meta
+  /**
+   * 関連リソースや次アクションへのリンク情報。
+   * @nullable
+   */
+  links: CustomerOperationsUpdatePreferences200Links
 }

@@ -30,21 +30,21 @@ import type {
   AuthOperationsResetPassword400,
   AuthOperationsVerifyResetTokenParams,
   AuthOperationsVerifyTwoFactor400,
+  ModelsAuthEmailVerificationRequest,
+  ModelsAuthLoginRequest,
+  ModelsAuthLoginResponse,
+  ModelsAuthPasswordChangeRequest,
+  ModelsAuthPasswordResetConfirmRequest,
+  ModelsAuthPasswordResetRequest,
+  ModelsAuthRegisterRequest,
+  ModelsAuthSessionListResponse,
   ModelsAuthSuccessResponse,
-  ModelsEmailVerificationRequest,
+  ModelsAuthTokenRefreshRequest,
+  ModelsAuthTwoFactorDisableRequest,
+  ModelsAuthTwoFactorEnableRequest,
+  ModelsAuthTwoFactorSetupResponse,
+  ModelsAuthTwoFactorVerifyRequest,
   ModelsError,
-  ModelsLoginRequest,
-  ModelsLoginResponse,
-  ModelsPasswordChangeRequest,
-  ModelsPasswordResetConfirmRequest,
-  ModelsPasswordResetRequest,
-  ModelsRegisterRequest,
-  ModelsSessionListResponse,
-  ModelsTokenRefreshRequest,
-  ModelsTwoFactorDisableRequest,
-  ModelsTwoFactorEnableRequest,
-  ModelsTwoFactorSetupResponse,
-  ModelsTwoFactorVerifyRequest,
   ModelsUser,
 } from '../../models'
 
@@ -89,7 +89,7 @@ export const getAuthOperationsGenerateBackupCodesUrl = () => {
 }
 
 export const authOperationsGenerateBackupCodes = async (
-  modelsTwoFactorVerifyRequest: ModelsTwoFactorVerifyRequest,
+  modelsAuthTwoFactorVerifyRequest: ModelsAuthTwoFactorVerifyRequest,
   options?: RequestInit
 ): Promise<authOperationsGenerateBackupCodesResponse> => {
   return customInstance<authOperationsGenerateBackupCodesResponse>(
@@ -98,7 +98,7 @@ export const authOperationsGenerateBackupCodes = async (
       ...options,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsTwoFactorVerifyRequest),
+      body: JSON.stringify(modelsAuthTwoFactorVerifyRequest),
     }
   )
 }
@@ -110,14 +110,14 @@ export const getAuthOperationsGenerateBackupCodesMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof authOperationsGenerateBackupCodes>>,
     TError,
-    { data: ModelsTwoFactorVerifyRequest },
+    { data: ModelsAuthTwoFactorVerifyRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof authOperationsGenerateBackupCodes>>,
   TError,
-  { data: ModelsTwoFactorVerifyRequest },
+  { data: ModelsAuthTwoFactorVerifyRequest },
   TContext
 > => {
   const mutationKey = ['authOperationsGenerateBackupCodes']
@@ -131,7 +131,7 @@ export const getAuthOperationsGenerateBackupCodesMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof authOperationsGenerateBackupCodes>>,
-    { data: ModelsTwoFactorVerifyRequest }
+    { data: ModelsAuthTwoFactorVerifyRequest }
   > = (props) => {
     const { data } = props ?? {}
 
@@ -145,7 +145,7 @@ export type AuthOperationsGenerateBackupCodesMutationResult = NonNullable<
   Awaited<ReturnType<typeof authOperationsGenerateBackupCodes>>
 >
 export type AuthOperationsGenerateBackupCodesMutationBody =
-  ModelsTwoFactorVerifyRequest
+  ModelsAuthTwoFactorVerifyRequest
 export type AuthOperationsGenerateBackupCodesMutationError =
   | AuthOperationsGenerateBackupCodes400
   | ModelsError
@@ -158,7 +158,7 @@ export const useAuthOperationsGenerateBackupCodes = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof authOperationsGenerateBackupCodes>>,
       TError,
-      { data: ModelsTwoFactorVerifyRequest },
+      { data: ModelsAuthTwoFactorVerifyRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -167,7 +167,7 @@ export const useAuthOperationsGenerateBackupCodes = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof authOperationsGenerateBackupCodes>>,
   TError,
-  { data: ModelsTwoFactorVerifyRequest },
+  { data: ModelsAuthTwoFactorVerifyRequest },
   TContext
 > => {
   const mutationOptions =
@@ -208,7 +208,7 @@ export const getAuthOperationsDisableTwoFactorUrl = () => {
 }
 
 export const authOperationsDisableTwoFactor = async (
-  modelsTwoFactorDisableRequest: ModelsTwoFactorDisableRequest,
+  modelsAuthTwoFactorDisableRequest: ModelsAuthTwoFactorDisableRequest,
   options?: RequestInit
 ): Promise<authOperationsDisableTwoFactorResponse> => {
   return customInstance<authOperationsDisableTwoFactorResponse>(
@@ -217,7 +217,7 @@ export const authOperationsDisableTwoFactor = async (
       ...options,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsTwoFactorDisableRequest),
+      body: JSON.stringify(modelsAuthTwoFactorDisableRequest),
     }
   )
 }
@@ -229,14 +229,14 @@ export const getAuthOperationsDisableTwoFactorMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof authOperationsDisableTwoFactor>>,
     TError,
-    { data: ModelsTwoFactorDisableRequest },
+    { data: ModelsAuthTwoFactorDisableRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof authOperationsDisableTwoFactor>>,
   TError,
-  { data: ModelsTwoFactorDisableRequest },
+  { data: ModelsAuthTwoFactorDisableRequest },
   TContext
 > => {
   const mutationKey = ['authOperationsDisableTwoFactor']
@@ -250,7 +250,7 @@ export const getAuthOperationsDisableTwoFactorMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof authOperationsDisableTwoFactor>>,
-    { data: ModelsTwoFactorDisableRequest }
+    { data: ModelsAuthTwoFactorDisableRequest }
   > = (props) => {
     const { data } = props ?? {}
 
@@ -264,7 +264,7 @@ export type AuthOperationsDisableTwoFactorMutationResult = NonNullable<
   Awaited<ReturnType<typeof authOperationsDisableTwoFactor>>
 >
 export type AuthOperationsDisableTwoFactorMutationBody =
-  ModelsTwoFactorDisableRequest
+  ModelsAuthTwoFactorDisableRequest
 export type AuthOperationsDisableTwoFactorMutationError =
   | AuthOperationsDisableTwoFactor400
   | ModelsError
@@ -277,7 +277,7 @@ export const useAuthOperationsDisableTwoFactor = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof authOperationsDisableTwoFactor>>,
       TError,
-      { data: ModelsTwoFactorDisableRequest },
+      { data: ModelsAuthTwoFactorDisableRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -286,7 +286,7 @@ export const useAuthOperationsDisableTwoFactor = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof authOperationsDisableTwoFactor>>,
   TError,
-  { data: ModelsTwoFactorDisableRequest },
+  { data: ModelsAuthTwoFactorDisableRequest },
   TContext
 > => {
   const mutationOptions =
@@ -298,7 +298,7 @@ export const useAuthOperationsDisableTwoFactor = <
  * Enable two-factor authentication
  */
 export type authOperationsEnableTwoFactorResponse200 = {
-  data: ModelsTwoFactorSetupResponse
+  data: ModelsAuthTwoFactorSetupResponse
   status: 200
 }
 
@@ -327,7 +327,7 @@ export const getAuthOperationsEnableTwoFactorUrl = () => {
 }
 
 export const authOperationsEnableTwoFactor = async (
-  modelsTwoFactorEnableRequest: ModelsTwoFactorEnableRequest,
+  modelsAuthTwoFactorEnableRequest: ModelsAuthTwoFactorEnableRequest,
   options?: RequestInit
 ): Promise<authOperationsEnableTwoFactorResponse> => {
   return customInstance<authOperationsEnableTwoFactorResponse>(
@@ -336,7 +336,7 @@ export const authOperationsEnableTwoFactor = async (
       ...options,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsTwoFactorEnableRequest),
+      body: JSON.stringify(modelsAuthTwoFactorEnableRequest),
     }
   )
 }
@@ -348,14 +348,14 @@ export const getAuthOperationsEnableTwoFactorMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof authOperationsEnableTwoFactor>>,
     TError,
-    { data: ModelsTwoFactorEnableRequest },
+    { data: ModelsAuthTwoFactorEnableRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof authOperationsEnableTwoFactor>>,
   TError,
-  { data: ModelsTwoFactorEnableRequest },
+  { data: ModelsAuthTwoFactorEnableRequest },
   TContext
 > => {
   const mutationKey = ['authOperationsEnableTwoFactor']
@@ -369,7 +369,7 @@ export const getAuthOperationsEnableTwoFactorMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof authOperationsEnableTwoFactor>>,
-    { data: ModelsTwoFactorEnableRequest }
+    { data: ModelsAuthTwoFactorEnableRequest }
   > = (props) => {
     const { data } = props ?? {}
 
@@ -383,7 +383,7 @@ export type AuthOperationsEnableTwoFactorMutationResult = NonNullable<
   Awaited<ReturnType<typeof authOperationsEnableTwoFactor>>
 >
 export type AuthOperationsEnableTwoFactorMutationBody =
-  ModelsTwoFactorEnableRequest
+  ModelsAuthTwoFactorEnableRequest
 export type AuthOperationsEnableTwoFactorMutationError =
   | AuthOperationsEnableTwoFactor400
   | ModelsError
@@ -396,7 +396,7 @@ export const useAuthOperationsEnableTwoFactor = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof authOperationsEnableTwoFactor>>,
       TError,
-      { data: ModelsTwoFactorEnableRequest },
+      { data: ModelsAuthTwoFactorEnableRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -405,7 +405,7 @@ export const useAuthOperationsEnableTwoFactor = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof authOperationsEnableTwoFactor>>,
   TError,
-  { data: ModelsTwoFactorEnableRequest },
+  { data: ModelsAuthTwoFactorEnableRequest },
   TContext
 > => {
   const mutationOptions =
@@ -417,7 +417,7 @@ export const useAuthOperationsEnableTwoFactor = <
  * Get QR code for 2FA setup
  */
 export type authOperationsGetTwoFactorQRCodeResponse200 = {
-  data: ModelsTwoFactorSetupResponse
+  data: ModelsAuthTwoFactorSetupResponse
   status: 200
 }
 
@@ -624,7 +624,7 @@ export const getAuthOperationsVerifyTwoFactorUrl = () => {
 }
 
 export const authOperationsVerifyTwoFactor = async (
-  modelsTwoFactorVerifyRequest: ModelsTwoFactorVerifyRequest,
+  modelsAuthTwoFactorVerifyRequest: ModelsAuthTwoFactorVerifyRequest,
   options?: RequestInit
 ): Promise<authOperationsVerifyTwoFactorResponse> => {
   return customInstance<authOperationsVerifyTwoFactorResponse>(
@@ -633,7 +633,7 @@ export const authOperationsVerifyTwoFactor = async (
       ...options,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsTwoFactorVerifyRequest),
+      body: JSON.stringify(modelsAuthTwoFactorVerifyRequest),
     }
   )
 }
@@ -645,14 +645,14 @@ export const getAuthOperationsVerifyTwoFactorMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof authOperationsVerifyTwoFactor>>,
     TError,
-    { data: ModelsTwoFactorVerifyRequest },
+    { data: ModelsAuthTwoFactorVerifyRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof authOperationsVerifyTwoFactor>>,
   TError,
-  { data: ModelsTwoFactorVerifyRequest },
+  { data: ModelsAuthTwoFactorVerifyRequest },
   TContext
 > => {
   const mutationKey = ['authOperationsVerifyTwoFactor']
@@ -666,7 +666,7 @@ export const getAuthOperationsVerifyTwoFactorMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof authOperationsVerifyTwoFactor>>,
-    { data: ModelsTwoFactorVerifyRequest }
+    { data: ModelsAuthTwoFactorVerifyRequest }
   > = (props) => {
     const { data } = props ?? {}
 
@@ -680,7 +680,7 @@ export type AuthOperationsVerifyTwoFactorMutationResult = NonNullable<
   Awaited<ReturnType<typeof authOperationsVerifyTwoFactor>>
 >
 export type AuthOperationsVerifyTwoFactorMutationBody =
-  ModelsTwoFactorVerifyRequest
+  ModelsAuthTwoFactorVerifyRequest
 export type AuthOperationsVerifyTwoFactorMutationError =
   | AuthOperationsVerifyTwoFactor400
   | ModelsError
@@ -693,7 +693,7 @@ export const useAuthOperationsVerifyTwoFactor = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof authOperationsVerifyTwoFactor>>,
       TError,
-      { data: ModelsTwoFactorVerifyRequest },
+      { data: ModelsAuthTwoFactorVerifyRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -702,7 +702,7 @@ export const useAuthOperationsVerifyTwoFactor = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof authOperationsVerifyTwoFactor>>,
   TError,
-  { data: ModelsTwoFactorVerifyRequest },
+  { data: ModelsAuthTwoFactorVerifyRequest },
   TContext
 > => {
   const mutationOptions =
@@ -743,7 +743,7 @@ export const getAuthOperationsChangePasswordUrl = () => {
 }
 
 export const authOperationsChangePassword = async (
-  modelsPasswordChangeRequest: ModelsPasswordChangeRequest,
+  modelsAuthPasswordChangeRequest: ModelsAuthPasswordChangeRequest,
   options?: RequestInit
 ): Promise<authOperationsChangePasswordResponse> => {
   return customInstance<authOperationsChangePasswordResponse>(
@@ -752,7 +752,7 @@ export const authOperationsChangePassword = async (
       ...options,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsPasswordChangeRequest),
+      body: JSON.stringify(modelsAuthPasswordChangeRequest),
     }
   )
 }
@@ -764,14 +764,14 @@ export const getAuthOperationsChangePasswordMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof authOperationsChangePassword>>,
     TError,
-    { data: ModelsPasswordChangeRequest },
+    { data: ModelsAuthPasswordChangeRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof authOperationsChangePassword>>,
   TError,
-  { data: ModelsPasswordChangeRequest },
+  { data: ModelsAuthPasswordChangeRequest },
   TContext
 > => {
   const mutationKey = ['authOperationsChangePassword']
@@ -785,7 +785,7 @@ export const getAuthOperationsChangePasswordMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof authOperationsChangePassword>>,
-    { data: ModelsPasswordChangeRequest }
+    { data: ModelsAuthPasswordChangeRequest }
   > = (props) => {
     const { data } = props ?? {}
 
@@ -799,7 +799,7 @@ export type AuthOperationsChangePasswordMutationResult = NonNullable<
   Awaited<ReturnType<typeof authOperationsChangePassword>>
 >
 export type AuthOperationsChangePasswordMutationBody =
-  ModelsPasswordChangeRequest
+  ModelsAuthPasswordChangeRequest
 export type AuthOperationsChangePasswordMutationError =
   | AuthOperationsChangePassword400
   | ModelsError
@@ -812,7 +812,7 @@ export const useAuthOperationsChangePassword = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof authOperationsChangePassword>>,
       TError,
-      { data: ModelsPasswordChangeRequest },
+      { data: ModelsAuthPasswordChangeRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -821,7 +821,7 @@ export const useAuthOperationsChangePassword = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof authOperationsChangePassword>>,
   TError,
-  { data: ModelsPasswordChangeRequest },
+  { data: ModelsAuthPasswordChangeRequest },
   TContext
 > => {
   const mutationOptions =
@@ -856,7 +856,7 @@ export const getAuthOperationsForgotPasswordUrl = () => {
 }
 
 export const authOperationsForgotPassword = async (
-  modelsPasswordResetRequest: ModelsPasswordResetRequest,
+  modelsAuthPasswordResetRequest: ModelsAuthPasswordResetRequest,
   options?: RequestInit
 ): Promise<authOperationsForgotPasswordResponse> => {
   return customInstance<authOperationsForgotPasswordResponse>(
@@ -865,7 +865,7 @@ export const authOperationsForgotPassword = async (
       ...options,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsPasswordResetRequest),
+      body: JSON.stringify(modelsAuthPasswordResetRequest),
     }
   )
 }
@@ -877,14 +877,14 @@ export const getAuthOperationsForgotPasswordMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof authOperationsForgotPassword>>,
     TError,
-    { data: ModelsPasswordResetRequest },
+    { data: ModelsAuthPasswordResetRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof authOperationsForgotPassword>>,
   TError,
-  { data: ModelsPasswordResetRequest },
+  { data: ModelsAuthPasswordResetRequest },
   TContext
 > => {
   const mutationKey = ['authOperationsForgotPassword']
@@ -898,7 +898,7 @@ export const getAuthOperationsForgotPasswordMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof authOperationsForgotPassword>>,
-    { data: ModelsPasswordResetRequest }
+    { data: ModelsAuthPasswordResetRequest }
   > = (props) => {
     const { data } = props ?? {}
 
@@ -912,7 +912,7 @@ export type AuthOperationsForgotPasswordMutationResult = NonNullable<
   Awaited<ReturnType<typeof authOperationsForgotPassword>>
 >
 export type AuthOperationsForgotPasswordMutationBody =
-  ModelsPasswordResetRequest
+  ModelsAuthPasswordResetRequest
 export type AuthOperationsForgotPasswordMutationError = ModelsError
 
 export const useAuthOperationsForgotPassword = <
@@ -923,7 +923,7 @@ export const useAuthOperationsForgotPassword = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof authOperationsForgotPassword>>,
       TError,
-      { data: ModelsPasswordResetRequest },
+      { data: ModelsAuthPasswordResetRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -932,7 +932,7 @@ export const useAuthOperationsForgotPassword = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof authOperationsForgotPassword>>,
   TError,
-  { data: ModelsPasswordResetRequest },
+  { data: ModelsAuthPasswordResetRequest },
   TContext
 > => {
   const mutationOptions =
@@ -944,7 +944,7 @@ export const useAuthOperationsForgotPassword = <
  * Login with email and password
  */
 export type authOperationsLoginResponse200 = {
-  data: ModelsLoginResponse
+  data: ModelsAuthLoginResponse
   status: 200
 }
 
@@ -967,7 +967,7 @@ export const getAuthOperationsLoginUrl = () => {
 }
 
 export const authOperationsLogin = async (
-  modelsLoginRequest: ModelsLoginRequest,
+  modelsAuthLoginRequest: ModelsAuthLoginRequest,
   options?: RequestInit
 ): Promise<authOperationsLoginResponse> => {
   return customInstance<authOperationsLoginResponse>(
@@ -976,7 +976,7 @@ export const authOperationsLogin = async (
       ...options,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsLoginRequest),
+      body: JSON.stringify(modelsAuthLoginRequest),
     }
   )
 }
@@ -988,14 +988,14 @@ export const getAuthOperationsLoginMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof authOperationsLogin>>,
     TError,
-    { data: ModelsLoginRequest },
+    { data: ModelsAuthLoginRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof authOperationsLogin>>,
   TError,
-  { data: ModelsLoginRequest },
+  { data: ModelsAuthLoginRequest },
   TContext
 > => {
   const mutationKey = ['authOperationsLogin']
@@ -1009,7 +1009,7 @@ export const getAuthOperationsLoginMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof authOperationsLogin>>,
-    { data: ModelsLoginRequest }
+    { data: ModelsAuthLoginRequest }
   > = (props) => {
     const { data } = props ?? {}
 
@@ -1022,7 +1022,7 @@ export const getAuthOperationsLoginMutationOptions = <
 export type AuthOperationsLoginMutationResult = NonNullable<
   Awaited<ReturnType<typeof authOperationsLogin>>
 >
-export type AuthOperationsLoginMutationBody = ModelsLoginRequest
+export type AuthOperationsLoginMutationBody = ModelsAuthLoginRequest
 export type AuthOperationsLoginMutationError = ModelsError
 
 export const useAuthOperationsLogin = <
@@ -1033,7 +1033,7 @@ export const useAuthOperationsLogin = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof authOperationsLogin>>,
       TError,
-      { data: ModelsLoginRequest },
+      { data: ModelsAuthLoginRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -1042,7 +1042,7 @@ export const useAuthOperationsLogin = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof authOperationsLogin>>,
   TError,
-  { data: ModelsLoginRequest },
+  { data: ModelsAuthLoginRequest },
   TContext
 > => {
   const mutationOptions = getAuthOperationsLoginMutationOptions(options)
@@ -1439,7 +1439,7 @@ export function useAuthOperationsGetCurrentUser<
  * Refresh access token
  */
 export type authOperationsRefreshTokenResponse200 = {
-  data: ModelsLoginResponse
+  data: ModelsAuthLoginResponse
   status: 200
 }
 
@@ -1462,7 +1462,7 @@ export const getAuthOperationsRefreshTokenUrl = () => {
 }
 
 export const authOperationsRefreshToken = async (
-  modelsTokenRefreshRequest: ModelsTokenRefreshRequest,
+  modelsAuthTokenRefreshRequest: ModelsAuthTokenRefreshRequest,
   options?: RequestInit
 ): Promise<authOperationsRefreshTokenResponse> => {
   return customInstance<authOperationsRefreshTokenResponse>(
@@ -1471,7 +1471,7 @@ export const authOperationsRefreshToken = async (
       ...options,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsTokenRefreshRequest),
+      body: JSON.stringify(modelsAuthTokenRefreshRequest),
     }
   )
 }
@@ -1483,14 +1483,14 @@ export const getAuthOperationsRefreshTokenMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof authOperationsRefreshToken>>,
     TError,
-    { data: ModelsTokenRefreshRequest },
+    { data: ModelsAuthTokenRefreshRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof authOperationsRefreshToken>>,
   TError,
-  { data: ModelsTokenRefreshRequest },
+  { data: ModelsAuthTokenRefreshRequest },
   TContext
 > => {
   const mutationKey = ['authOperationsRefreshToken']
@@ -1504,7 +1504,7 @@ export const getAuthOperationsRefreshTokenMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof authOperationsRefreshToken>>,
-    { data: ModelsTokenRefreshRequest }
+    { data: ModelsAuthTokenRefreshRequest }
   > = (props) => {
     const { data } = props ?? {}
 
@@ -1517,7 +1517,8 @@ export const getAuthOperationsRefreshTokenMutationOptions = <
 export type AuthOperationsRefreshTokenMutationResult = NonNullable<
   Awaited<ReturnType<typeof authOperationsRefreshToken>>
 >
-export type AuthOperationsRefreshTokenMutationBody = ModelsTokenRefreshRequest
+export type AuthOperationsRefreshTokenMutationBody =
+  ModelsAuthTokenRefreshRequest
 export type AuthOperationsRefreshTokenMutationError = ModelsError
 
 export const useAuthOperationsRefreshToken = <
@@ -1528,7 +1529,7 @@ export const useAuthOperationsRefreshToken = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof authOperationsRefreshToken>>,
       TError,
-      { data: ModelsTokenRefreshRequest },
+      { data: ModelsAuthTokenRefreshRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -1537,7 +1538,7 @@ export const useAuthOperationsRefreshToken = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof authOperationsRefreshToken>>,
   TError,
-  { data: ModelsTokenRefreshRequest },
+  { data: ModelsAuthTokenRefreshRequest },
   TContext
 > => {
   const mutationOptions = getAuthOperationsRefreshTokenMutationOptions(options)
@@ -1571,7 +1572,7 @@ export const getAuthOperationsRegisterUrl = () => {
 }
 
 export const authOperationsRegister = async (
-  modelsRegisterRequest: ModelsRegisterRequest,
+  modelsAuthRegisterRequest: ModelsAuthRegisterRequest,
   options?: RequestInit
 ): Promise<authOperationsRegisterResponse> => {
   return customInstance<authOperationsRegisterResponse>(
@@ -1580,7 +1581,7 @@ export const authOperationsRegister = async (
       ...options,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsRegisterRequest),
+      body: JSON.stringify(modelsAuthRegisterRequest),
     }
   )
 }
@@ -1592,14 +1593,14 @@ export const getAuthOperationsRegisterMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof authOperationsRegister>>,
     TError,
-    { data: ModelsRegisterRequest },
+    { data: ModelsAuthRegisterRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof authOperationsRegister>>,
   TError,
-  { data: ModelsRegisterRequest },
+  { data: ModelsAuthRegisterRequest },
   TContext
 > => {
   const mutationKey = ['authOperationsRegister']
@@ -1613,7 +1614,7 @@ export const getAuthOperationsRegisterMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof authOperationsRegister>>,
-    { data: ModelsRegisterRequest }
+    { data: ModelsAuthRegisterRequest }
   > = (props) => {
     const { data } = props ?? {}
 
@@ -1626,7 +1627,7 @@ export const getAuthOperationsRegisterMutationOptions = <
 export type AuthOperationsRegisterMutationResult = NonNullable<
   Awaited<ReturnType<typeof authOperationsRegister>>
 >
-export type AuthOperationsRegisterMutationBody = ModelsRegisterRequest
+export type AuthOperationsRegisterMutationBody = ModelsAuthRegisterRequest
 export type AuthOperationsRegisterMutationError = ModelsError
 
 export const useAuthOperationsRegister = <
@@ -1637,7 +1638,7 @@ export const useAuthOperationsRegister = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof authOperationsRegister>>,
       TError,
-      { data: ModelsRegisterRequest },
+      { data: ModelsAuthRegisterRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -1646,7 +1647,7 @@ export const useAuthOperationsRegister = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof authOperationsRegister>>,
   TError,
-  { data: ModelsRegisterRequest },
+  { data: ModelsAuthRegisterRequest },
   TContext
 > => {
   const mutationOptions = getAuthOperationsRegisterMutationOptions(options)
@@ -1680,7 +1681,7 @@ export const getAuthOperationsResetPasswordUrl = () => {
 }
 
 export const authOperationsResetPassword = async (
-  modelsPasswordResetConfirmRequest: ModelsPasswordResetConfirmRequest,
+  modelsAuthPasswordResetConfirmRequest: ModelsAuthPasswordResetConfirmRequest,
   options?: RequestInit
 ): Promise<authOperationsResetPasswordResponse> => {
   return customInstance<authOperationsResetPasswordResponse>(
@@ -1689,7 +1690,7 @@ export const authOperationsResetPassword = async (
       ...options,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsPasswordResetConfirmRequest),
+      body: JSON.stringify(modelsAuthPasswordResetConfirmRequest),
     }
   )
 }
@@ -1701,14 +1702,14 @@ export const getAuthOperationsResetPasswordMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof authOperationsResetPassword>>,
     TError,
-    { data: ModelsPasswordResetConfirmRequest },
+    { data: ModelsAuthPasswordResetConfirmRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof authOperationsResetPassword>>,
   TError,
-  { data: ModelsPasswordResetConfirmRequest },
+  { data: ModelsAuthPasswordResetConfirmRequest },
   TContext
 > => {
   const mutationKey = ['authOperationsResetPassword']
@@ -1722,7 +1723,7 @@ export const getAuthOperationsResetPasswordMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof authOperationsResetPassword>>,
-    { data: ModelsPasswordResetConfirmRequest }
+    { data: ModelsAuthPasswordResetConfirmRequest }
   > = (props) => {
     const { data } = props ?? {}
 
@@ -1736,7 +1737,7 @@ export type AuthOperationsResetPasswordMutationResult = NonNullable<
   Awaited<ReturnType<typeof authOperationsResetPassword>>
 >
 export type AuthOperationsResetPasswordMutationBody =
-  ModelsPasswordResetConfirmRequest
+  ModelsAuthPasswordResetConfirmRequest
 export type AuthOperationsResetPasswordMutationError =
   AuthOperationsResetPassword400
 
@@ -1748,7 +1749,7 @@ export const useAuthOperationsResetPassword = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof authOperationsResetPassword>>,
       TError,
-      { data: ModelsPasswordResetConfirmRequest },
+      { data: ModelsAuthPasswordResetConfirmRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -1757,7 +1758,7 @@ export const useAuthOperationsResetPassword = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof authOperationsResetPassword>>,
   TError,
-  { data: ModelsPasswordResetConfirmRequest },
+  { data: ModelsAuthPasswordResetConfirmRequest },
   TContext
 > => {
   const mutationOptions = getAuthOperationsResetPasswordMutationOptions(options)
@@ -1976,7 +1977,7 @@ export function useAuthOperationsVerifyResetToken<
  * Get active sessions
  */
 export type authOperationsGetSessionsResponse200 = {
-  data: ModelsSessionListResponse
+  data: ModelsAuthSessionListResponse
   status: 200
 }
 
@@ -2283,7 +2284,7 @@ export const getAuthOperationsConfirmEmailVerificationUrl = () => {
 }
 
 export const authOperationsConfirmEmailVerification = async (
-  modelsEmailVerificationRequest: ModelsEmailVerificationRequest,
+  modelsAuthEmailVerificationRequest: ModelsAuthEmailVerificationRequest,
   options?: RequestInit
 ): Promise<authOperationsConfirmEmailVerificationResponse> => {
   return customInstance<authOperationsConfirmEmailVerificationResponse>(
@@ -2292,7 +2293,7 @@ export const authOperationsConfirmEmailVerification = async (
       ...options,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsEmailVerificationRequest),
+      body: JSON.stringify(modelsAuthEmailVerificationRequest),
     }
   )
 }
@@ -2304,14 +2305,14 @@ export const getAuthOperationsConfirmEmailVerificationMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof authOperationsConfirmEmailVerification>>,
     TError,
-    { data: ModelsEmailVerificationRequest },
+    { data: ModelsAuthEmailVerificationRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof authOperationsConfirmEmailVerification>>,
   TError,
-  { data: ModelsEmailVerificationRequest },
+  { data: ModelsAuthEmailVerificationRequest },
   TContext
 > => {
   const mutationKey = ['authOperationsConfirmEmailVerification']
@@ -2325,7 +2326,7 @@ export const getAuthOperationsConfirmEmailVerificationMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof authOperationsConfirmEmailVerification>>,
-    { data: ModelsEmailVerificationRequest }
+    { data: ModelsAuthEmailVerificationRequest }
   > = (props) => {
     const { data } = props ?? {}
 
@@ -2339,7 +2340,7 @@ export type AuthOperationsConfirmEmailVerificationMutationResult = NonNullable<
   Awaited<ReturnType<typeof authOperationsConfirmEmailVerification>>
 >
 export type AuthOperationsConfirmEmailVerificationMutationBody =
-  ModelsEmailVerificationRequest
+  ModelsAuthEmailVerificationRequest
 export type AuthOperationsConfirmEmailVerificationMutationError = ModelsError
 
 export const useAuthOperationsConfirmEmailVerification = <
@@ -2350,7 +2351,7 @@ export const useAuthOperationsConfirmEmailVerification = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof authOperationsConfirmEmailVerification>>,
       TError,
-      { data: ModelsEmailVerificationRequest },
+      { data: ModelsAuthEmailVerificationRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -2359,7 +2360,7 @@ export const useAuthOperationsConfirmEmailVerification = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof authOperationsConfirmEmailVerification>>,
   TError,
-  { data: ModelsEmailVerificationRequest },
+  { data: ModelsAuthEmailVerificationRequest },
   TContext
 > => {
   const mutationOptions =

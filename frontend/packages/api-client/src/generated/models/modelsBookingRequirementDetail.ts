@@ -13,24 +13,54 @@ import type { ModelsBookingRequirementType } from './modelsBookingRequirementTyp
 export interface ModelsBookingRequirementDetail {
   /** 要件の種類 */
   type: ModelsBookingRequirementType
-  /** 金額要件（例: デポジット額） */
-  amount?: number
-  /** 割合で設定する要件 */
-  percentage?: number
-  /** 必須かどうか */
-  required?: boolean
-  /** 所要時間や準備時間 */
-  duration?: number
-  /** 何日前までに対応が必要か */
-  daysInAdvance?: number
-  /** 利用可能な最低年齢 */
-  minAge?: number
-  /** 利用可能な最高年齢 */
-  maxAge?: number
-  /** 利用可能な性別の制限 */
-  allowedGenders?: string[]
-  /** 必要な会員ランク */
-  requiredTier?: string
-  /** 顧客への具体的な指示 */
-  instructions?: string[]
+  /**
+   * 金額要件（例: デポジット額）
+   * @nullable
+   */
+  amount: number | null
+  /**
+   * 割合で設定する要件
+   * @nullable
+   */
+  percentage: number | null
+  /**
+   * 必須かどうか
+   * @nullable
+   */
+  required: boolean | null
+  /**
+   * 所要時間や準備時間
+   * @nullable
+   */
+  duration: number | null
+  /**
+   * 何日前までに対応が必要か
+   * @nullable
+   */
+  daysInAdvance: number | null
+  /**
+   * 利用可能な最低年齢
+   * @nullable
+   */
+  minAge: number | null
+  /**
+   * 利用可能な最高年齢
+   * @nullable
+   */
+  maxAge: number | null
+  /**
+   * 利用可能な性別の制限
+   * @nullable
+   */
+  allowedGenders: string[] | null
+  /**
+   * 必要な会員ランク
+   * @nullable
+   */
+  requiredTier: string | null
+  /**
+   * 顧客への具体的な指示
+   * @nullable
+   */
+  instructions: string[] | null
 }

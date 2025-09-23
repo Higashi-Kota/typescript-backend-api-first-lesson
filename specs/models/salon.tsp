@@ -34,11 +34,11 @@ namespace BeautySalon.Models {
     @doc("季節やキャンペーン等に合わせた営業スケジュール。未設定時はnull")
     businessHours: BusinessHours[] | null;
 
-    @doc("店舗写真や内装画像のURL一覧。未登録時はnull")
-    imageUrls: string[] | null;
+    @doc("店舗写真や内装画像のURL一覧")
+    imageUrls: string[];
 
-    @doc("設備・サービス・こだわりポイント等の特徴タグ一覧。未設定時はnull")
-    features: string[] | null;
+    @doc("設備・サービス・こだわりポイント等の特徴タグ一覧")
+    features: string[];
 
     @doc("顧客レビューから算出した平均評価。評価が無い場合はnull")
     rating: float32 | null;
@@ -71,20 +71,20 @@ namespace BeautySalon.Models {
     @doc("特別営業スケジュールやシフト連動の営業時間。不要な場合はnull")
     businessHours: BusinessHours[] | null;
 
-    @doc("店舗写真やメニュー画像のURL一覧。未登録時はnull")
-    imageUrls: string[] | null;
+    @doc("店舗写真やメニュー画像のURL一覧")
+    imageUrls: string[];
 
-    @doc("バリアフリー対応や個室有無などの特徴タグ一覧。不要な場合はnull")
-    features: string[] | null;
+    @doc("バリアフリー対応や個室有無などの特徴タグ一覧")
+    features: string[];
   }
 
-  @doc("サロン情報を部分更新するためのリクエスト")
+  @doc("サロン情報を部分更新するためのリクエスト。null指定で値をリセット可能")
   model UpdateSalonRequest {
     @doc("名称変更を行う場合に指定")
     name?: string;
 
-    @doc("紹介文を更新する場合に指定")
-    description?: string;
+    @doc("紹介文を更新する場合に指定（null指定で初期化可能）")
+    description?: string | null;
 
     @doc("住所情報の差し替えが必要な場合に指定")
     address?: Address;
@@ -95,41 +95,14 @@ namespace BeautySalon.Models {
     @doc("通常営業時間の更新が必要な場合に指定")
     openingHours?: OpeningHours[];
 
-    @doc("特別営業時間やシフト設定の更新に利用")
-    businessHours?: BusinessHours[];
+    @doc("特別営業時間やシフト設定の更新に利用（null指定で初期化可能）")
+    businessHours?: BusinessHours[] | null;
 
     @doc("画像URLリストを更新する場合に指定")
     imageUrls?: string[];
 
     @doc("特徴タグの追加・削除を行う場合に指定")
     features?: string[];
-  }
-
-  @doc("サロン情報を部分更新しつつ値のリセットにも対応したリクエスト")
-  model UpdateSalonRequestWithReset {
-    @doc("名称更新または未設定化を行う場合に指定")
-    name?: string | null;
-
-    @doc("紹介文の更新またはリセットを行う場合に指定")
-    description?: string | null;
-
-    @doc("住所情報を更新または未設定に戻す場合に指定")
-    address?: Address | null;
-
-    @doc("連絡先情報を更新または未設定化する場合に指定")
-    contactInfo?: ContactInfo | null;
-
-    @doc("通常営業時間を更新または削除する場合に指定")
-    openingHours?: OpeningHours[] | null;
-
-    @doc("特別営業時間を更新またはリセットする場合に指定")
-    businessHours?: BusinessHours[] | null;
-
-    @doc("画像URLリストを更新またはクリアする場合に指定")
-    imageUrls?: string[] | null;
-
-    @doc("特徴タグの更新またはリセットを行う場合に指定")
-    features?: string[] | null;
   }
 
   @doc("""
@@ -333,7 +306,7 @@ namespace BeautySalon.Models {
     effectiveFrom: utcDateTime;
 
     @doc("スケジュールの終了日時。無期限の場合はnull")
-    effectiveTo?: utcDateTime;
+    effectiveTo: utcDateTime | null;
 
     ...AuditTrail;
   }
@@ -383,12 +356,12 @@ namespace BeautySalon.Models {
     regularHours: BusinessHours[];
 
     @doc("休暇や特例などの例外設定一覧。変更がない場合はnull")
-    exceptions?: ScheduleException[];
+    exceptions: ScheduleException[] | null;
 
     @doc("更新内容の適用開始日時")
     effectiveFrom: utcDateTime;
 
     @doc("適用終了日時。未定の場合はnull")
-    effectiveTo?: utcDateTime;
+    effectiveTo: utcDateTime | null;
   }
 }

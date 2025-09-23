@@ -17,6 +17,9 @@ export interface ModelsServiceSchedule {
   startTime: string
   /** 提供終了時刻（HH:mm） */
   endTime: string
-  /** 予約受け入れ上限数 */
-  maxBookings?: number
+  /**
+   * 予約受け入れ上限数
+   * @nullable
+   */
+  maxBookings: number | null
 }

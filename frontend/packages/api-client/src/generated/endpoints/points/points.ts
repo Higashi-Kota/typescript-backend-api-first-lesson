@@ -23,7 +23,7 @@ import type {
 
 import type {
   ModelsCustomerId,
-  ModelsPointTransactionCreateInput,
+  ModelsPointTransactionCreateRequest,
   PointOperationsAdjustPoints200,
   PointOperationsEarnPoints200,
   PointOperationsGetExpiringPoints200,
@@ -65,7 +65,7 @@ export const getPointOperationsAdjustPointsUrl = () => {
 }
 
 export const pointOperationsAdjustPoints = async (
-  modelsPointTransactionCreateInput: ModelsPointTransactionCreateInput,
+  modelsPointTransactionCreateRequest: ModelsPointTransactionCreateRequest,
   options?: RequestInit
 ): Promise<pointOperationsAdjustPointsResponse> => {
   return customInstance<pointOperationsAdjustPointsResponse>(
@@ -74,7 +74,7 @@ export const pointOperationsAdjustPoints = async (
       ...options,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsPointTransactionCreateInput),
+      body: JSON.stringify(modelsPointTransactionCreateRequest),
     }
   )
 }
@@ -86,14 +86,14 @@ export const getPointOperationsAdjustPointsMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof pointOperationsAdjustPoints>>,
     TError,
-    { data: ModelsPointTransactionCreateInput },
+    { data: ModelsPointTransactionCreateRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof pointOperationsAdjustPoints>>,
   TError,
-  { data: ModelsPointTransactionCreateInput },
+  { data: ModelsPointTransactionCreateRequest },
   TContext
 > => {
   const mutationKey = ['pointOperationsAdjustPoints']
@@ -107,7 +107,7 @@ export const getPointOperationsAdjustPointsMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof pointOperationsAdjustPoints>>,
-    { data: ModelsPointTransactionCreateInput }
+    { data: ModelsPointTransactionCreateRequest }
   > = (props) => {
     const { data } = props ?? {}
 
@@ -121,7 +121,7 @@ export type PointOperationsAdjustPointsMutationResult = NonNullable<
   Awaited<ReturnType<typeof pointOperationsAdjustPoints>>
 >
 export type PointOperationsAdjustPointsMutationBody =
-  ModelsPointTransactionCreateInput
+  ModelsPointTransactionCreateRequest
 export type PointOperationsAdjustPointsMutationError = unknown
 
 export const usePointOperationsAdjustPoints = <
@@ -132,7 +132,7 @@ export const usePointOperationsAdjustPoints = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof pointOperationsAdjustPoints>>,
       TError,
-      { data: ModelsPointTransactionCreateInput },
+      { data: ModelsPointTransactionCreateRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -141,7 +141,7 @@ export const usePointOperationsAdjustPoints = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof pointOperationsAdjustPoints>>,
   TError,
-  { data: ModelsPointTransactionCreateInput },
+  { data: ModelsPointTransactionCreateRequest },
   TContext
 > => {
   const mutationOptions = getPointOperationsAdjustPointsMutationOptions(options)
@@ -802,7 +802,7 @@ export const getPointOperationsEarnPointsUrl = () => {
 }
 
 export const pointOperationsEarnPoints = async (
-  modelsPointTransactionCreateInput: ModelsPointTransactionCreateInput,
+  modelsPointTransactionCreateRequest: ModelsPointTransactionCreateRequest,
   options?: RequestInit
 ): Promise<pointOperationsEarnPointsResponse> => {
   return customInstance<pointOperationsEarnPointsResponse>(
@@ -811,7 +811,7 @@ export const pointOperationsEarnPoints = async (
       ...options,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsPointTransactionCreateInput),
+      body: JSON.stringify(modelsPointTransactionCreateRequest),
     }
   )
 }
@@ -823,14 +823,14 @@ export const getPointOperationsEarnPointsMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof pointOperationsEarnPoints>>,
     TError,
-    { data: ModelsPointTransactionCreateInput },
+    { data: ModelsPointTransactionCreateRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof pointOperationsEarnPoints>>,
   TError,
-  { data: ModelsPointTransactionCreateInput },
+  { data: ModelsPointTransactionCreateRequest },
   TContext
 > => {
   const mutationKey = ['pointOperationsEarnPoints']
@@ -844,7 +844,7 @@ export const getPointOperationsEarnPointsMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof pointOperationsEarnPoints>>,
-    { data: ModelsPointTransactionCreateInput }
+    { data: ModelsPointTransactionCreateRequest }
   > = (props) => {
     const { data } = props ?? {}
 
@@ -858,7 +858,7 @@ export type PointOperationsEarnPointsMutationResult = NonNullable<
   Awaited<ReturnType<typeof pointOperationsEarnPoints>>
 >
 export type PointOperationsEarnPointsMutationBody =
-  ModelsPointTransactionCreateInput
+  ModelsPointTransactionCreateRequest
 export type PointOperationsEarnPointsMutationError = unknown
 
 export const usePointOperationsEarnPoints = <
@@ -869,7 +869,7 @@ export const usePointOperationsEarnPoints = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof pointOperationsEarnPoints>>,
       TError,
-      { data: ModelsPointTransactionCreateInput },
+      { data: ModelsPointTransactionCreateRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -878,7 +878,7 @@ export const usePointOperationsEarnPoints = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof pointOperationsEarnPoints>>,
   TError,
-  { data: ModelsPointTransactionCreateInput },
+  { data: ModelsPointTransactionCreateRequest },
   TContext
 > => {
   const mutationOptions = getPointOperationsEarnPointsMutationOptions(options)
@@ -1011,7 +1011,7 @@ export const getPointOperationsUsePointsUrl = () => {
 }
 
 export const pointOperationsUsePoints = async (
-  modelsPointTransactionCreateInput: ModelsPointTransactionCreateInput,
+  modelsPointTransactionCreateRequest: ModelsPointTransactionCreateRequest,
   options?: RequestInit
 ): Promise<pointOperationsUsePointsResponse> => {
   return customInstance<pointOperationsUsePointsResponse>(
@@ -1020,7 +1020,7 @@ export const pointOperationsUsePoints = async (
       ...options,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsPointTransactionCreateInput),
+      body: JSON.stringify(modelsPointTransactionCreateRequest),
     }
   )
 }
@@ -1032,14 +1032,14 @@ export const getPointOperationsUsePointsMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof pointOperationsUsePoints>>,
     TError,
-    { data: ModelsPointTransactionCreateInput },
+    { data: ModelsPointTransactionCreateRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof pointOperationsUsePoints>>,
   TError,
-  { data: ModelsPointTransactionCreateInput },
+  { data: ModelsPointTransactionCreateRequest },
   TContext
 > => {
   const mutationKey = ['pointOperationsUsePoints']
@@ -1053,7 +1053,7 @@ export const getPointOperationsUsePointsMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof pointOperationsUsePoints>>,
-    { data: ModelsPointTransactionCreateInput }
+    { data: ModelsPointTransactionCreateRequest }
   > = (props) => {
     const { data } = props ?? {}
 
@@ -1067,7 +1067,7 @@ export type PointOperationsUsePointsMutationResult = NonNullable<
   Awaited<ReturnType<typeof pointOperationsUsePoints>>
 >
 export type PointOperationsUsePointsMutationBody =
-  ModelsPointTransactionCreateInput
+  ModelsPointTransactionCreateRequest
 export type PointOperationsUsePointsMutationError = unknown
 
 export const usePointOperationsUsePoints = <
@@ -1078,7 +1078,7 @@ export const usePointOperationsUsePoints = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof pointOperationsUsePoints>>,
       TError,
-      { data: ModelsPointTransactionCreateInput },
+      { data: ModelsPointTransactionCreateRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -1087,7 +1087,7 @@ export const usePointOperationsUsePoints = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof pointOperationsUsePoints>>,
   TError,
-  { data: ModelsPointTransactionCreateInput },
+  { data: ModelsPointTransactionCreateRequest },
   TContext
 > => {
   const mutationOptions = getPointOperationsUsePointsMutationOptions(options)

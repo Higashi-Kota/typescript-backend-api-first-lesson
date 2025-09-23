@@ -9,6 +9,7 @@ import type { ModelsCustomerId } from './modelsCustomerId'
 import type { ModelsContactInfo } from './modelsContactInfo'
 import type { ModelsCustomerGender } from './modelsCustomerGender'
 import type { ModelsCustomerAddress } from './modelsCustomerAddress'
+import type { ModelsCustomerPreferencesProperty } from './modelsCustomerPreferencesProperty'
 import type { ModelsCustomerMembership } from './modelsCustomerMembership'
 import type { ModelsCustomerNotificationSettings } from './modelsCustomerNotificationSettings'
 import type { ModelsCustomerHealthProperty } from './modelsCustomerHealthProperty'
@@ -38,26 +39,17 @@ export interface ModelsCustomer {
    * @nullable
    */
   address: ModelsCustomerAddress
-  /**
-   * Preferences and requirements
-   * @nullable
-   */
-  preferences: string | null
+  /** Preferences and requirements */
+  preferences: ModelsCustomerPreferencesProperty
   /**
    * Internal notes
    * @nullable
    */
   notes: string | null
-  /**
-   * Tags for categorization
-   * @nullable
-   */
-  tags: string[] | null
-  /**
-   * Current loyalty points
-   * @nullable
-   */
-  loyaltyPoints: number | null
+  /** Tags for categorization */
+  tags: string[]
+  /** Current loyalty points */
+  loyaltyPoints: number
   /**
    * Membership information
    * @nullable

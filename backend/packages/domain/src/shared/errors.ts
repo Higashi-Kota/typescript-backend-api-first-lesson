@@ -179,6 +179,7 @@ export function toProblemDetails(
   return {
     type: `https://example.com/probs/${error.type.toLowerCase().replace(/_/g, '-')}`,
     title: error.type.replace(/_/g, ' ').toLowerCase(),
+    correlationId: null,
     status: httpStatus,
     detail: error.message,
     instance: instance || `urn:error:${Date.now()}`,
@@ -194,7 +195,7 @@ export function toProblemDetails(
             constraint: undefined,
           },
         ]
-      : undefined,
+      : null,
   }
 }
 

@@ -6,14 +6,17 @@
  * OpenAPI spec version: 2.0
  */
 import type { ModelsContactInfo } from './modelsContactInfo'
+import type { CustomerCrudBulkUpdateBodyItemsItemPreferences } from './customerCrudBulkUpdateBodyItemsItemPreferences'
 import type { ModelsCustomerId } from './modelsCustomerId'
 
 export type CustomerCrudBulkUpdateBodyItemsItem = {
   name?: string
   contactInfo?: ModelsContactInfo
-  preferences?: string
-  notes?: string
+  preferences?: CustomerCrudBulkUpdateBodyItemsItemPreferences
+  /** @nullable */
+  notes?: string | null
   tags?: string[]
-  birthDate?: string
+  /** @nullable */
+  birthDate?: string | null
   id: ModelsCustomerId
 }

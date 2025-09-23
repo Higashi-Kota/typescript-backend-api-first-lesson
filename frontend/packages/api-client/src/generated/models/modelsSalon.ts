@@ -35,16 +35,10 @@ export interface ModelsSalon {
    * @nullable
    */
   businessHours: ModelsBusinessHours[] | null
-  /**
-   * 店舗写真や内装画像のURL一覧。未登録時はnull
-   * @nullable
-   */
-  imageUrls: string[] | null
-  /**
-   * 設備・サービス・こだわりポイント等の特徴タグ一覧。未設定時はnull
-   * @nullable
-   */
-  features: string[] | null
+  /** 店舗写真や内装画像のURL一覧 */
+  imageUrls: string[]
+  /** 設備・サービス・こだわりポイント等の特徴タグ一覧 */
+  features: string[]
   /**
    * 顧客レビューから算出した平均評価。評価が無い場合はnull
    * @nullable

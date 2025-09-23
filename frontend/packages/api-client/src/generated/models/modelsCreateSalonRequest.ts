@@ -32,14 +32,8 @@ export interface ModelsCreateSalonRequest {
    * @nullable
    */
   businessHours: ModelsBusinessHours[] | null
-  /**
-   * 店舗写真やメニュー画像のURL一覧。未登録時はnull
-   * @nullable
-   */
-  imageUrls: string[] | null
-  /**
-   * バリアフリー対応や個室有無などの特徴タグ一覧。不要な場合はnull
-   * @nullable
-   */
-  features: string[] | null
+  /** 店舗写真やメニュー画像のURL一覧 */
+  imageUrls: string[]
+  /** バリアフリー対応や個室有無などの特徴タグ一覧 */
+  features: string[]
 }

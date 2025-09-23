@@ -234,7 +234,7 @@ type LoginRequest = components['schemas']['Models.LoginRequest']
 //   twoFactorCode?: string
 // }
 
-type LoginResponse = components['schemas']['Models.LoginResponse']
+type AuthLoginResponse = components['schemas']['Models.AuthLoginResponse']
 // {
 //   accessToken: string
 //   refreshToken: string
@@ -246,7 +246,7 @@ type LoginResponse = components['schemas']['Models.LoginResponse']
 // APIルート
 router.post('/login', async (
   req: Request<unknown, unknown, LoginRequest>,
-  res: Response<LoginResponse>
+  res: Response<AuthLoginResponse>
 ) => {
   const loginData: LoginRequest = req.body
   
@@ -257,7 +257,7 @@ router.post('/login', async (
   const tokens = await generateTokens(user)
   
   // OpenAPI準拠のレスポンス構築
-  const response: LoginResponse = {
+  const response: AuthLoginResponse = {
     accessToken: tokens.accessToken,
     refreshToken: tokens.refreshToken,
     tokenType: 'Bearer',

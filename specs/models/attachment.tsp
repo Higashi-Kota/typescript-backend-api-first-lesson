@@ -42,13 +42,13 @@ model Attachment {
   uploadedBy: string;
 
   @doc("ファイルが紐づくサロンID。任意項目。")
-  salonId?: string;
+  salonId: string | null;
 
   @doc("必要に応じて付加情報を保持する任意メタデータ。")
-  metadata?: Record<unknown>;
+  metadata: Record<unknown> | null;
 
   @doc("ラベリングや検索に利用するタグ情報のセット。")
-  tags?: Record<string>;
+  tags: Record<string> | null;
 
   @doc("ファイルがアップロードされた日時。")
   uploadedAt: utcDateTime;
@@ -58,7 +58,7 @@ model Attachment {
 }
 
 @doc("マルチパートアップロードで添付ファイルを登録するためのリクエスト。")
-model UploadAttachmentRequest {
+model AttachmentCreateRequest {
   @doc("HTTPリクエストで送信されるファイル本体。")
   file: bytes;
 
@@ -69,14 +69,14 @@ model UploadAttachmentRequest {
   content: string;
 
   @doc("ファイルを関連付けるサロンID。任意設定。")
-  salonId?: string;
+  salonId: string | null;
 
   @doc("タグ情報を表すJSON文字列。任意設定。")
-  tags?: string;
+  tags: string | null;
 }
 
 @doc("外部ストレージへ直接アップロードするための署名付きURLを要求するリクエスト。")
-model GetUploadUrlRequest {
+model AttachmentUploadUrlGetRequest {
   @doc("アップロード予定のファイル名。")
   filename: string;
 
@@ -87,11 +87,11 @@ model GetUploadUrlRequest {
   size: int32;
 
   @doc("ファイルをひも付けるサロンID。任意設定。")
-  salonId?: string;
+  salonId: string | null;
 }
 
 @doc("署名付きアップロードURLと関連情報を返すレスポンス。")
-model UploadUrlResponse {
+model AttachmentUploadUrlResponse {
   @doc("一時的に有効なアップロード用URL。")
   uploadUrl: string;
 
@@ -103,7 +103,7 @@ model UploadUrlResponse {
 }
 
 @doc("添付ファイルをダウンロードするための署名付きURLを返すレスポンス。")
-model DownloadUrlResponse {
+model AttachmentDownloadUrlResponse {
   @doc("一時的に有効なダウンロード用URL。")
   downloadUrl: string;
 
@@ -123,10 +123,10 @@ model ShareLink {
   attachmentId: string;
 
   @doc("共有リンクの有効期限。任意設定。")
-  expiresAt?: utcDateTime;
+  expiresAt: utcDateTime | null;
 
   @doc("許可する最大ダウンロード回数。任意設定。")
-  maxDownloads?: int32;
+  maxDownloads: int32 | null;
 
   @doc("これまでのダウンロード累計数。")
   downloadCount: int32;
@@ -135,7 +135,7 @@ model ShareLink {
   hasPassword: boolean;
 
   @doc("アクセスを許可するメールアドレス一覧。任意設定。")
-  allowedEmails?: string[];
+  allowedEmails: string[] | null;
 
   @doc("共有リンクを作成したユーザーID。")
   createdBy: string;
@@ -145,24 +145,24 @@ model ShareLink {
 }
 
 @doc("添付ファイルの共有リンクを新規発行する際のリクエスト。")
-model CreateShareLinkRequest {
+model ShareLinkCreateRequest {
   @doc("共有リンクの有効期限。任意設定。")
-  expiresAt?: utcDateTime;
+  expiresAt: utcDateTime | null;
 
   @doc("許可する最大ダウンロード回数。任意設定。")
-  maxDownloads?: int32;
+  maxDownloads: int32 | null;
 
   @doc("共有リンク保護用のパスワード。任意設定。")
-  password?: string;
+  password: string | null;
 
   @doc("アクセスを許可するメールアドレス一覧。任意設定。")
-  allowedEmails?: string[];
+  allowedEmails: string[] | null;
 }
 
 @doc("パスワード保護された共有リンクへアクセスする際のリクエスト。")
-model AccessShareLinkRequest {
+model ShareLinkAccessRequest {
   @doc("共有リンクのパスワード。保護されている場合に入力。")
-  password?: string;
+  password: string | null;
 }
 
 @doc("添付ファイル一覧をページネーション付きで返すレスポンスモデル。")

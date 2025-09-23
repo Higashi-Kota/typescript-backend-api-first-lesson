@@ -20,10 +20,16 @@ export type ModelsBookingDetail = ModelsBooking & {
   customerName: string
   /** サロンの表示名。 */
   salonName: string
-  /** 決済履歴の一覧。未登録の場合はnull。 */
-  paymentHistory?: ModelsPaymentHistory[]
-  /** ウェイティングリストの履歴。未登録の場合はnull。 */
-  waitlistHistory?: ModelsWaitlistEntry[]
+  /**
+   * 決済履歴の一覧。未登録の場合はnull。
+   * @nullable
+   */
+  paymentHistory: ModelsPaymentHistory[] | null
+  /**
+   * ウェイティングリストの履歴。未登録の場合はnull。
+   * @nullable
+   */
+  waitlistHistory: ModelsWaitlistEntry[] | null
 } & Required<
     Pick<
       ModelsBooking & {
@@ -33,11 +39,21 @@ export type ModelsBookingDetail = ModelsBooking & {
         customerName: string
         /** サロンの表示名。 */
         salonName: string
-        /** 決済履歴の一覧。未登録の場合はnull。 */
-        paymentHistory?: ModelsPaymentHistory[]
-        /** ウェイティングリストの履歴。未登録の場合はnull。 */
-        waitlistHistory?: ModelsWaitlistEntry[]
+        /**
+         * 決済履歴の一覧。未登録の場合はnull。
+         * @nullable
+         */
+        paymentHistory: ModelsPaymentHistory[] | null
+        /**
+         * ウェイティングリストの履歴。未登録の場合はnull。
+         * @nullable
+         */
+        waitlistHistory: ModelsWaitlistEntry[] | null
       },
-      'reservations' | 'customerName' | 'salonName'
+      | 'reservations'
+      | 'customerName'
+      | 'salonName'
+      | 'paymentHistory'
+      | 'waitlistHistory'
     >
   >

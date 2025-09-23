@@ -20,8 +20,14 @@ export interface ModelsStaffAvailability {
   startTime: string
   /** 空き枠の終了時刻 (HH:mm) */
   endTime: string
-  /** 休憩などの開始時刻 */
-  breakStart?: string
-  /** 休憩などの終了時刻 */
-  breakEnd?: string
+  /**
+   * 休憩などの開始時刻
+   * @nullable
+   */
+  breakStart: string | null
+  /**
+   * 休憩などの終了時刻
+   * @nullable
+   */
+  breakEnd: string | null
 }

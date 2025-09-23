@@ -37,22 +37,43 @@ export interface ModelsTreatmentRecord {
   startTime: string
   /** 施術終了日時 */
   endTime: string
-  /** 施術の詳細メモ */
-  notes?: string
-  /** 使用した資材・商材の記録 */
-  usedMaterials?: ModelsMaterialUsage[]
-  /** 施術前後の写真 ID */
-  photos?: ModelsAttachmentId[]
-  /** 顧客のフィードバック */
-  customerFeedback?: string
-  /** 次回来店への提案内容 */
-  nextRecommendations?: string
+  /**
+   * 施術の詳細メモ
+   * @nullable
+   */
+  notes: string | null
+  /**
+   * 使用した資材・商材の記録
+   * @nullable
+   */
+  usedMaterials: ModelsMaterialUsage[] | null
+  /**
+   * 施術前後の写真 ID
+   * @nullable
+   */
+  photos: ModelsAttachmentId[] | null
+  /**
+   * 顧客のフィードバック
+   * @nullable
+   */
+  customerFeedback: string | null
+  /**
+   * 次回来店への提案内容
+   * @nullable
+   */
+  nextRecommendations: string | null
   /** 請求総額 */
   totalAmount: number
-  /** 適用した割引額 */
-  discountAmount?: number
-  /** 付与したポイント数 */
-  pointsEarned?: number
+  /**
+   * 適用した割引額
+   * @nullable
+   */
+  discountAmount: number | null
+  /**
+   * 付与したポイント数
+   * @nullable
+   */
+  pointsEarned: number | null
   /** レコード作成日時。 */
   createdAt: string
   /**

@@ -13,12 +13,24 @@ import type { ModelsPasswordResetStateType } from './modelsPasswordResetStateTyp
 export interface ModelsPasswordResetStateDetail {
   /** 現在のリセット状態区分。 */
   type: ModelsPasswordResetStateType
-  /** リセット手続きに使用するトークン。 */
-  token?: string
-  /** トークンの有効期限。 */
-  expiresAt?: string
-  /** リセットを要求した日時。 */
-  requestedAt?: string
-  /** リセット完了日時。未完了の場合はnull。 */
-  completedAt?: string
+  /**
+   * リセット手続きに使用するトークン。
+   * @nullable
+   */
+  token: string | null
+  /**
+   * トークンの有効期限。
+   * @nullable
+   */
+  expiresAt: string | null
+  /**
+   * リセットを要求した日時。
+   * @nullable
+   */
+  requestedAt: string | null
+  /**
+   * リセット完了日時。未完了の場合はnull。
+   * @nullable
+   */
+  completedAt: string | null
 }

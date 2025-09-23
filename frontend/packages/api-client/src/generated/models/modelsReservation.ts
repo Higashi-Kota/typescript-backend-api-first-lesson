@@ -32,16 +32,25 @@ export interface ModelsReservation {
   endTime: string
   /** 予約の現在ステータスを表す区分値 */
   status: ModelsReservationStatusType
-  /** 顧客からの特記事項やサロン側メモ */
-  notes?: string
+  /**
+   * 顧客からの特記事項やサロン側メモ
+   * @nullable
+   */
+  notes: string | null
   /** 施術料金の合計金額 (税・割引適用後) */
   totalAmount: number
-  /** 事前に受領した内金・デポジット金額 */
-  depositAmount?: number
+  /**
+   * 事前に受領した内金・デポジット金額
+   * @nullable
+   */
+  depositAmount: number | null
   /** 予約に対する決済が完了しているかを示すフラグ */
   isPaid: boolean
-  /** キャンセルが発生した場合の理由 */
-  cancellationReason?: string
+  /**
+   * キャンセルが発生した場合の理由
+   * @nullable
+   */
+  cancellationReason: string | null
   /** レコード作成日時。 */
   createdAt: string
   /**

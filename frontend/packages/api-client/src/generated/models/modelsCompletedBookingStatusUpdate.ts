@@ -6,7 +6,6 @@
  * OpenAPI spec version: 2.0
  */
 import type { ModelsCompletedBookingStatusUpdateType } from './modelsCompletedBookingStatusUpdateType'
-import type { ModelsPaymentId } from './modelsPaymentId'
 
 /**
  * 施術が完了した場合の状態情報。
@@ -16,8 +15,14 @@ export interface ModelsCompletedBookingStatusUpdate {
   type?: ModelsCompletedBookingStatusUpdateType
   /** 施術が完了した日時。 */
   completedAt?: string
-  /** 関連する決済ID。未決済の場合はnull。 */
-  paymentId?: ModelsPaymentId
-  /** 施術内容のサマリーメモ。未設定の場合はnull。 */
-  serviceSummary?: string
+  /**
+   * 関連する決済ID。未決済の場合はnull。
+   * @nullable
+   */
+  paymentId?: string | null
+  /**
+   * 施術内容のサマリーメモ。未設定の場合はnull。
+   * @nullable
+   */
+  serviceSummary?: string | null
 }

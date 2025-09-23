@@ -6,7 +6,6 @@
  * OpenAPI spec version: 2.0
  */
 import type { ModelsRoleId } from './modelsRoleId'
-import type { ModelsSalonId } from './modelsSalonId'
 
 /**
  * ユーザーへのロール割当情報
@@ -16,14 +15,20 @@ export interface ModelsUserRoleAssignment {
   userId: string
   /** 割り当てるロール ID */
   roleId: ModelsRoleId
-  /** サロン単位のロールの場合の対象サロン ID */
-  salonId?: ModelsSalonId
+  /**
+   * サロン単位のロールの場合の対象サロン ID
+   * @nullable
+   */
+  salonId: string | null
   /** 割当日時 */
   assignedAt: string
   /** 割当を実施したユーザー ID */
   assignedBy: string
-  /** ロール割当の有効期限 */
-  expiresAt?: string
+  /**
+   * ロール割当の有効期限
+   * @nullable
+   */
+  expiresAt: string | null
   /** 割当が現在有効かどうか */
   isActive: boolean
 }

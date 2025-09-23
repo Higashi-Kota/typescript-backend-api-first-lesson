@@ -12,10 +12,19 @@
 export interface ModelsAccessResult {
   /** 操作が許可されたかどうか */
   allowed: boolean
-  /** 拒否または許可の理由 */
-  reason?: string
-  /** 必要な権限キー一覧 */
-  requiredPermissions?: string[]
-  /** ユーザーが保有する権限キー一覧 */
-  userPermissions?: string[]
+  /**
+   * 拒否または許可の理由
+   * @nullable
+   */
+  reason: string | null
+  /**
+   * 必要な権限キー一覧
+   * @nullable
+   */
+  requiredPermissions: string[] | null
+  /**
+   * ユーザーが保有する権限キー一覧
+   * @nullable
+   */
+  userPermissions: string[] | null
 }

@@ -23,18 +23,39 @@ export interface ModelsCreateStaffRequest {
   contactInfo: ModelsContactInfo
   /** 得意分野や専門メニューの一覧 */
   specialties: string[]
-  /** プロフィール画像のURL */
-  imageUrl?: string
-  /** 自己紹介や経歴の概要 */
-  bio?: string
-  /** 実務経験年数 */
-  yearsOfExperience?: number
-  /** 保有資格名の一覧 */
-  certifications?: string[]
-  /** 詳細な資格情報の一覧 */
-  qualifications?: ModelsStaffQualification[]
-  /** 通常勤務スケジュールの一覧 */
-  schedules?: ModelsStaffSchedule[]
-  /** 付与する権限の一覧 */
-  permissions?: ModelsStaffPermission[]
+  /**
+   * プロフィール画像のURL
+   * @nullable
+   */
+  imageUrl: string | null
+  /**
+   * 自己紹介や経歴の概要
+   * @nullable
+   */
+  bio: string | null
+  /**
+   * 実務経験年数
+   * @nullable
+   */
+  yearsOfExperience: number | null
+  /**
+   * 保有資格名の一覧
+   * @nullable
+   */
+  certifications: string[] | null
+  /**
+   * 詳細な資格情報の一覧
+   * @nullable
+   */
+  qualifications: ModelsStaffQualification[] | null
+  /**
+   * 通常勤務スケジュールの一覧
+   * @nullable
+   */
+  schedules: ModelsStaffSchedule[] | null
+  /**
+   * 付与する権限の一覧
+   * @nullable
+   */
+  permissions: ModelsStaffPermission[] | null
 }

@@ -25,9 +25,9 @@ import type {
   ModelsAttachmentId,
   ModelsCustomerId,
   ModelsStaffId,
-  ModelsTreatmentRecordCreateInput,
+  ModelsTreatmentRecordCreateRequest,
   ModelsTreatmentRecordId,
-  ModelsTreatmentRecordUpdateInput,
+  ModelsTreatmentRecordUpdateRequest,
   TreatmentOperationsAddTreatmentPhotos200,
   TreatmentOperationsCreateTreatment200,
   TreatmentOperationsDeleteTreatment200,
@@ -272,7 +272,7 @@ export const getTreatmentOperationsCreateTreatmentUrl = () => {
 }
 
 export const treatmentOperationsCreateTreatment = async (
-  modelsTreatmentRecordCreateInput: ModelsTreatmentRecordCreateInput,
+  modelsTreatmentRecordCreateRequest: ModelsTreatmentRecordCreateRequest,
   options?: RequestInit
 ): Promise<treatmentOperationsCreateTreatmentResponse> => {
   return customInstance<treatmentOperationsCreateTreatmentResponse>(
@@ -281,7 +281,7 @@ export const treatmentOperationsCreateTreatment = async (
       ...options,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsTreatmentRecordCreateInput),
+      body: JSON.stringify(modelsTreatmentRecordCreateRequest),
     }
   )
 }
@@ -293,14 +293,14 @@ export const getTreatmentOperationsCreateTreatmentMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof treatmentOperationsCreateTreatment>>,
     TError,
-    { data: ModelsTreatmentRecordCreateInput },
+    { data: ModelsTreatmentRecordCreateRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof treatmentOperationsCreateTreatment>>,
   TError,
-  { data: ModelsTreatmentRecordCreateInput },
+  { data: ModelsTreatmentRecordCreateRequest },
   TContext
 > => {
   const mutationKey = ['treatmentOperationsCreateTreatment']
@@ -314,7 +314,7 @@ export const getTreatmentOperationsCreateTreatmentMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof treatmentOperationsCreateTreatment>>,
-    { data: ModelsTreatmentRecordCreateInput }
+    { data: ModelsTreatmentRecordCreateRequest }
   > = (props) => {
     const { data } = props ?? {}
 
@@ -328,7 +328,7 @@ export type TreatmentOperationsCreateTreatmentMutationResult = NonNullable<
   Awaited<ReturnType<typeof treatmentOperationsCreateTreatment>>
 >
 export type TreatmentOperationsCreateTreatmentMutationBody =
-  ModelsTreatmentRecordCreateInput
+  ModelsTreatmentRecordCreateRequest
 export type TreatmentOperationsCreateTreatmentMutationError = unknown
 
 export const useTreatmentOperationsCreateTreatment = <
@@ -339,7 +339,7 @@ export const useTreatmentOperationsCreateTreatment = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof treatmentOperationsCreateTreatment>>,
       TError,
-      { data: ModelsTreatmentRecordCreateInput },
+      { data: ModelsTreatmentRecordCreateRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -348,7 +348,7 @@ export const useTreatmentOperationsCreateTreatment = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof treatmentOperationsCreateTreatment>>,
   TError,
-  { data: ModelsTreatmentRecordCreateInput },
+  { data: ModelsTreatmentRecordCreateRequest },
   TContext
 > => {
   const mutationOptions =
@@ -1245,7 +1245,7 @@ export const getTreatmentOperationsUpdateTreatmentUrl = (
 
 export const treatmentOperationsUpdateTreatment = async (
   id: ModelsTreatmentRecordId,
-  modelsTreatmentRecordUpdateInput: ModelsTreatmentRecordUpdateInput,
+  modelsTreatmentRecordUpdateRequest: ModelsTreatmentRecordUpdateRequest,
   options?: RequestInit
 ): Promise<treatmentOperationsUpdateTreatmentResponse> => {
   return customInstance<treatmentOperationsUpdateTreatmentResponse>(
@@ -1254,7 +1254,7 @@ export const treatmentOperationsUpdateTreatment = async (
       ...options,
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsTreatmentRecordUpdateInput),
+      body: JSON.stringify(modelsTreatmentRecordUpdateRequest),
     }
   )
 }
@@ -1266,14 +1266,14 @@ export const getTreatmentOperationsUpdateTreatmentMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof treatmentOperationsUpdateTreatment>>,
     TError,
-    { id: ModelsTreatmentRecordId; data: ModelsTreatmentRecordUpdateInput },
+    { id: ModelsTreatmentRecordId; data: ModelsTreatmentRecordUpdateRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof treatmentOperationsUpdateTreatment>>,
   TError,
-  { id: ModelsTreatmentRecordId; data: ModelsTreatmentRecordUpdateInput },
+  { id: ModelsTreatmentRecordId; data: ModelsTreatmentRecordUpdateRequest },
   TContext
 > => {
   const mutationKey = ['treatmentOperationsUpdateTreatment']
@@ -1287,7 +1287,7 @@ export const getTreatmentOperationsUpdateTreatmentMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof treatmentOperationsUpdateTreatment>>,
-    { id: ModelsTreatmentRecordId; data: ModelsTreatmentRecordUpdateInput }
+    { id: ModelsTreatmentRecordId; data: ModelsTreatmentRecordUpdateRequest }
   > = (props) => {
     const { id, data } = props ?? {}
 
@@ -1301,7 +1301,7 @@ export type TreatmentOperationsUpdateTreatmentMutationResult = NonNullable<
   Awaited<ReturnType<typeof treatmentOperationsUpdateTreatment>>
 >
 export type TreatmentOperationsUpdateTreatmentMutationBody =
-  ModelsTreatmentRecordUpdateInput
+  ModelsTreatmentRecordUpdateRequest
 export type TreatmentOperationsUpdateTreatmentMutationError = unknown
 
 export const useTreatmentOperationsUpdateTreatment = <
@@ -1312,7 +1312,7 @@ export const useTreatmentOperationsUpdateTreatment = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof treatmentOperationsUpdateTreatment>>,
       TError,
-      { id: ModelsTreatmentRecordId; data: ModelsTreatmentRecordUpdateInput },
+      { id: ModelsTreatmentRecordId; data: ModelsTreatmentRecordUpdateRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -1321,7 +1321,7 @@ export const useTreatmentOperationsUpdateTreatment = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof treatmentOperationsUpdateTreatment>>,
   TError,
-  { id: ModelsTreatmentRecordId; data: ModelsTreatmentRecordUpdateInput },
+  { id: ModelsTreatmentRecordId; data: ModelsTreatmentRecordUpdateRequest },
   TContext
 > => {
   const mutationOptions =

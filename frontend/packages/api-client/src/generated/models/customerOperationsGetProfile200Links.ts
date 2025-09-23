@@ -8,5 +8,8 @@
 
 /**
  * 関連リソースや次アクションへのリンク情報。
+ * @nullable
  */
-export type CustomerOperationsGetProfile200Links = { [key: string]: string }
+export type CustomerOperationsGetProfile200Links = {
+  [key: string]: string
+} | null

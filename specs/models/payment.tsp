@@ -72,7 +72,7 @@ namespace BeautySalon.Models {
     startedAt: utcDateTime;
 
     @doc("処理を担当しているスタッフ ID")
-    processorId?: StaffId;
+    processorId: StaffId | null;
   }
 
   @doc("支払い完了状態の詳細")
@@ -87,7 +87,7 @@ namespace BeautySalon.Models {
     paidAmount: Money;
 
     @doc("発行されたレシート番号")
-    receiptNumber?: string;
+    receiptNumber: string | null;
   }
 
   @doc("支払い失敗状態の詳細")
@@ -102,7 +102,7 @@ namespace BeautySalon.Models {
     reason: string;
 
     @doc("再試行が可能かどうか")
-    retryable?: boolean = false;
+    retryable: boolean | null = false;
   }
 
   @doc("全額返金済み状態の詳細")
@@ -117,7 +117,7 @@ namespace BeautySalon.Models {
     refundAmount: Money;
 
     @doc("関連する返金 ID")
-    refundId?: RefundId;
+    refundId: RefundId | null;
   }
 
   @doc("部分返金済み状態の詳細")
@@ -440,7 +440,7 @@ namespace BeautySalon.Models {
   }
 
   @doc("決済登録時に利用する入力モデル")
-  model PaymentCreateInput {
+  model PaymentCreateRequest {
     @doc("決済を登録するサロン ID")
     salonId: SalonId;
 
@@ -476,7 +476,7 @@ namespace BeautySalon.Models {
   }
 
   @doc("決済情報の更新入力モデル")
-  model PaymentUpdateInput {
+  model PaymentUpdateRequest {
     @doc("変更後の支払い方法")
     method?: PaymentMethodType;
 
@@ -503,7 +503,7 @@ namespace BeautySalon.Models {
   }
 
   @doc("返金処理を開始するための入力モデル")
-  model RefundInput {
+  model RefundCreateRequest {
     @doc("対象となる決済 ID")
     paymentId: PaymentId;
 
@@ -524,7 +524,7 @@ namespace BeautySalon.Models {
   }
 
   @doc("ポイント取引を登録する入力モデル")
-  model PointTransactionCreateInput {
+  model PointTransactionCreateRequest {
     @doc("対象顧客 ID")
     customerId: CustomerId;
 

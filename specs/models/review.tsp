@@ -22,31 +22,31 @@ namespace BeautySalon.Models {
     bookingId: BookingId;
 
     @doc("評価対象のスタッフID。スタッフ未指定レビューの場合は省略")
-    staffId?: StaffId;
+    staffId: StaffId | null;
 
     @doc("全体満足度の評価値 (例: 1〜5)")
     overallRating: int32;
 
     @doc("自由記述のレビューコメント")
-    comment?: string;
+    comment: string | null;
 
     @doc("レビュータイトルや要約")
-    title?: string;
+    title: string | null;
 
     @doc("施術サービスそのものに対する評価値")
-    serviceRating?: int32;
+    serviceRating: int32 | null;
 
     @doc("スタッフの接客・技術に対する評価値")
-    staffRating?: int32;
+    staffRating: int32 | null;
 
     @doc("店内の清潔さ・衛生面に対する評価値")
-    cleanlinessRating?: int32;
+    cleanlinessRating: int32 | null;
 
     @doc("価格に対する価値・コストパフォーマンス評価値")
-    valueRating?: int32;
+    valueRating: int32 | null;
 
     @doc("レビューに添付された画像URLの一覧")
-    imageUrls?: string[];
+    imageUrls: string[] | null;
 
     @doc("実来店が確認済みかを表す検証フラグ")
     isVerified: boolean;
@@ -58,10 +58,10 @@ namespace BeautySalon.Models {
     reportCount: int32 = 0;
 
     @doc("サロン運営からの公式返信本文")
-    ownerResponse?: string;
+    ownerResponse: string | null;
 
     @doc("運営が返信した日時 (UTC)")
-    ownerRespondedAt?: utcDateTime;
+    ownerRespondedAt: utcDateTime | null;
 
     ...AuditInfo;
   }
@@ -69,7 +69,7 @@ namespace BeautySalon.Models {
   @doc("""
     レビュー作成リクエスト - 顧客が新規レビュー投稿時に入力する評価情報と任意コメント・画像を受け取る
     """)
-  model CreateReviewRequest {
+  model ReviewCreateRequest {
     @doc("レビュー対象のサロンID")
     salonId: SalonId;
 
@@ -80,88 +80,59 @@ namespace BeautySalon.Models {
     bookingId: BookingId;
 
     @doc("評価対象スタッフのID")
-    staffId?: StaffId;
+    staffId: StaffId | null;
 
     @doc("全体満足度の評価値")
     overallRating: int32;
 
     @doc("自由記述のコメント")
-    comment?: string;
+    comment: string | null;
 
     @doc("レビュータイトル")
-    title?: string;
+    title: string | null;
 
     @doc("サービス品質に対する評価値")
-    serviceRating?: int32;
+    serviceRating: int32 | null;
 
     @doc("スタッフ対応に対する評価値")
-    staffRating?: int32;
+    staffRating: int32 | null;
 
     @doc("清潔さ・衛生状態に対する評価値")
-    cleanlinessRating?: int32;
+    cleanlinessRating: int32 | null;
 
     @doc("価格に見合う価値の評価値")
-    valueRating?: int32;
+    valueRating: int32 | null;
 
     @doc("添付画像のURL一覧")
-    imageUrls?: string[];
+    imageUrls: string[] | null;
   }
 
   @doc("""
-    レビュー更新リクエスト - 任意項目を部分更新し、既存レビューの評価やコメントを調整する
+    レビュー更新リクエスト - 任意項目を部分更新し、既存レビューの評価やコメントを調整する。null指定で値をリセット可能
     """)
-  model UpdateReviewRequest {
+  model ReviewUpdateRequest {
     @doc("更新後の全体満足度評価")
     overallRating?: int32;
 
-    @doc("更新後のコメント本文")
-    comment?: string;
-
-    @doc("更新後のレビュータイトル")
-    title?: string;
-
-    @doc("更新後のサービス品質評価")
-    serviceRating?: int32;
-
-    @doc("更新後のスタッフ評価")
-    staffRating?: int32;
-
-    @doc("更新後の清潔さ評価")
-    cleanlinessRating?: int32;
-
-    @doc("更新後の価格価値評価")
-    valueRating?: int32;
-
-    @doc("画像URL一覧の更新内容")
-    imageUrls?: string[];
-  }
-
-  @doc("""
-    リセット対応レビュー更新リクエスト - null指定でコメントや画像を初期化しながらレビューを再設定できる
-    """)
-  model UpdateReviewRequestWithReset {
-    @doc("更新後の全体満足度評価")
-    overallRating?: int32;
-
-    @doc("null指定も可能なコメント本文")
+    @doc("更新後のコメント本文（null指定で初期化可能）")
     comment?: string | null;
 
-    @doc("null指定も可能なレビュータイトル")
+    @doc("更新後のレビュータイトル（null指定で初期化可能）")
     title?: string | null;
 
-    @doc("null指定も可能なサービス品質評価")
+    @doc("更新後のサービス品質評価（null指定で初期化可能）")
     serviceRating?: int32 | null;
 
-    @doc("null指定も可能なスタッフ評価")
+    @doc("更新後のスタッフ評価（null指定で初期化可能）")
     staffRating?: int32 | null;
 
-    @doc("null指定も可能な清潔さ評価")
+    @doc("更新後の清潔さ評価（null指定で初期化可能）")
     cleanlinessRating?: int32 | null;
 
-    @doc("null指定も可能な価格価値評価")
+    @doc("更新後の価格価値評価（null指定で初期化可能）")
     valueRating?: int32 | null;
 
-    @doc("null指定も可能な画像URL一覧")
+    @doc("画像URL一覧の更新内容（null指定で初期化可能）")
     imageUrls?: string[] | null;
   }
 

@@ -14,7 +14,7 @@ namespace BeautySalon.Operations {
     @doc("List inventory items with filters")
     @get
     listInventoryItems(
-      ...SearchInventoryRequest,
+      ...InventorySearchRequest,
     ): Result<PaginationResponse<InventoryItem>>;
 
     @doc("Get inventory item by ID")
@@ -25,7 +25,7 @@ namespace BeautySalon.Operations {
     @doc("Create new inventory item")
     @post
     createInventoryItem(
-      @body item: InventoryItemCreateInput,
+      @body item: InventoryItemCreateRequest,
     ): Result<InventoryItem>;
 
     @doc("Update inventory item")
@@ -33,7 +33,7 @@ namespace BeautySalon.Operations {
     @route("/{id}")
     updateInventoryItem(
       @path id: InventoryId,
-      @body updates: InventoryItemUpdateInput,
+      @body updates: InventoryItemUpdateRequest,
     ): Result<InventoryItem>;
 
     @doc("Delete inventory item")
@@ -61,7 +61,7 @@ namespace BeautySalon.Operations {
     @post
     @route("/movement")
     recordStockMovement(
-      @body movement: StockMovementInput,
+      @body movement: StockMovementCreateRequest,
     ): Result<StockMovement>;
 
     @doc("Get stock movement history")
@@ -133,7 +133,7 @@ namespace BeautySalon.Operations {
     @doc("Create purchase order")
     @post
     createPurchaseOrder(
-      @body order: PurchaseOrderCreateInput,
+      @body order: PurchaseOrderCreateRequest,
     ): Result<PurchaseOrder>;
 
     @doc("Update purchase order")
@@ -141,7 +141,7 @@ namespace BeautySalon.Operations {
     @route("/{id}")
     updatePurchaseOrder(
       @path id: OrderId,
-      @body updates: PurchaseOrderUpdateInput,
+      @body updates: PurchaseOrderUpdateRequest,
     ): Result<PurchaseOrder>;
 
     @doc("Approve purchase order")

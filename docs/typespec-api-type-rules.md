@@ -1,8 +1,104 @@
 # TypeSpec API型定義ルール
 
-このドキュメントは、TypeSpecでAPIの入出力型を定義する際の厳格なルールを定めます。
+このドキュメントは、TypeSpecでAPIの入出力型を定義する際の厳格なルールと、Beauty Salon Reservation System におけるAPI命名規則の完全なリファレンスです。
+
+## 🎯 命名規則の原則
+
+1. **一貫性**: すべてのモデルが同じパターンに従う
+2. **予測可能性**: 操作種別から命名を推測可能
+3. **明確性**: Request/Response の区別が明確
+4. **拡張性**: 新しい操作種別にも対応可能
+
+## 📝 モデル命名規則
+
+### 統一された命名規則
+
+すべてのTypeSpecモデルは、以下の統一された命名規則に従います。これにより、API単位でI/Oの対応関係が1:1となり、一貫性のあるAPI設計を実現します。
+
+#### 入力モデル（Request）
+
+| 操作種別 | 命名パターン | 例 | 用途 |
+|---------|------------|-----|------|
+| **作成** | `{Domain}CreateRequest` | `CustomerCreateRequest` | 新規リソース作成 |
+| **更新** | `{Domain}UpdateRequest` | `CustomerUpdateRequest` | 既存リソース更新 |
+| **削除** | `{Domain}DeleteRequest` | `CustomerDeleteRequest` | リソース削除 |
+| **一括作成** | `{Domain}BulkCreateRequest` | `CustomerBulkCreateRequest` | 複数リソース一括作成 |
+| **一括更新** | `{Domain}BulkUpdateRequest` | `CustomerBulkUpdateRequest` | 複数リソース一括更新 |
+| **一括削除** | `{Domain}BulkDeleteRequest` | `CustomerBulkDeleteRequest` | 複数リソース一括削除 |
+| **取得** | `{Domain}{Context}GetRequest` | `CustomerBookingsGetRequest` | 特定条件での取得 |
+| **検索** | `{Domain}SearchRequest` | `CustomerSearchRequest` | リソース検索・リスト取得 |
+
+#### 出力モデル（Response）
+
+| 操作種別 | 命名パターン | 例 | 説明 |
+|---------|------------|-----|------|
+| **すべて** | `{Domain}Response` | `CustomerResponse` | すべてのレスポンスモデル |
+
+例外的に、特定の操作に対する専用レスポンスが必要な場合：
+```
+{Prefix}{Action}Response
+```
+
+#### 特殊操作パターン
+
+認証やアクション系の操作には、プレフィックスとサフィックスを組み合わせます：
+
+```
+{Prefix}{Action}Request
+```
+
+例：
+- `AuthLoginRequest` - ログイン操作
+- `AuthRegisterRequest` - ユーザー登録操作
+- `AuthPasswordResetRequest` - パスワードリセット操作
 
 ## 基本原則
+
+### ベースモデル（エンティティモデル）のNullableルール
+
+ベースモデル（Response型の基礎となるエンティティモデル）において、任意項目はすべて**nullable（`| null`）**として定義します。これにより、値の未設定状態を明確に表現し、Create/Update APIでのnullリセット操作を可能にします。
+
+#### ベースモデルのフィールド定義ルール
+
+| フィールドの性質 | TypeSpec定義 | 説明 |
+|-----------------|-------------|------|
+| **必須かつ非null** | `field: Type` | 常に値が存在するフィールド |
+| **任意項目** | `field: Type \| null` | 値が設定されていない可能性があるフィールド（DBでNULLABLE） |
+| **配列** | `field: Type[] \| null` | 空配列ではなくnullで未設定を表現 |
+| **オブジェクト** | `field: Type \| null` | 空オブジェクトではなくnullで未設定を表現 |
+
+#### 適用対象モデル
+
+このルールは以下のすべてのモデルタイプに適用されます：
+
+1. **ドメインエンティティモデル** (Customer, Salon, Staff等)
+2. **共有モデル** (Error, Money, Address等)
+3. **ラッパーモデル** (ApiResponse, ProblemDetails等)
+4. **サブモデル** (MaterialUsage, PreviousTreatment等)
+
+**例外**: 検索パラメータモデル（SearchParams, FilterParams等）は、Optional（`?`）のまま維持
+
+#### 誤った定義と正しい定義
+
+```typespec
+// ❌ 誤り: 任意項目がOptional（?）のみ
+model Attachment {
+  id: string;
+  filename: string;
+  salonId?: string;              // 誤り：OptionalはAPIリクエストでのみ使用
+  metadata?: Record<unknown>;     // 誤り：任意項目はnullableにすべき
+  tags?: Record<string>;          // 誤り：任意項目はnullableにすべき
+}
+
+// ✅ 正しい: 任意項目はnullable
+model Attachment {
+  id: string;
+  filename: string;
+  salonId: string | null;         // 正しい：未設定の可能性がある
+  metadata: Record<unknown> | null;  // 正しい：nullで未設定を表現
+  tags: Record<string> | null;       // 正しい：nullで未設定を表現
+}
+```
 
 ### Optionalフィールドの制約
 
@@ -23,21 +119,21 @@ APIの定義において、**Optional（省略可能）フィールドは検索A
 
 ```typespec
 // ✅ 作成API: Optionalなし、すべて必須（値はnullable）
-model CreateCustomerRequest {
+model CustomerCreateRequest {
   name: string | null;        // 必須キー、null許可
   email: string | null;       // 必須キー、null許可
   phoneNumber: string | null; // 必須キー、null許可
 }
 
-// ✅ 更新API: すべてOptional（部分更新）
-model UpdateCustomerRequest {
-  name?: string;              // Optional: 省略可能
-  email?: string;             // Optional: 省略可能
-  phoneNumber?: string;       // Optional: 省略可能
+// ✅ 更新API: 基本モデルの型に応じて、nullableを許可
+model CustomerUpdateRequest {
+  name?: string | null;              // Optional: 省略可能でnull許可
+  email?: string | null;             // Optional: 省略可能でnull許可
+  phoneNumber?: string | null;       // Optional: 省略可能でnull許可
 }
 
 // ✅ 検索API: 検索条件はOptional
-model SearchCustomerRequest {
+model CustomerSearchRequest {
   @query keyword?: string;    // Optional: 検索条件
   @query city?: string;       // Optional: 検索条件
   @query tags?: string[];     // Optional: 検索条件
@@ -62,7 +158,7 @@ model CustomerResponse {
 
 #### 更新API
 - **すべてのフィールドは`optional`（省略可能）**
-- **初期値に戻したい場合は`nullable` + `optional`を使用**
+- **基本モデルでnullableなフィールドは`Type | null`を追加（nullでリセット可能）**
 - 省略されたフィールドは更新しない
 
 #### 検索API
@@ -79,7 +175,7 @@ model CustomerResponse {
 
 ```typespec
 @doc("Customer creation request - all keys required, values nullable")
-model CreateCustomerRequest {
+model CustomerCreateRequest {
   // すべてのキーは必須、値はnullable
   name: string | null;
   email: string | null;
@@ -92,7 +188,7 @@ model CreateCustomerRequest {
 }
 
 // 使用例（TypeScript）
-const request: CreateCustomerRequest = {
+const request: CustomerCreateRequest = {
   name: "山田太郎",           // OK: 値あり
   email: null,                // OK: null
   phoneNumber: null,          // OK: null
@@ -114,22 +210,8 @@ const invalidRequest = {
 
 ```typespec
 @doc("Customer update request - all fields optional for partial updates")
-model UpdateCustomerRequest {
-  // すべてのフィールドはoptional（部分更新）
-  name?: string;
-  email?: string;
-  phoneNumber?: string;
-  contactInfo?: ContactInfo;
-  preferences?: string;
-  notes?: string;
-  tags?: string[];
-  birthDate?: plainDate;
-}
-
-// 初期値に戻したい場合はnullable + optional
-@doc("Customer update request with nullable support - allows resetting to default")
-model UpdateCustomerRequestWithReset {
-  // optional + nullable: 明示的なnull設定が可能
+model CustomerUpdateRequest {
+  // すべてのフィールドはoptionalで基本モデルの型に応じてnullable（部分更新）
   name?: string | null;
   email?: string | null;
   phoneNumber?: string | null;
@@ -140,19 +222,9 @@ model UpdateCustomerRequestWithReset {
   birthDate?: plainDate | null;
 }
 
-// 使用例（TypeScript）
-// パターン1: 通常の部分更新（optionalのみ）
 const partialUpdate: UpdateCustomerRequest = {
   name: "新しい名前",         // 名前だけ更新
-  email: "new@example.com"   // メールも更新
-  // 他のフィールドは省略 = 更新しない
-};
-
-// パターン2: 初期値リセットを含む更新（optional + nullable）
-const updateWithReset: UpdateCustomerRequestWithReset = {
-  name: "新しい名前",         // 値を更新
-  email: null,               // 明示的にnullに設定（初期値に戻す）
-  phoneNumber: undefined     // 省略 = 更新しない
+  email: null,              // 明示的にnullに設定（初期値に戻す）※基本モデルでnullableの場合のみ
   // 他のフィールドは省略 = 更新しない
 };
 ```
@@ -227,15 +299,15 @@ const response: CustomerResponse = {
 ### 1. undefined、null、値の違い
 
 ```typescript
-// 更新APIでの3つの状態
-interface UpdateRequestWithReset {
-  name?: string | null;
-  email?: string | null;
-  phoneNumber?: string | null;
+// 更新APIでの3つの状態（UpdateRequestに統合）
+interface UpdateRequest {
+  name?: string;              // 基本モデルで NOT NULL の場合
+  email?: string | null;      // 基本モデルで nullable の場合
+  phoneNumber?: string | null; // 基本モデルで nullable の場合
 }
 
 // 実装例
-async function updateCustomer(id: string, request: UpdateRequestWithReset) {
+async function updateCustomer(id: string, request: UpdateRequest) {
   const updates: Partial<Customer> = {};
   
   // 3つの状態を適切に処理
@@ -637,10 +709,10 @@ model GoodUpdateRequest {
   email?: string;          // OK: 部分更新可能
 }
 
-// OK: 更新APIでリセット機能付き
-model GoodUpdateRequestWithReset {
-  name?: string | null;    // OK: 省略/更新/リセット可能
-  email?: string | null;   // OK: 省略/更新/リセット可能
+// OK: 更新APIで条件付きリセット機能（基本モデルに従う）
+model GoodUpdateRequest {
+  name?: string;           // OK: 基本モデルがNOT NULLの場合
+  email?: string | null;   // OK: 基本モデルがnullableの場合はリセット可能
 }
 
 // OK: レスポンスはキー必須
@@ -656,8 +728,7 @@ model GoodResponse {
 | API種別 | キーの扱い | 値の扱い | 例 | 用途 |
 |---------|-----------|----------|-----|------|
 | 作成API | すべて必須 | nullable | `name: string \| null` | 全フィールドの明示的な設定 |
-| 更新API（通常） | すべてoptional | 通常の型 | `name?: string` | 部分更新 |
-| 更新API（リセット付き） | すべてoptional | nullable | `name?: string \| null` | 部分更新＋初期値リセット |
+| 更新API | すべてoptional | 基本モデルに従う | `name?: string` (NOT NULL)<br>`email?: string \| null` (nullable) | 部分更新＋条件付きリセット |
 | 検索API（必須フィールドあり） | 必須フィールドは必須、他はoptional | 通常の型 | `tenantId: string`<br>`keyword?: string` | 条件付き検索 |
 | 検索API（必須フィールドなし） | すべてoptional | 通常の型 | `keyword?: string` | 自由検索 |
 | レスポンス | すべて必須 | nullable可 | `email: string \| null` | 完全な情報提供 |
@@ -841,6 +912,150 @@ namespace BeautySalon.Operations {
 - [ ] @queryデコレータに#suppressディレクティブを追加（必要な場合）
 - [ ] 型生成を実行して正しくコンパイルされることを確認
 
+## 包括的なNullableルール適用ガイド
+
+### 2024年9月の大規模改修内容
+
+プロジェクト全体でNullableルールを統一し、以下の改修を実施しました：
+
+#### 1. UpdateRequestWithResetモデルの完全廃止
+- 7つのドメイン（Booking, Customer, Reservation, Review, Salon, Service, Staff）でUpdateRequestWithResetを廃止
+- すべてUpdateRequestモデルに統合
+- キーはOptional（`?`）、基本モデルでnullableな値は`| null`追加
+
+#### 2. ベースモデルのOptionalフィールド廃止
+- **修正対象**: Reservation, Review, Staff, Attachment等のベースモデル
+- **変更内容**: `field?: Type` → `field: Type | null`
+- **理由**: ベースモデルではOptionalを使用せず、nullableで未設定を表現
+
+#### 3. 共有モデルへのNullableルール適用
+- **修正ファイル**:
+  - `specs/models/_shared/common-api-patterns.tsp`
+  - `specs/models/_shared/common.tsp`
+  - `specs/models/_shared/domain-errors.tsp`
+- **主な変更**: ProblemDetails, ValidationError, SoftDelete, HealthCheck, ApiResponse等
+
+#### 4. CreateRequestモデルの標準化
+- **変更前**: 一部のフィールドがOptional（`?`）
+- **変更後**: すべてのフィールドが必須、値はnullable可
+- **例**: `notes?: string` → `notes: string | null`
+
+## 更新APIモデルの統合ルール（UpdateRequestWithReset廃止）
+
+### 背景と方針
+プロジェクトでは、当初UpdateRequestとUpdateRequestWithResetという2つの更新モデルを用意していましたが、これを**UpdateRequestに統合**する方針に変更しました。
+
+### 統合後のルール
+
+#### 基本原則
+1. **単一の更新モデル**: 各ドメインにつき`UpdateXXXRequest`モデルを1つだけ定義
+2. **UpdateRequestWithResetは作成しない**: 別モデルによる分岐は複雑性を増すため廃止
+3. **nullable判定は基本モデルに従う**: DB/基本モデルでnullableなフィールドのみnullリセット可能
+
+#### 実装パターン
+```typespec
+// 基本モデル（例：Staff）
+model Staff {
+  name: string;                        // NOT NULL
+  bio: string | null;                  // nullable
+  yearsOfExperience: int32 | null;    // nullable
+  imageUrl: string | null;             // nullable
+  certifications: string[] | null;     // nullable
+  isActive: boolean;                   // NOT NULL
+}
+
+// 統合された更新モデル
+@doc("スタッフ更新リクエスト - 部分更新対応。null指定で値をリセット可能")
+model UpdateStaffRequest {
+  name?: string;                       // Optional、NOT NULLなのでnullリセット不可
+  bio?: string | null;                 // Optional + nullable、nullでリセット可能
+  yearsOfExperience?: int32 | null;   // Optional + nullable、nullでリセット可能
+  imageUrl?: string | null;            // Optional + nullable、nullでリセット可能
+  certifications?: string[] | null;   // Optional + nullable、nullでリセット可能
+  isActive?: boolean;                  // Optional、NOT NULLなのでnullリセット不可
+}
+```
+
+#### 3つの更新パターン
+| フィールドの状態 | TypeScript表現 | DB NOT NULL フィールド | DB nullable フィールド |
+|----------------|---------------|----------------------|---------------------|
+| 省略（undefined） | キー自体がない | 更新しない | 更新しない |
+| null設定 | `{ field: null }` | **不可**（型エラー） | DBにnullを設定（リセット） |
+| 値設定 | `{ field: "value" }` | DBに値を設定 | DBに値を設定 |
+
+#### 移行例
+```typespec
+// ❌ Before: 2つのモデルが存在
+model UpdateServiceRequest {
+  name?: string;
+  description?: string;
+  imageUrl?: string;
+}
+
+model UpdateServiceRequestWithReset {
+  name?: string;
+  description?: string;
+  imageUrl?: string | null;  // nullリセット対応
+}
+
+// ✅ After: 1つのモデルに統合
+model UpdateServiceRequest {
+  name?: string;                  // 基本モデルでNOT NULL
+  description?: string;            // 基本モデルでNOT NULL
+  imageUrl?: string | null;        // 基本モデルでnullable → nullリセット可能
+}
+```
+
+### 実装の注意点
+
+#### TypeScriptでの実装
+```typescript
+async function updateStaff(id: string, request: UpdateStaffRequest) {
+  const updates: Partial<DbStaff> = {};
+
+  // 各フィールドの処理
+  if (request.name !== undefined) {
+    // NOT NULLフィールド: nullは型的に来ない
+    updates.name = request.name;
+  }
+
+  if (request.bio !== undefined) {
+    // nullableフィールド: nullも値も受け付ける
+    updates.bio = request.bio;  // null or string
+  }
+
+  if (request.imageUrl !== undefined) {
+    // nullableフィールド: 明示的なnull設定でリセット
+    updates.imageUrl = request.imageUrl;  // null or string
+  }
+
+  // DBを更新
+  await db.update('staff', id, updates);
+}
+```
+
+#### Zapperでの処理
+```typescript
+const staffUpdateSchema = z.object({
+  name: z.string().optional(),
+  bio: z.string().nullable().optional(),
+  yearsOfExperience: z.number().nullable().optional(),
+  imageUrl: z.string().url().nullable().optional(),
+  certifications: z.array(z.string()).nullable().optional(),
+  isActive: z.boolean().optional(),
+});
+```
+
+### 移行チェックリスト
+既存のUpdateRequestWithResetモデルを統合する際の確認事項：
+
+- [ ] 基本モデルのnullable/NOT NULLを確認
+- [ ] UpdateRequestモデルに適切な `| null` を追加
+- [ ] UpdateRequestWithResetモデルを削除
+- [ ] @doc コメントに「null指定で値をリセット可能」を追記
+- [ ] 参照している箇所（operations等）を更新
+- [ ] 型生成とテストを実行
+
 ### 実装例：完全な移行
 
 #### Step 1: モデルの移動と改名
@@ -907,3 +1122,9 @@ export type SalonSearchParams = components['schemas']['Models.SearchSalonRequest
 ```
 
 この標準化により、コードベース全体で一貫性のある命名と構造を維持できます。
+
+## 📚 関連ドキュメント
+
+- [Backend Architecture Guidelines](./backend-architecture-guidelines.md)
+- [Multi-Agent Collaboration Framework](./multi-agent-collaboration-framework.md)
+- [API Testing Guide](./api-testing-guide.md)

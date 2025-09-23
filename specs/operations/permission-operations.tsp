@@ -26,12 +26,15 @@ namespace BeautySalon.Operations {
 
     @doc("Create new role")
     @post
-    createRole(@body role: RoleCreateInput): Result<Role>;
+    createRole(@body role: RoleCreateRequest): Result<Role>;
 
     @doc("Update role")
     @patch(#{ implicitOptionality: true })
     @route("/{id}")
-    updateRole(@path id: RoleId, @body updates: RoleUpdateInput): Result<Role>;
+    updateRole(
+      @path id: RoleId,
+      @body updates: RoleUpdateRequest,
+    ): Result<Role>;
 
     @doc("Delete role")
     @delete
@@ -93,7 +96,7 @@ namespace BeautySalon.Operations {
     @doc("Assign role to user")
     @post
     assignUserRoleType(
-      @body assignment: UserRoleAssignInput,
+      @body assignment: UserRoleAssignRequest,
     ): Result<UserRoleType>;
 
     @doc("Revoke user role")
@@ -159,7 +162,7 @@ namespace BeautySalon.Operations {
     @post
     @route("/check-permissions")
     checkPermissions(
-      @body check: PermissionCheckInput,
+      @body check: PermissionCheckRequest,
     ): Result<PermissionCheckResult>;
 
     @doc("Get user effective permissions")

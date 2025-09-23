@@ -252,7 +252,7 @@ namespace BeautySalon.Models {
   }
 
   @doc("在庫アイテムを新規登録する入力モデル")
-  model InventoryItemCreateInput {
+  model InventoryItemCreateRequest {
     @doc("在庫を追加するサロン ID")
     salonId: SalonId;
 
@@ -263,16 +263,16 @@ namespace BeautySalon.Models {
     productName: string;
 
     @doc("商品説明文")
-    description?: string;
+    description: string | null;
 
     @doc("分類カテゴリ")
     category: string;
 
     @doc("ブランド名")
-    brand?: string;
+    brand: string | null;
 
     @doc("仕入先情報")
-    supplier?: string;
+    supplier: string | null;
 
     @doc("登録時点の在庫数量")
     currentStock: float32;
@@ -281,7 +281,7 @@ namespace BeautySalon.Models {
     minimumStock: float32;
 
     @doc("最大在庫数")
-    maximumStock?: float32;
+    maximumStock: float32 | null;
 
     @doc("数量単位")
     unit: string;
@@ -290,62 +290,62 @@ namespace BeautySalon.Models {
     unitCost: float32;
 
     @doc("顧客販売価格")
-    sellingPrice?: float32;
+    sellingPrice: float32 | null;
 
     @doc("保管場所")
-    location?: string;
+    location: string | null;
 
     @doc("賞味・使用期限")
-    expirationDate?: utcDateTime;
+    expirationDate: utcDateTime | null;
 
     @doc("備考メモ")
-    notes?: string;
+    notes: string | null;
   }
 
   @doc("在庫アイテムの情報更新入力モデル")
-  model InventoryItemUpdateInput {
+  model InventoryItemUpdateRequest {
     @doc("更新後の商品名")
     productName?: string;
 
     @doc("更新後の商品説明")
-    description?: string;
+    description?: string | null;
 
     @doc("更新後のカテゴリ")
     category?: string;
 
     @doc("更新後のブランド名")
-    brand?: string;
+    brand?: string | null;
 
     @doc("更新後の仕入先情報")
-    supplier?: string;
+    supplier?: string | null;
 
     @doc("更新後の最低在庫数")
     minimumStock?: float32;
 
     @doc("更新後の最大在庫数")
-    maximumStock?: float32;
+    maximumStock?: float32 | null;
 
     @doc("更新後の仕入単価")
     unitCost?: float32;
 
     @doc("更新後の販売価格")
-    sellingPrice?: float32;
+    sellingPrice?: float32 | null;
 
     @doc("更新後の保管場所")
-    location?: string;
+    location?: string | null;
 
     @doc("更新後の賞味・使用期限")
-    expirationDate?: utcDateTime;
+    expirationDate?: utcDateTime | null;
 
     @doc("在庫状態の更新")
     status?: InventoryStatusType;
 
     @doc("更新後の備考")
-    notes?: string;
+    notes?: string | null;
   }
 
   @doc("在庫移動処理を登録する入力モデル")
-  model StockMovementInput {
+  model StockMovementCreateRequest {
     @doc("対象在庫 ID")
     inventoryId: InventoryId;
 
@@ -359,17 +359,17 @@ namespace BeautySalon.Models {
     reason: string;
 
     @doc("関連する発注 ID")
-    orderId?: OrderId;
+    orderId: OrderId | null;
 
     @doc("関連する施術記録 ID")
-    treatmentRecordId?: TreatmentRecordId;
+    treatmentRecordId: TreatmentRecordId | null;
 
     @doc("備考メモ")
-    notes?: string;
+    notes: string | null;
   }
 
   @doc("仕入れ発注を作成する入力モデル")
-  model PurchaseOrderCreateInput {
+  model PurchaseOrderCreateRequest {
     @doc("仕入先名")
     supplier: string;
 
@@ -380,20 +380,20 @@ namespace BeautySalon.Models {
     taxAmount: float32;
 
     @doc("送料")
-    shippingCost?: float32;
+    shippingCost: float32 | null;
 
     @doc("予定納期")
-    expectedDelivery?: utcDateTime;
+    expectedDelivery: utcDateTime | null;
 
     @doc("支払条件")
-    paymentTerms?: string;
+    paymentTerms: string | null;
 
     @doc("備考メモ")
-    notes?: string;
+    notes: string | null;
   }
 
   @doc("仕入れ発注の更新入力モデル")
-  model PurchaseOrderUpdateInput {
+  model PurchaseOrderUpdateRequest {
     @doc("更新後の発注ステータス")
     status?: OrderStatusType;
 
@@ -411,7 +411,7 @@ namespace BeautySalon.Models {
   }
 
   @doc("在庫検索のリクエスト条件")
-  model SearchInventoryRequest {
+  model InventorySearchRequest {
     @doc("検索対象のサロン ID")
     @query
     salonId: SalonId;

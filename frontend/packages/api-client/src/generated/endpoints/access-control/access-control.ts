@@ -31,7 +31,7 @@ import type {
   AccessControlOperationsValidatePermissions200,
   AccessControlOperationsValidatePermissionsBody,
   ModelsAccessCheck,
-  ModelsPermissionCheckInput,
+  ModelsPermissionCheckRequest,
 } from '../../models'
 
 import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher'
@@ -167,7 +167,7 @@ export const getAccessControlOperationsCheckPermissionsUrl = () => {
 }
 
 export const accessControlOperationsCheckPermissions = async (
-  modelsPermissionCheckInput: ModelsPermissionCheckInput,
+  modelsPermissionCheckRequest: ModelsPermissionCheckRequest,
   options?: RequestInit
 ): Promise<accessControlOperationsCheckPermissionsResponse> => {
   return customInstance<accessControlOperationsCheckPermissionsResponse>(
@@ -176,7 +176,7 @@ export const accessControlOperationsCheckPermissions = async (
       ...options,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsPermissionCheckInput),
+      body: JSON.stringify(modelsPermissionCheckRequest),
     }
   )
 }
@@ -188,14 +188,14 @@ export const getAccessControlOperationsCheckPermissionsMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof accessControlOperationsCheckPermissions>>,
     TError,
-    { data: ModelsPermissionCheckInput },
+    { data: ModelsPermissionCheckRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof accessControlOperationsCheckPermissions>>,
   TError,
-  { data: ModelsPermissionCheckInput },
+  { data: ModelsPermissionCheckRequest },
   TContext
 > => {
   const mutationKey = ['accessControlOperationsCheckPermissions']
@@ -209,7 +209,7 @@ export const getAccessControlOperationsCheckPermissionsMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof accessControlOperationsCheckPermissions>>,
-    { data: ModelsPermissionCheckInput }
+    { data: ModelsPermissionCheckRequest }
   > = (props) => {
     const { data } = props ?? {}
 
@@ -223,7 +223,7 @@ export type AccessControlOperationsCheckPermissionsMutationResult = NonNullable<
   Awaited<ReturnType<typeof accessControlOperationsCheckPermissions>>
 >
 export type AccessControlOperationsCheckPermissionsMutationBody =
-  ModelsPermissionCheckInput
+  ModelsPermissionCheckRequest
 export type AccessControlOperationsCheckPermissionsMutationError = unknown
 
 export const useAccessControlOperationsCheckPermissions = <
@@ -234,7 +234,7 @@ export const useAccessControlOperationsCheckPermissions = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof accessControlOperationsCheckPermissions>>,
       TError,
-      { data: ModelsPermissionCheckInput },
+      { data: ModelsPermissionCheckRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -243,7 +243,7 @@ export const useAccessControlOperationsCheckPermissions = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof accessControlOperationsCheckPermissions>>,
   TError,
-  { data: ModelsPermissionCheckInput },
+  { data: ModelsPermissionCheckRequest },
   TContext
 > => {
   const mutationOptions =

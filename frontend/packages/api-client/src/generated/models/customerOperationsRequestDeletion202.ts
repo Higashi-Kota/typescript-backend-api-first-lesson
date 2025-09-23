@@ -6,7 +6,7 @@
  * OpenAPI spec version: 2.0
  */
 import type { CustomerOperationsRequestDeletion202Data } from './customerOperationsRequestDeletion202Data'
-import type { ModelsResponseMeta } from './modelsResponseMeta'
+import type { CustomerOperationsRequestDeletion202Meta } from './customerOperationsRequestDeletion202Meta'
 import type { CustomerOperationsRequestDeletion202Links } from './customerOperationsRequestDeletion202Links'
 
 /**
@@ -16,8 +16,14 @@ import type { CustomerOperationsRequestDeletion202Links } from './customerOperat
 export type CustomerOperationsRequestDeletion202 = {
   /** レスポンスの主体となるビジネスデータ。 */
   data: CustomerOperationsRequestDeletion202Data
-  /** リクエスト識別子やバージョン情報など共通メタデータ。 */
-  meta?: ModelsResponseMeta
-  /** 関連リソースや次アクションへのリンク情報。 */
-  links?: CustomerOperationsRequestDeletion202Links
+  /**
+   * リクエスト識別子やバージョン情報など共通メタデータ。
+   * @nullable
+   */
+  meta: CustomerOperationsRequestDeletion202Meta
+  /**
+   * 関連リソースや次アクションへのリンク情報。
+   * @nullable
+   */
+  links: CustomerOperationsRequestDeletion202Links
 }

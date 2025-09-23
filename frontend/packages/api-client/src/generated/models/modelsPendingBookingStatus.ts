@@ -6,7 +6,6 @@
  * OpenAPI spec version: 2.0
  */
 import type { ModelsPendingBookingStatusType } from './modelsPendingBookingStatusType'
-import type { ModelsStaffId } from './modelsStaffId'
 
 /**
  * 予約が確認待ち段階にある場合の状態情報。
@@ -16,8 +15,14 @@ export interface ModelsPendingBookingStatus {
   type: ModelsPendingBookingStatusType
   /** 顧客から予約リクエストを受け付けた日時。 */
   requestedAt: string
-  /** 保留状態の有効期限。未設定の場合は期限なし。 */
-  holdExpiresAt?: string
-  /** 仮割り当てされたスタッフID。未確定の場合はnull。 */
-  assignedStaffId?: ModelsStaffId
+  /**
+   * 保留状態の有効期限。未設定の場合は期限なし。
+   * @nullable
+   */
+  holdExpiresAt: string | null
+  /**
+   * 仮割り当てされたスタッフID。未確定の場合はnull。
+   * @nullable
+   */
+  assignedStaffId: string | null
 }

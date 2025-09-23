@@ -10,20 +10,44 @@
  * サービスのメタデータ情報
  */
 export interface ModelsServiceMetadata {
-  /** タグ一覧 */
-  tags?: string[]
-  /** 検索キーワード */
-  keywords?: string[]
-  /** SEO 用タイトル */
-  seoTitle?: string
-  /** SEO 用ディスクリプション */
-  seoDescription?: string
-  /** 内部向けメモ */
-  internalNotes?: string
-  /** 表示順序 */
-  sortOrder?: number
-  /** 注目サービスとして表示するか */
-  featured?: boolean
-  /** メニュー非表示フラグ */
-  hideFromMenu?: boolean
+  /**
+   * タグ一覧
+   * @nullable
+   */
+  tags: string[] | null
+  /**
+   * 検索キーワード
+   * @nullable
+   */
+  keywords: string[] | null
+  /**
+   * SEO 用タイトル
+   * @nullable
+   */
+  seoTitle: string | null
+  /**
+   * SEO 用ディスクリプション
+   * @nullable
+   */
+  seoDescription: string | null
+  /**
+   * 内部向けメモ
+   * @nullable
+   */
+  internalNotes: string | null
+  /**
+   * 表示順序
+   * @nullable
+   */
+  sortOrder: number | null
+  /**
+   * 注目サービスとして表示するか
+   * @nullable
+   */
+  featured: boolean | null
+  /**
+   * メニュー非表示フラグ
+   * @nullable
+   */
+  hideFromMenu: boolean | null
 }

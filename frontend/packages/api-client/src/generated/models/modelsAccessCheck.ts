@@ -5,7 +5,6 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsSalonId } from './modelsSalonId'
 
 /**
  * アクセス権限の確認リクエスト
@@ -17,8 +16,14 @@ export interface ModelsAccessCheck {
   resource: string
   /** 実行したい操作区分 */
   action: string
-  /** サロン単位での権限チェック時のサロン ID */
-  salonId?: ModelsSalonId
-  /** リソース固有の ID */
-  resourceId?: string
+  /**
+   * サロン単位での権限チェック時のサロン ID
+   * @nullable
+   */
+  salonId: string | null
+  /**
+   * リソース固有の ID
+   * @nullable
+   */
+  resourceId: string | null
 }

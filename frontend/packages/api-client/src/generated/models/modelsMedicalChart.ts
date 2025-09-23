@@ -17,22 +17,46 @@ export interface ModelsMedicalChart {
   id: ModelsMedicalChartId
   /** 対象顧客 ID */
   customerId: ModelsCustomerId
-  /** アレルギー・敏感情報 */
-  allergies?: string[]
-  /** 頭皮状態のメモ */
-  scalpCondition?: string
-  /** 毛髪状態のメモ */
-  hairCondition?: string
-  /** 過去に実施したケミカル施術履歴 */
-  previousTreatments?: ModelsPreviousTreatment[]
-  /** 注意が必要な持病・体調情報 */
-  medicalConditions?: string
-  /** 好みの商材・ブランド */
-  preferredProducts?: string[]
-  /** 避けるべき商材 */
-  avoidProducts?: string[]
-  /** 自由記述メモ */
-  notes?: string
+  /**
+   * アレルギー・敏感情報
+   * @nullable
+   */
+  allergies: string[] | null
+  /**
+   * 頭皮状態のメモ
+   * @nullable
+   */
+  scalpCondition: string | null
+  /**
+   * 毛髪状態のメモ
+   * @nullable
+   */
+  hairCondition: string | null
+  /**
+   * 過去に実施したケミカル施術履歴
+   * @nullable
+   */
+  previousTreatments: ModelsPreviousTreatment[] | null
+  /**
+   * 注意が必要な持病・体調情報
+   * @nullable
+   */
+  medicalConditions: string | null
+  /**
+   * 好みの商材・ブランド
+   * @nullable
+   */
+  preferredProducts: string[] | null
+  /**
+   * 避けるべき商材
+   * @nullable
+   */
+  avoidProducts: string[] | null
+  /**
+   * 自由記述メモ
+   * @nullable
+   */
+  notes: string | null
   /** 最終更新日時 */
   lastUpdated: string
   /** レコード作成日時。 */

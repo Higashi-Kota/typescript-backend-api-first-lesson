@@ -7,7 +7,6 @@
  */
 import type { ModelsPricingFactorType } from './modelsPricingFactorType'
 import type { ModelsPricingFactorMultipliers } from './modelsPricingFactorMultipliers'
-import type { ModelsDecimal } from './modelsDecimal'
 import type { ModelsSeason } from './modelsSeason'
 
 /**
@@ -16,14 +15,29 @@ import type { ModelsSeason } from './modelsSeason'
 export interface ModelsPricingFactor {
   /** 変動要因の種類 */
   type: ModelsPricingFactorType
-  /** 条件に応じた倍率設定 */
-  multipliers?: ModelsPricingFactorMultipliers
-  /** ピーク時間帯の指定 */
-  peakHours?: string[]
-  /** ピーク時間帯に適用する倍率 */
-  peakMultiplier?: ModelsDecimal
-  /** 需要に応じた閾値設定 */
-  threshold?: number
-  /** 季節要因の詳細設定 */
-  seasons?: ModelsSeason[]
+  /**
+   * 条件に応じた倍率設定
+   * @nullable
+   */
+  multipliers: ModelsPricingFactorMultipliers
+  /**
+   * ピーク時間帯の指定
+   * @nullable
+   */
+  peakHours: string[] | null
+  /**
+   * ピーク時間帯に適用する倍率
+   * @nullable
+   */
+  peakMultiplier: number | null
+  /**
+   * 需要に応じた閾値設定
+   * @nullable
+   */
+  threshold: number | null
+  /**
+   * 季節要因の詳細設定
+   * @nullable
+   */
+  seasons: ModelsSeason[] | null
 }

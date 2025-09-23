@@ -6,7 +6,7 @@
  * OpenAPI spec version: 2.0
  */
 import type { ModelsSalonAvailabilityResponse } from './modelsSalonAvailabilityResponse'
-import type { ModelsResponseMeta } from './modelsResponseMeta'
+import type { SalonOperationsCheckAvailability200Meta } from './salonOperationsCheckAvailability200Meta'
 import type { SalonOperationsCheckAvailability200Links } from './salonOperationsCheckAvailability200Links'
 
 /**
@@ -16,8 +16,14 @@ import type { SalonOperationsCheckAvailability200Links } from './salonOperations
 export type SalonOperationsCheckAvailability200 = {
   /** レスポンスの主体となるビジネスデータ。 */
   data: ModelsSalonAvailabilityResponse
-  /** リクエスト識別子やバージョン情報など共通メタデータ。 */
-  meta?: ModelsResponseMeta
-  /** 関連リソースや次アクションへのリンク情報。 */
-  links?: SalonOperationsCheckAvailability200Links
+  /**
+   * リクエスト識別子やバージョン情報など共通メタデータ。
+   * @nullable
+   */
+  meta: SalonOperationsCheckAvailability200Meta
+  /**
+   * 関連リソースや次アクションへのリンク情報。
+   * @nullable
+   */
+  links: SalonOperationsCheckAvailability200Links
 }

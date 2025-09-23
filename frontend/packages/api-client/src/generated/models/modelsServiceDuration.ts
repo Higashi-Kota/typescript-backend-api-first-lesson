@@ -12,14 +12,26 @@
 export interface ModelsServiceDuration {
   /** 標準施術時間（分） */
   standard: number
-  /** 最短施術時間 */
-  minimum?: number
-  /** 最長施術時間 */
-  maximum?: number
-  /** 施術前のバッファ時間 */
-  bufferBefore?: number
-  /** 施術後のバッファ時間 */
-  bufferAfter?: number
+  /**
+   * 最短施術時間
+   * @nullable
+   */
+  minimum: number | null
+  /**
+   * 最長施術時間
+   * @nullable
+   */
+  maximum: number | null
+  /**
+   * 施術前のバッファ時間
+   * @nullable
+   */
+  bufferBefore: number | null
+  /**
+   * 施術後のバッファ時間
+   * @nullable
+   */
+  bufferAfter: number | null
   /** カウンセリング時間を含むか */
   includesConsultation: boolean
 }

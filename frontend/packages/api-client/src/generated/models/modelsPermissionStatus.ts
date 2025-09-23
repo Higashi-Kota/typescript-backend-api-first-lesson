@@ -14,6 +14,9 @@ export interface ModelsPermissionStatus {
   permission: string
   /** 権限が付与されているかどうか */
   granted: boolean
-  /** 権限を付与したロール情報 */
-  source?: string
+  /**
+   * 権限を付与したロール情報
+   * @nullable
+   */
+  source: string | null
 }

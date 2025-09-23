@@ -29,9 +29,9 @@ import type {
   MedicalChartOperationsSearchMedicalChartsParams,
   MedicalChartOperationsUpdateMedicalChart200,
   ModelsCustomerId,
-  ModelsMedicalChartCreateInput,
+  ModelsMedicalChartCreateRequest,
   ModelsMedicalChartId,
-  ModelsMedicalChartUpdateInput,
+  ModelsMedicalChartUpdateRequest,
 } from '../../models'
 
 import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher'
@@ -63,7 +63,7 @@ export const getMedicalChartOperationsCreateMedicalChartUrl = () => {
 }
 
 export const medicalChartOperationsCreateMedicalChart = async (
-  modelsMedicalChartCreateInput: ModelsMedicalChartCreateInput,
+  modelsMedicalChartCreateRequest: ModelsMedicalChartCreateRequest,
   options?: RequestInit
 ): Promise<medicalChartOperationsCreateMedicalChartResponse> => {
   return customInstance<medicalChartOperationsCreateMedicalChartResponse>(
@@ -72,7 +72,7 @@ export const medicalChartOperationsCreateMedicalChart = async (
       ...options,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsMedicalChartCreateInput),
+      body: JSON.stringify(modelsMedicalChartCreateRequest),
     }
   )
 }
@@ -84,14 +84,14 @@ export const getMedicalChartOperationsCreateMedicalChartMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof medicalChartOperationsCreateMedicalChart>>,
     TError,
-    { data: ModelsMedicalChartCreateInput },
+    { data: ModelsMedicalChartCreateRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof medicalChartOperationsCreateMedicalChart>>,
   TError,
-  { data: ModelsMedicalChartCreateInput },
+  { data: ModelsMedicalChartCreateRequest },
   TContext
 > => {
   const mutationKey = ['medicalChartOperationsCreateMedicalChart']
@@ -105,7 +105,7 @@ export const getMedicalChartOperationsCreateMedicalChartMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof medicalChartOperationsCreateMedicalChart>>,
-    { data: ModelsMedicalChartCreateInput }
+    { data: ModelsMedicalChartCreateRequest }
   > = (props) => {
     const { data } = props ?? {}
 
@@ -120,7 +120,7 @@ export type MedicalChartOperationsCreateMedicalChartMutationResult =
     Awaited<ReturnType<typeof medicalChartOperationsCreateMedicalChart>>
   >
 export type MedicalChartOperationsCreateMedicalChartMutationBody =
-  ModelsMedicalChartCreateInput
+  ModelsMedicalChartCreateRequest
 export type MedicalChartOperationsCreateMedicalChartMutationError = unknown
 
 export const useMedicalChartOperationsCreateMedicalChart = <
@@ -131,7 +131,7 @@ export const useMedicalChartOperationsCreateMedicalChart = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof medicalChartOperationsCreateMedicalChart>>,
       TError,
-      { data: ModelsMedicalChartCreateInput },
+      { data: ModelsMedicalChartCreateRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -140,7 +140,7 @@ export const useMedicalChartOperationsCreateMedicalChart = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof medicalChartOperationsCreateMedicalChart>>,
   TError,
-  { data: ModelsMedicalChartCreateInput },
+  { data: ModelsMedicalChartCreateRequest },
   TContext
 > => {
   const mutationOptions =
@@ -812,7 +812,7 @@ export const getMedicalChartOperationsUpdateMedicalChartUrl = (
 
 export const medicalChartOperationsUpdateMedicalChart = async (
   id: ModelsMedicalChartId,
-  modelsMedicalChartUpdateInput: ModelsMedicalChartUpdateInput,
+  modelsMedicalChartUpdateRequest: ModelsMedicalChartUpdateRequest,
   options?: RequestInit
 ): Promise<medicalChartOperationsUpdateMedicalChartResponse> => {
   return customInstance<medicalChartOperationsUpdateMedicalChartResponse>(
@@ -821,7 +821,7 @@ export const medicalChartOperationsUpdateMedicalChart = async (
       ...options,
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsMedicalChartUpdateInput),
+      body: JSON.stringify(modelsMedicalChartUpdateRequest),
     }
   )
 }
@@ -833,14 +833,14 @@ export const getMedicalChartOperationsUpdateMedicalChartMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof medicalChartOperationsUpdateMedicalChart>>,
     TError,
-    { id: ModelsMedicalChartId; data: ModelsMedicalChartUpdateInput },
+    { id: ModelsMedicalChartId; data: ModelsMedicalChartUpdateRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof medicalChartOperationsUpdateMedicalChart>>,
   TError,
-  { id: ModelsMedicalChartId; data: ModelsMedicalChartUpdateInput },
+  { id: ModelsMedicalChartId; data: ModelsMedicalChartUpdateRequest },
   TContext
 > => {
   const mutationKey = ['medicalChartOperationsUpdateMedicalChart']
@@ -854,7 +854,7 @@ export const getMedicalChartOperationsUpdateMedicalChartMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof medicalChartOperationsUpdateMedicalChart>>,
-    { id: ModelsMedicalChartId; data: ModelsMedicalChartUpdateInput }
+    { id: ModelsMedicalChartId; data: ModelsMedicalChartUpdateRequest }
   > = (props) => {
     const { id, data } = props ?? {}
 
@@ -869,7 +869,7 @@ export type MedicalChartOperationsUpdateMedicalChartMutationResult =
     Awaited<ReturnType<typeof medicalChartOperationsUpdateMedicalChart>>
   >
 export type MedicalChartOperationsUpdateMedicalChartMutationBody =
-  ModelsMedicalChartUpdateInput
+  ModelsMedicalChartUpdateRequest
 export type MedicalChartOperationsUpdateMedicalChartMutationError = unknown
 
 export const useMedicalChartOperationsUpdateMedicalChart = <
@@ -880,7 +880,7 @@ export const useMedicalChartOperationsUpdateMedicalChart = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof medicalChartOperationsUpdateMedicalChart>>,
       TError,
-      { id: ModelsMedicalChartId; data: ModelsMedicalChartUpdateInput },
+      { id: ModelsMedicalChartId; data: ModelsMedicalChartUpdateRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -889,7 +889,7 @@ export const useMedicalChartOperationsUpdateMedicalChart = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof medicalChartOperationsUpdateMedicalChart>>,
   TError,
-  { id: ModelsMedicalChartId; data: ModelsMedicalChartUpdateInput },
+  { id: ModelsMedicalChartId; data: ModelsMedicalChartUpdateRequest },
   TContext
 > => {
   const mutationOptions =

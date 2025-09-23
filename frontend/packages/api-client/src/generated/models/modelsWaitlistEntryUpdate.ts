@@ -5,8 +5,6 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsStaffId } from './modelsStaffId'
-import type { ModelsServiceId } from './modelsServiceId'
 
 /**
  * ウェイティングリストに登録された顧客情報。
@@ -14,18 +12,36 @@ import type { ModelsServiceId } from './modelsServiceId'
 export interface ModelsWaitlistEntryUpdate {
   /** 現在の待機順序。 */
   position?: number
-  /** 呼び出し予想時刻。未確定の場合はnull。 */
-  estimatedTime?: string
+  /**
+   * 呼び出し予想時刻。未確定の場合はnull。
+   * @nullable
+   */
+  estimatedTime?: string | null
   /** ウェイティングリストに参加した日時。 */
   joinedAt?: string
-  /** 待機権が失効する日時。 */
-  expiresAt?: string
-  /** 呼び出し通知を送信した日時。 */
-  notifiedAt?: string
-  /** 希望スタッフID。任意指定。 */
-  preferredStaffId?: ModelsStaffId
-  /** 希望サービスID。任意指定。 */
-  preferredServiceId?: ModelsServiceId
-  /** 追加メモ。 */
-  notes?: string
+  /**
+   * 待機権が失効する日時。
+   * @nullable
+   */
+  expiresAt?: string | null
+  /**
+   * 呼び出し通知を送信した日時。
+   * @nullable
+   */
+  notifiedAt?: string | null
+  /**
+   * 希望スタッフID。任意指定。
+   * @nullable
+   */
+  preferredStaffId?: string | null
+  /**
+   * 希望サービスID。任意指定。
+   * @nullable
+   */
+  preferredServiceId?: string | null
+  /**
+   * 追加メモ。
+   * @nullable
+   */
+  notes?: string | null
 }

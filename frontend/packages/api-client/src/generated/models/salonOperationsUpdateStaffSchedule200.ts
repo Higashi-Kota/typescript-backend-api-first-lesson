@@ -6,7 +6,7 @@
  * OpenAPI spec version: 2.0
  */
 import type { ModelsStaffScheduleManagement } from './modelsStaffScheduleManagement'
-import type { ModelsResponseMeta } from './modelsResponseMeta'
+import type { SalonOperationsUpdateStaffSchedule200Meta } from './salonOperationsUpdateStaffSchedule200Meta'
 import type { SalonOperationsUpdateStaffSchedule200Links } from './salonOperationsUpdateStaffSchedule200Links'
 
 /**
@@ -16,8 +16,14 @@ import type { SalonOperationsUpdateStaffSchedule200Links } from './salonOperatio
 export type SalonOperationsUpdateStaffSchedule200 = {
   /** レスポンスの主体となるビジネスデータ。 */
   data: ModelsStaffScheduleManagement
-  /** リクエスト識別子やバージョン情報など共通メタデータ。 */
-  meta?: ModelsResponseMeta
-  /** 関連リソースや次アクションへのリンク情報。 */
-  links?: SalonOperationsUpdateStaffSchedule200Links
+  /**
+   * リクエスト識別子やバージョン情報など共通メタデータ。
+   * @nullable
+   */
+  meta: SalonOperationsUpdateStaffSchedule200Meta
+  /**
+   * 関連リソースや次アクションへのリンク情報。
+   * @nullable
+   */
+  links: SalonOperationsUpdateStaffSchedule200Links
 }

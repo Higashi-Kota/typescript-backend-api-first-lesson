@@ -6,6 +6,7 @@
  * OpenAPI spec version: 2.0
  */
 import type { ModelsContactInfo } from './modelsContactInfo'
+import type { ModelsCreateCustomerRequestPreferences } from './modelsCreateCustomerRequestPreferences'
 
 /**
  * Customer creation request with required and optional fields
@@ -13,8 +14,10 @@ import type { ModelsContactInfo } from './modelsContactInfo'
 export interface ModelsCreateCustomerRequest {
   name: string
   contactInfo: ModelsContactInfo
-  preferences?: string
-  notes?: string
-  tags?: string[]
-  birthDate?: string
+  preferences: ModelsCreateCustomerRequestPreferences
+  /** @nullable */
+  notes: string | null
+  tags: string[]
+  /** @nullable */
+  birthDate: string | null
 }

@@ -8,9 +8,11 @@
 
 /**
  * 権限の適用範囲（own/salon/all）
+ * @nullable
  */
 export type ModelsPermissionScope =
-  (typeof ModelsPermissionScope)[keyof typeof ModelsPermissionScope]
+  | (typeof ModelsPermissionScope)[keyof typeof ModelsPermissionScope]
+  | null
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsPermissionScope = {

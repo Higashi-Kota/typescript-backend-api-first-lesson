@@ -6,7 +6,7 @@
  * OpenAPI spec version: 2.0
  */
 import type { ModelsCustomer } from './modelsCustomer'
-import type { ModelsResponseMeta } from './modelsResponseMeta'
+import type { CustomerCrudGetVersion200Meta } from './customerCrudGetVersion200Meta'
 import type { CustomerCrudGetVersion200Links } from './customerCrudGetVersion200Links'
 
 /**
@@ -16,8 +16,14 @@ import type { CustomerCrudGetVersion200Links } from './customerCrudGetVersion200
 export type CustomerCrudGetVersion200 = {
   /** レスポンスの主体となるビジネスデータ。 */
   data: ModelsCustomer
-  /** リクエスト識別子やバージョン情報など共通メタデータ。 */
-  meta?: ModelsResponseMeta
-  /** 関連リソースや次アクションへのリンク情報。 */
-  links?: CustomerCrudGetVersion200Links
+  /**
+   * リクエスト識別子やバージョン情報など共通メタデータ。
+   * @nullable
+   */
+  meta: CustomerCrudGetVersion200Meta
+  /**
+   * 関連リソースや次アクションへのリンク情報。
+   * @nullable
+   */
+  links: CustomerCrudGetVersion200Links
 }

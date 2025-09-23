@@ -12,12 +12,21 @@
 export interface ModelsPriceTier {
   /** 価格段階の名称 */
   name: string
-  /** 段階の説明 */
-  description?: string
+  /**
+   * 段階の説明
+   * @nullable
+   */
+  description: string | null
   /** 適用価格（税抜） */
   price: number
-  /** この段階での施術時間 */
-  duration?: number
-  /** 適用条件の説明リスト */
-  conditions?: string[]
+  /**
+   * この段階での施術時間
+   * @nullable
+   */
+  duration: number | null
+  /**
+   * 適用条件の説明リスト
+   * @nullable
+   */
+  conditions: string[] | null
 }

@@ -294,7 +294,7 @@ namespace BeautySalon.Models {
     message: string;
 
     @doc("デバッグやサポート対応に役立つ追加情報。任意項目。")
-    details?: Record<unknown>;
+    details: Record<unknown> | null;
   }
 
   @doc("認証されていないアクセスを表す標準エラーモデル。")
@@ -472,7 +472,7 @@ namespace BeautySalon.Models {
     currency: CurrencyCodeType;
 
     @doc("適用税率。任意設定。")
-    taxRate?: decimal;
+    taxRate: decimal | null;
   }
 
   @doc("期間条件で絞り込むための共通クエリモデル。")

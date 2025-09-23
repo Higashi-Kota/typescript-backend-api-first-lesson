@@ -22,9 +22,9 @@ import type {
 } from '@tanstack/react-query'
 
 import type {
-  ModelsRoleCreateInput,
+  ModelsRoleCreateRequest,
   ModelsRoleId,
-  ModelsRoleUpdateInput,
+  ModelsRoleUpdateRequest,
   RoleOperationsCloneRole200,
   RoleOperationsCloneRoleBody,
   RoleOperationsCreateRole200,
@@ -259,7 +259,7 @@ export const getRoleOperationsCreateRoleUrl = () => {
 }
 
 export const roleOperationsCreateRole = async (
-  modelsRoleCreateInput: ModelsRoleCreateInput,
+  modelsRoleCreateRequest: ModelsRoleCreateRequest,
   options?: RequestInit
 ): Promise<roleOperationsCreateRoleResponse> => {
   return customInstance<roleOperationsCreateRoleResponse>(
@@ -268,7 +268,7 @@ export const roleOperationsCreateRole = async (
       ...options,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsRoleCreateInput),
+      body: JSON.stringify(modelsRoleCreateRequest),
     }
   )
 }
@@ -280,14 +280,14 @@ export const getRoleOperationsCreateRoleMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof roleOperationsCreateRole>>,
     TError,
-    { data: ModelsRoleCreateInput },
+    { data: ModelsRoleCreateRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof roleOperationsCreateRole>>,
   TError,
-  { data: ModelsRoleCreateInput },
+  { data: ModelsRoleCreateRequest },
   TContext
 > => {
   const mutationKey = ['roleOperationsCreateRole']
@@ -301,7 +301,7 @@ export const getRoleOperationsCreateRoleMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof roleOperationsCreateRole>>,
-    { data: ModelsRoleCreateInput }
+    { data: ModelsRoleCreateRequest }
   > = (props) => {
     const { data } = props ?? {}
 
@@ -314,7 +314,7 @@ export const getRoleOperationsCreateRoleMutationOptions = <
 export type RoleOperationsCreateRoleMutationResult = NonNullable<
   Awaited<ReturnType<typeof roleOperationsCreateRole>>
 >
-export type RoleOperationsCreateRoleMutationBody = ModelsRoleCreateInput
+export type RoleOperationsCreateRoleMutationBody = ModelsRoleCreateRequest
 export type RoleOperationsCreateRoleMutationError = unknown
 
 export const useRoleOperationsCreateRole = <
@@ -325,7 +325,7 @@ export const useRoleOperationsCreateRole = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof roleOperationsCreateRole>>,
       TError,
-      { data: ModelsRoleCreateInput },
+      { data: ModelsRoleCreateRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -334,7 +334,7 @@ export const useRoleOperationsCreateRole = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof roleOperationsCreateRole>>,
   TError,
-  { data: ModelsRoleCreateInput },
+  { data: ModelsRoleCreateRequest },
   TContext
 > => {
   const mutationOptions = getRoleOperationsCreateRoleMutationOptions(options)
@@ -719,7 +719,7 @@ export const getRoleOperationsUpdateRoleUrl = (id: ModelsRoleId) => {
 
 export const roleOperationsUpdateRole = async (
   id: ModelsRoleId,
-  modelsRoleUpdateInput: ModelsRoleUpdateInput,
+  modelsRoleUpdateRequest: ModelsRoleUpdateRequest,
   options?: RequestInit
 ): Promise<roleOperationsUpdateRoleResponse> => {
   return customInstance<roleOperationsUpdateRoleResponse>(
@@ -728,7 +728,7 @@ export const roleOperationsUpdateRole = async (
       ...options,
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsRoleUpdateInput),
+      body: JSON.stringify(modelsRoleUpdateRequest),
     }
   )
 }
@@ -740,14 +740,14 @@ export const getRoleOperationsUpdateRoleMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof roleOperationsUpdateRole>>,
     TError,
-    { id: ModelsRoleId; data: ModelsRoleUpdateInput },
+    { id: ModelsRoleId; data: ModelsRoleUpdateRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof roleOperationsUpdateRole>>,
   TError,
-  { id: ModelsRoleId; data: ModelsRoleUpdateInput },
+  { id: ModelsRoleId; data: ModelsRoleUpdateRequest },
   TContext
 > => {
   const mutationKey = ['roleOperationsUpdateRole']
@@ -761,7 +761,7 @@ export const getRoleOperationsUpdateRoleMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof roleOperationsUpdateRole>>,
-    { id: ModelsRoleId; data: ModelsRoleUpdateInput }
+    { id: ModelsRoleId; data: ModelsRoleUpdateRequest }
   > = (props) => {
     const { id, data } = props ?? {}
 
@@ -774,7 +774,7 @@ export const getRoleOperationsUpdateRoleMutationOptions = <
 export type RoleOperationsUpdateRoleMutationResult = NonNullable<
   Awaited<ReturnType<typeof roleOperationsUpdateRole>>
 >
-export type RoleOperationsUpdateRoleMutationBody = ModelsRoleUpdateInput
+export type RoleOperationsUpdateRoleMutationBody = ModelsRoleUpdateRequest
 export type RoleOperationsUpdateRoleMutationError = unknown
 
 export const useRoleOperationsUpdateRole = <
@@ -785,7 +785,7 @@ export const useRoleOperationsUpdateRole = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof roleOperationsUpdateRole>>,
       TError,
-      { id: ModelsRoleId; data: ModelsRoleUpdateInput },
+      { id: ModelsRoleId; data: ModelsRoleUpdateRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -794,7 +794,7 @@ export const useRoleOperationsUpdateRole = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof roleOperationsUpdateRole>>,
   TError,
-  { id: ModelsRoleId; data: ModelsRoleUpdateInput },
+  { id: ModelsRoleId; data: ModelsRoleUpdateRequest },
   TContext
 > => {
   const mutationOptions = getRoleOperationsUpdateRoleMutationOptions(options)

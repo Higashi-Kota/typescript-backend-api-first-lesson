@@ -8,7 +8,8 @@
 
 /**
  * 関連リソースや次アクションへのリンク情報。
+ * @nullable
  */
 export type CustomerOperationsAddLoyaltyPoints200Links = {
   [key: string]: string
-}
+} | null

@@ -7,7 +7,6 @@
  */
 import type { ModelsSalonId } from './modelsSalonId'
 import type { ModelsServiceCategoryType } from './modelsServiceCategoryType'
-import type { ModelsCategoryId } from './modelsCategoryId'
 
 /**
  * サービスを新規登録するリクエスト
@@ -25,18 +24,39 @@ export interface ModelsCreateServiceRequest {
   price: number
   /** サービスカテゴリ区分 */
   category: ModelsServiceCategoryType
-  /** カテゴリ ID */
-  categoryId?: ModelsCategoryId
-  /** サービス画像 URL */
-  imageUrl?: string
-  /** 必要スタッフレベル */
-  requiredStaffLevel?: number
-  /** 必要なデポジット額 */
-  depositAmount?: number
-  /** 有効フラグ */
-  isActive?: boolean
-  /** 最大全日予約可能日数 */
-  maxAdvanceBookingDays?: number
-  /** 最短予約受付時間（時間） */
-  minAdvanceBookingHours?: number
+  /**
+   * カテゴリ ID
+   * @nullable
+   */
+  categoryId: string | null
+  /**
+   * サービス画像 URL
+   * @nullable
+   */
+  imageUrl: string | null
+  /**
+   * 必要スタッフレベル
+   * @nullable
+   */
+  requiredStaffLevel: number | null
+  /**
+   * 必要なデポジット額
+   * @nullable
+   */
+  depositAmount: number | null
+  /**
+   * 有効フラグ
+   * @nullable
+   */
+  isActive: boolean | null
+  /**
+   * 最大全日予約可能日数
+   * @nullable
+   */
+  maxAdvanceBookingDays: number | null
+  /**
+   * 最短予約受付時間（時間）
+   * @nullable
+   */
+  minAdvanceBookingHours: number | null
 }

@@ -5,6 +5,8 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
+import type { ModelsValidationErrorValue } from './modelsValidationErrorValue'
+import type { ModelsValidationErrorConstraint } from './modelsValidationErrorConstraint'
 
 /**
  * 入力検証での失敗内容を表すモデル。
@@ -17,8 +19,14 @@ export interface ModelsValidationError {
   rule: string
   /** ユーザーに提示する具体的なエラーメッセージ。 */
   message: string
-  /** 検証対象となった実際の値。セキュリティ観点で出力が許容される場合のみ利用する。 */
-  value?: unknown
-  /** 期待される値や制約条件。入力補助やUI表示のガイダンスに使用する。 */
-  constraint?: unknown
+  /**
+   * 検証対象となった実際の値。セキュリティ観点で出力が許容される場合のみ利用する。
+   * @nullable
+   */
+  value: ModelsValidationErrorValue
+  /**
+   * 期待される値や制約条件。入力補助やUI表示のガイダンスに使用する。
+   * @nullable
+   */
+  constraint: ModelsValidationErrorConstraint
 }

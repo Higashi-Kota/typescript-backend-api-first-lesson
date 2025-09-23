@@ -143,7 +143,7 @@ namespace BeautySalon.Operations {
     @route("{id}/preferences")
     op updatePreferences(
       @path id: CustomerId,
-      @body preferences: CustomerPreferencesUpdate,
+      @body preferences: CustomerPreferencesUpdateRequest,
       @header("Authorization") authorization?: string,
     ):
       | {

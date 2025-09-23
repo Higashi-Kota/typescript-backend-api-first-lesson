@@ -15,6 +15,9 @@ export interface ModelsInProgressBookingStatusUpdate {
   type?: ModelsInProgressBookingStatusUpdateType
   /** 施術を開始した日時。 */
   startedAt?: string
-  /** 施術を行っているブースや席の名称。未設定の場合はnull。 */
-  stationName?: string
+  /**
+   * 施術を行っているブースや席の名称。未設定の場合はnull。
+   * @nullable
+   */
+  stationName?: string | null
 }

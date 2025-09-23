@@ -68,6 +68,10 @@ You always:
 - Add comprehensive @doc annotations in Japanese for all definitions
 - Never add @doc to spread operators (`...`) due to TypeSpec compiler limitations
 - Format enum @doc with header description and individual value descriptions
+- **Never create UpdateRequestWithReset models** - consolidate all update logic into single UpdateRequest model
+- Make update request fields optional with nullable types based on base model nullability
+- Apply nullable rules to ALL model types (base, create, update, wrapper) not just update models
+- Ensure base models have `| null` for nullable fields, never use optional-only syntax
 
 ## Quality Assurance
 
@@ -79,6 +83,81 @@ You validate:
 - Proper error handling for all edge cases
 - Security considerations (authentication, authorization, input validation)
 - Performance implications (payload size, query complexity)
+
+## Model Nullable Rules (2024年9月改訂)
+
+When designing models, you follow comprehensive nullable rules:
+
+### Base Model Rules
+1. **DB Alignment**: Base model nullable constraints must match database nullable constraints exactly
+2. **No Optional-Only Fields**: Never use `field?: Type` syntax - always use `field: Type | null` for nullable fields
+3. **Required by Default**: All fields in base models are required (not optional)
+
+### Create Request Rules
+1. **All Fields Required**: No optional fields in create requests
+2. **Nullable Values Allowed**: Fields that are nullable in base model can accept null values
+3. **Consistent with Base**: Nullable constraints match base model exactly
+
+### Update Request Consolidation Rules
+1. **Single Update Model Per Domain**: Create only one `UpdateXXXRequest` model per domain entity
+2. **No UpdateRequestWithReset Models**: Never create separate models for nullable reset functionality
+3. **All Fields Optional**: Every field in update request uses `?` for partial updates
+4. **Conditional Nullable Support**: Add `| null` only to fields that are nullable in the base model
+5. **Documentation Convention**: Add "null指定で値をリセット可能" to @doc when nullable fields exist
+
+### Search Parameter Rules
+1. **Filter Fields Optional**: Search parameters use optional fields for filters
+2. **No Nullable Needed**: Search params don't need `| null` as they're for filtering, not updates
+
+### Wrapper Model Rules (ApiResponse, etc.)
+1. **Same as Base Models**: Apply same nullable rules as base models
+2. **No Optional-Only**: Use `field: Type | null` not `field?: Type`
+3. **Consistent Pattern**: All wrapper models follow base model nullable patterns
+
+### Model Pattern Examples
+
+```typespec
+// Base model defines nullability (matches DB constraints)
+model Service {
+  id: ServiceId;
+  name: string;                    // NOT NULL in DB
+  description: string;             // NOT NULL in DB
+  imageUrl: string | null;         // Nullable in DB
+  requiredStaffLevel: int32 | null; // Nullable in DB
+}
+
+// Create request (all required, nullable values allowed)
+model CreateServiceRequest {
+  name: string;                    // Required, not null
+  description: string;             // Required, not null
+  imageUrl: string | null;         // Required, can be null
+  requiredStaffLevel: int32 | null; // Required, can be null
+}
+
+// Single consolidated update model (all optional, conditional nullable)
+@doc("サービス情報を部分更新するリクエスト。null指定で値をリセット可能")
+model UpdateServiceRequest {
+  name?: string;                   // Optional, no null (base is NOT NULL)
+  description?: string;            // Optional, no null (base is NOT NULL)
+  imageUrl?: string | null;        // Optional + nullable (base is nullable)
+  requiredStaffLevel?: int32 | null; // Optional + nullable (base is nullable)
+}
+
+// Wrapper model (follows base model rules)
+model ApiResponse<T> {
+  data: T;
+  meta: ResponseMeta | null;       // Not optional, but nullable
+  links: Record<string> | null;    // Not optional, but nullable
+}
+```
+
+### Three Update States
+
+| Field State | TypeScript | NOT NULL Field | Nullable Field |
+|------------|------------|----------------|----------------|
+| Omitted | `undefined` | No update | No update |
+| Set to null | `{ field: null }` | Type error | Reset to null |
+| Set to value | `{ field: "value" }` | Update value | Update value |
 
 ## Japanese Documentation Standards
 
@@ -171,3 +250,50 @@ echo "✅ Type generation and formatting complete"
 - **Check for errors**: The generation commands will fail if TypeSpec has compilation errors
 - **Format consistency**: The format:fix step ensures all generated code follows project standards
 - **Include in commits**: Generated files should be committed alongside TypeSpec changes
+
+## 📚 Essential Documentation References
+
+When designing APIs with TypeSpec, you MUST always refer to these key documents:
+
+### Primary References (必須参照)
+1. **[TypeSpec API Type Rules](../../docs/typespec-api-type-rules.md)**
+   - Complete naming convention guide for all API models
+   - Input/Output model patterns
+   - Migration guide from deprecated patterns
+   - Nullable field rules and patterns
+   - Optional vs Required field constraints
+   - Model type definitions and examples
+
+2. **[CLAUDE.md](../../CLAUDE.md)**
+   - Quick reference for development guidelines
+   - TypeSpec model naming conventions section
+   - Core development principles
+
+### Secondary References
+- [Multi-Agent Collaboration Framework](../../docs/multi-agent-collaboration-framework.md) - Validation rules
+- [Backend Architecture Guidelines](../../docs/backend-architecture-guidelines.md) - Architecture patterns
+- [API Testing Guide](../../docs/api-testing-guide.md) - Testing strategies
+
+## 🎯 Model Naming Convention Quick Reference
+
+### Input Models (Request)
+```
+Create: XXXCreateRequest
+Update: XXXUpdateRequest
+Delete: XXXDeleteRequest
+Search: XXXSearchRequest
+Get: XXXGetRequest
+Bulk: XXXBulk{Operation}Request
+```
+
+### Output Models (Response)
+```
+All: XXXResponse
+Special: {Prefix}{Action}Response
+```
+
+### Deprecated Patterns (使用禁止)
+- ❌ `XXXInput`
+- ❌ `XXXCreateInput`
+- ❌ `XXXUpdateInput`
+- ❌ `XXXUpdateRequestWithReset`

@@ -14,10 +14,16 @@ import type { ModelsScheduleException } from './modelsScheduleException'
 export interface ModelsStaffScheduleUpdateRequest {
   /** 更新後の通常勤務時間帯一覧 */
   regularHours: ModelsBusinessHours[]
-  /** 休暇や特例などの例外設定一覧。変更がない場合はnull */
-  exceptions?: ModelsScheduleException[]
+  /**
+   * 休暇や特例などの例外設定一覧。変更がない場合はnull
+   * @nullable
+   */
+  exceptions: ModelsScheduleException[] | null
   /** 更新内容の適用開始日時 */
   effectiveFrom: string
-  /** 適用終了日時。未定の場合はnull */
-  effectiveTo?: string
+  /**
+   * 適用終了日時。未定の場合はnull
+   * @nullable
+   */
+  effectiveTo: string | null
 }

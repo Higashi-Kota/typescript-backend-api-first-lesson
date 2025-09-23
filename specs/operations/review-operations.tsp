@@ -33,7 +33,7 @@ namespace BeautySalon.Operations {
     @doc("施術完了後に顧客がレビューを投稿し、サービス品質の可視化と信頼獲得につなげます。")
     @summary("Create review")
     @post
-    op create(@body review: CreateReviewRequest): {
+    op create(@body review: ReviewCreateRequest): {
       @statusCode statusCode: 201;
       @header location: string;
       @body review: Review;
@@ -59,7 +59,7 @@ namespace BeautySalon.Operations {
     @doc("顧客が投稿後のレビューを修正し、誤記修正や追記を反映します。")
     @summary("Update review")
     @patch(#{ implicitOptionality: true })
-    op update(@path id: ReviewId, @body updates: UpdateReviewRequest): {
+    op update(@path id: ReviewId, @body updates: ReviewUpdateRequest): {
       @statusCode statusCode: 200;
       @body review: Review;
     } | {

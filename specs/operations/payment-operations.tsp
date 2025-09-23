@@ -29,14 +29,14 @@ namespace BeautySalon.Operations {
 
     @doc("Create new payment")
     @post
-    createPayment(@body payment: PaymentCreateInput): Result<Payment>;
+    createPayment(@body payment: PaymentCreateRequest): Result<Payment>;
 
     @doc("Update payment status")
     @patch(#{ implicitOptionality: true })
     @route("/{id}")
     updatePayment(
       @path id: PaymentId,
-      @body updates: PaymentUpdateInput,
+      @body updates: PaymentUpdateRequest,
     ): Result<Payment>;
 
     @doc("Process payment")
@@ -59,7 +59,7 @@ namespace BeautySalon.Operations {
     @route("/{id}/refund")
     processRefund(
       @path id: PaymentId,
-      @body refund: RefundInput,
+      @body refund: RefundCreateRequest,
     ): Result<Payment>;
 
     @doc("Get payment receipt")
@@ -179,21 +179,21 @@ namespace BeautySalon.Operations {
     @post
     @route("/earn")
     earnPoints(
-      @body transaction: PointTransactionCreateInput,
+      @body transaction: PointTransactionCreateRequest,
     ): Result<PointTransaction>;
 
     @doc("Use customer points")
     @post
     @route("/use")
     usePoints(
-      @body transaction: PointTransactionCreateInput,
+      @body transaction: PointTransactionCreateRequest,
     ): Result<PointTransaction>;
 
     @doc("Adjust customer points")
     @post
     @route("/adjust")
     adjustPoints(
-      @body transaction: PointTransactionCreateInput,
+      @body transaction: PointTransactionCreateRequest,
     ): Result<PointTransaction>;
 
     @doc("Get expiring points")

@@ -64,7 +64,7 @@ import type {
   ModelsBatchGetRequest,
   ModelsCreateCustomerRequest,
   ModelsCustomerId,
-  ModelsCustomerPreferencesUpdate,
+  ModelsCustomerPreferencesUpdateRequest,
   ModelsProblemDetails,
   ModelsUpdateCustomerRequest,
   ModelsUpdateCustomerRequestUpdate,
@@ -2830,7 +2830,7 @@ export const getCustomerOperationsUpdatePreferencesUrl = (
 
 export const customerOperationsUpdatePreferences = async (
   id: ModelsCustomerId,
-  modelsCustomerPreferencesUpdate: ModelsCustomerPreferencesUpdate,
+  modelsCustomerPreferencesUpdateRequest: ModelsCustomerPreferencesUpdateRequest,
   options?: RequestInit
 ): Promise<customerOperationsUpdatePreferencesResponse> => {
   return customInstance<customerOperationsUpdatePreferencesResponse>(
@@ -2839,7 +2839,7 @@ export const customerOperationsUpdatePreferences = async (
       ...options,
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsCustomerPreferencesUpdate),
+      body: JSON.stringify(modelsCustomerPreferencesUpdateRequest),
     }
   )
 }
@@ -2851,14 +2851,14 @@ export const getCustomerOperationsUpdatePreferencesMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof customerOperationsUpdatePreferences>>,
     TError,
-    { id: ModelsCustomerId; data: ModelsCustomerPreferencesUpdate },
+    { id: ModelsCustomerId; data: ModelsCustomerPreferencesUpdateRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof customerOperationsUpdatePreferences>>,
   TError,
-  { id: ModelsCustomerId; data: ModelsCustomerPreferencesUpdate },
+  { id: ModelsCustomerId; data: ModelsCustomerPreferencesUpdateRequest },
   TContext
 > => {
   const mutationKey = ['customerOperationsUpdatePreferences']
@@ -2872,7 +2872,7 @@ export const getCustomerOperationsUpdatePreferencesMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof customerOperationsUpdatePreferences>>,
-    { id: ModelsCustomerId; data: ModelsCustomerPreferencesUpdate }
+    { id: ModelsCustomerId; data: ModelsCustomerPreferencesUpdateRequest }
   > = (props) => {
     const { id, data } = props ?? {}
 
@@ -2886,7 +2886,7 @@ export type CustomerOperationsUpdatePreferencesMutationResult = NonNullable<
   Awaited<ReturnType<typeof customerOperationsUpdatePreferences>>
 >
 export type CustomerOperationsUpdatePreferencesMutationBody =
-  ModelsCustomerPreferencesUpdate
+  ModelsCustomerPreferencesUpdateRequest
 export type CustomerOperationsUpdatePreferencesMutationError =
   ModelsProblemDetails
 
@@ -2901,7 +2901,7 @@ export const useCustomerOperationsUpdatePreferences = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof customerOperationsUpdatePreferences>>,
       TError,
-      { id: ModelsCustomerId; data: ModelsCustomerPreferencesUpdate },
+      { id: ModelsCustomerId; data: ModelsCustomerPreferencesUpdateRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -2910,7 +2910,7 @@ export const useCustomerOperationsUpdatePreferences = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof customerOperationsUpdatePreferences>>,
   TError,
-  { id: ModelsCustomerId; data: ModelsCustomerPreferencesUpdate },
+  { id: ModelsCustomerId; data: ModelsCustomerPreferencesUpdateRequest },
   TContext
 > => {
   const mutationOptions =

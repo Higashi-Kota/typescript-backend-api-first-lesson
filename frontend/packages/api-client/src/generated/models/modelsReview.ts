@@ -9,7 +9,6 @@ import type { ModelsReviewId } from './modelsReviewId'
 import type { ModelsSalonId } from './modelsSalonId'
 import type { ModelsCustomerId } from './modelsCustomerId'
 import type { ModelsBookingId } from './modelsBookingId'
-import type { ModelsStaffId } from './modelsStaffId'
 
 /**
  * レビューモデル - 施術後の顧客体験を定量・定性的に記録し、サロン品質の改善と信頼性向上に活用する
@@ -23,34 +22,64 @@ export interface ModelsReview {
   customerId: ModelsCustomerId
   /** 紐づく来店予約を示すID (DBカラム booking_id と整合) */
   bookingId: ModelsBookingId
-  /** 評価対象のスタッフID。スタッフ未指定レビューの場合は省略 */
-  staffId?: ModelsStaffId
+  /**
+   * 評価対象のスタッフID。スタッフ未指定レビューの場合は省略
+   * @nullable
+   */
+  staffId: string | null
   /** 全体満足度の評価値 (例: 1〜5) */
   overallRating: number
-  /** 自由記述のレビューコメント */
-  comment?: string
-  /** レビュータイトルや要約 */
-  title?: string
-  /** 施術サービスそのものに対する評価値 */
-  serviceRating?: number
-  /** スタッフの接客・技術に対する評価値 */
-  staffRating?: number
-  /** 店内の清潔さ・衛生面に対する評価値 */
-  cleanlinessRating?: number
-  /** 価格に対する価値・コストパフォーマンス評価値 */
-  valueRating?: number
-  /** レビューに添付された画像URLの一覧 */
-  imageUrls?: string[]
+  /**
+   * 自由記述のレビューコメント
+   * @nullable
+   */
+  comment: string | null
+  /**
+   * レビュータイトルや要約
+   * @nullable
+   */
+  title: string | null
+  /**
+   * 施術サービスそのものに対する評価値
+   * @nullable
+   */
+  serviceRating: number | null
+  /**
+   * スタッフの接客・技術に対する評価値
+   * @nullable
+   */
+  staffRating: number | null
+  /**
+   * 店内の清潔さ・衛生面に対する評価値
+   * @nullable
+   */
+  cleanlinessRating: number | null
+  /**
+   * 価格に対する価値・コストパフォーマンス評価値
+   * @nullable
+   */
+  valueRating: number | null
+  /**
+   * レビューに添付された画像URLの一覧
+   * @nullable
+   */
+  imageUrls: string[] | null
   /** 実来店が確認済みかを表す検証フラグ */
   isVerified: boolean
   /** レビューが「参考になった」と評価された累積回数 */
   helpfulCount: number
   /** 不適切報告が入った累積回数 */
   reportCount: number
-  /** サロン運営からの公式返信本文 */
-  ownerResponse?: string
-  /** 運営が返信した日時 (UTC) */
-  ownerRespondedAt?: string
+  /**
+   * サロン運営からの公式返信本文
+   * @nullable
+   */
+  ownerResponse: string | null
+  /**
+   * 運営が返信した日時 (UTC)
+   * @nullable
+   */
+  ownerRespondedAt: string | null
   /** レコード作成日時。 */
   createdAt: string
   /**

@@ -30,7 +30,7 @@ namespace BeautySalon.Operations {
     @doc("Create new treatment record")
     @post
     createTreatment(
-      @body treatment: TreatmentRecordCreateInput,
+      @body treatment: TreatmentRecordCreateRequest,
     ): Result<TreatmentRecord>;
 
     @doc("Update treatment record")
@@ -38,7 +38,7 @@ namespace BeautySalon.Operations {
     @route("/{id}")
     updateTreatment(
       @path id: TreatmentRecordId,
-      @body updates: TreatmentRecordUpdateInput,
+      @body updates: TreatmentRecordUpdateRequest,
     ): Result<TreatmentRecord>;
 
     @doc("Delete treatment record")
@@ -97,7 +97,7 @@ namespace BeautySalon.Operations {
     @doc("Create medical chart for customer")
     @post
     createMedicalChart(
-      @body chart: MedicalChartCreateInput,
+      @body chart: MedicalChartCreateRequest,
     ): Result<MedicalChart>;
 
     @doc("Update medical chart")
@@ -105,7 +105,7 @@ namespace BeautySalon.Operations {
     @route("/{id}")
     updateMedicalChart(
       @path id: MedicalChartId,
-      @body updates: MedicalChartUpdateInput,
+      @body updates: MedicalChartUpdateRequest,
     ): Result<MedicalChart>;
 
     @doc("Get allergy warnings for customer")

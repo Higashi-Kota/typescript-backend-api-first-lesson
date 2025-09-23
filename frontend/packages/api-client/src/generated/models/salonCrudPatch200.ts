@@ -6,7 +6,7 @@
  * OpenAPI spec version: 2.0
  */
 import type { ModelsSalon } from './modelsSalon'
-import type { ModelsResponseMeta } from './modelsResponseMeta'
+import type { SalonCrudPatch200Meta } from './salonCrudPatch200Meta'
 import type { SalonCrudPatch200Links } from './salonCrudPatch200Links'
 
 /**
@@ -16,8 +16,14 @@ import type { SalonCrudPatch200Links } from './salonCrudPatch200Links'
 export type SalonCrudPatch200 = {
   /** レスポンスの主体となるビジネスデータ。 */
   data: ModelsSalon
-  /** リクエスト識別子やバージョン情報など共通メタデータ。 */
-  meta?: ModelsResponseMeta
-  /** 関連リソースや次アクションへのリンク情報。 */
-  links?: SalonCrudPatch200Links
+  /**
+   * リクエスト識別子やバージョン情報など共通メタデータ。
+   * @nullable
+   */
+  meta: SalonCrudPatch200Meta
+  /**
+   * 関連リソースや次アクションへのリンク情報。
+   * @nullable
+   */
+  links: SalonCrudPatch200Links
 }

@@ -136,6 +136,32 @@ backend/packages/
 - Specs: `@beauty-salon/specs`
 - Shared: `@beauty-salon-shared/*`
 
+## 📝 TypeSpec Model Naming Convention
+
+### Input Models (Request)
+- Create: `XXXCreateRequest`
+- Update: `XXXUpdateRequest`
+- Delete: `XXXDeleteRequest`
+- Bulk Create: `XXXBulkCreateRequest`
+- Bulk Update: `XXXBulkUpdateRequest`
+- Bulk Delete: `XXXBulkDeleteRequest`
+- Get: `XXXGetRequest`
+- Search/List: `XXXSearchRequest`
+
+### Output Models (Response)
+- All responses: `XXXResponse`
+
+### Examples
+```typespec
+model CustomerCreateRequest { ... }     // Create customer input
+model CustomerUpdateRequest { ... }     // Update customer input
+model CustomerSearchRequest { ... }     // Search customers input
+model CustomerResponse { ... }          // Customer response
+
+model AuthLoginRequest { ... }          // Login input
+model AuthLoginResponse { ... }         // Login response
+```
+
 ## 🔄 Development Workflow
 
 ### Type Generation Pipeline

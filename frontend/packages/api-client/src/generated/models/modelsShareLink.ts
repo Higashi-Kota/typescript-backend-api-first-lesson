@@ -16,16 +16,25 @@ export interface ModelsShareLink {
   token: string
   /** 共有対象の添付ファイルID。 */
   attachmentId: string
-  /** 共有リンクの有効期限。任意設定。 */
-  expiresAt?: string
-  /** 許可する最大ダウンロード回数。任意設定。 */
-  maxDownloads?: number
+  /**
+   * 共有リンクの有効期限。任意設定。
+   * @nullable
+   */
+  expiresAt: string | null
+  /**
+   * 許可する最大ダウンロード回数。任意設定。
+   * @nullable
+   */
+  maxDownloads: number | null
   /** これまでのダウンロード累計数。 */
   downloadCount: number
   /** 共有リンクがパスワード保護されているか。 */
   hasPassword: boolean
-  /** アクセスを許可するメールアドレス一覧。任意設定。 */
-  allowedEmails?: string[]
+  /**
+   * アクセスを許可するメールアドレス一覧。任意設定。
+   * @nullable
+   */
+  allowedEmails: string[] | null
   /** 共有リンクを作成したユーザーID。 */
   createdBy: string
   /** 共有リンクを作成した日時。 */

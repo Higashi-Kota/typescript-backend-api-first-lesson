@@ -22,14 +22,14 @@ import type {
 } from '@tanstack/react-query'
 
 import type {
-  ModelsCreateReviewRequest,
   ModelsError,
   ModelsReview,
+  ModelsReviewCreateRequest,
   ModelsReviewId,
   ModelsReviewSummary,
+  ModelsReviewUpdateRequest,
   ModelsSalonId,
   ModelsStaffId,
-  ModelsUpdateReviewRequest,
   ReviewOperationsList200,
   ReviewOperationsListParams,
   ReviewOperationsMarkHelpful200,
@@ -277,7 +277,7 @@ export const getReviewOperationsCreateUrl = () => {
 }
 
 export const reviewOperationsCreate = async (
-  modelsCreateReviewRequest: ModelsCreateReviewRequest,
+  modelsReviewCreateRequest: ModelsReviewCreateRequest,
   options?: RequestInit
 ): Promise<reviewOperationsCreateResponse> => {
   return customInstance<reviewOperationsCreateResponse>(
@@ -286,7 +286,7 @@ export const reviewOperationsCreate = async (
       ...options,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsCreateReviewRequest),
+      body: JSON.stringify(modelsReviewCreateRequest),
     }
   )
 }
@@ -298,14 +298,14 @@ export const getReviewOperationsCreateMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof reviewOperationsCreate>>,
     TError,
-    { data: ModelsCreateReviewRequest },
+    { data: ModelsReviewCreateRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof reviewOperationsCreate>>,
   TError,
-  { data: ModelsCreateReviewRequest },
+  { data: ModelsReviewCreateRequest },
   TContext
 > => {
   const mutationKey = ['reviewOperationsCreate']
@@ -319,7 +319,7 @@ export const getReviewOperationsCreateMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof reviewOperationsCreate>>,
-    { data: ModelsCreateReviewRequest }
+    { data: ModelsReviewCreateRequest }
   > = (props) => {
     const { data } = props ?? {}
 
@@ -332,7 +332,7 @@ export const getReviewOperationsCreateMutationOptions = <
 export type ReviewOperationsCreateMutationResult = NonNullable<
   Awaited<ReturnType<typeof reviewOperationsCreate>>
 >
-export type ReviewOperationsCreateMutationBody = ModelsCreateReviewRequest
+export type ReviewOperationsCreateMutationBody = ModelsReviewCreateRequest
 export type ReviewOperationsCreateMutationError = ModelsError
 
 /**
@@ -346,7 +346,7 @@ export const useReviewOperationsCreate = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof reviewOperationsCreate>>,
       TError,
-      { data: ModelsCreateReviewRequest },
+      { data: ModelsReviewCreateRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -355,7 +355,7 @@ export const useReviewOperationsCreate = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof reviewOperationsCreate>>,
   TError,
-  { data: ModelsCreateReviewRequest },
+  { data: ModelsReviewCreateRequest },
   TContext
 > => {
   const mutationOptions = getReviewOperationsCreateMutationOptions(options)
@@ -584,7 +584,7 @@ export const getReviewOperationsUpdateUrl = (id: ModelsReviewId) => {
 
 export const reviewOperationsUpdate = async (
   id: ModelsReviewId,
-  modelsUpdateReviewRequest: ModelsUpdateReviewRequest,
+  modelsReviewUpdateRequest: ModelsReviewUpdateRequest,
   options?: RequestInit
 ): Promise<reviewOperationsUpdateResponse> => {
   return customInstance<reviewOperationsUpdateResponse>(
@@ -593,7 +593,7 @@ export const reviewOperationsUpdate = async (
       ...options,
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsUpdateReviewRequest),
+      body: JSON.stringify(modelsReviewUpdateRequest),
     }
   )
 }
@@ -605,14 +605,14 @@ export const getReviewOperationsUpdateMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof reviewOperationsUpdate>>,
     TError,
-    { id: ModelsReviewId; data: ModelsUpdateReviewRequest },
+    { id: ModelsReviewId; data: ModelsReviewUpdateRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof reviewOperationsUpdate>>,
   TError,
-  { id: ModelsReviewId; data: ModelsUpdateReviewRequest },
+  { id: ModelsReviewId; data: ModelsReviewUpdateRequest },
   TContext
 > => {
   const mutationKey = ['reviewOperationsUpdate']
@@ -626,7 +626,7 @@ export const getReviewOperationsUpdateMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof reviewOperationsUpdate>>,
-    { id: ModelsReviewId; data: ModelsUpdateReviewRequest }
+    { id: ModelsReviewId; data: ModelsReviewUpdateRequest }
   > = (props) => {
     const { id, data } = props ?? {}
 
@@ -639,7 +639,7 @@ export const getReviewOperationsUpdateMutationOptions = <
 export type ReviewOperationsUpdateMutationResult = NonNullable<
   Awaited<ReturnType<typeof reviewOperationsUpdate>>
 >
-export type ReviewOperationsUpdateMutationBody = ModelsUpdateReviewRequest
+export type ReviewOperationsUpdateMutationBody = ModelsReviewUpdateRequest
 export type ReviewOperationsUpdateMutationError = ModelsError
 
 /**
@@ -653,7 +653,7 @@ export const useReviewOperationsUpdate = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof reviewOperationsUpdate>>,
       TError,
-      { id: ModelsReviewId; data: ModelsUpdateReviewRequest },
+      { id: ModelsReviewId; data: ModelsReviewUpdateRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -662,7 +662,7 @@ export const useReviewOperationsUpdate = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof reviewOperationsUpdate>>,
   TError,
-  { id: ModelsReviewId; data: ModelsUpdateReviewRequest },
+  { id: ModelsReviewId; data: ModelsReviewUpdateRequest },
   TContext
 > => {
   const mutationOptions = getReviewOperationsUpdateMutationOptions(options)

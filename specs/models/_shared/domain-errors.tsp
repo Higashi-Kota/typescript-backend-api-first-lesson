@@ -43,19 +43,19 @@ namespace BeautySalon.Models {
     code: string;
 
     @doc("追加のエラー文脈。入力値や関連設定など柔軟に格納する。")
-    details?: Record<unknown>;
+    details: Record<unknown> | null;
 
     @doc("関連するエンティティ名。例: `Reservation` や `Customer`。")
-    entity?: string;
+    entity: string | null;
 
     @doc("問題が発生したフィールド名。入力フォームとの紐付けに利用。")
-    field?: string;
+    field: string | null;
 
     @doc("問題があった値。マスキングが不要なケースのみ保持する。")
-    value?: string;
+    value: string | null;
 
     @doc("外部サービスエラー時の対象サービス名。連携先の切り分けに役立つ。")
-    service?: string;
+    service: string | null;
   }
 
   @doc("""
@@ -157,9 +157,9 @@ namespace BeautySalon.Models {
     occurredAt: utcDateTime;
 
     @doc("エラーが発生した操作名やユースケース。例: `CreateReservation`。")
-    operation?: string;
+    operation: string | null;
 
     @doc("デバッグ用のスタックトレース。開発・検証環境のみで出力する。")
-    stackTrace?: string;
+    stackTrace: string | null;
   }
 }

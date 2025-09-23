@@ -52,22 +52,22 @@ namespace BeautySalon.Models {
     type: AuthenticationStateType;
 
     @doc("状態に紐づくセッションID。未確立の場合はnull。")
-    sessionId?: SessionId;
+    sessionId: SessionId | null;
 
     @doc("該当状態が失効する日時。")
-    expiresAt?: utcDateTime;
+    expiresAt: utcDateTime | null;
 
     @doc("2要素認証や一時アクセスに利用する暫定トークン。")
-    tempToken?: string;
+    tempToken: string | null;
 
     @doc("ロックや制限状態が解除される予定日時。")
-    until?: utcDateTime;
+    until: utcDateTime | null;
 
     @doc("認証失敗などの試行回数。")
-    attempts?: int32;
+    attempts: int32 | null;
 
     @doc("状態が発生した具体的な理由メッセージ。")
-    reason?: string;
+    reason: string | null;
   }
 
   // ============================================================================
@@ -93,16 +93,16 @@ namespace BeautySalon.Models {
     type: EmailVerificationStateType;
 
     @doc("確認完了日時。未確認の場合はnull。")
-    verifiedAt?: utcDateTime;
+    verifiedAt: utcDateTime | null;
 
     @doc("確認メールに含めるトークン。再送未実施の場合はnull。")
-    token?: string;
+    token: string | null;
 
     @doc("トークンの有効期限。")
-    expiresAt?: utcDateTime;
+    expiresAt: utcDateTime | null;
 
     @doc("確認メールを送信した日時。")
-    sentAt?: utcDateTime;
+    sentAt: utcDateTime | null;
   }
 
   // ============================================================================
@@ -128,16 +128,16 @@ namespace BeautySalon.Models {
     type: PasswordResetStateType;
 
     @doc("リセット手続きに使用するトークン。")
-    token?: string;
+    token: string | null;
 
     @doc("トークンの有効期限。")
-    expiresAt?: utcDateTime;
+    expiresAt: utcDateTime | null;
 
     @doc("リセットを要求した日時。")
-    requestedAt?: utcDateTime;
+    requestedAt: utcDateTime | null;
 
     @doc("リセット完了日時。未完了の場合はnull。")
-    completedAt?: utcDateTime;
+    completedAt: utcDateTime | null;
   }
 
   // ============================================================================
@@ -167,10 +167,10 @@ namespace BeautySalon.Models {
     type: UserRoleType;
 
     @doc("役割が適用されるサロンID。全社権限の場合はnull。")
-    salonId?: SalonId;
+    salonId: SalonId | null;
 
     @doc("スタッフに対して設定される技術レベル。")
-    level?: StaffLevelType;
+    level: StaffLevelType | null;
   }
   @doc("""
     認証ユーザーロール区分 - 認証システムにおけるユーザーの役割
@@ -237,58 +237,58 @@ namespace BeautySalon.Models {
     emailVerified: boolean;
 
     @doc("メール確認に利用するトークン。内部管理用。")
-    emailVerificationToken?: string;
+    emailVerificationToken: string | null;
 
     @doc("メール確認トークンの有効期限。")
-    emailVerificationTokenExpiry?: utcDateTime;
+    emailVerificationTokenExpiry: utcDateTime | null;
 
     @doc("2要素認証の設定状態。")
     twoFactorStatus: TwoFactorStatusType;
 
     @doc("暗号化された2要素認証シークレット。")
-    twoFactorSecret?: string;
+    twoFactorSecret: string | null;
 
     @doc("2要素認証の復旧用バックアップコード一覧。")
-    backupCodes?: string[];
+    backupCodes: string[] | null;
 
     @doc("連続したログイン失敗回数。")
     failedLoginAttempts: int32 = 0;
 
     @doc("アカウントをロックした日時。未ロックの場合はnull。")
-    lockedAt?: utcDateTime;
+    lockedAt: utcDateTime | null;
 
     @doc("パスワードリセットに利用するトークン。内部管理用。")
-    passwordResetToken?: string;
+    passwordResetToken: string | null;
 
     @doc("パスワードリセットトークンの有効期限。")
-    passwordResetTokenExpiry?: utcDateTime;
+    passwordResetTokenExpiry: utcDateTime | null;
 
     @doc("最後にパスワードを変更した日時。")
-    lastPasswordChangeAt?: utcDateTime;
+    lastPasswordChangeAt: utcDateTime | null;
 
     @doc("再利用防止のため保持する過去パスワードハッシュ。")
-    passwordHistory?: string[];
+    passwordHistory: string[] | null;
 
     @doc("信頼済みIPアドレスのリスト。")
-    trustedIpAddresses?: string[];
+    trustedIpAddresses: string[] | null;
 
     @doc("ユーザーが顧客の場合の顧客プロファイルID。")
-    customerId?: CustomerId;
+    customerId: CustomerId | null;
 
     @doc("ユーザーがスタッフの場合のスタッフプロファイルID。")
-    staffId?: StaffId;
+    staffId: StaffId | null;
 
     @doc("担当サロンやレベル等を含む拡張ロール情報。")
-    roleDetail?: UserRoleDetail;
+    roleDetail: UserRoleDetail | null;
 
     @doc("現在の認証状態区分。")
-    authState?: AuthenticationStateType;
+    authState: AuthenticationStateType | null;
 
     @doc("メール確認状態区分。")
-    emailVerificationState?: EmailVerificationStateType;
+    emailVerificationState: EmailVerificationStateType | null;
 
     @doc("パスワードリセット状態区分。")
-    passwordResetState?: PasswordResetStateType;
+    passwordResetState: PasswordResetStateType | null;
 
     @doc("ユーザーアカウント作成日時。")
     createdAt: utcDateTime;
@@ -297,10 +297,10 @@ namespace BeautySalon.Models {
     updatedAt: utcDateTime;
 
     @doc("直近のログイン日時。")
-    lastLoginAt?: utcDateTime;
+    lastLoginAt: utcDateTime | null;
 
     @doc("直近ログイン時のIPアドレス。")
-    lastLoginIp?: string;
+    lastLoginIp: string | null;
   }
 
   @doc("ログインセッションの状態と追跡情報。")
@@ -335,7 +335,7 @@ namespace BeautySalon.Models {
   }
 
   @doc("ユーザーがログインする際の認証リクエスト。")
-  model LoginRequest {
+  model AuthLoginRequest {
     @doc("ログインに使用するメールアドレス。")
     email: string;
 
@@ -350,7 +350,7 @@ namespace BeautySalon.Models {
   }
 
   @doc("ログイン成功時に返却するトークン情報。")
-  model LoginResponse {
+  model AuthLoginResponse {
     @doc("API呼び出しに利用するアクセストークン。")
     accessToken: string;
 
@@ -368,7 +368,7 @@ namespace BeautySalon.Models {
   }
 
   @doc("新規ユーザー登録時のリクエスト。")
-  model RegisterRequest {
+  model AuthRegisterRequest {
     @doc("登録に使用するメールアドレス。")
     email: string;
 
@@ -383,13 +383,13 @@ namespace BeautySalon.Models {
   }
 
   @doc("パスワード再設定メール送信を要求するリクエスト。")
-  model PasswordResetRequest {
+  model AuthPasswordResetRequest {
     @doc("対象アカウントのメールアドレス。")
     email: string;
   }
 
   @doc("パスワード再設定を確定するためのリクエスト。")
-  model PasswordResetConfirmRequest {
+  model AuthPasswordResetConfirmRequest {
     @doc("メールで受け取った再設定トークン。")
     token: string;
 
@@ -398,7 +398,7 @@ namespace BeautySalon.Models {
   }
 
   @doc("ログイン中ユーザーがパスワードを変更するためのリクエスト。")
-  model PasswordChangeRequest {
+  model AuthPasswordChangeRequest {
     @doc("本人確認のための現在パスワード。")
     currentPassword: string;
 
@@ -407,19 +407,19 @@ namespace BeautySalon.Models {
   }
 
   @doc("メールアドレス確認を完了させるリクエスト。")
-  model EmailVerificationRequest {
+  model AuthEmailVerificationRequest {
     @doc("メールに記載された確認トークン。")
     token: string;
   }
 
   @doc("2要素認証を有効化する際の認証リクエスト。")
-  model TwoFactorEnableRequest {
+  model AuthTwoFactorEnableRequest {
     @doc("本人確認のための現在パスワード。")
     password: string;
   }
 
   @doc("2要素認証の設定情報を返すレスポンス。")
-  model TwoFactorSetupResponse {
+  model AuthTwoFactorSetupResponse {
     @doc("認証アプリで読み取るQRコードURL。")
     qrCodeUrl: string;
 
@@ -431,13 +431,13 @@ namespace BeautySalon.Models {
   }
 
   @doc("2要素認証コードを検証するリクエスト。")
-  model TwoFactorVerifyRequest {
+  model AuthTwoFactorVerifyRequest {
     @doc("認証アプリが生成したTOTPコード。")
     code: string;
   }
 
   @doc("2要素認証を無効化する際の確認リクエスト。")
-  model TwoFactorDisableRequest {
+  model AuthTwoFactorDisableRequest {
     @doc("本人確認のための現在パスワード。")
     password: string;
 
@@ -446,13 +446,13 @@ namespace BeautySalon.Models {
   }
 
   @doc("アクセストークンを更新するためのリクエスト。")
-  model TokenRefreshRequest {
+  model AuthTokenRefreshRequest {
     @doc("認証済みセッションに紐づくリフレッシュトークン。")
     refreshToken: string;
   }
 
   @doc("アクティブなセッション一覧を返すレスポンス。")
-  model SessionListResponse {
+  model AuthSessionListResponse {
     @doc("稼働中のセッション配列。")
     sessions: Session[];
 

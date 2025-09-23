@@ -14,10 +14,19 @@ export interface ModelsStaffQualification {
   name: string
   /** 資格を取得した日付 */
   certificationDate: string
-  /** 資格の有効期限。無期限の場合は省略 */
-  expiryDate?: string
-  /** 資格を発行した機関名 */
-  issuer?: string
-  /** 資格証明番号などの識別子 */
-  credentialId?: string
+  /**
+   * 資格の有効期限。無期限の場合は省略
+   * @nullable
+   */
+  expiryDate: string | null
+  /**
+   * 資格を発行した機関名
+   * @nullable
+   */
+  issuer: string | null
+  /**
+   * 資格証明番号などの識別子
+   * @nullable
+   */
+  credentialId: string | null
 }

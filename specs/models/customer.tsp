@@ -317,16 +317,16 @@ namespace BeautySalon.Models {
     address: Address | null;
 
     @doc("Preferences and requirements")
-    preferences: string | null;
+    preferences: Record<unknown>;
 
     @doc("Internal notes")
     notes: string | null;
 
     @doc("Tags for categorization")
-    tags: string[] | null;
+    tags: string[];
 
     @doc("Current loyalty points")
-    loyaltyPoints: int32 | null;
+    loyaltyPoints: int32;
 
     @doc("Membership information")
     membership: MembershipInfo | null;
@@ -374,31 +374,21 @@ namespace BeautySalon.Models {
 
     contactInfo: ContactInfo;
 
-    // Optional fields
-    preferences?: string;
+    // All fields required but nullable for create (when base model is nullable)
+    preferences: Record<unknown>;
 
-    notes?: string;
-    tags?: string[];
-    birthDate?: plainDate;
+    notes: string | null;
+    tags: string[];
+    birthDate: plainDate | null;
   }
 
-  @doc("Customer update request with optional fields for partial updates")
+  @doc("Customer update request with optional fields for partial updates. null指定で値をリセット可能")
   model UpdateCustomerRequest {
     name?: string;
     contactInfo?: ContactInfo;
-    preferences?: string;
-    notes?: string;
-    tags?: string[];
-    birthDate?: plainDate;
-  }
-
-  @doc("Customer update request with reset capability")
-  model UpdateCustomerRequestWithReset {
-    name?: string;
-    contactInfo?: ContactInfo;
-    preferences?: string | null;
+    preferences?: Record<unknown>;
     notes?: string | null;
-    tags?: string[] | null;
+    tags?: string[];
     birthDate?: plainDate | null;
   }
 
@@ -447,14 +437,14 @@ namespace BeautySalon.Models {
   }
 
   @doc("Customer reservations filter parameters")
-  model GetCustomerReservationsRequest {
+  model CustomerReservationsGetRequest {
     @query status?: ReservationStatusType;
     @query from?: utcDateTime;
     @query to?: utcDateTime;
   }
 
   @doc("Customer bookings filter parameters")
-  model GetCustomerBookingsRequest {
+  model CustomerBookingsGetRequest {
     @query status?: BookingStatusCodeType;
   }
 
@@ -524,7 +514,7 @@ namespace BeautySalon.Models {
   /**
    * Customer preferences update model
    */
-  model CustomerPreferencesUpdate {
+  model CustomerPreferencesUpdateRequest {
     @doc("Preferred contact method")
     contactMethod: ContactMethodType;
 

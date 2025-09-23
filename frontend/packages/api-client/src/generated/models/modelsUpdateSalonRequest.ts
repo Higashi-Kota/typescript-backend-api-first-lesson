@@ -11,21 +11,27 @@ import type { ModelsOpeningHours } from './modelsOpeningHours'
 import type { ModelsBusinessHours } from './modelsBusinessHours'
 
 /**
- * サロン情報を部分更新するためのリクエスト
+ * サロン情報を部分更新するためのリクエスト。null指定で値をリセット可能
  */
 export interface ModelsUpdateSalonRequest {
   /** 名称変更を行う場合に指定 */
   name?: string
-  /** 紹介文を更新する場合に指定 */
-  description?: string
+  /**
+   * 紹介文を更新する場合に指定（null指定で初期化可能）
+   * @nullable
+   */
+  description?: string | null
   /** 住所情報の差し替えが必要な場合に指定 */
   address?: ModelsAddress
   /** 電話番号やメールアドレス等の連絡先を更新する場合に指定 */
   contactInfo?: ModelsContactInfo
   /** 通常営業時間の更新が必要な場合に指定 */
   openingHours?: ModelsOpeningHours[]
-  /** 特別営業時間やシフト設定の更新に利用 */
-  businessHours?: ModelsBusinessHours[]
+  /**
+   * 特別営業時間やシフト設定の更新に利用（null指定で初期化可能）
+   * @nullable
+   */
+  businessHours?: ModelsBusinessHours[] | null
   /** 画像URLリストを更新する場合に指定 */
   imageUrls?: string[]
   /** 特徴タグの追加・削除を行う場合に指定 */

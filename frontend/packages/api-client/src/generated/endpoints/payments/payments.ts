@@ -23,10 +23,10 @@ import type {
 
 import type {
   ModelsCustomerId,
-  ModelsPaymentCreateInput,
+  ModelsPaymentCreateRequest,
   ModelsPaymentId,
-  ModelsPaymentUpdateInput,
-  ModelsRefundInput,
+  ModelsPaymentUpdateRequest,
+  ModelsRefundCreateRequest,
   PaymentOperationsCalculatePayment200,
   PaymentOperationsCalculatePaymentBody,
   PaymentOperationsCancelPayment200,
@@ -271,7 +271,7 @@ export const getPaymentOperationsCreatePaymentUrl = () => {
 }
 
 export const paymentOperationsCreatePayment = async (
-  modelsPaymentCreateInput: ModelsPaymentCreateInput,
+  modelsPaymentCreateRequest: ModelsPaymentCreateRequest,
   options?: RequestInit
 ): Promise<paymentOperationsCreatePaymentResponse> => {
   return customInstance<paymentOperationsCreatePaymentResponse>(
@@ -280,7 +280,7 @@ export const paymentOperationsCreatePayment = async (
       ...options,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsPaymentCreateInput),
+      body: JSON.stringify(modelsPaymentCreateRequest),
     }
   )
 }
@@ -292,14 +292,14 @@ export const getPaymentOperationsCreatePaymentMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof paymentOperationsCreatePayment>>,
     TError,
-    { data: ModelsPaymentCreateInput },
+    { data: ModelsPaymentCreateRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof paymentOperationsCreatePayment>>,
   TError,
-  { data: ModelsPaymentCreateInput },
+  { data: ModelsPaymentCreateRequest },
   TContext
 > => {
   const mutationKey = ['paymentOperationsCreatePayment']
@@ -313,7 +313,7 @@ export const getPaymentOperationsCreatePaymentMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof paymentOperationsCreatePayment>>,
-    { data: ModelsPaymentCreateInput }
+    { data: ModelsPaymentCreateRequest }
   > = (props) => {
     const { data } = props ?? {}
 
@@ -327,7 +327,7 @@ export type PaymentOperationsCreatePaymentMutationResult = NonNullable<
   Awaited<ReturnType<typeof paymentOperationsCreatePayment>>
 >
 export type PaymentOperationsCreatePaymentMutationBody =
-  ModelsPaymentCreateInput
+  ModelsPaymentCreateRequest
 export type PaymentOperationsCreatePaymentMutationError = unknown
 
 export const usePaymentOperationsCreatePayment = <
@@ -338,7 +338,7 @@ export const usePaymentOperationsCreatePayment = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof paymentOperationsCreatePayment>>,
       TError,
-      { data: ModelsPaymentCreateInput },
+      { data: ModelsPaymentCreateRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -347,7 +347,7 @@ export const usePaymentOperationsCreatePayment = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof paymentOperationsCreatePayment>>,
   TError,
-  { data: ModelsPaymentCreateInput },
+  { data: ModelsPaymentCreateRequest },
   TContext
 > => {
   const mutationOptions =
@@ -887,7 +887,7 @@ export const getPaymentOperationsUpdatePaymentUrl = (id: ModelsPaymentId) => {
 
 export const paymentOperationsUpdatePayment = async (
   id: ModelsPaymentId,
-  modelsPaymentUpdateInput: ModelsPaymentUpdateInput,
+  modelsPaymentUpdateRequest: ModelsPaymentUpdateRequest,
   options?: RequestInit
 ): Promise<paymentOperationsUpdatePaymentResponse> => {
   return customInstance<paymentOperationsUpdatePaymentResponse>(
@@ -896,7 +896,7 @@ export const paymentOperationsUpdatePayment = async (
       ...options,
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsPaymentUpdateInput),
+      body: JSON.stringify(modelsPaymentUpdateRequest),
     }
   )
 }
@@ -908,14 +908,14 @@ export const getPaymentOperationsUpdatePaymentMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof paymentOperationsUpdatePayment>>,
     TError,
-    { id: ModelsPaymentId; data: ModelsPaymentUpdateInput },
+    { id: ModelsPaymentId; data: ModelsPaymentUpdateRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof paymentOperationsUpdatePayment>>,
   TError,
-  { id: ModelsPaymentId; data: ModelsPaymentUpdateInput },
+  { id: ModelsPaymentId; data: ModelsPaymentUpdateRequest },
   TContext
 > => {
   const mutationKey = ['paymentOperationsUpdatePayment']
@@ -929,7 +929,7 @@ export const getPaymentOperationsUpdatePaymentMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof paymentOperationsUpdatePayment>>,
-    { id: ModelsPaymentId; data: ModelsPaymentUpdateInput }
+    { id: ModelsPaymentId; data: ModelsPaymentUpdateRequest }
   > = (props) => {
     const { id, data } = props ?? {}
 
@@ -943,7 +943,7 @@ export type PaymentOperationsUpdatePaymentMutationResult = NonNullable<
   Awaited<ReturnType<typeof paymentOperationsUpdatePayment>>
 >
 export type PaymentOperationsUpdatePaymentMutationBody =
-  ModelsPaymentUpdateInput
+  ModelsPaymentUpdateRequest
 export type PaymentOperationsUpdatePaymentMutationError = unknown
 
 export const usePaymentOperationsUpdatePayment = <
@@ -954,7 +954,7 @@ export const usePaymentOperationsUpdatePayment = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof paymentOperationsUpdatePayment>>,
       TError,
-      { id: ModelsPaymentId; data: ModelsPaymentUpdateInput },
+      { id: ModelsPaymentId; data: ModelsPaymentUpdateRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -963,7 +963,7 @@ export const usePaymentOperationsUpdatePayment = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof paymentOperationsUpdatePayment>>,
   TError,
-  { id: ModelsPaymentId; data: ModelsPaymentUpdateInput },
+  { id: ModelsPaymentId; data: ModelsPaymentUpdateRequest },
   TContext
 > => {
   const mutationOptions =
@@ -1386,7 +1386,7 @@ export const getPaymentOperationsProcessRefundUrl = (id: ModelsPaymentId) => {
 
 export const paymentOperationsProcessRefund = async (
   id: ModelsPaymentId,
-  modelsRefundInput: ModelsRefundInput,
+  modelsRefundCreateRequest: ModelsRefundCreateRequest,
   options?: RequestInit
 ): Promise<paymentOperationsProcessRefundResponse> => {
   return customInstance<paymentOperationsProcessRefundResponse>(
@@ -1395,7 +1395,7 @@ export const paymentOperationsProcessRefund = async (
       ...options,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsRefundInput),
+      body: JSON.stringify(modelsRefundCreateRequest),
     }
   )
 }
@@ -1407,14 +1407,14 @@ export const getPaymentOperationsProcessRefundMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof paymentOperationsProcessRefund>>,
     TError,
-    { id: ModelsPaymentId; data: ModelsRefundInput },
+    { id: ModelsPaymentId; data: ModelsRefundCreateRequest },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof paymentOperationsProcessRefund>>,
   TError,
-  { id: ModelsPaymentId; data: ModelsRefundInput },
+  { id: ModelsPaymentId; data: ModelsRefundCreateRequest },
   TContext
 > => {
   const mutationKey = ['paymentOperationsProcessRefund']
@@ -1428,7 +1428,7 @@ export const getPaymentOperationsProcessRefundMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof paymentOperationsProcessRefund>>,
-    { id: ModelsPaymentId; data: ModelsRefundInput }
+    { id: ModelsPaymentId; data: ModelsRefundCreateRequest }
   > = (props) => {
     const { id, data } = props ?? {}
 
@@ -1441,7 +1441,8 @@ export const getPaymentOperationsProcessRefundMutationOptions = <
 export type PaymentOperationsProcessRefundMutationResult = NonNullable<
   Awaited<ReturnType<typeof paymentOperationsProcessRefund>>
 >
-export type PaymentOperationsProcessRefundMutationBody = ModelsRefundInput
+export type PaymentOperationsProcessRefundMutationBody =
+  ModelsRefundCreateRequest
 export type PaymentOperationsProcessRefundMutationError = unknown
 
 export const usePaymentOperationsProcessRefund = <
@@ -1452,7 +1453,7 @@ export const usePaymentOperationsProcessRefund = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof paymentOperationsProcessRefund>>,
       TError,
-      { id: ModelsPaymentId; data: ModelsRefundInput },
+      { id: ModelsPaymentId; data: ModelsRefundCreateRequest },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
@@ -1461,7 +1462,7 @@ export const usePaymentOperationsProcessRefund = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof paymentOperationsProcessRefund>>,
   TError,
-  { id: ModelsPaymentId; data: ModelsRefundInput },
+  { id: ModelsPaymentId; data: ModelsRefundCreateRequest },
   TContext
 > => {
   const mutationOptions =

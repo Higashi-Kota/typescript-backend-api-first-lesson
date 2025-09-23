@@ -19,7 +19,7 @@
 
 ## 🏗️ Type Generation & API
 - [Type Generation System](./type-generation-system.md) - TypeSpec → OpenAPI → TypeScript pipeline
-- [TypeSpec API Type Rules](./typespec-api-type-rules.md) - API type definition rules
+- [**TypeSpec API Type Rules**](./typespec-api-type-rules.md) - API type definition rules and naming conventions
 - [TypeSpec Directory Structure](./typespec-directory-structure.md) - TypeSpec project organization
 - [OpenAPI TypeScript Usage](./openapi-typescript-usage.md) - Using generated types
 - [Frontend API Integration](./frontend-api-integration.md) - Frontend integration guide

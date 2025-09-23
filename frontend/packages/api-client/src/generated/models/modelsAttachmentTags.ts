@@ -8,5 +8,6 @@
 
 /**
  * ラベリングや検索に利用するタグ情報のセット。
+ * @nullable
  */
-export type ModelsAttachmentTags = { [key: string]: string }
+export type ModelsAttachmentTags = { [key: string]: string } | null
