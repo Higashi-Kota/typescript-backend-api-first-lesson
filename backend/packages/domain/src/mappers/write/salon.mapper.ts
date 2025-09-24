@@ -106,7 +106,7 @@ export const SalonWriteMapper = {
     return {
       salonId,
       dayOfWeek: hours.dayOfWeek,
-      specificDate: hours.date,
+      date: hours.date,
       openTime: hours.openTime,
       closeTime: hours.closeTime,
       isHoliday: hours.isHoliday,

@@ -163,7 +163,7 @@ export class SalonRepository implements ISalonRepository {
       return Result.error(
         DomainErrors.database(
           'Failed to find salon by ID',
-          error instanceof Error ? error.message : error
+          JSON.stringify(error, null, 2)
         )
       )
     }
@@ -181,7 +181,7 @@ export class SalonRepository implements ISalonRepository {
       return Result.error(
         DomainErrors.database(
           'Failed to check salon email existence',
-          error instanceof Error ? error.message : error
+          JSON.stringify(error, null, 2)
         )
       )
     }

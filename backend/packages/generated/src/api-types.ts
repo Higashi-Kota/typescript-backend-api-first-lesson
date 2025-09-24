@@ -1,6 +1,6 @@
 // Generated from TypeSpec/OpenAPI using openapi-typescript
 // DO NOT EDIT MANUALLY
-// Last generated: 2025-09-23T17:27:19.980Z
+// Last generated: 2025-09-24T07:42:48.918Z
 
 // Base types from OpenAPI
 /**
@@ -6578,15 +6578,15 @@ export interface components {
        */
       sortOrder: 'asc' | 'desc'
     }
-    /** @description 曜日別および特定日の営業時間を管理するモデル。 */
+    /** @description 曜日別の営業時間を管理するモデル。 */
     'Models.OpeningHours': {
-      /** @description 対象となる曜日。特定日指定の場合はnull */
-      dayOfWeek: components['schemas']['Models.DayOfWeekType'] | null
+      /** @description 対象となる曜日 */
+      dayOfWeek: components['schemas']['Models.DayOfWeekType']
       /**
        * Format: date
-       * @description 特定日の日付。曜日別営業時間の場合はnull
+       * @description 日付
        */
-      date: string | null
+      date: string
       /** @description 開店時刻（HH:mm形式）。休業日の場合はnull */
       openTime: string | null
       /** @description 閉店時刻（HH:mm形式）。休業日の場合はnull */

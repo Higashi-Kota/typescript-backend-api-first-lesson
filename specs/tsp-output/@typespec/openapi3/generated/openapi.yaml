@@ -17028,13 +17028,11 @@ components:
         dayOfWeek:
           allOf:
             - $ref: "#/components/schemas/Models.DayOfWeekType"
-          nullable: true
-          description: 対象となる曜日。特定日指定の場合はnull
+          description: 対象となる曜日
         date:
           type: string
           format: date
-          nullable: true
-          description: 特定日の日付。曜日別営業時間の場合はnull
+          description: 日付
         openTime:
           type: string
           nullable: true
@@ -17054,7 +17052,7 @@ components:
           type: string
           nullable: true
           description: 備考や注意事項。特記事項がない場合はnull
-      description: 曜日別および特定日の営業時間を管理するモデル。
+      description: 曜日別の営業時間を管理するモデル。
     Models.OrderId:
       type: string
       format: uuid

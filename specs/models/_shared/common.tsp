@@ -335,13 +335,13 @@ namespace BeautySalon.Models {
     offset: int32;
   }
 
-  @doc("曜日別および特定日の営業時間を管理するモデル。")
+  @doc("曜日別の営業時間を管理するモデル。")
   model OpeningHours {
-    @doc("対象となる曜日。特定日指定の場合はnull")
-    dayOfWeek: DayOfWeekType | null;
+    @doc("対象となる曜日")
+    dayOfWeek: DayOfWeekType;
 
-    @doc("特定日の日付。曜日別営業時間の場合はnull")
-    date: plainDate | null;
+    @doc("日付")
+    date: plainDate;
 
     @doc("開店時刻（HH:mm形式）。休業日の場合はnull")
     openTime: string | null;

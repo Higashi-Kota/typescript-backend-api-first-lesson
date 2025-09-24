@@ -608,6 +608,14 @@ export const salons = pgTable(
       'btree',
       table.email.asc().nullsLast().op('text_ops')
     ),
+    index('idx_salons_rating').using(
+      'btree',
+      table.rating.asc().nullsLast().op('numeric_ops')
+    ),
+    index('idx_salons_review_count').using(
+      'btree',
+      table.reviewCount.asc().nullsLast().op('int4_ops')
+    ),
     unique('salons_email_unique').on(table.email),
   ]
 )
@@ -1086,8 +1094,8 @@ export const openingHours = pgTable(
   {
     id: uuid().defaultRandom().primaryKey().notNull(),
     salonId: uuid().notNull(),
-    dayOfWeek: dayOfWeek(),
-    specificDate: date(),
+    dayOfWeek: dayOfWeek().notNull(),
+    date: date().notNull(),
     openTime: time(),
     closeTime: time(),
     isHoliday: boolean().default(false).notNull(),
@@ -1101,13 +1109,13 @@ export const openingHours = pgTable(
       .notNull(),
   },
   (table) => [
+    index('idx_opening_hours_date').using(
+      'btree',
+      table.date.asc().nullsLast().op('date_ops')
+    ),
     index('idx_opening_hours_salon_id').using(
       'btree',
       table.salonId.asc().nullsLast().op('uuid_ops')
-    ),
-    index('idx_opening_hours_specific_date').using(
-      'btree',
-      table.specificDate.asc().nullsLast().op('date_ops')
     ),
     foreignKey({
       columns: [table.salonId],

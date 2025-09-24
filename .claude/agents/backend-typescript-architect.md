@@ -590,7 +590,7 @@ export class SalonRepository implements ISalonRepository {
       return Result.error(
         DomainErrors.database(
           'Failed to create salon',
-          error instanceof Error ? error.message : error
+          JSON.stringify(error, null, 2)
         )
       )
     }

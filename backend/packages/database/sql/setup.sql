@@ -4,7 +4,7 @@
 -- - All tables with columns, constraints, and defaults
 -- - All foreign key relationships
 -- - All indexes
--- Generated on: 2025-09-23T17:27:23.380Z
+-- Generated on: 2025-09-24T07:42:52.305Z
 -- Source: backend/packages/database/src/schema.ts
 
 CREATE TYPE "public"."account_status" AS ENUM('active', 'unverified', 'inactive', 'locked', 'suspended', 'deleted');
@@ -298,8 +298,8 @@ CREATE TABLE "notification_logs" (
 CREATE TABLE "opening_hours" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"salonId" uuid NOT NULL,
-	"dayOfWeek" "day_of_week",
-	"specificDate" date,
+	"dayOfWeek" "day_of_week" NOT NULL,
+	"date" date NOT NULL,
 	"openTime" time,
 	"closeTime" time,
 	"isHoliday" boolean DEFAULT false NOT NULL,
@@ -836,8 +836,8 @@ CREATE INDEX "idx_membership_tiers_salon_id" ON "membership_tiers" USING btree (
 CREATE INDEX "idx_notification_logs_created_at" ON "notification_logs" USING btree ("createdAt" timestamptz_ops);
 CREATE INDEX "idx_notification_logs_notification_type" ON "notification_logs" USING btree ("notificationType" enum_ops);
 CREATE INDEX "idx_notification_logs_recipient_id" ON "notification_logs" USING btree ("recipientId" uuid_ops);
+CREATE INDEX "idx_opening_hours_date" ON "opening_hours" USING btree ("date" date_ops);
 CREATE INDEX "idx_opening_hours_salon_id" ON "opening_hours" USING btree ("salonId" uuid_ops);
-CREATE INDEX "idx_opening_hours_specific_date" ON "opening_hours" USING btree ("specificDate" date_ops);
 CREATE INDEX "idx_payment_methods_salon_id" ON "payment_methods" USING btree ("salonId" uuid_ops);
 CREATE INDEX "idx_payment_transactions_payment_method_id" ON "payment_transactions" USING btree ("paymentMethodId" uuid_ops);
 CREATE INDEX "idx_payment_transactions_sale_id" ON "payment_transactions" USING btree ("saleId" uuid_ops);
@@ -862,6 +862,8 @@ CREATE INDEX "idx_sales_details_sale_id" ON "sales_details" USING btree ("saleId
 CREATE INDEX "idx_sales_details_staff_id" ON "sales_details" USING btree ("staffId" uuid_ops);
 CREATE INDEX "idx_salons_deleted_at" ON "salons" USING btree ("deletedAt" timestamptz_ops);
 CREATE INDEX "idx_salons_email" ON "salons" USING btree ("email" text_ops);
+CREATE INDEX "idx_salons_rating" ON "salons" USING btree ("rating" numeric_ops);
+CREATE INDEX "idx_salons_review_count" ON "salons" USING btree ("reviewCount" int4_ops);
 CREATE INDEX "idx_service_categories_parent_id" ON "service_categories" USING btree ("parentId" uuid_ops);
 CREATE INDEX "idx_service_categories_salon_id" ON "service_categories" USING btree ("salonId" uuid_ops);
 CREATE INDEX "idx_service_options_service_id" ON "service_options" USING btree ("serviceId" uuid_ops);

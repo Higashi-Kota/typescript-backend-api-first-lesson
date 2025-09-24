@@ -65,7 +65,7 @@ export const SalonReadMapper = {
   toApiOpeningHours(dbOpeningHours: DbOpeningHours): ApiOpeningHours {
     return {
       dayOfWeek: dbOpeningHours.dayOfWeek,
-      date: dbOpeningHours.specificDate,
+      date: dbOpeningHours.date,
       openTime: dbOpeningHours.openTime,
       closeTime: dbOpeningHours.closeTime,
       isHoliday: dbOpeningHours.isHoliday,

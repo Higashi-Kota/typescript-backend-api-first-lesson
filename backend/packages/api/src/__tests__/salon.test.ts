@@ -15,6 +15,14 @@ describe('Salon API Integration Tests', () => {
 
   describe('POST /api/v1/salons', () => {
     it('should create a salon with valid data', async () => {
+      // Helper to get dates for each day of the week
+      const getNextDate = (dayOffset: number): string => {
+        const date = new Date()
+        date.setDate(date.getDate() + dayOffset)
+        // biome-ignore lint/style/noNonNullAssertion: <explanation>
+        return date.toISOString().split('T')[0]!
+      }
+
       const salonData = {
         name: 'Test Salon',
         description: 'A test salon',
@@ -34,7 +42,7 @@ describe('Salon API Integration Tests', () => {
         openingHours: [
           {
             dayOfWeek: 'monday',
-            date: null,
+            date: getNextDate(1),
             openTime: '10:00',
             closeTime: '20:00',
             isHoliday: false,
@@ -43,7 +51,7 @@ describe('Salon API Integration Tests', () => {
           },
           {
             dayOfWeek: 'tuesday',
-            date: null,
+            date: getNextDate(2),
             openTime: '10:00',
             closeTime: '20:00',
             isHoliday: false,
@@ -52,7 +60,7 @@ describe('Salon API Integration Tests', () => {
           },
           {
             dayOfWeek: 'wednesday',
-            date: null,
+            date: getNextDate(3),
             openTime: '10:00',
             closeTime: '20:00',
             isHoliday: false,
@@ -61,7 +69,7 @@ describe('Salon API Integration Tests', () => {
           },
           {
             dayOfWeek: 'thursday',
-            date: null,
+            date: getNextDate(4),
             openTime: '10:00',
             closeTime: '20:00',
             isHoliday: false,
@@ -70,7 +78,7 @@ describe('Salon API Integration Tests', () => {
           },
           {
             dayOfWeek: 'friday',
-            date: null,
+            date: getNextDate(5),
             openTime: '10:00',
             closeTime: '20:00',
             isHoliday: false,
@@ -79,7 +87,7 @@ describe('Salon API Integration Tests', () => {
           },
           {
             dayOfWeek: 'saturday',
-            date: null,
+            date: getNextDate(6),
             openTime: '10:00',
             closeTime: '18:00',
             isHoliday: false,
@@ -88,7 +96,7 @@ describe('Salon API Integration Tests', () => {
           },
           {
             dayOfWeek: 'sunday',
-            date: null,
+            date: getNextDate(7),
             openTime: '10:00',
             closeTime: '18:00',
             isHoliday: false,

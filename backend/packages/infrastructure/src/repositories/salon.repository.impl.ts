@@ -50,7 +50,7 @@ export class SalonRepository implements ISalonRepository {
       return Result.error(
         DomainErrors.database(
           'Failed to create salon',
-          error instanceof Error ? error.message : error
+          JSON.stringify(error, null, 2)
         )
       )
     }
@@ -69,7 +69,7 @@ export class SalonRepository implements ISalonRepository {
       return Result.error(
         DomainErrors.database(
           'Failed to find salon by ID',
-          error instanceof Error ? error.message : error
+          JSON.stringify(error, null, 2)
         )
       )
     }
@@ -90,7 +90,7 @@ export class SalonRepository implements ISalonRepository {
       return Result.error(
         DomainErrors.database(
           'Failed to find salon by email',
-          error instanceof Error ? error.message : error
+          JSON.stringify(error, null, 2)
         )
       )
     }
@@ -128,7 +128,7 @@ export class SalonRepository implements ISalonRepository {
       return Result.error(
         DomainErrors.database(
           'Failed to list salons',
-          error instanceof Error ? error.message : error
+          JSON.stringify(error, null, 2)
         )
       )
     }
@@ -154,7 +154,7 @@ export class SalonRepository implements ISalonRepository {
       return Result.error(
         DomainErrors.database(
           'Failed to update salon',
-          error instanceof Error ? error.message : error
+          JSON.stringify(error, null, 2)
         )
       )
     }
@@ -173,7 +173,7 @@ export class SalonRepository implements ISalonRepository {
       return Result.error(
         DomainErrors.database(
           'Failed to delete salon',
-          error instanceof Error ? error.message : error
+          JSON.stringify(error, null, 2)
         )
       )
     }
@@ -237,7 +237,7 @@ export class SalonRepository implements ISalonRepository {
       return Result.error(
         DomainErrors.database(
           'Failed to search salons',
-          error instanceof Error ? error.message : error
+          JSON.stringify(error, null, 2)
         )
       )
     }
@@ -258,7 +258,7 @@ export class SalonRepository implements ISalonRepository {
       return Result.error(
         DomainErrors.database(
           'Failed to find opening hours',
-          error instanceof Error ? error.message : error
+          JSON.stringify(error, null, 2)
         )
       )
     }
@@ -282,7 +282,7 @@ export class SalonRepository implements ISalonRepository {
       return Result.error(
         DomainErrors.database(
           'Failed to create opening hours',
-          error instanceof Error ? error.message : error
+          JSON.stringify(error, null, 2)
         )
       )
     }
@@ -316,7 +316,7 @@ export class SalonRepository implements ISalonRepository {
       return Result.error(
         DomainErrors.database(
           'Failed to update opening hours',
-          error instanceof Error ? error.message : error
+          JSON.stringify(error, null, 2)
         )
       )
     }
@@ -334,7 +334,7 @@ export class SalonRepository implements ISalonRepository {
       return Result.error(
         DomainErrors.database(
           'Failed to delete opening hours',
-          error instanceof Error ? error.message : error
+          JSON.stringify(error, null, 2)
         )
       )
     }
@@ -352,7 +352,7 @@ export class SalonRepository implements ISalonRepository {
       return Result.error(
         DomainErrors.database(
           'Failed to check salon existence',
-          error instanceof Error ? error.message : error
+          JSON.stringify(error, null, 2)
         )
       )
     }
@@ -370,7 +370,7 @@ export class SalonRepository implements ISalonRepository {
       return Result.error(
         DomainErrors.database(
           'Failed to check salon email existence',
-          error instanceof Error ? error.message : error
+          JSON.stringify(error, null, 2)
         )
       )
     }
@@ -388,7 +388,7 @@ export class SalonRepository implements ISalonRepository {
       return Result.error(
         DomainErrors.database(
           'Failed to count active salons',
-          error instanceof Error ? error.message : error
+          JSON.stringify(error, null, 2)
         )
       )
     }

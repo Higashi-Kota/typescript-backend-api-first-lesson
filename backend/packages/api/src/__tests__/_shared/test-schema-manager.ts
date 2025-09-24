@@ -1,3 +1,4 @@
+import console from 'node:console'
 import { randomUUID } from 'node:crypto'
 import * as schema from '@beauty-salon-backend/database'
 import { SqlScripts } from '@beauty-salon-backend/database'
@@ -34,24 +35,22 @@ export class TestSchemaManager {
   async initializeEnums() {
     try {
       const enumStatements = SqlScripts.getEnumStatements()
-      let enumCount = 0
+      let successCount = 0
+      let skippedCount = 0
 
-      // Create all enum types in public schema
+      // Create all enum types in public schema with idempotent approach
       for (const statement of enumStatements) {
-        try {
-          await this.adminDb.execute(sql.raw(statement))
-          enumCount++
-        } catch (error) {
-          if (
-            error instanceof Error &&
-            !error.message?.includes('already exists')
-          ) {
-            throw error
-          }
+        const created = await this.createEnumIfNotExists(statement)
+        if (created) {
+          successCount++
+        } else {
+          skippedCount++
         }
       }
 
-      console.log(`✅ ${enumCount} Enum types initialized in public schema`)
+      console.log(
+        `✅ ${successCount} Enum types ready in public schema (${skippedCount} skipped)`
+      )
 
       // Verify enums exist
       const result = await this.adminDb.execute(sql`
@@ -62,6 +61,45 @@ export class TestSchemaManager {
       console.log(`✅ Found ${result.length} enum types in database`)
     } catch (error) {
       throw new Error(`Failed to initialize enum types: ${error}`)
+    }
+  }
+
+  /**
+   * Create a single enum type if it doesn't exist
+   * @param enumDefinition - The CREATE TYPE statement
+   * @returns true if created or already exists, false on error
+   */
+  private async createEnumIfNotExists(
+    enumDefinition: string
+  ): Promise<boolean> {
+    // Extract enum name from the CREATE TYPE statement
+    const match = enumDefinition.match(/CREATE TYPE "public"\."(\w+)" AS ENUM/)
+    if (!match) {
+      console.warn('Invalid enum definition:', enumDefinition)
+      return false
+    }
+
+    const enumName = match[1]
+
+    try {
+      // Check if the enum already exists
+      const existsResult = await this.adminDb.execute(sql`
+        SELECT 1 FROM pg_type 
+        WHERE typname = ${enumName} 
+        AND typnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public')
+      `)
+
+      if (existsResult.length > 0) {
+        // Enum already exists, skip creation
+        return true
+      }
+
+      // Create the enum
+      await this.adminDb.execute(sql.raw(enumDefinition))
+      return true
+    } catch (error) {
+      console.warn(`Failed to create enum ${enumName}:`, error)
+      return false
     }
   }
 
@@ -124,6 +162,21 @@ export class TestSchemaManager {
         // Use simplified test setup for faster tests
         const testSql = SqlScripts.getTestSetupSql()
         statements = SqlScripts.parseStatements(testSql)
+
+        // Filter out CREATE TYPE statements since enums are already created in public schema
+        statements = statements.filter((stmt) => !stmt.includes('CREATE TYPE'))
+
+        // Fix foreign key references to use current schema instead of public
+        statements = statements.map((stmt) => {
+          // Replace REFERENCES "public"."table" with REFERENCES "table" to use search path
+          if (stmt.includes('REFERENCES "public"."')) {
+            return stmt.replace(
+              /REFERENCES "public"\."(\w+)"/g,
+              'REFERENCES "$1"'
+            )
+          }
+          return stmt
+        })
       } else {
         // Use full setup with proper enum handling
         const tableStatements = SqlScripts.getTableStatements()
@@ -149,6 +202,7 @@ export class TestSchemaManager {
 
       console.log(`✅ Database setup applied to schema ${schemaName}`)
     } catch (error) {
+      console.log(JSON.stringify(error, null, 2))
       throw new Error(`Failed to apply database setup: ${error}`)
     }
   }
