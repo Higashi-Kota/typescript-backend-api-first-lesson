@@ -3,24 +3,22 @@
     "@beauty-salon-frontend/utils": "workspace:*",
     "@tanstack/react-table": "^8.21.3",
     "radash": "^12.1.1",
-    "ts-pattern": "^5.7.1",
-    "zod": "^3.25.76"
+    "ts-pattern": "^5.8.0",
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@beauty-salon-shared/config": "workspace:*",
     "@biomejs/biome": "^1.9.4",
-    "@rslib/core": "^0.10.5",
-    "@types/node": "^24.0.13",
-    "@vitejs/plugin-react-swc": "^3.10.2",
+    "@rslib/core": "^0.14.0",
+    "@types/node": "^24.5.2",
+    "@vitejs/plugin-react-swc": "^4.1.0",
     "@vitest/coverage-v8": "^3.2.4",
-    "knip": "^5.61.3",
-    "taze": "^19.1.0",
-    "type-fest": "^4.41.0",
-    "typescript": "^5.8.3",
-    "vite": "^7.0.4",
+    "@vitest/ui": "^3.2.4",
+    "type-fest": "^5.0.1",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.7",
     "vite-plugin-dts": "^4.5.4",
-    "vitest": "^3.2.4",
-    "@vitest/ui": "^3.2.4"
+    "vitest": "^3.2.4"
   },
   "exports": {
     ".": {
@@ -42,8 +40,6 @@
     "build:stg": "NODE_ENV=staging rslib build",
     "build:prod": "NODE_ENV=production rslib build",
     "build:watch": "NODE_ENV=development rslib build --watch",
-    "package:check": "taze",
-    "knip": "knip --include dependencies,optionalPeerDependencies,unlisted,binaries,unresolved",
     "typecheck": "tsc --build",
     "format": "biome format --write .",
     "format:fix": "biome check . --fix --unsafe",

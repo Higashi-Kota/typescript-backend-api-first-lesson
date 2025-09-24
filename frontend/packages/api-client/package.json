@@ -25,13 +25,13 @@
     "@beauty-salon-frontend/io": "workspace:*",
     "@beauty-salon-frontend/types": "workspace:*",
     "@biomejs/biome": "^1.9.4",
-    "@rslib/core": "^0.10.5",
-    "@tanstack/react-query": "^5.83.0"
+    "@rslib/core": "^0.14.0",
+    "@tanstack/react-query": "^5.90.2"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
     "@beauty-salon-shared/config": "workspace:*",
-    "@types/node": "^24.0.13",
-    "orval": "^7.10.0"
+    "@biomejs/biome": "^1.9.4",
+    "@types/node": "^24.5.2",
+    "orval": "^7.11.2"
   }
 }

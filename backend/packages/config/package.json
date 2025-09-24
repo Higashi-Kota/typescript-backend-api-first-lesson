@@ -25,9 +25,7 @@
     "format": "biome format --write .",
     "format:fix": "biome check . --fix --unsafe",
     "lint": "biome lint .",
-    "lint:fix": "biome lint . --write",
-    "knip": "knip --include dependencies,optionalPeerDependencies,unlisted,binaries,unresolved",
-    "package:check": "taze -r"
+    "lint:fix": "biome lint . --write"
   },
   "dependencies": {
     "@t3-oss/env-core": "^0.13.8",
@@ -36,10 +34,8 @@
   "devDependencies": {
     "@beauty-salon-shared/config": "workspace:*",
     "@biomejs/biome": "^1.9.4",
-    "@rslib/core": "^0.10.5",
-    "@types/node": "^24.0.13",
-    "knip": "^5.61.3",
-    "taze": "^19.1.0",
-    "typescript": "^5.8.3"
+    "@rslib/core": "^0.14.0",
+    "@types/node": "^24.5.2",
+    "typescript": "^5.9.2"
   }
 }

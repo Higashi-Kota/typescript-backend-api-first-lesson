@@ -196,7 +196,7 @@ pnpm dlx ts-prune
 
 # 未使用の依存関係の検出
 # tazeを使用して依存関係の更新状況を確認
-pnpm update:check
+pnpm package:check
 ```
 
 ## クリーンアップのチェックリスト
@@ -248,7 +248,7 @@ pnpm test:integration   # 統合テストの実行
 pnpm knip  # 未使用のファイル、エクスポート、依存関係を検出
 
 # 依存関係の更新確認
-pnpm update:check  # 更新可能な依存関係を確認
+pnpm package:check  # 更新可能な依存関係を確認
 
 # package.jsonの整理
 - dependencies: 本番環境で必要なもののみ
@@ -321,7 +321,7 @@ jobs:
         run: pnpm knip
         
       - name: Check for unused dependencies
-        run: pnpm update:check
+        run: pnpm package:check
         
       - name: Lint check
         run: pnpm lint

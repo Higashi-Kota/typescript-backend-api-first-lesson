@@ -29,8 +29,6 @@
     "format:fix": "biome check . --fix --unsafe",
     "lint": "biome lint .",
     "lint:fix": "biome lint . --write",
-    "knip": "knip --include dependencies,optionalPeerDependencies,unlisted,binaries,unresolved",
-    "package:check": "taze -r",
     "db:migrate": "tsx src/scripts/migrate.ts",
     "db:reset": "tsx src/scripts/reset-db.ts",
     "db:setup": "tsx src/scripts/setup-db.ts",
@@ -41,20 +39,18 @@
     "db:truncate": "tsx src/scripts/truncate-seed.ts"
   },
   "dependencies": {
-    "drizzle-orm": "^0.44.2",
-    "postgres": "^3.4.7",
-    "@beauty-salon-backend/utility": "workspace:*"
+    "@beauty-salon-backend/utility": "workspace:*",
+    "drizzle-orm": "^0.44.5",
+    "postgres": "^3.4.7"
   },
   "devDependencies": {
     "@beauty-salon-shared/config": "workspace:*",
     "@biomejs/biome": "^1.9.4",
-    "@rslib/core": "^0.10.5",
-    "@types/node": "^24.0.13",
-    "dotenv": "^16.4.5",
+    "@rslib/core": "^0.14.0",
+    "@types/node": "^24.5.2",
+    "dotenv": "^17.2.2",
     "drizzle-kit": "^0.31.4",
-    "knip": "^5.61.3",
-    "taze": "^19.1.0",
-    "tsx": "^4.19.0",
-    "typescript": "^5.8.3"
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
   }
 }

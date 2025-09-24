@@ -239,7 +239,7 @@ pnpm knip
 pnpm audit
 
 # 依存関係の更新状況を確認
-pnpm update:check
+pnpm package:check
 ```
 
 ### 4. パフォーマンスチェック

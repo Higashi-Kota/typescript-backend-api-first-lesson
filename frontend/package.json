@@ -18,6 +18,6 @@
   },
   "devDependencies": {
     "@beauty-salon-shared/config": "workspace:*",
-    "vite": "^7.0.4"
+    "vite": "^7.1.7"
   }
 }

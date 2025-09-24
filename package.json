@@ -31,8 +31,9 @@
     "fresh": "pnpm clean:all && pnpm install",
     "prepare": "husky",
     "knip": "knip",
-    "update:deps": "taze -r -w --install",
-    "update:check": "taze -r",
+    "knip:fix": "knip --fix",
+    "update:check": "taze major -r",
+    "update:install": "taze major -r -w --install",
     "generate:spec": "pnpm --filter '@beauty-salon/specs' run compile",
     "generate:api": "pnpm --filter '@beauty-salon-frontend/api-client' run generate",
     "generate:backend": "pnpm --filter '@beauty-salon/specs' run generate:backend",
@@ -47,12 +48,12 @@
   },
   "devDependencies": {
     "@beauty-salon-shared/config": "workspace:*",
-    "concurrently": "^8.2.2",
+    "@biomejs/biome": "^1.9.4",
+    "concurrently": "^9.2.1",
     "husky": "^9.1.7",
-    "knip": "^5.61.3",
-    "lint-staged": "^15.5.2",
-    "taze": "^19.1.0",
-    "@biomejs/biome": "^1.9.4"
+    "knip": "^5.64.0",
+    "lint-staged": "^16.2.0",
+    "taze": "^19.7.0"
   },
   "volta": {
     "node": "24.4.0",

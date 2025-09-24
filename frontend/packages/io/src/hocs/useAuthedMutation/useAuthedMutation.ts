@@ -24,7 +24,10 @@ type RequiredMutationFnOptions<TData, TError, TVariables, TContext> = {
 export const useAuthedMutation = <TData, TError, TVariables, TContext>(
   options: RequiredMutationFnOptions<TData, TError, TVariables, TContext>
 ): UseMutationResult<TData, TError, TVariables, TContext> => {
-  const wrappedMutationFn = async (variables: TVariables) => {
+  const wrappedMutationFn: MutationFunction<TData, TVariables> = async (
+    variables,
+    context
+  ) => {
     const tokenCacheManager = new SessionManager<TokenCacheItem, TData>(
       SESSION_KEY
     )
@@ -36,7 +39,7 @@ export const useAuthedMutation = <TData, TError, TVariables, TContext>(
       fetchFn: async () => {
         const result = await authRepository.retrieveAuthedUserSession({})
         if (result.isErr()) {
-          return options.mutationFn(variables)
+          return options.mutationFn(variables, context)
         }
         tokenCacheManager.setCacheId(result.value?.tokens?.idToken?.toString())
       },
@@ -45,13 +48,13 @@ export const useAuthedMutation = <TData, TError, TVariables, TContext>(
     const result = await authRepository.retrieveAuthedUserSession({})
 
     if (result.isErr()) {
-      return options.mutationFn(variables)
+      return options.mutationFn(variables, context)
     }
 
     const idToken = result.value?.tokens?.idToken?.toString()
 
     if (isNullOrUndefined(idToken) || isEmpty(idToken)) {
-      return options.mutationFn(variables)
+      return options.mutationFn(variables, context)
     }
 
     setAuthorizationHeader(idToken)
@@ -59,7 +62,7 @@ export const useAuthedMutation = <TData, TError, TVariables, TContext>(
     //   'X-App-Version': env.VITE_APP_VERSION.value,
     // })
 
-    return options.mutationFn(variables)
+    return options.mutationFn(variables, context)
   }
 
   return useMutation<TData, TError, TVariables, TContext>({
