@@ -9,4 +9,4 @@
 /**
  * 特定日時に営業しているサロンを探すための基準日時
  */
-export type ModelsSalonSearchRequestOpenAtParameter = string
+export type ModelsSalonSearchRequestOpenAtParameter = string;

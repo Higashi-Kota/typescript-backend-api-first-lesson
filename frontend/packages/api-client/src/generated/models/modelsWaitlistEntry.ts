@@ -11,37 +11,37 @@
  */
 export interface ModelsWaitlistEntry {
   /** 現在の待機順序。 */
-  position: number
+  position: number;
   /**
    * 呼び出し予想時刻。時刻が未確定の場合はnull。
    * @nullable
    */
-  estimatedTime: string | null
+  estimatedTime: string | null;
   /** ウェイティングリストに参加した日時。 */
-  joinedAt: string
+  joinedAt: string;
   /**
    * 待機権が失効する日時。無期限の場合はnull。
    * @nullable
    */
-  expiresAt: string | null
+  expiresAt: string | null;
   /**
    * 呼び出し通知を送信した日時。未通知の場合はnull。
    * @nullable
    */
-  notifiedAt: string | null
+  notifiedAt: string | null;
   /**
    * 希望スタッフID。指名なしの場合はnull。
    * @nullable
    */
-  preferredStaffId: string | null
+  preferredStaffId: string | null;
   /**
    * 希望サービスID。サービスを指定していない場合はnull。
    * @nullable
    */
-  preferredServiceId: string | null
+  preferredServiceId: string | null;
   /**
    * 追加メモ。メモがない場合はnull。
    * @nullable
    */
-  notes: string | null
+  notes: string | null;
 }

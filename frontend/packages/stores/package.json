@@ -4,13 +4,10 @@
   },
   "devDependencies": {
     "@beauty-salon-shared/config": "workspace:*",
-    "@biomejs/biome": "^1.9.4",
+    "@biomejs/biome": "^2.2.4",
     "@rslib/core": "^0.14.0",
     "@types/node": "^24.5.2",
-    "@vitejs/plugin-react-swc": "^4.1.0",
     "typescript": "^5.9.2",
-    "vite": "^7.1.7",
-    "vite-plugin-dts": "^4.5.4",
     "vitest": "^3.2.4"
   },
   "exports": {
@@ -19,7 +16,9 @@
       "types": "./dist/index.d.ts"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "name": "@beauty-salon-frontend/stores",

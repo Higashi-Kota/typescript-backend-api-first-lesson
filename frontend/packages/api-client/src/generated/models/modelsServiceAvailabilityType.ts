@@ -15,8 +15,8 @@ by_appointment: 予約制 - 事前予約が必要なサービス
 seasonal: 季節限定 - 特定の季節のみ提供
 limited: 数量限定 - 提供数に制限があるサービス
  */
-export type ModelsServiceAvailabilityType =
-  (typeof ModelsServiceAvailabilityType)[keyof typeof ModelsServiceAvailabilityType]
+export type ModelsServiceAvailabilityType = typeof ModelsServiceAvailabilityType[keyof typeof ModelsServiceAvailabilityType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsServiceAvailabilityType = {
@@ -25,4 +25,4 @@ export const ModelsServiceAvailabilityType = {
   by_appointment: 'by_appointment',
   seasonal: 'seasonal',
   limited: 'limited',
-} as const
+} as const;

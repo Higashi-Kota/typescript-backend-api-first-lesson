@@ -1,14 +1,14 @@
 // Re-export schemas only (models.ts was removed as unused)
-export * from './schema'
 
 // Re-export OpenAPI types
 export type {
-  components,
-  paths,
-  operations,
-  webhooks,
   $defs,
+  components,
+  operations,
+  paths,
+  webhooks,
 } from './api-types'
+export * from './schema'
 
 import type { components } from './api-types'
 

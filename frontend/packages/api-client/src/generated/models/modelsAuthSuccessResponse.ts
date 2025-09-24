@@ -11,5 +11,5 @@
  */
 export interface ModelsAuthSuccessResponse {
   /** 完了メッセージ。 */
-  message: string
+  message: string;
 }

@@ -5,32 +5,32 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsPasswordResetStateType } from './modelsPasswordResetStateType'
+import type { ModelsPasswordResetStateType } from './modelsPasswordResetStateType';
 
 /**
  * パスワード再設定リクエストの状態管理モデル。
  */
 export interface ModelsPasswordResetStateDetail {
   /** 現在のリセット状態区分。 */
-  type: ModelsPasswordResetStateType
+  type: ModelsPasswordResetStateType;
   /**
    * リセット手続きに使用するトークン。リセットが要求されていない場合はnull。
    * @nullable
    */
-  token: string | null
+  token: string | null;
   /**
    * トークンの有効期限。リセットが要求されていない場合はnull。
    * @nullable
    */
-  expiresAt: string | null
+  expiresAt: string | null;
   /**
    * リセットを要求した日時。リセットが要求されていない場合はnull。
    * @nullable
    */
-  requestedAt: string | null
+  requestedAt: string | null;
   /**
    * リセット完了日時。パスワードリセットが未完了の場合はnull。
    * @nullable
    */
-  completedAt: string | null
+  completedAt: string | null;
 }

@@ -5,18 +5,18 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { SalonReviewOperationsGetSalonReviewsSortBy } from './salonReviewOperationsGetSalonReviewsSortBy'
-import type { ModelsPaginationParamsLimitParameter } from './modelsPaginationParamsLimitParameter'
-import type { ModelsPaginationParamsOffsetParameter } from './modelsPaginationParamsOffsetParameter'
+import type { SalonReviewOperationsGetSalonReviewsSortBy } from './salonReviewOperationsGetSalonReviewsSortBy';
+import type { ModelsPaginationParamsLimitParameter } from './modelsPaginationParamsLimitParameter';
+import type { ModelsPaginationParamsOffsetParameter } from './modelsPaginationParamsOffsetParameter';
 
 export type SalonReviewOperationsGetSalonReviewsParams = {
-  sortBy?: SalonReviewOperationsGetSalonReviewsSortBy
-  /**
-   * 1ページあたりの取得件数。省略時は20件。
-   */
-  limit?: ModelsPaginationParamsLimitParameter
-  /**
-   * 取得開始位置を表すオフセット。省略時は0。
-   */
-  offset?: ModelsPaginationParamsOffsetParameter
-}
+sortBy?: SalonReviewOperationsGetSalonReviewsSortBy;
+/**
+ * 1ページあたりの取得件数。省略時は20件。
+ */
+limit?: ModelsPaginationParamsLimitParameter;
+/**
+ * 取得開始位置を表すオフセット。省略時は0。
+ */
+offset?: ModelsPaginationParamsOffsetParameter;
+};

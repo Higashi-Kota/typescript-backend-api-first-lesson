@@ -17,7 +17,7 @@ export interface BookingSeedResult {
 
 export async function seedBookings(
   db: PostgresJsDatabase<typeof schema>,
-  data: BookingSeedData
+  data: BookingSeedData,
 ): Promise<BookingSeedResult> {
   const { salonIds, customerIds, serviceIds, staffIds, vipCustomerId } = data
 
@@ -70,7 +70,7 @@ export async function seedBookings(
       pointsEarned: 84,
       reminderSent: true,
       reminderSentAt: new Date(
-        startTime.getTime() - 24 * 60 * 60 * 1000
+        startTime.getTime() - 24 * 60 * 60 * 1000,
       ).toISOString(),
       completedAt: endTime.toISOString(),
       actualStartTime: startTime.toISOString(),
@@ -137,7 +137,7 @@ export async function seedBookings(
     taxAmount: 500,
     totalAmount: 5500,
     cancelledAt: new Date(
-      cancelledDate.getTime() - 24 * 60 * 60 * 1000
+      cancelledDate.getTime() - 24 * 60 * 60 * 1000,
     ).toISOString(),
     cancellationReason: 'Customer illness',
     cancellationFee: 0,
@@ -234,7 +234,7 @@ export async function seedBookings(
           toStatus: 'completed' as const,
           reason: 'Service completed',
           metadata: { completedBy: 'staff' },
-        }
+        },
       )
     } else if (booking.status === 'confirmed') {
       statusHistories.push({

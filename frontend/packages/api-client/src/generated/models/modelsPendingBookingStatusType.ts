@@ -9,10 +9,10 @@
 /**
  * 固定値pending。保留状態であることを示す。
  */
-export type ModelsPendingBookingStatusType =
-  (typeof ModelsPendingBookingStatusType)[keyof typeof ModelsPendingBookingStatusType]
+export type ModelsPendingBookingStatusType = typeof ModelsPendingBookingStatusType[keyof typeof ModelsPendingBookingStatusType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsPendingBookingStatusType = {
   pending: 'pending',
-} as const
+} as const;

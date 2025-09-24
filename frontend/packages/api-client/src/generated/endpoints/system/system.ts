@@ -5,7 +5,9 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import { useQuery } from '@tanstack/react-query'
+import {
+  useQuery
+} from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -15,8 +17,8 @@ import type {
   QueryKey,
   UndefinedInitialDataOptions,
   UseQueryOptions,
-  UseQueryResult,
-} from '@tanstack/react-query'
+  UseQueryResult
+} from '@tanstack/react-query';
 
 import type {
   ModelsHealthStatus,
@@ -24,16 +26,19 @@ import type {
   SystemOperationsAlive200,
   SystemOperationsReady200,
   SystemOperationsReady503,
-  SystemOperationsVersion200,
-} from '../../models'
+  SystemOperationsVersion200
+} from '../../models';
 
-import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher'
+import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher';
 
-type AwaitedInput<T> = PromiseLike<T> | T
+type AwaitedInput<T> = PromiseLike<T> | T;
 
-type Awaited<O> = O extends AwaitedInput<infer T> ? T : never
+      type Awaited<O> = O extends AwaitedInput<infer T> ? T : never;
 
-type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
+
 
 /**
  * プロセスが生存しているかを判定するエンドポイントで、異常時は再起動判定に利用されます。
@@ -43,171 +48,104 @@ export type systemOperationsAliveResponse200 = {
   data: SystemOperationsAlive200
   status: 200
 }
-
-export type systemOperationsAliveResponseComposite =
-  systemOperationsAliveResponse200
-
-export type systemOperationsAliveResponse =
-  systemOperationsAliveResponseComposite & {
-    headers: Headers
-  }
+    
+export type systemOperationsAliveResponseComposite = systemOperationsAliveResponse200;
+    
+export type systemOperationsAliveResponse = systemOperationsAliveResponseComposite & {
+  headers: Headers;
+}
 
 export const getSystemOperationsAliveUrl = () => {
+
+
+  
+
   return `/api/system/alive`
 }
 
-export const systemOperationsAlive = async (
-  options?: RequestInit
-): Promise<systemOperationsAliveResponse> => {
-  return customInstance<systemOperationsAliveResponse>(
-    getSystemOperationsAliveUrl(),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
+export const systemOperationsAlive = async ( options?: RequestInit): Promise<systemOperationsAliveResponse> => {
+  
+  return customInstance<systemOperationsAliveResponse>(getSystemOperationsAliveUrl(),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
 
 export const getSystemOperationsAliveQueryKey = () => {
-  return [`/api/system/alive`] as const
+    return [`/api/system/alive`] as const;
+    }
+
+    
+export const getSystemOperationsAliveQueryOptions = <TData = Awaited<ReturnType<typeof systemOperationsAlive>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof systemOperationsAlive>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getSystemOperationsAliveQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof systemOperationsAlive>>> = ({ signal }) => systemOperationsAlive({ signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof systemOperationsAlive>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export const getSystemOperationsAliveQueryOptions = <
-  TData = Awaited<ReturnType<typeof systemOperationsAlive>>,
-  TError = unknown,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<
-      Awaited<ReturnType<typeof systemOperationsAlive>>,
-      TError,
-      TData
-    >
-  >
-  request?: SecondParameter<typeof customInstance>
-}) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
-
-  const queryKey = queryOptions?.queryKey ?? getSystemOperationsAliveQueryKey()
-
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof systemOperationsAlive>>
-  > = ({ signal }) => systemOperationsAlive({ signal, ...requestOptions })
-
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof systemOperationsAlive>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type SystemOperationsAliveQueryResult = NonNullable<
-  Awaited<ReturnType<typeof systemOperationsAlive>>
->
+export type SystemOperationsAliveQueryResult = NonNullable<Awaited<ReturnType<typeof systemOperationsAlive>>>
 export type SystemOperationsAliveQueryError = unknown
 
-export function useSystemOperationsAlive<
-  TData = Awaited<ReturnType<typeof systemOperationsAlive>>,
-  TError = unknown,
->(
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof systemOperationsAlive>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useSystemOperationsAlive<TData = Awaited<ReturnType<typeof systemOperationsAlive>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof systemOperationsAlive>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof systemOperationsAlive>>,
           TError,
           Awaited<ReturnType<typeof systemOperationsAlive>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSystemOperationsAlive<
-  TData = Awaited<ReturnType<typeof systemOperationsAlive>>,
-  TError = unknown,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof systemOperationsAlive>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSystemOperationsAlive<TData = Awaited<ReturnType<typeof systemOperationsAlive>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof systemOperationsAlive>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof systemOperationsAlive>>,
           TError,
           Awaited<ReturnType<typeof systemOperationsAlive>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSystemOperationsAlive<
-  TData = Awaited<ReturnType<typeof systemOperationsAlive>>,
-  TError = unknown,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof systemOperationsAlive>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSystemOperationsAlive<TData = Awaited<ReturnType<typeof systemOperationsAlive>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof systemOperationsAlive>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Check API liveness
  */
 
-export function useSystemOperationsAlive<
-  TData = Awaited<ReturnType<typeof systemOperationsAlive>>,
-  TError = unknown,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof systemOperationsAlive>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
+export function useSystemOperationsAlive<TData = Awaited<ReturnType<typeof systemOperationsAlive>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof systemOperationsAlive>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
   const queryOptions = getSystemOperationsAliveQueryOptions(options)
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  query.queryKey = queryOptions.queryKey
+  query.queryKey = queryOptions.queryKey ;
 
-  return query
+  return query;
 }
+
+
 
 /**
  * APIが正常稼働しているかを判定し、監視ツールやロードバランサーから参照します。
@@ -222,172 +160,104 @@ export type systemOperationsHealthResponse503 = {
   data: ModelsHealthStatus
   status: 503
 }
-
-export type systemOperationsHealthResponseComposite =
-  | systemOperationsHealthResponse200
-  | systemOperationsHealthResponse503
-
-export type systemOperationsHealthResponse =
-  systemOperationsHealthResponseComposite & {
-    headers: Headers
-  }
+    
+export type systemOperationsHealthResponseComposite = systemOperationsHealthResponse200 | systemOperationsHealthResponse503;
+    
+export type systemOperationsHealthResponse = systemOperationsHealthResponseComposite & {
+  headers: Headers;
+}
 
 export const getSystemOperationsHealthUrl = () => {
+
+
+  
+
   return `/api/system/health`
 }
 
-export const systemOperationsHealth = async (
-  options?: RequestInit
-): Promise<systemOperationsHealthResponse> => {
-  return customInstance<systemOperationsHealthResponse>(
-    getSystemOperationsHealthUrl(),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
+export const systemOperationsHealth = async ( options?: RequestInit): Promise<systemOperationsHealthResponse> => {
+  
+  return customInstance<systemOperationsHealthResponse>(getSystemOperationsHealthUrl(),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
 
 export const getSystemOperationsHealthQueryKey = () => {
-  return [`/api/system/health`] as const
+    return [`/api/system/health`] as const;
+    }
+
+    
+export const getSystemOperationsHealthQueryOptions = <TData = Awaited<ReturnType<typeof systemOperationsHealth>>, TError = ModelsHealthStatus>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof systemOperationsHealth>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getSystemOperationsHealthQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof systemOperationsHealth>>> = ({ signal }) => systemOperationsHealth({ signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof systemOperationsHealth>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export const getSystemOperationsHealthQueryOptions = <
-  TData = Awaited<ReturnType<typeof systemOperationsHealth>>,
-  TError = ModelsHealthStatus,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<
-      Awaited<ReturnType<typeof systemOperationsHealth>>,
-      TError,
-      TData
-    >
-  >
-  request?: SecondParameter<typeof customInstance>
-}) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
-
-  const queryKey = queryOptions?.queryKey ?? getSystemOperationsHealthQueryKey()
-
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof systemOperationsHealth>>
-  > = ({ signal }) => systemOperationsHealth({ signal, ...requestOptions })
-
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof systemOperationsHealth>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type SystemOperationsHealthQueryResult = NonNullable<
-  Awaited<ReturnType<typeof systemOperationsHealth>>
->
+export type SystemOperationsHealthQueryResult = NonNullable<Awaited<ReturnType<typeof systemOperationsHealth>>>
 export type SystemOperationsHealthQueryError = ModelsHealthStatus
 
-export function useSystemOperationsHealth<
-  TData = Awaited<ReturnType<typeof systemOperationsHealth>>,
-  TError = ModelsHealthStatus,
->(
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof systemOperationsHealth>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useSystemOperationsHealth<TData = Awaited<ReturnType<typeof systemOperationsHealth>>, TError = ModelsHealthStatus>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof systemOperationsHealth>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof systemOperationsHealth>>,
           TError,
           Awaited<ReturnType<typeof systemOperationsHealth>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSystemOperationsHealth<
-  TData = Awaited<ReturnType<typeof systemOperationsHealth>>,
-  TError = ModelsHealthStatus,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof systemOperationsHealth>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSystemOperationsHealth<TData = Awaited<ReturnType<typeof systemOperationsHealth>>, TError = ModelsHealthStatus>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof systemOperationsHealth>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof systemOperationsHealth>>,
           TError,
           Awaited<ReturnType<typeof systemOperationsHealth>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSystemOperationsHealth<
-  TData = Awaited<ReturnType<typeof systemOperationsHealth>>,
-  TError = ModelsHealthStatus,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof systemOperationsHealth>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSystemOperationsHealth<TData = Awaited<ReturnType<typeof systemOperationsHealth>>, TError = ModelsHealthStatus>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof systemOperationsHealth>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Check API health
  */
 
-export function useSystemOperationsHealth<
-  TData = Awaited<ReturnType<typeof systemOperationsHealth>>,
-  TError = ModelsHealthStatus,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof systemOperationsHealth>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
+export function useSystemOperationsHealth<TData = Awaited<ReturnType<typeof systemOperationsHealth>>, TError = ModelsHealthStatus>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof systemOperationsHealth>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
   const queryOptions = getSystemOperationsHealthQueryOptions(options)
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  query.queryKey = queryOptions.queryKey
+  query.queryKey = queryOptions.queryKey ;
 
-  return query
+  return query;
 }
+
+
 
 /**
  * Prometheus形式のメトリクスを返却し、監視基盤での可視化やアラート設定に用います。
@@ -402,173 +272,104 @@ export type systemOperationsMetricsResponse401 = {
   data: ModelsProblemDetails
   status: 401
 }
-
-export type systemOperationsMetricsResponseComposite =
-  | systemOperationsMetricsResponse200
-  | systemOperationsMetricsResponse401
-
-export type systemOperationsMetricsResponse =
-  systemOperationsMetricsResponseComposite & {
-    headers: Headers
-  }
+    
+export type systemOperationsMetricsResponseComposite = systemOperationsMetricsResponse200 | systemOperationsMetricsResponse401;
+    
+export type systemOperationsMetricsResponse = systemOperationsMetricsResponseComposite & {
+  headers: Headers;
+}
 
 export const getSystemOperationsMetricsUrl = () => {
+
+
+  
+
   return `/api/system/metrics`
 }
 
-export const systemOperationsMetrics = async (
-  options?: RequestInit
-): Promise<systemOperationsMetricsResponse> => {
-  return customInstance<systemOperationsMetricsResponse>(
-    getSystemOperationsMetricsUrl(),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
+export const systemOperationsMetrics = async ( options?: RequestInit): Promise<systemOperationsMetricsResponse> => {
+  
+  return customInstance<systemOperationsMetricsResponse>(getSystemOperationsMetricsUrl(),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
 
 export const getSystemOperationsMetricsQueryKey = () => {
-  return [`/api/system/metrics`] as const
+    return [`/api/system/metrics`] as const;
+    }
+
+    
+export const getSystemOperationsMetricsQueryOptions = <TData = Awaited<ReturnType<typeof systemOperationsMetrics>>, TError = ModelsProblemDetails>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof systemOperationsMetrics>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getSystemOperationsMetricsQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof systemOperationsMetrics>>> = ({ signal }) => systemOperationsMetrics({ signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof systemOperationsMetrics>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export const getSystemOperationsMetricsQueryOptions = <
-  TData = Awaited<ReturnType<typeof systemOperationsMetrics>>,
-  TError = ModelsProblemDetails,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<
-      Awaited<ReturnType<typeof systemOperationsMetrics>>,
-      TError,
-      TData
-    >
-  >
-  request?: SecondParameter<typeof customInstance>
-}) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
-
-  const queryKey =
-    queryOptions?.queryKey ?? getSystemOperationsMetricsQueryKey()
-
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof systemOperationsMetrics>>
-  > = ({ signal }) => systemOperationsMetrics({ signal, ...requestOptions })
-
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof systemOperationsMetrics>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type SystemOperationsMetricsQueryResult = NonNullable<
-  Awaited<ReturnType<typeof systemOperationsMetrics>>
->
+export type SystemOperationsMetricsQueryResult = NonNullable<Awaited<ReturnType<typeof systemOperationsMetrics>>>
 export type SystemOperationsMetricsQueryError = ModelsProblemDetails
 
-export function useSystemOperationsMetrics<
-  TData = Awaited<ReturnType<typeof systemOperationsMetrics>>,
-  TError = ModelsProblemDetails,
->(
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof systemOperationsMetrics>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useSystemOperationsMetrics<TData = Awaited<ReturnType<typeof systemOperationsMetrics>>, TError = ModelsProblemDetails>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof systemOperationsMetrics>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof systemOperationsMetrics>>,
           TError,
           Awaited<ReturnType<typeof systemOperationsMetrics>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSystemOperationsMetrics<
-  TData = Awaited<ReturnType<typeof systemOperationsMetrics>>,
-  TError = ModelsProblemDetails,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof systemOperationsMetrics>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSystemOperationsMetrics<TData = Awaited<ReturnType<typeof systemOperationsMetrics>>, TError = ModelsProblemDetails>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof systemOperationsMetrics>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof systemOperationsMetrics>>,
           TError,
           Awaited<ReturnType<typeof systemOperationsMetrics>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSystemOperationsMetrics<
-  TData = Awaited<ReturnType<typeof systemOperationsMetrics>>,
-  TError = ModelsProblemDetails,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof systemOperationsMetrics>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSystemOperationsMetrics<TData = Awaited<ReturnType<typeof systemOperationsMetrics>>, TError = ModelsProblemDetails>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof systemOperationsMetrics>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get API metrics
  */
 
-export function useSystemOperationsMetrics<
-  TData = Awaited<ReturnType<typeof systemOperationsMetrics>>,
-  TError = ModelsProblemDetails,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof systemOperationsMetrics>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
+export function useSystemOperationsMetrics<TData = Awaited<ReturnType<typeof systemOperationsMetrics>>, TError = ModelsProblemDetails>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof systemOperationsMetrics>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
   const queryOptions = getSystemOperationsMetricsQueryOptions(options)
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  query.queryKey = queryOptions.queryKey
+  query.queryKey = queryOptions.queryKey ;
 
-  return query
+  return query;
 }
+
+
 
 /**
  * Kubernetes等のオーケストレーターがトラフィック受信可否を判断するための準備完了チェックです。
@@ -583,172 +384,104 @@ export type systemOperationsReadyResponse503 = {
   data: SystemOperationsReady503
   status: 503
 }
-
-export type systemOperationsReadyResponseComposite =
-  | systemOperationsReadyResponse200
-  | systemOperationsReadyResponse503
-
-export type systemOperationsReadyResponse =
-  systemOperationsReadyResponseComposite & {
-    headers: Headers
-  }
+    
+export type systemOperationsReadyResponseComposite = systemOperationsReadyResponse200 | systemOperationsReadyResponse503;
+    
+export type systemOperationsReadyResponse = systemOperationsReadyResponseComposite & {
+  headers: Headers;
+}
 
 export const getSystemOperationsReadyUrl = () => {
+
+
+  
+
   return `/api/system/ready`
 }
 
-export const systemOperationsReady = async (
-  options?: RequestInit
-): Promise<systemOperationsReadyResponse> => {
-  return customInstance<systemOperationsReadyResponse>(
-    getSystemOperationsReadyUrl(),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
+export const systemOperationsReady = async ( options?: RequestInit): Promise<systemOperationsReadyResponse> => {
+  
+  return customInstance<systemOperationsReadyResponse>(getSystemOperationsReadyUrl(),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
 
 export const getSystemOperationsReadyQueryKey = () => {
-  return [`/api/system/ready`] as const
+    return [`/api/system/ready`] as const;
+    }
+
+    
+export const getSystemOperationsReadyQueryOptions = <TData = Awaited<ReturnType<typeof systemOperationsReady>>, TError = SystemOperationsReady503>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof systemOperationsReady>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getSystemOperationsReadyQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof systemOperationsReady>>> = ({ signal }) => systemOperationsReady({ signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof systemOperationsReady>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export const getSystemOperationsReadyQueryOptions = <
-  TData = Awaited<ReturnType<typeof systemOperationsReady>>,
-  TError = SystemOperationsReady503,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<
-      Awaited<ReturnType<typeof systemOperationsReady>>,
-      TError,
-      TData
-    >
-  >
-  request?: SecondParameter<typeof customInstance>
-}) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
-
-  const queryKey = queryOptions?.queryKey ?? getSystemOperationsReadyQueryKey()
-
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof systemOperationsReady>>
-  > = ({ signal }) => systemOperationsReady({ signal, ...requestOptions })
-
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof systemOperationsReady>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type SystemOperationsReadyQueryResult = NonNullable<
-  Awaited<ReturnType<typeof systemOperationsReady>>
->
+export type SystemOperationsReadyQueryResult = NonNullable<Awaited<ReturnType<typeof systemOperationsReady>>>
 export type SystemOperationsReadyQueryError = SystemOperationsReady503
 
-export function useSystemOperationsReady<
-  TData = Awaited<ReturnType<typeof systemOperationsReady>>,
-  TError = SystemOperationsReady503,
->(
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof systemOperationsReady>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useSystemOperationsReady<TData = Awaited<ReturnType<typeof systemOperationsReady>>, TError = SystemOperationsReady503>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof systemOperationsReady>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof systemOperationsReady>>,
           TError,
           Awaited<ReturnType<typeof systemOperationsReady>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSystemOperationsReady<
-  TData = Awaited<ReturnType<typeof systemOperationsReady>>,
-  TError = SystemOperationsReady503,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof systemOperationsReady>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSystemOperationsReady<TData = Awaited<ReturnType<typeof systemOperationsReady>>, TError = SystemOperationsReady503>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof systemOperationsReady>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof systemOperationsReady>>,
           TError,
           Awaited<ReturnType<typeof systemOperationsReady>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSystemOperationsReady<
-  TData = Awaited<ReturnType<typeof systemOperationsReady>>,
-  TError = SystemOperationsReady503,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof systemOperationsReady>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSystemOperationsReady<TData = Awaited<ReturnType<typeof systemOperationsReady>>, TError = SystemOperationsReady503>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof systemOperationsReady>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Check API readiness
  */
 
-export function useSystemOperationsReady<
-  TData = Awaited<ReturnType<typeof systemOperationsReady>>,
-  TError = SystemOperationsReady503,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof systemOperationsReady>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
+export function useSystemOperationsReady<TData = Awaited<ReturnType<typeof systemOperationsReady>>, TError = SystemOperationsReady503>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof systemOperationsReady>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
   const queryOptions = getSystemOperationsReadyQueryOptions(options)
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  query.queryKey = queryOptions.queryKey
+  query.queryKey = queryOptions.queryKey ;
 
-  return query
+  return query;
 }
+
+
 
 /**
  * APIのバージョンやビルド情報を返し、障害解析やデプロイ確認に活用します。
@@ -758,169 +491,102 @@ export type systemOperationsVersionResponse200 = {
   data: SystemOperationsVersion200
   status: 200
 }
-
-export type systemOperationsVersionResponseComposite =
-  systemOperationsVersionResponse200
-
-export type systemOperationsVersionResponse =
-  systemOperationsVersionResponseComposite & {
-    headers: Headers
-  }
+    
+export type systemOperationsVersionResponseComposite = systemOperationsVersionResponse200;
+    
+export type systemOperationsVersionResponse = systemOperationsVersionResponseComposite & {
+  headers: Headers;
+}
 
 export const getSystemOperationsVersionUrl = () => {
+
+
+  
+
   return `/api/system/version`
 }
 
-export const systemOperationsVersion = async (
-  options?: RequestInit
-): Promise<systemOperationsVersionResponse> => {
-  return customInstance<systemOperationsVersionResponse>(
-    getSystemOperationsVersionUrl(),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
+export const systemOperationsVersion = async ( options?: RequestInit): Promise<systemOperationsVersionResponse> => {
+  
+  return customInstance<systemOperationsVersionResponse>(getSystemOperationsVersionUrl(),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
 
 export const getSystemOperationsVersionQueryKey = () => {
-  return [`/api/system/version`] as const
+    return [`/api/system/version`] as const;
+    }
+
+    
+export const getSystemOperationsVersionQueryOptions = <TData = Awaited<ReturnType<typeof systemOperationsVersion>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof systemOperationsVersion>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getSystemOperationsVersionQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof systemOperationsVersion>>> = ({ signal }) => systemOperationsVersion({ signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof systemOperationsVersion>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export const getSystemOperationsVersionQueryOptions = <
-  TData = Awaited<ReturnType<typeof systemOperationsVersion>>,
-  TError = unknown,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<
-      Awaited<ReturnType<typeof systemOperationsVersion>>,
-      TError,
-      TData
-    >
-  >
-  request?: SecondParameter<typeof customInstance>
-}) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
-
-  const queryKey =
-    queryOptions?.queryKey ?? getSystemOperationsVersionQueryKey()
-
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof systemOperationsVersion>>
-  > = ({ signal }) => systemOperationsVersion({ signal, ...requestOptions })
-
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof systemOperationsVersion>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type SystemOperationsVersionQueryResult = NonNullable<
-  Awaited<ReturnType<typeof systemOperationsVersion>>
->
+export type SystemOperationsVersionQueryResult = NonNullable<Awaited<ReturnType<typeof systemOperationsVersion>>>
 export type SystemOperationsVersionQueryError = unknown
 
-export function useSystemOperationsVersion<
-  TData = Awaited<ReturnType<typeof systemOperationsVersion>>,
-  TError = unknown,
->(
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof systemOperationsVersion>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useSystemOperationsVersion<TData = Awaited<ReturnType<typeof systemOperationsVersion>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof systemOperationsVersion>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof systemOperationsVersion>>,
           TError,
           Awaited<ReturnType<typeof systemOperationsVersion>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSystemOperationsVersion<
-  TData = Awaited<ReturnType<typeof systemOperationsVersion>>,
-  TError = unknown,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof systemOperationsVersion>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSystemOperationsVersion<TData = Awaited<ReturnType<typeof systemOperationsVersion>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof systemOperationsVersion>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof systemOperationsVersion>>,
           TError,
           Awaited<ReturnType<typeof systemOperationsVersion>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSystemOperationsVersion<
-  TData = Awaited<ReturnType<typeof systemOperationsVersion>>,
-  TError = unknown,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof systemOperationsVersion>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSystemOperationsVersion<TData = Awaited<ReturnType<typeof systemOperationsVersion>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof systemOperationsVersion>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get API version
  */
 
-export function useSystemOperationsVersion<
-  TData = Awaited<ReturnType<typeof systemOperationsVersion>>,
-  TError = unknown,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof systemOperationsVersion>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
+export function useSystemOperationsVersion<TData = Awaited<ReturnType<typeof systemOperationsVersion>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof systemOperationsVersion>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
   const queryOptions = getSystemOperationsVersionQueryOptions(options)
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  query.queryKey = queryOptions.queryKey
+  query.queryKey = queryOptions.queryKey ;
 
-  return query
+  return query;
 }
+
+
+

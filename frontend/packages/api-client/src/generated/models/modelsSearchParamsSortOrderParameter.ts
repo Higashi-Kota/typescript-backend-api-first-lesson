@@ -6,11 +6,11 @@
  * OpenAPI spec version: 2.0
  */
 
-export type ModelsSearchParamsSortOrderParameter =
-  (typeof ModelsSearchParamsSortOrderParameter)[keyof typeof ModelsSearchParamsSortOrderParameter]
+export type ModelsSearchParamsSortOrderParameter = typeof ModelsSearchParamsSortOrderParameter[keyof typeof ModelsSearchParamsSortOrderParameter];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsSearchParamsSortOrderParameter = {
   asc: 'asc',
   desc: 'desc',
-} as const
+} as const;

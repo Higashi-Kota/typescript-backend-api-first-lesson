@@ -16,8 +16,8 @@ limited: 数量限定 - 残りわずかなサービス
 discontinued: 廃止 - 提供を終了したサービス
 coming_soon: 近日公開 - 近々提供予定のサービス
  */
-export type ModelsServiceStatusType =
-  (typeof ModelsServiceStatusType)[keyof typeof ModelsServiceStatusType]
+export type ModelsServiceStatusType = typeof ModelsServiceStatusType[keyof typeof ModelsServiceStatusType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsServiceStatusType = {
@@ -27,4 +27,4 @@ export const ModelsServiceStatusType = {
   limited: 'limited',
   discontinued: 'discontinued',
   coming_soon: 'coming_soon',
-} as const
+} as const;

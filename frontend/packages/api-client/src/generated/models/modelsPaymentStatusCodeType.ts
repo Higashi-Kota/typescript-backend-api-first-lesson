@@ -16,8 +16,8 @@ failed: 失敗 - 支払い処理が失敗した状態
 refunded: 返金済み - 全額返金が完了した状態
 partial_refund: 部分返金 - 一部金額の返金が完了した状態
  */
-export type ModelsPaymentStatusCodeType =
-  (typeof ModelsPaymentStatusCodeType)[keyof typeof ModelsPaymentStatusCodeType]
+export type ModelsPaymentStatusCodeType = typeof ModelsPaymentStatusCodeType[keyof typeof ModelsPaymentStatusCodeType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsPaymentStatusCodeType = {
@@ -27,4 +27,4 @@ export const ModelsPaymentStatusCodeType = {
   failed: 'failed',
   refunded: 'refunded',
   partial_refund: 'partial_refund',
-} as const
+} as const;

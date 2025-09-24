@@ -5,22 +5,15 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsDraftBookingStatus } from './modelsDraftBookingStatus'
-import type { ModelsPendingBookingStatus } from './modelsPendingBookingStatus'
-import type { ModelsConfirmedBookingStatus } from './modelsConfirmedBookingStatus'
-import type { ModelsInProgressBookingStatus } from './modelsInProgressBookingStatus'
-import type { ModelsCompletedBookingStatus } from './modelsCompletedBookingStatus'
-import type { ModelsCancelledBookingStatus } from './modelsCancelledBookingStatus'
-import type { ModelsNoShowBookingStatus } from './modelsNoShowBookingStatus'
+import type { ModelsDraftBookingStatus } from './modelsDraftBookingStatus';
+import type { ModelsPendingBookingStatus } from './modelsPendingBookingStatus';
+import type { ModelsConfirmedBookingStatus } from './modelsConfirmedBookingStatus';
+import type { ModelsInProgressBookingStatus } from './modelsInProgressBookingStatus';
+import type { ModelsCompletedBookingStatus } from './modelsCompletedBookingStatus';
+import type { ModelsCancelledBookingStatus } from './modelsCancelledBookingStatus';
+import type { ModelsNoShowBookingStatus } from './modelsNoShowBookingStatus';
 
 /**
  * 予約の進行状況ごとに保持する詳細情報ユニオン。
  */
-export type ModelsBookingStatus =
-  | ModelsDraftBookingStatus
-  | ModelsPendingBookingStatus
-  | ModelsConfirmedBookingStatus
-  | ModelsInProgressBookingStatus
-  | ModelsCompletedBookingStatus
-  | ModelsCancelledBookingStatus
-  | ModelsNoShowBookingStatus
+export type ModelsBookingStatus = ModelsDraftBookingStatus | ModelsPendingBookingStatus | ModelsConfirmedBookingStatus | ModelsInProgressBookingStatus | ModelsCompletedBookingStatus | ModelsCancelledBookingStatus | ModelsNoShowBookingStatus;

@@ -5,28 +5,28 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsContactInfo } from './modelsContactInfo'
-import type { CustomerCrudBulkUpdateBodyItemsItemPreferences } from './customerCrudBulkUpdateBodyItemsItemPreferences'
-import type { ModelsCustomerId } from './modelsCustomerId'
+import type { ModelsContactInfo } from './modelsContactInfo';
+import type { CustomerCrudBulkUpdateBodyItemsItemPreferences } from './customerCrudBulkUpdateBodyItemsItemPreferences';
+import type { ModelsCustomerId } from './modelsCustomerId';
 
 export type CustomerCrudBulkUpdateBodyItemsItem = {
   /** 顧客氏名。フルネームまたは通称名 */
-  name?: string
+  name?: string;
   /** 連絡先情報。メール、電話番号等の連絡手段 */
-  contactInfo?: ModelsContactInfo
+  contactInfo?: ModelsContactInfo;
   /** 顧客の好みや要望。カスタム設定情報 */
-  preferences?: CustomerCrudBulkUpdateBodyItemsItemPreferences
+  preferences?: CustomerCrudBulkUpdateBodyItemsItemPreferences;
   /**
    * 内部メモ。スタッフ用の顧客に関する備考。null指定でリセット可能
    * @nullable
    */
-  notes?: string | null
+  notes?: string | null;
   /** 分類用タグ。顧客をグループ化するためのラベル */
-  tags?: string[]
+  tags?: string[];
   /**
    * 生年月日。年齢計算や誕生日特典に使用。null指定でリセット可能
    * @nullable
    */
-  birthDate?: string | null
-  id: ModelsCustomerId
-}
+  birthDate?: string | null;
+  id: ModelsCustomerId;
+};

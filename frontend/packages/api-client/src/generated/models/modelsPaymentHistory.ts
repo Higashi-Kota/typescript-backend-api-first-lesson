@@ -5,41 +5,41 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsPaymentId } from './modelsPaymentId'
-import type { ModelsPaymentStatus } from './modelsPaymentStatus'
-import type { ModelsPaymentHistoryActor } from './modelsPaymentHistoryActor'
-import type { ModelsPaymentHistoryMetadata } from './modelsPaymentHistoryMetadata'
+import type { ModelsPaymentId } from './modelsPaymentId';
+import type { ModelsPaymentStatus } from './modelsPaymentStatus';
+import type { ModelsPaymentHistoryActor } from './modelsPaymentHistoryActor';
+import type { ModelsPaymentHistoryMetadata } from './modelsPaymentHistoryMetadata';
 
 /**
  * 決済状態の変更履歴
  */
 export interface ModelsPaymentHistory {
   /** 履歴イベント ID */
-  eventId: string
+  eventId: string;
   /** 対象となる決済 ID */
-  paymentId: ModelsPaymentId
+  paymentId: ModelsPaymentId;
   /** 変更後の支払い状態 */
-  status: ModelsPaymentStatus
+  status: ModelsPaymentStatus;
   /** 変更が発生した日時 */
-  occurredAt: string
+  occurredAt: string;
   /**
    * 操作主体の区分
    * @nullable
    */
-  actor: ModelsPaymentHistoryActor
+  actor: ModelsPaymentHistoryActor;
   /**
    * 操作主体の ID
    * @nullable
    */
-  actorId: string | null
+  actorId: string | null;
   /**
    * 変更内容の補足メモ
    * @nullable
    */
-  note: string | null
+  note: string | null;
   /**
    * 履歴に紐づく追加メタデータ
    * @nullable
    */
-  metadata: ModelsPaymentHistoryMetadata
+  metadata: ModelsPaymentHistoryMetadata;
 }

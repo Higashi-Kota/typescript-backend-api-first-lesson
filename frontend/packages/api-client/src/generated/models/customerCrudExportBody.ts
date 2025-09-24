@@ -5,48 +5,48 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { CustomerCrudExportBodyStatus } from './customerCrudExportBodyStatus'
-import type { CustomerCrudExportBodyLoyaltyTier } from './customerCrudExportBodyLoyaltyTier'
-import type { CustomerCrudExportBodySortOrder } from './customerCrudExportBodySortOrder'
-import type { CustomerCrudExportBodyFormat } from './customerCrudExportBodyFormat'
+import type { CustomerCrudExportBodyStatus } from './customerCrudExportBodyStatus';
+import type { CustomerCrudExportBodyLoyaltyTier } from './customerCrudExportBodyLoyaltyTier';
+import type { CustomerCrudExportBodySortOrder } from './customerCrudExportBodySortOrder';
+import type { CustomerCrudExportBodyFormat } from './customerCrudExportBodyFormat';
 
 export type CustomerCrudExportBody = {
   /** 顧客名、メール、または電話番号で検索 */
-  search?: string
+  search?: string;
   /** 顧客タグでフィルタ */
-  tags?: string[]
+  tags?: string[];
   /** 登録日開始でフィルタ */
-  registeredFrom?: string
+  registeredFrom?: string;
   /** 登録日終了でフィルタ */
-  registeredTo?: string
+  registeredTo?: string;
   /** 顧客ステータスでフィルタ */
-  status?: CustomerCrudExportBodyStatus
+  status?: CustomerCrudExportBodyStatus;
   /** ロイヤルティティアでフィルタ */
-  loyaltyTier?: CustomerCrudExportBodyLoyaltyTier
+  loyaltyTier?: CustomerCrudExportBodyLoyaltyTier;
   /** 全文検索キーワード。名称や説明文を横断的に検索する。 */
-  q?: string
+  q?: string;
   /** フィルター式。例: `status:active AND category:premium`。属性条件を組み合わせた絞り込みに使用。 */
-  filter?: string
+  filter?: string;
   /** レスポンスに含めるフィールドのカンマ区切りリスト。データ転送量の最適化に活用。 */
-  fields?: string
+  fields?: string;
   /** レスポンスから除外したいフィールドのカンマ区切りリスト。不要情報を除く場合に利用。 */
-  exclude?: string
+  exclude?: string;
   /** ファセット集計を有効化するかどうか。true で各項目の件数を集計する。 */
-  facets?: boolean
+  facets?: boolean;
   /** 集計対象とするファセットフィールドの一覧。カテゴリや価格帯などを指定する。 */
-  facetFields?: string[]
+  facetFields?: string[];
   /**
    * 1ページあたりの取得件数上限 (1〜100)。指定が無い場合は既定値 20 を適用。
    * @minimum 1
    * @maximum 100
    */
-  limit?: number
+  limit?: number;
   /** 次ページを指し示すカーソル。前回レスポンスの `meta.nextCursor` を設定する。 */
-  cursor?: string
+  cursor?: string;
   /** ソート対象フィールド。予約日時や作成日時など業務軸を指定する。 */
-  sortBy?: string
+  sortBy?: string;
   /** ソート順序。`asc` は昇順、`desc` は降順を表す。 */
-  sortOrder?: CustomerCrudExportBodySortOrder
-  format: CustomerCrudExportBodyFormat
-  exportFields?: string[]
-}
+  sortOrder?: CustomerCrudExportBodySortOrder;
+  format: CustomerCrudExportBodyFormat;
+  exportFields?: string[];
+};

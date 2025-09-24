@@ -6,7 +6,7 @@
  */
 export const isRequiredFile = (
   file: File | FileList | null | undefined,
-  isRequired: boolean
+  isRequired: boolean,
 ): boolean => {
   if (!isRequired) {
     return true

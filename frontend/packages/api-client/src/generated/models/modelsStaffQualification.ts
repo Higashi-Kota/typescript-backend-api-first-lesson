@@ -11,22 +11,22 @@
  */
 export interface ModelsStaffQualification {
   /** 資格・認定の名称 */
-  name: string
+  name: string;
   /** 資格を取得した日付 */
-  certificationDate: string
+  certificationDate: string;
   /**
    * 資格の有効期限 - 無期限資格や更新不要の資格の場合はnull
    * @nullable
    */
-  expiryDate: string | null
+  expiryDate: string | null;
   /**
    * 資格を発行した機関名 - 発行機関が不明または未記録の場合はnull
    * @nullable
    */
-  issuer: string | null
+  issuer: string | null;
   /**
    * 資格証明番号などの識別子 - 証明番号がない内部認定やサロン独自資格の場合はnull
    * @nullable
    */
-  credentialId: string | null
+  credentialId: string | null;
 }

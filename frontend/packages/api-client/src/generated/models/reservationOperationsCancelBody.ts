@@ -7,5 +7,5 @@
  */
 
 export type ReservationOperationsCancelBody = {
-  reason?: string
-}
+  reason?: string;
+};

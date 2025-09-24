@@ -5,31 +5,31 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsPermissionId } from './modelsPermissionId'
-import type { ModelsPermissionScope } from './modelsPermissionScope'
+import type { ModelsPermissionId } from './modelsPermissionId';
+import type { ModelsPermissionScope } from './modelsPermissionScope';
 
 /**
  * 操作権限の定義
  */
 export interface ModelsPermission {
   /** 権限 ID */
-  id: ModelsPermissionId
+  id: ModelsPermissionId;
   /** 権限キー（例: booking.create） */
-  key: string
+  key: string;
   /** 権限の名称 */
-  name: string
+  name: string;
   /**
    * 権限の説明 - 自明な権限や説明不要な基本権限の場合はnull
    * @nullable
    */
-  description: string | null
+  description: string | null;
   /** 対象リソース種別 */
-  resource: string
+  resource: string;
   /** 許可する操作区分 */
-  action: string
+  action: string;
   /**
    * 権限の適用範囲（own/salon/all） - 範囲指定が不要なグローバル権限の場合はnull
    * @nullable
    */
-  scope: ModelsPermissionScope
+  scope: ModelsPermissionScope;
 }

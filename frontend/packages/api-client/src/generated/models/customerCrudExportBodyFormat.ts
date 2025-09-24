@@ -6,12 +6,12 @@
  * OpenAPI spec version: 2.0
  */
 
-export type CustomerCrudExportBodyFormat =
-  (typeof CustomerCrudExportBodyFormat)[keyof typeof CustomerCrudExportBodyFormat]
+export type CustomerCrudExportBodyFormat = typeof CustomerCrudExportBodyFormat[keyof typeof CustomerCrudExportBodyFormat];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CustomerCrudExportBodyFormat = {
   csv: 'csv',
   json: 'json',
   excel: 'excel',
-} as const
+} as const;

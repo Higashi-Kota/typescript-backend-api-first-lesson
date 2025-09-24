@@ -5,11 +5,10 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsPaymentMethodType } from './modelsPaymentMethodType'
+import type { ModelsPaymentMethodType } from './modelsPaymentMethodType';
 
 /**
  * 予定している支払い方法。当日決定または未選択の場合はnull
  * @nullable
  */
-export type ModelsCreateBookingRequestPaymentMethod =
-  ModelsPaymentMethodType | null
+export type ModelsCreateBookingRequestPaymentMethod = ModelsPaymentMethodType | null;

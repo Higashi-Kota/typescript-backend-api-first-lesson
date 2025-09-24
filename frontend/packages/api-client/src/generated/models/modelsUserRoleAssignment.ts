@@ -5,30 +5,30 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsRoleId } from './modelsRoleId'
+import type { ModelsRoleId } from './modelsRoleId';
 
 /**
  * ユーザーへのロール割当情報
  */
 export interface ModelsUserRoleAssignment {
   /** 対象ユーザー ID（スタッフ/顧客いずれも可） */
-  userId: string
+  userId: string;
   /** 割り当てるロール ID */
-  roleId: ModelsRoleId
+  roleId: ModelsRoleId;
   /**
    * サロン単位のロールの場合の対象サロン ID - システム全体ロールの場合はnull
    * @nullable
    */
-  salonId: string | null
+  salonId: string | null;
   /** 割当日時 */
-  assignedAt: string
+  assignedAt: string;
   /** 割当を実施したユーザー ID */
-  assignedBy: string
+  assignedBy: string;
   /**
    * ロール割当の有効期限 - 無期限割当の場合はnull
    * @nullable
    */
-  expiresAt: string | null
+  expiresAt: string | null;
   /** 割当が現在有効かどうか */
-  isActive: boolean
+  isActive: boolean;
 }

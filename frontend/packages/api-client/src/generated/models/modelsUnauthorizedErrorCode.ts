@@ -9,10 +9,10 @@
 /**
  * 固定値UNAUTHORIZED。クライアントでのハンドリングを容易にする識別子。
  */
-export type ModelsUnauthorizedErrorCode =
-  (typeof ModelsUnauthorizedErrorCode)[keyof typeof ModelsUnauthorizedErrorCode]
+export type ModelsUnauthorizedErrorCode = typeof ModelsUnauthorizedErrorCode[keyof typeof ModelsUnauthorizedErrorCode];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsUnauthorizedErrorCode = {
   UNAUTHORIZED: 'UNAUTHORIZED',
-} as const
+} as const;

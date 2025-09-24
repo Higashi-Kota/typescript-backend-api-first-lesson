@@ -6,7 +6,7 @@
  */
 export const isLowerMaximumFileSize = (
   file: File | null | undefined,
-  maxSize: number
+  maxSize: number,
 ): boolean => {
   if (file == null) {
     return true // No file is considered valid

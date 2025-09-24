@@ -9,10 +9,10 @@
 /**
  * 固定値error。エラー結果であることを示す。
  */
-export type PermissionOperationsGetPermissionGroups200AnyOfFourStatus =
-  (typeof PermissionOperationsGetPermissionGroups200AnyOfFourStatus)[keyof typeof PermissionOperationsGetPermissionGroups200AnyOfFourStatus]
+export type PermissionOperationsGetPermissionGroups200AnyOfFourStatus = typeof PermissionOperationsGetPermissionGroups200AnyOfFourStatus[keyof typeof PermissionOperationsGetPermissionGroups200AnyOfFourStatus];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PermissionOperationsGetPermissionGroups200AnyOfFourStatus = {
   error: 'error',
-} as const
+} as const;

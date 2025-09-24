@@ -9,10 +9,10 @@
 /**
  * 状態種別（completed 固定値）
  */
-export type ModelsCompletedPaymentStatusUpdateType =
-  (typeof ModelsCompletedPaymentStatusUpdateType)[keyof typeof ModelsCompletedPaymentStatusUpdateType]
+export type ModelsCompletedPaymentStatusUpdateType = typeof ModelsCompletedPaymentStatusUpdateType[keyof typeof ModelsCompletedPaymentStatusUpdateType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsCompletedPaymentStatusUpdateType = {
   completed: 'completed',
-} as const
+} as const;

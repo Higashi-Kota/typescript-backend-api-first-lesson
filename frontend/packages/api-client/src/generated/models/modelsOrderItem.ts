@@ -5,26 +5,26 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsInventoryId } from './modelsInventoryId'
+import type { ModelsInventoryId } from './modelsInventoryId';
 
 /**
  * 発注明細の詳細情報
  */
 export interface ModelsOrderItem {
   /** 紐づく在庫 ID */
-  inventoryId: ModelsInventoryId
+  inventoryId: ModelsInventoryId;
   /** 商品コード */
-  productCode: string
+  productCode: string;
   /** 商品名 */
-  productName: string
+  productName: string;
   /** 発注数量 */
-  quantity: number
+  quantity: number;
   /** 数量単位 */
-  unit: string
+  unit: string;
   /** 単価 */
-  unitPrice: number
+  unitPrice: number;
   /** 明細ごとの金額 */
-  totalPrice: number
+  totalPrice: number;
   /** 備考メモ */
-  notes?: string
+  notes?: string;
 }

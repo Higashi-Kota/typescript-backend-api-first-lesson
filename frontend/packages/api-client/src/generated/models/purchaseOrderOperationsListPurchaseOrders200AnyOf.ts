@@ -5,15 +5,15 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { PurchaseOrderOperationsListPurchaseOrders200AnyOfStatus } from './purchaseOrderOperationsListPurchaseOrders200AnyOfStatus'
-import type { PurchaseOrderOperationsListPurchaseOrders200AnyOfData } from './purchaseOrderOperationsListPurchaseOrders200AnyOfData'
+import type { PurchaseOrderOperationsListPurchaseOrders200AnyOfStatus } from './purchaseOrderOperationsListPurchaseOrders200AnyOfStatus';
+import type { PurchaseOrderOperationsListPurchaseOrders200AnyOfData } from './purchaseOrderOperationsListPurchaseOrders200AnyOfData';
 
 /**
  * 成功時のデータとステータスを保持するモデル。
  */
 export type PurchaseOrderOperationsListPurchaseOrders200AnyOf = {
   /** 固定値success。成功結果であることを示す。 */
-  status: PurchaseOrderOperationsListPurchaseOrders200AnyOfStatus
+  status: PurchaseOrderOperationsListPurchaseOrders200AnyOfStatus;
   /** 成功時に返却するドメインデータ。 */
-  data: PurchaseOrderOperationsListPurchaseOrders200AnyOfData
-}
+  data: PurchaseOrderOperationsListPurchaseOrders200AnyOfData;
+};

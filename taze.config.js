@@ -1,14 +1,8 @@
-import { defineConfig } from 'taze'
+import { defineConfig } from "taze"
 
 export default defineConfig({
   // Exclude specific packages from updates
-  exclude: [
-    'tailwindcss',
-    '@biomejs/biome',
-    'storybook',
-    '@storybook/react',
-    '@storybook/react-vite',
-  ],
+  exclude: ["tailwindcss", "storybook", "@storybook/react", "@storybook/react-vite"],
 
   // Force fetch latest package info without cache
   force: true,
@@ -20,12 +14,7 @@ export default defineConfig({
   install: false,
 
   // Ignore specific paths when searching for package.json files
-  ignorePaths: [
-    '**/node_modules/**',
-    '**/dist/**',
-    '**/build/**',
-    '**/.next/**',
-  ],
+  ignorePaths: ["**/node_modules/**", "**/dist/**", "**/build/**", "**/.next/**"],
 
   // Package-specific update strategies
   // You can override the global behavior for specific packages if needed

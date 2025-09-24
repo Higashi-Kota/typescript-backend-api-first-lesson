@@ -5,58 +5,58 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsBookingStatusUpdate } from './modelsBookingStatusUpdate'
-import type { ModelsBookingStatusCodeType } from './modelsBookingStatusCodeType'
-import type { ModelsBookingUpdateRequestWaitlistEntry } from './modelsBookingUpdateRequestWaitlistEntry'
-import type { ModelsBookingUpdateRequestDeposit } from './modelsBookingUpdateRequestDeposit'
-import type { ModelsBookingUpdateRequestPaymentMethod } from './modelsBookingUpdateRequestPaymentMethod'
-import type { ModelsBookingUpdateRequestPaymentStatus } from './modelsBookingUpdateRequestPaymentStatus'
-import type { ModelsMoneyUpdate } from './modelsMoneyUpdate'
-import type { ModelsBookingUpdateRequestBalanceDue } from './modelsBookingUpdateRequestBalanceDue'
-import type { ModelsBookingUpdateRequestMetadata } from './modelsBookingUpdateRequestMetadata'
+import type { ModelsBookingStatusUpdate } from './modelsBookingStatusUpdate';
+import type { ModelsBookingStatusCodeType } from './modelsBookingStatusCodeType';
+import type { ModelsBookingUpdateRequestWaitlistEntry } from './modelsBookingUpdateRequestWaitlistEntry';
+import type { ModelsBookingUpdateRequestDeposit } from './modelsBookingUpdateRequestDeposit';
+import type { ModelsBookingUpdateRequestPaymentMethod } from './modelsBookingUpdateRequestPaymentMethod';
+import type { ModelsBookingUpdateRequestPaymentStatus } from './modelsBookingUpdateRequestPaymentStatus';
+import type { ModelsMoneyUpdate } from './modelsMoneyUpdate';
+import type { ModelsBookingUpdateRequestBalanceDue } from './modelsBookingUpdateRequestBalanceDue';
+import type { ModelsBookingUpdateRequestMetadata } from './modelsBookingUpdateRequestMetadata';
 
 /**
  * 予約情報を部分更新するためのリクエスト。null指定で値をリセット可能。
  */
 export interface ModelsBookingUpdateRequest {
   /** ステータス詳細の更新。 */
-  status?: ModelsBookingStatusUpdate
+  status?: ModelsBookingStatusUpdate;
   /** ステータスコードの更新。 */
-  statusCode?: ModelsBookingStatusCodeType
+  statusCode?: ModelsBookingStatusCodeType;
   /**
    * ウェイティングリスト情報の更新またはリセット。
    * @nullable
    */
-  waitlistEntry?: ModelsBookingUpdateRequestWaitlistEntry
+  waitlistEntry?: ModelsBookingUpdateRequestWaitlistEntry;
   /**
    * デポジット情報の更新またはリセット。
    * @nullable
    */
-  deposit?: ModelsBookingUpdateRequestDeposit
+  deposit?: ModelsBookingUpdateRequestDeposit;
   /**
    * 支払い方法の更新またはリセット。
    * @nullable
    */
-  paymentMethod?: ModelsBookingUpdateRequestPaymentMethod
+  paymentMethod?: ModelsBookingUpdateRequestPaymentMethod;
   /**
    * 支払いステータスの更新またはリセット。
    * @nullable
    */
-  paymentStatus?: ModelsBookingUpdateRequestPaymentStatus
+  paymentStatus?: ModelsBookingUpdateRequestPaymentStatus;
   /** 割引額の更新 */
-  discountAmount?: ModelsMoneyUpdate
+  discountAmount?: ModelsMoneyUpdate;
   /** 最終請求額の更新。 */
-  finalAmount?: ModelsMoneyUpdate
+  finalAmount?: ModelsMoneyUpdate;
   /**
    * 未収金額の更新またはリセット。
    * @nullable
    */
-  balanceDue?: ModelsBookingUpdateRequestBalanceDue
+  balanceDue?: ModelsBookingUpdateRequestBalanceDue;
   /**
    * 備考の更新またはリセット。
    * @nullable
    */
-  notes?: string | null
+  notes?: string | null;
   /** 任意メタデータの更新。 */
-  metadata?: ModelsBookingUpdateRequestMetadata
+  metadata?: ModelsBookingUpdateRequestMetadata;
 }

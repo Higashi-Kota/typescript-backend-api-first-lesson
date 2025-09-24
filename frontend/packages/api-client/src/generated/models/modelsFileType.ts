@@ -13,12 +13,12 @@ image: 画像 - 写真やイラスト等の画像ファイル（jpg, png, gif等
 document: ドキュメント - PDF、Word、Excel等の文書ファイル
 other: その他 - 上記に分類されないファイル
  */
-export type ModelsFileType =
-  (typeof ModelsFileType)[keyof typeof ModelsFileType]
+export type ModelsFileType = typeof ModelsFileType[keyof typeof ModelsFileType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsFileType = {
   image: 'image',
   document: 'document',
   other: 'other',
-} as const
+} as const;

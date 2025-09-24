@@ -11,17 +11,17 @@
  */
 export interface ModelsStaffPermission {
   /** 操作対象リソースの識別子 */
-  resource: string
+  resource: string;
   /** 許可されたアクションの一覧 */
-  actions: string[]
+  actions: string[];
   /**
    * 権限が適用される範囲や条件 - 全体権限の場合や特定範囲がない場合はnull
    * @nullable
    */
-  scope: string | null
+  scope: string | null;
   /**
    * 権限の有効期限 (UTC) - 無期限権限の場合はnull
    * @nullable
    */
-  expiresAt: string | null
+  expiresAt: string | null;
 }

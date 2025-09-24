@@ -1,7 +1,7 @@
-import { DeleteSalonUseCase } from '@beauty-salon-backend/domain'
 import type { SalonId } from '@beauty-salon-backend/domain'
-import { SalonRepository } from '@beauty-salon-backend/infrastructure'
+import { DeleteSalonUseCase } from '@beauty-salon-backend/domain'
 import type { Database } from '@beauty-salon-backend/infrastructure'
+import { SalonRepository } from '@beauty-salon-backend/infrastructure'
 import type { RequestHandler, Response } from 'express'
 import { match } from 'ts-pattern'
 import type { DeleteSalonResponse, ErrorResponse } from './_shared'
@@ -36,7 +36,7 @@ export const deleteSalonHandler: RequestHandler<
         res.status(204).send()
       })
       .with({ type: 'error' }, ({ error }) =>
-        handleDomainError(res as Response<ErrorResponse>, error)
+        handleDomainError(res as Response<ErrorResponse>, error),
       )
       .exhaustive()
   } catch (error) {

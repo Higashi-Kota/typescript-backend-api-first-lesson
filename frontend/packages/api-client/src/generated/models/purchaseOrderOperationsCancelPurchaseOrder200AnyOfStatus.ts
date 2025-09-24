@@ -9,10 +9,10 @@
 /**
  * 固定値success。成功結果であることを示す。
  */
-export type PurchaseOrderOperationsCancelPurchaseOrder200AnyOfStatus =
-  (typeof PurchaseOrderOperationsCancelPurchaseOrder200AnyOfStatus)[keyof typeof PurchaseOrderOperationsCancelPurchaseOrder200AnyOfStatus]
+export type PurchaseOrderOperationsCancelPurchaseOrder200AnyOfStatus = typeof PurchaseOrderOperationsCancelPurchaseOrder200AnyOfStatus[keyof typeof PurchaseOrderOperationsCancelPurchaseOrder200AnyOfStatus];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PurchaseOrderOperationsCancelPurchaseOrder200AnyOfStatus = {
   success: 'success',
-} as const
+} as const;

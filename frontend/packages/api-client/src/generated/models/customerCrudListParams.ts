@@ -5,41 +5,41 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsCustomerSearchRequestSearchParameter } from './modelsCustomerSearchRequestSearchParameter'
-import type { ModelsCustomerSearchRequestTagsParameter } from './modelsCustomerSearchRequestTagsParameter'
-import type { ModelsCustomerSearchRequestRegisteredFromParameter } from './modelsCustomerSearchRequestRegisteredFromParameter'
-import type { ModelsCustomerSearchRequestRegisteredToParameter } from './modelsCustomerSearchRequestRegisteredToParameter'
-import type { ModelsCustomerSearchRequestStatusParameter } from './modelsCustomerSearchRequestStatusParameter'
-import type { ModelsCustomerSearchRequestLoyaltyTierParameter } from './modelsCustomerSearchRequestLoyaltyTierParameter'
-import type { ModelsAdvancedSearchParamsQParameter } from './modelsAdvancedSearchParamsQParameter'
-import type { ModelsAdvancedSearchParamsFilterParameter } from './modelsAdvancedSearchParamsFilterParameter'
-import type { ModelsAdvancedSearchParamsFieldsParameter } from './modelsAdvancedSearchParamsFieldsParameter'
-import type { ModelsAdvancedSearchParamsExcludeParameter } from './modelsAdvancedSearchParamsExcludeParameter'
-import type { ModelsAdvancedSearchParamsFacetsParameter } from './modelsAdvancedSearchParamsFacetsParameter'
-import type { ModelsAdvancedSearchParamsFacetFieldsParameter } from './modelsAdvancedSearchParamsFacetFieldsParameter'
-import type { ModelsCursorPaginationParamsLimitParameter } from './modelsCursorPaginationParamsLimitParameter'
-import type { ModelsCursorPaginationParamsCursorParameter } from './modelsCursorPaginationParamsCursorParameter'
-import type { ModelsCursorPaginationParamsSortByParameter } from './modelsCursorPaginationParamsSortByParameter'
-import type { ModelsCursorPaginationParamsSortOrderParameter } from './modelsCursorPaginationParamsSortOrderParameter'
+import type { ModelsCustomerSearchRequestSearchParameter } from './modelsCustomerSearchRequestSearchParameter';
+import type { ModelsCustomerSearchRequestTagsParameter } from './modelsCustomerSearchRequestTagsParameter';
+import type { ModelsCustomerSearchRequestRegisteredFromParameter } from './modelsCustomerSearchRequestRegisteredFromParameter';
+import type { ModelsCustomerSearchRequestRegisteredToParameter } from './modelsCustomerSearchRequestRegisteredToParameter';
+import type { ModelsCustomerSearchRequestStatusParameter } from './modelsCustomerSearchRequestStatusParameter';
+import type { ModelsCustomerSearchRequestLoyaltyTierParameter } from './modelsCustomerSearchRequestLoyaltyTierParameter';
+import type { ModelsAdvancedSearchParamsQParameter } from './modelsAdvancedSearchParamsQParameter';
+import type { ModelsAdvancedSearchParamsFilterParameter } from './modelsAdvancedSearchParamsFilterParameter';
+import type { ModelsAdvancedSearchParamsFieldsParameter } from './modelsAdvancedSearchParamsFieldsParameter';
+import type { ModelsAdvancedSearchParamsExcludeParameter } from './modelsAdvancedSearchParamsExcludeParameter';
+import type { ModelsAdvancedSearchParamsFacetsParameter } from './modelsAdvancedSearchParamsFacetsParameter';
+import type { ModelsAdvancedSearchParamsFacetFieldsParameter } from './modelsAdvancedSearchParamsFacetFieldsParameter';
+import type { ModelsCursorPaginationParamsLimitParameter } from './modelsCursorPaginationParamsLimitParameter';
+import type { ModelsCursorPaginationParamsCursorParameter } from './modelsCursorPaginationParamsCursorParameter';
+import type { ModelsCursorPaginationParamsSortByParameter } from './modelsCursorPaginationParamsSortByParameter';
+import type { ModelsCursorPaginationParamsSortOrderParameter } from './modelsCursorPaginationParamsSortOrderParameter';
 
 export type CustomerCrudListParams = {
-  /**
-   * 顧客名、メール、または電話番号で検索
-   */
-  search?: ModelsCustomerSearchRequestSearchParameter
-  /**
-   * 顧客タグでフィルタ
-   */
-  tags?: ModelsCustomerSearchRequestTagsParameter
-  /**
-   * 登録日開始でフィルタ
-   */
-  registeredFrom?: ModelsCustomerSearchRequestRegisteredFromParameter
-  /**
-   * 登録日終了でフィルタ
-   */
-  registeredTo?: ModelsCustomerSearchRequestRegisteredToParameter
-  /**
+/**
+ * 顧客名、メール、または電話番号で検索
+ */
+search?: ModelsCustomerSearchRequestSearchParameter;
+/**
+ * 顧客タグでフィルタ
+ */
+tags?: ModelsCustomerSearchRequestTagsParameter;
+/**
+ * 登録日開始でフィルタ
+ */
+registeredFrom?: ModelsCustomerSearchRequestRegisteredFromParameter;
+/**
+ * 登録日終了でフィルタ
+ */
+registeredTo?: ModelsCustomerSearchRequestRegisteredToParameter;
+/**
  * 顧客ステータス区分 - 顧客アカウントの活動状態や利用可否を表す区分
 
 active: アクティブ - 通常利用可能な状態
@@ -48,8 +48,8 @@ suspended: 停止中 - 一時的に利用が停止されている状態
 deleted: 削除済み - アカウントが論理削除された状態
 blacklisted: ブラックリスト - 利用を禁止された状態
  */
-  status?: ModelsCustomerSearchRequestStatusParameter
-  /**
+status?: ModelsCustomerSearchRequestStatusParameter;
+/**
  * ロイヤルティティア区分 - 顧客ロイヤルティプログラムの会員ランク
 
 bronze: ブロンズ - 基本会員ランク、初期段階の特典を提供
@@ -57,47 +57,47 @@ silver: シルバー - 中級会員ランク、標準的な特典を提供
 gold: ゴールド - 上級会員ランク、優待特典を提供
 platinum: プラチナ - 最上級会員ランク、最高レベルの特典を提供
  */
-  loyaltyTier?: ModelsCustomerSearchRequestLoyaltyTierParameter
-  /**
-   * 全文検索キーワード。名称や説明文を横断的に検索する。
-   */
-  q?: ModelsAdvancedSearchParamsQParameter
-  /**
-   * フィルター式。例: `status:active AND category:premium`。属性条件を組み合わせた絞り込みに使用。
-   */
-  filter?: ModelsAdvancedSearchParamsFilterParameter
-  /**
-   * レスポンスに含めるフィールドのカンマ区切りリスト。データ転送量の最適化に活用。
-   */
-  fields?: ModelsAdvancedSearchParamsFieldsParameter
-  /**
-   * レスポンスから除外したいフィールドのカンマ区切りリスト。不要情報を除く場合に利用。
-   */
-  exclude?: ModelsAdvancedSearchParamsExcludeParameter
-  /**
-   * ファセット集計を有効化するかどうか。true で各項目の件数を集計する。
-   */
-  facets?: ModelsAdvancedSearchParamsFacetsParameter
-  /**
-   * 集計対象とするファセットフィールドの一覧。カテゴリや価格帯などを指定する。
-   */
-  facetFields?: ModelsAdvancedSearchParamsFacetFieldsParameter
-  /**
-   * 1ページあたりの取得件数上限 (1〜100)。指定が無い場合は既定値 20 を適用。
-   * @minimum 1
-   * @maximum 100
-   */
-  limit?: ModelsCursorPaginationParamsLimitParameter
-  /**
-   * 次ページを指し示すカーソル。前回レスポンスの `meta.nextCursor` を設定する。
-   */
-  cursor?: ModelsCursorPaginationParamsCursorParameter
-  /**
-   * ソート対象フィールド。予約日時や作成日時など業務軸を指定する。
-   */
-  sortBy?: ModelsCursorPaginationParamsSortByParameter
-  /**
-   * ソート順序。`asc` は昇順、`desc` は降順を表す。
-   */
-  sortOrder?: ModelsCursorPaginationParamsSortOrderParameter
-}
+loyaltyTier?: ModelsCustomerSearchRequestLoyaltyTierParameter;
+/**
+ * 全文検索キーワード。名称や説明文を横断的に検索する。
+ */
+q?: ModelsAdvancedSearchParamsQParameter;
+/**
+ * フィルター式。例: `status:active AND category:premium`。属性条件を組み合わせた絞り込みに使用。
+ */
+filter?: ModelsAdvancedSearchParamsFilterParameter;
+/**
+ * レスポンスに含めるフィールドのカンマ区切りリスト。データ転送量の最適化に活用。
+ */
+fields?: ModelsAdvancedSearchParamsFieldsParameter;
+/**
+ * レスポンスから除外したいフィールドのカンマ区切りリスト。不要情報を除く場合に利用。
+ */
+exclude?: ModelsAdvancedSearchParamsExcludeParameter;
+/**
+ * ファセット集計を有効化するかどうか。true で各項目の件数を集計する。
+ */
+facets?: ModelsAdvancedSearchParamsFacetsParameter;
+/**
+ * 集計対象とするファセットフィールドの一覧。カテゴリや価格帯などを指定する。
+ */
+facetFields?: ModelsAdvancedSearchParamsFacetFieldsParameter;
+/**
+ * 1ページあたりの取得件数上限 (1〜100)。指定が無い場合は既定値 20 を適用。
+ * @minimum 1
+ * @maximum 100
+ */
+limit?: ModelsCursorPaginationParamsLimitParameter;
+/**
+ * 次ページを指し示すカーソル。前回レスポンスの `meta.nextCursor` を設定する。
+ */
+cursor?: ModelsCursorPaginationParamsCursorParameter;
+/**
+ * ソート対象フィールド。予約日時や作成日時など業務軸を指定する。
+ */
+sortBy?: ModelsCursorPaginationParamsSortByParameter;
+/**
+ * ソート順序。`asc` は昇順、`desc` は降順を表す。
+ */
+sortOrder?: ModelsCursorPaginationParamsSortOrderParameter;
+};

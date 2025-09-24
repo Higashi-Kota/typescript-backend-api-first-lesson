@@ -9,8 +9,8 @@
 /**
  * 在庫操作区分
  */
-export type ModelsStockMovementCreateRequestType =
-  (typeof ModelsStockMovementCreateRequestType)[keyof typeof ModelsStockMovementCreateRequestType]
+export type ModelsStockMovementCreateRequestType = typeof ModelsStockMovementCreateRequestType[keyof typeof ModelsStockMovementCreateRequestType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsStockMovementCreateRequestType = {
@@ -18,4 +18,4 @@ export const ModelsStockMovementCreateRequestType = {
   out: 'out',
   adjustment: 'adjustment',
   transfer: 'transfer',
-} as const
+} as const;

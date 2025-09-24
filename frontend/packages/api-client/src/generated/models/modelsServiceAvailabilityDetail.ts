@@ -5,39 +5,39 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsServiceAvailabilityType } from './modelsServiceAvailabilityType'
-import type { ModelsServiceSchedule } from './modelsServiceSchedule'
-import type { ModelsSeason } from './modelsSeason'
+import type { ModelsServiceAvailabilityType } from './modelsServiceAvailabilityType';
+import type { ModelsServiceSchedule } from './modelsServiceSchedule';
+import type { ModelsSeason } from './modelsSeason';
 
 /**
  * サービスの提供可否設定
  */
 export interface ModelsServiceAvailabilityDetail {
   /** 提供可否タイプ */
-  type: ModelsServiceAvailabilityType
+  type: ModelsServiceAvailabilityType;
   /**
    * 曜日・時間帯のスケジュール。常時提供または予約制の場合はnull
    * @nullable
    */
-  schedule: ModelsServiceSchedule[] | null
+  schedule: ModelsServiceSchedule[] | null;
   /**
    * 事前承認が必要かどうか。即時予約可能な場合はnull（falseと同義）
    * @nullable
    */
-  requiresApproval: boolean | null
+  requiresApproval: boolean | null;
   /**
    * 季節限定時の季節設定。季節限定以外の提供タイプの場合はnull
    * @nullable
    */
-  seasons: ModelsSeason[] | null
+  seasons: ModelsSeason[] | null;
   /**
    * 1 日あたりの提供上限。日次制限がない場合はnull
    * @nullable
    */
-  maxPerDay: number | null
+  maxPerDay: number | null;
   /**
    * 1 週間あたりの提供上限。週次制限がない場合はnull
    * @nullable
    */
-  maxPerWeek: number | null
+  maxPerWeek: number | null;
 }

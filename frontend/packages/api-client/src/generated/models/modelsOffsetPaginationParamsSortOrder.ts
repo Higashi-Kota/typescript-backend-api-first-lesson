@@ -9,11 +9,11 @@
 /**
  * ソート順序。`asc` は昇順、`desc` は降順を表す。
  */
-export type ModelsOffsetPaginationParamsSortOrder =
-  (typeof ModelsOffsetPaginationParamsSortOrder)[keyof typeof ModelsOffsetPaginationParamsSortOrder]
+export type ModelsOffsetPaginationParamsSortOrder = typeof ModelsOffsetPaginationParamsSortOrder[keyof typeof ModelsOffsetPaginationParamsSortOrder];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsOffsetPaginationParamsSortOrder = {
   asc: 'asc',
   desc: 'desc',
-} as const
+} as const;

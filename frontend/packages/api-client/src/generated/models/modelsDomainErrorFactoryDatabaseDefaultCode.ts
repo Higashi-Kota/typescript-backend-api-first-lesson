@@ -6,10 +6,10 @@
  * OpenAPI spec version: 2.0
  */
 
-export type ModelsDomainErrorFactoryDatabaseDefaultCode =
-  (typeof ModelsDomainErrorFactoryDatabaseDefaultCode)[keyof typeof ModelsDomainErrorFactoryDatabaseDefaultCode]
+export type ModelsDomainErrorFactoryDatabaseDefaultCode = typeof ModelsDomainErrorFactoryDatabaseDefaultCode[keyof typeof ModelsDomainErrorFactoryDatabaseDefaultCode];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsDomainErrorFactoryDatabaseDefaultCode = {
   DATABASE_ERROR: 'DATABASE_ERROR',
-} as const
+} as const;

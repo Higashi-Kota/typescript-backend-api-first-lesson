@@ -1,7 +1,7 @@
-import { UpdateSalonUseCase } from '@beauty-salon-backend/domain'
 import type { SalonId } from '@beauty-salon-backend/domain'
-import { SalonRepository } from '@beauty-salon-backend/infrastructure'
+import { UpdateSalonUseCase } from '@beauty-salon-backend/domain'
 import type { Database } from '@beauty-salon-backend/infrastructure'
+import { SalonRepository } from '@beauty-salon-backend/infrastructure'
 import type { RequestHandler, Response } from 'express'
 import { match } from 'ts-pattern'
 import type {
@@ -53,7 +53,7 @@ export const updateSalonHandler: RequestHandler<
         res.json(response)
       })
       .with({ type: 'error' }, ({ error }) =>
-        handleDomainError(res as Response<ErrorResponse>, error)
+        handleDomainError(res as Response<ErrorResponse>, error),
       )
       .exhaustive()
   } catch (error) {

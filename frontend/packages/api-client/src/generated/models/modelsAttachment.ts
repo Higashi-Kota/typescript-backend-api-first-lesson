@@ -5,45 +5,45 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsAttachmentFile } from './modelsAttachmentFile'
-import type { ModelsAttachmentMetadata } from './modelsAttachmentMetadata'
-import type { ModelsAttachmentTags } from './modelsAttachmentTags'
+import type { ModelsAttachmentFile } from './modelsAttachmentFile';
+import type { ModelsAttachmentMetadata } from './modelsAttachmentMetadata';
+import type { ModelsAttachmentTags } from './modelsAttachmentTags';
 
 /**
  * サロンシステムで管理するアップロード済みファイルのメタ情報を表すモデル。
  */
 export interface ModelsAttachment {
   /** 添付ファイルを一意に識別するID。UUID形式。 */
-  id: string
+  id: string;
   /** オブジェクトストレージでファイルを参照するための内部キー。 */
-  key: string
+  key: string;
   /** 利用者がアップロードした元のファイル名。 */
-  filename: string
+  filename: string;
   /** ファイルのMIMEタイプ（Content-Type）。 */
-  content: string
+  content: string;
   /** ファイルサイズ（バイト単位）。 */
-  size: number
+  size: number;
   /** ファイルの実体情報。ダウンロードや共有レスポンスで利用。 */
-  file: ModelsAttachmentFile
+  file: ModelsAttachmentFile;
   /** ファイルをアップロードしたユーザーID。 */
-  uploadedBy: string
+  uploadedBy: string;
   /**
    * ファイルが紐づくサロンID。全社共通ファイルやシステムファイルの場合はnull。
    * @nullable
    */
-  salonId: string | null
+  salonId: string | null;
   /**
    * 必要に応じて付加情報を保持する任意メタデータ。追加情報が不要な場合はnull。
    * @nullable
    */
-  metadata: ModelsAttachmentMetadata
+  metadata: ModelsAttachmentMetadata;
   /**
    * ラベリングや検索に利用するタグ情報のセット。タグ付けをしていない場合はnull。
    * @nullable
    */
-  tags: ModelsAttachmentTags
+  tags: ModelsAttachmentTags;
   /** ファイルがアップロードされた日時。 */
-  uploadedAt: string
+  uploadedAt: string;
   /** ファイル情報が最後に更新された日時。 */
-  updatedAt: string
+  updatedAt: string;
 }

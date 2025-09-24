@@ -10,6 +10,4 @@
  * 関連リソースや次アクションへのリンク情報。リンクがない場合はnull
  * @nullable
  */
-export type CustomerOperationsAddLoyaltyPoints200Links = {
-  [key: string]: string
-} | null
+export type CustomerOperationsAddLoyaltyPoints200Links = {[key: string]: string} | null;

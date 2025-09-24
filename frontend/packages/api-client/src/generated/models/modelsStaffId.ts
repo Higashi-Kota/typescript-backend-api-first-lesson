@@ -9,4 +9,4 @@
 /**
  * 施術スタッフや従業員を識別するためのブランド付きUUID。
  */
-export type ModelsStaffId = string
+export type ModelsStaffId = string;

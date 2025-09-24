@@ -27,7 +27,7 @@ export const createApp = (deps: AppDependencies): Express => {
     cors({
       origin: process.env.FRONTEND_URL ?? 'http://localhost:3001',
       credentials: true,
-    })
+    }),
   )
   app.use(compression())
   app.use(express.json())

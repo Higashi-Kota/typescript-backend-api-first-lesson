@@ -5,109 +5,109 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsServiceId } from './modelsServiceId'
-import type { ModelsSalonId } from './modelsSalonId'
-import type { ModelsServiceInfo } from './modelsServiceInfo'
-import type { ModelsServiceCategoryType } from './modelsServiceCategoryType'
-import type { ModelsServicePricing } from './modelsServicePricing'
-import type { ModelsServiceDuration } from './modelsServiceDuration'
-import type { ModelsServiceAvailability } from './modelsServiceAvailability'
-import type { ModelsBookingRequirementDetail } from './modelsBookingRequirementDetail'
-import type { ModelsServiceOptionDetail } from './modelsServiceOptionDetail'
-import type { ModelsServiceRestrictionsProperty } from './modelsServiceRestrictionsProperty'
-import type { ModelsServicePerformanceProperty } from './modelsServicePerformanceProperty'
-import type { ModelsServiceAssociationsProperty } from './modelsServiceAssociationsProperty'
-import type { ModelsServiceMetadataProperty } from './modelsServiceMetadataProperty'
-import type { ModelsServiceStatusDetail } from './modelsServiceStatusDetail'
+import type { ModelsServiceId } from './modelsServiceId';
+import type { ModelsSalonId } from './modelsSalonId';
+import type { ModelsServiceInfo } from './modelsServiceInfo';
+import type { ModelsServiceCategoryType } from './modelsServiceCategoryType';
+import type { ModelsServicePricing } from './modelsServicePricing';
+import type { ModelsServiceDuration } from './modelsServiceDuration';
+import type { ModelsServiceAvailability } from './modelsServiceAvailability';
+import type { ModelsBookingRequirementDetail } from './modelsBookingRequirementDetail';
+import type { ModelsServiceOptionDetail } from './modelsServiceOptionDetail';
+import type { ModelsServiceRestrictionsProperty } from './modelsServiceRestrictionsProperty';
+import type { ModelsServicePerformanceProperty } from './modelsServicePerformanceProperty';
+import type { ModelsServiceAssociationsProperty } from './modelsServiceAssociationsProperty';
+import type { ModelsServiceMetadataProperty } from './modelsServiceMetadataProperty';
+import type { ModelsServiceStatusDetail } from './modelsServiceStatusDetail';
 
 /**
  * サロンで提供するサービスの統合モデル
  */
 export interface ModelsService {
   /** サービス ID */
-  id: ModelsServiceId
+  id: ModelsServiceId;
   /** サービスを提供するサロン ID */
-  salonId: ModelsSalonId
+  salonId: ModelsSalonId;
   /** サービスの紹介情報 */
-  info: ModelsServiceInfo
+  info: ModelsServiceInfo;
   /** サービスカテゴリ区分 */
-  category: ModelsServiceCategoryType
+  category: ModelsServiceCategoryType;
   /**
    * カテゴリ ID（分類ツリー連携用）。サービスカテゴリ区分のみで分類される場合はnull
    * @nullable
    */
-  categoryId: string | null
+  categoryId: string | null;
   /** 料金設定情報 */
-  pricing: ModelsServicePricing
+  pricing: ModelsServicePricing;
   /** 提供時間の設定 */
-  duration: ModelsServiceDuration
+  duration: ModelsServiceDuration;
   /**
    * 提供可能条件の設定。常時提供で特別な制約がない場合はnull
    * @nullable
    */
-  availability: ModelsServiceAvailability
+  availability: ModelsServiceAvailability;
   /**
    * 予約時に必要な要件一覧。特別な要件がない標準サービスの場合はnull
    * @nullable
    */
-  requirements: ModelsBookingRequirementDetail[] | null
+  requirements: ModelsBookingRequirementDetail[] | null;
   /**
    * 追加オプション設定。オプションがないシンプルなサービスの場合はnull
    * @nullable
    */
-  options: ModelsServiceOptionDetail[] | null
+  options: ModelsServiceOptionDetail[] | null;
   /**
    * 提供上の制約条件。制約がないサービスの場合はnull
    * @nullable
    */
-  restrictions: ModelsServiceRestrictionsProperty
+  restrictions: ModelsServiceRestrictionsProperty;
   /**
    * サービス実績の指標。新サービスで実績データがない場合はnull
    * @nullable
    */
-  performance: ModelsServicePerformanceProperty
+  performance: ModelsServicePerformanceProperty;
   /**
    * 関連サービス・担当者情報。関連設定がない独立したサービスの場合はnull
    * @nullable
    */
-  associations: ModelsServiceAssociationsProperty
+  associations: ModelsServiceAssociationsProperty;
   /**
    * メタデータ・表示設定。特別な表示設定が不要な場合はnull
    * @nullable
    */
-  metadata: ModelsServiceMetadataProperty
+  metadata: ModelsServiceMetadataProperty;
   /** 現在の提供ステータス */
-  status: ModelsServiceStatusDetail
+  status: ModelsServiceStatusDetail;
   /** サービス名 */
-  name: string
+  name: string;
   /** 説明文 */
-  description: string
+  description: string;
   /** 料金 */
-  price: number
+  price: number;
   /**
    * 画像 URL。画像が登録されていない場合はnull
    * @nullable
    */
-  imageUrl: string | null
+  imageUrl: string | null;
   /**
    * スタッフレベル。全スタッフが対応可能な場合はnull
    * @nullable
    */
-  requiredStaffLevel: number | null
+  requiredStaffLevel: number | null;
   /** 有効フラグ */
-  isActive: boolean
+  isActive: boolean;
   /** レコード作成日時。 */
-  createdAt: string
+  createdAt: string;
   /**
    * レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull
    * @nullable
    */
-  createdBy: string | null
+  createdBy: string | null;
   /** レコード最終更新日時。 */
-  updatedAt: string
+  updatedAt: string;
   /**
    * レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull
    * @nullable
    */
-  updatedBy: string | null
+  updatedBy: string | null;
 }

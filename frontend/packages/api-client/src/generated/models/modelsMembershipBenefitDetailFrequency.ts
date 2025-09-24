@@ -10,13 +10,12 @@
  * 特典提供频度。频度指定がない場合はnull
  * @nullable
  */
-export type ModelsMembershipBenefitDetailFrequency =
-  | (typeof ModelsMembershipBenefitDetailFrequency)[keyof typeof ModelsMembershipBenefitDetailFrequency]
-  | null
+export type ModelsMembershipBenefitDetailFrequency = typeof ModelsMembershipBenefitDetailFrequency[keyof typeof ModelsMembershipBenefitDetailFrequency] | null;
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsMembershipBenefitDetailFrequency = {
   monthly: 'monthly',
   quarterly: 'quarterly',
   yearly: 'yearly',
-} as const
+} as const;

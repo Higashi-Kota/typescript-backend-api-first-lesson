@@ -45,7 +45,7 @@ export const SalonWriteMapper = {
     }
 
     const openingHours: DbNewOpeningHours[] = request.openingHours.map((oh) =>
-      this.mapOpeningHours(oh, '')
+      this.mapOpeningHours(oh, ''),
     )
 
     return { salon, openingHours }
@@ -119,7 +119,7 @@ export const SalonWriteMapper = {
 
   toDbOpeningHours(
     openingHours: ApiOpeningHours[],
-    salonId: string
+    salonId: string,
   ): DbNewOpeningHours[] {
     return openingHours.map((oh) => this.mapOpeningHours(oh, salonId))
   },

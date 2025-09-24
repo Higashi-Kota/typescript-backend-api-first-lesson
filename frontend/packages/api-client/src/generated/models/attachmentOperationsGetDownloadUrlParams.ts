@@ -7,5 +7,5 @@
  */
 
 export type AttachmentOperationsGetDownloadUrlParams = {
-  inline?: boolean
-}
+inline?: boolean;
+};

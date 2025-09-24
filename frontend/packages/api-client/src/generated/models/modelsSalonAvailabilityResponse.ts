@@ -5,19 +5,19 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsAvailableTimeSlot } from './modelsAvailableTimeSlot'
+import type { ModelsAvailableTimeSlot } from './modelsAvailableTimeSlot';
 
 /**
  * サロンの空き状況照会結果を返すレスポンス
  */
 export interface ModelsSalonAvailabilityResponse {
   /** 予約可能な時間帯候補一覧 */
-  availableSlots: ModelsAvailableTimeSlot[]
+  availableSlots: ModelsAvailableTimeSlot[];
   /**
    * 希望日が満席の場合に提示する次の空き日。空きがない場合はnull
    * @nullable
    */
-  nextAvailableDate: string | null
+  nextAvailableDate: string | null;
   /** ウェイトリスト登録の可否 */
-  waitlistAvailable: boolean
+  waitlistAvailable: boolean;
 }

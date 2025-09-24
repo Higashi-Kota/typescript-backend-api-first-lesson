@@ -5,19 +5,19 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsErrorDetails } from './modelsErrorDetails'
+import type { ModelsErrorDetails } from './modelsErrorDetails';
 
 /**
  * API全体で共通利用する業務エラーの基本モデル。
  */
 export interface ModelsError {
   /** エラーの種類を特定するアプリケーション固有コード。 */
-  code: string
+  code: string;
   /** ユーザーまたはオペレーターに提示するエラーメッセージ。 */
-  message: string
+  message: string;
   /**
    * デバッグやサポート対応に役立つ追加情報。追加情報がない場合はnull
    * @nullable
    */
-  details: ModelsErrorDetails
+  details: ModelsErrorDetails;
 }

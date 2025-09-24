@@ -11,11 +11,11 @@
  */
 export interface ModelsAuthLoginRequest {
   /** ログインに使用するメールアドレス。 */
-  email: string
+  email: string;
   /** ログイン用パスワード。 */
-  password: string
+  password: string;
   /** 永続セッションを希望するかどうかのフラグ。 */
-  rememberMe?: boolean
+  rememberMe?: boolean;
   /** 2要素認証が有効な場合に入力するワンタイムコード。 */
-  twoFactorCode?: string
+  twoFactorCode?: string;
 }

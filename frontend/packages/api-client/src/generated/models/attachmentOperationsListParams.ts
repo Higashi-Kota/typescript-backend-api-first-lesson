@@ -7,7 +7,7 @@
  */
 
 export type AttachmentOperationsListParams = {
-  salonId?: string
-  page?: number
-  limit?: number
-}
+salonId?: string;
+page?: number;
+limit?: number;
+};

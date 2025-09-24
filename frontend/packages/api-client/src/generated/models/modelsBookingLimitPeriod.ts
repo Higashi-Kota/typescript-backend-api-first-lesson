@@ -9,12 +9,12 @@
 /**
  * 制限期間の単位
  */
-export type ModelsBookingLimitPeriod =
-  (typeof ModelsBookingLimitPeriod)[keyof typeof ModelsBookingLimitPeriod]
+export type ModelsBookingLimitPeriod = typeof ModelsBookingLimitPeriod[keyof typeof ModelsBookingLimitPeriod];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsBookingLimitPeriod = {
   day: 'day',
   week: 'week',
   month: 'month',
-} as const
+} as const;

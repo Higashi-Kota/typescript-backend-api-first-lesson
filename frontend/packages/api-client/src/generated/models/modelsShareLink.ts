@@ -11,32 +11,32 @@
  */
 export interface ModelsShareLink {
   /** 共有リンクを一意に識別するID。 */
-  id: string
+  id: string;
   /** 共有アクセス時に利用するトークン。 */
-  token: string
+  token: string;
   /** 共有対象の添付ファイルID。 */
-  attachmentId: string
+  attachmentId: string;
   /**
    * 共有リンクの有効期限。無期限の場合はnull。
    * @nullable
    */
-  expiresAt: string | null
+  expiresAt: string | null;
   /**
    * 許可する最大ダウンロード回数。無制限の場合はnull。
    * @nullable
    */
-  maxDownloads: number | null
+  maxDownloads: number | null;
   /** これまでのダウンロード累計数。 */
-  downloadCount: number
+  downloadCount: number;
   /** 共有リンクがパスワード保護されているか。 */
-  hasPassword: boolean
+  hasPassword: boolean;
   /**
    * アクセスを許可するメールアドレス一覧。制限なしの場合はnull。
    * @nullable
    */
-  allowedEmails: string[] | null
+  allowedEmails: string[] | null;
   /** 共有リンクを作成したユーザーID。 */
-  createdBy: string
+  createdBy: string;
   /** 共有リンクを作成した日時。 */
-  createdAt: string
+  createdAt: string;
 }

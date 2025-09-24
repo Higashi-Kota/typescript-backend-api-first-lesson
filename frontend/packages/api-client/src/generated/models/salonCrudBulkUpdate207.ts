@@ -5,9 +5,9 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { SalonCrudBulkUpdate207SucceededItem } from './salonCrudBulkUpdate207SucceededItem'
-import type { SalonCrudBulkUpdate207FailedItem } from './salonCrudBulkUpdate207FailedItem'
-import type { ModelsBulkSummary } from './modelsBulkSummary'
+import type { SalonCrudBulkUpdate207SucceededItem } from './salonCrudBulkUpdate207SucceededItem';
+import type { SalonCrudBulkUpdate207FailedItem } from './salonCrudBulkUpdate207FailedItem';
+import type { ModelsBulkSummary } from './modelsBulkSummary';
 
 /**
  * 一括処理の結果を表すレスポンスモデル。
@@ -15,9 +15,9 @@ import type { ModelsBulkSummary } from './modelsBulkSummary'
  */
 export type SalonCrudBulkUpdate207 = {
   /** 正常に処理されたアイテムの一覧。ビジネス結果を含む。 */
-  succeeded: SalonCrudBulkUpdate207SucceededItem[]
+  succeeded: SalonCrudBulkUpdate207SucceededItem[];
   /** エラーとなったアイテムの一覧。問題の詳細を確認できる。 */
-  failed: SalonCrudBulkUpdate207FailedItem[]
+  failed: SalonCrudBulkUpdate207FailedItem[];
   /** 処理件数や所要時間をまとめた統計情報。 */
-  summary: ModelsBulkSummary
-}
+  summary: ModelsBulkSummary;
+};

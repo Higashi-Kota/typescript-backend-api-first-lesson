@@ -6,10 +6,10 @@
  * OpenAPI spec version: 2.0
  */
 
-export type CustomerCrudExport202Status =
-  (typeof CustomerCrudExport202Status)[keyof typeof CustomerCrudExport202Status]
+export type CustomerCrudExport202Status = typeof CustomerCrudExport202Status[keyof typeof CustomerCrudExport202Status];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CustomerCrudExport202Status = {
   pending: 'pending',
-} as const
+} as const;

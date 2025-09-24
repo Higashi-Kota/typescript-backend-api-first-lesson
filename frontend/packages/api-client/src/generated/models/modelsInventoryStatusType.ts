@@ -15,8 +15,8 @@ out_of_stock: 在庫切れ - 在庫がゼロになった状態
 ordered: 発注済み - 補充のための発注が行われた状態
 discontinued: 廃番 - 商品の取り扱いを終了した状態
  */
-export type ModelsInventoryStatusType =
-  (typeof ModelsInventoryStatusType)[keyof typeof ModelsInventoryStatusType]
+export type ModelsInventoryStatusType = typeof ModelsInventoryStatusType[keyof typeof ModelsInventoryStatusType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsInventoryStatusType = {
@@ -25,4 +25,4 @@ export const ModelsInventoryStatusType = {
   out_of_stock: 'out_of_stock',
   ordered: 'ordered',
   discontinued: 'discontinued',
-} as const
+} as const;

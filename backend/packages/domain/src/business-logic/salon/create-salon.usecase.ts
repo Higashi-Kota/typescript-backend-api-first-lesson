@@ -1,4 +1,4 @@
-import { Result, createId } from '@beauty-salon-backend/utility'
+import { createId, Result } from '@beauty-salon-backend/utility'
 import { SalonReadMapper } from '../../mappers/read/salon.mapper'
 import { SalonWriteMapper } from '../../mappers/write/salon.mapper'
 import {
@@ -6,13 +6,13 @@ import {
   type ApiSalon,
   toSalonID,
 } from '../../models/salon'
-import { DomainErrors } from '../../shared'
 import type { DomainError } from '../../shared'
+import { DomainErrors } from '../../shared'
 import { BaseSalonUseCase } from './_shared/base-salon.usecase'
 
 export class CreateSalonUseCase extends BaseSalonUseCase {
   async execute(
-    request: ApiCreateSalonRequest
+    request: ApiCreateSalonRequest,
   ): Promise<Result<ApiSalon, DomainError>> {
     const validation = this.validate(request)
     if (Result.isError(validation)) {
@@ -20,7 +20,7 @@ export class CreateSalonUseCase extends BaseSalonUseCase {
     }
 
     const emailExists = await this.repository.existsByEmail(
-      request.contactInfo.email
+      request.contactInfo.email,
     )
     if (Result.isError(emailExists)) {
       return emailExists
@@ -28,7 +28,7 @@ export class CreateSalonUseCase extends BaseSalonUseCase {
 
     if (emailExists.data) {
       return Result.error(
-        DomainErrors.alreadyExists('Salon', 'email', request.contactInfo.email)
+        DomainErrors.alreadyExists('Salon', 'email', request.contactInfo.email),
       )
     }
 
@@ -36,18 +36,18 @@ export class CreateSalonUseCase extends BaseSalonUseCase {
 
     const createResult = await this.repository.create(
       { ...salon, id: toSalonID(createId()) },
-      openingHours
+      openingHours,
     )
     if (Result.isError(createResult)) {
       return createResult
     }
 
     const openingHoursResult = await this.repository.findOpeningHours(
-      toSalonID(createResult.data.id)
+      toSalonID(createResult.data.id),
     )
     const apiSalon = SalonReadMapper.toApiSalon(
       createResult.data,
-      Result.isSuccess(openingHoursResult) ? openingHoursResult.data : []
+      Result.isSuccess(openingHoursResult) ? openingHoursResult.data : [],
     )
 
     return Result.success(apiSalon)
@@ -70,8 +70,8 @@ export class CreateSalonUseCase extends BaseSalonUseCase {
         DomainErrors.validation(
           'Validation failed',
           'SALON_VALIDATION_ERROR',
-          errors
-        )
+          errors,
+        ),
       )
     }
 

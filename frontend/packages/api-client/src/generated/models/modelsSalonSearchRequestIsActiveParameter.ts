@@ -9,4 +9,4 @@
 /**
  * 営業中サロンのみを対象にするかどうか
  */
-export type ModelsSalonSearchRequestIsActiveParameter = boolean
+export type ModelsSalonSearchRequestIsActiveParameter = boolean;

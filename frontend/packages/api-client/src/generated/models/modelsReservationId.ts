@@ -9,4 +9,4 @@
 /**
  * 予約申込レコードを識別するためのブランド付きUUID。
  */
-export type ModelsReservationId = string
+export type ModelsReservationId = string;

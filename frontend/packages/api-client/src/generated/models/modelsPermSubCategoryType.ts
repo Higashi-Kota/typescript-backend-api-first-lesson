@@ -15,8 +15,8 @@ spiral_perm: スパイラルパーマ - 螺旋状の強いカールを作るパ�
 body_wave: ボディウェーブ - 大きなウェーブを作るパーマ
 straightening: ストレートパーマ - 縮毛矯正や髪をストレートにする施術
  */
-export type ModelsPermSubCategoryType =
-  (typeof ModelsPermSubCategoryType)[keyof typeof ModelsPermSubCategoryType]
+export type ModelsPermSubCategoryType = typeof ModelsPermSubCategoryType[keyof typeof ModelsPermSubCategoryType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsPermSubCategoryType = {
@@ -25,4 +25,4 @@ export const ModelsPermSubCategoryType = {
   spiral_perm: 'spiral_perm',
   body_wave: 'body_wave',
   straightening: 'straightening',
-} as const
+} as const;

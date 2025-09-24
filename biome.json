@@ -1,1 +1,3 @@
-./shared-config/biome.json
+{
+  "extends": ["./shared-config/biome.json"]
+}

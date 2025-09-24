@@ -6,12 +6,12 @@
  * OpenAPI spec version: 2.0
  */
 
-export type SalonOperationsGetRecommendationsPriceRange =
-  (typeof SalonOperationsGetRecommendationsPriceRange)[keyof typeof SalonOperationsGetRecommendationsPriceRange]
+export type SalonOperationsGetRecommendationsPriceRange = typeof SalonOperationsGetRecommendationsPriceRange[keyof typeof SalonOperationsGetRecommendationsPriceRange];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SalonOperationsGetRecommendationsPriceRange = {
   budget: 'budget',
   medium: 'medium',
   premium: 'premium',
-} as const
+} as const;

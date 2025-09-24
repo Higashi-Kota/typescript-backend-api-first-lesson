@@ -5,64 +5,64 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsReservationId } from './modelsReservationId'
-import type { ModelsSalonId } from './modelsSalonId'
-import type { ModelsCustomerId } from './modelsCustomerId'
-import type { ModelsStaffId } from './modelsStaffId'
-import type { ModelsServiceId } from './modelsServiceId'
-import type { ModelsReservationStatusType } from './modelsReservationStatusType'
+import type { ModelsReservationId } from './modelsReservationId';
+import type { ModelsSalonId } from './modelsSalonId';
+import type { ModelsCustomerId } from './modelsCustomerId';
+import type { ModelsStaffId } from './modelsStaffId';
+import type { ModelsServiceId } from './modelsServiceId';
+import type { ModelsReservationStatusType } from './modelsReservationStatusType';
 
 /**
  * 予約モデル - 顧客がサロンに依頼した施術予約の全情報を保持し、日時・担当者・料金・支払い状態を一元管理する中核レコード
  */
 export interface ModelsReservation {
   /** 予約を一意に識別するID */
-  id: ModelsReservationId
+  id: ModelsReservationId;
   /** 予約が紐づくサロンのID */
-  salonId: ModelsSalonId
+  salonId: ModelsSalonId;
   /** 予約を行った顧客のID */
-  customerId: ModelsCustomerId
+  customerId: ModelsCustomerId;
   /** 施術を担当するスタッフのID */
-  staffId: ModelsStaffId
+  staffId: ModelsStaffId;
   /** 予約された施術メニューのID */
-  serviceId: ModelsServiceId
+  serviceId: ModelsServiceId;
   /** 施術開始予定日時 (UTC) */
-  startTime: string
+  startTime: string;
   /** 施術終了予定日時 (UTC) */
-  endTime: string
+  endTime: string;
   /** 予約の現在ステータスを表す区分値 */
-  status: ModelsReservationStatusType
+  status: ModelsReservationStatusType;
   /**
    * 顧客からの特記事項やサロン側メモ - 特記事項がない標準予約の場合はnull
    * @nullable
    */
-  notes: string | null
+  notes: string | null;
   /** 施術料金の合計金額 (税・割引適用後) */
-  totalAmount: number
+  totalAmount: number;
   /**
    * 事前に受領した内金・デポジット金額 - 内金不要な予約や当日払いの場合はnull
    * @nullable
    */
-  depositAmount: number | null
+  depositAmount: number | null;
   /** 予約に対する決済が完了しているかを示すフラグ */
-  isPaid: boolean
+  isPaid: boolean;
   /**
    * キャンセルが発生した場合の理由 - キャンセルされていない予約や理由未記録の場合はnull
    * @nullable
    */
-  cancellationReason: string | null
+  cancellationReason: string | null;
   /** レコード作成日時。 */
-  createdAt: string
+  createdAt: string;
   /**
    * レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull
    * @nullable
    */
-  createdBy: string | null
+  createdBy: string | null;
   /** レコード最終更新日時。 */
-  updatedAt: string
+  updatedAt: string;
   /**
    * レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull
    * @nullable
    */
-  updatedBy: string | null
+  updatedBy: string | null;
 }

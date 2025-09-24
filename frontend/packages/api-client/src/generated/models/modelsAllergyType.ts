@@ -16,8 +16,8 @@ latex: ラテックス - 手袋等のゴム製品に対するアレルギー
 plant: 植物 - ヘナ、ハーブ等の植物由来成分に対するアレルギー
 other: その他 - 上記に分類されないアレルギー
  */
-export type ModelsAllergyType =
-  (typeof ModelsAllergyType)[keyof typeof ModelsAllergyType]
+export type ModelsAllergyType = typeof ModelsAllergyType[keyof typeof ModelsAllergyType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsAllergyType = {
@@ -27,4 +27,4 @@ export const ModelsAllergyType = {
   latex: 'latex',
   plant: 'plant',
   other: 'other',
-} as const
+} as const;

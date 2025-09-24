@@ -6,10 +6,10 @@
  * OpenAPI spec version: 2.0
  */
 
-export type ModelsDomainErrorFactoryForbiddenHttpStatus =
-  (typeof ModelsDomainErrorFactoryForbiddenHttpStatus)[keyof typeof ModelsDomainErrorFactoryForbiddenHttpStatus]
+export type ModelsDomainErrorFactoryForbiddenHttpStatus = typeof ModelsDomainErrorFactoryForbiddenHttpStatus[keyof typeof ModelsDomainErrorFactoryForbiddenHttpStatus];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsDomainErrorFactoryForbiddenHttpStatus = {
   NUMBER_403: 403,
-} as const
+} as const;

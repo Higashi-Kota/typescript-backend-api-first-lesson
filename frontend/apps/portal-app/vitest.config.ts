@@ -27,15 +27,15 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src'),
       '@beauty-salon-frontend/api-client': path.resolve(
         __dirname,
-        '../../packages/api-client/src'
+        '../../packages/api-client/src',
       ),
       '@beauty-salon-frontend/types': path.resolve(
         __dirname,
-        '../../packages/types/src'
+        '../../packages/types/src',
       ),
       '@beauty-salon-frontend/ui': path.resolve(
         __dirname,
-        '../../packages/ui/src'
+        '../../packages/ui/src',
       ),
     },
   },

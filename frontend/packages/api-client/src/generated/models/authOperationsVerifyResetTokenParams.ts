@@ -7,5 +7,5 @@
  */
 
 export type AuthOperationsVerifyResetTokenParams = {
-  token: string
-}
+token: string;
+};

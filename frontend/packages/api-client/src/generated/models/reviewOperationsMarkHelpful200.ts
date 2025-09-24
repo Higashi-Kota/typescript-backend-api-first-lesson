@@ -7,5 +7,5 @@
  */
 
 export type ReviewOperationsMarkHelpful200 = {
-  helpfulCount: number
-}
+  helpfulCount: number;
+};

@@ -5,8 +5,8 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsErrorCodeType } from './modelsErrorCodeType'
-import type { ModelsValidationError } from './modelsValidationError'
+import type { ModelsErrorCodeType } from './modelsErrorCodeType';
+import type { ModelsValidationError } from './modelsValidationError';
 
 /**
  * RFC 7807 に準拠した標準エラーレスポンスモデル。
@@ -14,33 +14,33 @@ import type { ModelsValidationError } from './modelsValidationError'
  */
 export interface ModelsProblemDetails {
   /** エラー種別を特定するための URI。参照することで関連ドキュメントに誘導できる。 */
-  type: string
+  type: string;
   /** ユーザーに短く要点を伝えるエラー概要メッセージ。 */
-  title: string
+  title: string;
   /** レスポンスに付与される HTTP ステータスコード。 */
-  status: number
+  status: number;
   /**
    * 今回の発生状況に固有の詳細説明。サポート対応時の一次情報となる。詳細が不要な場合はnull
    * @nullable
    */
-  detail: string | null
+  detail: string | null;
   /**
    * この事象を一意に識別するための URI。監査ログやダッシュボードと連携する。URIが不要な場合はnull
    * @nullable
    */
-  instance: string | null
+  instance: string | null;
   /** システム全体で共有する機械判読可能なエラーコード。画面表示や分岐処理に使用する。 */
-  code: ModelsErrorCodeType
+  code: ModelsErrorCodeType;
   /**
    * フィールド単位の検証エラーなど、追加のエラー詳細情報一覧。検証エラーがない場合はnull
    * @nullable
    */
-  errors: ModelsValidationError[] | null
+  errors: ModelsValidationError[] | null;
   /**
    * 障害調査や問い合わせで利用する相関 ID。リクエスト単位で一意。相関IDが不要な場合はnull
    * @nullable
    */
-  correlationId: string | null
+  correlationId: string | null;
   /** エラー発生日時 (UTC)。サーバーログの検索キーとして使用する。 */
-  timestamp: string
+  timestamp: string;
 }

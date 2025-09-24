@@ -9,4 +9,4 @@
 /**
  * 集計対象とするファセットフィールドの一覧。カテゴリや価格帯などを指定する。
  */
-export type ModelsAdvancedSearchParamsFacetFieldsParameter = string[]
+export type ModelsAdvancedSearchParamsFacetFieldsParameter = string[];

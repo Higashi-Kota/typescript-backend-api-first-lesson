@@ -5,22 +5,15 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsDraftBookingStatusUpdate } from './modelsDraftBookingStatusUpdate'
-import type { ModelsPendingBookingStatusUpdate } from './modelsPendingBookingStatusUpdate'
-import type { ModelsConfirmedBookingStatusUpdate } from './modelsConfirmedBookingStatusUpdate'
-import type { ModelsInProgressBookingStatusUpdate } from './modelsInProgressBookingStatusUpdate'
-import type { ModelsCompletedBookingStatusUpdate } from './modelsCompletedBookingStatusUpdate'
-import type { ModelsCancelledBookingStatusUpdate } from './modelsCancelledBookingStatusUpdate'
-import type { ModelsNoShowBookingStatusUpdate } from './modelsNoShowBookingStatusUpdate'
+import type { ModelsDraftBookingStatusUpdate } from './modelsDraftBookingStatusUpdate';
+import type { ModelsPendingBookingStatusUpdate } from './modelsPendingBookingStatusUpdate';
+import type { ModelsConfirmedBookingStatusUpdate } from './modelsConfirmedBookingStatusUpdate';
+import type { ModelsInProgressBookingStatusUpdate } from './modelsInProgressBookingStatusUpdate';
+import type { ModelsCompletedBookingStatusUpdate } from './modelsCompletedBookingStatusUpdate';
+import type { ModelsCancelledBookingStatusUpdate } from './modelsCancelledBookingStatusUpdate';
+import type { ModelsNoShowBookingStatusUpdate } from './modelsNoShowBookingStatusUpdate';
 
 /**
  * 予約の進行状況ごとに保持する詳細情報ユニオン。
  */
-export type ModelsBookingStatusUpdate =
-  | ModelsDraftBookingStatusUpdate
-  | ModelsPendingBookingStatusUpdate
-  | ModelsConfirmedBookingStatusUpdate
-  | ModelsInProgressBookingStatusUpdate
-  | ModelsCompletedBookingStatusUpdate
-  | ModelsCancelledBookingStatusUpdate
-  | ModelsNoShowBookingStatusUpdate
+export type ModelsBookingStatusUpdate = ModelsDraftBookingStatusUpdate | ModelsPendingBookingStatusUpdate | ModelsConfirmedBookingStatusUpdate | ModelsInProgressBookingStatusUpdate | ModelsCompletedBookingStatusUpdate | ModelsCancelledBookingStatusUpdate | ModelsNoShowBookingStatusUpdate;

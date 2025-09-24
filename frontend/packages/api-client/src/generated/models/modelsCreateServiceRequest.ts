@@ -5,58 +5,58 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsSalonId } from './modelsSalonId'
-import type { ModelsServiceCategoryType } from './modelsServiceCategoryType'
+import type { ModelsSalonId } from './modelsSalonId';
+import type { ModelsServiceCategoryType } from './modelsServiceCategoryType';
 
 /**
  * サービスを新規登録するリクエスト
  */
 export interface ModelsCreateServiceRequest {
   /** サービスを登録するサロン ID */
-  salonId: ModelsSalonId
+  salonId: ModelsSalonId;
   /** サービス名 */
-  name: string
+  name: string;
   /** サービスの説明文 */
-  description: string
+  description: string;
   /** 施術時間（分） */
-  duration: number
+  duration: number;
   /** 料金（税抜） */
-  price: number
+  price: number;
   /** サービスカテゴリ区分 */
-  category: ModelsServiceCategoryType
+  category: ModelsServiceCategoryType;
   /**
    * カテゴリ ID。サービスカテゴリ区分のみで分類する場合はnull
    * @nullable
    */
-  categoryId: string | null
+  categoryId: string | null;
   /**
    * サービス画像 URL。画像がない場合はnull
    * @nullable
    */
-  imageUrl: string | null
+  imageUrl: string | null;
   /**
    * 必要スタッフレベル。全スタッフが対応可能な場合はnull
    * @nullable
    */
-  requiredStaffLevel: number | null
+  requiredStaffLevel: number | null;
   /**
    * 必要なデポジット額。デポジットが不要な場合はnull
    * @nullable
    */
-  depositAmount: number | null
+  depositAmount: number | null;
   /**
    * 有効フラグ。未指定時はデフォルトでtrueとして扱う場合null
    * @nullable
    */
-  isActive: boolean | null
+  isActive: boolean | null;
   /**
    * 最大全日予約可能日数。予約可能期間に制限がない場合はnull
    * @nullable
    */
-  maxAdvanceBookingDays: number | null
+  maxAdvanceBookingDays: number | null;
   /**
    * 最短予約受付時間（時間）。即時予約可能な場合はnull
    * @nullable
    */
-  minAdvanceBookingHours: number | null
+  minAdvanceBookingHours: number | null;
 }

@@ -5,40 +5,40 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsPricingStrategyDetail } from './modelsPricingStrategyDetail'
-import type { ModelsCurrencyCodeType } from './modelsCurrencyCodeType'
-import type { ModelsServicePricingCancellationFee } from './modelsServicePricingCancellationFee'
+import type { ModelsPricingStrategyDetail } from './modelsPricingStrategyDetail';
+import type { ModelsCurrencyCodeType } from './modelsCurrencyCodeType';
+import type { ModelsServicePricingCancellationFee } from './modelsServicePricingCancellationFee';
 
 /**
  * サービスの料金設定情報
  */
 export interface ModelsServicePricing {
   /** 採用している価格戦略 */
-  strategy: ModelsPricingStrategyDetail
+  strategy: ModelsPricingStrategyDetail;
   /** 税込価格かどうか */
-  taxIncluded: boolean
+  taxIncluded: boolean;
   /** 通貨コード */
-  currency: ModelsCurrencyCodeType
+  currency: ModelsCurrencyCodeType;
   /**
    * 設定されている最低料金。最低料金制限がない場合はnull
    * @nullable
    */
-  minimumPrice: number | null
+  minimumPrice: number | null;
   /**
    * 設定されている最高料金。最高料金制限がない場合はnull
    * @nullable
    */
-  maximumPrice: number | null
+  maximumPrice: number | null;
   /** 予約時にデポジットが必要か */
-  depositRequired: boolean
+  depositRequired: boolean;
   /**
    * 必要なデポジット金額。デポジットが不要な場合はnull
    * @nullable
    */
-  depositAmount: number | null
+  depositAmount: number | null;
   /**
    * キャンセル料金の設定。キャンセル料が発生しない場合はnull
    * @nullable
    */
-  cancellationFee: ModelsServicePricingCancellationFee
+  cancellationFee: ModelsServicePricingCancellationFee;
 }

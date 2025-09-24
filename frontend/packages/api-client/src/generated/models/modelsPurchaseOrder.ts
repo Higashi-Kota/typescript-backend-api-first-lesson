@@ -5,84 +5,84 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsOrderId } from './modelsOrderId'
-import type { ModelsSalonId } from './modelsSalonId'
-import type { ModelsOrderStatusType } from './modelsOrderStatusType'
-import type { ModelsOrderItem } from './modelsOrderItem'
+import type { ModelsOrderId } from './modelsOrderId';
+import type { ModelsSalonId } from './modelsSalonId';
+import type { ModelsOrderStatusType } from './modelsOrderStatusType';
+import type { ModelsOrderItem } from './modelsOrderItem';
 
 /**
  * 仕入れ発注の基本情報
  */
 export interface ModelsPurchaseOrder {
   /** 発注 ID */
-  id: ModelsOrderId
+  id: ModelsOrderId;
   /** 発注を行うサロン ID */
-  salonId: ModelsSalonId
+  salonId: ModelsSalonId;
   /** 発注番号 */
-  orderNumber: string
+  orderNumber: string;
   /** 仕入先名 */
-  supplier: string
+  supplier: string;
   /** 発注ステータス区分 */
-  status: ModelsOrderStatusType
+  status: ModelsOrderStatusType;
   /** 発注明細の一覧 */
-  items: ModelsOrderItem[]
+  items: ModelsOrderItem[];
   /** 税抜小計金額 */
-  subtotal: number
+  subtotal: number;
   /** 税額 */
-  taxAmount: number
+  taxAmount: number;
   /**
    * 送料
    * @nullable
    */
-  shippingCost: number | null
+  shippingCost: number | null;
   /** 発注合計金額 */
-  totalAmount: number
+  totalAmount: number;
   /** 発注日 */
-  orderDate: string
+  orderDate: string;
   /**
    * 予定納期
    * @nullable
    */
-  expectedDelivery: string | null
+  expectedDelivery: string | null;
   /**
    * 実際の納品日
    * @nullable
    */
-  actualDelivery: string | null
+  actualDelivery: string | null;
   /**
    * 納品に関するメモ
    * @nullable
    */
-  deliveryNotes: string | null
+  deliveryNotes: string | null;
   /**
    * 支払条件
    * @nullable
    */
-  paymentTerms: string | null
+  paymentTerms: string | null;
   /** その他備考 */
-  notes?: string
+  notes?: string;
   /**
    * 発注承認を行ったスタッフ ID
    * @nullable
    */
-  approvedBy: string | null
+  approvedBy: string | null;
   /**
    * 承認日時
    * @nullable
    */
-  approvedAt: string | null
+  approvedAt: string | null;
   /** レコード作成日時。 */
-  createdAt: string
+  createdAt: string;
   /**
    * レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull
    * @nullable
    */
-  createdBy: string | null
+  createdBy: string | null;
   /** レコード最終更新日時。 */
-  updatedAt: string
+  updatedAt: string;
   /**
    * レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull
    * @nullable
    */
-  updatedBy: string | null
+  updatedBy: string | null;
 }

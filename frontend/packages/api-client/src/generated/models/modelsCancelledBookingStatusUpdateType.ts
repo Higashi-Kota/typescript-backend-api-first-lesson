@@ -9,10 +9,10 @@
 /**
  * 固定値cancelled。キャンセル状態であることを示す。
  */
-export type ModelsCancelledBookingStatusUpdateType =
-  (typeof ModelsCancelledBookingStatusUpdateType)[keyof typeof ModelsCancelledBookingStatusUpdateType]
+export type ModelsCancelledBookingStatusUpdateType = typeof ModelsCancelledBookingStatusUpdateType[keyof typeof ModelsCancelledBookingStatusUpdateType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsCancelledBookingStatusUpdateType = {
   cancelled: 'cancelled',
-} as const
+} as const;

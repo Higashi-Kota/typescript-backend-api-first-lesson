@@ -5,55 +5,55 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsStaffId } from './modelsStaffId'
-import type { ModelsSalonId } from './modelsSalonId'
-import type { ModelsBusinessHours } from './modelsBusinessHours'
-import type { ModelsScheduleException } from './modelsScheduleException'
+import type { ModelsStaffId } from './modelsStaffId';
+import type { ModelsSalonId } from './modelsSalonId';
+import type { ModelsBusinessHours } from './modelsBusinessHours';
+import type { ModelsScheduleException } from './modelsScheduleException';
 
 /**
  * スタッフの勤務スケジュールと例外設定を管理するモデル
  */
 export interface ModelsStaffScheduleManagement {
   /** 対象スタッフのID */
-  staffId: ModelsStaffId
+  staffId: ModelsStaffId;
   /** 所属サロンのID */
-  salonId: ModelsSalonId
+  salonId: ModelsSalonId;
   /** 通常勤務時間帯の一覧 */
-  regularHours: ModelsBusinessHours[]
+  regularHours: ModelsBusinessHours[];
   /** 休暇や研修などの例外設定一覧 */
-  exceptions: ModelsScheduleException[]
+  exceptions: ModelsScheduleException[];
   /** スケジュールが有効になる開始日時 */
-  effectiveFrom: string
+  effectiveFrom: string;
   /**
    * スケジュールの終了日時。無期限の場合はnull
    * @nullable
    */
-  effectiveTo: string | null
+  effectiveTo: string | null;
   /** レコード作成日時 (UTC)。 */
-  createdAt: string
+  createdAt: string;
   /** レコードを作成したユーザーID またはサービス名。 */
-  createdBy: string
+  createdBy: string;
   /** 最終更新日時 (UTC)。 */
-  updatedAt: string
+  updatedAt: string;
   /** 最後に更新したユーザーID またはサービス名。 */
-  updatedBy: string
+  updatedBy: string;
   /** 楽観的ロックに使用するバージョン番号。 */
-  version: number
+  version: number;
   /** 論理削除フラグ。true の場合は通常の検索結果から除外する。 */
-  isDeleted: boolean
+  isDeleted: boolean;
   /**
    * 削除操作が実行された日時 (UTC)。削除されていない場合はnull
    * @nullable
    */
-  deletedAt: string | null
+  deletedAt: string | null;
   /**
    * 削除操作を実施したユーザーID またはサービス名。削除されていない場合はnull
    * @nullable
    */
-  deletedBy: string | null
+  deletedBy: string | null;
   /**
    * 削除理由や補足メモ。カスタマーサポート対応に利用する。理由が不要または削除されていない場合はnull
    * @nullable
    */
-  deletionReason: string | null
+  deletionReason: string | null;
 }

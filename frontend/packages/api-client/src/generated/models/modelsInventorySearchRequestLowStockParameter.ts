@@ -9,4 +9,4 @@
 /**
  * 最低在庫を下回るもののみ取得するか
  */
-export type ModelsInventorySearchRequestLowStockParameter = boolean
+export type ModelsInventorySearchRequestLowStockParameter = boolean;

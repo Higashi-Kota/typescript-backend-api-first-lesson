@@ -5,58 +5,58 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsServiceCategoryType } from './modelsServiceCategoryType'
+import type { ModelsServiceCategoryType } from './modelsServiceCategoryType';
 
 /**
  * サービス情報を部分更新するリクエスト。null指定で値をリセット可能
  */
 export interface ModelsUpdateServiceRequestUpdate {
   /** 更新後のサービス名 */
-  name?: string
+  name?: string;
   /**
    * 更新後の説明文。null指定で説明文をクリア（空文字列にリセット）
    * @nullable
    */
-  description?: string | null
+  description?: string | null;
   /**
    * 更新後の施術時間。null指定で時間設定をクリア（デフォルト値にリセット）
    * @nullable
    */
-  duration?: number | null
+  duration?: number | null;
   /** 更新後の料金 */
-  price?: number
+  price?: number;
   /** 更新後のサービスカテゴリ */
-  category?: ModelsServiceCategoryType
+  category?: ModelsServiceCategoryType;
   /**
    * 更新後のカテゴリ ID（null 指定で解除）
    * @nullable
    */
-  categoryId?: string | null
+  categoryId?: string | null;
   /**
    * 更新後の画像 URL（null 指定で解除）
    * @nullable
    */
-  imageUrl?: string | null
+  imageUrl?: string | null;
   /**
    * 更新後の必要スタッフレベル（null 指定で解除）
    * @nullable
    */
-  requiredStaffLevel?: number | null
+  requiredStaffLevel?: number | null;
   /**
    * 更新後のデポジット額（null 指定で解除）
    * @nullable
    */
-  depositAmount?: number | null
+  depositAmount?: number | null;
   /** 更新後の有効フラグ */
-  isActive?: boolean
+  isActive?: boolean;
   /**
    * 更新後の最大予約日数（null 指定で解除）
    * @nullable
    */
-  maxAdvanceBookingDays?: number | null
+  maxAdvanceBookingDays?: number | null;
   /**
    * 更新後の最短予約受付時間（null 指定で解除）
    * @nullable
    */
-  minAdvanceBookingHours?: number | null
+  minAdvanceBookingHours?: number | null;
 }

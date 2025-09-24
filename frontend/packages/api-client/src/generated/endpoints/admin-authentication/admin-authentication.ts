@@ -5,28 +5,33 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import { useMutation } from '@tanstack/react-query'
+import {
+  useMutation
+} from '@tanstack/react-query';
 import type {
   MutationFunction,
   QueryClient,
   UseMutationOptions,
-  UseMutationResult,
-} from '@tanstack/react-query'
+  UseMutationResult
+} from '@tanstack/react-query';
 
 import type {
   AdminAuthOperationsAddTrustedIpBody,
   AdminAuthOperationsRemoveTrustedIpParams,
   ModelsAuthSuccessResponse,
-  ModelsError,
-} from '../../models'
+  ModelsError
+} from '../../models';
 
-import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher'
+import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher';
 
-type AwaitedInput<T> = PromiseLike<T> | T
+type AwaitedInput<T> = PromiseLike<T> | T;
 
-type Awaited<O> = O extends AwaitedInput<infer T> ? T : never
+      type Awaited<O> = O extends AwaitedInput<infer T> ? T : never;
 
-type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
+
 
 /**
  * Add trusted IP address for a user
@@ -55,114 +60,80 @@ export type adminAuthOperationsAddTrustedIpResponse404 = {
   data: ModelsError
   status: 404
 }
+    
+export type adminAuthOperationsAddTrustedIpResponseComposite = adminAuthOperationsAddTrustedIpResponse200 | adminAuthOperationsAddTrustedIpResponse400 | adminAuthOperationsAddTrustedIpResponse401 | adminAuthOperationsAddTrustedIpResponse403 | adminAuthOperationsAddTrustedIpResponse404;
+    
+export type adminAuthOperationsAddTrustedIpResponse = adminAuthOperationsAddTrustedIpResponseComposite & {
+  headers: Headers;
+}
 
-export type adminAuthOperationsAddTrustedIpResponseComposite =
-  | adminAuthOperationsAddTrustedIpResponse200
-  | adminAuthOperationsAddTrustedIpResponse400
-  | adminAuthOperationsAddTrustedIpResponse401
-  | adminAuthOperationsAddTrustedIpResponse403
-  | adminAuthOperationsAddTrustedIpResponse404
+export const getAdminAuthOperationsAddTrustedIpUrl = (userId: string,) => {
 
-export type adminAuthOperationsAddTrustedIpResponse =
-  adminAuthOperationsAddTrustedIpResponseComposite & {
-    headers: Headers
-  }
 
-export const getAdminAuthOperationsAddTrustedIpUrl = (userId: string) => {
+  
+
   return `/api/v1/admin/auth/trusted-ip/${userId}`
 }
 
-export const adminAuthOperationsAddTrustedIp = async (
-  userId: string,
-  adminAuthOperationsAddTrustedIpBody: AdminAuthOperationsAddTrustedIpBody,
-  options?: RequestInit
-): Promise<adminAuthOperationsAddTrustedIpResponse> => {
-  return customInstance<adminAuthOperationsAddTrustedIpResponse>(
-    getAdminAuthOperationsAddTrustedIpUrl(userId),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(adminAuthOperationsAddTrustedIpBody),
-    }
-  )
-}
-
-export const getAdminAuthOperationsAddTrustedIpMutationOptions = <
-  TError = ModelsError | ModelsError | ModelsError | ModelsError,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof adminAuthOperationsAddTrustedIp>>,
-    TError,
-    { userId: string; data: AdminAuthOperationsAddTrustedIpBody },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof adminAuthOperationsAddTrustedIp>>,
-  TError,
-  { userId: string; data: AdminAuthOperationsAddTrustedIpBody },
-  TContext
-> => {
-  const mutationKey = ['adminAuthOperationsAddTrustedIp']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof adminAuthOperationsAddTrustedIp>>,
-    { userId: string; data: AdminAuthOperationsAddTrustedIpBody }
-  > = (props) => {
-    const { userId, data } = props ?? {}
-
-    return adminAuthOperationsAddTrustedIp(userId, data, requestOptions)
+export const adminAuthOperationsAddTrustedIp = async (userId: string,
+    adminAuthOperationsAddTrustedIpBody: AdminAuthOperationsAddTrustedIpBody, options?: RequestInit): Promise<adminAuthOperationsAddTrustedIpResponse> => {
+  
+  return customInstance<adminAuthOperationsAddTrustedIpResponse>(getAdminAuthOperationsAddTrustedIpUrl(userId),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      adminAuthOperationsAddTrustedIpBody,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type AdminAuthOperationsAddTrustedIpMutationResult = NonNullable<
-  Awaited<ReturnType<typeof adminAuthOperationsAddTrustedIp>>
->
-export type AdminAuthOperationsAddTrustedIpMutationBody =
-  AdminAuthOperationsAddTrustedIpBody
-export type AdminAuthOperationsAddTrustedIpMutationError =
-  | ModelsError
-  | ModelsError
-  | ModelsError
-  | ModelsError
 
-export const useAdminAuthOperationsAddTrustedIp = <
-  TError = ModelsError | ModelsError | ModelsError | ModelsError,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof adminAuthOperationsAddTrustedIp>>,
-      TError,
-      { userId: string; data: AdminAuthOperationsAddTrustedIpBody },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof adminAuthOperationsAddTrustedIp>>,
-  TError,
-  { userId: string; data: AdminAuthOperationsAddTrustedIpBody },
-  TContext
-> => {
-  const mutationOptions =
-    getAdminAuthOperationsAddTrustedIpMutationOptions(options)
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+export const getAdminAuthOperationsAddTrustedIpMutationOptions = <TError = ModelsError | ModelsError | ModelsError | ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof adminAuthOperationsAddTrustedIp>>, TError,{userId: string;data: AdminAuthOperationsAddTrustedIpBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof adminAuthOperationsAddTrustedIp>>, TError,{userId: string;data: AdminAuthOperationsAddTrustedIpBody}, TContext> => {
+
+const mutationKey = ['adminAuthOperationsAddTrustedIp'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof adminAuthOperationsAddTrustedIp>>, {userId: string;data: AdminAuthOperationsAddTrustedIpBody}> = (props) => {
+          const {userId,data} = props ?? {};
+
+          return  adminAuthOperationsAddTrustedIp(userId,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AdminAuthOperationsAddTrustedIpMutationResult = NonNullable<Awaited<ReturnType<typeof adminAuthOperationsAddTrustedIp>>>
+    export type AdminAuthOperationsAddTrustedIpMutationBody = AdminAuthOperationsAddTrustedIpBody
+    export type AdminAuthOperationsAddTrustedIpMutationError = ModelsError | ModelsError | ModelsError | ModelsError
+
+    export const useAdminAuthOperationsAddTrustedIp = <TError = ModelsError | ModelsError | ModelsError | ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof adminAuthOperationsAddTrustedIp>>, TError,{userId: string;data: AdminAuthOperationsAddTrustedIpBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof adminAuthOperationsAddTrustedIp>>,
+        TError,
+        {userId: string;data: AdminAuthOperationsAddTrustedIpBody},
+        TContext
+      > => {
+
+      const mutationOptions = getAdminAuthOperationsAddTrustedIpMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * Remove trusted IP address for a user
  */
 export type adminAuthOperationsRemoveTrustedIpResponse200 = {
@@ -184,124 +155,87 @@ export type adminAuthOperationsRemoveTrustedIpResponse404 = {
   data: ModelsError
   status: 404
 }
+    
+export type adminAuthOperationsRemoveTrustedIpResponseComposite = adminAuthOperationsRemoveTrustedIpResponse200 | adminAuthOperationsRemoveTrustedIpResponse401 | adminAuthOperationsRemoveTrustedIpResponse403 | adminAuthOperationsRemoveTrustedIpResponse404;
+    
+export type adminAuthOperationsRemoveTrustedIpResponse = adminAuthOperationsRemoveTrustedIpResponseComposite & {
+  headers: Headers;
+}
 
-export type adminAuthOperationsRemoveTrustedIpResponseComposite =
-  | adminAuthOperationsRemoveTrustedIpResponse200
-  | adminAuthOperationsRemoveTrustedIpResponse401
-  | adminAuthOperationsRemoveTrustedIpResponse403
-  | adminAuthOperationsRemoveTrustedIpResponse404
-
-export type adminAuthOperationsRemoveTrustedIpResponse =
-  adminAuthOperationsRemoveTrustedIpResponseComposite & {
-    headers: Headers
-  }
-
-export const getAdminAuthOperationsRemoveTrustedIpUrl = (
-  userId: string,
-  params: AdminAuthOperationsRemoveTrustedIpParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getAdminAuthOperationsRemoveTrustedIpUrl = (userId: string,
+    params: AdminAuthOperationsRemoveTrustedIpParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v1/admin/auth/trusted-ip/${userId}?${stringifiedParams}`
-    : `/api/v1/admin/auth/trusted-ip/${userId}`
+  return stringifiedParams.length > 0 ? `/api/v1/admin/auth/trusted-ip/${userId}?${stringifiedParams}` : `/api/v1/admin/auth/trusted-ip/${userId}`
 }
 
-export const adminAuthOperationsRemoveTrustedIp = async (
-  userId: string,
-  params: AdminAuthOperationsRemoveTrustedIpParams,
-  options?: RequestInit
-): Promise<adminAuthOperationsRemoveTrustedIpResponse> => {
-  return customInstance<adminAuthOperationsRemoveTrustedIpResponse>(
-    getAdminAuthOperationsRemoveTrustedIpUrl(userId, params),
-    {
-      ...options,
-      method: 'DELETE',
-    }
-  )
-}
-
-export const getAdminAuthOperationsRemoveTrustedIpMutationOptions = <
-  TError = ModelsError | ModelsError | ModelsError,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof adminAuthOperationsRemoveTrustedIp>>,
-    TError,
-    { userId: string; params: AdminAuthOperationsRemoveTrustedIpParams },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof adminAuthOperationsRemoveTrustedIp>>,
-  TError,
-  { userId: string; params: AdminAuthOperationsRemoveTrustedIpParams },
-  TContext
-> => {
-  const mutationKey = ['adminAuthOperationsRemoveTrustedIp']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof adminAuthOperationsRemoveTrustedIp>>,
-    { userId: string; params: AdminAuthOperationsRemoveTrustedIpParams }
-  > = (props) => {
-    const { userId, params } = props ?? {}
-
-    return adminAuthOperationsRemoveTrustedIp(userId, params, requestOptions)
+export const adminAuthOperationsRemoveTrustedIp = async (userId: string,
+    params: AdminAuthOperationsRemoveTrustedIpParams, options?: RequestInit): Promise<adminAuthOperationsRemoveTrustedIpResponse> => {
+  
+  return customInstance<adminAuthOperationsRemoveTrustedIpResponse>(getAdminAuthOperationsRemoveTrustedIpUrl(userId,params),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type AdminAuthOperationsRemoveTrustedIpMutationResult = NonNullable<
-  Awaited<ReturnType<typeof adminAuthOperationsRemoveTrustedIp>>
->
 
-export type AdminAuthOperationsRemoveTrustedIpMutationError =
-  | ModelsError
-  | ModelsError
-  | ModelsError
 
-export const useAdminAuthOperationsRemoveTrustedIp = <
-  TError = ModelsError | ModelsError | ModelsError,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof adminAuthOperationsRemoveTrustedIp>>,
-      TError,
-      { userId: string; params: AdminAuthOperationsRemoveTrustedIpParams },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof adminAuthOperationsRemoveTrustedIp>>,
-  TError,
-  { userId: string; params: AdminAuthOperationsRemoveTrustedIpParams },
-  TContext
-> => {
-  const mutationOptions =
-    getAdminAuthOperationsRemoveTrustedIpMutationOptions(options)
+export const getAdminAuthOperationsRemoveTrustedIpMutationOptions = <TError = ModelsError | ModelsError | ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof adminAuthOperationsRemoveTrustedIp>>, TError,{userId: string;params: AdminAuthOperationsRemoveTrustedIpParams}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof adminAuthOperationsRemoveTrustedIp>>, TError,{userId: string;params: AdminAuthOperationsRemoveTrustedIpParams}, TContext> => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+const mutationKey = ['adminAuthOperationsRemoveTrustedIp'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof adminAuthOperationsRemoveTrustedIp>>, {userId: string;params: AdminAuthOperationsRemoveTrustedIpParams}> = (props) => {
+          const {userId,params} = props ?? {};
+
+          return  adminAuthOperationsRemoveTrustedIp(userId,params,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AdminAuthOperationsRemoveTrustedIpMutationResult = NonNullable<Awaited<ReturnType<typeof adminAuthOperationsRemoveTrustedIp>>>
+    
+    export type AdminAuthOperationsRemoveTrustedIpMutationError = ModelsError | ModelsError | ModelsError
+
+    export const useAdminAuthOperationsRemoveTrustedIp = <TError = ModelsError | ModelsError | ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof adminAuthOperationsRemoveTrustedIp>>, TError,{userId: string;params: AdminAuthOperationsRemoveTrustedIpParams}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof adminAuthOperationsRemoveTrustedIp>>,
+        TError,
+        {userId: string;params: AdminAuthOperationsRemoveTrustedIpParams},
+        TContext
+      > => {
+
+      const mutationOptions = getAdminAuthOperationsRemoveTrustedIpMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * Unlock a locked user account
  */
 export type adminAuthOperationsUnlockAccountResponse200 = {
@@ -328,106 +262,75 @@ export type adminAuthOperationsUnlockAccountResponse404 = {
   data: ModelsError
   status: 404
 }
+    
+export type adminAuthOperationsUnlockAccountResponseComposite = adminAuthOperationsUnlockAccountResponse200 | adminAuthOperationsUnlockAccountResponse400 | adminAuthOperationsUnlockAccountResponse401 | adminAuthOperationsUnlockAccountResponse403 | adminAuthOperationsUnlockAccountResponse404;
+    
+export type adminAuthOperationsUnlockAccountResponse = adminAuthOperationsUnlockAccountResponseComposite & {
+  headers: Headers;
+}
 
-export type adminAuthOperationsUnlockAccountResponseComposite =
-  | adminAuthOperationsUnlockAccountResponse200
-  | adminAuthOperationsUnlockAccountResponse400
-  | adminAuthOperationsUnlockAccountResponse401
-  | adminAuthOperationsUnlockAccountResponse403
-  | adminAuthOperationsUnlockAccountResponse404
+export const getAdminAuthOperationsUnlockAccountUrl = (userId: string,) => {
 
-export type adminAuthOperationsUnlockAccountResponse =
-  adminAuthOperationsUnlockAccountResponseComposite & {
-    headers: Headers
-  }
 
-export const getAdminAuthOperationsUnlockAccountUrl = (userId: string) => {
+  
+
   return `/api/v1/admin/auth/unlock/${userId}`
 }
 
-export const adminAuthOperationsUnlockAccount = async (
-  userId: string,
-  options?: RequestInit
-): Promise<adminAuthOperationsUnlockAccountResponse> => {
-  return customInstance<adminAuthOperationsUnlockAccountResponse>(
-    getAdminAuthOperationsUnlockAccountUrl(userId),
-    {
-      ...options,
-      method: 'POST',
-    }
-  )
-}
-
-export const getAdminAuthOperationsUnlockAccountMutationOptions = <
-  TError = ModelsError | ModelsError | ModelsError | ModelsError,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof adminAuthOperationsUnlockAccount>>,
-    TError,
-    { userId: string },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof adminAuthOperationsUnlockAccount>>,
-  TError,
-  { userId: string },
-  TContext
-> => {
-  const mutationKey = ['adminAuthOperationsUnlockAccount']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof adminAuthOperationsUnlockAccount>>,
-    { userId: string }
-  > = (props) => {
-    const { userId } = props ?? {}
-
-    return adminAuthOperationsUnlockAccount(userId, requestOptions)
+export const adminAuthOperationsUnlockAccount = async (userId: string, options?: RequestInit): Promise<adminAuthOperationsUnlockAccountResponse> => {
+  
+  return customInstance<adminAuthOperationsUnlockAccountResponse>(getAdminAuthOperationsUnlockAccountUrl(userId),
+  {      
+    ...options,
+    method: 'POST'
+    
+    
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type AdminAuthOperationsUnlockAccountMutationResult = NonNullable<
-  Awaited<ReturnType<typeof adminAuthOperationsUnlockAccount>>
->
 
-export type AdminAuthOperationsUnlockAccountMutationError =
-  | ModelsError
-  | ModelsError
-  | ModelsError
-  | ModelsError
 
-export const useAdminAuthOperationsUnlockAccount = <
-  TError = ModelsError | ModelsError | ModelsError | ModelsError,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof adminAuthOperationsUnlockAccount>>,
-      TError,
-      { userId: string },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof adminAuthOperationsUnlockAccount>>,
-  TError,
-  { userId: string },
-  TContext
-> => {
-  const mutationOptions =
-    getAdminAuthOperationsUnlockAccountMutationOptions(options)
+export const getAdminAuthOperationsUnlockAccountMutationOptions = <TError = ModelsError | ModelsError | ModelsError | ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof adminAuthOperationsUnlockAccount>>, TError,{userId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof adminAuthOperationsUnlockAccount>>, TError,{userId: string}, TContext> => {
 
-  return useMutation(mutationOptions, queryClient)
-}
+const mutationKey = ['adminAuthOperationsUnlockAccount'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof adminAuthOperationsUnlockAccount>>, {userId: string}> = (props) => {
+          const {userId} = props ?? {};
+
+          return  adminAuthOperationsUnlockAccount(userId,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AdminAuthOperationsUnlockAccountMutationResult = NonNullable<Awaited<ReturnType<typeof adminAuthOperationsUnlockAccount>>>
+    
+    export type AdminAuthOperationsUnlockAccountMutationError = ModelsError | ModelsError | ModelsError | ModelsError
+
+    export const useAdminAuthOperationsUnlockAccount = <TError = ModelsError | ModelsError | ModelsError | ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof adminAuthOperationsUnlockAccount>>, TError,{userId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof adminAuthOperationsUnlockAccount>>,
+        TError,
+        {userId: string},
+        TContext
+      > => {
+
+      const mutationOptions = getAdminAuthOperationsUnlockAccountMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    

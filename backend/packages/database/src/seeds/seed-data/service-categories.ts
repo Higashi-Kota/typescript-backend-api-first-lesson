@@ -8,7 +8,7 @@ export interface ServiceCategorySeedResult {
 
 export async function seedServiceCategories(
   db: PostgresJsDatabase<typeof schema>,
-  salonIds: string[]
+  salonIds: string[],
 ): Promise<ServiceCategorySeedResult> {
   const categories = []
   const categoryMap: Record<string, string> = {}
@@ -86,7 +86,7 @@ export async function seedServiceCategories(
         displayOrder: 8,
         color: '#B8B8B8',
         isActive: true,
-      }
+      },
     )
   }
 

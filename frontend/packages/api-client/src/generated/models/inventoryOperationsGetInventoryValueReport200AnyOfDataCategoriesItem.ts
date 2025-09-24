@@ -6,9 +6,8 @@
  * OpenAPI spec version: 2.0
  */
 
-export type InventoryOperationsGetInventoryValueReport200AnyOfDataCategoriesItem =
-  {
-    category: string
-    value: number
-    itemCount: number
-  }
+export type InventoryOperationsGetInventoryValueReport200AnyOfDataCategoriesItem = {
+  category: string;
+  value: number;
+  itemCount: number;
+};

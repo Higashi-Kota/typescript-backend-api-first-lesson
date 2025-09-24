@@ -15,8 +15,8 @@ scalp_treatment: スカルプトリートメント - 頭皮ケアに特化した
 keratin_treatment: ケラチントリートメント - ケラチンを補充し髪をストレートにするトリートメント
 olaplex: オラプレックス - ダメージした髪の内部結合を修復するトリートメント
  */
-export type ModelsTreatmentSubCategoryType =
-  (typeof ModelsTreatmentSubCategoryType)[keyof typeof ModelsTreatmentSubCategoryType]
+export type ModelsTreatmentSubCategoryType = typeof ModelsTreatmentSubCategoryType[keyof typeof ModelsTreatmentSubCategoryType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsTreatmentSubCategoryType = {
@@ -25,4 +25,4 @@ export const ModelsTreatmentSubCategoryType = {
   scalp_treatment: 'scalp_treatment',
   keratin_treatment: 'keratin_treatment',
   olaplex: 'olaplex',
-} as const
+} as const;

@@ -9,4 +9,4 @@
 /**
  * 返金処理のトランザクションを識別するブランド付きUUID。
  */
-export type ModelsRefundId = string
+export type ModelsRefundId = string;

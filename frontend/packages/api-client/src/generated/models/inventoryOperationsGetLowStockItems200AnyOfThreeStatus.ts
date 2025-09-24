@@ -9,10 +9,10 @@
 /**
  * 固定値error。エラー結果であることを示す。
  */
-export type InventoryOperationsGetLowStockItems200AnyOfThreeStatus =
-  (typeof InventoryOperationsGetLowStockItems200AnyOfThreeStatus)[keyof typeof InventoryOperationsGetLowStockItems200AnyOfThreeStatus]
+export type InventoryOperationsGetLowStockItems200AnyOfThreeStatus = typeof InventoryOperationsGetLowStockItems200AnyOfThreeStatus[keyof typeof InventoryOperationsGetLowStockItems200AnyOfThreeStatus];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const InventoryOperationsGetLowStockItems200AnyOfThreeStatus = {
   error: 'error',
-} as const
+} as const;

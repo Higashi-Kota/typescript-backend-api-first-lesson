@@ -9,10 +9,10 @@
 /**
  * 固定値success。成功結果であることを示す。
  */
-export type RoleOperationsCreateRole200AnyOfStatus =
-  (typeof RoleOperationsCreateRole200AnyOfStatus)[keyof typeof RoleOperationsCreateRole200AnyOfStatus]
+export type RoleOperationsCreateRole200AnyOfStatus = typeof RoleOperationsCreateRole200AnyOfStatus[keyof typeof RoleOperationsCreateRole200AnyOfStatus];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const RoleOperationsCreateRole200AnyOfStatus = {
   success: 'success',
-} as const
+} as const;

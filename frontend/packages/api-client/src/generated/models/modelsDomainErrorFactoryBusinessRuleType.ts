@@ -6,10 +6,10 @@
  * OpenAPI spec version: 2.0
  */
 
-export type ModelsDomainErrorFactoryBusinessRuleType =
-  (typeof ModelsDomainErrorFactoryBusinessRuleType)[keyof typeof ModelsDomainErrorFactoryBusinessRuleType]
+export type ModelsDomainErrorFactoryBusinessRuleType = typeof ModelsDomainErrorFactoryBusinessRuleType[keyof typeof ModelsDomainErrorFactoryBusinessRuleType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsDomainErrorFactoryBusinessRuleType = {
   BUSINESS_RULE_VIOLATION: 'BUSINESS_RULE_VIOLATION',
-} as const
+} as const;

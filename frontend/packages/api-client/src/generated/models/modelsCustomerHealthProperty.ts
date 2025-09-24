@@ -5,10 +5,10 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsCustomerHealth } from './modelsCustomerHealth'
+import type { ModelsCustomerHealth } from './modelsCustomerHealth';
 
 /**
  * 健康情報。情報提供がない場合はnull
  * @nullable
  */
-export type ModelsCustomerHealthProperty = ModelsCustomerHealth | null
+export type ModelsCustomerHealthProperty = ModelsCustomerHealth | null;

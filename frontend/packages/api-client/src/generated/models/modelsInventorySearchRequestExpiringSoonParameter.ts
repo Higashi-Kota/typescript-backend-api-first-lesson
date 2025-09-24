@@ -9,4 +9,4 @@
 /**
  * 期限切れ間近の在庫を取得するか
  */
-export type ModelsInventorySearchRequestExpiringSoonParameter = boolean
+export type ModelsInventorySearchRequestExpiringSoonParameter = boolean;

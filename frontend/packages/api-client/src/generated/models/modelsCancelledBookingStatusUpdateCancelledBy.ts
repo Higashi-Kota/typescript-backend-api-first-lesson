@@ -9,12 +9,12 @@
 /**
  * キャンセルを実行した主体（customer: 顧客／salon: サロン側／system: システム判断）。
  */
-export type ModelsCancelledBookingStatusUpdateCancelledBy =
-  (typeof ModelsCancelledBookingStatusUpdateCancelledBy)[keyof typeof ModelsCancelledBookingStatusUpdateCancelledBy]
+export type ModelsCancelledBookingStatusUpdateCancelledBy = typeof ModelsCancelledBookingStatusUpdateCancelledBy[keyof typeof ModelsCancelledBookingStatusUpdateCancelledBy];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsCancelledBookingStatusUpdateCancelledBy = {
   customer: 'customer',
   salon: 'salon',
   system: 'system',
-} as const
+} as const;

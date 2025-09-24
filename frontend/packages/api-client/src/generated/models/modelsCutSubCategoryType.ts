@@ -15,8 +15,8 @@ kids_cut: キッズカット - 子供向けヘアカットサービス
 bang_trim: 前髪カット - 前髪のみのカットサービス
 beard_trim: 髭トリミング - 髭の整えサービス
  */
-export type ModelsCutSubCategoryType =
-  (typeof ModelsCutSubCategoryType)[keyof typeof ModelsCutSubCategoryType]
+export type ModelsCutSubCategoryType = typeof ModelsCutSubCategoryType[keyof typeof ModelsCutSubCategoryType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsCutSubCategoryType = {
@@ -25,4 +25,4 @@ export const ModelsCutSubCategoryType = {
   kids_cut: 'kids_cut',
   bang_trim: 'bang_trim',
   beard_trim: 'beard_trim',
-} as const
+} as const;

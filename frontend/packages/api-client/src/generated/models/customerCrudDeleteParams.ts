@@ -7,5 +7,5 @@
  */
 
 export type CustomerCrudDeleteParams = {
-  permanent?: boolean
-}
+permanent?: boolean;
+};

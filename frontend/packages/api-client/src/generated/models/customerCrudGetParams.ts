@@ -7,5 +7,5 @@
  */
 
 export type CustomerCrudGetParams = {
-  fields?: string
-}
+fields?: string;
+};

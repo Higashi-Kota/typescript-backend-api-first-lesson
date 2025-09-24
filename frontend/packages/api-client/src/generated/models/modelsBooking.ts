@@ -5,83 +5,83 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsBookingId } from './modelsBookingId'
-import type { ModelsSalonId } from './modelsSalonId'
-import type { ModelsCustomerId } from './modelsCustomerId'
-import type { ModelsReservationId } from './modelsReservationId'
-import type { ModelsBookingStatus } from './modelsBookingStatus'
-import type { ModelsBookingStatusCodeType } from './modelsBookingStatusCodeType'
-import type { ModelsBookingWaitlistEntry } from './modelsBookingWaitlistEntry'
-import type { ModelsBookingDepositProperty } from './modelsBookingDepositProperty'
-import type { ModelsMoney } from './modelsMoney'
-import type { ModelsBookingBalanceDue } from './modelsBookingBalanceDue'
-import type { ModelsBookingPaymentMethod } from './modelsBookingPaymentMethod'
-import type { ModelsBookingPaymentStatus } from './modelsBookingPaymentStatus'
+import type { ModelsBookingId } from './modelsBookingId';
+import type { ModelsSalonId } from './modelsSalonId';
+import type { ModelsCustomerId } from './modelsCustomerId';
+import type { ModelsReservationId } from './modelsReservationId';
+import type { ModelsBookingStatus } from './modelsBookingStatus';
+import type { ModelsBookingStatusCodeType } from './modelsBookingStatusCodeType';
+import type { ModelsBookingWaitlistEntry } from './modelsBookingWaitlistEntry';
+import type { ModelsBookingDepositProperty } from './modelsBookingDepositProperty';
+import type { ModelsMoney } from './modelsMoney';
+import type { ModelsBookingBalanceDue } from './modelsBookingBalanceDue';
+import type { ModelsBookingPaymentMethod } from './modelsBookingPaymentMethod';
+import type { ModelsBookingPaymentStatus } from './modelsBookingPaymentStatus';
 
 /**
  * サロンで確定管理する予約の集約モデル。
  */
 export interface ModelsBooking {
   /** 予約を一意に識別するID。 */
-  id: ModelsBookingId
+  id: ModelsBookingId;
   /** 予約が紐づくサロンID。 */
-  salonId: ModelsSalonId
+  salonId: ModelsSalonId;
   /** 予約を行った顧客ID。 */
-  customerId: ModelsCustomerId
+  customerId: ModelsCustomerId;
   /** 関連する予約リクエストID一覧。 */
-  reservationIds: ModelsReservationId[]
+  reservationIds: ModelsReservationId[];
   /** 進行状況ごとの詳細情報。 */
-  status: ModelsBookingStatus
+  status: ModelsBookingStatus;
   /** 現在のステータスコード。 */
-  statusCode: ModelsBookingStatusCodeType
+  statusCode: ModelsBookingStatusCodeType;
   /**
    * ウェイティングリスト情報。ウェイティングリストに登録されていない場合はnull。
    * @nullable
    */
-  waitlistEntry: ModelsBookingWaitlistEntry
+  waitlistEntry: ModelsBookingWaitlistEntry;
   /**
    * 預かり金に関する情報。デポジットが不要な場合はnull。
    * @nullable
    */
-  deposit: ModelsBookingDepositProperty
+  deposit: ModelsBookingDepositProperty;
   /** 割引適用前の合計金額。 */
-  totalAmount: ModelsMoney
+  totalAmount: ModelsMoney;
   /** 適用された割引額 */
-  discountAmount: ModelsMoney
+  discountAmount: ModelsMoney;
   /** 最終的に請求する金額。 */
-  finalAmount: ModelsMoney
+  finalAmount: ModelsMoney;
   /**
    * 未収金額。支払いが完了している場合はnull。
    * @nullable
    */
-  balanceDue: ModelsBookingBalanceDue
+  balanceDue: ModelsBookingBalanceDue;
   /**
    * 予定している支払い方法。当日決定または未選択の場合はnull
    * @nullable
    */
-  paymentMethod: ModelsBookingPaymentMethod
+  paymentMethod: ModelsBookingPaymentMethod;
   /**
    * 支払いの進捗ステータス。支払いが未開始の場合はnull。
    * @nullable
    */
-  paymentStatus: ModelsBookingPaymentStatus
+  paymentStatus: ModelsBookingPaymentStatus;
   /**
    * スタッフ・顧客間で共有するメモ。メモがない場合はnull。
    * @nullable
    */
-  notes: string | null
+  notes: string | null;
   /** レコード作成日時。 */
-  createdAt: string
+  createdAt: string;
   /**
    * レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull
    * @nullable
    */
-  createdBy: string | null
+  createdBy: string | null;
   /** レコード最終更新日時。 */
-  updatedAt: string
+  updatedAt: string;
   /**
    * レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull
    * @nullable
    */
-  updatedBy: string | null
+  updatedBy: string | null;
 }

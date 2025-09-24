@@ -5,8 +5,8 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsDomainErrorType } from './modelsDomainErrorType'
-import type { ModelsDomainErrorDetailsDetails } from './modelsDomainErrorDetailsDetails'
+import type { ModelsDomainErrorType } from './modelsDomainErrorType';
+import type { ModelsDomainErrorDetailsDetails } from './modelsDomainErrorDetailsDetails';
 
 /**
  * ドメインエラーの詳細情報モデル。
@@ -14,34 +14,34 @@ import type { ModelsDomainErrorDetailsDetails } from './modelsDomainErrorDetails
  */
 export interface ModelsDomainErrorDetails {
   /** エラー分類タイプ。上位のビジネスルールカテゴリを特定する。 */
-  type: ModelsDomainErrorType
+  type: ModelsDomainErrorType;
   /** 業務担当者が理解しやすい説明文。ユーザー通知にも使用可能。 */
-  message: string
+  message: string;
   /** 機械判読可能なエラーコード。外部連携やログ分析に利用する。 */
-  code: string
+  code: string;
   /**
    * 追加のエラー文脈。入力値や関連設定など柔軟に格納する。追加情報がない場合はnull
    * @nullable
    */
-  details: ModelsDomainErrorDetailsDetails
+  details: ModelsDomainErrorDetailsDetails;
   /**
    * 関連するエンティティ名。例: `Reservation` や `Customer`。特定のエンティティに関連しない場合はnull
    * @nullable
    */
-  entity: string | null
+  entity: string | null;
   /**
    * 問題が発生したフィールド名。入力フォームとの紐付けに利用。フィールド特定が不要な場合はnull
    * @nullable
    */
-  field: string | null
+  field: string | null;
   /**
    * 問題があった値。マスキングが不要なケースのみ保持する。値を出力しない場合はnull
    * @nullable
    */
-  value: string | null
+  value: string | null;
   /**
    * 外部サービスエラー時の対象サービス名。連携先の切り分けに役立つ。外部サービスに関係ない場合はnull
    * @nullable
    */
-  service: string | null
+  service: string | null;
 }

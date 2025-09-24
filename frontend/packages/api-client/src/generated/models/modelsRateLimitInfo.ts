@@ -10,6 +10,4 @@
  * レート制限に関する HTTP ヘッダ情報モデル。
 API 呼び出し頻度をクライアントに通知し、適切なリトライ制御を促す。
  */
-export interface ModelsRateLimitInfo {
-  [key: string]: unknown
-}
+export interface ModelsRateLimitInfo { [key: string]: unknown }

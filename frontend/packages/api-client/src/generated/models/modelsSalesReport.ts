@@ -5,40 +5,40 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsSalonId } from './modelsSalonId'
-import type { ModelsMoney } from './modelsMoney'
-import type { ModelsSalesByMethod } from './modelsSalesByMethod'
-import type { ModelsSalesByCategory } from './modelsSalesByCategory'
-import type { ModelsStaffPerformance } from './modelsStaffPerformance'
+import type { ModelsSalonId } from './modelsSalonId';
+import type { ModelsMoney } from './modelsMoney';
+import type { ModelsSalesByMethod } from './modelsSalesByMethod';
+import type { ModelsSalesByCategory } from './modelsSalesByCategory';
+import type { ModelsStaffPerformance } from './modelsStaffPerformance';
 
 /**
  * 期間内の売上実績を集計したレポート
  */
 export interface ModelsSalesReport {
   /** 対象サロン ID */
-  salonId: ModelsSalonId
+  salonId: ModelsSalonId;
   /** 集計期間の開始日時 */
-  periodStart: string
+  periodStart: string;
   /** 集計期間の終了日時 */
-  periodEnd: string
+  periodEnd: string;
   /** 総売上額 */
-  totalSales: ModelsMoney
+  totalSales: ModelsMoney;
   /** 累計税額 */
-  totalTax: ModelsMoney
+  totalTax: ModelsMoney;
   /** 累計割引額 */
-  totalDiscounts: ModelsMoney
+  totalDiscounts: ModelsMoney;
   /** 累計返金額 */
-  totalRefunds: ModelsMoney
+  totalRefunds: ModelsMoney;
   /** 返金考慮後の純売上額 */
-  netSales: ModelsMoney
+  netSales: ModelsMoney;
   /** 取引件数 */
-  transactionCount: number
+  transactionCount: number;
   /** 平均取引単価 */
-  averageTransactionValue: ModelsMoney
+  averageTransactionValue: ModelsMoney;
   /** 支払い方法別の売上内訳 */
-  salesByMethod: ModelsSalesByMethod[]
+  salesByMethod: ModelsSalesByMethod[];
   /** サービスカテゴリ別の売上内訳 */
-  salesByCategory: ModelsSalesByCategory[]
+  salesByCategory: ModelsSalesByCategory[];
   /** 売上貢献度の高いスタッフ情報 */
-  topStaff: ModelsStaffPerformance[]
+  topStaff: ModelsStaffPerformance[];
 }

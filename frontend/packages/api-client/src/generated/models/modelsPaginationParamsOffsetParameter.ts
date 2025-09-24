@@ -9,4 +9,4 @@
 /**
  * 取得開始位置を表すオフセット。省略時は0。
  */
-export type ModelsPaginationParamsOffsetParameter = number
+export type ModelsPaginationParamsOffsetParameter = number;

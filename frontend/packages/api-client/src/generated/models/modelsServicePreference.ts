@@ -5,28 +5,28 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsServiceId } from './modelsServiceId'
-import type { ModelsServicePreferencePreferredPriceRange } from './modelsServicePreferencePreferredPriceRange'
+import type { ModelsServiceId } from './modelsServiceId';
+import type { ModelsServicePreferencePreferredPriceRange } from './modelsServicePreferencePreferredPriceRange';
 
 export interface ModelsServicePreference {
   /**
    * お気に入りサービス一覧。特にない場合はnull
    * @nullable
    */
-  favoriteServices: ModelsServiceId[] | null
+  favoriteServices: ModelsServiceId[] | null;
   /**
    * 避けたいサービス一覧。特にない場合はnull
    * @nullable
    */
-  avoidServices: ModelsServiceId[] | null
+  avoidServices: ModelsServiceId[] | null;
   /**
    * 希望施術時間（分）。特に希望がない場合はnull
    * @nullable
    */
-  preferredDuration: number | null
+  preferredDuration: number | null;
   /**
    * 希望価格帯。特に希望がない場合はnull
    * @nullable
    */
-  preferredPriceRange: ModelsServicePreferencePreferredPriceRange
+  preferredPriceRange: ModelsServicePreferencePreferredPriceRange;
 }

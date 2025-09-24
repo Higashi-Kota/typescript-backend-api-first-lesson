@@ -11,19 +11,19 @@
  */
 export interface ModelsPointInfo {
   /** 現在保持している有効ポイント数。 */
-  currentPoints: number
+  currentPoints: number;
   /** 累計で獲得したポイント総数。 */
-  totalEarnedPoints: number
+  totalEarnedPoints: number;
   /** 累計で利用（消費）したポイント総数。 */
-  totalUsedPoints: number
+  totalUsedPoints: number;
   /**
    * 失効予定のポイント数。失効予定がない場合はnull
    * @nullable
    */
-  expiringPoints: number | null
+  expiringPoints: number | null;
   /**
    * 最も早く失効するポイントの失効日。失効予定がない場合はnull
    * @nullable
    */
-  expirationDate: string | null
+  expirationDate: string | null;
 }

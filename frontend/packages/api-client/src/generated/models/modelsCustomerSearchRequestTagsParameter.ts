@@ -9,4 +9,4 @@
 /**
  * 顧客タグでフィルタ
  */
-export type ModelsCustomerSearchRequestTagsParameter = string[]
+export type ModelsCustomerSearchRequestTagsParameter = string[];

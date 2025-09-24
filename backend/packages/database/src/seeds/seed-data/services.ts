@@ -10,7 +10,7 @@ export interface ServiceSeedResult {
 export async function seedServices(
   db: PostgresJsDatabase<typeof schema>,
   salonIds: string[],
-  categoryResult: ServiceCategorySeedResult
+  categoryResult: ServiceCategorySeedResult,
 ): Promise<ServiceSeedResult> {
   const services = []
   const { categoryMap } = categoryResult
@@ -174,7 +174,7 @@ export async function seedServices(
       allowOnlineBooking: true,
       isActive: true,
       sortOrder: 10,
-    }
+    },
   )
 
   // Services for Salon 2 (Hair & Spa Osaka)
@@ -254,7 +254,7 @@ export async function seedServices(
       allowOnlineBooking: true,
       isActive: true,
       sortOrder: 5,
-    }
+    },
   )
 
   const insertedServices = await db
@@ -290,7 +290,7 @@ export async function seedServices(
         isRequired: false,
         sortOrder: 2,
         isActive: true,
-      }
+      },
     )
   }
 

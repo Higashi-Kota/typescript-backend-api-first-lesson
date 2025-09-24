@@ -10,4 +10,4 @@
  * 関連リソースや次アクションへのリンク情報。リンクがない場合はnull
  * @nullable
  */
-export type SalonCrudUpdate200Links = { [key: string]: string } | null
+export type SalonCrudUpdate200Links = {[key: string]: string} | null;

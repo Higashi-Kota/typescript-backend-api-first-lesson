@@ -53,7 +53,7 @@ const getPrefix = (type: IdType) =>
  */
 export const createId = (
   size: number = DEFAULT_SIZE,
-  type: IdType = 'default'
+  type: IdType = 'default',
 ) => {
   const prefix = getPrefix(type)
 
@@ -66,7 +66,7 @@ export const createId = (
 export const createIdBySeed = (
   seed: string,
   size: number = DEFAULT_SIZE,
-  type: IdType = 'default'
+  type: IdType = 'default',
 ) => {
   const rng = gnrng(seed)
   const nanoid = customRandom(AVAILABLE_ALPHABET, size, (size) => {

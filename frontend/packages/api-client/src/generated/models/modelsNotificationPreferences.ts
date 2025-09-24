@@ -11,11 +11,11 @@
  */
 export interface ModelsNotificationPreferences {
   /** メール通知有効 */
-  email: boolean
+  email: boolean;
   /** SMS通知有効 */
-  sms: boolean
+  sms: boolean;
   /** プッシュ通知有効 */
-  push: boolean
+  push: boolean;
   /** リマインダータイミング（予約の何時間前） */
-  reminderHours: number
+  reminderHours: number;
 }

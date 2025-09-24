@@ -15,8 +15,8 @@ duration: 時間延長 - サービス時間を延長するオプション
 product: 商品追加 - サービスに商品を含めるオプション
 combo: コンボ - 複数サービスの組み合わせオプション
  */
-export type ModelsServiceOptionType =
-  (typeof ModelsServiceOptionType)[keyof typeof ModelsServiceOptionType]
+export type ModelsServiceOptionType = typeof ModelsServiceOptionType[keyof typeof ModelsServiceOptionType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsServiceOptionType = {
@@ -25,4 +25,4 @@ export const ModelsServiceOptionType = {
   duration: 'duration',
   product: 'product',
   combo: 'combo',
-} as const
+} as const;

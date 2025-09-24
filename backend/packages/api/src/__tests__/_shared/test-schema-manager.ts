@@ -49,7 +49,7 @@ export class TestSchemaManager {
       }
 
       console.log(
-        `✅ ${successCount} Enum types ready in public schema (${skippedCount} skipped)`
+        `✅ ${successCount} Enum types ready in public schema (${skippedCount} skipped)`,
       )
 
       // Verify enums exist
@@ -70,7 +70,7 @@ export class TestSchemaManager {
    * @returns true if created or already exists, false on error
    */
   private async createEnumIfNotExists(
-    enumDefinition: string
+    enumDefinition: string,
   ): Promise<boolean> {
     // Extract enum name from the CREATE TYPE statement
     const match = enumDefinition.match(/CREATE TYPE "public"\."(\w+)" AS ENUM/)
@@ -150,7 +150,7 @@ export class TestSchemaManager {
   private async applyDatabaseSetup(
     db: Database,
     schemaName: string,
-    useSimplifiedSetup = true
+    useSimplifiedSetup = true,
   ) {
     try {
       // Set search path to include both test schema and public (for enums)
@@ -172,7 +172,7 @@ export class TestSchemaManager {
           if (stmt.includes('REFERENCES "public"."')) {
             return stmt.replace(
               /REFERENCES "public"\."(\w+)"/g,
-              'REFERENCES "$1"'
+              'REFERENCES "$1"',
             )
           }
           return stmt
@@ -187,7 +187,7 @@ export class TestSchemaManager {
           if (stmt.includes('CREATE TABLE')) {
             return stmt.replace(
               /CREATE TABLE "(\w+)"/g,
-              `CREATE TABLE ${schemaName}."$1"`
+              `CREATE TABLE ${schemaName}."$1"`,
             )
           }
           // For ALTER TABLE and CREATE INDEX, they'll use the search path
@@ -231,7 +231,7 @@ export class TestSchemaManager {
   private async dropSchema(schemaName: string) {
     try {
       await this.adminDb.execute(
-        sql.raw(`DROP SCHEMA IF EXISTS ${schemaName} CASCADE`)
+        sql.raw(`DROP SCHEMA IF EXISTS ${schemaName} CASCADE`),
       )
       this.schemas.delete(schemaName)
     } catch (error) {
@@ -244,7 +244,7 @@ export class TestSchemaManager {
    */
   async cleanupAll() {
     const cleanupPromises = Array.from(this.schemas.values()).map((schema) =>
-      schema.cleanup()
+      schema.cleanup(),
     )
 
     await Promise.allSettled(cleanupPromises)

@@ -16,8 +16,8 @@ free_service: 無料サービス - 特定サービスの無料提供
 birthday_special: 誕生日特典 - 誕生月に提供される特別サービス
 exclusive_access: 特別アクセス権 - VIP専用メニューや特別イベントへの参加権
  */
-export type ModelsMembershipBenefitType =
-  (typeof ModelsMembershipBenefitType)[keyof typeof ModelsMembershipBenefitType]
+export type ModelsMembershipBenefitType = typeof ModelsMembershipBenefitType[keyof typeof ModelsMembershipBenefitType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsMembershipBenefitType = {
@@ -27,4 +27,4 @@ export const ModelsMembershipBenefitType = {
   free_service: 'free_service',
   birthday_special: 'birthday_special',
   exclusive_access: 'exclusive_access',
-} as const
+} as const;

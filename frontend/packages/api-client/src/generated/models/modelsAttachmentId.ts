@@ -9,4 +9,4 @@
 /**
  * 添付ファイル・画像データを識別するブランド付きUUID。
  */
-export type ModelsAttachmentId = string
+export type ModelsAttachmentId = string;

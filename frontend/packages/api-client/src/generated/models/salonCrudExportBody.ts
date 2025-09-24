@@ -5,66 +5,66 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsServiceCategoryType } from './modelsServiceCategoryType'
-import type { SalonCrudExportBodySortOrder } from './salonCrudExportBodySortOrder'
-import type { SalonCrudExportBodyFormat } from './salonCrudExportBodyFormat'
+import type { ModelsServiceCategoryType } from './modelsServiceCategoryType';
+import type { SalonCrudExportBodySortOrder } from './salonCrudExportBodySortOrder';
+import type { SalonCrudExportBodyFormat } from './salonCrudExportBodyFormat';
 
 export type SalonCrudExportBody = {
   /** 検索キーワード。qパラメータのエイリアス */
-  keyword?: string
+  keyword?: string;
   /** 市区町村名による絞り込み */
-  city?: string
+  city?: string;
   /** 都道府県名による絞り込み */
-  prefecture?: string
+  prefecture?: string;
   /** サービスカテゴリ（カット・カラー等）による絞り込み */
-  categories?: ModelsServiceCategoryType[]
+  categories?: ModelsServiceCategoryType[];
   /** 設備やこだわり条件などの特徴タグによる絞り込み */
-  features?: string[]
+  features?: string[];
   /** 営業中サロンのみを対象にするかどうか */
-  isActive?: boolean
+  isActive?: boolean;
   /**
    * 最低評価値による絞り込み
    * @minimum 0
    * @maximum 5
    */
-  minRating?: number
+  minRating?: number;
   /**
    * 検索基点からの最大距離（km）
    * @minimum 0
    */
-  maxDistance?: number
+  maxDistance?: number;
   /** 距離計算に使用する基準緯度 */
-  lat?: number
+  lat?: number;
   /** 距離計算に使用する基準経度 */
-  lon?: number
+  lon?: number;
   /** 現在営業中かどうかで絞り込むフラグ */
-  openNow?: boolean
+  openNow?: boolean;
   /** 特定日時に営業しているサロンを探すための基準日時 */
-  openAt?: string
+  openAt?: string;
   /** 全文検索キーワード。名称や説明文を横断的に検索する。 */
-  q?: string
+  q?: string;
   /** フィルター式。例: `status:active AND category:premium`。属性条件を組み合わせた絞り込みに使用。 */
-  filter?: string
+  filter?: string;
   /** レスポンスに含めるフィールドのカンマ区切りリスト。データ転送量の最適化に活用。 */
-  fields?: string
+  fields?: string;
   /** レスポンスから除外したいフィールドのカンマ区切りリスト。不要情報を除く場合に利用。 */
-  exclude?: string
+  exclude?: string;
   /** ファセット集計を有効化するかどうか。true で各項目の件数を集計する。 */
-  facets?: boolean
+  facets?: boolean;
   /** 集計対象とするファセットフィールドの一覧。カテゴリや価格帯などを指定する。 */
-  facetFields?: string[]
+  facetFields?: string[];
   /**
    * 1ページあたりの取得件数上限 (1〜100)。指定が無い場合は既定値 20 を適用。
    * @minimum 1
    * @maximum 100
    */
-  limit?: number
+  limit?: number;
   /** 次ページを指し示すカーソル。前回レスポンスの `meta.nextCursor` を設定する。 */
-  cursor?: string
+  cursor?: string;
   /** ソート対象フィールド。予約日時や作成日時など業務軸を指定する。 */
-  sortBy?: string
+  sortBy?: string;
   /** ソート順序。`asc` は昇順、`desc` は降順を表す。 */
-  sortOrder?: SalonCrudExportBodySortOrder
-  format: SalonCrudExportBodyFormat
-  exportFields?: string[]
-}
+  sortOrder?: SalonCrudExportBodySortOrder;
+  format: SalonCrudExportBodyFormat;
+  exportFields?: string[];
+};

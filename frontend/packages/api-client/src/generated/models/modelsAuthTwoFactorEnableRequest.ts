@@ -11,5 +11,5 @@
  */
 export interface ModelsAuthTwoFactorEnableRequest {
   /** 本人確認のための現在パスワード。 */
-  password: string
+  password: string;
 }

@@ -11,7 +11,7 @@
  */
 export interface ModelsPriceRangeFilter {
   /** 下限価格。未指定の場合は制限なし。 */
-  minPrice?: number
+  minPrice?: number;
   /** 上限価格。未指定の場合は制限なし。 */
-  maxPrice?: number
+  maxPrice?: number;
 }

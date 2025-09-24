@@ -5,9 +5,7 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { PaymentOperationsGetReceipt200AnyOf } from './paymentOperationsGetReceipt200AnyOf'
-import type { PaymentOperationsGetReceipt200AnyOfFive } from './paymentOperationsGetReceipt200AnyOfFive'
+import type { PaymentOperationsGetReceipt200AnyOf } from './paymentOperationsGetReceipt200AnyOf';
+import type { PaymentOperationsGetReceipt200AnyOfFive } from './paymentOperationsGetReceipt200AnyOfFive';
 
-export type PaymentOperationsGetReceipt200 =
-  | PaymentOperationsGetReceipt200AnyOf
-  | PaymentOperationsGetReceipt200AnyOfFive
+export type PaymentOperationsGetReceipt200 = PaymentOperationsGetReceipt200AnyOf | PaymentOperationsGetReceipt200AnyOfFive;

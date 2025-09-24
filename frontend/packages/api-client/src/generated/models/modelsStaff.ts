@@ -5,76 +5,76 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsStaffId } from './modelsStaffId'
-import type { ModelsSalonId } from './modelsSalonId'
-import type { ModelsContactInfo } from './modelsContactInfo'
-import type { ModelsStaffQualification } from './modelsStaffQualification'
-import type { ModelsStaffSchedule } from './modelsStaffSchedule'
-import type { ModelsStaffPermission } from './modelsStaffPermission'
+import type { ModelsStaffId } from './modelsStaffId';
+import type { ModelsSalonId } from './modelsSalonId';
+import type { ModelsContactInfo } from './modelsContactInfo';
+import type { ModelsStaffQualification } from './modelsStaffQualification';
+import type { ModelsStaffSchedule } from './modelsStaffSchedule';
+import type { ModelsStaffPermission } from './modelsStaffPermission';
 
 /**
  * スタッフモデル - サロンに所属するスタッフのプロフィール・資格・スケジュール・権限を統合管理する
  */
 export interface ModelsStaff {
   /** スタッフを一意に識別するID */
-  id: ModelsStaffId
+  id: ModelsStaffId;
   /** 所属サロンのID */
-  salonId: ModelsSalonId
+  salonId: ModelsSalonId;
   /** スタッフの氏名 */
-  name: string
+  name: string;
   /** 連絡先情報 (電話・メール等) */
-  contactInfo: ModelsContactInfo
+  contactInfo: ModelsContactInfo;
   /** 得意分野や専門メニューの一覧 */
-  specialties: string[]
+  specialties: string[];
   /**
    * プロフィール画像のURL - プロフィール画像未設定の場合はnull
    * @nullable
    */
-  imageUrl: string | null
+  imageUrl: string | null;
   /**
    * 自己紹介や経歴の概要 - プロフィール未記入の新人スタッフの場合はnull
    * @nullable
    */
-  bio: string | null
+  bio: string | null;
   /**
    * 実務経験年数 - 経験年数未記載またはアシスタントスタッフの場合はnull
    * @nullable
    */
-  yearsOfExperience: number | null
+  yearsOfExperience: number | null;
   /**
    * 保有資格名の一覧 (テキスト管理) - 資格なしの新人やアシスタントの場合はnull
    * @nullable
    */
-  certifications: string[] | null
+  certifications: string[] | null;
   /**
    * 詳細な資格情報の一覧 - 詳細資格情報未登録の場合はnull
    * @nullable
    */
-  qualifications: ModelsStaffQualification[] | null
+  qualifications: ModelsStaffQualification[] | null;
   /**
    * 通常勤務スケジュールの一覧 - スケジュール未設定やフリーランススタッフの場合はnull
    * @nullable
    */
-  schedules: ModelsStaffSchedule[] | null
+  schedules: ModelsStaffSchedule[] | null;
   /** 現在スタッフがアクティブに勤務可能かを示すフラグ */
-  isActive: boolean
+  isActive: boolean;
   /**
    * システム上で付与されている追加権限一覧 - 特別権限がない一般スタッフの場合はnull
    * @nullable
    */
-  permissions: ModelsStaffPermission[] | null
+  permissions: ModelsStaffPermission[] | null;
   /** レコード作成日時。 */
-  createdAt: string
+  createdAt: string;
   /**
    * レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull
    * @nullable
    */
-  createdBy: string | null
+  createdBy: string | null;
   /** レコード最終更新日時。 */
-  updatedAt: string
+  updatedAt: string;
   /**
    * レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull
    * @nullable
    */
-  updatedBy: string | null
+  updatedBy: string | null;
 }

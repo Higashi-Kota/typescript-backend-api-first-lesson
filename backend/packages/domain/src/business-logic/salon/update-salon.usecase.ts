@@ -6,18 +6,18 @@ import type {
   ApiUpdateSalonRequest,
   SalonId,
 } from '../../models/salon'
-import { DomainErrors } from '../../shared'
 import type { DomainError } from '../../shared'
+import { DomainErrors } from '../../shared'
 import { BaseSalonUseCase } from './_shared/base-salon.usecase'
 
 export class UpdateSalonUseCase extends BaseSalonUseCase {
   async execute(
     id: SalonId,
-    request: ApiUpdateSalonRequest
+    request: ApiUpdateSalonRequest,
   ): Promise<Result<ApiSalon, DomainError>> {
     if (!this.isValidUuid(id)) {
       return Result.error(
-        DomainErrors.validation('Invalid salon ID format', 'INVALID_SALON_ID')
+        DomainErrors.validation('Invalid salon ID format', 'INVALID_SALON_ID'),
       )
     }
 
@@ -40,15 +40,15 @@ export class UpdateSalonUseCase extends BaseSalonUseCase {
       if (Result.isSuccess(currentSalon) && currentSalon.data) {
         if (currentSalon.data.email !== request.contactInfo.email) {
           const emailExists = await this.repository.existsByEmail(
-            request.contactInfo.email
+            request.contactInfo.email,
           )
           if (Result.isSuccess(emailExists) && emailExists.data) {
             return Result.error(
               DomainErrors.alreadyExists(
                 'Salon',
                 'email',
-                request.contactInfo.email
-              )
+                request.contactInfo.email,
+              ),
             )
           }
         }
@@ -66,7 +66,7 @@ export class UpdateSalonUseCase extends BaseSalonUseCase {
       if (request.openingHours.length > 0) {
         const newOpeningHours = SalonWriteMapper.toDbOpeningHours(
           request.openingHours,
-          id
+          id,
         )
         await this.repository.createOpeningHours(newOpeningHours)
       }
@@ -108,8 +108,8 @@ export class UpdateSalonUseCase extends BaseSalonUseCase {
         DomainErrors.validation(
           'Validation failed',
           'SALON_VALIDATION_ERROR',
-          errors
-        )
+          errors,
+        ),
       )
     }
 

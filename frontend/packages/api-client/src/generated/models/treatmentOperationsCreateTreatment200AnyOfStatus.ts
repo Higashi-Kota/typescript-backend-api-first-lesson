@@ -9,10 +9,10 @@
 /**
  * 固定値success。成功結果であることを示す。
  */
-export type TreatmentOperationsCreateTreatment200AnyOfStatus =
-  (typeof TreatmentOperationsCreateTreatment200AnyOfStatus)[keyof typeof TreatmentOperationsCreateTreatment200AnyOfStatus]
+export type TreatmentOperationsCreateTreatment200AnyOfStatus = typeof TreatmentOperationsCreateTreatment200AnyOfStatus[keyof typeof TreatmentOperationsCreateTreatment200AnyOfStatus];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TreatmentOperationsCreateTreatment200AnyOfStatus = {
   success: 'success',
-} as const
+} as const;

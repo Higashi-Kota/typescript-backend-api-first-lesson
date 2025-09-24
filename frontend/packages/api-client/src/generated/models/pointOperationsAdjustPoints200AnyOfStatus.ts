@@ -9,10 +9,10 @@
 /**
  * 固定値success。成功結果であることを示す。
  */
-export type PointOperationsAdjustPoints200AnyOfStatus =
-  (typeof PointOperationsAdjustPoints200AnyOfStatus)[keyof typeof PointOperationsAdjustPoints200AnyOfStatus]
+export type PointOperationsAdjustPoints200AnyOfStatus = typeof PointOperationsAdjustPoints200AnyOfStatus[keyof typeof PointOperationsAdjustPoints200AnyOfStatus];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PointOperationsAdjustPoints200AnyOfStatus = {
   success: 'success',
-} as const
+} as const;

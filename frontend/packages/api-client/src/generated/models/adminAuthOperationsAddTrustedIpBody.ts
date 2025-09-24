@@ -7,5 +7,5 @@
  */
 
 export type AdminAuthOperationsAddTrustedIpBody = {
-  ipAddress: string
-}
+  ipAddress: string;
+};

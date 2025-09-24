@@ -9,4 +9,4 @@
 /**
  * フィルター式。例: `status:active AND category:premium`。属性条件を組み合わせた絞り込みに使用。
  */
-export type ModelsAdvancedSearchParamsFilterParameter = string
+export type ModelsAdvancedSearchParamsFilterParameter = string;

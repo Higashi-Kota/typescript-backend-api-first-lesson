@@ -9,4 +9,4 @@
 /**
  * 距離計算に使用する基準緯度
  */
-export type ModelsSalonSearchRequestLatParameter = number
+export type ModelsSalonSearchRequestLatParameter = number;

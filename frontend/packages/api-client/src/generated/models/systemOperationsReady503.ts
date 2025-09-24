@@ -7,6 +7,6 @@
  */
 
 export type SystemOperationsReady503 = {
-  ready: boolean
-  reason?: string
-}
+  ready: boolean;
+  reason?: string;
+};

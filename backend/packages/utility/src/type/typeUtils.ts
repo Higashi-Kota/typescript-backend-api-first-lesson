@@ -58,7 +58,7 @@ export const isMinusNumber = (data: unknown): data is number => {
 }
 
 export const isEmpty = (
-  data: unknown
+  data: unknown,
 ): data is '' | [] | Record<string, never> | Map<never, never> | Set<never> =>
   isEmptyString(data) ||
   isEmptyArray(data) ||

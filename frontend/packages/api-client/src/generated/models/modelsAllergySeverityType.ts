@@ -13,12 +13,12 @@ mild: 軽度 - 軽いかゆみや赤み程度、通常の施術で注意すれ�
 moderate: 中等度 - 明確な皮膚反応、特別な配慮や代替品の使用が必要
 severe: 重度 - 激しい反応、特定の施術を避けるべきレベル
  */
-export type ModelsAllergySeverityType =
-  (typeof ModelsAllergySeverityType)[keyof typeof ModelsAllergySeverityType]
+export type ModelsAllergySeverityType = typeof ModelsAllergySeverityType[keyof typeof ModelsAllergySeverityType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsAllergySeverityType = {
   mild: 'mild',
   moderate: 'moderate',
   severe: 'severe',
-} as const
+} as const;

@@ -12,7 +12,7 @@
  */
 export interface ModelsScoreRange {
   /** 関連度スコアの最小値。 */
-  min: number
+  min: number;
   /** 関連度スコアの最大値。 */
-  max: number
+  max: number;
 }

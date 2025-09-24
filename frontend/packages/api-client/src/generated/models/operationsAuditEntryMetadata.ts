@@ -9,4 +9,4 @@
 /**
  * Additional metadata
  */
-export type OperationsAuditEntryMetadata = { [key: string]: unknown }
+export type OperationsAuditEntryMetadata = {[key: string]: unknown};

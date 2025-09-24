@@ -11,5 +11,5 @@
  */
 export interface ModelsAuthTokenRefreshRequest {
   /** 認証済みセッションに紐づくリフレッシュトークン。 */
-  refreshToken: string
+  refreshToken: string;
 }

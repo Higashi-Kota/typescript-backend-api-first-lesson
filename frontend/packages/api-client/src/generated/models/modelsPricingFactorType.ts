@@ -9,8 +9,8 @@
 /**
  * 変動要因の種類
  */
-export type ModelsPricingFactorType =
-  (typeof ModelsPricingFactorType)[keyof typeof ModelsPricingFactorType]
+export type ModelsPricingFactorType = typeof ModelsPricingFactorType[keyof typeof ModelsPricingFactorType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsPricingFactorType = {
@@ -19,4 +19,4 @@ export const ModelsPricingFactorType = {
   staff_level: 'staff_level',
   demand: 'demand',
   season: 'season',
-} as const
+} as const;

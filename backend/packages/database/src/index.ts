@@ -1,15 +1,13 @@
 // Export all database schema and relations for type inference
-export * from './schema'
-export * from './relations'
 
+// Re-export commonly used types from drizzle-orm for convenience
+export type { InferInsertModel, InferSelectModel } from 'drizzle-orm'
 // Export migration utilities
 export * from './migrations/index'
-
-// Export seeding utilities
-export * from './seeds/index'
+export * from './relations'
+export * from './schema'
 
 // Export SQL script utilities
 export * from './scripts/index'
-
-// Re-export commonly used types from drizzle-orm for convenience
-export type { InferSelectModel, InferInsertModel } from 'drizzle-orm'
+// Export seeding utilities
+export * from './seeds/index'

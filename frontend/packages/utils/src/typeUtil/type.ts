@@ -1,9 +1,9 @@
 import type {
+  DistributedOmit as _DistributedOmit,
+  DistributedPick as _DistributedPick,
   Except,
   KeysOfUnion,
   Simplify,
-  DistributedOmit as _DistributedOmit,
-  DistributedPick as _DistributedPick,
 } from 'type-fest'
 import type {
   DeepNonNullable as _DeepNonNullable,
@@ -26,7 +26,7 @@ type Builtin =
   | boolean
   | bigint
   | symbol
-  // biome-ignore lint/complexity/noBannedTypes: <explanation>
+  // biome-ignore lint/complexity/noBannedTypes: Function type is needed for generic type checking in utility functions
   | Function
   | Date
   | Error

@@ -16,10 +16,10 @@ export interface ModelsBatchGetRequest {
    * @minItems 1
    * @maxItems 100
    */
-  ids: string[]
+  ids: string[];
   /**
    * レスポンスに含めたいフィールドのカンマ区切りリスト。パフォーマンス最適化に活用する。全フィールド取得の場合はnull
    * @nullable
    */
-  fields: string | null
+  fields: string | null;
 }

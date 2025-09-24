@@ -9,4 +9,4 @@
 /**
  * サロン店舗・拠点を識別するためのブランド付きUUID。
  */
-export type ModelsSalonId = string
+export type ModelsSalonId = string;

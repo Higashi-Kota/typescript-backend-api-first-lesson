@@ -17,8 +17,8 @@ qr_payment: QRコード決済 - PayPay、LINE Pay等のQRコード決済
 bank_transfer: 銀行振込 - 銀行口座への振込による支払い
 point: ポイント - サロンのポイントを使用した支払い
  */
-export type ModelsPaymentMethodType =
-  (typeof ModelsPaymentMethodType)[keyof typeof ModelsPaymentMethodType]
+export type ModelsPaymentMethodType = typeof ModelsPaymentMethodType[keyof typeof ModelsPaymentMethodType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsPaymentMethodType = {
@@ -29,4 +29,4 @@ export const ModelsPaymentMethodType = {
   qr_payment: 'qr_payment',
   bank_transfer: 'bank_transfer',
   point: 'point',
-} as const
+} as const;

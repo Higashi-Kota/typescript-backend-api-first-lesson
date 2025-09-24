@@ -9,4 +9,4 @@
 /**
  * 顧客名、メール、または電話番号で検索
  */
-export type ModelsCustomerSearchRequestSearchParameter = string
+export type ModelsCustomerSearchRequestSearchParameter = string;

@@ -11,9 +11,9 @@
  */
 export interface ModelsAuthTwoFactorSetupResponse {
   /** 認証アプリで読み取るQRコードURL。 */
-  qrCodeUrl: string
+  qrCodeUrl: string;
   /** 手動登録用のシークレットキー。 */
-  secret: string
+  secret: string;
   /** 復旧用バックアップコード一覧。 */
-  backupCodes: string[]
+  backupCodes: string[];
 }

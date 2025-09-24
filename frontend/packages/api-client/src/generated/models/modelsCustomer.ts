@@ -5,123 +5,123 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsCustomerId } from './modelsCustomerId'
-import type { ModelsContactInfo } from './modelsContactInfo'
-import type { ModelsCustomerGender } from './modelsCustomerGender'
-import type { ModelsCustomerAddress } from './modelsCustomerAddress'
-import type { ModelsCustomerPreferencesProperty } from './modelsCustomerPreferencesProperty'
-import type { ModelsCustomerMembership } from './modelsCustomerMembership'
-import type { ModelsCustomerNotificationSettings } from './modelsCustomerNotificationSettings'
-import type { ModelsCustomerHealthProperty } from './modelsCustomerHealthProperty'
-import type { ModelsCustomerCustomerPreferences } from './modelsCustomerCustomerPreferences'
-import type { ModelsCustomerHistoryProperty } from './modelsCustomerHistoryProperty'
-import type { ModelsCustomerAssociationsProperty } from './modelsCustomerAssociationsProperty'
-import type { ModelsCustomerStatus } from './modelsCustomerStatus'
-import type { ModelsCustomerMetadataProperty } from './modelsCustomerMetadataProperty'
-import type { ModelsCustomerRegistrationSource } from './modelsCustomerRegistrationSource'
+import type { ModelsCustomerId } from './modelsCustomerId';
+import type { ModelsContactInfo } from './modelsContactInfo';
+import type { ModelsCustomerGender } from './modelsCustomerGender';
+import type { ModelsCustomerAddress } from './modelsCustomerAddress';
+import type { ModelsCustomerPreferencesProperty } from './modelsCustomerPreferencesProperty';
+import type { ModelsCustomerMembership } from './modelsCustomerMembership';
+import type { ModelsCustomerNotificationSettings } from './modelsCustomerNotificationSettings';
+import type { ModelsCustomerHealthProperty } from './modelsCustomerHealthProperty';
+import type { ModelsCustomerCustomerPreferences } from './modelsCustomerCustomerPreferences';
+import type { ModelsCustomerHistoryProperty } from './modelsCustomerHistoryProperty';
+import type { ModelsCustomerAssociationsProperty } from './modelsCustomerAssociationsProperty';
+import type { ModelsCustomerStatus } from './modelsCustomerStatus';
+import type { ModelsCustomerMetadataProperty } from './modelsCustomerMetadataProperty';
+import type { ModelsCustomerRegistrationSource } from './modelsCustomerRegistrationSource';
 
 export interface ModelsCustomer {
   /** 顧客を一意に識別するID。システム内で重複しない識別子 */
-  id: ModelsCustomerId
+  id: ModelsCustomerId;
   /** 顧客氏名。フルネームまたは通称名 */
-  name: string
+  name: string;
   /** 連絡先情報。メール、電話番号等の連絡手段 */
-  contactInfo: ModelsContactInfo
+  contactInfo: ModelsContactInfo;
   /**
    * 顧客の性別。未登録または非公開の場合はnull
    * @nullable
    */
-  gender: ModelsCustomerGender
+  gender: ModelsCustomerGender;
   /**
    * 生年月日。未登録または非公開の場合はnull
    * @nullable
    */
-  birthDate: string | null
+  birthDate: string | null;
   /**
    * 住所情報。未登録の場合はnull
    * @nullable
    */
-  address: ModelsCustomerAddress
+  address: ModelsCustomerAddress;
   /** 顧客の好みや要望 */
-  preferences: ModelsCustomerPreferencesProperty
+  preferences: ModelsCustomerPreferencesProperty;
   /**
    * 内部メモ。メモがない場合はnull
    * @nullable
    */
-  notes: string | null
+  notes: string | null;
   /** 分類用タグ */
-  tags: string[]
+  tags: string[];
   /** 現在のロイヤルティポイント */
-  loyaltyPoints: number
+  loyaltyPoints: number;
   /**
    * 会員情報。非会員の場合はnull
    * @nullable
    */
-  membership: ModelsCustomerMembership
+  membership: ModelsCustomerMembership;
   /**
    * 通知設定。設定がない場合はnull
    * @nullable
    */
-  notificationSettings: ModelsCustomerNotificationSettings
+  notificationSettings: ModelsCustomerNotificationSettings;
   /**
    * 健康情報。情報提供がない場合はnull
    * @nullable
    */
-  health: ModelsCustomerHealthProperty
+  health: ModelsCustomerHealthProperty;
   /**
    * 顧客の好み設定。設定がない場合はnull
    * @nullable
    */
-  customerPreferences: ModelsCustomerCustomerPreferences
+  customerPreferences: ModelsCustomerCustomerPreferences;
   /**
    * 来店履歴。履歴がない場合はnull
    * @nullable
    */
-  history: ModelsCustomerHistoryProperty
+  history: ModelsCustomerHistoryProperty;
   /**
    * 顧客関連情報。関連がない場合はnull
    * @nullable
    */
-  associations: ModelsCustomerAssociationsProperty
+  associations: ModelsCustomerAssociationsProperty;
   /**
    * 顧客ステータス詳細。特別なステータスがない場合はnull
    * @nullable
    */
-  status: ModelsCustomerStatus
+  status: ModelsCustomerStatus;
   /**
    * 顧客メタデータ。追加情報がない場合はnull
    * @nullable
    */
-  metadata: ModelsCustomerMetadataProperty
+  metadata: ModelsCustomerMetadataProperty;
   /**
    * カルテID。カルテがない場合はnull
    * @nullable
    */
-  medicalChartId: string | null
+  medicalChartId: string | null;
   /** アクティブな顧客かどうか */
-  isActive: boolean
+  isActive: boolean;
   /**
    * 登録経路。不明の場合はnull
    * @nullable
    */
-  registrationSource: ModelsCustomerRegistrationSource
+  registrationSource: ModelsCustomerRegistrationSource;
   /**
    * 紹介元顧客ID。紹介ではない場合はnull
    * @nullable
    */
-  referredBy: string | null
+  referredBy: string | null;
   /** レコード作成日時。 */
-  createdAt: string
+  createdAt: string;
   /**
    * レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull
    * @nullable
    */
-  createdBy: string | null
+  createdBy: string | null;
   /** レコード最終更新日時。 */
-  updatedAt: string
+  updatedAt: string;
   /**
    * レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull
    * @nullable
    */
-  updatedBy: string | null
+  updatedBy: string | null;
 }

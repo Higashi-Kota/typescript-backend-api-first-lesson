@@ -5,7 +5,7 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsOffsetPaginationParamsSortOrder } from './modelsOffsetPaginationParamsSortOrder'
+import type { ModelsOffsetPaginationParamsSortOrder } from './modelsOffsetPaginationParamsSortOrder';
 
 /**
  * オフセット方式のページネーション指定モデル。
@@ -17,14 +17,14 @@ export interface ModelsOffsetPaginationParams {
    * @minimum 1
    * @maximum 100
    */
-  limit?: number
+  limit?: number;
   /**
    * スキップする件数。リスト冒頭からのオフセット値を指定する。
    * @minimum 0
    */
-  offset?: number
+  offset?: number;
   /** ソート対象フィールド。予約一覧や顧客一覧の表示順を決定する。 */
-  sortBy?: string
+  sortBy?: string;
   /** ソート順序。`asc` は昇順、`desc` は降順を表す。 */
-  sortOrder?: ModelsOffsetPaginationParamsSortOrder
+  sortOrder?: ModelsOffsetPaginationParamsSortOrder;
 }

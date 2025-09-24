@@ -5,34 +5,34 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsSalonId } from './modelsSalonId'
-import type { ModelsCustomerId } from './modelsCustomerId'
-import type { ModelsPaymentStatusCodeType } from './modelsPaymentStatusCodeType'
-import type { ModelsPaymentMethodType } from './modelsPaymentMethodType'
-import type { ModelsDateRangeFilterStartDateParameter } from './modelsDateRangeFilterStartDateParameter'
-import type { ModelsDateRangeFilterEndDateParameter } from './modelsDateRangeFilterEndDateParameter'
-import type { ModelsPaginationParamsLimitParameter } from './modelsPaginationParamsLimitParameter'
-import type { ModelsPaginationParamsOffsetParameter } from './modelsPaginationParamsOffsetParameter'
+import type { ModelsSalonId } from './modelsSalonId';
+import type { ModelsCustomerId } from './modelsCustomerId';
+import type { ModelsPaymentStatusCodeType } from './modelsPaymentStatusCodeType';
+import type { ModelsPaymentMethodType } from './modelsPaymentMethodType';
+import type { ModelsDateRangeFilterStartDateParameter } from './modelsDateRangeFilterStartDateParameter';
+import type { ModelsDateRangeFilterEndDateParameter } from './modelsDateRangeFilterEndDateParameter';
+import type { ModelsPaginationParamsLimitParameter } from './modelsPaginationParamsLimitParameter';
+import type { ModelsPaginationParamsOffsetParameter } from './modelsPaginationParamsOffsetParameter';
 
 export type PaymentOperationsListPaymentsParams = {
-  salonId?: ModelsSalonId
-  customerId?: ModelsCustomerId
-  status?: ModelsPaymentStatusCodeType
-  method?: ModelsPaymentMethodType
-  /**
-   * 検索対象期間の開始日時。
-   */
-  startDate?: ModelsDateRangeFilterStartDateParameter
-  /**
-   * 検索対象期間の終了日時。
-   */
-  endDate?: ModelsDateRangeFilterEndDateParameter
-  /**
-   * 1ページあたりの取得件数。省略時は20件。
-   */
-  limit?: ModelsPaginationParamsLimitParameter
-  /**
-   * 取得開始位置を表すオフセット。省略時は0。
-   */
-  offset?: ModelsPaginationParamsOffsetParameter
-}
+salonId?: ModelsSalonId;
+customerId?: ModelsCustomerId;
+status?: ModelsPaymentStatusCodeType;
+method?: ModelsPaymentMethodType;
+/**
+ * 検索対象期間の開始日時。
+ */
+startDate?: ModelsDateRangeFilterStartDateParameter;
+/**
+ * 検索対象期間の終了日時。
+ */
+endDate?: ModelsDateRangeFilterEndDateParameter;
+/**
+ * 1ページあたりの取得件数。省略時は20件。
+ */
+limit?: ModelsPaginationParamsLimitParameter;
+/**
+ * 取得開始位置を表すオフセット。省略時は0。
+ */
+offset?: ModelsPaginationParamsOffsetParameter;
+};

@@ -12,7 +12,7 @@
  */
 export interface ModelsVersioned {
   /** 内部的に管理するバージョン番号。更新ごとにインクリメントする。 */
-  version: number
+  version: number;
   /** 最終更新日時 (UTC)。キャッシュ制御や監査に利用。 */
-  lastModified: string
+  lastModified: string;
 }

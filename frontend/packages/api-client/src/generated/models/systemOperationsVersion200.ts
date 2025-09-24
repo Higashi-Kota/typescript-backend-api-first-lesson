@@ -7,9 +7,9 @@
  */
 
 export type SystemOperationsVersion200 = {
-  version: string
-  buildTime: string
-  gitCommit?: string
-  gitBranch?: string
-  environment?: string
-}
+  version: string;
+  buildTime: string;
+  gitCommit?: string;
+  gitBranch?: string;
+  environment?: string;
+};

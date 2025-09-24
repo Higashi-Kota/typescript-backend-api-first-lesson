@@ -5,56 +5,56 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsContactInfo } from './modelsContactInfo'
-import type { ModelsStaffQualification } from './modelsStaffQualification'
-import type { ModelsStaffSchedule } from './modelsStaffSchedule'
-import type { ModelsStaffPermission } from './modelsStaffPermission'
+import type { ModelsContactInfo } from './modelsContactInfo';
+import type { ModelsStaffQualification } from './modelsStaffQualification';
+import type { ModelsStaffSchedule } from './modelsStaffSchedule';
+import type { ModelsStaffPermission } from './modelsStaffPermission';
 
 /**
  * スタッフ更新リクエスト - 任意項目を部分更新し、プロフィールや勤務状況を柔軟に調整する。null指定で値をリセット可能
  */
 export interface ModelsUpdateStaffRequest {
   /** スタッフ名の更新 */
-  name?: string
+  name?: string;
   /** 連絡先情報の更新 */
-  contactInfo?: ModelsContactInfo
+  contactInfo?: ModelsContactInfo;
   /** 得意分野一覧の更新 */
-  specialties?: string[]
+  specialties?: string[];
   /**
    * プロフィール画像URLの更新（null指定で初期化可能）
    * @nullable
    */
-  imageUrl?: string | null
+  imageUrl?: string | null;
   /**
    * 自己紹介文の更新（null指定で初期化可能）
    * @nullable
    */
-  bio?: string | null
+  bio?: string | null;
   /**
    * 経験年数の更新（null指定で初期化可能）
    * @nullable
    */
-  yearsOfExperience?: number | null
+  yearsOfExperience?: number | null;
   /**
    * 資格名一覧の更新（null指定で初期化可能）
    * @nullable
    */
-  certifications?: string[] | null
+  certifications?: string[] | null;
   /**
    * 資格詳細一覧の更新（null指定で初期化可能）
    * @nullable
    */
-  qualifications?: ModelsStaffQualification[] | null
+  qualifications?: ModelsStaffQualification[] | null;
   /**
    * 勤務スケジュール一覧の更新（null指定で初期化可能）
    * @nullable
    */
-  schedules?: ModelsStaffSchedule[] | null
+  schedules?: ModelsStaffSchedule[] | null;
   /**
    * 付与権限一覧の更新（null指定で初期化可能）
    * @nullable
    */
-  permissions?: ModelsStaffPermission[] | null
+  permissions?: ModelsStaffPermission[] | null;
   /** アクティブ状態の更新 */
-  isActive?: boolean
+  isActive?: boolean;
 }

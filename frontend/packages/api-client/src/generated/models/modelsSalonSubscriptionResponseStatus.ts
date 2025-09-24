@@ -9,10 +9,10 @@
 /**
  * 購読状態（常にactiveを返却）
  */
-export type ModelsSalonSubscriptionResponseStatus =
-  (typeof ModelsSalonSubscriptionResponseStatus)[keyof typeof ModelsSalonSubscriptionResponseStatus]
+export type ModelsSalonSubscriptionResponseStatus = typeof ModelsSalonSubscriptionResponseStatus[keyof typeof ModelsSalonSubscriptionResponseStatus];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsSalonSubscriptionResponseStatus = {
   active: 'active',
-} as const
+} as const;

@@ -41,8 +41,8 @@
 4004: 外部サービスエラー - 外部サービスでエラーが発生
 4005: レート制限超過 - APIレート制限を超えた
  */
-export type ModelsErrorCodeType =
-  (typeof ModelsErrorCodeType)[keyof typeof ModelsErrorCodeType]
+export type ModelsErrorCodeType = typeof ModelsErrorCodeType[keyof typeof ModelsErrorCodeType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsErrorCodeType = {
@@ -70,4 +70,4 @@ export const ModelsErrorCodeType = {
   NUMBER_4003: '4003',
   NUMBER_4004: '4004',
   NUMBER_4005: '4005',
-} as const
+} as const;

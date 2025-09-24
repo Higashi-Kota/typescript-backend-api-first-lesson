@@ -5,7 +5,10 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import { useMutation, useQuery } from '@tanstack/react-query'
+import {
+  useMutation,
+  useQuery
+} from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -18,8 +21,8 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult,
-} from '@tanstack/react-query'
+  UseQueryResult
+} from '@tanstack/react-query';
 
 import type {
   ModelsOrderId,
@@ -37,16 +40,19 @@ import type {
   PurchaseOrderOperationsListPurchaseOrdersParams,
   PurchaseOrderOperationsReceivePurchaseOrder200,
   PurchaseOrderOperationsReceivePurchaseOrderBody,
-  PurchaseOrderOperationsUpdatePurchaseOrder200,
-} from '../../models'
+  PurchaseOrderOperationsUpdatePurchaseOrder200
+} from '../../models';
 
-import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher'
+import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher';
 
-type AwaitedInput<T> = PromiseLike<T> | T
+type AwaitedInput<T> = PromiseLike<T> | T;
 
-type Awaited<O> = O extends AwaitedInput<infer T> ? T : never
+      type Awaited<O> = O extends AwaitedInput<infer T> ? T : never;
 
-type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
+
 
 /**
  * List purchase orders
@@ -55,201 +61,108 @@ export type purchaseOrderOperationsListPurchaseOrdersResponse200 = {
   data: PurchaseOrderOperationsListPurchaseOrders200
   status: 200
 }
+    
+export type purchaseOrderOperationsListPurchaseOrdersResponseComposite = purchaseOrderOperationsListPurchaseOrdersResponse200;
+    
+export type purchaseOrderOperationsListPurchaseOrdersResponse = purchaseOrderOperationsListPurchaseOrdersResponseComposite & {
+  headers: Headers;
+}
 
-export type purchaseOrderOperationsListPurchaseOrdersResponseComposite =
-  purchaseOrderOperationsListPurchaseOrdersResponse200
-
-export type purchaseOrderOperationsListPurchaseOrdersResponse =
-  purchaseOrderOperationsListPurchaseOrdersResponseComposite & {
-    headers: Headers
-  }
-
-export const getPurchaseOrderOperationsListPurchaseOrdersUrl = (
-  params: PurchaseOrderOperationsListPurchaseOrdersParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getPurchaseOrderOperationsListPurchaseOrdersUrl = (params: PurchaseOrderOperationsListPurchaseOrdersParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/purchase-orders?${stringifiedParams}`
-    : `/purchase-orders`
+  return stringifiedParams.length > 0 ? `/purchase-orders?${stringifiedParams}` : `/purchase-orders`
 }
 
-export const purchaseOrderOperationsListPurchaseOrders = async (
-  params: PurchaseOrderOperationsListPurchaseOrdersParams,
-  options?: RequestInit
-): Promise<purchaseOrderOperationsListPurchaseOrdersResponse> => {
-  return customInstance<purchaseOrderOperationsListPurchaseOrdersResponse>(
-    getPurchaseOrderOperationsListPurchaseOrdersUrl(params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getPurchaseOrderOperationsListPurchaseOrdersQueryKey = (
-  params?: PurchaseOrderOperationsListPurchaseOrdersParams
-) => {
-  return [`/purchase-orders`, ...(params ? [params] : [])] as const
-}
-
-export const getPurchaseOrderOperationsListPurchaseOrdersQueryOptions = <
-  TData = Awaited<ReturnType<typeof purchaseOrderOperationsListPurchaseOrders>>,
-  TError = unknown,
->(
-  params: PurchaseOrderOperationsListPurchaseOrdersParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof purchaseOrderOperationsListPurchaseOrders>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const purchaseOrderOperationsListPurchaseOrders = async (params: PurchaseOrderOperationsListPurchaseOrdersParams, options?: RequestInit): Promise<purchaseOrderOperationsListPurchaseOrdersResponse> => {
+  
+  return customInstance<purchaseOrderOperationsListPurchaseOrdersResponse>(getPurchaseOrderOperationsListPurchaseOrdersUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getPurchaseOrderOperationsListPurchaseOrdersQueryKey = (params?: PurchaseOrderOperationsListPurchaseOrdersParams,) => {
+    return [`/purchase-orders`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getPurchaseOrderOperationsListPurchaseOrdersQueryOptions = <TData = Awaited<ReturnType<typeof purchaseOrderOperationsListPurchaseOrders>>, TError = unknown>(params: PurchaseOrderOperationsListPurchaseOrdersParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof purchaseOrderOperationsListPurchaseOrders>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ??
-    getPurchaseOrderOperationsListPurchaseOrdersQueryKey(params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof purchaseOrderOperationsListPurchaseOrders>>
-  > = ({ signal }) =>
-    purchaseOrderOperationsListPurchaseOrders(params, {
-      signal,
-      ...requestOptions,
-    })
+  const queryKey =  queryOptions?.queryKey ?? getPurchaseOrderOperationsListPurchaseOrdersQueryKey(params);
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof purchaseOrderOperationsListPurchaseOrders>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof purchaseOrderOperationsListPurchaseOrders>>> = ({ signal }) => purchaseOrderOperationsListPurchaseOrders(params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof purchaseOrderOperationsListPurchaseOrders>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type PurchaseOrderOperationsListPurchaseOrdersQueryResult = NonNullable<
-  Awaited<ReturnType<typeof purchaseOrderOperationsListPurchaseOrders>>
->
+export type PurchaseOrderOperationsListPurchaseOrdersQueryResult = NonNullable<Awaited<ReturnType<typeof purchaseOrderOperationsListPurchaseOrders>>>
 export type PurchaseOrderOperationsListPurchaseOrdersQueryError = unknown
 
-export function usePurchaseOrderOperationsListPurchaseOrders<
-  TData = Awaited<ReturnType<typeof purchaseOrderOperationsListPurchaseOrders>>,
-  TError = unknown,
->(
-  params: PurchaseOrderOperationsListPurchaseOrdersParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof purchaseOrderOperationsListPurchaseOrders>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function usePurchaseOrderOperationsListPurchaseOrders<TData = Awaited<ReturnType<typeof purchaseOrderOperationsListPurchaseOrders>>, TError = unknown>(
+ params: PurchaseOrderOperationsListPurchaseOrdersParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof purchaseOrderOperationsListPurchaseOrders>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof purchaseOrderOperationsListPurchaseOrders>>,
           TError,
           Awaited<ReturnType<typeof purchaseOrderOperationsListPurchaseOrders>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function usePurchaseOrderOperationsListPurchaseOrders<
-  TData = Awaited<ReturnType<typeof purchaseOrderOperationsListPurchaseOrders>>,
-  TError = unknown,
->(
-  params: PurchaseOrderOperationsListPurchaseOrdersParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof purchaseOrderOperationsListPurchaseOrders>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function usePurchaseOrderOperationsListPurchaseOrders<TData = Awaited<ReturnType<typeof purchaseOrderOperationsListPurchaseOrders>>, TError = unknown>(
+ params: PurchaseOrderOperationsListPurchaseOrdersParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof purchaseOrderOperationsListPurchaseOrders>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof purchaseOrderOperationsListPurchaseOrders>>,
           TError,
           Awaited<ReturnType<typeof purchaseOrderOperationsListPurchaseOrders>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function usePurchaseOrderOperationsListPurchaseOrders<
-  TData = Awaited<ReturnType<typeof purchaseOrderOperationsListPurchaseOrders>>,
-  TError = unknown,
->(
-  params: PurchaseOrderOperationsListPurchaseOrdersParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof purchaseOrderOperationsListPurchaseOrders>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function usePurchaseOrderOperationsListPurchaseOrders<TData = Awaited<ReturnType<typeof purchaseOrderOperationsListPurchaseOrders>>, TError = unknown>(
+ params: PurchaseOrderOperationsListPurchaseOrdersParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof purchaseOrderOperationsListPurchaseOrders>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function usePurchaseOrderOperationsListPurchaseOrders<TData = Awaited<ReturnType<typeof purchaseOrderOperationsListPurchaseOrders>>, TError = unknown>(
+ params: PurchaseOrderOperationsListPurchaseOrdersParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof purchaseOrderOperationsListPurchaseOrders>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getPurchaseOrderOperationsListPurchaseOrdersQueryOptions(params,options)
+
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
 
-export function usePurchaseOrderOperationsListPurchaseOrders<
-  TData = Awaited<ReturnType<typeof purchaseOrderOperationsListPurchaseOrders>>,
-  TError = unknown,
->(
-  params: PurchaseOrderOperationsListPurchaseOrdersParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof purchaseOrderOperationsListPurchaseOrders>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getPurchaseOrderOperationsListPurchaseOrdersQueryOptions(
-    params,
-    options
-  )
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-
-  query.queryKey = queryOptions.queryKey
-
-  return query
-}
 
 /**
  * Create purchase order
@@ -258,337 +171,187 @@ export type purchaseOrderOperationsCreatePurchaseOrderResponse200 = {
   data: PurchaseOrderOperationsCreatePurchaseOrder200
   status: 200
 }
-
-export type purchaseOrderOperationsCreatePurchaseOrderResponseComposite =
-  purchaseOrderOperationsCreatePurchaseOrderResponse200
-
-export type purchaseOrderOperationsCreatePurchaseOrderResponse =
-  purchaseOrderOperationsCreatePurchaseOrderResponseComposite & {
-    headers: Headers
-  }
+    
+export type purchaseOrderOperationsCreatePurchaseOrderResponseComposite = purchaseOrderOperationsCreatePurchaseOrderResponse200;
+    
+export type purchaseOrderOperationsCreatePurchaseOrderResponse = purchaseOrderOperationsCreatePurchaseOrderResponseComposite & {
+  headers: Headers;
+}
 
 export const getPurchaseOrderOperationsCreatePurchaseOrderUrl = () => {
+
+
+  
+
   return `/purchase-orders`
 }
 
-export const purchaseOrderOperationsCreatePurchaseOrder = async (
-  modelsPurchaseOrderCreateRequest: ModelsPurchaseOrderCreateRequest,
-  options?: RequestInit
-): Promise<purchaseOrderOperationsCreatePurchaseOrderResponse> => {
-  return customInstance<purchaseOrderOperationsCreatePurchaseOrderResponse>(
-    getPurchaseOrderOperationsCreatePurchaseOrderUrl(),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsPurchaseOrderCreateRequest),
-    }
-  )
-}
-
-export const getPurchaseOrderOperationsCreatePurchaseOrderMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof purchaseOrderOperationsCreatePurchaseOrder>>,
-    TError,
-    { data: ModelsPurchaseOrderCreateRequest },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof purchaseOrderOperationsCreatePurchaseOrder>>,
-  TError,
-  { data: ModelsPurchaseOrderCreateRequest },
-  TContext
-> => {
-  const mutationKey = ['purchaseOrderOperationsCreatePurchaseOrder']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof purchaseOrderOperationsCreatePurchaseOrder>>,
-    { data: ModelsPurchaseOrderCreateRequest }
-  > = (props) => {
-    const { data } = props ?? {}
-
-    return purchaseOrderOperationsCreatePurchaseOrder(data, requestOptions)
+export const purchaseOrderOperationsCreatePurchaseOrder = async (modelsPurchaseOrderCreateRequest: ModelsPurchaseOrderCreateRequest, options?: RequestInit): Promise<purchaseOrderOperationsCreatePurchaseOrderResponse> => {
+  
+  return customInstance<purchaseOrderOperationsCreatePurchaseOrderResponse>(getPurchaseOrderOperationsCreatePurchaseOrderUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      modelsPurchaseOrderCreateRequest,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type PurchaseOrderOperationsCreatePurchaseOrderMutationResult =
-  NonNullable<
-    Awaited<ReturnType<typeof purchaseOrderOperationsCreatePurchaseOrder>>
-  >
-export type PurchaseOrderOperationsCreatePurchaseOrderMutationBody =
-  ModelsPurchaseOrderCreateRequest
-export type PurchaseOrderOperationsCreatePurchaseOrderMutationError = unknown
 
-export const usePurchaseOrderOperationsCreatePurchaseOrder = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof purchaseOrderOperationsCreatePurchaseOrder>>,
-      TError,
-      { data: ModelsPurchaseOrderCreateRequest },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof purchaseOrderOperationsCreatePurchaseOrder>>,
-  TError,
-  { data: ModelsPurchaseOrderCreateRequest },
-  TContext
-> => {
-  const mutationOptions =
-    getPurchaseOrderOperationsCreatePurchaseOrderMutationOptions(options)
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+export const getPurchaseOrderOperationsCreatePurchaseOrderMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof purchaseOrderOperationsCreatePurchaseOrder>>, TError,{data: ModelsPurchaseOrderCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof purchaseOrderOperationsCreatePurchaseOrder>>, TError,{data: ModelsPurchaseOrderCreateRequest}, TContext> => {
+
+const mutationKey = ['purchaseOrderOperationsCreatePurchaseOrder'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof purchaseOrderOperationsCreatePurchaseOrder>>, {data: ModelsPurchaseOrderCreateRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  purchaseOrderOperationsCreatePurchaseOrder(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PurchaseOrderOperationsCreatePurchaseOrderMutationResult = NonNullable<Awaited<ReturnType<typeof purchaseOrderOperationsCreatePurchaseOrder>>>
+    export type PurchaseOrderOperationsCreatePurchaseOrderMutationBody = ModelsPurchaseOrderCreateRequest
+    export type PurchaseOrderOperationsCreatePurchaseOrderMutationError = unknown
+
+    export const usePurchaseOrderOperationsCreatePurchaseOrder = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof purchaseOrderOperationsCreatePurchaseOrder>>, TError,{data: ModelsPurchaseOrderCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof purchaseOrderOperationsCreatePurchaseOrder>>,
+        TError,
+        {data: ModelsPurchaseOrderCreateRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getPurchaseOrderOperationsCreatePurchaseOrderMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * Generate reorder suggestions
  */
 export type purchaseOrderOperationsGetReorderSuggestionsResponse200 = {
   data: PurchaseOrderOperationsGetReorderSuggestions200
   status: 200
 }
+    
+export type purchaseOrderOperationsGetReorderSuggestionsResponseComposite = purchaseOrderOperationsGetReorderSuggestionsResponse200;
+    
+export type purchaseOrderOperationsGetReorderSuggestionsResponse = purchaseOrderOperationsGetReorderSuggestionsResponseComposite & {
+  headers: Headers;
+}
 
-export type purchaseOrderOperationsGetReorderSuggestionsResponseComposite =
-  purchaseOrderOperationsGetReorderSuggestionsResponse200
-
-export type purchaseOrderOperationsGetReorderSuggestionsResponse =
-  purchaseOrderOperationsGetReorderSuggestionsResponseComposite & {
-    headers: Headers
-  }
-
-export const getPurchaseOrderOperationsGetReorderSuggestionsUrl = (
-  params: PurchaseOrderOperationsGetReorderSuggestionsParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getPurchaseOrderOperationsGetReorderSuggestionsUrl = (params: PurchaseOrderOperationsGetReorderSuggestionsParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/purchase-orders/reorder-suggestions?${stringifiedParams}`
-    : `/purchase-orders/reorder-suggestions`
+  return stringifiedParams.length > 0 ? `/purchase-orders/reorder-suggestions?${stringifiedParams}` : `/purchase-orders/reorder-suggestions`
 }
 
-export const purchaseOrderOperationsGetReorderSuggestions = async (
-  params: PurchaseOrderOperationsGetReorderSuggestionsParams,
-  options?: RequestInit
-): Promise<purchaseOrderOperationsGetReorderSuggestionsResponse> => {
-  return customInstance<purchaseOrderOperationsGetReorderSuggestionsResponse>(
-    getPurchaseOrderOperationsGetReorderSuggestionsUrl(params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getPurchaseOrderOperationsGetReorderSuggestionsQueryKey = (
-  params?: PurchaseOrderOperationsGetReorderSuggestionsParams
-) => {
-  return [
-    `/purchase-orders/reorder-suggestions`,
-    ...(params ? [params] : []),
-  ] as const
-}
-
-export const getPurchaseOrderOperationsGetReorderSuggestionsQueryOptions = <
-  TData = Awaited<
-    ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>
-  >,
-  TError = unknown,
->(
-  params: PurchaseOrderOperationsGetReorderSuggestionsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<
-          ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>
-        >,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const purchaseOrderOperationsGetReorderSuggestions = async (params: PurchaseOrderOperationsGetReorderSuggestionsParams, options?: RequestInit): Promise<purchaseOrderOperationsGetReorderSuggestionsResponse> => {
+  
+  return customInstance<purchaseOrderOperationsGetReorderSuggestionsResponse>(getPurchaseOrderOperationsGetReorderSuggestionsUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getPurchaseOrderOperationsGetReorderSuggestionsQueryKey = (params?: PurchaseOrderOperationsGetReorderSuggestionsParams,) => {
+    return [`/purchase-orders/reorder-suggestions`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getPurchaseOrderOperationsGetReorderSuggestionsQueryOptions = <TData = Awaited<ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>>, TError = unknown>(params: PurchaseOrderOperationsGetReorderSuggestionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ??
-    getPurchaseOrderOperationsGetReorderSuggestionsQueryKey(params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>>
-  > = ({ signal }) =>
-    purchaseOrderOperationsGetReorderSuggestions(params, {
-      signal,
-      ...requestOptions,
-    })
+  const queryKey =  queryOptions?.queryKey ?? getPurchaseOrderOperationsGetReorderSuggestionsQueryKey(params);
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>>> = ({ signal }) => purchaseOrderOperationsGetReorderSuggestions(params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type PurchaseOrderOperationsGetReorderSuggestionsQueryResult =
-  NonNullable<
-    Awaited<ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>>
-  >
+export type PurchaseOrderOperationsGetReorderSuggestionsQueryResult = NonNullable<Awaited<ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>>>
 export type PurchaseOrderOperationsGetReorderSuggestionsQueryError = unknown
 
-export function usePurchaseOrderOperationsGetReorderSuggestions<
-  TData = Awaited<
-    ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>
-  >,
-  TError = unknown,
->(
-  params: PurchaseOrderOperationsGetReorderSuggestionsParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<
-          ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>
-        >,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function usePurchaseOrderOperationsGetReorderSuggestions<TData = Awaited<ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>>, TError = unknown>(
+ params: PurchaseOrderOperationsGetReorderSuggestionsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<
-            ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>
-          >,
+          Awaited<ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>>,
           TError,
-          Awaited<
-            ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>
-          >
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function usePurchaseOrderOperationsGetReorderSuggestions<
-  TData = Awaited<
-    ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>
-  >,
-  TError = unknown,
->(
-  params: PurchaseOrderOperationsGetReorderSuggestionsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<
-          ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>
-        >,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+          Awaited<ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function usePurchaseOrderOperationsGetReorderSuggestions<TData = Awaited<ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>>, TError = unknown>(
+ params: PurchaseOrderOperationsGetReorderSuggestionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<
-            ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>
-          >,
+          Awaited<ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>>,
           TError,
-          Awaited<
-            ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>
-          >
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function usePurchaseOrderOperationsGetReorderSuggestions<
-  TData = Awaited<
-    ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>
-  >,
-  TError = unknown,
->(
-  params: PurchaseOrderOperationsGetReorderSuggestionsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<
-          ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>
-        >,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
+          Awaited<ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function usePurchaseOrderOperationsGetReorderSuggestions<TData = Awaited<ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>>, TError = unknown>(
+ params: PurchaseOrderOperationsGetReorderSuggestionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function usePurchaseOrderOperationsGetReorderSuggestions<TData = Awaited<ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>>, TError = unknown>(
+ params: PurchaseOrderOperationsGetReorderSuggestionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getPurchaseOrderOperationsGetReorderSuggestionsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
 
-export function usePurchaseOrderOperationsGetReorderSuggestions<
-  TData = Awaited<
-    ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>
-  >,
-  TError = unknown,
->(
-  params: PurchaseOrderOperationsGetReorderSuggestionsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<
-          ReturnType<typeof purchaseOrderOperationsGetReorderSuggestions>
-        >,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions =
-    getPurchaseOrderOperationsGetReorderSuggestionsQueryOptions(params, options)
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-
-  query.queryKey = queryOptions.queryKey
-
-  return query
-}
 
 /**
  * Get purchase order by ID
@@ -597,191 +360,101 @@ export type purchaseOrderOperationsGetPurchaseOrderResponse200 = {
   data: PurchaseOrderOperationsGetPurchaseOrder200
   status: 200
 }
+    
+export type purchaseOrderOperationsGetPurchaseOrderResponseComposite = purchaseOrderOperationsGetPurchaseOrderResponse200;
+    
+export type purchaseOrderOperationsGetPurchaseOrderResponse = purchaseOrderOperationsGetPurchaseOrderResponseComposite & {
+  headers: Headers;
+}
 
-export type purchaseOrderOperationsGetPurchaseOrderResponseComposite =
-  purchaseOrderOperationsGetPurchaseOrderResponse200
+export const getPurchaseOrderOperationsGetPurchaseOrderUrl = (id: ModelsOrderId,) => {
 
-export type purchaseOrderOperationsGetPurchaseOrderResponse =
-  purchaseOrderOperationsGetPurchaseOrderResponseComposite & {
-    headers: Headers
-  }
 
-export const getPurchaseOrderOperationsGetPurchaseOrderUrl = (
-  id: ModelsOrderId
-) => {
+  
+
   return `/purchase-orders/${id}`
 }
 
-export const purchaseOrderOperationsGetPurchaseOrder = async (
-  id: ModelsOrderId,
-  options?: RequestInit
-): Promise<purchaseOrderOperationsGetPurchaseOrderResponse> => {
-  return customInstance<purchaseOrderOperationsGetPurchaseOrderResponse>(
-    getPurchaseOrderOperationsGetPurchaseOrderUrl(id),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getPurchaseOrderOperationsGetPurchaseOrderQueryKey = (
-  id?: ModelsOrderId
-) => {
-  return [`/purchase-orders/${id}`] as const
-}
-
-export const getPurchaseOrderOperationsGetPurchaseOrderQueryOptions = <
-  TData = Awaited<ReturnType<typeof purchaseOrderOperationsGetPurchaseOrder>>,
-  TError = unknown,
->(
-  id: ModelsOrderId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof purchaseOrderOperationsGetPurchaseOrder>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const purchaseOrderOperationsGetPurchaseOrder = async (id: ModelsOrderId, options?: RequestInit): Promise<purchaseOrderOperationsGetPurchaseOrderResponse> => {
+  
+  return customInstance<purchaseOrderOperationsGetPurchaseOrderResponse>(getPurchaseOrderOperationsGetPurchaseOrderUrl(id),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getPurchaseOrderOperationsGetPurchaseOrderQueryKey = (id?: ModelsOrderId,) => {
+    return [`/purchase-orders/${id}`] as const;
+    }
+
+    
+export const getPurchaseOrderOperationsGetPurchaseOrderQueryOptions = <TData = Awaited<ReturnType<typeof purchaseOrderOperationsGetPurchaseOrder>>, TError = unknown>(id: ModelsOrderId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof purchaseOrderOperationsGetPurchaseOrder>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ??
-    getPurchaseOrderOperationsGetPurchaseOrderQueryKey(id)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof purchaseOrderOperationsGetPurchaseOrder>>
-  > = ({ signal }) =>
-    purchaseOrderOperationsGetPurchaseOrder(id, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getPurchaseOrderOperationsGetPurchaseOrderQueryKey(id);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!id,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof purchaseOrderOperationsGetPurchaseOrder>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof purchaseOrderOperationsGetPurchaseOrder>>> = ({ signal }) => purchaseOrderOperationsGetPurchaseOrder(id, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof purchaseOrderOperationsGetPurchaseOrder>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type PurchaseOrderOperationsGetPurchaseOrderQueryResult = NonNullable<
-  Awaited<ReturnType<typeof purchaseOrderOperationsGetPurchaseOrder>>
->
+export type PurchaseOrderOperationsGetPurchaseOrderQueryResult = NonNullable<Awaited<ReturnType<typeof purchaseOrderOperationsGetPurchaseOrder>>>
 export type PurchaseOrderOperationsGetPurchaseOrderQueryError = unknown
 
-export function usePurchaseOrderOperationsGetPurchaseOrder<
-  TData = Awaited<ReturnType<typeof purchaseOrderOperationsGetPurchaseOrder>>,
-  TError = unknown,
->(
-  id: ModelsOrderId,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof purchaseOrderOperationsGetPurchaseOrder>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function usePurchaseOrderOperationsGetPurchaseOrder<TData = Awaited<ReturnType<typeof purchaseOrderOperationsGetPurchaseOrder>>, TError = unknown>(
+ id: ModelsOrderId, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof purchaseOrderOperationsGetPurchaseOrder>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof purchaseOrderOperationsGetPurchaseOrder>>,
           TError,
           Awaited<ReturnType<typeof purchaseOrderOperationsGetPurchaseOrder>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function usePurchaseOrderOperationsGetPurchaseOrder<
-  TData = Awaited<ReturnType<typeof purchaseOrderOperationsGetPurchaseOrder>>,
-  TError = unknown,
->(
-  id: ModelsOrderId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof purchaseOrderOperationsGetPurchaseOrder>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function usePurchaseOrderOperationsGetPurchaseOrder<TData = Awaited<ReturnType<typeof purchaseOrderOperationsGetPurchaseOrder>>, TError = unknown>(
+ id: ModelsOrderId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof purchaseOrderOperationsGetPurchaseOrder>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof purchaseOrderOperationsGetPurchaseOrder>>,
           TError,
           Awaited<ReturnType<typeof purchaseOrderOperationsGetPurchaseOrder>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function usePurchaseOrderOperationsGetPurchaseOrder<
-  TData = Awaited<ReturnType<typeof purchaseOrderOperationsGetPurchaseOrder>>,
-  TError = unknown,
->(
-  id: ModelsOrderId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof purchaseOrderOperationsGetPurchaseOrder>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function usePurchaseOrderOperationsGetPurchaseOrder<TData = Awaited<ReturnType<typeof purchaseOrderOperationsGetPurchaseOrder>>, TError = unknown>(
+ id: ModelsOrderId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof purchaseOrderOperationsGetPurchaseOrder>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function usePurchaseOrderOperationsGetPurchaseOrder<TData = Awaited<ReturnType<typeof purchaseOrderOperationsGetPurchaseOrder>>, TError = unknown>(
+ id: ModelsOrderId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof purchaseOrderOperationsGetPurchaseOrder>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getPurchaseOrderOperationsGetPurchaseOrderQueryOptions(id,options)
+
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
 
-export function usePurchaseOrderOperationsGetPurchaseOrder<
-  TData = Awaited<ReturnType<typeof purchaseOrderOperationsGetPurchaseOrder>>,
-  TError = unknown,
->(
-  id: ModelsOrderId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof purchaseOrderOperationsGetPurchaseOrder>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getPurchaseOrderOperationsGetPurchaseOrderQueryOptions(
-    id,
-    options
-  )
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-
-  query.queryKey = queryOptions.queryKey
-
-  return query
-}
 
 /**
  * Update purchase order
@@ -790,447 +463,317 @@ export type purchaseOrderOperationsUpdatePurchaseOrderResponse200 = {
   data: PurchaseOrderOperationsUpdatePurchaseOrder200
   status: 200
 }
+    
+export type purchaseOrderOperationsUpdatePurchaseOrderResponseComposite = purchaseOrderOperationsUpdatePurchaseOrderResponse200;
+    
+export type purchaseOrderOperationsUpdatePurchaseOrderResponse = purchaseOrderOperationsUpdatePurchaseOrderResponseComposite & {
+  headers: Headers;
+}
 
-export type purchaseOrderOperationsUpdatePurchaseOrderResponseComposite =
-  purchaseOrderOperationsUpdatePurchaseOrderResponse200
+export const getPurchaseOrderOperationsUpdatePurchaseOrderUrl = (id: ModelsOrderId,) => {
 
-export type purchaseOrderOperationsUpdatePurchaseOrderResponse =
-  purchaseOrderOperationsUpdatePurchaseOrderResponseComposite & {
-    headers: Headers
-  }
 
-export const getPurchaseOrderOperationsUpdatePurchaseOrderUrl = (
-  id: ModelsOrderId
-) => {
+  
+
   return `/purchase-orders/${id}`
 }
 
-export const purchaseOrderOperationsUpdatePurchaseOrder = async (
-  id: ModelsOrderId,
-  modelsPurchaseOrderUpdateRequest: ModelsPurchaseOrderUpdateRequest,
-  options?: RequestInit
-): Promise<purchaseOrderOperationsUpdatePurchaseOrderResponse> => {
-  return customInstance<purchaseOrderOperationsUpdatePurchaseOrderResponse>(
-    getPurchaseOrderOperationsUpdatePurchaseOrderUrl(id),
-    {
-      ...options,
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsPurchaseOrderUpdateRequest),
-    }
-  )
-}
-
-export const getPurchaseOrderOperationsUpdatePurchaseOrderMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof purchaseOrderOperationsUpdatePurchaseOrder>>,
-    TError,
-    { id: ModelsOrderId; data: ModelsPurchaseOrderUpdateRequest },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof purchaseOrderOperationsUpdatePurchaseOrder>>,
-  TError,
-  { id: ModelsOrderId; data: ModelsPurchaseOrderUpdateRequest },
-  TContext
-> => {
-  const mutationKey = ['purchaseOrderOperationsUpdatePurchaseOrder']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof purchaseOrderOperationsUpdatePurchaseOrder>>,
-    { id: ModelsOrderId; data: ModelsPurchaseOrderUpdateRequest }
-  > = (props) => {
-    const { id, data } = props ?? {}
-
-    return purchaseOrderOperationsUpdatePurchaseOrder(id, data, requestOptions)
+export const purchaseOrderOperationsUpdatePurchaseOrder = async (id: ModelsOrderId,
+    modelsPurchaseOrderUpdateRequest: ModelsPurchaseOrderUpdateRequest, options?: RequestInit): Promise<purchaseOrderOperationsUpdatePurchaseOrderResponse> => {
+  
+  return customInstance<purchaseOrderOperationsUpdatePurchaseOrderResponse>(getPurchaseOrderOperationsUpdatePurchaseOrderUrl(id),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      modelsPurchaseOrderUpdateRequest,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type PurchaseOrderOperationsUpdatePurchaseOrderMutationResult =
-  NonNullable<
-    Awaited<ReturnType<typeof purchaseOrderOperationsUpdatePurchaseOrder>>
-  >
-export type PurchaseOrderOperationsUpdatePurchaseOrderMutationBody =
-  ModelsPurchaseOrderUpdateRequest
-export type PurchaseOrderOperationsUpdatePurchaseOrderMutationError = unknown
 
-export const usePurchaseOrderOperationsUpdatePurchaseOrder = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof purchaseOrderOperationsUpdatePurchaseOrder>>,
-      TError,
-      { id: ModelsOrderId; data: ModelsPurchaseOrderUpdateRequest },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof purchaseOrderOperationsUpdatePurchaseOrder>>,
-  TError,
-  { id: ModelsOrderId; data: ModelsPurchaseOrderUpdateRequest },
-  TContext
-> => {
-  const mutationOptions =
-    getPurchaseOrderOperationsUpdatePurchaseOrderMutationOptions(options)
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+export const getPurchaseOrderOperationsUpdatePurchaseOrderMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof purchaseOrderOperationsUpdatePurchaseOrder>>, TError,{id: ModelsOrderId;data: ModelsPurchaseOrderUpdateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof purchaseOrderOperationsUpdatePurchaseOrder>>, TError,{id: ModelsOrderId;data: ModelsPurchaseOrderUpdateRequest}, TContext> => {
+
+const mutationKey = ['purchaseOrderOperationsUpdatePurchaseOrder'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof purchaseOrderOperationsUpdatePurchaseOrder>>, {id: ModelsOrderId;data: ModelsPurchaseOrderUpdateRequest}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  purchaseOrderOperationsUpdatePurchaseOrder(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PurchaseOrderOperationsUpdatePurchaseOrderMutationResult = NonNullable<Awaited<ReturnType<typeof purchaseOrderOperationsUpdatePurchaseOrder>>>
+    export type PurchaseOrderOperationsUpdatePurchaseOrderMutationBody = ModelsPurchaseOrderUpdateRequest
+    export type PurchaseOrderOperationsUpdatePurchaseOrderMutationError = unknown
+
+    export const usePurchaseOrderOperationsUpdatePurchaseOrder = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof purchaseOrderOperationsUpdatePurchaseOrder>>, TError,{id: ModelsOrderId;data: ModelsPurchaseOrderUpdateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof purchaseOrderOperationsUpdatePurchaseOrder>>,
+        TError,
+        {id: ModelsOrderId;data: ModelsPurchaseOrderUpdateRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getPurchaseOrderOperationsUpdatePurchaseOrderMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * Approve purchase order
  */
 export type purchaseOrderOperationsApprovePurchaseOrderResponse200 = {
   data: PurchaseOrderOperationsApprovePurchaseOrder200
   status: 200
 }
+    
+export type purchaseOrderOperationsApprovePurchaseOrderResponseComposite = purchaseOrderOperationsApprovePurchaseOrderResponse200;
+    
+export type purchaseOrderOperationsApprovePurchaseOrderResponse = purchaseOrderOperationsApprovePurchaseOrderResponseComposite & {
+  headers: Headers;
+}
 
-export type purchaseOrderOperationsApprovePurchaseOrderResponseComposite =
-  purchaseOrderOperationsApprovePurchaseOrderResponse200
+export const getPurchaseOrderOperationsApprovePurchaseOrderUrl = (id: ModelsOrderId,) => {
 
-export type purchaseOrderOperationsApprovePurchaseOrderResponse =
-  purchaseOrderOperationsApprovePurchaseOrderResponseComposite & {
-    headers: Headers
-  }
 
-export const getPurchaseOrderOperationsApprovePurchaseOrderUrl = (
-  id: ModelsOrderId
-) => {
+  
+
   return `/purchase-orders/${id}/approve`
 }
 
-export const purchaseOrderOperationsApprovePurchaseOrder = async (
-  id: ModelsOrderId,
-  purchaseOrderOperationsApprovePurchaseOrderBody: PurchaseOrderOperationsApprovePurchaseOrderBody,
-  options?: RequestInit
-): Promise<purchaseOrderOperationsApprovePurchaseOrderResponse> => {
-  return customInstance<purchaseOrderOperationsApprovePurchaseOrderResponse>(
-    getPurchaseOrderOperationsApprovePurchaseOrderUrl(id),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(purchaseOrderOperationsApprovePurchaseOrderBody),
-    }
-  )
-}
-
-export const getPurchaseOrderOperationsApprovePurchaseOrderMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof purchaseOrderOperationsApprovePurchaseOrder>>,
-    TError,
-    {
-      id: ModelsOrderId
-      data: PurchaseOrderOperationsApprovePurchaseOrderBody
-    },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof purchaseOrderOperationsApprovePurchaseOrder>>,
-  TError,
-  { id: ModelsOrderId; data: PurchaseOrderOperationsApprovePurchaseOrderBody },
-  TContext
-> => {
-  const mutationKey = ['purchaseOrderOperationsApprovePurchaseOrder']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof purchaseOrderOperationsApprovePurchaseOrder>>,
-    { id: ModelsOrderId; data: PurchaseOrderOperationsApprovePurchaseOrderBody }
-  > = (props) => {
-    const { id, data } = props ?? {}
-
-    return purchaseOrderOperationsApprovePurchaseOrder(id, data, requestOptions)
+export const purchaseOrderOperationsApprovePurchaseOrder = async (id: ModelsOrderId,
+    purchaseOrderOperationsApprovePurchaseOrderBody: PurchaseOrderOperationsApprovePurchaseOrderBody, options?: RequestInit): Promise<purchaseOrderOperationsApprovePurchaseOrderResponse> => {
+  
+  return customInstance<purchaseOrderOperationsApprovePurchaseOrderResponse>(getPurchaseOrderOperationsApprovePurchaseOrderUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      purchaseOrderOperationsApprovePurchaseOrderBody,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type PurchaseOrderOperationsApprovePurchaseOrderMutationResult =
-  NonNullable<
-    Awaited<ReturnType<typeof purchaseOrderOperationsApprovePurchaseOrder>>
-  >
-export type PurchaseOrderOperationsApprovePurchaseOrderMutationBody =
-  PurchaseOrderOperationsApprovePurchaseOrderBody
-export type PurchaseOrderOperationsApprovePurchaseOrderMutationError = unknown
 
-export const usePurchaseOrderOperationsApprovePurchaseOrder = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof purchaseOrderOperationsApprovePurchaseOrder>>,
-      TError,
-      {
-        id: ModelsOrderId
-        data: PurchaseOrderOperationsApprovePurchaseOrderBody
-      },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof purchaseOrderOperationsApprovePurchaseOrder>>,
-  TError,
-  { id: ModelsOrderId; data: PurchaseOrderOperationsApprovePurchaseOrderBody },
-  TContext
-> => {
-  const mutationOptions =
-    getPurchaseOrderOperationsApprovePurchaseOrderMutationOptions(options)
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+export const getPurchaseOrderOperationsApprovePurchaseOrderMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof purchaseOrderOperationsApprovePurchaseOrder>>, TError,{id: ModelsOrderId;data: PurchaseOrderOperationsApprovePurchaseOrderBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof purchaseOrderOperationsApprovePurchaseOrder>>, TError,{id: ModelsOrderId;data: PurchaseOrderOperationsApprovePurchaseOrderBody}, TContext> => {
+
+const mutationKey = ['purchaseOrderOperationsApprovePurchaseOrder'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof purchaseOrderOperationsApprovePurchaseOrder>>, {id: ModelsOrderId;data: PurchaseOrderOperationsApprovePurchaseOrderBody}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  purchaseOrderOperationsApprovePurchaseOrder(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PurchaseOrderOperationsApprovePurchaseOrderMutationResult = NonNullable<Awaited<ReturnType<typeof purchaseOrderOperationsApprovePurchaseOrder>>>
+    export type PurchaseOrderOperationsApprovePurchaseOrderMutationBody = PurchaseOrderOperationsApprovePurchaseOrderBody
+    export type PurchaseOrderOperationsApprovePurchaseOrderMutationError = unknown
+
+    export const usePurchaseOrderOperationsApprovePurchaseOrder = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof purchaseOrderOperationsApprovePurchaseOrder>>, TError,{id: ModelsOrderId;data: PurchaseOrderOperationsApprovePurchaseOrderBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof purchaseOrderOperationsApprovePurchaseOrder>>,
+        TError,
+        {id: ModelsOrderId;data: PurchaseOrderOperationsApprovePurchaseOrderBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPurchaseOrderOperationsApprovePurchaseOrderMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * Cancel purchase order
  */
 export type purchaseOrderOperationsCancelPurchaseOrderResponse200 = {
   data: PurchaseOrderOperationsCancelPurchaseOrder200
   status: 200
 }
+    
+export type purchaseOrderOperationsCancelPurchaseOrderResponseComposite = purchaseOrderOperationsCancelPurchaseOrderResponse200;
+    
+export type purchaseOrderOperationsCancelPurchaseOrderResponse = purchaseOrderOperationsCancelPurchaseOrderResponseComposite & {
+  headers: Headers;
+}
 
-export type purchaseOrderOperationsCancelPurchaseOrderResponseComposite =
-  purchaseOrderOperationsCancelPurchaseOrderResponse200
+export const getPurchaseOrderOperationsCancelPurchaseOrderUrl = (id: ModelsOrderId,) => {
 
-export type purchaseOrderOperationsCancelPurchaseOrderResponse =
-  purchaseOrderOperationsCancelPurchaseOrderResponseComposite & {
-    headers: Headers
-  }
 
-export const getPurchaseOrderOperationsCancelPurchaseOrderUrl = (
-  id: ModelsOrderId
-) => {
+  
+
   return `/purchase-orders/${id}/cancel`
 }
 
-export const purchaseOrderOperationsCancelPurchaseOrder = async (
-  id: ModelsOrderId,
-  purchaseOrderOperationsCancelPurchaseOrderBody: PurchaseOrderOperationsCancelPurchaseOrderBody,
-  options?: RequestInit
-): Promise<purchaseOrderOperationsCancelPurchaseOrderResponse> => {
-  return customInstance<purchaseOrderOperationsCancelPurchaseOrderResponse>(
-    getPurchaseOrderOperationsCancelPurchaseOrderUrl(id),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(purchaseOrderOperationsCancelPurchaseOrderBody),
-    }
-  )
-}
-
-export const getPurchaseOrderOperationsCancelPurchaseOrderMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof purchaseOrderOperationsCancelPurchaseOrder>>,
-    TError,
-    { id: ModelsOrderId; data: PurchaseOrderOperationsCancelPurchaseOrderBody },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof purchaseOrderOperationsCancelPurchaseOrder>>,
-  TError,
-  { id: ModelsOrderId; data: PurchaseOrderOperationsCancelPurchaseOrderBody },
-  TContext
-> => {
-  const mutationKey = ['purchaseOrderOperationsCancelPurchaseOrder']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof purchaseOrderOperationsCancelPurchaseOrder>>,
-    { id: ModelsOrderId; data: PurchaseOrderOperationsCancelPurchaseOrderBody }
-  > = (props) => {
-    const { id, data } = props ?? {}
-
-    return purchaseOrderOperationsCancelPurchaseOrder(id, data, requestOptions)
+export const purchaseOrderOperationsCancelPurchaseOrder = async (id: ModelsOrderId,
+    purchaseOrderOperationsCancelPurchaseOrderBody: PurchaseOrderOperationsCancelPurchaseOrderBody, options?: RequestInit): Promise<purchaseOrderOperationsCancelPurchaseOrderResponse> => {
+  
+  return customInstance<purchaseOrderOperationsCancelPurchaseOrderResponse>(getPurchaseOrderOperationsCancelPurchaseOrderUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      purchaseOrderOperationsCancelPurchaseOrderBody,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type PurchaseOrderOperationsCancelPurchaseOrderMutationResult =
-  NonNullable<
-    Awaited<ReturnType<typeof purchaseOrderOperationsCancelPurchaseOrder>>
-  >
-export type PurchaseOrderOperationsCancelPurchaseOrderMutationBody =
-  PurchaseOrderOperationsCancelPurchaseOrderBody
-export type PurchaseOrderOperationsCancelPurchaseOrderMutationError = unknown
 
-export const usePurchaseOrderOperationsCancelPurchaseOrder = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof purchaseOrderOperationsCancelPurchaseOrder>>,
-      TError,
-      {
-        id: ModelsOrderId
-        data: PurchaseOrderOperationsCancelPurchaseOrderBody
-      },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof purchaseOrderOperationsCancelPurchaseOrder>>,
-  TError,
-  { id: ModelsOrderId; data: PurchaseOrderOperationsCancelPurchaseOrderBody },
-  TContext
-> => {
-  const mutationOptions =
-    getPurchaseOrderOperationsCancelPurchaseOrderMutationOptions(options)
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+export const getPurchaseOrderOperationsCancelPurchaseOrderMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof purchaseOrderOperationsCancelPurchaseOrder>>, TError,{id: ModelsOrderId;data: PurchaseOrderOperationsCancelPurchaseOrderBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof purchaseOrderOperationsCancelPurchaseOrder>>, TError,{id: ModelsOrderId;data: PurchaseOrderOperationsCancelPurchaseOrderBody}, TContext> => {
+
+const mutationKey = ['purchaseOrderOperationsCancelPurchaseOrder'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof purchaseOrderOperationsCancelPurchaseOrder>>, {id: ModelsOrderId;data: PurchaseOrderOperationsCancelPurchaseOrderBody}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  purchaseOrderOperationsCancelPurchaseOrder(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PurchaseOrderOperationsCancelPurchaseOrderMutationResult = NonNullable<Awaited<ReturnType<typeof purchaseOrderOperationsCancelPurchaseOrder>>>
+    export type PurchaseOrderOperationsCancelPurchaseOrderMutationBody = PurchaseOrderOperationsCancelPurchaseOrderBody
+    export type PurchaseOrderOperationsCancelPurchaseOrderMutationError = unknown
+
+    export const usePurchaseOrderOperationsCancelPurchaseOrder = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof purchaseOrderOperationsCancelPurchaseOrder>>, TError,{id: ModelsOrderId;data: PurchaseOrderOperationsCancelPurchaseOrderBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof purchaseOrderOperationsCancelPurchaseOrder>>,
+        TError,
+        {id: ModelsOrderId;data: PurchaseOrderOperationsCancelPurchaseOrderBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPurchaseOrderOperationsCancelPurchaseOrderMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * Receive purchase order
  */
 export type purchaseOrderOperationsReceivePurchaseOrderResponse200 = {
   data: PurchaseOrderOperationsReceivePurchaseOrder200
   status: 200
 }
+    
+export type purchaseOrderOperationsReceivePurchaseOrderResponseComposite = purchaseOrderOperationsReceivePurchaseOrderResponse200;
+    
+export type purchaseOrderOperationsReceivePurchaseOrderResponse = purchaseOrderOperationsReceivePurchaseOrderResponseComposite & {
+  headers: Headers;
+}
 
-export type purchaseOrderOperationsReceivePurchaseOrderResponseComposite =
-  purchaseOrderOperationsReceivePurchaseOrderResponse200
+export const getPurchaseOrderOperationsReceivePurchaseOrderUrl = (id: ModelsOrderId,) => {
 
-export type purchaseOrderOperationsReceivePurchaseOrderResponse =
-  purchaseOrderOperationsReceivePurchaseOrderResponseComposite & {
-    headers: Headers
-  }
 
-export const getPurchaseOrderOperationsReceivePurchaseOrderUrl = (
-  id: ModelsOrderId
-) => {
+  
+
   return `/purchase-orders/${id}/receive`
 }
 
-export const purchaseOrderOperationsReceivePurchaseOrder = async (
-  id: ModelsOrderId,
-  purchaseOrderOperationsReceivePurchaseOrderBody: PurchaseOrderOperationsReceivePurchaseOrderBody,
-  options?: RequestInit
-): Promise<purchaseOrderOperationsReceivePurchaseOrderResponse> => {
-  return customInstance<purchaseOrderOperationsReceivePurchaseOrderResponse>(
-    getPurchaseOrderOperationsReceivePurchaseOrderUrl(id),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(purchaseOrderOperationsReceivePurchaseOrderBody),
-    }
-  )
-}
-
-export const getPurchaseOrderOperationsReceivePurchaseOrderMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof purchaseOrderOperationsReceivePurchaseOrder>>,
-    TError,
-    {
-      id: ModelsOrderId
-      data: PurchaseOrderOperationsReceivePurchaseOrderBody
-    },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof purchaseOrderOperationsReceivePurchaseOrder>>,
-  TError,
-  { id: ModelsOrderId; data: PurchaseOrderOperationsReceivePurchaseOrderBody },
-  TContext
-> => {
-  const mutationKey = ['purchaseOrderOperationsReceivePurchaseOrder']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof purchaseOrderOperationsReceivePurchaseOrder>>,
-    { id: ModelsOrderId; data: PurchaseOrderOperationsReceivePurchaseOrderBody }
-  > = (props) => {
-    const { id, data } = props ?? {}
-
-    return purchaseOrderOperationsReceivePurchaseOrder(id, data, requestOptions)
+export const purchaseOrderOperationsReceivePurchaseOrder = async (id: ModelsOrderId,
+    purchaseOrderOperationsReceivePurchaseOrderBody: PurchaseOrderOperationsReceivePurchaseOrderBody, options?: RequestInit): Promise<purchaseOrderOperationsReceivePurchaseOrderResponse> => {
+  
+  return customInstance<purchaseOrderOperationsReceivePurchaseOrderResponse>(getPurchaseOrderOperationsReceivePurchaseOrderUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      purchaseOrderOperationsReceivePurchaseOrderBody,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type PurchaseOrderOperationsReceivePurchaseOrderMutationResult =
-  NonNullable<
-    Awaited<ReturnType<typeof purchaseOrderOperationsReceivePurchaseOrder>>
-  >
-export type PurchaseOrderOperationsReceivePurchaseOrderMutationBody =
-  PurchaseOrderOperationsReceivePurchaseOrderBody
-export type PurchaseOrderOperationsReceivePurchaseOrderMutationError = unknown
 
-export const usePurchaseOrderOperationsReceivePurchaseOrder = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof purchaseOrderOperationsReceivePurchaseOrder>>,
-      TError,
-      {
-        id: ModelsOrderId
-        data: PurchaseOrderOperationsReceivePurchaseOrderBody
-      },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof purchaseOrderOperationsReceivePurchaseOrder>>,
-  TError,
-  { id: ModelsOrderId; data: PurchaseOrderOperationsReceivePurchaseOrderBody },
-  TContext
-> => {
-  const mutationOptions =
-    getPurchaseOrderOperationsReceivePurchaseOrderMutationOptions(options)
 
-  return useMutation(mutationOptions, queryClient)
-}
+export const getPurchaseOrderOperationsReceivePurchaseOrderMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof purchaseOrderOperationsReceivePurchaseOrder>>, TError,{id: ModelsOrderId;data: PurchaseOrderOperationsReceivePurchaseOrderBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof purchaseOrderOperationsReceivePurchaseOrder>>, TError,{id: ModelsOrderId;data: PurchaseOrderOperationsReceivePurchaseOrderBody}, TContext> => {
+
+const mutationKey = ['purchaseOrderOperationsReceivePurchaseOrder'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof purchaseOrderOperationsReceivePurchaseOrder>>, {id: ModelsOrderId;data: PurchaseOrderOperationsReceivePurchaseOrderBody}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  purchaseOrderOperationsReceivePurchaseOrder(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PurchaseOrderOperationsReceivePurchaseOrderMutationResult = NonNullable<Awaited<ReturnType<typeof purchaseOrderOperationsReceivePurchaseOrder>>>
+    export type PurchaseOrderOperationsReceivePurchaseOrderMutationBody = PurchaseOrderOperationsReceivePurchaseOrderBody
+    export type PurchaseOrderOperationsReceivePurchaseOrderMutationError = unknown
+
+    export const usePurchaseOrderOperationsReceivePurchaseOrder = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof purchaseOrderOperationsReceivePurchaseOrder>>, TError,{id: ModelsOrderId;data: PurchaseOrderOperationsReceivePurchaseOrderBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof purchaseOrderOperationsReceivePurchaseOrder>>,
+        TError,
+        {id: ModelsOrderId;data: PurchaseOrderOperationsReceivePurchaseOrderBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPurchaseOrderOperationsReceivePurchaseOrderMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    

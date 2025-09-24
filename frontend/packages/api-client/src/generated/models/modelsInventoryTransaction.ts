@@ -5,45 +5,45 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsInventoryId } from './modelsInventoryId'
-import type { ModelsSalonId } from './modelsSalonId'
-import type { ModelsInventoryTransactionType } from './modelsInventoryTransactionType'
-import type { ModelsStaffId } from './modelsStaffId'
-import type { ModelsInventoryTransactionMetadata } from './modelsInventoryTransactionMetadata'
+import type { ModelsInventoryId } from './modelsInventoryId';
+import type { ModelsSalonId } from './modelsSalonId';
+import type { ModelsInventoryTransactionType } from './modelsInventoryTransactionType';
+import type { ModelsStaffId } from './modelsStaffId';
+import type { ModelsInventoryTransactionMetadata } from './modelsInventoryTransactionMetadata';
 
 /**
  * 在庫の入出庫トランザクション
  */
 export interface ModelsInventoryTransaction {
   /** トランザクション ID */
-  id: string
+  id: string;
   /** 対象在庫アイテム ID */
-  itemId: ModelsInventoryId
+  itemId: ModelsInventoryId;
   /** 処理を行うサロン ID */
-  salonId: ModelsSalonId
+  salonId: ModelsSalonId;
   /** 在庫操作区分（入庫/出庫/調整/移動） */
-  type: ModelsInventoryTransactionType
+  type: ModelsInventoryTransactionType;
   /** 操作した数量 */
-  quantity: number
+  quantity: number;
   /** 操作理由 */
-  reason: string
+  reason: string;
   /** 操作を担当したスタッフ ID */
-  performedBy: ModelsStaffId
+  performedBy: ModelsStaffId;
   /** 操作日時 */
-  occurredAt: string
+  occurredAt: string;
   /**
    * 関連する外部参照 ID
    * @nullable
    */
-  referenceId: string | null
+  referenceId: string | null;
   /**
    * 備考メモ
    * @nullable
    */
-  notes: string | null
+  notes: string | null;
   /**
    * 追加のメタデータ
    * @nullable
    */
-  metadata: ModelsInventoryTransactionMetadata
+  metadata: ModelsInventoryTransactionMetadata;
 }

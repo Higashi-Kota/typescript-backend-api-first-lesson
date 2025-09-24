@@ -7,5 +7,5 @@
  */
 
 export type PointOperationsGetExpiringPointsParams = {
-  days?: number
-}
+days?: number;
+};

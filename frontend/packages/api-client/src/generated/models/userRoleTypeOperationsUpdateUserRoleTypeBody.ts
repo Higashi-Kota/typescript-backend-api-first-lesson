@@ -7,6 +7,6 @@
  */
 
 export type UserRoleTypeOperationsUpdateUserRoleTypeBody = {
-  expiresAt?: string
-  isActive?: boolean
-}
+  expiresAt?: string;
+  isActive?: boolean;
+};

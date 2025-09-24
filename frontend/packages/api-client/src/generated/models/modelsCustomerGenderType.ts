@@ -14,8 +14,8 @@ female: 女性
 other: その他 - 男性・女性以外の性自認を持つ方
 prefer_not_to_say: 回答しない - 性別の回答を希望しない方
  */
-export type ModelsCustomerGenderType =
-  (typeof ModelsCustomerGenderType)[keyof typeof ModelsCustomerGenderType]
+export type ModelsCustomerGenderType = typeof ModelsCustomerGenderType[keyof typeof ModelsCustomerGenderType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsCustomerGenderType = {
@@ -23,4 +23,4 @@ export const ModelsCustomerGenderType = {
   female: 'female',
   other: 'other',
   prefer_not_to_say: 'prefer_not_to_say',
-} as const
+} as const;

@@ -12,7 +12,7 @@ export async function seedCustomers(
   db: PostgresJsDatabase<typeof schema>,
   userIds?: {
     customerUserIds: string[]
-  }
+  },
 ): Promise<CustomerSeedResult> {
   const customers = await db
     .insert(schema.customers)

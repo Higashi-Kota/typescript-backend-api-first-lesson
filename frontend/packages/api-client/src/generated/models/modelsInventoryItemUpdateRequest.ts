@@ -5,60 +5,60 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsInventoryStatusType } from './modelsInventoryStatusType'
+import type { ModelsInventoryStatusType } from './modelsInventoryStatusType';
 
 /**
  * 在庫アイテムの情報更新入力モデル
  */
 export interface ModelsInventoryItemUpdateRequest {
   /** 更新後の商品名 */
-  productName?: string
+  productName?: string;
   /**
    * 更新後の商品説明
    * @nullable
    */
-  description?: string | null
+  description?: string | null;
   /** 更新後のカテゴリ */
-  category?: string
+  category?: string;
   /**
    * 更新後のブランド名
    * @nullable
    */
-  brand?: string | null
+  brand?: string | null;
   /**
    * 更新後の仕入先情報
    * @nullable
    */
-  supplier?: string | null
+  supplier?: string | null;
   /** 更新後の最低在庫数 */
-  minimumStock?: number
+  minimumStock?: number;
   /**
    * 更新後の最大在庫数
    * @nullable
    */
-  maximumStock?: number | null
+  maximumStock?: number | null;
   /** 更新後の仕入単価 */
-  unitCost?: number
+  unitCost?: number;
   /**
    * 更新後の販売価格
    * @nullable
    */
-  sellingPrice?: number | null
+  sellingPrice?: number | null;
   /**
    * 更新後の保管場所
    * @nullable
    */
-  location?: string | null
+  location?: string | null;
   /**
    * 更新後の賞味・使用期限
    * @nullable
    */
-  expirationDate?: string | null
+  expirationDate?: string | null;
   /** 在庫状態の更新 */
-  status?: ModelsInventoryStatusType
+  status?: ModelsInventoryStatusType;
   /**
    * 更新後の備考
    * @nullable
    */
-  notes?: string | null
+  notes?: string | null;
 }

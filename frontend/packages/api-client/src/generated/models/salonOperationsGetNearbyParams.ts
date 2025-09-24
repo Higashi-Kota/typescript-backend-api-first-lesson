@@ -5,47 +5,47 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsServiceCategoryType } from './modelsServiceCategoryType'
-import type { ModelsCursorPaginationParamsLimitParameter } from './modelsCursorPaginationParamsLimitParameter'
-import type { ModelsCursorPaginationParamsCursorParameter } from './modelsCursorPaginationParamsCursorParameter'
-import type { ModelsCursorPaginationParamsSortByParameter } from './modelsCursorPaginationParamsSortByParameter'
-import type { ModelsCursorPaginationParamsSortOrderParameter } from './modelsCursorPaginationParamsSortOrderParameter'
+import type { ModelsServiceCategoryType } from './modelsServiceCategoryType';
+import type { ModelsCursorPaginationParamsLimitParameter } from './modelsCursorPaginationParamsLimitParameter';
+import type { ModelsCursorPaginationParamsCursorParameter } from './modelsCursorPaginationParamsCursorParameter';
+import type { ModelsCursorPaginationParamsSortByParameter } from './modelsCursorPaginationParamsSortByParameter';
+import type { ModelsCursorPaginationParamsSortOrderParameter } from './modelsCursorPaginationParamsSortOrderParameter';
 
 export type SalonOperationsGetNearbyParams = {
-  /**
-   * 緯度
-   */
-  lat: number
-  /**
-   * 経度
-   */
-  lon: number
-  /**
-   * 検索半径（キロメートル）
-   * @minimum 0.1
-   * @maximum 100
-   */
-  radius?: number
-  /**
-   * 対象サービスカテゴリのフィルター
-   */
-  categories?: ModelsServiceCategoryType[]
-  /**
-   * 1ページあたりの取得件数上限 (1〜100)。指定が無い場合は既定値 20 を適用。
-   * @minimum 1
-   * @maximum 100
-   */
-  limit?: ModelsCursorPaginationParamsLimitParameter
-  /**
-   * 次ページを指し示すカーソル。前回レスポンスの `meta.nextCursor` を設定する。
-   */
-  cursor?: ModelsCursorPaginationParamsCursorParameter
-  /**
-   * ソート対象フィールド。予約日時や作成日時など業務軸を指定する。
-   */
-  sortBy?: ModelsCursorPaginationParamsSortByParameter
-  /**
-   * ソート順序。`asc` は昇順、`desc` は降順を表す。
-   */
-  sortOrder?: ModelsCursorPaginationParamsSortOrderParameter
-}
+/**
+ * 緯度
+ */
+lat: number;
+/**
+ * 経度
+ */
+lon: number;
+/**
+ * 検索半径（キロメートル）
+ * @minimum 0.1
+ * @maximum 100
+ */
+radius?: number;
+/**
+ * 対象サービスカテゴリのフィルター
+ */
+categories?: ModelsServiceCategoryType[];
+/**
+ * 1ページあたりの取得件数上限 (1〜100)。指定が無い場合は既定値 20 を適用。
+ * @minimum 1
+ * @maximum 100
+ */
+limit?: ModelsCursorPaginationParamsLimitParameter;
+/**
+ * 次ページを指し示すカーソル。前回レスポンスの `meta.nextCursor` を設定する。
+ */
+cursor?: ModelsCursorPaginationParamsCursorParameter;
+/**
+ * ソート対象フィールド。予約日時や作成日時など業務軸を指定する。
+ */
+sortBy?: ModelsCursorPaginationParamsSortByParameter;
+/**
+ * ソート順序。`asc` は昇順、`desc` は降順を表す。
+ */
+sortOrder?: ModelsCursorPaginationParamsSortOrderParameter;
+};

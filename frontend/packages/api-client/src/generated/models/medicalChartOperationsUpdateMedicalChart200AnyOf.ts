@@ -5,15 +5,15 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { MedicalChartOperationsUpdateMedicalChart200AnyOfStatus } from './medicalChartOperationsUpdateMedicalChart200AnyOfStatus'
-import type { ModelsMedicalChart } from './modelsMedicalChart'
+import type { MedicalChartOperationsUpdateMedicalChart200AnyOfStatus } from './medicalChartOperationsUpdateMedicalChart200AnyOfStatus';
+import type { ModelsMedicalChart } from './modelsMedicalChart';
 
 /**
  * 成功時のデータとステータスを保持するモデル。
  */
 export type MedicalChartOperationsUpdateMedicalChart200AnyOf = {
   /** 固定値success。成功結果であることを示す。 */
-  status: MedicalChartOperationsUpdateMedicalChart200AnyOfStatus
+  status: MedicalChartOperationsUpdateMedicalChart200AnyOfStatus;
   /** 成功時に返却するドメインデータ。 */
-  data: ModelsMedicalChart
-}
+  data: ModelsMedicalChart;
+};

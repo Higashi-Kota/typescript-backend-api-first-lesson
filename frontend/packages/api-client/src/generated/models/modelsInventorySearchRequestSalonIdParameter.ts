@@ -9,4 +9,4 @@
 /**
  * 検索対象のサロン ID
  */
-export type ModelsInventorySearchRequestSalonIdParameter = string
+export type ModelsInventorySearchRequestSalonIdParameter = string;

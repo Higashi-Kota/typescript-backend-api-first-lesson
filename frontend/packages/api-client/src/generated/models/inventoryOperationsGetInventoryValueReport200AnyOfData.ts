@@ -5,13 +5,13 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { InventoryOperationsGetInventoryValueReport200AnyOfDataCategoriesItem } from './inventoryOperationsGetInventoryValueReport200AnyOfDataCategoriesItem'
+import type { InventoryOperationsGetInventoryValueReport200AnyOfDataCategoriesItem } from './inventoryOperationsGetInventoryValueReport200AnyOfDataCategoriesItem';
 
 /**
  * 成功時に返却するドメインデータ。
  */
 export type InventoryOperationsGetInventoryValueReport200AnyOfData = {
-  totalValue: number
-  totalItems: number
-  categories: InventoryOperationsGetInventoryValueReport200AnyOfDataCategoriesItem[]
-}
+  totalValue: number;
+  totalItems: number;
+  categories: InventoryOperationsGetInventoryValueReport200AnyOfDataCategoriesItem[];
+};

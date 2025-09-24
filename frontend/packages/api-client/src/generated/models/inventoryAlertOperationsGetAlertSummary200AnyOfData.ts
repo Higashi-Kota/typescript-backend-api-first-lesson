@@ -10,9 +10,9 @@
  * 成功時に返却するドメインデータ。
  */
 export type InventoryAlertOperationsGetAlertSummary200AnyOfData = {
-  totalAlerts: number
-  criticalAlerts: number
-  warningAlerts: number
-  infoAlerts: number
-  unacknowledged: number
-}
+  totalAlerts: number;
+  criticalAlerts: number;
+  warningAlerts: number;
+  infoAlerts: number;
+  unacknowledged: number;
+};

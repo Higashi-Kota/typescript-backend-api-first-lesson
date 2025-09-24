@@ -11,12 +11,12 @@
  */
 export interface ModelsPermissionStatus {
   /** 権限キー */
-  permission: string
+  permission: string;
   /** 権限が付与されているかどうか */
-  granted: boolean
+  granted: boolean;
   /**
    * 権限を付与したロール情報 - 権限が付与されていない場合はnull
    * @nullable
    */
-  source: string | null
+  source: string | null;
 }

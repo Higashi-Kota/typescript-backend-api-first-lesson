@@ -1,9 +1,9 @@
 import { openingHours, salons } from '@beauty-salon-backend/database'
-import type { ISalonRepository } from '@beauty-salon-backend/domain'
 import type {
   DbNewOpeningHours,
   DbOpeningHours,
   DbSalon,
+  ISalonRepository,
   SalonId,
   SalonSearchParams,
 } from '@beauty-salon-backend/domain'
@@ -23,7 +23,7 @@ export class SalonRepository implements ISalonRepository {
 
   async create(
     salon: DbSalon,
-    openingHoursData?: DbNewOpeningHours[]
+    openingHoursData?: DbNewOpeningHours[],
   ): Promise<Result<DbSalon, DomainError>> {
     try {
       const result = await this.db.transaction(async (tx) => {
@@ -50,8 +50,8 @@ export class SalonRepository implements ISalonRepository {
       return Result.error(
         DomainErrors.database(
           'Failed to create salon',
-          JSON.stringify(error, null, 2)
-        )
+          JSON.stringify(error, null, 2),
+        ),
       )
     }
   }
@@ -69,14 +69,14 @@ export class SalonRepository implements ISalonRepository {
       return Result.error(
         DomainErrors.database(
           'Failed to find salon by ID',
-          JSON.stringify(error, null, 2)
-        )
+          JSON.stringify(error, null, 2),
+        ),
       )
     }
   }
 
   async findByEmail(
-    email: string
+    email: string,
   ): Promise<Result<DbSalon | null, DomainError>> {
     try {
       const [salon] = await this.db
@@ -90,14 +90,14 @@ export class SalonRepository implements ISalonRepository {
       return Result.error(
         DomainErrors.database(
           'Failed to find salon by email',
-          JSON.stringify(error, null, 2)
-        )
+          JSON.stringify(error, null, 2),
+        ),
       )
     }
   }
 
   async findAll(
-    params: PaginationParams
+    params: PaginationParams,
   ): Promise<Result<PaginatedResult<DbSalon>, DomainError>> {
     try {
       const offset = Pagination.getOffset(params)
@@ -120,7 +120,7 @@ export class SalonRepository implements ISalonRepository {
       const result = Pagination.createResult(
         salonsList as DbSalon[],
         totalItems,
-        params
+        params,
       )
 
       return Result.success(result)
@@ -128,15 +128,15 @@ export class SalonRepository implements ISalonRepository {
       return Result.error(
         DomainErrors.database(
           'Failed to list salons',
-          JSON.stringify(error, null, 2)
-        )
+          JSON.stringify(error, null, 2),
+        ),
       )
     }
   }
 
   async update(
     id: SalonId,
-    salon: Partial<DbSalon>
+    salon: Partial<DbSalon>,
   ): Promise<Result<DbSalon, DomainError>> {
     try {
       const [updatedSalon] = await this.db
@@ -154,8 +154,8 @@ export class SalonRepository implements ISalonRepository {
       return Result.error(
         DomainErrors.database(
           'Failed to update salon',
-          JSON.stringify(error, null, 2)
-        )
+          JSON.stringify(error, null, 2),
+        ),
       )
     }
   }
@@ -173,15 +173,15 @@ export class SalonRepository implements ISalonRepository {
       return Result.error(
         DomainErrors.database(
           'Failed to delete salon',
-          JSON.stringify(error, null, 2)
-        )
+          JSON.stringify(error, null, 2),
+        ),
       )
     }
   }
 
   async search(
     params: SalonSearchParams,
-    pagination: PaginationParams
+    pagination: PaginationParams,
   ): Promise<Result<PaginatedResult<DbSalon>, DomainError>> {
     try {
       const conditions = [isNull(salons.deletedAt)]
@@ -189,7 +189,7 @@ export class SalonRepository implements ISalonRepository {
       if (params.keyword) {
         const keywordCondition = or(
           like(salons.name, `%${params.keyword}%`),
-          like(salons.description, `%${params.keyword}%`)
+          like(salons.description, `%${params.keyword}%`),
         )
         if (keywordCondition) {
           conditions.push(keywordCondition)
@@ -229,7 +229,7 @@ export class SalonRepository implements ISalonRepository {
       const result = Pagination.createResult(
         salonsList as DbSalon[],
         totalItems,
-        pagination
+        pagination,
       )
 
       return Result.success(result)
@@ -237,14 +237,14 @@ export class SalonRepository implements ISalonRepository {
       return Result.error(
         DomainErrors.database(
           'Failed to search salons',
-          JSON.stringify(error, null, 2)
-        )
+          JSON.stringify(error, null, 2),
+        ),
       )
     }
   }
 
   async findOpeningHours(
-    salonId: SalonId
+    salonId: SalonId,
   ): Promise<Result<DbOpeningHours[], DomainError>> {
     try {
       const hours = await this.db
@@ -258,14 +258,14 @@ export class SalonRepository implements ISalonRepository {
       return Result.error(
         DomainErrors.database(
           'Failed to find opening hours',
-          JSON.stringify(error, null, 2)
-        )
+          JSON.stringify(error, null, 2),
+        ),
       )
     }
   }
 
   async createOpeningHours(
-    openingHoursData: DbNewOpeningHours[]
+    openingHoursData: DbNewOpeningHours[],
   ): Promise<Result<DbOpeningHours[], DomainError>> {
     try {
       if (openingHoursData.length === 0) {
@@ -282,15 +282,15 @@ export class SalonRepository implements ISalonRepository {
       return Result.error(
         DomainErrors.database(
           'Failed to create opening hours',
-          JSON.stringify(error, null, 2)
-        )
+          JSON.stringify(error, null, 2),
+        ),
       )
     }
   }
 
   async updateOpeningHours(
     salonId: SalonId,
-    openingHoursData: DbNewOpeningHours[]
+    openingHoursData: DbNewOpeningHours[],
   ): Promise<Result<DbOpeningHours[], DomainError>> {
     try {
       const result = await this.db.transaction(async (tx) => {
@@ -316,14 +316,14 @@ export class SalonRepository implements ISalonRepository {
       return Result.error(
         DomainErrors.database(
           'Failed to update opening hours',
-          JSON.stringify(error, null, 2)
-        )
+          JSON.stringify(error, null, 2),
+        ),
       )
     }
   }
 
   async deleteOpeningHours(
-    salonId: SalonId
+    salonId: SalonId,
   ): Promise<Result<boolean, DomainError>> {
     try {
       await this.db
@@ -334,8 +334,8 @@ export class SalonRepository implements ISalonRepository {
       return Result.error(
         DomainErrors.database(
           'Failed to delete opening hours',
-          JSON.stringify(error, null, 2)
-        )
+          JSON.stringify(error, null, 2),
+        ),
       )
     }
   }
@@ -352,8 +352,8 @@ export class SalonRepository implements ISalonRepository {
       return Result.error(
         DomainErrors.database(
           'Failed to check salon existence',
-          JSON.stringify(error, null, 2)
-        )
+          JSON.stringify(error, null, 2),
+        ),
       )
     }
   }
@@ -370,8 +370,8 @@ export class SalonRepository implements ISalonRepository {
       return Result.error(
         DomainErrors.database(
           'Failed to check salon email existence',
-          JSON.stringify(error, null, 2)
-        )
+          JSON.stringify(error, null, 2),
+        ),
       )
     }
   }
@@ -388,8 +388,8 @@ export class SalonRepository implements ISalonRepository {
       return Result.error(
         DomainErrors.database(
           'Failed to count active salons',
-          JSON.stringify(error, null, 2)
-        )
+          JSON.stringify(error, null, 2),
+        ),
       )
     }
   }

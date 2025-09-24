@@ -9,10 +9,10 @@
 /**
  * 固定値success。成功結果であることを示す。
  */
-export type InventoryOperationsRecordStockMovement200AnyOfStatus =
-  (typeof InventoryOperationsRecordStockMovement200AnyOfStatus)[keyof typeof InventoryOperationsRecordStockMovement200AnyOfStatus]
+export type InventoryOperationsRecordStockMovement200AnyOfStatus = typeof InventoryOperationsRecordStockMovement200AnyOfStatus[keyof typeof InventoryOperationsRecordStockMovement200AnyOfStatus];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const InventoryOperationsRecordStockMovement200AnyOfStatus = {
   success: 'success',
-} as const
+} as const;

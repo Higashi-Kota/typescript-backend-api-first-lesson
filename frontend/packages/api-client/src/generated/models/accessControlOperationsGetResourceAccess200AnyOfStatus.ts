@@ -9,10 +9,10 @@
 /**
  * 固定値success。成功結果であることを示す。
  */
-export type AccessControlOperationsGetResourceAccess200AnyOfStatus =
-  (typeof AccessControlOperationsGetResourceAccess200AnyOfStatus)[keyof typeof AccessControlOperationsGetResourceAccess200AnyOfStatus]
+export type AccessControlOperationsGetResourceAccess200AnyOfStatus = typeof AccessControlOperationsGetResourceAccess200AnyOfStatus[keyof typeof AccessControlOperationsGetResourceAccess200AnyOfStatus];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const AccessControlOperationsGetResourceAccess200AnyOfStatus = {
   success: 'success',
-} as const
+} as const;

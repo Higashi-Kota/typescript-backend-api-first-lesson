@@ -6,10 +6,10 @@
  * OpenAPI spec version: 2.0
  */
 
-export type ModelsDomainErrorFactoryDatabaseHttpStatus =
-  (typeof ModelsDomainErrorFactoryDatabaseHttpStatus)[keyof typeof ModelsDomainErrorFactoryDatabaseHttpStatus]
+export type ModelsDomainErrorFactoryDatabaseHttpStatus = typeof ModelsDomainErrorFactoryDatabaseHttpStatus[keyof typeof ModelsDomainErrorFactoryDatabaseHttpStatus];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsDomainErrorFactoryDatabaseHttpStatus = {
   NUMBER_500: 500,
-} as const
+} as const;

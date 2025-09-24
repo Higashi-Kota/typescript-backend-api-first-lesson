@@ -9,4 +9,4 @@
 /**
  * フリーワード検索用キーワード。
  */
-export type ModelsSearchParamsQParameter = string
+export type ModelsSearchParamsQParameter = string;

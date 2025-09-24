@@ -5,66 +5,66 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsSalonId } from './modelsSalonId'
+import type { ModelsSalonId } from './modelsSalonId';
 
 /**
  * 在庫アイテムを新規登録する入力モデル
  */
 export interface ModelsInventoryItemCreateRequest {
   /** 在庫を追加するサロン ID */
-  salonId: ModelsSalonId
+  salonId: ModelsSalonId;
   /** 商品コード・SKU */
-  productCode: string
+  productCode: string;
   /** 商品名 */
-  productName: string
+  productName: string;
   /**
    * 商品説明文
    * @nullable
    */
-  description: string | null
+  description: string | null;
   /** 分類カテゴリ */
-  category: string
+  category: string;
   /**
    * ブランド名
    * @nullable
    */
-  brand: string | null
+  brand: string | null;
   /**
    * 仕入先情報
    * @nullable
    */
-  supplier: string | null
+  supplier: string | null;
   /** 登録時点の在庫数量 */
-  currentStock: number
+  currentStock: number;
   /** 最低在庫数 */
-  minimumStock: number
+  minimumStock: number;
   /**
    * 最大在庫数
    * @nullable
    */
-  maximumStock: number | null
+  maximumStock: number | null;
   /** 数量単位 */
-  unit: string
+  unit: string;
   /** 仕入単価 */
-  unitCost: number
+  unitCost: number;
   /**
    * 顧客販売価格
    * @nullable
    */
-  sellingPrice: number | null
+  sellingPrice: number | null;
   /**
    * 保管場所
    * @nullable
    */
-  location: string | null
+  location: string | null;
   /**
    * 賞味・使用期限
    * @nullable
    */
-  expirationDate: string | null
+  expirationDate: string | null;
   /**
    * 備考メモ
    * @nullable
    */
-  notes: string | null
+  notes: string | null;
 }

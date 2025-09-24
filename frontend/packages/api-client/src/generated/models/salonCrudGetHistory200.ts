@@ -5,9 +5,9 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { OperationsAuditEntry } from './operationsAuditEntry'
-import type { ModelsPaginationMeta } from './modelsPaginationMeta'
-import type { ModelsPaginationLinks } from './modelsPaginationLinks'
+import type { OperationsAuditEntry } from './operationsAuditEntry';
+import type { ModelsPaginationMeta } from './modelsPaginationMeta';
+import type { ModelsPaginationLinks } from './modelsPaginationLinks';
 
 /**
  * カーソル方式のページネーションレスポンスモデル。
@@ -15,9 +15,9 @@ import type { ModelsPaginationLinks } from './modelsPaginationLinks'
  */
 export type SalonCrudGetHistory200 = {
   /** 現在ページで取得したデータ配列。サロン一覧や予約履歴の実データを格納する。 */
-  data: OperationsAuditEntry[]
+  data: OperationsAuditEntry[];
   /** ページング状態を示すメタ情報。次ページの有無やカーソル値を含む。 */
-  meta: ModelsPaginationMeta
+  meta: ModelsPaginationMeta;
   /** 関連するページ遷移リンク。HATEOAS 連携や外部連携向けに利用する。 */
-  links: ModelsPaginationLinks
-}
+  links: ModelsPaginationLinks;
+};

@@ -5,87 +5,87 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsTreatmentRecordId } from './modelsTreatmentRecordId'
-import type { ModelsBookingId } from './modelsBookingId'
-import type { ModelsCustomerId } from './modelsCustomerId'
-import type { ModelsStaffId } from './modelsStaffId'
-import type { ModelsSalonId } from './modelsSalonId'
-import type { ModelsTreatmentType } from './modelsTreatmentType'
-import type { ModelsServiceId } from './modelsServiceId'
-import type { ModelsMaterialUsage } from './modelsMaterialUsage'
-import type { ModelsAttachmentId } from './modelsAttachmentId'
+import type { ModelsTreatmentRecordId } from './modelsTreatmentRecordId';
+import type { ModelsBookingId } from './modelsBookingId';
+import type { ModelsCustomerId } from './modelsCustomerId';
+import type { ModelsStaffId } from './modelsStaffId';
+import type { ModelsSalonId } from './modelsSalonId';
+import type { ModelsTreatmentType } from './modelsTreatmentType';
+import type { ModelsServiceId } from './modelsServiceId';
+import type { ModelsMaterialUsage } from './modelsMaterialUsage';
+import type { ModelsAttachmentId } from './modelsAttachmentId';
 
 /**
  * 顧客来店時の施術記録
  */
 export interface ModelsTreatmentRecord {
   /** 施術記録 ID */
-  id: ModelsTreatmentRecordId
+  id: ModelsTreatmentRecordId;
   /** 紐づく予約 ID */
-  bookingId: ModelsBookingId
+  bookingId: ModelsBookingId;
   /** 施術を受けた顧客 ID */
-  customerId: ModelsCustomerId
+  customerId: ModelsCustomerId;
   /** 施術担当スタッフ ID */
-  staffId: ModelsStaffId
+  staffId: ModelsStaffId;
   /** 施術を実施したサロン ID */
-  salonId: ModelsSalonId
+  salonId: ModelsSalonId;
   /** 実施した施術タイプ */
-  treatment: ModelsTreatmentType
+  treatment: ModelsTreatmentType;
   /** 施術で提供したサービス ID 一覧 */
-  serviceIds: ModelsServiceId[]
+  serviceIds: ModelsServiceId[];
   /** 施術開始日時 */
-  startTime: string
+  startTime: string;
   /** 施術終了日時 */
-  endTime: string
+  endTime: string;
   /**
    * 施術の詳細メモ - 特記事項がない通常施術の場合はnull
    * @nullable
    */
-  notes: string | null
+  notes: string | null;
   /**
    * 使用した資材・商材の記録 - カットのみなど商材を使用しない施術の場合はnull
    * @nullable
    */
-  usedMaterials: ModelsMaterialUsage[] | null
+  usedMaterials: ModelsMaterialUsage[] | null;
   /**
    * 施術前後の写真 ID - 写真撮影を希望しない顧客や撮影が不要な施術の場合はnull
    * @nullable
    */
-  photos: ModelsAttachmentId[] | null
+  photos: ModelsAttachmentId[] | null;
   /**
    * 顧客のフィードバック - 施術直後でフィードバック未収集の場合はnull
    * @nullable
    */
-  customerFeedback: string | null
+  customerFeedback: string | null;
   /**
    * 次回来店への提案内容 - 特に提案事項がない場合や定期メンテナンスのみの場合はnull
    * @nullable
    */
-  nextRecommendations: string | null
+  nextRecommendations: string | null;
   /** 請求総額 */
-  totalAmount: number
+  totalAmount: number;
   /**
    * 適用した割引額 - 割引を適用しない定価施術の場合はnull
    * @nullable
    */
-  discountAmount: number | null
+  discountAmount: number | null;
   /**
    * 付与したポイント数 - ポイント対象外の施術やポイント制度未導入サロンの場合はnull
    * @nullable
    */
-  pointsEarned: number | null
+  pointsEarned: number | null;
   /** レコード作成日時。 */
-  createdAt: string
+  createdAt: string;
   /**
    * レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull
    * @nullable
    */
-  createdBy: string | null
+  createdBy: string | null;
   /** レコード最終更新日時。 */
-  updatedAt: string
+  updatedAt: string;
   /**
    * レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull
    * @nullable
    */
-  updatedBy: string | null
+  updatedBy: string | null;
 }

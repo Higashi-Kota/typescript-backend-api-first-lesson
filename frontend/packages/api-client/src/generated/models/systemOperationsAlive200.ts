@@ -7,5 +7,5 @@
  */
 
 export type SystemOperationsAlive200 = {
-  alive: boolean
-}
+  alive: boolean;
+};

@@ -1,5 +1,5 @@
 import { isNullOrUndefined } from '@beauty-salon-frontend/utils'
-import { type Result, err, ok } from 'neverthrow'
+import { err, ok, type Result } from 'neverthrow'
 import { z } from 'zod'
 
 export const PasswordSchema = z
@@ -43,7 +43,7 @@ export const PasswordSchema = z
 type Password = z.infer<typeof PasswordSchema>
 
 export const validatePassword = (
-  data: unknown
+  data: unknown,
 ): Result<Password, z.ZodError> => {
   const parsed = PasswordSchema.safeParse(data)
 

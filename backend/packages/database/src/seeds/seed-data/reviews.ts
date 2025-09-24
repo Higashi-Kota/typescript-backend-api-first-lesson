@@ -10,7 +10,7 @@ interface ReviewSeedData {
 
 export async function seedReviews(
   db: PostgresJsDatabase<typeof schema>,
-  data: ReviewSeedData
+  data: ReviewSeedData,
 ): Promise<string[]> {
   const { salonIds, customerIds, completedBookingIds, staffIds } = data
 
@@ -90,7 +90,7 @@ export async function seedReviews(
   // Create reviews for some completed bookings
   const bookingsToReview = completedBookingIds.slice(
     0,
-    Math.min(5, completedBookingIds.length)
+    Math.min(5, completedBookingIds.length),
   )
 
   for (let i = 0; i < bookingsToReview.length; i++) {

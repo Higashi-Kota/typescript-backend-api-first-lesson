@@ -6,10 +6,10 @@
  * OpenAPI spec version: 2.0
  */
 
-export type ModelsDomainErrorFactoryNotFoundType =
-  (typeof ModelsDomainErrorFactoryNotFoundType)[keyof typeof ModelsDomainErrorFactoryNotFoundType]
+export type ModelsDomainErrorFactoryNotFoundType = typeof ModelsDomainErrorFactoryNotFoundType[keyof typeof ModelsDomainErrorFactoryNotFoundType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsDomainErrorFactoryNotFoundType = {
   NOT_FOUND: 'NOT_FOUND',
-} as const
+} as const;

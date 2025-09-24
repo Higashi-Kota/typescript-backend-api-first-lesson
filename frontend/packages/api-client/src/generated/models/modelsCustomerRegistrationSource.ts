@@ -10,9 +10,8 @@
  * 登録経路。不明の場合はnull
  * @nullable
  */
-export type ModelsCustomerRegistrationSource =
-  | (typeof ModelsCustomerRegistrationSource)[keyof typeof ModelsCustomerRegistrationSource]
-  | null
+export type ModelsCustomerRegistrationSource = typeof ModelsCustomerRegistrationSource[keyof typeof ModelsCustomerRegistrationSource] | null;
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsCustomerRegistrationSource = {
@@ -20,4 +19,4 @@ export const ModelsCustomerRegistrationSource = {
   online: 'online',
   phone: 'phone',
   referral: 'referral',
-} as const
+} as const;

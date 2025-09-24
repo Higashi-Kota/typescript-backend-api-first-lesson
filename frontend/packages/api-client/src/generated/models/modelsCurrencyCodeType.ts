@@ -20,8 +20,8 @@ KRW: 韓国ウォン - South Korean Won
 SGD: シンガポールドル - Singapore Dollar
 TWD: 台湾ドル - Taiwan Dollar
  */
-export type ModelsCurrencyCodeType =
-  (typeof ModelsCurrencyCodeType)[keyof typeof ModelsCurrencyCodeType]
+export type ModelsCurrencyCodeType = typeof ModelsCurrencyCodeType[keyof typeof ModelsCurrencyCodeType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsCurrencyCodeType = {
@@ -35,4 +35,4 @@ export const ModelsCurrencyCodeType = {
   KRW: 'KRW',
   SGD: 'SGD',
   TWD: 'TWD',
-} as const
+} as const;

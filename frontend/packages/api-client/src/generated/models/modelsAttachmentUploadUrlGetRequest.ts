@@ -11,14 +11,14 @@
  */
 export interface ModelsAttachmentUploadUrlGetRequest {
   /** アップロード予定のファイル名。 */
-  filename: string
+  filename: string;
   /** アップロード予定ファイルのContent-Type。 */
-  content: string
+  content: string;
   /** アップロード予定ファイルのサイズ（バイト単位）。 */
-  size: number
+  size: number;
   /**
    * ファイルをひも付けるサロンID。全社共通ファイルの場合はnull。
    * @nullable
    */
-  salonId: string | null
+  salonId: string | null;
 }

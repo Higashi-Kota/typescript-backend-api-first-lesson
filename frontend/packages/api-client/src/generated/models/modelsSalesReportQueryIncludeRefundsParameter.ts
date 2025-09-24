@@ -9,4 +9,4 @@
 /**
  * 返金取引を集計に含めるかどうか
  */
-export type ModelsSalesReportQueryIncludeRefundsParameter = boolean
+export type ModelsSalesReportQueryIncludeRefundsParameter = boolean;

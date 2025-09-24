@@ -5,17 +5,17 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsNotificationType } from './modelsNotificationType'
-import type { ModelsReminderTimingType } from './modelsReminderTimingType'
+import type { ModelsNotificationType } from './modelsNotificationType';
+import type { ModelsReminderTimingType } from './modelsReminderTimingType';
 
 /**
  * 顧客への通知チャネルとリマインダー設定をまとめたモデル。
  */
 export interface ModelsNotificationSettings {
   /** 利用を許可する通知チャネルの一覧。 */
-  types: ModelsNotificationType[]
+  types: ModelsNotificationType[];
   /** リマインダー送信タイミングの一覧。 */
-  reminderTimings: ModelsReminderTimingType[]
+  reminderTimings: ModelsReminderTimingType[];
   /** 通知機能全体の有効・無効フラグ。 */
-  enabled: boolean
+  enabled: boolean;
 }

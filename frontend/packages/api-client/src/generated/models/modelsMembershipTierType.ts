@@ -15,8 +15,8 @@ gold: ゴールド会員 - 上級ランク、10%の割引や優先予約等の�
 platinum: プラチナ会員 - 最上級ランク、15%の割引や特別サービス提供
 vip: VIP会員 - 特別会員、完全カスタマイズされた特別待遇を提供
  */
-export type ModelsMembershipTierType =
-  (typeof ModelsMembershipTierType)[keyof typeof ModelsMembershipTierType]
+export type ModelsMembershipTierType = typeof ModelsMembershipTierType[keyof typeof ModelsMembershipTierType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsMembershipTierType = {
@@ -25,4 +25,4 @@ export const ModelsMembershipTierType = {
   gold: 'gold',
   platinum: 'platinum',
   vip: 'vip',
-} as const
+} as const;

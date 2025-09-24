@@ -5,15 +5,15 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { RoleOperationsGetSystemRoles200AnyOfStatus } from './roleOperationsGetSystemRoles200AnyOfStatus'
-import type { ModelsRole } from './modelsRole'
+import type { RoleOperationsGetSystemRoles200AnyOfStatus } from './roleOperationsGetSystemRoles200AnyOfStatus';
+import type { ModelsRole } from './modelsRole';
 
 /**
  * 成功時のデータとステータスを保持するモデル。
  */
 export type RoleOperationsGetSystemRoles200AnyOf = {
   /** 固定値success。成功結果であることを示す。 */
-  status: RoleOperationsGetSystemRoles200AnyOfStatus
+  status: RoleOperationsGetSystemRoles200AnyOfStatus;
   /** 成功時に返却するドメインデータ。 */
-  data: ModelsRole[]
-}
+  data: ModelsRole[];
+};

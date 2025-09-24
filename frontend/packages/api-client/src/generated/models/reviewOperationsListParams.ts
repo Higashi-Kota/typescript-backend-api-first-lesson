@@ -5,26 +5,26 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsSalonId } from './modelsSalonId'
-import type { ModelsCustomerId } from './modelsCustomerId'
-import type { ModelsBookingId } from './modelsBookingId'
-import type { ModelsStaffId } from './modelsStaffId'
-import type { ModelsPaginationParamsLimitParameter } from './modelsPaginationParamsLimitParameter'
-import type { ModelsPaginationParamsOffsetParameter } from './modelsPaginationParamsOffsetParameter'
+import type { ModelsSalonId } from './modelsSalonId';
+import type { ModelsCustomerId } from './modelsCustomerId';
+import type { ModelsBookingId } from './modelsBookingId';
+import type { ModelsStaffId } from './modelsStaffId';
+import type { ModelsPaginationParamsLimitParameter } from './modelsPaginationParamsLimitParameter';
+import type { ModelsPaginationParamsOffsetParameter } from './modelsPaginationParamsOffsetParameter';
 
 export type ReviewOperationsListParams = {
-  salonId?: ModelsSalonId
-  customerId?: ModelsCustomerId
-  bookingId?: ModelsBookingId
-  staffId?: ModelsStaffId
-  minRating?: number
-  isVerified?: boolean
-  /**
-   * 1ページあたりの取得件数。省略時は20件。
-   */
-  limit?: ModelsPaginationParamsLimitParameter
-  /**
-   * 取得開始位置を表すオフセット。省略時は0。
-   */
-  offset?: ModelsPaginationParamsOffsetParameter
-}
+salonId?: ModelsSalonId;
+customerId?: ModelsCustomerId;
+bookingId?: ModelsBookingId;
+staffId?: ModelsStaffId;
+minRating?: number;
+isVerified?: boolean;
+/**
+ * 1ページあたりの取得件数。省略時は20件。
+ */
+limit?: ModelsPaginationParamsLimitParameter;
+/**
+ * 取得開始位置を表すオフセット。省略時は0。
+ */
+offset?: ModelsPaginationParamsOffsetParameter;
+};

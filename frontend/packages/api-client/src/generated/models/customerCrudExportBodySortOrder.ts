@@ -9,11 +9,11 @@
 /**
  * ソート順序。`asc` は昇順、`desc` は降順を表す。
  */
-export type CustomerCrudExportBodySortOrder =
-  (typeof CustomerCrudExportBodySortOrder)[keyof typeof CustomerCrudExportBodySortOrder]
+export type CustomerCrudExportBodySortOrder = typeof CustomerCrudExportBodySortOrder[keyof typeof CustomerCrudExportBodySortOrder];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CustomerCrudExportBodySortOrder = {
   asc: 'asc',
   desc: 'desc',
-} as const
+} as const;

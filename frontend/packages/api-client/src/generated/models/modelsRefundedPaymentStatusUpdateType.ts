@@ -9,10 +9,10 @@
 /**
  * 状態種別（refunded 固定値）
  */
-export type ModelsRefundedPaymentStatusUpdateType =
-  (typeof ModelsRefundedPaymentStatusUpdateType)[keyof typeof ModelsRefundedPaymentStatusUpdateType]
+export type ModelsRefundedPaymentStatusUpdateType = typeof ModelsRefundedPaymentStatusUpdateType[keyof typeof ModelsRefundedPaymentStatusUpdateType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsRefundedPaymentStatusUpdateType = {
   refunded: 'refunded',
-} as const
+} as const;

@@ -5,18 +5,18 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsDecimal } from './modelsDecimal'
+import type { ModelsDecimal } from './modelsDecimal';
 
 /**
  * 季節要因の定義
  */
 export interface ModelsSeason {
   /** 季節名 */
-  name: string
+  name: string;
   /** 開始月 */
-  startMonth: number
+  startMonth: number;
   /** 終了月 */
-  endMonth: number
+  endMonth: number;
   /** 適用倍率 */
-  multiplier: ModelsDecimal
+  multiplier: ModelsDecimal;
 }

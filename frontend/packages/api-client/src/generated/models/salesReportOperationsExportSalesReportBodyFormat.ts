@@ -6,12 +6,12 @@
  * OpenAPI spec version: 2.0
  */
 
-export type SalesReportOperationsExportSalesReportBodyFormat =
-  (typeof SalesReportOperationsExportSalesReportBodyFormat)[keyof typeof SalesReportOperationsExportSalesReportBodyFormat]
+export type SalesReportOperationsExportSalesReportBodyFormat = typeof SalesReportOperationsExportSalesReportBodyFormat[keyof typeof SalesReportOperationsExportSalesReportBodyFormat];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SalesReportOperationsExportSalesReportBodyFormat = {
   csv: 'csv',
   excel: 'excel',
   pdf: 'pdf',
-} as const
+} as const;

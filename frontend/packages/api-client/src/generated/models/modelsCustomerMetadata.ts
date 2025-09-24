@@ -5,48 +5,48 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsCustomerMetadataSource } from './modelsCustomerMetadataSource'
-import type { ModelsCustomerMetadataCustomFields } from './modelsCustomerMetadataCustomFields'
+import type { ModelsCustomerMetadataSource } from './modelsCustomerMetadataSource';
+import type { ModelsCustomerMetadataCustomFields } from './modelsCustomerMetadataCustomFields';
 
 export interface ModelsCustomerMetadata {
   /**
    * 顧客獲得チャネル。不明の場合はnull
    * @nullable
    */
-  source: ModelsCustomerMetadataSource
+  source: ModelsCustomerMetadataSource;
   /**
    * キャンペーン名。キャンペーン経由でない場合はnull
    * @nullable
    */
-  campaign: string | null
+  campaign: string | null;
   /**
    * 分類タグ一覧。タグがない場合はnull
    * @nullable
    */
-  tags: string[] | null
+  tags: string[] | null;
   /**
    * カスタムフィールド。追加情報がない場合はnull
    * @nullable
    */
-  customFields: ModelsCustomerMetadataCustomFields
+  customFields: ModelsCustomerMetadataCustomFields;
   /**
    * 内部メモ一覧。メモがない場合はnull
    * @nullable
    */
-  internalNotes: string[] | null
+  internalNotes: string[] | null;
   /**
    * リスクスコア。評価未実施の場合はnull
    * @nullable
    */
-  riskScore: number | null
+  riskScore: number | null;
   /**
    * 生涯価値。計算未実施の場合はnull
    * @nullable
    */
-  lifetimeValue: number | null
+  lifetimeValue: number | null;
   /**
    * 最終更新者。システム自動更新の場合はnull
    * @nullable
    */
-  lastUpdatedBy: string | null
+  lastUpdatedBy: string | null;
 }

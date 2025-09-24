@@ -7,8 +7,8 @@
  */
 
 export type UserRoleTypeOperationsGetUsersByRole200AnyOfDataDataItem = {
-  userId: string
-  userName?: string
-  assignedAt: string
-  expiresAt?: string
-}
+  userId: string;
+  userName?: string;
+  assignedAt: string;
+  expiresAt?: string;
+};

@@ -11,9 +11,9 @@ export type CustomerOperationsAddLoyaltyPointsBody = {
    * 加算するポイント数
    * @minimum 1
    */
-  points: number
+  points: number;
   /** ポイント加算の理由 */
-  reason: string
+  reason: string;
   /** 関連する参照ID（例: 予約ID） */
-  referenceId?: string
-}
+  referenceId?: string;
+};

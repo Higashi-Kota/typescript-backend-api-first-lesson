@@ -9,10 +9,10 @@
 /**
  * 固定値completed。完了状態であることを示す。
  */
-export type ModelsCompletedBookingStatusType =
-  (typeof ModelsCompletedBookingStatusType)[keyof typeof ModelsCompletedBookingStatusType]
+export type ModelsCompletedBookingStatusType = typeof ModelsCompletedBookingStatusType[keyof typeof ModelsCompletedBookingStatusType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsCompletedBookingStatusType = {
   completed: 'completed',
-} as const
+} as const;

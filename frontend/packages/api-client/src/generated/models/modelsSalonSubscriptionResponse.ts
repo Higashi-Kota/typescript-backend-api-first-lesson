@@ -5,19 +5,19 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsSalonSubscriptionResponseStatus } from './modelsSalonSubscriptionResponseStatus'
+import type { ModelsSalonSubscriptionResponseStatus } from './modelsSalonSubscriptionResponseStatus';
 
 /**
  * サロン通知購読の作成結果を返すレスポンスモデル
  */
 export interface ModelsSalonSubscriptionResponse {
   /** 購読設定を一意に識別するID */
-  subscriptionId: string
+  subscriptionId: string;
   /** 購読状態（常にactiveを返却） */
-  status: ModelsSalonSubscriptionResponseStatus
+  status: ModelsSalonSubscriptionResponseStatus;
   /**
    * 購読の有効期限。無期限の場合はnull
    * @nullable
    */
-  expiresAt: string | null
+  expiresAt: string | null;
 }

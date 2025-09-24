@@ -9,10 +9,10 @@
 /**
  * 固定値error。エラー結果であることを示す。
  */
-export type TreatmentOperationsUpdateTreatment200AnyOfThreeStatus =
-  (typeof TreatmentOperationsUpdateTreatment200AnyOfThreeStatus)[keyof typeof TreatmentOperationsUpdateTreatment200AnyOfThreeStatus]
+export type TreatmentOperationsUpdateTreatment200AnyOfThreeStatus = typeof TreatmentOperationsUpdateTreatment200AnyOfThreeStatus[keyof typeof TreatmentOperationsUpdateTreatment200AnyOfThreeStatus];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TreatmentOperationsUpdateTreatment200AnyOfThreeStatus = {
   error: 'error',
-} as const
+} as const;

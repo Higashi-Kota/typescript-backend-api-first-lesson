@@ -151,7 +151,7 @@ export const DomainErrors = {
   externalService(
     service: string,
     message: string,
-    details?: unknown
+    details?: unknown,
   ): DomainError {
     return {
       type: 'EXTERNAL_SERVICE_ERROR' as DomainErrorType,
@@ -171,7 +171,7 @@ export const DomainErrors = {
  */
 export function toProblemDetails(
   error: DomainError,
-  instance?: string
+  instance?: string,
 ): ProblemDetails {
   const errorCode = ERROR_CODE_MAP[error.type] || '4001'
   const httpStatus = HTTP_STATUS_MAP[error.type] || 500

@@ -9,4 +9,4 @@
 /**
  * サプライヤー発注・仕入れオーダーを識別するブランド付きUUID。
  */
-export type ModelsOrderId = string
+export type ModelsOrderId = string;

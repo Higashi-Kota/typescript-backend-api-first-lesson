@@ -9,4 +9,4 @@
 /**
  * 成功時に返却するドメインデータ。
  */
-export type RoleOperationsDeleteRole200AnyOfData = { [key: string]: unknown }
+export type RoleOperationsDeleteRole200AnyOfData = { [key: string]: unknown };

@@ -5,43 +5,43 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsInventoryId } from './modelsInventoryId'
-import type { ModelsInventoryAlertAlert } from './modelsInventoryAlertAlert'
-import type { ModelsInventoryAlertSeverity } from './modelsInventoryAlertSeverity'
+import type { ModelsInventoryId } from './modelsInventoryId';
+import type { ModelsInventoryAlertAlert } from './modelsInventoryAlertAlert';
+import type { ModelsInventoryAlertSeverity } from './modelsInventoryAlertSeverity';
 
 /**
  * 在庫に関するアラート情報
  */
 export interface ModelsInventoryAlert {
   /** 対象在庫 ID */
-  itemId: ModelsInventoryId
+  itemId: ModelsInventoryId;
   /** 設定した閾値 */
-  threshold: number
+  threshold: number;
   /** 警告発生時の在庫数 */
-  currentStock: number
+  currentStock: number;
   /** 警告が発生した日時 */
-  triggeredAt: string
+  triggeredAt: string;
   /** 関連する在庫 ID */
-  inventoryId: ModelsInventoryId
+  inventoryId: ModelsInventoryId;
   /** アラート種別 */
-  alert: ModelsInventoryAlertAlert
+  alert: ModelsInventoryAlertAlert;
   /** 通知メッセージ */
-  message: string
+  message: string;
   /** 重要度レベル */
-  severity: ModelsInventoryAlertSeverity
+  severity: ModelsInventoryAlertSeverity;
   /**
    * 確認済みかどうか
    * @nullable
    */
-  acknowledged: boolean | null
+  acknowledged: boolean | null;
   /**
    * 確認したスタッフ ID
    * @nullable
    */
-  acknowledgedBy: string | null
+  acknowledgedBy: string | null;
   /**
    * 確認日時
    * @nullable
    */
-  acknowledgedAt: string | null
+  acknowledgedAt: string | null;
 }

@@ -7,8 +7,8 @@
  */
 
 export type AccessControlOperationsGetResourceAccess200AnyOfDataItem = {
-  userId: string
-  userName?: string
-  hasAccess: boolean
-  grantedBy: string[]
-}
+  userId: string;
+  userName?: string;
+  hasAccess: boolean;
+  grantedBy: string[];
+};

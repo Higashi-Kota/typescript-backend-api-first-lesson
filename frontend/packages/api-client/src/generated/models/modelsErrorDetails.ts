@@ -10,4 +10,4 @@
  * デバッグやサポート対応に役立つ追加情報。追加情報がない場合はnull
  * @nullable
  */
-export type ModelsErrorDetails = { [key: string]: unknown } | null
+export type ModelsErrorDetails = {[key: string]: unknown} | null;

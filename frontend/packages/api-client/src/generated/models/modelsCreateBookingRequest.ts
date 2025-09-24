@@ -5,50 +5,50 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsSalonId } from './modelsSalonId'
-import type { ModelsCustomerId } from './modelsCustomerId'
-import type { ModelsReservationId } from './modelsReservationId'
-import type { ModelsCreateBookingRequestWaitlistEntry } from './modelsCreateBookingRequestWaitlistEntry'
-import type { ModelsCreateBookingRequestDeposit } from './modelsCreateBookingRequestDeposit'
-import type { ModelsMoney } from './modelsMoney'
-import type { ModelsCreateBookingRequestPaymentMethod } from './modelsCreateBookingRequestPaymentMethod'
-import type { ModelsCreateBookingRequestMetadata } from './modelsCreateBookingRequestMetadata'
+import type { ModelsSalonId } from './modelsSalonId';
+import type { ModelsCustomerId } from './modelsCustomerId';
+import type { ModelsReservationId } from './modelsReservationId';
+import type { ModelsCreateBookingRequestWaitlistEntry } from './modelsCreateBookingRequestWaitlistEntry';
+import type { ModelsCreateBookingRequestDeposit } from './modelsCreateBookingRequestDeposit';
+import type { ModelsMoney } from './modelsMoney';
+import type { ModelsCreateBookingRequestPaymentMethod } from './modelsCreateBookingRequestPaymentMethod';
+import type { ModelsCreateBookingRequestMetadata } from './modelsCreateBookingRequestMetadata';
 
 /**
  * 予約を新規作成する際のリクエスト。
  */
 export interface ModelsCreateBookingRequest {
   /** 予約対象のサロンID。 */
-  salonId: ModelsSalonId
+  salonId: ModelsSalonId;
   /** 予約を申し込む顧客ID。 */
-  customerId: ModelsCustomerId
+  customerId: ModelsCustomerId;
   /** 紐付ける予約リクエストID一覧。 */
-  reservationIds: ModelsReservationId[]
+  reservationIds: ModelsReservationId[];
   /**
    * ウェイティングリスト情報。ウェイティングリストに登録していない場合はnull。
    * @nullable
    */
-  waitlistEntry: ModelsCreateBookingRequestWaitlistEntry
+  waitlistEntry: ModelsCreateBookingRequestWaitlistEntry;
   /**
    * 預かり金設定。デポジットが不要な場合はnull。
    * @nullable
    */
-  deposit: ModelsCreateBookingRequestDeposit
+  deposit: ModelsCreateBookingRequestDeposit;
   /** 適用する割引額 */
-  discountAmount: ModelsMoney
+  discountAmount: ModelsMoney;
   /**
    * 予定している支払い方法。当日決定または未選択の場合はnull
    * @nullable
    */
-  paymentMethod: ModelsCreateBookingRequestPaymentMethod
+  paymentMethod: ModelsCreateBookingRequestPaymentMethod;
   /**
    * スタッフ向けの備考。備考がない場合はnull。
    * @nullable
    */
-  notes: string | null
+  notes: string | null;
   /**
    * 外部連携や業務用に保持する任意メタデータ。追加情報が不要の場合はnull。
    * @nullable
    */
-  metadata: ModelsCreateBookingRequestMetadata
+  metadata: ModelsCreateBookingRequestMetadata;
 }

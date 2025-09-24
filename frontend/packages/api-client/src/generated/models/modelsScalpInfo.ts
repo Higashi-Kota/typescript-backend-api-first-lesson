@@ -5,16 +5,16 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsScalpConditionType } from './modelsScalpConditionType'
+import type { ModelsScalpConditionType } from './modelsScalpConditionType';
 
 export interface ModelsScalpInfo {
   /** 頭皮の状態。健康状態やケア必要性の分類 */
-  condition: ModelsScalpConditionType
+  condition: ModelsScalpConditionType;
   /** 頭皮の敏感性リスト。特定の刺激への反応 */
-  sensitivities: string[]
+  sensitivities: string[];
   /**
    * 頭皮に関する備考。特記事項がない場合はnull
    * @nullable
    */
-  notes: string | null
+  notes: string | null;
 }

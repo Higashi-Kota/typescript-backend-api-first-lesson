@@ -6,10 +6,10 @@
  * OpenAPI spec version: 2.0
  */
 
-export type ModelsDomainErrorFactoryInternalDefaultCode =
-  (typeof ModelsDomainErrorFactoryInternalDefaultCode)[keyof typeof ModelsDomainErrorFactoryInternalDefaultCode]
+export type ModelsDomainErrorFactoryInternalDefaultCode = typeof ModelsDomainErrorFactoryInternalDefaultCode[keyof typeof ModelsDomainErrorFactoryInternalDefaultCode];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsDomainErrorFactoryInternalDefaultCode = {
   INTERNAL_SERVER_ERROR: 'INTERNAL_SERVER_ERROR',
-} as const
+} as const;

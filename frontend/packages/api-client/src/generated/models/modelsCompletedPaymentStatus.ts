@@ -5,22 +5,22 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsCompletedPaymentStatusType } from './modelsCompletedPaymentStatusType'
-import type { ModelsMoney } from './modelsMoney'
+import type { ModelsCompletedPaymentStatusType } from './modelsCompletedPaymentStatusType';
+import type { ModelsMoney } from './modelsMoney';
 
 /**
  * 支払い完了状態の詳細
  */
 export interface ModelsCompletedPaymentStatus {
   /** 状態種別（completed 固定値） */
-  type: ModelsCompletedPaymentStatusType
+  type: ModelsCompletedPaymentStatusType;
   /** 支払い完了日時 */
-  completedAt: string
+  completedAt: string;
   /** 実際に決済された金額 */
-  paidAmount: ModelsMoney
+  paidAmount: ModelsMoney;
   /**
    * 発行されたレシート番号
    * @nullable
    */
-  receiptNumber: string | null
+  receiptNumber: string | null;
 }

@@ -9,8 +9,8 @@
 /**
  * 在庫操作区分（入庫/出庫/調整/移動）
  */
-export type ModelsStockMovementType =
-  (typeof ModelsStockMovementType)[keyof typeof ModelsStockMovementType]
+export type ModelsStockMovementType = typeof ModelsStockMovementType[keyof typeof ModelsStockMovementType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsStockMovementType = {
@@ -18,4 +18,4 @@ export const ModelsStockMovementType = {
   out: 'out',
   adjustment: 'adjustment',
   transfer: 'transfer',
-} as const
+} as const;

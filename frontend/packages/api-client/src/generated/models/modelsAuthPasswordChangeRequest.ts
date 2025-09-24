@@ -11,7 +11,7 @@
  */
 export interface ModelsAuthPasswordChangeRequest {
   /** 本人確認のための現在パスワード。 */
-  currentPassword: string
+  currentPassword: string;
   /** 変更後の新しいパスワード。 */
-  newPassword: string
+  newPassword: string;
 }

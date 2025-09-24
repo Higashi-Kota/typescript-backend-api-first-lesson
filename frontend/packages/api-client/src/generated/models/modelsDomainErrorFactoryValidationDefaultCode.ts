@@ -6,10 +6,10 @@
  * OpenAPI spec version: 2.0
  */
 
-export type ModelsDomainErrorFactoryValidationDefaultCode =
-  (typeof ModelsDomainErrorFactoryValidationDefaultCode)[keyof typeof ModelsDomainErrorFactoryValidationDefaultCode]
+export type ModelsDomainErrorFactoryValidationDefaultCode = typeof ModelsDomainErrorFactoryValidationDefaultCode[keyof typeof ModelsDomainErrorFactoryValidationDefaultCode];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsDomainErrorFactoryValidationDefaultCode = {
   VALIDATION_FAILED: 'VALIDATION_FAILED',
-} as const
+} as const;

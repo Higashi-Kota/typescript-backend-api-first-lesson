@@ -7,5 +7,5 @@
  */
 
 export type ReviewOperationsReport200 = {
-  reportId: string
-}
+  reportId: string;
+};

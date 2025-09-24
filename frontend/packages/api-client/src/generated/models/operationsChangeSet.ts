@@ -8,9 +8,9 @@
 
 export interface OperationsChangeSet {
   /** Field that was changed */
-  field: string
+  field: string;
   /** Previous value */
-  oldValue?: unknown
+  oldValue?: unknown;
   /** New value */
-  newValue?: unknown
+  newValue?: unknown;
 }

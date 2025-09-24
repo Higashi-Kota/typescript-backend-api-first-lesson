@@ -25,59 +25,59 @@ const mockData = [
 
 function Dashboard() {
   return (
-    <div className="dashboard">
+    <div className='dashboard'>
       <h1>Dashboard</h1>
-      <div className="dashboard-stats">
-        <Card className="stat-card">
+      <div className='dashboard-stats'>
+        <Card className='stat-card'>
           <h3>Total Appointments</h3>
-          <p className="stat-value">165</p>
-          <p className="stat-change positive">+12% from last week</p>
+          <p className='stat-value'>165</p>
+          <p className='stat-change positive'>+12% from last week</p>
         </Card>
-        <Card className="stat-card">
+        <Card className='stat-card'>
           <h3>Total Revenue</h3>
-          <p className="stat-value">$21,700</p>
-          <p className="stat-change positive">+8% from last week</p>
+          <p className='stat-value'>$21,700</p>
+          <p className='stat-change positive'>+8% from last week</p>
         </Card>
-        <Card className="stat-card">
+        <Card className='stat-card'>
           <h3>Active Customers</h3>
-          <p className="stat-value">342</p>
-          <p className="stat-change positive">+5% from last week</p>
+          <p className='stat-value'>342</p>
+          <p className='stat-change positive'>+5% from last week</p>
         </Card>
-        <Card className="stat-card">
+        <Card className='stat-card'>
           <h3>Staff Utilization</h3>
-          <p className="stat-value">87%</p>
-          <p className="stat-change negative">-2% from last week</p>
+          <p className='stat-value'>87%</p>
+          <p className='stat-change negative'>-2% from last week</p>
         </Card>
       </div>
 
-      <div className="charts">
-        <Card className="chart-card">
+      <div className='charts'>
+        <Card className='chart-card'>
           <h3>Weekly Appointments</h3>
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width='100%' height={300}>
             <LineChart data={mockData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
+              <CartesianGrid strokeDasharray='3 3' />
+              <XAxis dataKey='name' />
               <YAxis />
               <Tooltip />
               <Line
-                type="monotone"
-                dataKey="appointments"
-                stroke="#e91e63"
+                type='monotone'
+                dataKey='appointments'
+                stroke='#e91e63'
                 strokeWidth={2}
               />
             </LineChart>
           </ResponsiveContainer>
         </Card>
 
-        <Card className="chart-card">
+        <Card className='chart-card'>
           <h3>Revenue by Day</h3>
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width='100%' height={300}>
             <BarChart data={mockData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
+              <CartesianGrid strokeDasharray='3 3' />
+              <XAxis dataKey='name' />
               <YAxis />
               <Tooltip />
-              <Bar dataKey="revenue" fill="#9c27b0" />
+              <Bar dataKey='revenue' fill='#9c27b0' />
             </BarChart>
           </ResponsiveContainer>
         </Card>
@@ -88,10 +88,10 @@ function Dashboard() {
 
 function Staff() {
   return (
-    <div className="staff">
+    <div className='staff'>
       <h1>Staff Management</h1>
-      <Button variant="primary">Add New Staff</Button>
-      <div className="staff-list">
+      <Button variant='primary'>Add New Staff</Button>
+      <div className='staff-list'>
         <Card>
           <h3>Sarah Johnson</h3>
           <p>Senior Stylist</p>
@@ -114,10 +114,10 @@ function Staff() {
 
 function Services() {
   return (
-    <div className="services">
+    <div className='services'>
       <h1>Service Management</h1>
-      <Button variant="primary">Add New Service</Button>
-      <div className="service-list">
+      <Button variant='primary'>Add New Service</Button>
+      <div className='service-list'>
         <Card>
           <h3>Hair Cut & Style</h3>
           <p>Duration: 60 min</p>
@@ -140,14 +140,14 @@ function Services() {
 
 function Appointments() {
   return (
-    <div className="appointments">
+    <div className='appointments'>
       <h1>Appointment Management</h1>
-      <div className="appointment-filters">
-        <Button variant="secondary">Today</Button>
-        <Button variant="secondary">This Week</Button>
-        <Button variant="secondary">This Month</Button>
+      <div className='appointment-filters'>
+        <Button variant='secondary'>Today</Button>
+        <Button variant='secondary'>This Week</Button>
+        <Button variant='secondary'>This Month</Button>
       </div>
-      <div className="appointment-list">
+      <div className='appointment-list'>
         <Card>
           <h3>Jane Doe - Hair Cut & Style</h3>
           <p>Today, 2:00 PM - 3:00 PM</p>
@@ -167,46 +167,46 @@ function Appointments() {
 
 function App() {
   return (
-    <div className="app">
-      <aside className="app-sidebar">
-        <div className="logo">
+    <div className='app'>
+      <aside className='app-sidebar'>
+        <div className='logo'>
           <h2>Admin Panel</h2>
         </div>
         <nav>
-          <Link to="/" className="nav-link">
+          <Link to='/' className='nav-link'>
             <span>Dashboard</span>
           </Link>
-          <Link to="/appointments" className="nav-link">
+          <Link to='/appointments' className='nav-link'>
             <span>Appointments</span>
           </Link>
-          <Link to="/staff" className="nav-link">
+          <Link to='/staff' className='nav-link'>
             <span>Staff</span>
           </Link>
-          <Link to="/services" className="nav-link">
+          <Link to='/services' className='nav-link'>
             <span>Services</span>
           </Link>
         </nav>
-        <div className="sidebar-footer">
+        <div className='sidebar-footer'>
           <p>Environment: {import.meta.env.VITE_MODE}</p>
         </div>
       </aside>
 
-      <div className="app-content">
-        <header className="app-header">
+      <div className='app-content'>
+        <header className='app-header'>
           <h1>{import.meta.env.VITE_APP_TITLE}</h1>
-          <div className="header-actions">
-            <Button variant="secondary">Profile</Button>
-            <Button variant="secondary">Logout</Button>
+          <div className='header-actions'>
+            <Button variant='secondary'>Profile</Button>
+            <Button variant='secondary'>Logout</Button>
           </div>
         </header>
 
-        <main className="app-main">
+        <main className='app-main'>
           <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/appointments" element={<Appointments />} />
-            <Route path="/staff" element={<Staff />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/tailwind-test" element={<TailwindTest />} />
+            <Route path='/' element={<Dashboard />} />
+            <Route path='/appointments' element={<Appointments />} />
+            <Route path='/staff' element={<Staff />} />
+            <Route path='/services' element={<Services />} />
+            <Route path='/tailwind-test' element={<TailwindTest />} />
           </Routes>
         </main>
       </div>

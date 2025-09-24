@@ -9,8 +9,8 @@
 /**
  * 例外の種別（休暇・病欠など）
  */
-export type ModelsScheduleExceptionType =
-  (typeof ModelsScheduleExceptionType)[keyof typeof ModelsScheduleExceptionType]
+export type ModelsScheduleExceptionType = typeof ModelsScheduleExceptionType[keyof typeof ModelsScheduleExceptionType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsScheduleExceptionType = {
@@ -19,4 +19,4 @@ export const ModelsScheduleExceptionType = {
   vacation: 'vacation',
   training: 'training',
   other: 'other',
-} as const
+} as const;

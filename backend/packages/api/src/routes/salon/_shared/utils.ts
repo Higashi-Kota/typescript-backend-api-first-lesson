@@ -1,5 +1,5 @@
-import { toProblemDetails } from '@beauty-salon-backend/domain'
 import type { DomainError } from '@beauty-salon-backend/domain'
+import { toProblemDetails } from '@beauty-salon-backend/domain'
 import type { Response } from 'express'
 import type { ErrorResponse } from './types'
 
@@ -9,7 +9,7 @@ import type { ErrorResponse } from './types'
  */
 export const handleDomainError = (
   res: Response<ErrorResponse>,
-  error: DomainError
+  error: DomainError,
 ): Response<ErrorResponse> => {
   const problemDetails = toProblemDetails(error)
   return res.status(problemDetails.status).json(problemDetails)
@@ -23,7 +23,7 @@ export const handleDomainError = (
  */
 export const cursorToPage = (
   cursor: string | undefined,
-  limit: number
+  limit: number,
 ): number => {
   if (!cursor) {
     return 1

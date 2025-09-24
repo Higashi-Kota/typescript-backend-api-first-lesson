@@ -5,15 +5,15 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsDomainErrorFactoryValidation } from './modelsDomainErrorFactoryValidation'
-import type { ModelsDomainErrorFactoryNotFound } from './modelsDomainErrorFactoryNotFound'
-import type { ModelsDomainErrorFactoryAlreadyExists } from './modelsDomainErrorFactoryAlreadyExists'
-import type { ModelsDomainErrorFactoryBusinessRule } from './modelsDomainErrorFactoryBusinessRule'
-import type { ModelsDomainErrorFactoryUnauthorized } from './modelsDomainErrorFactoryUnauthorized'
-import type { ModelsDomainErrorFactoryForbidden } from './modelsDomainErrorFactoryForbidden'
-import type { ModelsDomainErrorFactoryInternal } from './modelsDomainErrorFactoryInternal'
-import type { ModelsDomainErrorFactoryDatabase } from './modelsDomainErrorFactoryDatabase'
-import type { ModelsDomainErrorFactoryExternalService } from './modelsDomainErrorFactoryExternalService'
+import type { ModelsDomainErrorFactoryValidation } from './modelsDomainErrorFactoryValidation';
+import type { ModelsDomainErrorFactoryNotFound } from './modelsDomainErrorFactoryNotFound';
+import type { ModelsDomainErrorFactoryAlreadyExists } from './modelsDomainErrorFactoryAlreadyExists';
+import type { ModelsDomainErrorFactoryBusinessRule } from './modelsDomainErrorFactoryBusinessRule';
+import type { ModelsDomainErrorFactoryUnauthorized } from './modelsDomainErrorFactoryUnauthorized';
+import type { ModelsDomainErrorFactoryForbidden } from './modelsDomainErrorFactoryForbidden';
+import type { ModelsDomainErrorFactoryInternal } from './modelsDomainErrorFactoryInternal';
+import type { ModelsDomainErrorFactoryDatabase } from './modelsDomainErrorFactoryDatabase';
+import type { ModelsDomainErrorFactoryExternalService } from './modelsDomainErrorFactoryExternalService';
 
 /**
  * ドメインエラー生成の標準設定モデル。
@@ -21,21 +21,21 @@ import type { ModelsDomainErrorFactoryExternalService } from './modelsDomainErro
  */
 export interface ModelsDomainErrorFactory {
   /** 検証エラーを生成するための設定。 */
-  validation: ModelsDomainErrorFactoryValidation
+  validation: ModelsDomainErrorFactoryValidation;
   /** リソース未検出エラーを生成するための設定。 */
-  notFound: ModelsDomainErrorFactoryNotFound
+  notFound: ModelsDomainErrorFactoryNotFound;
   /** 重複登録エラーを生成するための設定。 */
-  alreadyExists: ModelsDomainErrorFactoryAlreadyExists
+  alreadyExists: ModelsDomainErrorFactoryAlreadyExists;
   /** ビジネスルール違反エラーを生成するための設定。 */
-  businessRule: ModelsDomainErrorFactoryBusinessRule
+  businessRule: ModelsDomainErrorFactoryBusinessRule;
   /** 未認証エラーを生成するための設定。 */
-  unauthorized: ModelsDomainErrorFactoryUnauthorized
+  unauthorized: ModelsDomainErrorFactoryUnauthorized;
   /** 権限不足エラーを生成するための設定。 */
-  forbidden: ModelsDomainErrorFactoryForbidden
+  forbidden: ModelsDomainErrorFactoryForbidden;
   /** 内部サーバーエラーを生成するための設定。 */
-  internal: ModelsDomainErrorFactoryInternal
+  internal: ModelsDomainErrorFactoryInternal;
   /** データベースエラーを生成するための設定。 */
-  database: ModelsDomainErrorFactoryDatabase
+  database: ModelsDomainErrorFactoryDatabase;
   /** 外部サービス連携エラーを生成するための設定。 */
-  externalService: ModelsDomainErrorFactoryExternalService
+  externalService: ModelsDomainErrorFactoryExternalService;
 }

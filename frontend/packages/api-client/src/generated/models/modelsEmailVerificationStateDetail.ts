@@ -5,32 +5,32 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsEmailVerificationStateType } from './modelsEmailVerificationStateType'
+import type { ModelsEmailVerificationStateType } from './modelsEmailVerificationStateType';
 
 /**
  * メールアドレス確認フローの進行状況を保持するモデル。
  */
 export interface ModelsEmailVerificationStateDetail {
   /** 現在の確認状態区分。 */
-  type: ModelsEmailVerificationStateType
+  type: ModelsEmailVerificationStateType;
   /**
    * 確認完了日時。メールアドレスが未確認の場合はnull。
    * @nullable
    */
-  verifiedAt: string | null
+  verifiedAt: string | null;
   /**
    * 確認メールに含めるトークン。確認メールが未送信の場合はnull。
    * @nullable
    */
-  token: string | null
+  token: string | null;
   /**
    * トークンの有効期限。トークンが発行されていない場合はnull。
    * @nullable
    */
-  expiresAt: string | null
+  expiresAt: string | null;
   /**
    * 確認メールを送信した日時。メール未送信の場合はnull。
    * @nullable
    */
-  sentAt: string | null
+  sentAt: string | null;
 }

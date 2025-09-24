@@ -9,10 +9,10 @@
 /**
  * 固定値success。成功結果であることを示す。
  */
-export type PaymentOperationsGetPayment200AnyOfStatus =
-  (typeof PaymentOperationsGetPayment200AnyOfStatus)[keyof typeof PaymentOperationsGetPayment200AnyOfStatus]
+export type PaymentOperationsGetPayment200AnyOfStatus = typeof PaymentOperationsGetPayment200AnyOfStatus[keyof typeof PaymentOperationsGetPayment200AnyOfStatus];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PaymentOperationsGetPayment200AnyOfStatus = {
   success: 'success',
-} as const
+} as const;

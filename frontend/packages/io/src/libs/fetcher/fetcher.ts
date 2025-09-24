@@ -97,7 +97,7 @@ const buildURL = (url: string, params?: Record<string, any>): string => {
 const fetchWithTimeout = async (
   url: string,
   options: RequestInit,
-  timeoutMs: number
+  timeoutMs: number,
 ): Promise<Response> => {
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs)
@@ -129,7 +129,7 @@ class HTTPError extends Error {
   constructor(
     public status: number,
     public statusText: string,
-    public response: Response
+    public response: Response,
   ) {
     super(`HTTP Error: ${status} ${statusText}`)
     this.name = 'HTTPError'
@@ -139,23 +139,23 @@ class HTTPError extends Error {
 // orval互換のオーバーロード: 第一引数がstring（URL）の場合
 export function customInstance<T>(
   url: string,
-  options?: RequestInit
+  options?: RequestInit,
 ): CancellablePromise<T>
 // 既存のインターフェース: 第一引数がFetchRequestConfigの場合
 export function customInstance<T>(
   config: FetchRequestConfig,
-  options?: FetchRequestConfig
+  options?: FetchRequestConfig,
 ): CancellablePromise<T>
 // 実装
 export function customInstance<T>(
   urlOrConfig: string | FetchRequestConfig,
-  options?: RequestInit | FetchRequestConfig
+  options?: RequestInit | FetchRequestConfig,
 ): CancellablePromise<T> {
   const controller = new AbortController()
 
   // RequestInitをFetchRequestConfigに変換する関数
   const convertRequestInit = (
-    init?: RequestInit | FetchRequestConfig
+    init?: RequestInit | FetchRequestConfig,
   ): FetchRequestConfig => {
     if (init === undefined) {
       return {}
@@ -279,7 +279,7 @@ export function customInstance<T>(
         return response.text()
       }
       return response.blob()
-    }
+    },
   ) as CancellablePromise<T>
 
   // キャンセル機能を追加

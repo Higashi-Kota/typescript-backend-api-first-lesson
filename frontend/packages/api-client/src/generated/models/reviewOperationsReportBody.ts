@@ -7,6 +7,6 @@
  */
 
 export type ReviewOperationsReportBody = {
-  reason: string
-  details?: string
-}
+  reason: string;
+  details?: string;
+};

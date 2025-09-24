@@ -9,4 +9,4 @@
 /**
  * 集計対象のサロン ID
  */
-export type ModelsSalesReportQuerySalonIdParameter = string
+export type ModelsSalesReportQuerySalonIdParameter = string;

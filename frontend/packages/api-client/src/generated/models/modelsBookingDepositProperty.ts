@@ -5,10 +5,10 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsBookingDeposit } from './modelsBookingDeposit'
+import type { ModelsBookingDeposit } from './modelsBookingDeposit';
 
 /**
  * 預かり金に関する情報。デポジットが不要な場合はnull。
  * @nullable
  */
-export type ModelsBookingDepositProperty = ModelsBookingDeposit | null
+export type ModelsBookingDepositProperty = ModelsBookingDeposit | null;

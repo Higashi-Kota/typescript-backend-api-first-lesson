@@ -20,8 +20,8 @@ nail: ネイル - マニキュア、ジェルネイル等の爪装飾技術
 eyelash: まつげ - まつげエクステ、まつげパーマ等のまつげ装飾技術
 other: その他 - 上記に分類されない施術
  */
-export type ModelsTreatmentType =
-  (typeof ModelsTreatmentType)[keyof typeof ModelsTreatmentType]
+export type ModelsTreatmentType = typeof ModelsTreatmentType[keyof typeof ModelsTreatmentType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsTreatmentType = {
@@ -35,4 +35,4 @@ export const ModelsTreatmentType = {
   nail: 'nail',
   eyelash: 'eyelash',
   other: 'other',
-} as const
+} as const;

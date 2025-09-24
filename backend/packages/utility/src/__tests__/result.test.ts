@@ -119,7 +119,7 @@ describe('Result', () => {
     it('should return error from flatMap function', () => {
       const result = Result.success(5)
       const chained = Result.flatMap(result, (_x) =>
-        Result.error('operation failed')
+        Result.error('operation failed'),
       )
 
       expect(chained).toEqual({
@@ -173,7 +173,7 @@ describe('Result', () => {
       const result = Result.error('error message')
 
       expect(() => Result.unwrap(result)).toThrow(
-        'Attempted to unwrap an error result'
+        'Attempted to unwrap an error result',
       )
     })
   })
@@ -199,7 +199,7 @@ describe('Result', () => {
       const result = Result.success(10)
       const final = Result.flatMap(
         Result.map(result, (x) => x * 2),
-        (x) => (x > 15 ? Result.success(x) : Result.error('Too small'))
+        (x) => (x > 15 ? Result.success(x) : Result.error('Too small')),
       )
 
       expect(final).toEqual({
@@ -212,7 +212,7 @@ describe('Result', () => {
       const result = Result.success(5)
       const final = Result.flatMap(
         Result.map(result, (x) => x * 2),
-        (x) => (x > 15 ? Result.success(x) : Result.error('Too small'))
+        (x) => (x > 15 ? Result.success(x) : Result.error('Too small')),
       )
 
       expect(final).toEqual({

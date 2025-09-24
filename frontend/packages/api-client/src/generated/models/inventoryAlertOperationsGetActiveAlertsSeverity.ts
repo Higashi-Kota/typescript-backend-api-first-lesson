@@ -6,12 +6,12 @@
  * OpenAPI spec version: 2.0
  */
 
-export type InventoryAlertOperationsGetActiveAlertsSeverity =
-  (typeof InventoryAlertOperationsGetActiveAlertsSeverity)[keyof typeof InventoryAlertOperationsGetActiveAlertsSeverity]
+export type InventoryAlertOperationsGetActiveAlertsSeverity = typeof InventoryAlertOperationsGetActiveAlertsSeverity[keyof typeof InventoryAlertOperationsGetActiveAlertsSeverity];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const InventoryAlertOperationsGetActiveAlertsSeverity = {
   info: 'info',
   warning: 'warning',
   critical: 'critical',
-} as const
+} as const;

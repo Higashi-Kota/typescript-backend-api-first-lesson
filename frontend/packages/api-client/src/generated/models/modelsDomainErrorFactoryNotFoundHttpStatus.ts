@@ -6,10 +6,10 @@
  * OpenAPI spec version: 2.0
  */
 
-export type ModelsDomainErrorFactoryNotFoundHttpStatus =
-  (typeof ModelsDomainErrorFactoryNotFoundHttpStatus)[keyof typeof ModelsDomainErrorFactoryNotFoundHttpStatus]
+export type ModelsDomainErrorFactoryNotFoundHttpStatus = typeof ModelsDomainErrorFactoryNotFoundHttpStatus[keyof typeof ModelsDomainErrorFactoryNotFoundHttpStatus];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsDomainErrorFactoryNotFoundHttpStatus = {
   NUMBER_404: 404,
-} as const
+} as const;

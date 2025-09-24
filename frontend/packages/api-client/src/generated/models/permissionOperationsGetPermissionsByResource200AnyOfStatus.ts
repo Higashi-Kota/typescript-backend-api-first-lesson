@@ -9,10 +9,10 @@
 /**
  * 固定値success。成功結果であることを示す。
  */
-export type PermissionOperationsGetPermissionsByResource200AnyOfStatus =
-  (typeof PermissionOperationsGetPermissionsByResource200AnyOfStatus)[keyof typeof PermissionOperationsGetPermissionsByResource200AnyOfStatus]
+export type PermissionOperationsGetPermissionsByResource200AnyOfStatus = typeof PermissionOperationsGetPermissionsByResource200AnyOfStatus[keyof typeof PermissionOperationsGetPermissionsByResource200AnyOfStatus];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PermissionOperationsGetPermissionsByResource200AnyOfStatus = {
   success: 'success',
-} as const
+} as const;

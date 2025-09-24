@@ -5,24 +5,24 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsPendingBookingStatusUpdateType } from './modelsPendingBookingStatusUpdateType'
+import type { ModelsPendingBookingStatusUpdateType } from './modelsPendingBookingStatusUpdateType';
 
 /**
  * 予約が確認待ち段階にある場合の状態情報。
  */
 export interface ModelsPendingBookingStatusUpdate {
   /** 固定値pending。保留状態であることを示す。 */
-  type?: ModelsPendingBookingStatusUpdateType
+  type?: ModelsPendingBookingStatusUpdateType;
   /** 顧客から予約リクエストを受け付けた日時。 */
-  requestedAt?: string
+  requestedAt?: string;
   /**
    * 保留状態の有効期限。無期限の場合はnull。
    * @nullable
    */
-  holdExpiresAt?: string | null
+  holdExpiresAt?: string | null;
   /**
    * 仮割り当てされたスタッフID。スタッフが未確定の場合はnull。
    * @nullable
    */
-  assignedStaffId?: string | null
+  assignedStaffId?: string | null;
 }

@@ -7,6 +7,6 @@
  */
 
 export type PermissionOperationsListPermissionsParams = {
-  resource?: string
-  action?: string
-}
+resource?: string;
+action?: string;
+};

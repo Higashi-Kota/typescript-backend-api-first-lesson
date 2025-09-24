@@ -5,72 +5,72 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsMedicalChartId } from './modelsMedicalChartId'
-import type { ModelsCustomerId } from './modelsCustomerId'
-import type { ModelsPreviousTreatment } from './modelsPreviousTreatment'
+import type { ModelsMedicalChartId } from './modelsMedicalChartId';
+import type { ModelsCustomerId } from './modelsCustomerId';
+import type { ModelsPreviousTreatment } from './modelsPreviousTreatment';
 
 /**
  * 顧客ごとのカルテ情報
  */
 export interface ModelsMedicalChart {
   /** カルテ ID */
-  id: ModelsMedicalChartId
+  id: ModelsMedicalChartId;
   /** 対象顧客 ID */
-  customerId: ModelsCustomerId
+  customerId: ModelsCustomerId;
   /**
    * アレルギー・敏感情報 - アレルギーがない顧客の場合はnull
    * @nullable
    */
-  allergies: string[] | null
+  allergies: string[] | null;
   /**
    * 頭皮状態のメモ - 頭皮に問題がない健康な状態の場合はnull
    * @nullable
    */
-  scalpCondition: string | null
+  scalpCondition: string | null;
   /**
    * 毛髪状態のメモ - 毛髪に特筆すべき問題がない場合はnull
    * @nullable
    */
-  hairCondition: string | null
+  hairCondition: string | null;
   /**
    * 過去に実施したケミカル施術履歴 - 初回来店やケミカル施術経験がない顧客の場合はnull
    * @nullable
    */
-  previousTreatments: ModelsPreviousTreatment[] | null
+  previousTreatments: ModelsPreviousTreatment[] | null;
   /**
    * 注意が必要な持病・体調情報 - 健康上の問題がない顧客の場合はnull
    * @nullable
    */
-  medicalConditions: string | null
+  medicalConditions: string | null;
   /**
    * 好みの商材・ブランド - 特定の好みがない顧客の場合はnull
    * @nullable
    */
-  preferredProducts: string[] | null
+  preferredProducts: string[] | null;
   /**
    * 避けるべき商材 - 特に避けるべき商材がない顧客の場合はnull
    * @nullable
    */
-  avoidProducts: string[] | null
+  avoidProducts: string[] | null;
   /**
    * 自由記述メモ - 追加情報がない標準的なカルテの場合はnull
    * @nullable
    */
-  notes: string | null
+  notes: string | null;
   /** 最終更新日時 */
-  lastUpdated: string
+  lastUpdated: string;
   /** レコード作成日時。 */
-  createdAt: string
+  createdAt: string;
   /**
    * レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull
    * @nullable
    */
-  createdBy: string | null
+  createdBy: string | null;
   /** レコード最終更新日時。 */
-  updatedAt: string
+  updatedAt: string;
   /**
    * レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull
    * @nullable
    */
-  updatedBy: string | null
+  updatedBy: string | null;
 }

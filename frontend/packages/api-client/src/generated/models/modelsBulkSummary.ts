@@ -12,11 +12,11 @@
  */
 export interface ModelsBulkSummary {
   /** リクエストに含まれていたアイテム総数。 */
-  total: number
+  total: number;
   /** 成功したアイテム件数。 */
-  succeeded: number
+  succeeded: number;
   /** 失敗したアイテム件数。 */
-  failed: number
+  failed: number;
   /** 処理に要した時間 (ミリ秒)。バッチ最適化の指標。 */
-  duration: number
+  duration: number;
 }

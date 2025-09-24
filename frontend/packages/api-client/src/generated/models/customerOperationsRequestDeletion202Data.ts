@@ -11,9 +11,9 @@
  */
 export type CustomerOperationsRequestDeletion202Data = {
   /** 削除リクエストID */
-  requestId: string
+  requestId: string;
   /** 予定される削除日 */
-  scheduledDate: string
+  scheduledDate: string;
   /** 猶予期間（日数） */
-  gracePeriodDays: number
-}
+  gracePeriodDays: number;
+};

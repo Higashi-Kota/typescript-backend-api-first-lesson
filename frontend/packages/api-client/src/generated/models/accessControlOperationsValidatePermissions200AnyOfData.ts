@@ -10,7 +10,7 @@
  * 成功時に返却するドメインデータ。
  */
 export type AccessControlOperationsValidatePermissions200AnyOfData = {
-  isValid: boolean
-  missingPermissions: string[]
-  extraPermissions: string[]
-}
+  isValid: boolean;
+  missingPermissions: string[];
+  extraPermissions: string[];
+};

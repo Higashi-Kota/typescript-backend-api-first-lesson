@@ -125,7 +125,7 @@ async function executeDrizzleMigrations(sql: postgres.Sql) {
 
   if (!fs.existsSync(drizzleMigrationsDir)) {
     console.log(
-      '📁 No drizzle migrations directory found, skipping Drizzle migrations'
+      '📁 No drizzle migrations directory found, skipping Drizzle migrations',
     )
     return
   }

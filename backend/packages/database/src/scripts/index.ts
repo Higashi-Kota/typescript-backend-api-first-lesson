@@ -82,7 +82,7 @@ export function getTableStatements(): string[] {
     (stmt) =>
       stmt.includes('CREATE TABLE') ||
       stmt.includes('ALTER TABLE') ||
-      stmt.includes('CREATE INDEX')
+      stmt.includes('CREATE INDEX'),
   )
 }
 

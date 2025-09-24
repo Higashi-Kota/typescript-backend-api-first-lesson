@@ -11,7 +11,7 @@
  */
 export interface ModelsDateRange {
   /** 期間の開始日時。 */
-  startDate: string
+  startDate: string;
   /** 期間の終了日時。 */
-  endDate: string
+  endDate: string;
 }

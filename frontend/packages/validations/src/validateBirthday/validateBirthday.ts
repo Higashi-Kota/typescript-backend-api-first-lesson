@@ -1,4 +1,4 @@
-import { type Result, err, ok } from 'neverthrow'
+import { err, ok, type Result } from 'neverthrow'
 import { z } from 'zod'
 
 // 生年月日のスキーマ定義
@@ -12,7 +12,7 @@ type Birthday = z.infer<typeof BirthdaySchema>
  * @returns 検証結果
  */
 export const validateBirthday = (
-  data: unknown
+  data: unknown,
 ): Result<Birthday, z.ZodError> => {
   const parsed = BirthdaySchema.safeParse(data)
 

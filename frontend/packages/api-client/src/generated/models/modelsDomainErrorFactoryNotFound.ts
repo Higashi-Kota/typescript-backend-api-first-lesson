@@ -5,15 +5,15 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsDomainErrorFactoryNotFoundType } from './modelsDomainErrorFactoryNotFoundType'
-import type { ModelsDomainErrorFactoryNotFoundDefaultCode } from './modelsDomainErrorFactoryNotFoundDefaultCode'
-import type { ModelsDomainErrorFactoryNotFoundHttpStatus } from './modelsDomainErrorFactoryNotFoundHttpStatus'
+import type { ModelsDomainErrorFactoryNotFoundType } from './modelsDomainErrorFactoryNotFoundType';
+import type { ModelsDomainErrorFactoryNotFoundDefaultCode } from './modelsDomainErrorFactoryNotFoundDefaultCode';
+import type { ModelsDomainErrorFactoryNotFoundHttpStatus } from './modelsDomainErrorFactoryNotFoundHttpStatus';
 
 /**
  * リソース未検出エラーを生成するための設定。
  */
 export type ModelsDomainErrorFactoryNotFound = {
-  type: ModelsDomainErrorFactoryNotFoundType
-  defaultCode: ModelsDomainErrorFactoryNotFoundDefaultCode
-  httpStatus: ModelsDomainErrorFactoryNotFoundHttpStatus
-}
+  type: ModelsDomainErrorFactoryNotFoundType;
+  defaultCode: ModelsDomainErrorFactoryNotFoundDefaultCode;
+  httpStatus: ModelsDomainErrorFactoryNotFoundHttpStatus;
+};

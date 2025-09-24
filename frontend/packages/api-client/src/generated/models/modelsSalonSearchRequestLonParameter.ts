@@ -9,4 +9,4 @@
 /**
  * 距離計算に使用する基準経度
  */
-export type ModelsSalonSearchRequestLonParameter = number
+export type ModelsSalonSearchRequestLonParameter = number;

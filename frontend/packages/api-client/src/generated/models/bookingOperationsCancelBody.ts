@@ -7,6 +7,6 @@
  */
 
 export type BookingOperationsCancelBody = {
-  reason?: string
-  cancelReservations?: boolean
-}
+  reason?: string;
+  cancelReservations?: boolean;
+};

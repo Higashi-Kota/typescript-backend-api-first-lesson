@@ -5,37 +5,37 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsAllergyType } from './modelsAllergyType'
-import type { ModelsAllergySeverityType } from './modelsAllergySeverityType'
+import type { ModelsAllergyType } from './modelsAllergyType';
+import type { ModelsAllergySeverityType } from './modelsAllergySeverityType';
 
 export interface ModelsAllergyInfo {
   /** アレルギーのタイプ分類。物質の種類を示す */
-  type: ModelsAllergyType
+  type: ModelsAllergyType;
   /**
    * アレルギー物質一覧。該当なしの場合はnull
    * @nullable
    */
-  substances: string[] | null
+  substances: string[] | null;
   /**
    * アレルギー香料一覧。該当なしの場合はnull
    * @nullable
    */
-  fragrances: string[] | null
+  fragrances: string[] | null;
   /**
    * アレルギー金属一覧。該当なしの場合はnull
    * @nullable
    */
-  metals: string[] | null
+  metals: string[] | null;
   /**
    * アレルギー植物一覧。該当なしの場合はnull
    * @nullable
    */
-  plants: string[] | null
+  plants: string[] | null;
   /**
    * アレルギー詳細説明。追加情報がない場合はnull
    * @nullable
    */
-  description: string | null
+  description: string | null;
   /** アレルギーの重篤度。反応の強さと対応レベル */
-  severity: ModelsAllergySeverityType
+  severity: ModelsAllergySeverityType;
 }

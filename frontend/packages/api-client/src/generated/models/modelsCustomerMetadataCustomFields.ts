@@ -10,6 +10,4 @@
  * カスタムフィールド。追加情報がない場合はnull
  * @nullable
  */
-export type ModelsCustomerMetadataCustomFields = {
-  [key: string]: unknown
-} | null
+export type ModelsCustomerMetadataCustomFields = {[key: string]: unknown} | null;

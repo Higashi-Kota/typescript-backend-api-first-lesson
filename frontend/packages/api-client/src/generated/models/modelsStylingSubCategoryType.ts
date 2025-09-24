@@ -15,8 +15,8 @@ braiding: 編み込み - 三つ編み、編み込みアレンジ等
 extensions: エクステンション - ヘアエクステの装着サービス
 event_styling: イベントスタイリング - 結婚式、パーティー等の特別なスタイリング
  */
-export type ModelsStylingSubCategoryType =
-  (typeof ModelsStylingSubCategoryType)[keyof typeof ModelsStylingSubCategoryType]
+export type ModelsStylingSubCategoryType = typeof ModelsStylingSubCategoryType[keyof typeof ModelsStylingSubCategoryType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsStylingSubCategoryType = {
@@ -25,4 +25,4 @@ export const ModelsStylingSubCategoryType = {
   braiding: 'braiding',
   extensions: 'extensions',
   event_styling: 'event_styling',
-} as const
+} as const;

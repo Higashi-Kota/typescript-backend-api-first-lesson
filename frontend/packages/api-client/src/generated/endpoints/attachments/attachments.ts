@@ -5,7 +5,10 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import { useMutation, useQuery } from '@tanstack/react-query'
+import {
+  useMutation,
+  useQuery
+} from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -18,8 +21,8 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult,
-} from '@tanstack/react-query'
+  UseQueryResult
+} from '@tanstack/react-query';
 
 import type {
   AttachmentOperationsCreateShareLink200,
@@ -35,16 +38,19 @@ import type {
   AttachmentOperationsUploadFile200,
   ModelsAttachmentCreateRequest,
   ModelsAttachmentUploadUrlGetRequest,
-  ModelsShareLinkCreateRequest,
-} from '../../models'
+  ModelsShareLinkCreateRequest
+} from '../../models';
 
-import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher'
+import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher';
 
-type AwaitedInput<T> = PromiseLike<T> | T
+type AwaitedInput<T> = PromiseLike<T> | T;
 
-type Awaited<O> = O extends AwaitedInput<infer T> ? T : never
+      type Awaited<O> = O extends AwaitedInput<infer T> ? T : never;
 
-type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
+
 
 /**
  * サロンまたは顧客単位で登録済みの添付ファイルを一覧し、施術履歴の確認や資料整理に活用します。
@@ -53,194 +59,108 @@ export type attachmentOperationsListResponse200 = {
   data: AttachmentOperationsList200
   status: 200
 }
+    
+export type attachmentOperationsListResponseComposite = attachmentOperationsListResponse200;
+    
+export type attachmentOperationsListResponse = attachmentOperationsListResponseComposite & {
+  headers: Headers;
+}
 
-export type attachmentOperationsListResponseComposite =
-  attachmentOperationsListResponse200
-
-export type attachmentOperationsListResponse =
-  attachmentOperationsListResponseComposite & {
-    headers: Headers
-  }
-
-export const getAttachmentOperationsListUrl = (
-  params?: AttachmentOperationsListParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getAttachmentOperationsListUrl = (params?: AttachmentOperationsListParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v1/attachments?${stringifiedParams}`
-    : `/api/v1/attachments`
+  return stringifiedParams.length > 0 ? `/api/v1/attachments?${stringifiedParams}` : `/api/v1/attachments`
 }
 
-export const attachmentOperationsList = async (
-  params?: AttachmentOperationsListParams,
-  options?: RequestInit
-): Promise<attachmentOperationsListResponse> => {
-  return customInstance<attachmentOperationsListResponse>(
-    getAttachmentOperationsListUrl(params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getAttachmentOperationsListQueryKey = (
-  params?: AttachmentOperationsListParams
-) => {
-  return [`/api/v1/attachments`, ...(params ? [params] : [])] as const
-}
-
-export const getAttachmentOperationsListQueryOptions = <
-  TData = Awaited<ReturnType<typeof attachmentOperationsList>>,
-  TError = unknown,
->(
-  params?: AttachmentOperationsListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof attachmentOperationsList>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const attachmentOperationsList = async (params?: AttachmentOperationsListParams, options?: RequestInit): Promise<attachmentOperationsListResponse> => {
+  
+  return customInstance<attachmentOperationsListResponse>(getAttachmentOperationsListUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getAttachmentOperationsListQueryKey = (params?: AttachmentOperationsListParams,) => {
+    return [`/api/v1/attachments`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getAttachmentOperationsListQueryOptions = <TData = Awaited<ReturnType<typeof attachmentOperationsList>>, TError = unknown>(params?: AttachmentOperationsListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof attachmentOperationsList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ?? getAttachmentOperationsListQueryKey(params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof attachmentOperationsList>>
-  > = ({ signal }) =>
-    attachmentOperationsList(params, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getAttachmentOperationsListQueryKey(params);
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof attachmentOperationsList>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof attachmentOperationsList>>> = ({ signal }) => attachmentOperationsList(params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof attachmentOperationsList>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type AttachmentOperationsListQueryResult = NonNullable<
-  Awaited<ReturnType<typeof attachmentOperationsList>>
->
+export type AttachmentOperationsListQueryResult = NonNullable<Awaited<ReturnType<typeof attachmentOperationsList>>>
 export type AttachmentOperationsListQueryError = unknown
 
-export function useAttachmentOperationsList<
-  TData = Awaited<ReturnType<typeof attachmentOperationsList>>,
-  TError = unknown,
->(
-  params: undefined | AttachmentOperationsListParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof attachmentOperationsList>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useAttachmentOperationsList<TData = Awaited<ReturnType<typeof attachmentOperationsList>>, TError = unknown>(
+ params: undefined |  AttachmentOperationsListParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof attachmentOperationsList>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof attachmentOperationsList>>,
           TError,
           Awaited<ReturnType<typeof attachmentOperationsList>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useAttachmentOperationsList<
-  TData = Awaited<ReturnType<typeof attachmentOperationsList>>,
-  TError = unknown,
->(
-  params?: AttachmentOperationsListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof attachmentOperationsList>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useAttachmentOperationsList<TData = Awaited<ReturnType<typeof attachmentOperationsList>>, TError = unknown>(
+ params?: AttachmentOperationsListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof attachmentOperationsList>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof attachmentOperationsList>>,
           TError,
           Awaited<ReturnType<typeof attachmentOperationsList>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useAttachmentOperationsList<
-  TData = Awaited<ReturnType<typeof attachmentOperationsList>>,
-  TError = unknown,
->(
-  params?: AttachmentOperationsListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof attachmentOperationsList>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useAttachmentOperationsList<TData = Awaited<ReturnType<typeof attachmentOperationsList>>, TError = unknown>(
+ params?: AttachmentOperationsListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof attachmentOperationsList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useAttachmentOperationsList<TData = Awaited<ReturnType<typeof attachmentOperationsList>>, TError = unknown>(
+ params?: AttachmentOperationsListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof attachmentOperationsList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getAttachmentOperationsListQueryOptions(params,options)
+
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
 
-export function useAttachmentOperationsList<
-  TData = Awaited<ReturnType<typeof attachmentOperationsList>>,
-  TError = unknown,
->(
-  params?: AttachmentOperationsListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof attachmentOperationsList>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getAttachmentOperationsListQueryOptions(params, options)
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-
-  query.queryKey = queryOptions.queryKey
-
-  return query
-}
 
 /**
  * 不要になった共有リンクを失効させ、アクセス制御を適切に保ちます。
@@ -254,501 +174,337 @@ export type attachmentOperationsDeleteShareLinkResponse204 = {
   data: null
   status: 204
 }
+    
+export type attachmentOperationsDeleteShareLinkResponseComposite = attachmentOperationsDeleteShareLinkResponse200 | attachmentOperationsDeleteShareLinkResponse204;
+    
+export type attachmentOperationsDeleteShareLinkResponse = attachmentOperationsDeleteShareLinkResponseComposite & {
+  headers: Headers;
+}
 
-export type attachmentOperationsDeleteShareLinkResponseComposite =
-  | attachmentOperationsDeleteShareLinkResponse200
-  | attachmentOperationsDeleteShareLinkResponse204
+export const getAttachmentOperationsDeleteShareLinkUrl = (shareLinkId: string,) => {
 
-export type attachmentOperationsDeleteShareLinkResponse =
-  attachmentOperationsDeleteShareLinkResponseComposite & {
-    headers: Headers
-  }
 
-export const getAttachmentOperationsDeleteShareLinkUrl = (
-  shareLinkId: string
-) => {
+  
+
   return `/api/v1/attachments/share-links/${shareLinkId}`
 }
 
-export const attachmentOperationsDeleteShareLink = async (
-  shareLinkId: string,
-  options?: RequestInit
-): Promise<attachmentOperationsDeleteShareLinkResponse> => {
-  return customInstance<attachmentOperationsDeleteShareLinkResponse>(
-    getAttachmentOperationsDeleteShareLinkUrl(shareLinkId),
-    {
-      ...options,
-      method: 'DELETE',
-    }
-  )
-}
-
-export const getAttachmentOperationsDeleteShareLinkMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof attachmentOperationsDeleteShareLink>>,
-    TError,
-    { shareLinkId: string },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof attachmentOperationsDeleteShareLink>>,
-  TError,
-  { shareLinkId: string },
-  TContext
-> => {
-  const mutationKey = ['attachmentOperationsDeleteShareLink']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof attachmentOperationsDeleteShareLink>>,
-    { shareLinkId: string }
-  > = (props) => {
-    const { shareLinkId } = props ?? {}
-
-    return attachmentOperationsDeleteShareLink(shareLinkId, requestOptions)
+export const attachmentOperationsDeleteShareLink = async (shareLinkId: string, options?: RequestInit): Promise<attachmentOperationsDeleteShareLinkResponse> => {
+  
+  return customInstance<attachmentOperationsDeleteShareLinkResponse>(getAttachmentOperationsDeleteShareLinkUrl(shareLinkId),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type AttachmentOperationsDeleteShareLinkMutationResult = NonNullable<
-  Awaited<ReturnType<typeof attachmentOperationsDeleteShareLink>>
->
 
-export type AttachmentOperationsDeleteShareLinkMutationError = unknown
 
-export const useAttachmentOperationsDeleteShareLink = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof attachmentOperationsDeleteShareLink>>,
-      TError,
-      { shareLinkId: string },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof attachmentOperationsDeleteShareLink>>,
-  TError,
-  { shareLinkId: string },
-  TContext
-> => {
-  const mutationOptions =
-    getAttachmentOperationsDeleteShareLinkMutationOptions(options)
+export const getAttachmentOperationsDeleteShareLinkMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof attachmentOperationsDeleteShareLink>>, TError,{shareLinkId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof attachmentOperationsDeleteShareLink>>, TError,{shareLinkId: string}, TContext> => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+const mutationKey = ['attachmentOperationsDeleteShareLink'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof attachmentOperationsDeleteShareLink>>, {shareLinkId: string}> = (props) => {
+          const {shareLinkId} = props ?? {};
+
+          return  attachmentOperationsDeleteShareLink(shareLinkId,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AttachmentOperationsDeleteShareLinkMutationResult = NonNullable<Awaited<ReturnType<typeof attachmentOperationsDeleteShareLink>>>
+    
+    export type AttachmentOperationsDeleteShareLinkMutationError = unknown
+
+    export const useAttachmentOperationsDeleteShareLink = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof attachmentOperationsDeleteShareLink>>, TError,{shareLinkId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof attachmentOperationsDeleteShareLink>>,
+        TError,
+        {shareLinkId: string},
+        TContext
+      > => {
+
+      const mutationOptions = getAttachmentOperationsDeleteShareLinkMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * スタッフが管理画面からファイル本体を直接アップロードし、予約記録や顧客カルテに紐づけるための操作です。
  */
 export type attachmentOperationsUploadFileResponse200 = {
   data: AttachmentOperationsUploadFile200
   status: 200
 }
-
-export type attachmentOperationsUploadFileResponseComposite =
-  attachmentOperationsUploadFileResponse200
-
-export type attachmentOperationsUploadFileResponse =
-  attachmentOperationsUploadFileResponseComposite & {
-    headers: Headers
-  }
+    
+export type attachmentOperationsUploadFileResponseComposite = attachmentOperationsUploadFileResponse200;
+    
+export type attachmentOperationsUploadFileResponse = attachmentOperationsUploadFileResponseComposite & {
+  headers: Headers;
+}
 
 export const getAttachmentOperationsUploadFileUrl = () => {
+
+
+  
+
   return `/api/v1/attachments/upload`
 }
 
-export const attachmentOperationsUploadFile = async (
-  modelsAttachmentCreateRequest: ModelsAttachmentCreateRequest,
-  options?: RequestInit
-): Promise<attachmentOperationsUploadFileResponse> => {
-  return customInstance<attachmentOperationsUploadFileResponse>(
-    getAttachmentOperationsUploadFileUrl(),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsAttachmentCreateRequest),
-    }
-  )
-}
-
-export const getAttachmentOperationsUploadFileMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof attachmentOperationsUploadFile>>,
-    TError,
-    { data: ModelsAttachmentCreateRequest },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof attachmentOperationsUploadFile>>,
-  TError,
-  { data: ModelsAttachmentCreateRequest },
-  TContext
-> => {
-  const mutationKey = ['attachmentOperationsUploadFile']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof attachmentOperationsUploadFile>>,
-    { data: ModelsAttachmentCreateRequest }
-  > = (props) => {
-    const { data } = props ?? {}
-
-    return attachmentOperationsUploadFile(data, requestOptions)
+export const attachmentOperationsUploadFile = async (modelsAttachmentCreateRequest: ModelsAttachmentCreateRequest, options?: RequestInit): Promise<attachmentOperationsUploadFileResponse> => {
+  
+  return customInstance<attachmentOperationsUploadFileResponse>(getAttachmentOperationsUploadFileUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      modelsAttachmentCreateRequest,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type AttachmentOperationsUploadFileMutationResult = NonNullable<
-  Awaited<ReturnType<typeof attachmentOperationsUploadFile>>
->
-export type AttachmentOperationsUploadFileMutationBody =
-  ModelsAttachmentCreateRequest
-export type AttachmentOperationsUploadFileMutationError = unknown
 
-export const useAttachmentOperationsUploadFile = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof attachmentOperationsUploadFile>>,
-      TError,
-      { data: ModelsAttachmentCreateRequest },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof attachmentOperationsUploadFile>>,
-  TError,
-  { data: ModelsAttachmentCreateRequest },
-  TContext
-> => {
-  const mutationOptions =
-    getAttachmentOperationsUploadFileMutationOptions(options)
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+export const getAttachmentOperationsUploadFileMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof attachmentOperationsUploadFile>>, TError,{data: ModelsAttachmentCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof attachmentOperationsUploadFile>>, TError,{data: ModelsAttachmentCreateRequest}, TContext> => {
+
+const mutationKey = ['attachmentOperationsUploadFile'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof attachmentOperationsUploadFile>>, {data: ModelsAttachmentCreateRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  attachmentOperationsUploadFile(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AttachmentOperationsUploadFileMutationResult = NonNullable<Awaited<ReturnType<typeof attachmentOperationsUploadFile>>>
+    export type AttachmentOperationsUploadFileMutationBody = ModelsAttachmentCreateRequest
+    export type AttachmentOperationsUploadFileMutationError = unknown
+
+    export const useAttachmentOperationsUploadFile = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof attachmentOperationsUploadFile>>, TError,{data: ModelsAttachmentCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof attachmentOperationsUploadFile>>,
+        TError,
+        {data: ModelsAttachmentCreateRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getAttachmentOperationsUploadFileMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 顧客やスタッフがブラウザから直接クラウドストレージへアップロードできるよう、短時間だけ有効な署名付きURLを発行します。
  */
 export type attachmentOperationsGetUploadUrlResponse200 = {
   data: AttachmentOperationsGetUploadUrl200
   status: 200
 }
-
-export type attachmentOperationsGetUploadUrlResponseComposite =
-  attachmentOperationsGetUploadUrlResponse200
-
-export type attachmentOperationsGetUploadUrlResponse =
-  attachmentOperationsGetUploadUrlResponseComposite & {
-    headers: Headers
-  }
+    
+export type attachmentOperationsGetUploadUrlResponseComposite = attachmentOperationsGetUploadUrlResponse200;
+    
+export type attachmentOperationsGetUploadUrlResponse = attachmentOperationsGetUploadUrlResponseComposite & {
+  headers: Headers;
+}
 
 export const getAttachmentOperationsGetUploadUrlUrl = () => {
+
+
+  
+
   return `/api/v1/attachments/upload-url`
 }
 
-export const attachmentOperationsGetUploadUrl = async (
-  modelsAttachmentUploadUrlGetRequest: ModelsAttachmentUploadUrlGetRequest,
-  options?: RequestInit
-): Promise<attachmentOperationsGetUploadUrlResponse> => {
-  return customInstance<attachmentOperationsGetUploadUrlResponse>(
-    getAttachmentOperationsGetUploadUrlUrl(),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsAttachmentUploadUrlGetRequest),
-    }
-  )
-}
-
-export const getAttachmentOperationsGetUploadUrlMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof attachmentOperationsGetUploadUrl>>,
-    TError,
-    { data: ModelsAttachmentUploadUrlGetRequest },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof attachmentOperationsGetUploadUrl>>,
-  TError,
-  { data: ModelsAttachmentUploadUrlGetRequest },
-  TContext
-> => {
-  const mutationKey = ['attachmentOperationsGetUploadUrl']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof attachmentOperationsGetUploadUrl>>,
-    { data: ModelsAttachmentUploadUrlGetRequest }
-  > = (props) => {
-    const { data } = props ?? {}
-
-    return attachmentOperationsGetUploadUrl(data, requestOptions)
+export const attachmentOperationsGetUploadUrl = async (modelsAttachmentUploadUrlGetRequest: ModelsAttachmentUploadUrlGetRequest, options?: RequestInit): Promise<attachmentOperationsGetUploadUrlResponse> => {
+  
+  return customInstance<attachmentOperationsGetUploadUrlResponse>(getAttachmentOperationsGetUploadUrlUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      modelsAttachmentUploadUrlGetRequest,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type AttachmentOperationsGetUploadUrlMutationResult = NonNullable<
-  Awaited<ReturnType<typeof attachmentOperationsGetUploadUrl>>
->
-export type AttachmentOperationsGetUploadUrlMutationBody =
-  ModelsAttachmentUploadUrlGetRequest
-export type AttachmentOperationsGetUploadUrlMutationError = unknown
 
-export const useAttachmentOperationsGetUploadUrl = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof attachmentOperationsGetUploadUrl>>,
-      TError,
-      { data: ModelsAttachmentUploadUrlGetRequest },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof attachmentOperationsGetUploadUrl>>,
-  TError,
-  { data: ModelsAttachmentUploadUrlGetRequest },
-  TContext
-> => {
-  const mutationOptions =
-    getAttachmentOperationsGetUploadUrlMutationOptions(options)
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+export const getAttachmentOperationsGetUploadUrlMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof attachmentOperationsGetUploadUrl>>, TError,{data: ModelsAttachmentUploadUrlGetRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof attachmentOperationsGetUploadUrl>>, TError,{data: ModelsAttachmentUploadUrlGetRequest}, TContext> => {
+
+const mutationKey = ['attachmentOperationsGetUploadUrl'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof attachmentOperationsGetUploadUrl>>, {data: ModelsAttachmentUploadUrlGetRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  attachmentOperationsGetUploadUrl(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AttachmentOperationsGetUploadUrlMutationResult = NonNullable<Awaited<ReturnType<typeof attachmentOperationsGetUploadUrl>>>
+    export type AttachmentOperationsGetUploadUrlMutationBody = ModelsAttachmentUploadUrlGetRequest
+    export type AttachmentOperationsGetUploadUrlMutationError = unknown
+
+    export const useAttachmentOperationsGetUploadUrl = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof attachmentOperationsGetUploadUrl>>, TError,{data: ModelsAttachmentUploadUrlGetRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof attachmentOperationsGetUploadUrl>>,
+        TError,
+        {data: ModelsAttachmentUploadUrlGetRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getAttachmentOperationsGetUploadUrlMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 指定した添付ファイルの詳細情報を取得し、プレビュー表示や関連予約の確認に用います。
  */
 export type attachmentOperationsGetResponse200 = {
   data: AttachmentOperationsGet200
   status: 200
 }
+    
+export type attachmentOperationsGetResponseComposite = attachmentOperationsGetResponse200;
+    
+export type attachmentOperationsGetResponse = attachmentOperationsGetResponseComposite & {
+  headers: Headers;
+}
 
-export type attachmentOperationsGetResponseComposite =
-  attachmentOperationsGetResponse200
+export const getAttachmentOperationsGetUrl = (attachmentId: string,) => {
 
-export type attachmentOperationsGetResponse =
-  attachmentOperationsGetResponseComposite & {
-    headers: Headers
-  }
 
-export const getAttachmentOperationsGetUrl = (attachmentId: string) => {
+  
+
   return `/api/v1/attachments/${attachmentId}`
 }
 
-export const attachmentOperationsGet = async (
-  attachmentId: string,
-  options?: RequestInit
-): Promise<attachmentOperationsGetResponse> => {
-  return customInstance<attachmentOperationsGetResponse>(
-    getAttachmentOperationsGetUrl(attachmentId),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getAttachmentOperationsGetQueryKey = (attachmentId?: string) => {
-  return [`/api/v1/attachments/${attachmentId}`] as const
-}
-
-export const getAttachmentOperationsGetQueryOptions = <
-  TData = Awaited<ReturnType<typeof attachmentOperationsGet>>,
-  TError = unknown,
->(
-  attachmentId: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof attachmentOperationsGet>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const attachmentOperationsGet = async (attachmentId: string, options?: RequestInit): Promise<attachmentOperationsGetResponse> => {
+  
+  return customInstance<attachmentOperationsGetResponse>(getAttachmentOperationsGetUrl(attachmentId),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getAttachmentOperationsGetQueryKey = (attachmentId?: string,) => {
+    return [`/api/v1/attachments/${attachmentId}`] as const;
+    }
+
+    
+export const getAttachmentOperationsGetQueryOptions = <TData = Awaited<ReturnType<typeof attachmentOperationsGet>>, TError = unknown>(attachmentId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof attachmentOperationsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ?? getAttachmentOperationsGetQueryKey(attachmentId)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof attachmentOperationsGet>>
-  > = ({ signal }) =>
-    attachmentOperationsGet(attachmentId, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getAttachmentOperationsGetQueryKey(attachmentId);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!attachmentId,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof attachmentOperationsGet>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof attachmentOperationsGet>>> = ({ signal }) => attachmentOperationsGet(attachmentId, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(attachmentId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof attachmentOperationsGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type AttachmentOperationsGetQueryResult = NonNullable<
-  Awaited<ReturnType<typeof attachmentOperationsGet>>
->
+export type AttachmentOperationsGetQueryResult = NonNullable<Awaited<ReturnType<typeof attachmentOperationsGet>>>
 export type AttachmentOperationsGetQueryError = unknown
 
-export function useAttachmentOperationsGet<
-  TData = Awaited<ReturnType<typeof attachmentOperationsGet>>,
-  TError = unknown,
->(
-  attachmentId: string,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof attachmentOperationsGet>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useAttachmentOperationsGet<TData = Awaited<ReturnType<typeof attachmentOperationsGet>>, TError = unknown>(
+ attachmentId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof attachmentOperationsGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof attachmentOperationsGet>>,
           TError,
           Awaited<ReturnType<typeof attachmentOperationsGet>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useAttachmentOperationsGet<
-  TData = Awaited<ReturnType<typeof attachmentOperationsGet>>,
-  TError = unknown,
->(
-  attachmentId: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof attachmentOperationsGet>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useAttachmentOperationsGet<TData = Awaited<ReturnType<typeof attachmentOperationsGet>>, TError = unknown>(
+ attachmentId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof attachmentOperationsGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof attachmentOperationsGet>>,
           TError,
           Awaited<ReturnType<typeof attachmentOperationsGet>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useAttachmentOperationsGet<
-  TData = Awaited<ReturnType<typeof attachmentOperationsGet>>,
-  TError = unknown,
->(
-  attachmentId: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof attachmentOperationsGet>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useAttachmentOperationsGet<TData = Awaited<ReturnType<typeof attachmentOperationsGet>>, TError = unknown>(
+ attachmentId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof attachmentOperationsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useAttachmentOperationsGet<TData = Awaited<ReturnType<typeof attachmentOperationsGet>>, TError = unknown>(
+ attachmentId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof attachmentOperationsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getAttachmentOperationsGetQueryOptions(attachmentId,options)
+
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
 
-export function useAttachmentOperationsGet<
-  TData = Awaited<ReturnType<typeof attachmentOperationsGet>>,
-  TError = unknown,
->(
-  attachmentId: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof attachmentOperationsGet>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getAttachmentOperationsGetQueryOptions(
-    attachmentId,
-    options
-  )
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-
-  query.queryKey = queryOptions.queryKey
-
-  return query
-}
 
 /**
  * 不要になった添付ファイルを削除し、ストレージ容量の最適化と情報漏えいリスクの低減を図ります。
@@ -762,320 +518,194 @@ export type attachmentOperationsDeleteResponse204 = {
   data: null
   status: 204
 }
+    
+export type attachmentOperationsDeleteResponseComposite = attachmentOperationsDeleteResponse200 | attachmentOperationsDeleteResponse204;
+    
+export type attachmentOperationsDeleteResponse = attachmentOperationsDeleteResponseComposite & {
+  headers: Headers;
+}
 
-export type attachmentOperationsDeleteResponseComposite =
-  | attachmentOperationsDeleteResponse200
-  | attachmentOperationsDeleteResponse204
+export const getAttachmentOperationsDeleteUrl = (attachmentId: string,) => {
 
-export type attachmentOperationsDeleteResponse =
-  attachmentOperationsDeleteResponseComposite & {
-    headers: Headers
-  }
 
-export const getAttachmentOperationsDeleteUrl = (attachmentId: string) => {
+  
+
   return `/api/v1/attachments/${attachmentId}`
 }
 
-export const attachmentOperationsDelete = async (
-  attachmentId: string,
-  options?: RequestInit
-): Promise<attachmentOperationsDeleteResponse> => {
-  return customInstance<attachmentOperationsDeleteResponse>(
-    getAttachmentOperationsDeleteUrl(attachmentId),
-    {
-      ...options,
-      method: 'DELETE',
-    }
-  )
-}
-
-export const getAttachmentOperationsDeleteMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof attachmentOperationsDelete>>,
-    TError,
-    { attachmentId: string },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof attachmentOperationsDelete>>,
-  TError,
-  { attachmentId: string },
-  TContext
-> => {
-  const mutationKey = ['attachmentOperationsDelete']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof attachmentOperationsDelete>>,
-    { attachmentId: string }
-  > = (props) => {
-    const { attachmentId } = props ?? {}
-
-    return attachmentOperationsDelete(attachmentId, requestOptions)
+export const attachmentOperationsDelete = async (attachmentId: string, options?: RequestInit): Promise<attachmentOperationsDeleteResponse> => {
+  
+  return customInstance<attachmentOperationsDeleteResponse>(getAttachmentOperationsDeleteUrl(attachmentId),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type AttachmentOperationsDeleteMutationResult = NonNullable<
-  Awaited<ReturnType<typeof attachmentOperationsDelete>>
->
 
-export type AttachmentOperationsDeleteMutationError = unknown
 
-export const useAttachmentOperationsDelete = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof attachmentOperationsDelete>>,
-      TError,
-      { attachmentId: string },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof attachmentOperationsDelete>>,
-  TError,
-  { attachmentId: string },
-  TContext
-> => {
-  const mutationOptions = getAttachmentOperationsDeleteMutationOptions(options)
+export const getAttachmentOperationsDeleteMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof attachmentOperationsDelete>>, TError,{attachmentId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof attachmentOperationsDelete>>, TError,{attachmentId: string}, TContext> => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+const mutationKey = ['attachmentOperationsDelete'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof attachmentOperationsDelete>>, {attachmentId: string}> = (props) => {
+          const {attachmentId} = props ?? {};
+
+          return  attachmentOperationsDelete(attachmentId,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AttachmentOperationsDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof attachmentOperationsDelete>>>
+    
+    export type AttachmentOperationsDeleteMutationError = unknown
+
+    export const useAttachmentOperationsDelete = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof attachmentOperationsDelete>>, TError,{attachmentId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof attachmentOperationsDelete>>,
+        TError,
+        {attachmentId: string},
+        TContext
+      > => {
+
+      const mutationOptions = getAttachmentOperationsDeleteMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 閲覧権限を持つ利用者がファイルを安全に取得できるよう、短時間有効なダウンロードURLを発行します。
  */
 export type attachmentOperationsGetDownloadUrlResponse200 = {
   data: AttachmentOperationsGetDownloadUrl200
   status: 200
 }
+    
+export type attachmentOperationsGetDownloadUrlResponseComposite = attachmentOperationsGetDownloadUrlResponse200;
+    
+export type attachmentOperationsGetDownloadUrlResponse = attachmentOperationsGetDownloadUrlResponseComposite & {
+  headers: Headers;
+}
 
-export type attachmentOperationsGetDownloadUrlResponseComposite =
-  attachmentOperationsGetDownloadUrlResponse200
-
-export type attachmentOperationsGetDownloadUrlResponse =
-  attachmentOperationsGetDownloadUrlResponseComposite & {
-    headers: Headers
-  }
-
-export const getAttachmentOperationsGetDownloadUrlUrl = (
-  attachmentId: string,
-  params?: AttachmentOperationsGetDownloadUrlParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getAttachmentOperationsGetDownloadUrlUrl = (attachmentId: string,
+    params?: AttachmentOperationsGetDownloadUrlParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v1/attachments/${attachmentId}/download-url?${stringifiedParams}`
-    : `/api/v1/attachments/${attachmentId}/download-url`
+  return stringifiedParams.length > 0 ? `/api/v1/attachments/${attachmentId}/download-url?${stringifiedParams}` : `/api/v1/attachments/${attachmentId}/download-url`
 }
 
-export const attachmentOperationsGetDownloadUrl = async (
-  attachmentId: string,
-  params?: AttachmentOperationsGetDownloadUrlParams,
-  options?: RequestInit
-): Promise<attachmentOperationsGetDownloadUrlResponse> => {
-  return customInstance<attachmentOperationsGetDownloadUrlResponse>(
-    getAttachmentOperationsGetDownloadUrlUrl(attachmentId, params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getAttachmentOperationsGetDownloadUrlQueryKey = (
-  attachmentId?: string,
-  params?: AttachmentOperationsGetDownloadUrlParams
-) => {
-  return [
-    `/api/v1/attachments/${attachmentId}/download-url`,
-    ...(params ? [params] : []),
-  ] as const
-}
-
-export const getAttachmentOperationsGetDownloadUrlQueryOptions = <
-  TData = Awaited<ReturnType<typeof attachmentOperationsGetDownloadUrl>>,
-  TError = unknown,
->(
-  attachmentId: string,
-  params?: AttachmentOperationsGetDownloadUrlParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof attachmentOperationsGetDownloadUrl>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const attachmentOperationsGetDownloadUrl = async (attachmentId: string,
+    params?: AttachmentOperationsGetDownloadUrlParams, options?: RequestInit): Promise<attachmentOperationsGetDownloadUrlResponse> => {
+  
+  return customInstance<attachmentOperationsGetDownloadUrlResponse>(getAttachmentOperationsGetDownloadUrlUrl(attachmentId,params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getAttachmentOperationsGetDownloadUrlQueryKey = (attachmentId?: string,
+    params?: AttachmentOperationsGetDownloadUrlParams,) => {
+    return [`/api/v1/attachments/${attachmentId}/download-url`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getAttachmentOperationsGetDownloadUrlQueryOptions = <TData = Awaited<ReturnType<typeof attachmentOperationsGetDownloadUrl>>, TError = unknown>(attachmentId: string,
+    params?: AttachmentOperationsGetDownloadUrlParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof attachmentOperationsGetDownloadUrl>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ??
-    getAttachmentOperationsGetDownloadUrlQueryKey(attachmentId, params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof attachmentOperationsGetDownloadUrl>>
-  > = ({ signal }) =>
-    attachmentOperationsGetDownloadUrl(attachmentId, params, {
-      signal,
-      ...requestOptions,
-    })
+  const queryKey =  queryOptions?.queryKey ?? getAttachmentOperationsGetDownloadUrlQueryKey(attachmentId,params);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!attachmentId,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof attachmentOperationsGetDownloadUrl>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof attachmentOperationsGetDownloadUrl>>> = ({ signal }) => attachmentOperationsGetDownloadUrl(attachmentId,params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(attachmentId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof attachmentOperationsGetDownloadUrl>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type AttachmentOperationsGetDownloadUrlQueryResult = NonNullable<
-  Awaited<ReturnType<typeof attachmentOperationsGetDownloadUrl>>
->
+export type AttachmentOperationsGetDownloadUrlQueryResult = NonNullable<Awaited<ReturnType<typeof attachmentOperationsGetDownloadUrl>>>
 export type AttachmentOperationsGetDownloadUrlQueryError = unknown
 
-export function useAttachmentOperationsGetDownloadUrl<
-  TData = Awaited<ReturnType<typeof attachmentOperationsGetDownloadUrl>>,
-  TError = unknown,
->(
-  attachmentId: string,
-  params: undefined | AttachmentOperationsGetDownloadUrlParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof attachmentOperationsGetDownloadUrl>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useAttachmentOperationsGetDownloadUrl<TData = Awaited<ReturnType<typeof attachmentOperationsGetDownloadUrl>>, TError = unknown>(
+ attachmentId: string,
+    params: undefined |  AttachmentOperationsGetDownloadUrlParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof attachmentOperationsGetDownloadUrl>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof attachmentOperationsGetDownloadUrl>>,
           TError,
           Awaited<ReturnType<typeof attachmentOperationsGetDownloadUrl>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useAttachmentOperationsGetDownloadUrl<
-  TData = Awaited<ReturnType<typeof attachmentOperationsGetDownloadUrl>>,
-  TError = unknown,
->(
-  attachmentId: string,
-  params?: AttachmentOperationsGetDownloadUrlParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof attachmentOperationsGetDownloadUrl>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useAttachmentOperationsGetDownloadUrl<TData = Awaited<ReturnType<typeof attachmentOperationsGetDownloadUrl>>, TError = unknown>(
+ attachmentId: string,
+    params?: AttachmentOperationsGetDownloadUrlParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof attachmentOperationsGetDownloadUrl>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof attachmentOperationsGetDownloadUrl>>,
           TError,
           Awaited<ReturnType<typeof attachmentOperationsGetDownloadUrl>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useAttachmentOperationsGetDownloadUrl<
-  TData = Awaited<ReturnType<typeof attachmentOperationsGetDownloadUrl>>,
-  TError = unknown,
->(
-  attachmentId: string,
-  params?: AttachmentOperationsGetDownloadUrlParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof attachmentOperationsGetDownloadUrl>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useAttachmentOperationsGetDownloadUrl<TData = Awaited<ReturnType<typeof attachmentOperationsGetDownloadUrl>>, TError = unknown>(
+ attachmentId: string,
+    params?: AttachmentOperationsGetDownloadUrlParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof attachmentOperationsGetDownloadUrl>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useAttachmentOperationsGetDownloadUrl<TData = Awaited<ReturnType<typeof attachmentOperationsGetDownloadUrl>>, TError = unknown>(
+ attachmentId: string,
+    params?: AttachmentOperationsGetDownloadUrlParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof attachmentOperationsGetDownloadUrl>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getAttachmentOperationsGetDownloadUrlQueryOptions(attachmentId,params,options)
+
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
 
-export function useAttachmentOperationsGetDownloadUrl<
-  TData = Awaited<ReturnType<typeof attachmentOperationsGetDownloadUrl>>,
-  TError = unknown,
->(
-  attachmentId: string,
-  params?: AttachmentOperationsGetDownloadUrlParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof attachmentOperationsGetDownloadUrl>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getAttachmentOperationsGetDownloadUrlQueryOptions(
-    attachmentId,
-    params,
-    options
-  )
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-
-  query.queryKey = queryOptions.queryKey
-
-  return query
-}
 
 /**
  * 施術前後の写真や資料を外部パートナーや顧客と共有するためのリンクを発行します。必要に応じてパスワード保護も適用します。
@@ -1084,303 +714,179 @@ export type attachmentOperationsCreateShareLinkResponse200 = {
   data: AttachmentOperationsCreateShareLink200
   status: 200
 }
+    
+export type attachmentOperationsCreateShareLinkResponseComposite = attachmentOperationsCreateShareLinkResponse200;
+    
+export type attachmentOperationsCreateShareLinkResponse = attachmentOperationsCreateShareLinkResponseComposite & {
+  headers: Headers;
+}
 
-export type attachmentOperationsCreateShareLinkResponseComposite =
-  attachmentOperationsCreateShareLinkResponse200
+export const getAttachmentOperationsCreateShareLinkUrl = (attachmentId: string,) => {
 
-export type attachmentOperationsCreateShareLinkResponse =
-  attachmentOperationsCreateShareLinkResponseComposite & {
-    headers: Headers
-  }
 
-export const getAttachmentOperationsCreateShareLinkUrl = (
-  attachmentId: string
-) => {
+  
+
   return `/api/v1/attachments/${attachmentId}/share-links`
 }
 
-export const attachmentOperationsCreateShareLink = async (
-  attachmentId: string,
-  modelsShareLinkCreateRequest: ModelsShareLinkCreateRequest,
-  options?: RequestInit
-): Promise<attachmentOperationsCreateShareLinkResponse> => {
-  return customInstance<attachmentOperationsCreateShareLinkResponse>(
-    getAttachmentOperationsCreateShareLinkUrl(attachmentId),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsShareLinkCreateRequest),
-    }
-  )
-}
-
-export const getAttachmentOperationsCreateShareLinkMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof attachmentOperationsCreateShareLink>>,
-    TError,
-    { attachmentId: string; data: ModelsShareLinkCreateRequest },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof attachmentOperationsCreateShareLink>>,
-  TError,
-  { attachmentId: string; data: ModelsShareLinkCreateRequest },
-  TContext
-> => {
-  const mutationKey = ['attachmentOperationsCreateShareLink']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof attachmentOperationsCreateShareLink>>,
-    { attachmentId: string; data: ModelsShareLinkCreateRequest }
-  > = (props) => {
-    const { attachmentId, data } = props ?? {}
-
-    return attachmentOperationsCreateShareLink(
-      attachmentId,
-      data,
-      requestOptions
-    )
+export const attachmentOperationsCreateShareLink = async (attachmentId: string,
+    modelsShareLinkCreateRequest: ModelsShareLinkCreateRequest, options?: RequestInit): Promise<attachmentOperationsCreateShareLinkResponse> => {
+  
+  return customInstance<attachmentOperationsCreateShareLinkResponse>(getAttachmentOperationsCreateShareLinkUrl(attachmentId),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      modelsShareLinkCreateRequest,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type AttachmentOperationsCreateShareLinkMutationResult = NonNullable<
-  Awaited<ReturnType<typeof attachmentOperationsCreateShareLink>>
->
-export type AttachmentOperationsCreateShareLinkMutationBody =
-  ModelsShareLinkCreateRequest
-export type AttachmentOperationsCreateShareLinkMutationError = unknown
 
-export const useAttachmentOperationsCreateShareLink = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof attachmentOperationsCreateShareLink>>,
-      TError,
-      { attachmentId: string; data: ModelsShareLinkCreateRequest },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof attachmentOperationsCreateShareLink>>,
-  TError,
-  { attachmentId: string; data: ModelsShareLinkCreateRequest },
-  TContext
-> => {
-  const mutationOptions =
-    getAttachmentOperationsCreateShareLinkMutationOptions(options)
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+export const getAttachmentOperationsCreateShareLinkMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof attachmentOperationsCreateShareLink>>, TError,{attachmentId: string;data: ModelsShareLinkCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof attachmentOperationsCreateShareLink>>, TError,{attachmentId: string;data: ModelsShareLinkCreateRequest}, TContext> => {
+
+const mutationKey = ['attachmentOperationsCreateShareLink'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof attachmentOperationsCreateShareLink>>, {attachmentId: string;data: ModelsShareLinkCreateRequest}> = (props) => {
+          const {attachmentId,data} = props ?? {};
+
+          return  attachmentOperationsCreateShareLink(attachmentId,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AttachmentOperationsCreateShareLinkMutationResult = NonNullable<Awaited<ReturnType<typeof attachmentOperationsCreateShareLink>>>
+    export type AttachmentOperationsCreateShareLinkMutationBody = ModelsShareLinkCreateRequest
+    export type AttachmentOperationsCreateShareLinkMutationError = unknown
+
+    export const useAttachmentOperationsCreateShareLink = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof attachmentOperationsCreateShareLink>>, TError,{attachmentId: string;data: ModelsShareLinkCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof attachmentOperationsCreateShareLink>>,
+        TError,
+        {attachmentId: string;data: ModelsShareLinkCreateRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getAttachmentOperationsCreateShareLinkMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 対象ファイルに対して発行済みの共有リンクを一覧し、公開状況や有効期限の管理を行います。
  */
 export type attachmentOperationsListShareLinksResponse200 = {
   data: AttachmentOperationsListShareLinks200
   status: 200
 }
+    
+export type attachmentOperationsListShareLinksResponseComposite = attachmentOperationsListShareLinksResponse200;
+    
+export type attachmentOperationsListShareLinksResponse = attachmentOperationsListShareLinksResponseComposite & {
+  headers: Headers;
+}
 
-export type attachmentOperationsListShareLinksResponseComposite =
-  attachmentOperationsListShareLinksResponse200
+export const getAttachmentOperationsListShareLinksUrl = (attachmentId: string,) => {
 
-export type attachmentOperationsListShareLinksResponse =
-  attachmentOperationsListShareLinksResponseComposite & {
-    headers: Headers
-  }
 
-export const getAttachmentOperationsListShareLinksUrl = (
-  attachmentId: string
-) => {
+  
+
   return `/api/v1/attachments/${attachmentId}/share-links`
 }
 
-export const attachmentOperationsListShareLinks = async (
-  attachmentId: string,
-  options?: RequestInit
-): Promise<attachmentOperationsListShareLinksResponse> => {
-  return customInstance<attachmentOperationsListShareLinksResponse>(
-    getAttachmentOperationsListShareLinksUrl(attachmentId),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getAttachmentOperationsListShareLinksQueryKey = (
-  attachmentId?: string
-) => {
-  return [`/api/v1/attachments/${attachmentId}/share-links`] as const
-}
-
-export const getAttachmentOperationsListShareLinksQueryOptions = <
-  TData = Awaited<ReturnType<typeof attachmentOperationsListShareLinks>>,
-  TError = unknown,
->(
-  attachmentId: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof attachmentOperationsListShareLinks>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const attachmentOperationsListShareLinks = async (attachmentId: string, options?: RequestInit): Promise<attachmentOperationsListShareLinksResponse> => {
+  
+  return customInstance<attachmentOperationsListShareLinksResponse>(getAttachmentOperationsListShareLinksUrl(attachmentId),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getAttachmentOperationsListShareLinksQueryKey = (attachmentId?: string,) => {
+    return [`/api/v1/attachments/${attachmentId}/share-links`] as const;
+    }
+
+    
+export const getAttachmentOperationsListShareLinksQueryOptions = <TData = Awaited<ReturnType<typeof attachmentOperationsListShareLinks>>, TError = unknown>(attachmentId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof attachmentOperationsListShareLinks>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ??
-    getAttachmentOperationsListShareLinksQueryKey(attachmentId)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof attachmentOperationsListShareLinks>>
-  > = ({ signal }) =>
-    attachmentOperationsListShareLinks(attachmentId, {
-      signal,
-      ...requestOptions,
-    })
+  const queryKey =  queryOptions?.queryKey ?? getAttachmentOperationsListShareLinksQueryKey(attachmentId);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!attachmentId,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof attachmentOperationsListShareLinks>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof attachmentOperationsListShareLinks>>> = ({ signal }) => attachmentOperationsListShareLinks(attachmentId, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(attachmentId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof attachmentOperationsListShareLinks>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type AttachmentOperationsListShareLinksQueryResult = NonNullable<
-  Awaited<ReturnType<typeof attachmentOperationsListShareLinks>>
->
+export type AttachmentOperationsListShareLinksQueryResult = NonNullable<Awaited<ReturnType<typeof attachmentOperationsListShareLinks>>>
 export type AttachmentOperationsListShareLinksQueryError = unknown
 
-export function useAttachmentOperationsListShareLinks<
-  TData = Awaited<ReturnType<typeof attachmentOperationsListShareLinks>>,
-  TError = unknown,
->(
-  attachmentId: string,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof attachmentOperationsListShareLinks>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useAttachmentOperationsListShareLinks<TData = Awaited<ReturnType<typeof attachmentOperationsListShareLinks>>, TError = unknown>(
+ attachmentId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof attachmentOperationsListShareLinks>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof attachmentOperationsListShareLinks>>,
           TError,
           Awaited<ReturnType<typeof attachmentOperationsListShareLinks>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useAttachmentOperationsListShareLinks<
-  TData = Awaited<ReturnType<typeof attachmentOperationsListShareLinks>>,
-  TError = unknown,
->(
-  attachmentId: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof attachmentOperationsListShareLinks>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useAttachmentOperationsListShareLinks<TData = Awaited<ReturnType<typeof attachmentOperationsListShareLinks>>, TError = unknown>(
+ attachmentId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof attachmentOperationsListShareLinks>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof attachmentOperationsListShareLinks>>,
           TError,
           Awaited<ReturnType<typeof attachmentOperationsListShareLinks>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useAttachmentOperationsListShareLinks<
-  TData = Awaited<ReturnType<typeof attachmentOperationsListShareLinks>>,
-  TError = unknown,
->(
-  attachmentId: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof attachmentOperationsListShareLinks>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useAttachmentOperationsListShareLinks<TData = Awaited<ReturnType<typeof attachmentOperationsListShareLinks>>, TError = unknown>(
+ attachmentId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof attachmentOperationsListShareLinks>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useAttachmentOperationsListShareLinks<TData = Awaited<ReturnType<typeof attachmentOperationsListShareLinks>>, TError = unknown>(
+ attachmentId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof attachmentOperationsListShareLinks>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getAttachmentOperationsListShareLinksQueryOptions(attachmentId,options)
+
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
 
-export function useAttachmentOperationsListShareLinks<
-  TData = Awaited<ReturnType<typeof attachmentOperationsListShareLinks>>,
-  TError = unknown,
->(
-  attachmentId: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof attachmentOperationsListShareLinks>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getAttachmentOperationsListShareLinksQueryOptions(
-    attachmentId,
-    options
-  )
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
 
-  query.queryKey = queryOptions.queryKey
-
-  return query
-}

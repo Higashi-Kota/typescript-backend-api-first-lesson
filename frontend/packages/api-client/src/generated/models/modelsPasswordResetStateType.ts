@@ -13,12 +13,12 @@ none: なし - パスワードリセットが要求されていない状態
 requested: リクエスト中 - パスワードリセットが要求された状態
 completed: 完了 - パスワードリセットが完了した状態
  */
-export type ModelsPasswordResetStateType =
-  (typeof ModelsPasswordResetStateType)[keyof typeof ModelsPasswordResetStateType]
+export type ModelsPasswordResetStateType = typeof ModelsPasswordResetStateType[keyof typeof ModelsPasswordResetStateType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsPasswordResetStateType = {
   none: 'none',
   requested: 'requested',
   completed: 'completed',
-} as const
+} as const;

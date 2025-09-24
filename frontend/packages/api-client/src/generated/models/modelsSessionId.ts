@@ -9,4 +9,4 @@
 /**
  * ログインセッションを追跡するためのブランド付きUUID。
  */
-export type ModelsSessionId = string
+export type ModelsSessionId = string;

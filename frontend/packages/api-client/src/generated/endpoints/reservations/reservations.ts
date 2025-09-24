@@ -5,7 +5,10 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import { useMutation, useQuery } from '@tanstack/react-query'
+import {
+  useMutation,
+  useQuery
+} from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -18,8 +21,8 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult,
-} from '@tanstack/react-query'
+  UseQueryResult
+} from '@tanstack/react-query';
 
 import type {
   AvailabilityOperationsCheckAvailability200,
@@ -36,16 +39,19 @@ import type {
   ReservationOperationsCancelBody,
   ReservationOperationsList200,
   ReservationOperationsListParams,
-  ReservationOperationsRescheduleBody,
-} from '../../models'
+  ReservationOperationsRescheduleBody
+} from '../../models';
 
-import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher'
+import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher';
 
-type AwaitedInput<T> = PromiseLike<T> | T
+type AwaitedInput<T> = PromiseLike<T> | T;
 
-type Awaited<O> = O extends AwaitedInput<infer T> ? T : never
+      type Awaited<O> = O extends AwaitedInput<infer T> ? T : never;
 
-type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
+
 
 /**
  * サロン、顧客、スタッフなどの条件で予約一覧を取得し、当日の稼働状況を把握します。
@@ -55,197 +61,111 @@ export type reservationOperationsListResponse200 = {
   data: ReservationOperationsList200
   status: 200
 }
+    
+export type reservationOperationsListResponseComposite = reservationOperationsListResponse200;
+    
+export type reservationOperationsListResponse = reservationOperationsListResponseComposite & {
+  headers: Headers;
+}
 
-export type reservationOperationsListResponseComposite =
-  reservationOperationsListResponse200
-
-export type reservationOperationsListResponse =
-  reservationOperationsListResponseComposite & {
-    headers: Headers
-  }
-
-export const getReservationOperationsListUrl = (
-  params?: ReservationOperationsListParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getReservationOperationsListUrl = (params?: ReservationOperationsListParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v1/reservations?${stringifiedParams}`
-    : `/api/v1/reservations`
+  return stringifiedParams.length > 0 ? `/api/v1/reservations?${stringifiedParams}` : `/api/v1/reservations`
 }
 
-export const reservationOperationsList = async (
-  params?: ReservationOperationsListParams,
-  options?: RequestInit
-): Promise<reservationOperationsListResponse> => {
-  return customInstance<reservationOperationsListResponse>(
-    getReservationOperationsListUrl(params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getReservationOperationsListQueryKey = (
-  params?: ReservationOperationsListParams
-) => {
-  return [`/api/v1/reservations`, ...(params ? [params] : [])] as const
-}
-
-export const getReservationOperationsListQueryOptions = <
-  TData = Awaited<ReturnType<typeof reservationOperationsList>>,
-  TError = unknown,
->(
-  params?: ReservationOperationsListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof reservationOperationsList>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const reservationOperationsList = async (params?: ReservationOperationsListParams, options?: RequestInit): Promise<reservationOperationsListResponse> => {
+  
+  return customInstance<reservationOperationsListResponse>(getReservationOperationsListUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getReservationOperationsListQueryKey = (params?: ReservationOperationsListParams,) => {
+    return [`/api/v1/reservations`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getReservationOperationsListQueryOptions = <TData = Awaited<ReturnType<typeof reservationOperationsList>>, TError = unknown>(params?: ReservationOperationsListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof reservationOperationsList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ?? getReservationOperationsListQueryKey(params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof reservationOperationsList>>
-  > = ({ signal }) =>
-    reservationOperationsList(params, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getReservationOperationsListQueryKey(params);
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof reservationOperationsList>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof reservationOperationsList>>> = ({ signal }) => reservationOperationsList(params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof reservationOperationsList>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type ReservationOperationsListQueryResult = NonNullable<
-  Awaited<ReturnType<typeof reservationOperationsList>>
->
+export type ReservationOperationsListQueryResult = NonNullable<Awaited<ReturnType<typeof reservationOperationsList>>>
 export type ReservationOperationsListQueryError = unknown
 
-export function useReservationOperationsList<
-  TData = Awaited<ReturnType<typeof reservationOperationsList>>,
-  TError = unknown,
->(
-  params: undefined | ReservationOperationsListParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof reservationOperationsList>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useReservationOperationsList<TData = Awaited<ReturnType<typeof reservationOperationsList>>, TError = unknown>(
+ params: undefined |  ReservationOperationsListParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof reservationOperationsList>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof reservationOperationsList>>,
           TError,
           Awaited<ReturnType<typeof reservationOperationsList>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useReservationOperationsList<
-  TData = Awaited<ReturnType<typeof reservationOperationsList>>,
-  TError = unknown,
->(
-  params?: ReservationOperationsListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof reservationOperationsList>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useReservationOperationsList<TData = Awaited<ReturnType<typeof reservationOperationsList>>, TError = unknown>(
+ params?: ReservationOperationsListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof reservationOperationsList>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof reservationOperationsList>>,
           TError,
           Awaited<ReturnType<typeof reservationOperationsList>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useReservationOperationsList<
-  TData = Awaited<ReturnType<typeof reservationOperationsList>>,
-  TError = unknown,
->(
-  params?: ReservationOperationsListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof reservationOperationsList>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useReservationOperationsList<TData = Awaited<ReturnType<typeof reservationOperationsList>>, TError = unknown>(
+ params?: ReservationOperationsListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof reservationOperationsList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary List reservations
  */
 
-export function useReservationOperationsList<
-  TData = Awaited<ReturnType<typeof reservationOperationsList>>,
-  TError = unknown,
->(
-  params?: ReservationOperationsListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof reservationOperationsList>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getReservationOperationsListQueryOptions(params, options)
+export function useReservationOperationsList<TData = Awaited<ReturnType<typeof reservationOperationsList>>, TError = unknown>(
+ params?: ReservationOperationsListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof reservationOperationsList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  const queryOptions = getReservationOperationsListQueryOptions(params,options)
 
-  query.queryKey = queryOptions.queryKey
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  return query
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
+
+
 
 /**
  * 新しい施術予約を登録し、枠の確保と関連リソースの仮押さえを行います。
@@ -265,109 +185,82 @@ export type reservationOperationsCreateResponse409 = {
   data: ModelsError
   status: 409
 }
-
-export type reservationOperationsCreateResponseComposite =
-  | reservationOperationsCreateResponse201
-  | reservationOperationsCreateResponse400
-  | reservationOperationsCreateResponse409
-
-export type reservationOperationsCreateResponse =
-  reservationOperationsCreateResponseComposite & {
-    headers: Headers
-  }
+    
+export type reservationOperationsCreateResponseComposite = reservationOperationsCreateResponse201 | reservationOperationsCreateResponse400 | reservationOperationsCreateResponse409;
+    
+export type reservationOperationsCreateResponse = reservationOperationsCreateResponseComposite & {
+  headers: Headers;
+}
 
 export const getReservationOperationsCreateUrl = () => {
+
+
+  
+
   return `/api/v1/reservations`
 }
 
-export const reservationOperationsCreate = async (
-  modelsCreateReservationRequest: ModelsCreateReservationRequest,
-  options?: RequestInit
-): Promise<reservationOperationsCreateResponse> => {
-  return customInstance<reservationOperationsCreateResponse>(
-    getReservationOperationsCreateUrl(),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsCreateReservationRequest),
-    }
-  )
-}
-
-export const getReservationOperationsCreateMutationOptions = <
-  TError = ModelsError | ModelsError,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof reservationOperationsCreate>>,
-    TError,
-    { data: ModelsCreateReservationRequest },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof reservationOperationsCreate>>,
-  TError,
-  { data: ModelsCreateReservationRequest },
-  TContext
-> => {
-  const mutationKey = ['reservationOperationsCreate']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof reservationOperationsCreate>>,
-    { data: ModelsCreateReservationRequest }
-  > = (props) => {
-    const { data } = props ?? {}
-
-    return reservationOperationsCreate(data, requestOptions)
+export const reservationOperationsCreate = async (modelsCreateReservationRequest: ModelsCreateReservationRequest, options?: RequestInit): Promise<reservationOperationsCreateResponse> => {
+  
+  return customInstance<reservationOperationsCreateResponse>(getReservationOperationsCreateUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      modelsCreateReservationRequest,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type ReservationOperationsCreateMutationResult = NonNullable<
-  Awaited<ReturnType<typeof reservationOperationsCreate>>
->
-export type ReservationOperationsCreateMutationBody =
-  ModelsCreateReservationRequest
-export type ReservationOperationsCreateMutationError = ModelsError | ModelsError
 
-/**
+
+export const getReservationOperationsCreateMutationOptions = <TError = ModelsError | ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reservationOperationsCreate>>, TError,{data: ModelsCreateReservationRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof reservationOperationsCreate>>, TError,{data: ModelsCreateReservationRequest}, TContext> => {
+
+const mutationKey = ['reservationOperationsCreate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof reservationOperationsCreate>>, {data: ModelsCreateReservationRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  reservationOperationsCreate(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ReservationOperationsCreateMutationResult = NonNullable<Awaited<ReturnType<typeof reservationOperationsCreate>>>
+    export type ReservationOperationsCreateMutationBody = ModelsCreateReservationRequest
+    export type ReservationOperationsCreateMutationError = ModelsError | ModelsError
+
+    /**
  * @summary Create reservation
  */
-export const useReservationOperationsCreate = <
-  TError = ModelsError | ModelsError,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof reservationOperationsCreate>>,
-      TError,
-      { data: ModelsCreateReservationRequest },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof reservationOperationsCreate>>,
-  TError,
-  { data: ModelsCreateReservationRequest },
-  TContext
-> => {
-  const mutationOptions = getReservationOperationsCreateMutationOptions(options)
+export const useReservationOperationsCreate = <TError = ModelsError | ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reservationOperationsCreate>>, TError,{data: ModelsCreateReservationRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof reservationOperationsCreate>>,
+        TError,
+        {data: ModelsCreateReservationRequest},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getReservationOperationsCreateMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 個別予約の詳細情報を取得し、施術内容や担当者、タイムラインを確認します。
  * @summary Get reservation
  */
@@ -380,189 +273,104 @@ export type reservationOperationsGetResponse404 = {
   data: ModelsError
   status: 404
 }
+    
+export type reservationOperationsGetResponseComposite = reservationOperationsGetResponse200 | reservationOperationsGetResponse404;
+    
+export type reservationOperationsGetResponse = reservationOperationsGetResponseComposite & {
+  headers: Headers;
+}
 
-export type reservationOperationsGetResponseComposite =
-  | reservationOperationsGetResponse200
-  | reservationOperationsGetResponse404
+export const getReservationOperationsGetUrl = (id: ModelsReservationId,) => {
 
-export type reservationOperationsGetResponse =
-  reservationOperationsGetResponseComposite & {
-    headers: Headers
-  }
 
-export const getReservationOperationsGetUrl = (id: ModelsReservationId) => {
+  
+
   return `/api/v1/reservations/${id}`
 }
 
-export const reservationOperationsGet = async (
-  id: ModelsReservationId,
-  options?: RequestInit
-): Promise<reservationOperationsGetResponse> => {
-  return customInstance<reservationOperationsGetResponse>(
-    getReservationOperationsGetUrl(id),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getReservationOperationsGetQueryKey = (
-  id?: ModelsReservationId
-) => {
-  return [`/api/v1/reservations/${id}`] as const
-}
-
-export const getReservationOperationsGetQueryOptions = <
-  TData = Awaited<ReturnType<typeof reservationOperationsGet>>,
-  TError = ModelsError,
->(
-  id: ModelsReservationId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof reservationOperationsGet>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const reservationOperationsGet = async (id: ModelsReservationId, options?: RequestInit): Promise<reservationOperationsGetResponse> => {
+  
+  return customInstance<reservationOperationsGetResponse>(getReservationOperationsGetUrl(id),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getReservationOperationsGetQueryKey = (id?: ModelsReservationId,) => {
+    return [`/api/v1/reservations/${id}`] as const;
+    }
+
+    
+export const getReservationOperationsGetQueryOptions = <TData = Awaited<ReturnType<typeof reservationOperationsGet>>, TError = ModelsError>(id: ModelsReservationId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof reservationOperationsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ?? getReservationOperationsGetQueryKey(id)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof reservationOperationsGet>>
-  > = ({ signal }) =>
-    reservationOperationsGet(id, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getReservationOperationsGetQueryKey(id);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!id,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof reservationOperationsGet>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof reservationOperationsGet>>> = ({ signal }) => reservationOperationsGet(id, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof reservationOperationsGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type ReservationOperationsGetQueryResult = NonNullable<
-  Awaited<ReturnType<typeof reservationOperationsGet>>
->
+export type ReservationOperationsGetQueryResult = NonNullable<Awaited<ReturnType<typeof reservationOperationsGet>>>
 export type ReservationOperationsGetQueryError = ModelsError
 
-export function useReservationOperationsGet<
-  TData = Awaited<ReturnType<typeof reservationOperationsGet>>,
-  TError = ModelsError,
->(
-  id: ModelsReservationId,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof reservationOperationsGet>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useReservationOperationsGet<TData = Awaited<ReturnType<typeof reservationOperationsGet>>, TError = ModelsError>(
+ id: ModelsReservationId, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof reservationOperationsGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof reservationOperationsGet>>,
           TError,
           Awaited<ReturnType<typeof reservationOperationsGet>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useReservationOperationsGet<
-  TData = Awaited<ReturnType<typeof reservationOperationsGet>>,
-  TError = ModelsError,
->(
-  id: ModelsReservationId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof reservationOperationsGet>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useReservationOperationsGet<TData = Awaited<ReturnType<typeof reservationOperationsGet>>, TError = ModelsError>(
+ id: ModelsReservationId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof reservationOperationsGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof reservationOperationsGet>>,
           TError,
           Awaited<ReturnType<typeof reservationOperationsGet>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useReservationOperationsGet<
-  TData = Awaited<ReturnType<typeof reservationOperationsGet>>,
-  TError = ModelsError,
->(
-  id: ModelsReservationId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof reservationOperationsGet>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useReservationOperationsGet<TData = Awaited<ReturnType<typeof reservationOperationsGet>>, TError = ModelsError>(
+ id: ModelsReservationId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof reservationOperationsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get reservation
  */
 
-export function useReservationOperationsGet<
-  TData = Awaited<ReturnType<typeof reservationOperationsGet>>,
-  TError = ModelsError,
->(
-  id: ModelsReservationId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof reservationOperationsGet>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getReservationOperationsGetQueryOptions(id, options)
+export function useReservationOperationsGet<TData = Awaited<ReturnType<typeof reservationOperationsGet>>, TError = ModelsError>(
+ id: ModelsReservationId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof reservationOperationsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  const queryOptions = getReservationOperationsGetQueryOptions(id,options)
 
-  query.queryKey = queryOptions.queryKey
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  return query
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
+
+
 
 /**
  * 予約内容を部分的に更新し、サービス内容や担当スタッフの変更に対応します。
@@ -587,114 +395,83 @@ export type reservationOperationsUpdateResponse409 = {
   data: ModelsError
   status: 409
 }
+    
+export type reservationOperationsUpdateResponseComposite = reservationOperationsUpdateResponse200 | reservationOperationsUpdateResponse400 | reservationOperationsUpdateResponse404 | reservationOperationsUpdateResponse409;
+    
+export type reservationOperationsUpdateResponse = reservationOperationsUpdateResponseComposite & {
+  headers: Headers;
+}
 
-export type reservationOperationsUpdateResponseComposite =
-  | reservationOperationsUpdateResponse200
-  | reservationOperationsUpdateResponse400
-  | reservationOperationsUpdateResponse404
-  | reservationOperationsUpdateResponse409
+export const getReservationOperationsUpdateUrl = (id: ModelsReservationId,) => {
 
-export type reservationOperationsUpdateResponse =
-  reservationOperationsUpdateResponseComposite & {
-    headers: Headers
-  }
 
-export const getReservationOperationsUpdateUrl = (id: ModelsReservationId) => {
+  
+
   return `/api/v1/reservations/${id}`
 }
 
-export const reservationOperationsUpdate = async (
-  id: ModelsReservationId,
-  modelsUpdateReservationRequest: ModelsUpdateReservationRequest,
-  options?: RequestInit
-): Promise<reservationOperationsUpdateResponse> => {
-  return customInstance<reservationOperationsUpdateResponse>(
-    getReservationOperationsUpdateUrl(id),
-    {
-      ...options,
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsUpdateReservationRequest),
-    }
-  )
-}
-
-export const getReservationOperationsUpdateMutationOptions = <
-  TError = ModelsError | ModelsError | ModelsError,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof reservationOperationsUpdate>>,
-    TError,
-    { id: ModelsReservationId; data: ModelsUpdateReservationRequest },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof reservationOperationsUpdate>>,
-  TError,
-  { id: ModelsReservationId; data: ModelsUpdateReservationRequest },
-  TContext
-> => {
-  const mutationKey = ['reservationOperationsUpdate']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof reservationOperationsUpdate>>,
-    { id: ModelsReservationId; data: ModelsUpdateReservationRequest }
-  > = (props) => {
-    const { id, data } = props ?? {}
-
-    return reservationOperationsUpdate(id, data, requestOptions)
+export const reservationOperationsUpdate = async (id: ModelsReservationId,
+    modelsUpdateReservationRequest: ModelsUpdateReservationRequest, options?: RequestInit): Promise<reservationOperationsUpdateResponse> => {
+  
+  return customInstance<reservationOperationsUpdateResponse>(getReservationOperationsUpdateUrl(id),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      modelsUpdateReservationRequest,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type ReservationOperationsUpdateMutationResult = NonNullable<
-  Awaited<ReturnType<typeof reservationOperationsUpdate>>
->
-export type ReservationOperationsUpdateMutationBody =
-  ModelsUpdateReservationRequest
-export type ReservationOperationsUpdateMutationError =
-  | ModelsError
-  | ModelsError
-  | ModelsError
 
-/**
+
+export const getReservationOperationsUpdateMutationOptions = <TError = ModelsError | ModelsError | ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reservationOperationsUpdate>>, TError,{id: ModelsReservationId;data: ModelsUpdateReservationRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof reservationOperationsUpdate>>, TError,{id: ModelsReservationId;data: ModelsUpdateReservationRequest}, TContext> => {
+
+const mutationKey = ['reservationOperationsUpdate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof reservationOperationsUpdate>>, {id: ModelsReservationId;data: ModelsUpdateReservationRequest}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  reservationOperationsUpdate(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ReservationOperationsUpdateMutationResult = NonNullable<Awaited<ReturnType<typeof reservationOperationsUpdate>>>
+    export type ReservationOperationsUpdateMutationBody = ModelsUpdateReservationRequest
+    export type ReservationOperationsUpdateMutationError = ModelsError | ModelsError | ModelsError
+
+    /**
  * @summary Update reservation
  */
-export const useReservationOperationsUpdate = <
-  TError = ModelsError | ModelsError | ModelsError,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof reservationOperationsUpdate>>,
-      TError,
-      { id: ModelsReservationId; data: ModelsUpdateReservationRequest },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof reservationOperationsUpdate>>,
-  TError,
-  { id: ModelsReservationId; data: ModelsUpdateReservationRequest },
-  TContext
-> => {
-  const mutationOptions = getReservationOperationsUpdateMutationOptions(options)
+export const useReservationOperationsUpdate = <TError = ModelsError | ModelsError | ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reservationOperationsUpdate>>, TError,{id: ModelsReservationId;data: ModelsUpdateReservationRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof reservationOperationsUpdate>>,
+        TError,
+        {id: ModelsReservationId;data: ModelsUpdateReservationRequest},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getReservationOperationsUpdateMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 確定済みの予約をキャンセルし、理由の記録と枠の開放を行います。
  * @summary Cancel reservation
  */
@@ -712,110 +489,83 @@ export type reservationOperationsCancelResponse409 = {
   data: ModelsError
   status: 409
 }
+    
+export type reservationOperationsCancelResponseComposite = reservationOperationsCancelResponse200 | reservationOperationsCancelResponse404 | reservationOperationsCancelResponse409;
+    
+export type reservationOperationsCancelResponse = reservationOperationsCancelResponseComposite & {
+  headers: Headers;
+}
 
-export type reservationOperationsCancelResponseComposite =
-  | reservationOperationsCancelResponse200
-  | reservationOperationsCancelResponse404
-  | reservationOperationsCancelResponse409
+export const getReservationOperationsCancelUrl = (id: ModelsReservationId,) => {
 
-export type reservationOperationsCancelResponse =
-  reservationOperationsCancelResponseComposite & {
-    headers: Headers
-  }
 
-export const getReservationOperationsCancelUrl = (id: ModelsReservationId) => {
+  
+
   return `/api/v1/reservations/${id}/cancel`
 }
 
-export const reservationOperationsCancel = async (
-  id: ModelsReservationId,
-  reservationOperationsCancelBody: ReservationOperationsCancelBody,
-  options?: RequestInit
-): Promise<reservationOperationsCancelResponse> => {
-  return customInstance<reservationOperationsCancelResponse>(
-    getReservationOperationsCancelUrl(id),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(reservationOperationsCancelBody),
-    }
-  )
-}
-
-export const getReservationOperationsCancelMutationOptions = <
-  TError = ModelsError | ModelsError,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof reservationOperationsCancel>>,
-    TError,
-    { id: ModelsReservationId; data: ReservationOperationsCancelBody },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof reservationOperationsCancel>>,
-  TError,
-  { id: ModelsReservationId; data: ReservationOperationsCancelBody },
-  TContext
-> => {
-  const mutationKey = ['reservationOperationsCancel']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof reservationOperationsCancel>>,
-    { id: ModelsReservationId; data: ReservationOperationsCancelBody }
-  > = (props) => {
-    const { id, data } = props ?? {}
-
-    return reservationOperationsCancel(id, data, requestOptions)
+export const reservationOperationsCancel = async (id: ModelsReservationId,
+    reservationOperationsCancelBody: ReservationOperationsCancelBody, options?: RequestInit): Promise<reservationOperationsCancelResponse> => {
+  
+  return customInstance<reservationOperationsCancelResponse>(getReservationOperationsCancelUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      reservationOperationsCancelBody,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type ReservationOperationsCancelMutationResult = NonNullable<
-  Awaited<ReturnType<typeof reservationOperationsCancel>>
->
-export type ReservationOperationsCancelMutationBody =
-  ReservationOperationsCancelBody
-export type ReservationOperationsCancelMutationError = ModelsError | ModelsError
 
-/**
+
+export const getReservationOperationsCancelMutationOptions = <TError = ModelsError | ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reservationOperationsCancel>>, TError,{id: ModelsReservationId;data: ReservationOperationsCancelBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof reservationOperationsCancel>>, TError,{id: ModelsReservationId;data: ReservationOperationsCancelBody}, TContext> => {
+
+const mutationKey = ['reservationOperationsCancel'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof reservationOperationsCancel>>, {id: ModelsReservationId;data: ReservationOperationsCancelBody}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  reservationOperationsCancel(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ReservationOperationsCancelMutationResult = NonNullable<Awaited<ReturnType<typeof reservationOperationsCancel>>>
+    export type ReservationOperationsCancelMutationBody = ReservationOperationsCancelBody
+    export type ReservationOperationsCancelMutationError = ModelsError | ModelsError
+
+    /**
  * @summary Cancel reservation
  */
-export const useReservationOperationsCancel = <
-  TError = ModelsError | ModelsError,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof reservationOperationsCancel>>,
-      TError,
-      { id: ModelsReservationId; data: ReservationOperationsCancelBody },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof reservationOperationsCancel>>,
-  TError,
-  { id: ModelsReservationId; data: ReservationOperationsCancelBody },
-  TContext
-> => {
-  const mutationOptions = getReservationOperationsCancelMutationOptions(options)
+export const useReservationOperationsCancel = <TError = ModelsError | ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reservationOperationsCancel>>, TError,{id: ModelsReservationId;data: ReservationOperationsCancelBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof reservationOperationsCancel>>,
+        TError,
+        {id: ModelsReservationId;data: ReservationOperationsCancelBody},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getReservationOperationsCancelMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 施術完了を登録し、実績データや売上計上に利用するステータスへ更新します。
  * @summary Complete reservation
  */
@@ -833,111 +583,81 @@ export type reservationOperationsCompleteResponse409 = {
   data: ModelsError
   status: 409
 }
+    
+export type reservationOperationsCompleteResponseComposite = reservationOperationsCompleteResponse200 | reservationOperationsCompleteResponse404 | reservationOperationsCompleteResponse409;
+    
+export type reservationOperationsCompleteResponse = reservationOperationsCompleteResponseComposite & {
+  headers: Headers;
+}
 
-export type reservationOperationsCompleteResponseComposite =
-  | reservationOperationsCompleteResponse200
-  | reservationOperationsCompleteResponse404
-  | reservationOperationsCompleteResponse409
+export const getReservationOperationsCompleteUrl = (id: ModelsReservationId,) => {
 
-export type reservationOperationsCompleteResponse =
-  reservationOperationsCompleteResponseComposite & {
-    headers: Headers
-  }
 
-export const getReservationOperationsCompleteUrl = (
-  id: ModelsReservationId
-) => {
+  
+
   return `/api/v1/reservations/${id}/complete`
 }
 
-export const reservationOperationsComplete = async (
-  id: ModelsReservationId,
-  options?: RequestInit
-): Promise<reservationOperationsCompleteResponse> => {
-  return customInstance<reservationOperationsCompleteResponse>(
-    getReservationOperationsCompleteUrl(id),
-    {
-      ...options,
-      method: 'POST',
-    }
-  )
-}
-
-export const getReservationOperationsCompleteMutationOptions = <
-  TError = ModelsError | ModelsError,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof reservationOperationsComplete>>,
-    TError,
-    { id: ModelsReservationId },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof reservationOperationsComplete>>,
-  TError,
-  { id: ModelsReservationId },
-  TContext
-> => {
-  const mutationKey = ['reservationOperationsComplete']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof reservationOperationsComplete>>,
-    { id: ModelsReservationId }
-  > = (props) => {
-    const { id } = props ?? {}
-
-    return reservationOperationsComplete(id, requestOptions)
+export const reservationOperationsComplete = async (id: ModelsReservationId, options?: RequestInit): Promise<reservationOperationsCompleteResponse> => {
+  
+  return customInstance<reservationOperationsCompleteResponse>(getReservationOperationsCompleteUrl(id),
+  {      
+    ...options,
+    method: 'POST'
+    
+    
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type ReservationOperationsCompleteMutationResult = NonNullable<
-  Awaited<ReturnType<typeof reservationOperationsComplete>>
->
 
-export type ReservationOperationsCompleteMutationError =
-  | ModelsError
-  | ModelsError
 
-/**
+export const getReservationOperationsCompleteMutationOptions = <TError = ModelsError | ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reservationOperationsComplete>>, TError,{id: ModelsReservationId}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof reservationOperationsComplete>>, TError,{id: ModelsReservationId}, TContext> => {
+
+const mutationKey = ['reservationOperationsComplete'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof reservationOperationsComplete>>, {id: ModelsReservationId}> = (props) => {
+          const {id} = props ?? {};
+
+          return  reservationOperationsComplete(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ReservationOperationsCompleteMutationResult = NonNullable<Awaited<ReturnType<typeof reservationOperationsComplete>>>
+    
+    export type ReservationOperationsCompleteMutationError = ModelsError | ModelsError
+
+    /**
  * @summary Complete reservation
  */
-export const useReservationOperationsComplete = <
-  TError = ModelsError | ModelsError,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof reservationOperationsComplete>>,
-      TError,
-      { id: ModelsReservationId },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof reservationOperationsComplete>>,
-  TError,
-  { id: ModelsReservationId },
-  TContext
-> => {
-  const mutationOptions =
-    getReservationOperationsCompleteMutationOptions(options)
+export const useReservationOperationsComplete = <TError = ModelsError | ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reservationOperationsComplete>>, TError,{id: ModelsReservationId}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof reservationOperationsComplete>>,
+        TError,
+        {id: ModelsReservationId},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getReservationOperationsCompleteMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 予約日時や担当者の調整が必要な際に、新しいスケジュールへ付け替えます。
  * @summary Reschedule reservation
  */
@@ -955,115 +675,83 @@ export type reservationOperationsRescheduleResponse409 = {
   data: ModelsError
   status: 409
 }
+    
+export type reservationOperationsRescheduleResponseComposite = reservationOperationsRescheduleResponse200 | reservationOperationsRescheduleResponse404 | reservationOperationsRescheduleResponse409;
+    
+export type reservationOperationsRescheduleResponse = reservationOperationsRescheduleResponseComposite & {
+  headers: Headers;
+}
 
-export type reservationOperationsRescheduleResponseComposite =
-  | reservationOperationsRescheduleResponse200
-  | reservationOperationsRescheduleResponse404
-  | reservationOperationsRescheduleResponse409
+export const getReservationOperationsRescheduleUrl = (id: ModelsReservationId,) => {
 
-export type reservationOperationsRescheduleResponse =
-  reservationOperationsRescheduleResponseComposite & {
-    headers: Headers
-  }
 
-export const getReservationOperationsRescheduleUrl = (
-  id: ModelsReservationId
-) => {
+  
+
   return `/api/v1/reservations/${id}/reschedule`
 }
 
-export const reservationOperationsReschedule = async (
-  id: ModelsReservationId,
-  reservationOperationsRescheduleBody: ReservationOperationsRescheduleBody,
-  options?: RequestInit
-): Promise<reservationOperationsRescheduleResponse> => {
-  return customInstance<reservationOperationsRescheduleResponse>(
-    getReservationOperationsRescheduleUrl(id),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(reservationOperationsRescheduleBody),
-    }
-  )
-}
-
-export const getReservationOperationsRescheduleMutationOptions = <
-  TError = ModelsError | ModelsError,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof reservationOperationsReschedule>>,
-    TError,
-    { id: ModelsReservationId; data: ReservationOperationsRescheduleBody },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof reservationOperationsReschedule>>,
-  TError,
-  { id: ModelsReservationId; data: ReservationOperationsRescheduleBody },
-  TContext
-> => {
-  const mutationKey = ['reservationOperationsReschedule']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof reservationOperationsReschedule>>,
-    { id: ModelsReservationId; data: ReservationOperationsRescheduleBody }
-  > = (props) => {
-    const { id, data } = props ?? {}
-
-    return reservationOperationsReschedule(id, data, requestOptions)
+export const reservationOperationsReschedule = async (id: ModelsReservationId,
+    reservationOperationsRescheduleBody: ReservationOperationsRescheduleBody, options?: RequestInit): Promise<reservationOperationsRescheduleResponse> => {
+  
+  return customInstance<reservationOperationsRescheduleResponse>(getReservationOperationsRescheduleUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      reservationOperationsRescheduleBody,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type ReservationOperationsRescheduleMutationResult = NonNullable<
-  Awaited<ReturnType<typeof reservationOperationsReschedule>>
->
-export type ReservationOperationsRescheduleMutationBody =
-  ReservationOperationsRescheduleBody
-export type ReservationOperationsRescheduleMutationError =
-  | ModelsError
-  | ModelsError
 
-/**
+
+export const getReservationOperationsRescheduleMutationOptions = <TError = ModelsError | ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reservationOperationsReschedule>>, TError,{id: ModelsReservationId;data: ReservationOperationsRescheduleBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof reservationOperationsReschedule>>, TError,{id: ModelsReservationId;data: ReservationOperationsRescheduleBody}, TContext> => {
+
+const mutationKey = ['reservationOperationsReschedule'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof reservationOperationsReschedule>>, {id: ModelsReservationId;data: ReservationOperationsRescheduleBody}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  reservationOperationsReschedule(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ReservationOperationsRescheduleMutationResult = NonNullable<Awaited<ReturnType<typeof reservationOperationsReschedule>>>
+    export type ReservationOperationsRescheduleMutationBody = ReservationOperationsRescheduleBody
+    export type ReservationOperationsRescheduleMutationError = ModelsError | ModelsError
+
+    /**
  * @summary Reschedule reservation
  */
-export const useReservationOperationsReschedule = <
-  TError = ModelsError | ModelsError,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof reservationOperationsReschedule>>,
-      TError,
-      { id: ModelsReservationId; data: ReservationOperationsRescheduleBody },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof reservationOperationsReschedule>>,
-  TError,
-  { id: ModelsReservationId; data: ReservationOperationsRescheduleBody },
-  TContext
-> => {
-  const mutationOptions =
-    getReservationOperationsRescheduleMutationOptions(options)
+export const useReservationOperationsReschedule = <TError = ModelsError | ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reservationOperationsReschedule>>, TError,{id: ModelsReservationId;data: ReservationOperationsRescheduleBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof reservationOperationsReschedule>>,
+        TError,
+        {id: ModelsReservationId;data: ReservationOperationsRescheduleBody},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getReservationOperationsRescheduleMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 指定日の予約可能枠を取得し、空き枠一覧や予約フォームに反映します。
  * @summary Get available slots
  */
@@ -1076,222 +764,119 @@ export type availabilityOperationsGetAvailableSlotsResponse400 = {
   data: ModelsError
   status: 400
 }
+    
+export type availabilityOperationsGetAvailableSlotsResponseComposite = availabilityOperationsGetAvailableSlotsResponse200 | availabilityOperationsGetAvailableSlotsResponse400;
+    
+export type availabilityOperationsGetAvailableSlotsResponse = availabilityOperationsGetAvailableSlotsResponseComposite & {
+  headers: Headers;
+}
 
-export type availabilityOperationsGetAvailableSlotsResponseComposite =
-  | availabilityOperationsGetAvailableSlotsResponse200
-  | availabilityOperationsGetAvailableSlotsResponse400
-
-export type availabilityOperationsGetAvailableSlotsResponse =
-  availabilityOperationsGetAvailableSlotsResponseComposite & {
-    headers: Headers
-  }
-
-export const getAvailabilityOperationsGetAvailableSlotsUrl = (
-  salonId: ModelsSalonId,
-  params: AvailabilityOperationsGetAvailableSlotsParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getAvailabilityOperationsGetAvailableSlotsUrl = (salonId: ModelsSalonId,
+    params: AvailabilityOperationsGetAvailableSlotsParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v1/salons/${salonId}/available-slots?${stringifiedParams}`
-    : `/api/v1/salons/${salonId}/available-slots`
+  return stringifiedParams.length > 0 ? `/api/v1/salons/${salonId}/available-slots?${stringifiedParams}` : `/api/v1/salons/${salonId}/available-slots`
 }
 
-export const availabilityOperationsGetAvailableSlots = async (
-  salonId: ModelsSalonId,
-  params: AvailabilityOperationsGetAvailableSlotsParams,
-  options?: RequestInit
-): Promise<availabilityOperationsGetAvailableSlotsResponse> => {
-  return customInstance<availabilityOperationsGetAvailableSlotsResponse>(
-    getAvailabilityOperationsGetAvailableSlotsUrl(salonId, params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getAvailabilityOperationsGetAvailableSlotsQueryKey = (
-  salonId?: ModelsSalonId,
-  params?: AvailabilityOperationsGetAvailableSlotsParams
-) => {
-  return [
-    `/api/v1/salons/${salonId}/available-slots`,
-    ...(params ? [params] : []),
-  ] as const
-}
-
-export const getAvailabilityOperationsGetAvailableSlotsQueryOptions = <
-  TData = Awaited<ReturnType<typeof availabilityOperationsGetAvailableSlots>>,
-  TError = ModelsError,
->(
-  salonId: ModelsSalonId,
-  params: AvailabilityOperationsGetAvailableSlotsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof availabilityOperationsGetAvailableSlots>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const availabilityOperationsGetAvailableSlots = async (salonId: ModelsSalonId,
+    params: AvailabilityOperationsGetAvailableSlotsParams, options?: RequestInit): Promise<availabilityOperationsGetAvailableSlotsResponse> => {
+  
+  return customInstance<availabilityOperationsGetAvailableSlotsResponse>(getAvailabilityOperationsGetAvailableSlotsUrl(salonId,params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getAvailabilityOperationsGetAvailableSlotsQueryKey = (salonId?: ModelsSalonId,
+    params?: AvailabilityOperationsGetAvailableSlotsParams,) => {
+    return [`/api/v1/salons/${salonId}/available-slots`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getAvailabilityOperationsGetAvailableSlotsQueryOptions = <TData = Awaited<ReturnType<typeof availabilityOperationsGetAvailableSlots>>, TError = ModelsError>(salonId: ModelsSalonId,
+    params: AvailabilityOperationsGetAvailableSlotsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof availabilityOperationsGetAvailableSlots>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ??
-    getAvailabilityOperationsGetAvailableSlotsQueryKey(salonId, params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof availabilityOperationsGetAvailableSlots>>
-  > = ({ signal }) =>
-    availabilityOperationsGetAvailableSlots(salonId, params, {
-      signal,
-      ...requestOptions,
-    })
+  const queryKey =  queryOptions?.queryKey ?? getAvailabilityOperationsGetAvailableSlotsQueryKey(salonId,params);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!salonId,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof availabilityOperationsGetAvailableSlots>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof availabilityOperationsGetAvailableSlots>>> = ({ signal }) => availabilityOperationsGetAvailableSlots(salonId,params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(salonId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof availabilityOperationsGetAvailableSlots>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type AvailabilityOperationsGetAvailableSlotsQueryResult = NonNullable<
-  Awaited<ReturnType<typeof availabilityOperationsGetAvailableSlots>>
->
+export type AvailabilityOperationsGetAvailableSlotsQueryResult = NonNullable<Awaited<ReturnType<typeof availabilityOperationsGetAvailableSlots>>>
 export type AvailabilityOperationsGetAvailableSlotsQueryError = ModelsError
 
-export function useAvailabilityOperationsGetAvailableSlots<
-  TData = Awaited<ReturnType<typeof availabilityOperationsGetAvailableSlots>>,
-  TError = ModelsError,
->(
-  salonId: ModelsSalonId,
-  params: AvailabilityOperationsGetAvailableSlotsParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof availabilityOperationsGetAvailableSlots>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useAvailabilityOperationsGetAvailableSlots<TData = Awaited<ReturnType<typeof availabilityOperationsGetAvailableSlots>>, TError = ModelsError>(
+ salonId: ModelsSalonId,
+    params: AvailabilityOperationsGetAvailableSlotsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof availabilityOperationsGetAvailableSlots>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof availabilityOperationsGetAvailableSlots>>,
           TError,
           Awaited<ReturnType<typeof availabilityOperationsGetAvailableSlots>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useAvailabilityOperationsGetAvailableSlots<
-  TData = Awaited<ReturnType<typeof availabilityOperationsGetAvailableSlots>>,
-  TError = ModelsError,
->(
-  salonId: ModelsSalonId,
-  params: AvailabilityOperationsGetAvailableSlotsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof availabilityOperationsGetAvailableSlots>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useAvailabilityOperationsGetAvailableSlots<TData = Awaited<ReturnType<typeof availabilityOperationsGetAvailableSlots>>, TError = ModelsError>(
+ salonId: ModelsSalonId,
+    params: AvailabilityOperationsGetAvailableSlotsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof availabilityOperationsGetAvailableSlots>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof availabilityOperationsGetAvailableSlots>>,
           TError,
           Awaited<ReturnType<typeof availabilityOperationsGetAvailableSlots>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useAvailabilityOperationsGetAvailableSlots<
-  TData = Awaited<ReturnType<typeof availabilityOperationsGetAvailableSlots>>,
-  TError = ModelsError,
->(
-  salonId: ModelsSalonId,
-  params: AvailabilityOperationsGetAvailableSlotsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof availabilityOperationsGetAvailableSlots>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useAvailabilityOperationsGetAvailableSlots<TData = Awaited<ReturnType<typeof availabilityOperationsGetAvailableSlots>>, TError = ModelsError>(
+ salonId: ModelsSalonId,
+    params: AvailabilityOperationsGetAvailableSlotsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof availabilityOperationsGetAvailableSlots>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get available slots
  */
 
-export function useAvailabilityOperationsGetAvailableSlots<
-  TData = Awaited<ReturnType<typeof availabilityOperationsGetAvailableSlots>>,
-  TError = ModelsError,
->(
-  salonId: ModelsSalonId,
-  params: AvailabilityOperationsGetAvailableSlotsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof availabilityOperationsGetAvailableSlots>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getAvailabilityOperationsGetAvailableSlotsQueryOptions(
-    salonId,
-    params,
-    options
-  )
+export function useAvailabilityOperationsGetAvailableSlots<TData = Awaited<ReturnType<typeof availabilityOperationsGetAvailableSlots>>, TError = ModelsError>(
+ salonId: ModelsSalonId,
+    params: AvailabilityOperationsGetAvailableSlotsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof availabilityOperationsGetAvailableSlots>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  const queryOptions = getAvailabilityOperationsGetAvailableSlotsQueryOptions(salonId,params,options)
 
-  query.queryKey = queryOptions.queryKey
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  return query
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
+
+
 
 /**
  * 希望する日時・スタッフの組み合わせが予約可能か即時判定し、ダブルブッキングを防ぎます。
@@ -1301,120 +886,80 @@ export type availabilityOperationsCheckAvailabilityResponse200 = {
   data: AvailabilityOperationsCheckAvailability200
   status: 200
 }
+    
+export type availabilityOperationsCheckAvailabilityResponseComposite = availabilityOperationsCheckAvailabilityResponse200;
+    
+export type availabilityOperationsCheckAvailabilityResponse = availabilityOperationsCheckAvailabilityResponseComposite & {
+  headers: Headers;
+}
 
-export type availabilityOperationsCheckAvailabilityResponseComposite =
-  availabilityOperationsCheckAvailabilityResponse200
+export const getAvailabilityOperationsCheckAvailabilityUrl = (salonId: ModelsSalonId,) => {
 
-export type availabilityOperationsCheckAvailabilityResponse =
-  availabilityOperationsCheckAvailabilityResponseComposite & {
-    headers: Headers
-  }
 
-export const getAvailabilityOperationsCheckAvailabilityUrl = (
-  salonId: ModelsSalonId
-) => {
+  
+
   return `/api/v1/salons/${salonId}/available-slots/check`
 }
 
-export const availabilityOperationsCheckAvailability = async (
-  salonId: ModelsSalonId,
-  availabilityOperationsCheckAvailabilityBody: AvailabilityOperationsCheckAvailabilityBody,
-  options?: RequestInit
-): Promise<availabilityOperationsCheckAvailabilityResponse> => {
-  return customInstance<availabilityOperationsCheckAvailabilityResponse>(
-    getAvailabilityOperationsCheckAvailabilityUrl(salonId),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(availabilityOperationsCheckAvailabilityBody),
-    }
-  )
-}
-
-export const getAvailabilityOperationsCheckAvailabilityMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof availabilityOperationsCheckAvailability>>,
-    TError,
-    {
-      salonId: ModelsSalonId
-      data: AvailabilityOperationsCheckAvailabilityBody
-    },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof availabilityOperationsCheckAvailability>>,
-  TError,
-  { salonId: ModelsSalonId; data: AvailabilityOperationsCheckAvailabilityBody },
-  TContext
-> => {
-  const mutationKey = ['availabilityOperationsCheckAvailability']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof availabilityOperationsCheckAvailability>>,
-    {
-      salonId: ModelsSalonId
-      data: AvailabilityOperationsCheckAvailabilityBody
-    }
-  > = (props) => {
-    const { salonId, data } = props ?? {}
-
-    return availabilityOperationsCheckAvailability(
-      salonId,
-      data,
-      requestOptions
-    )
+export const availabilityOperationsCheckAvailability = async (salonId: ModelsSalonId,
+    availabilityOperationsCheckAvailabilityBody: AvailabilityOperationsCheckAvailabilityBody, options?: RequestInit): Promise<availabilityOperationsCheckAvailabilityResponse> => {
+  
+  return customInstance<availabilityOperationsCheckAvailabilityResponse>(getAvailabilityOperationsCheckAvailabilityUrl(salonId),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      availabilityOperationsCheckAvailabilityBody,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type AvailabilityOperationsCheckAvailabilityMutationResult = NonNullable<
-  Awaited<ReturnType<typeof availabilityOperationsCheckAvailability>>
->
-export type AvailabilityOperationsCheckAvailabilityMutationBody =
-  AvailabilityOperationsCheckAvailabilityBody
-export type AvailabilityOperationsCheckAvailabilityMutationError = unknown
 
-/**
+
+export const getAvailabilityOperationsCheckAvailabilityMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof availabilityOperationsCheckAvailability>>, TError,{salonId: ModelsSalonId;data: AvailabilityOperationsCheckAvailabilityBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof availabilityOperationsCheckAvailability>>, TError,{salonId: ModelsSalonId;data: AvailabilityOperationsCheckAvailabilityBody}, TContext> => {
+
+const mutationKey = ['availabilityOperationsCheckAvailability'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof availabilityOperationsCheckAvailability>>, {salonId: ModelsSalonId;data: AvailabilityOperationsCheckAvailabilityBody}> = (props) => {
+          const {salonId,data} = props ?? {};
+
+          return  availabilityOperationsCheckAvailability(salonId,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AvailabilityOperationsCheckAvailabilityMutationResult = NonNullable<Awaited<ReturnType<typeof availabilityOperationsCheckAvailability>>>
+    export type AvailabilityOperationsCheckAvailabilityMutationBody = AvailabilityOperationsCheckAvailabilityBody
+    export type AvailabilityOperationsCheckAvailabilityMutationError = unknown
+
+    /**
  * @summary Check availability
  */
-export const useAvailabilityOperationsCheckAvailability = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof availabilityOperationsCheckAvailability>>,
-      TError,
-      {
-        salonId: ModelsSalonId
-        data: AvailabilityOperationsCheckAvailabilityBody
-      },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof availabilityOperationsCheckAvailability>>,
-  TError,
-  { salonId: ModelsSalonId; data: AvailabilityOperationsCheckAvailabilityBody },
-  TContext
-> => {
-  const mutationOptions =
-    getAvailabilityOperationsCheckAvailabilityMutationOptions(options)
+export const useAvailabilityOperationsCheckAvailability = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof availabilityOperationsCheckAvailability>>, TError,{salonId: ModelsSalonId;data: AvailabilityOperationsCheckAvailabilityBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof availabilityOperationsCheckAvailability>>,
+        TError,
+        {salonId: ModelsSalonId;data: AvailabilityOperationsCheckAvailabilityBody},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
+      const mutationOptions = getAvailabilityOperationsCheckAvailabilityMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    

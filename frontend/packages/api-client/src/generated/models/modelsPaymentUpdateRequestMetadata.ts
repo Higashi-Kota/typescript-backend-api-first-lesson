@@ -10,6 +10,4 @@
  * 更新後のメタデータ（null 指定で解除）
  * @nullable
  */
-export type ModelsPaymentUpdateRequestMetadata = {
-  [key: string]: unknown
-} | null
+export type ModelsPaymentUpdateRequestMetadata = {[key: string]: unknown} | null;

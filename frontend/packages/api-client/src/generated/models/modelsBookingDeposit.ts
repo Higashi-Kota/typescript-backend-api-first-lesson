@@ -5,40 +5,40 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsMoney } from './modelsMoney'
-import type { ModelsBookingDepositStatus } from './modelsBookingDepositStatus'
+import type { ModelsMoney } from './modelsMoney';
+import type { ModelsBookingDepositStatus } from './modelsBookingDepositStatus';
 
 /**
  * 予約確定前に預かるデポジット情報。
  */
 export interface ModelsBookingDeposit {
   /** 預かり金額。 */
-  amount: ModelsMoney
+  amount: ModelsMoney;
   /** デポジットの状態区分（pending: 入金待ち／paid: 入金済み／refunded: 返金済み／forfeited: 没収）。 */
-  status: ModelsBookingDepositStatus
+  status: ModelsBookingDepositStatus;
   /**
    * 支払い期日。即時支払いまたは期日が未設定の場合はnull。
    * @nullable
    */
-  dueDate: string | null
+  dueDate: string | null;
   /**
    * 入金が確認された日時。未入金の場合はnull。
    * @nullable
    */
-  paidAt: string | null
+  paidAt: string | null;
   /**
    * 返金した日時。返金していない場合はnull。
    * @nullable
    */
-  refundedAt: string | null
+  refundedAt: string | null;
   /**
    * 紐づく決済ID。決済がない場合はnull。
    * @nullable
    */
-  paymentId: string | null
+  paymentId: string | null;
   /**
    * デポジットに関する備考。備考がない場合はnull。
    * @nullable
    */
-  notes: string | null
+  notes: string | null;
 }

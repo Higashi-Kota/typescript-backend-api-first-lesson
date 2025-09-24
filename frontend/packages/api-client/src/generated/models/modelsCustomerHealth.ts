@@ -5,41 +5,41 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsAllergyInfo } from './modelsAllergyInfo'
-import type { ModelsCustomerHealthHairInfo } from './modelsCustomerHealthHairInfo'
-import type { ModelsCustomerHealthScalpInfo } from './modelsCustomerHealthScalpInfo'
+import type { ModelsAllergyInfo } from './modelsAllergyInfo';
+import type { ModelsCustomerHealthHairInfo } from './modelsCustomerHealthHairInfo';
+import type { ModelsCustomerHealthScalpInfo } from './modelsCustomerHealthScalpInfo';
 
 export interface ModelsCustomerHealth {
   /** アレルギー情報リスト。全てのアレルギー詳細 */
-  allergies: ModelsAllergyInfo[]
+  allergies: ModelsAllergyInfo[];
   /**
    * 髪質情報。情報提供がない場合はnull
    * @nullable
    */
-  hairInfo: ModelsCustomerHealthHairInfo
+  hairInfo: ModelsCustomerHealthHairInfo;
   /**
    * 頭皮情報。情報提供がない場合はnull
    * @nullable
    */
-  scalpInfo: ModelsCustomerHealthScalpInfo
+  scalpInfo: ModelsCustomerHealthScalpInfo;
   /**
    * 既往症一覧。既往症がない場合はnull
    * @nullable
    */
-  medicalConditions: string[] | null
+  medicalConditions: string[] | null;
   /**
    * 服用中の薬一覧。服用薬がない場合はnull
    * @nullable
    */
-  medications: string[] | null
+  medications: string[] | null;
   /**
    * 妊娠状態。未確認または非該当の場合はnull
    * @nullable
    */
-  pregnancyStatus: boolean | null
+  pregnancyStatus: boolean | null;
   /**
    * 特別な配慮事項。特にない場合はnull
    * @nullable
    */
-  specialNeeds: string | null
+  specialNeeds: string | null;
 }

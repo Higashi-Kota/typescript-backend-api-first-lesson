@@ -5,57 +5,48 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsCustomer } from './modelsCustomer'
-import type { ModelsStaffId } from './modelsStaffId'
-import type { ModelsServiceId } from './modelsServiceId'
+import type { ModelsCustomer } from './modelsCustomer';
+import type { ModelsStaffId } from './modelsStaffId';
+import type { ModelsServiceId } from './modelsServiceId';
 
 export type ModelsCustomerProfile = ModelsCustomer & {
   /** 総来店回数。これまでの来店実績の合計 */
-  visitCount: number
+  visitCount: number;
   /**
    * 最終来店日。新規顧客でまだ来店がない場合はnull
    * @nullable
    */
-  lastVisitDate: string | null
+  lastVisitDate: string | null;
   /**
    * お気に入りスタッフID一覧。指名がない場合はnull
    * @nullable
    */
-  favoriteStaffIds: ModelsStaffId[] | null
+  favoriteStaffIds: ModelsStaffId[] | null;
   /**
    * お気に入りサービスID一覧。お気に入りがない場合はnull
    * @nullable
    */
-  favoriteServiceIds: ModelsServiceId[] | null
+  favoriteServiceIds: ModelsServiceId[] | null;
   /** 累計利用金額。これまでの総支払額 */
-  totalSpent: number
-} & Required<
-    Pick<
-      ModelsCustomer & {
-        /** 総来店回数。これまでの来店実績の合計 */
-        visitCount: number
-        /**
-         * 最終来店日。新規顧客でまだ来店がない場合はnull
-         * @nullable
-         */
-        lastVisitDate: string | null
-        /**
-         * お気に入りスタッフID一覧。指名がない場合はnull
-         * @nullable
-         */
-        favoriteStaffIds: ModelsStaffId[] | null
-        /**
-         * お気に入りサービスID一覧。お気に入りがない場合はnull
-         * @nullable
-         */
-        favoriteServiceIds: ModelsServiceId[] | null
-        /** 累計利用金額。これまでの総支払額 */
-        totalSpent: number
-      },
-      | 'visitCount'
-      | 'lastVisitDate'
-      | 'favoriteStaffIds'
-      | 'favoriteServiceIds'
-      | 'totalSpent'
-    >
-  >
+  totalSpent: number;
+} & Required<Pick<ModelsCustomer & {
+  /** 総来店回数。これまでの来店実績の合計 */
+  visitCount: number;
+  /**
+   * 最終来店日。新規顧客でまだ来店がない場合はnull
+   * @nullable
+   */
+  lastVisitDate: string | null;
+  /**
+   * お気に入りスタッフID一覧。指名がない場合はnull
+   * @nullable
+   */
+  favoriteStaffIds: ModelsStaffId[] | null;
+  /**
+   * お気に入りサービスID一覧。お気に入りがない場合はnull
+   * @nullable
+   */
+  favoriteServiceIds: ModelsServiceId[] | null;
+  /** 累計利用金額。これまでの総支払額 */
+  totalSpent: number;
+}, 'visitCount' | 'lastVisitDate' | 'favoriteStaffIds' | 'favoriteServiceIds' | 'totalSpent'>>;

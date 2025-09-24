@@ -5,121 +5,121 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsSalonSearchRequestKeywordParameter } from './modelsSalonSearchRequestKeywordParameter'
-import type { ModelsSalonSearchRequestCityParameter } from './modelsSalonSearchRequestCityParameter'
-import type { ModelsSalonSearchRequestPrefectureParameter } from './modelsSalonSearchRequestPrefectureParameter'
-import type { ModelsSalonSearchRequestCategoriesParameter } from './modelsSalonSearchRequestCategoriesParameter'
-import type { ModelsSalonSearchRequestFeaturesParameter } from './modelsSalonSearchRequestFeaturesParameter'
-import type { ModelsSalonSearchRequestIsActiveParameter } from './modelsSalonSearchRequestIsActiveParameter'
-import type { ModelsSalonSearchRequestMinRatingParameter } from './modelsSalonSearchRequestMinRatingParameter'
-import type { ModelsSalonSearchRequestMaxDistanceParameter } from './modelsSalonSearchRequestMaxDistanceParameter'
-import type { ModelsSalonSearchRequestLatParameter } from './modelsSalonSearchRequestLatParameter'
-import type { ModelsSalonSearchRequestLonParameter } from './modelsSalonSearchRequestLonParameter'
-import type { ModelsSalonSearchRequestOpenNowParameter } from './modelsSalonSearchRequestOpenNowParameter'
-import type { ModelsSalonSearchRequestOpenAtParameter } from './modelsSalonSearchRequestOpenAtParameter'
-import type { ModelsAdvancedSearchParamsQParameter } from './modelsAdvancedSearchParamsQParameter'
-import type { ModelsAdvancedSearchParamsFilterParameter } from './modelsAdvancedSearchParamsFilterParameter'
-import type { ModelsAdvancedSearchParamsFieldsParameter } from './modelsAdvancedSearchParamsFieldsParameter'
-import type { ModelsAdvancedSearchParamsExcludeParameter } from './modelsAdvancedSearchParamsExcludeParameter'
-import type { ModelsAdvancedSearchParamsFacetsParameter } from './modelsAdvancedSearchParamsFacetsParameter'
-import type { ModelsAdvancedSearchParamsFacetFieldsParameter } from './modelsAdvancedSearchParamsFacetFieldsParameter'
-import type { ModelsCursorPaginationParamsLimitParameter } from './modelsCursorPaginationParamsLimitParameter'
-import type { ModelsCursorPaginationParamsCursorParameter } from './modelsCursorPaginationParamsCursorParameter'
-import type { ModelsCursorPaginationParamsSortByParameter } from './modelsCursorPaginationParamsSortByParameter'
-import type { ModelsCursorPaginationParamsSortOrderParameter } from './modelsCursorPaginationParamsSortOrderParameter'
+import type { ModelsSalonSearchRequestKeywordParameter } from './modelsSalonSearchRequestKeywordParameter';
+import type { ModelsSalonSearchRequestCityParameter } from './modelsSalonSearchRequestCityParameter';
+import type { ModelsSalonSearchRequestPrefectureParameter } from './modelsSalonSearchRequestPrefectureParameter';
+import type { ModelsSalonSearchRequestCategoriesParameter } from './modelsSalonSearchRequestCategoriesParameter';
+import type { ModelsSalonSearchRequestFeaturesParameter } from './modelsSalonSearchRequestFeaturesParameter';
+import type { ModelsSalonSearchRequestIsActiveParameter } from './modelsSalonSearchRequestIsActiveParameter';
+import type { ModelsSalonSearchRequestMinRatingParameter } from './modelsSalonSearchRequestMinRatingParameter';
+import type { ModelsSalonSearchRequestMaxDistanceParameter } from './modelsSalonSearchRequestMaxDistanceParameter';
+import type { ModelsSalonSearchRequestLatParameter } from './modelsSalonSearchRequestLatParameter';
+import type { ModelsSalonSearchRequestLonParameter } from './modelsSalonSearchRequestLonParameter';
+import type { ModelsSalonSearchRequestOpenNowParameter } from './modelsSalonSearchRequestOpenNowParameter';
+import type { ModelsSalonSearchRequestOpenAtParameter } from './modelsSalonSearchRequestOpenAtParameter';
+import type { ModelsAdvancedSearchParamsQParameter } from './modelsAdvancedSearchParamsQParameter';
+import type { ModelsAdvancedSearchParamsFilterParameter } from './modelsAdvancedSearchParamsFilterParameter';
+import type { ModelsAdvancedSearchParamsFieldsParameter } from './modelsAdvancedSearchParamsFieldsParameter';
+import type { ModelsAdvancedSearchParamsExcludeParameter } from './modelsAdvancedSearchParamsExcludeParameter';
+import type { ModelsAdvancedSearchParamsFacetsParameter } from './modelsAdvancedSearchParamsFacetsParameter';
+import type { ModelsAdvancedSearchParamsFacetFieldsParameter } from './modelsAdvancedSearchParamsFacetFieldsParameter';
+import type { ModelsCursorPaginationParamsLimitParameter } from './modelsCursorPaginationParamsLimitParameter';
+import type { ModelsCursorPaginationParamsCursorParameter } from './modelsCursorPaginationParamsCursorParameter';
+import type { ModelsCursorPaginationParamsSortByParameter } from './modelsCursorPaginationParamsSortByParameter';
+import type { ModelsCursorPaginationParamsSortOrderParameter } from './modelsCursorPaginationParamsSortOrderParameter';
 
 export type SalonCrudSearchParams = {
-  /**
-   * 検索キーワード。qパラメータのエイリアス
-   */
-  keyword?: ModelsSalonSearchRequestKeywordParameter
-  /**
-   * 市区町村名による絞り込み
-   */
-  city?: ModelsSalonSearchRequestCityParameter
-  /**
-   * 都道府県名による絞り込み
-   */
-  prefecture?: ModelsSalonSearchRequestPrefectureParameter
-  /**
-   * サービスカテゴリ（カット・カラー等）による絞り込み
-   */
-  categories?: ModelsSalonSearchRequestCategoriesParameter
-  /**
-   * 設備やこだわり条件などの特徴タグによる絞り込み
-   */
-  features?: ModelsSalonSearchRequestFeaturesParameter
-  /**
-   * 営業中サロンのみを対象にするかどうか
-   */
-  isActive?: ModelsSalonSearchRequestIsActiveParameter
-  /**
-   * 最低評価値による絞り込み
-   * @minimum 0
-   * @maximum 5
-   */
-  minRating?: ModelsSalonSearchRequestMinRatingParameter
-  /**
-   * 検索基点からの最大距離（km）
-   * @minimum 0
-   */
-  maxDistance?: ModelsSalonSearchRequestMaxDistanceParameter
-  /**
-   * 距離計算に使用する基準緯度
-   */
-  lat?: ModelsSalonSearchRequestLatParameter
-  /**
-   * 距離計算に使用する基準経度
-   */
-  lon?: ModelsSalonSearchRequestLonParameter
-  /**
-   * 現在営業中かどうかで絞り込むフラグ
-   */
-  openNow?: ModelsSalonSearchRequestOpenNowParameter
-  /**
-   * 特定日時に営業しているサロンを探すための基準日時
-   */
-  openAt?: ModelsSalonSearchRequestOpenAtParameter
-  /**
-   * 全文検索キーワード。名称や説明文を横断的に検索する。
-   */
-  q?: ModelsAdvancedSearchParamsQParameter
-  /**
-   * フィルター式。例: `status:active AND category:premium`。属性条件を組み合わせた絞り込みに使用。
-   */
-  filter?: ModelsAdvancedSearchParamsFilterParameter
-  /**
-   * レスポンスに含めるフィールドのカンマ区切りリスト。データ転送量の最適化に活用。
-   */
-  fields?: ModelsAdvancedSearchParamsFieldsParameter
-  /**
-   * レスポンスから除外したいフィールドのカンマ区切りリスト。不要情報を除く場合に利用。
-   */
-  exclude?: ModelsAdvancedSearchParamsExcludeParameter
-  /**
-   * ファセット集計を有効化するかどうか。true で各項目の件数を集計する。
-   */
-  facets?: ModelsAdvancedSearchParamsFacetsParameter
-  /**
-   * 集計対象とするファセットフィールドの一覧。カテゴリや価格帯などを指定する。
-   */
-  facetFields?: ModelsAdvancedSearchParamsFacetFieldsParameter
-  /**
-   * 1ページあたりの取得件数上限 (1〜100)。指定が無い場合は既定値 20 を適用。
-   * @minimum 1
-   * @maximum 100
-   */
-  limit?: ModelsCursorPaginationParamsLimitParameter
-  /**
-   * 次ページを指し示すカーソル。前回レスポンスの `meta.nextCursor` を設定する。
-   */
-  cursor?: ModelsCursorPaginationParamsCursorParameter
-  /**
-   * ソート対象フィールド。予約日時や作成日時など業務軸を指定する。
-   */
-  sortBy?: ModelsCursorPaginationParamsSortByParameter
-  /**
-   * ソート順序。`asc` は昇順、`desc` は降順を表す。
-   */
-  sortOrder?: ModelsCursorPaginationParamsSortOrderParameter
-}
+/**
+ * 検索キーワード。qパラメータのエイリアス
+ */
+keyword?: ModelsSalonSearchRequestKeywordParameter;
+/**
+ * 市区町村名による絞り込み
+ */
+city?: ModelsSalonSearchRequestCityParameter;
+/**
+ * 都道府県名による絞り込み
+ */
+prefecture?: ModelsSalonSearchRequestPrefectureParameter;
+/**
+ * サービスカテゴリ（カット・カラー等）による絞り込み
+ */
+categories?: ModelsSalonSearchRequestCategoriesParameter;
+/**
+ * 設備やこだわり条件などの特徴タグによる絞り込み
+ */
+features?: ModelsSalonSearchRequestFeaturesParameter;
+/**
+ * 営業中サロンのみを対象にするかどうか
+ */
+isActive?: ModelsSalonSearchRequestIsActiveParameter;
+/**
+ * 最低評価値による絞り込み
+ * @minimum 0
+ * @maximum 5
+ */
+minRating?: ModelsSalonSearchRequestMinRatingParameter;
+/**
+ * 検索基点からの最大距離（km）
+ * @minimum 0
+ */
+maxDistance?: ModelsSalonSearchRequestMaxDistanceParameter;
+/**
+ * 距離計算に使用する基準緯度
+ */
+lat?: ModelsSalonSearchRequestLatParameter;
+/**
+ * 距離計算に使用する基準経度
+ */
+lon?: ModelsSalonSearchRequestLonParameter;
+/**
+ * 現在営業中かどうかで絞り込むフラグ
+ */
+openNow?: ModelsSalonSearchRequestOpenNowParameter;
+/**
+ * 特定日時に営業しているサロンを探すための基準日時
+ */
+openAt?: ModelsSalonSearchRequestOpenAtParameter;
+/**
+ * 全文検索キーワード。名称や説明文を横断的に検索する。
+ */
+q?: ModelsAdvancedSearchParamsQParameter;
+/**
+ * フィルター式。例: `status:active AND category:premium`。属性条件を組み合わせた絞り込みに使用。
+ */
+filter?: ModelsAdvancedSearchParamsFilterParameter;
+/**
+ * レスポンスに含めるフィールドのカンマ区切りリスト。データ転送量の最適化に活用。
+ */
+fields?: ModelsAdvancedSearchParamsFieldsParameter;
+/**
+ * レスポンスから除外したいフィールドのカンマ区切りリスト。不要情報を除く場合に利用。
+ */
+exclude?: ModelsAdvancedSearchParamsExcludeParameter;
+/**
+ * ファセット集計を有効化するかどうか。true で各項目の件数を集計する。
+ */
+facets?: ModelsAdvancedSearchParamsFacetsParameter;
+/**
+ * 集計対象とするファセットフィールドの一覧。カテゴリや価格帯などを指定する。
+ */
+facetFields?: ModelsAdvancedSearchParamsFacetFieldsParameter;
+/**
+ * 1ページあたりの取得件数上限 (1〜100)。指定が無い場合は既定値 20 を適用。
+ * @minimum 1
+ * @maximum 100
+ */
+limit?: ModelsCursorPaginationParamsLimitParameter;
+/**
+ * 次ページを指し示すカーソル。前回レスポンスの `meta.nextCursor` を設定する。
+ */
+cursor?: ModelsCursorPaginationParamsCursorParameter;
+/**
+ * ソート対象フィールド。予約日時や作成日時など業務軸を指定する。
+ */
+sortBy?: ModelsCursorPaginationParamsSortByParameter;
+/**
+ * ソート順序。`asc` は昇順、`desc` は降順を表す。
+ */
+sortOrder?: ModelsCursorPaginationParamsSortOrderParameter;
+};

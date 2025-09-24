@@ -5,42 +5,42 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsRoleId } from './modelsRoleId'
-import type { ModelsPermission } from './modelsPermission'
+import type { ModelsRoleId } from './modelsRoleId';
+import type { ModelsPermission } from './modelsPermission';
 
 /**
  * 権限管理におけるロール定義
  */
 export interface ModelsRole {
   /** ロール ID */
-  id: ModelsRoleId
+  id: ModelsRoleId;
   /** ロールのシステム内部名 */
-  name: string
+  name: string;
   /** 管理画面などで表示する名称 */
-  displayName: string
+  displayName: string;
   /**
    * ロールの詳細説明 - システム標準ロールや説明不要なシンプルなロールの場合はnull
    * @nullable
    */
-  description: string | null
+  description: string | null;
   /** 付与されている権限一覧 */
-  permissions: ModelsPermission[]
+  permissions: ModelsPermission[];
   /** システム標準ロールかどうか */
-  isSystem: boolean
+  isSystem: boolean;
   /** ロールが有効状態かどうか */
-  isActive: boolean
+  isActive: boolean;
   /** レコード作成日時。 */
-  createdAt: string
+  createdAt: string;
   /**
    * レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull
    * @nullable
    */
-  createdBy: string | null
+  createdBy: string | null;
   /** レコード最終更新日時。 */
-  updatedAt: string
+  updatedAt: string;
   /**
    * レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull
    * @nullable
    */
-  updatedBy: string | null
+  updatedBy: string | null;
 }

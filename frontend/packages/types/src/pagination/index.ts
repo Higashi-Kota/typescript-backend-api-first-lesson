@@ -32,7 +32,7 @@ export const generateDefaultPaginationData = <
   T = unknown,
   K extends string = 'data',
 >(
-  dataKey: K = 'data' as K
+  dataKey: K = 'data' as K,
 ): Pagination<T, K> =>
   ({
     pagination: { page: 0, per_page: 0, total: 0 },

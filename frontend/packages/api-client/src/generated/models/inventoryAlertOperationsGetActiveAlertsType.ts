@@ -6,8 +6,8 @@
  * OpenAPI spec version: 2.0
  */
 
-export type InventoryAlertOperationsGetActiveAlertsType =
-  (typeof InventoryAlertOperationsGetActiveAlertsType)[keyof typeof InventoryAlertOperationsGetActiveAlertsType]
+export type InventoryAlertOperationsGetActiveAlertsType = typeof InventoryAlertOperationsGetActiveAlertsType[keyof typeof InventoryAlertOperationsGetActiveAlertsType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const InventoryAlertOperationsGetActiveAlertsType = {
@@ -15,4 +15,4 @@ export const InventoryAlertOperationsGetActiveAlertsType = {
   expiring: 'expiring',
   expired: 'expired',
   overstock: 'overstock',
-} as const
+} as const;

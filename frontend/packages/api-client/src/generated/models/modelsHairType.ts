@@ -14,8 +14,8 @@ wavy: ウェービー - 緩やかな波状、S字カーブの髪質
 curly: カーリー - 明確なカール、螺旋状の髪質
 coily: コイリー - 非常に細かいカール、ジグザグ状の髪質
  */
-export type ModelsHairType =
-  (typeof ModelsHairType)[keyof typeof ModelsHairType]
+export type ModelsHairType = typeof ModelsHairType[keyof typeof ModelsHairType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsHairType = {
@@ -23,4 +23,4 @@ export const ModelsHairType = {
   wavy: 'wavy',
   curly: 'curly',
   coily: 'coily',
-} as const
+} as const;

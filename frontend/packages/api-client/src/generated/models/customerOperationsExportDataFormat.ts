@@ -6,12 +6,12 @@
  * OpenAPI spec version: 2.0
  */
 
-export type CustomerOperationsExportDataFormat =
-  (typeof CustomerOperationsExportDataFormat)[keyof typeof CustomerOperationsExportDataFormat]
+export type CustomerOperationsExportDataFormat = typeof CustomerOperationsExportDataFormat[keyof typeof CustomerOperationsExportDataFormat];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CustomerOperationsExportDataFormat = {
   json: 'json',
   csv: 'csv',
   pdf: 'pdf',
-} as const
+} as const;

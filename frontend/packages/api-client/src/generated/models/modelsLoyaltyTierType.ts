@@ -14,8 +14,8 @@ silver: シルバー - 中級会員ランク、標準的な特典を提供
 gold: ゴールド - 上級会員ランク、優待特典を提供
 platinum: プラチナ - 最上級会員ランク、最高レベルの特典を提供
  */
-export type ModelsLoyaltyTierType =
-  (typeof ModelsLoyaltyTierType)[keyof typeof ModelsLoyaltyTierType]
+export type ModelsLoyaltyTierType = typeof ModelsLoyaltyTierType[keyof typeof ModelsLoyaltyTierType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsLoyaltyTierType = {
@@ -23,4 +23,4 @@ export const ModelsLoyaltyTierType = {
   silver: 'silver',
   gold: 'gold',
   platinum: 'platinum',
-} as const
+} as const;

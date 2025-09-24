@@ -34,7 +34,7 @@ export interface SeedOptions {
  */
 export async function seed(
   db: PostgresJsDatabase<typeof schema>,
-  options: SeedOptions = {}
+  options: SeedOptions = {},
 ): Promise<void> {
   const {
     environment = 'development',
@@ -115,7 +115,7 @@ export async function seed(
  * Utility function to truncate all tables
  */
 export async function truncateAll(
-  db: PostgresJsDatabase<typeof schema>
+  db: PostgresJsDatabase<typeof schema>,
 ): Promise<void> {
   // Disable foreign key checks temporarily
   await db.execute(sql`SET session_replication_role = 'replica'`)

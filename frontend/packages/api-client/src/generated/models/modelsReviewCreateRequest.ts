@@ -5,60 +5,60 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsSalonId } from './modelsSalonId'
-import type { ModelsCustomerId } from './modelsCustomerId'
-import type { ModelsBookingId } from './modelsBookingId'
+import type { ModelsSalonId } from './modelsSalonId';
+import type { ModelsCustomerId } from './modelsCustomerId';
+import type { ModelsBookingId } from './modelsBookingId';
 
 /**
  * レビュー作成リクエスト - 顧客が新規レビュー投稿時に入力する評価情報と任意コメント・画像を受け取る
  */
 export interface ModelsReviewCreateRequest {
   /** レビュー対象のサロンID */
-  salonId: ModelsSalonId
+  salonId: ModelsSalonId;
   /** レビュー投稿者の顧客ID */
-  customerId: ModelsCustomerId
+  customerId: ModelsCustomerId;
   /** 紐づく来店予約ID (booking_id) */
-  bookingId: ModelsBookingId
+  bookingId: ModelsBookingId;
   /**
    * 評価対象スタッフのID - セルフサービスやスタッフ特定不要の施術の場合はnull
    * @nullable
    */
-  staffId: string | null
+  staffId: string | null;
   /** 全体満足度の評価値 */
-  overallRating: number
+  overallRating: number;
   /**
    * 自由記述のコメント - 評価のみでコメントなしのシンプルレビューの場合はnull
    * @nullable
    */
-  comment: string | null
+  comment: string | null;
   /**
    * レビュータイトル - タイトル未設定の簡易レビューの場合はnull
    * @nullable
    */
-  title: string | null
+  title: string | null;
   /**
    * サービス品質に対する評価値 - 個別評価をしない総合評価のみのレビューの場合はnull
    * @nullable
    */
-  serviceRating: number | null
+  serviceRating: number | null;
   /**
    * スタッフ対応に対する評価値 - スタッフ評価省略またはセルフサービスの場合はnull
    * @nullable
    */
-  staffRating: number | null
+  staffRating: number | null;
   /**
    * 清潔さ・衛生状態に対する評価値 - 清潔さ評価を省略したレビューの場合はnull
    * @nullable
    */
-  cleanlinessRating: number | null
+  cleanlinessRating: number | null;
   /**
    * 価格に見合う価値の評価値 - 価格評価を省略したレビューの場合はnull
    * @nullable
    */
-  valueRating: number | null
+  valueRating: number | null;
   /**
    * 添付画像のURL一覧 - 画像添付なしのテキストのみレビューの場合はnull
    * @nullable
    */
-  imageUrls: string[] | null
+  imageUrls: string[] | null;
 }

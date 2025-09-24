@@ -9,4 +9,4 @@
 /**
  * 現在営業中かどうかで絞り込むフラグ
  */
-export type ModelsSalonSearchRequestOpenNowParameter = boolean
+export type ModelsSalonSearchRequestOpenNowParameter = boolean;

@@ -9,8 +9,8 @@
 /**
  * 顧客ステータスでフィルタ
  */
-export type CustomerCrudExportBodyStatus =
-  (typeof CustomerCrudExportBodyStatus)[keyof typeof CustomerCrudExportBodyStatus]
+export type CustomerCrudExportBodyStatus = typeof CustomerCrudExportBodyStatus[keyof typeof CustomerCrudExportBodyStatus];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CustomerCrudExportBodyStatus = {
@@ -19,4 +19,4 @@ export const CustomerCrudExportBodyStatus = {
   suspended: 'suspended',
   deleted: 'deleted',
   blacklisted: 'blacklisted',
-} as const
+} as const;

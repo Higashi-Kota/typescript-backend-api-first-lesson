@@ -5,11 +5,11 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsFieldMaskParameter } from './modelsFieldMaskParameter'
+import type { ModelsFieldMaskParameter } from './modelsFieldMaskParameter';
 
 export type CustomerCrudPatchParams = {
-  /**
-   * 更新対象フィールドをカンマ区切りで列挙した文字列。例: `name,address.street`。
-   */
-  updateMask?: ModelsFieldMaskParameter
-}
+/**
+ * 更新対象フィールドをカンマ区切りで列挙した文字列。例: `name,address.street`。
+ */
+updateMask?: ModelsFieldMaskParameter;
+};

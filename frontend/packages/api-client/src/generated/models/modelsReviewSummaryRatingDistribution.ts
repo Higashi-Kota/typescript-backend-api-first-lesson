@@ -9,4 +9,4 @@
 /**
  * 評価値ごとのレビュー件数分布
  */
-export type ModelsReviewSummaryRatingDistribution = { [key: string]: number }
+export type ModelsReviewSummaryRatingDistribution = {[key: string]: number};

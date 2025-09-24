@@ -5,7 +5,10 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import { useMutation, useQuery } from '@tanstack/react-query'
+import {
+  useMutation,
+  useQuery
+} from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -18,8 +21,8 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult,
-} from '@tanstack/react-query'
+  UseQueryResult
+} from '@tanstack/react-query';
 
 import type {
   GlobalStaffOperationsSearchStaff200,
@@ -33,16 +36,19 @@ import type {
   ModelsUpdateStaffRequest,
   StaffOperationsGetAvailabilityParams,
   StaffOperationsList200,
-  StaffOperationsListParams,
-} from '../../models'
+  StaffOperationsListParams
+} from '../../models';
 
-import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher'
+import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher';
 
-type AwaitedInput<T> = PromiseLike<T> | T
+type AwaitedInput<T> = PromiseLike<T> | T;
 
-type Awaited<O> = O extends AwaitedInput<infer T> ? T : never
+      type Awaited<O> = O extends AwaitedInput<infer T> ? T : never;
 
-type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
+
 
 /**
  * サロンに所属するスタッフ一覧を取得し、配置状況や担当可能メニューを確認します。
@@ -52,217 +58,119 @@ export type staffOperationsListResponse200 = {
   data: StaffOperationsList200
   status: 200
 }
+    
+export type staffOperationsListResponseComposite = staffOperationsListResponse200;
+    
+export type staffOperationsListResponse = staffOperationsListResponseComposite & {
+  headers: Headers;
+}
 
-export type staffOperationsListResponseComposite =
-  staffOperationsListResponse200
-
-export type staffOperationsListResponse =
-  staffOperationsListResponseComposite & {
-    headers: Headers
-  }
-
-export const getStaffOperationsListUrl = (
-  salonId: ModelsSalonId,
-  params?: StaffOperationsListParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getStaffOperationsListUrl = (salonId: ModelsSalonId,
+    params?: StaffOperationsListParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v1/salons/${salonId}/staff?${stringifiedParams}`
-    : `/api/v1/salons/${salonId}/staff`
+  return stringifiedParams.length > 0 ? `/api/v1/salons/${salonId}/staff?${stringifiedParams}` : `/api/v1/salons/${salonId}/staff`
 }
 
-export const staffOperationsList = async (
-  salonId: ModelsSalonId,
-  params?: StaffOperationsListParams,
-  options?: RequestInit
-): Promise<staffOperationsListResponse> => {
-  return customInstance<staffOperationsListResponse>(
-    getStaffOperationsListUrl(salonId, params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getStaffOperationsListQueryKey = (
-  salonId?: ModelsSalonId,
-  params?: StaffOperationsListParams
-) => {
-  return [
-    `/api/v1/salons/${salonId}/staff`,
-    ...(params ? [params] : []),
-  ] as const
-}
-
-export const getStaffOperationsListQueryOptions = <
-  TData = Awaited<ReturnType<typeof staffOperationsList>>,
-  TError = unknown,
->(
-  salonId: ModelsSalonId,
-  params?: StaffOperationsListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof staffOperationsList>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const staffOperationsList = async (salonId: ModelsSalonId,
+    params?: StaffOperationsListParams, options?: RequestInit): Promise<staffOperationsListResponse> => {
+  
+  return customInstance<staffOperationsListResponse>(getStaffOperationsListUrl(salonId,params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getStaffOperationsListQueryKey = (salonId?: ModelsSalonId,
+    params?: StaffOperationsListParams,) => {
+    return [`/api/v1/salons/${salonId}/staff`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getStaffOperationsListQueryOptions = <TData = Awaited<ReturnType<typeof staffOperationsList>>, TError = unknown>(salonId: ModelsSalonId,
+    params?: StaffOperationsListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof staffOperationsList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ?? getStaffOperationsListQueryKey(salonId, params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof staffOperationsList>>
-  > = ({ signal }) =>
-    staffOperationsList(salonId, params, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getStaffOperationsListQueryKey(salonId,params);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!salonId,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof staffOperationsList>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof staffOperationsList>>> = ({ signal }) => staffOperationsList(salonId,params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(salonId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof staffOperationsList>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type StaffOperationsListQueryResult = NonNullable<
-  Awaited<ReturnType<typeof staffOperationsList>>
->
+export type StaffOperationsListQueryResult = NonNullable<Awaited<ReturnType<typeof staffOperationsList>>>
 export type StaffOperationsListQueryError = unknown
 
-export function useStaffOperationsList<
-  TData = Awaited<ReturnType<typeof staffOperationsList>>,
-  TError = unknown,
->(
-  salonId: ModelsSalonId,
-  params: undefined | StaffOperationsListParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof staffOperationsList>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useStaffOperationsList<TData = Awaited<ReturnType<typeof staffOperationsList>>, TError = unknown>(
+ salonId: ModelsSalonId,
+    params: undefined |  StaffOperationsListParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof staffOperationsList>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof staffOperationsList>>,
           TError,
           Awaited<ReturnType<typeof staffOperationsList>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useStaffOperationsList<
-  TData = Awaited<ReturnType<typeof staffOperationsList>>,
-  TError = unknown,
->(
-  salonId: ModelsSalonId,
-  params?: StaffOperationsListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof staffOperationsList>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useStaffOperationsList<TData = Awaited<ReturnType<typeof staffOperationsList>>, TError = unknown>(
+ salonId: ModelsSalonId,
+    params?: StaffOperationsListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof staffOperationsList>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof staffOperationsList>>,
           TError,
           Awaited<ReturnType<typeof staffOperationsList>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useStaffOperationsList<
-  TData = Awaited<ReturnType<typeof staffOperationsList>>,
-  TError = unknown,
->(
-  salonId: ModelsSalonId,
-  params?: StaffOperationsListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof staffOperationsList>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useStaffOperationsList<TData = Awaited<ReturnType<typeof staffOperationsList>>, TError = unknown>(
+ salonId: ModelsSalonId,
+    params?: StaffOperationsListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof staffOperationsList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary List staff members
  */
 
-export function useStaffOperationsList<
-  TData = Awaited<ReturnType<typeof staffOperationsList>>,
-  TError = unknown,
->(
-  salonId: ModelsSalonId,
-  params?: StaffOperationsListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof staffOperationsList>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getStaffOperationsListQueryOptions(
-    salonId,
-    params,
-    options
-  )
+export function useStaffOperationsList<TData = Awaited<ReturnType<typeof staffOperationsList>>, TError = unknown>(
+ salonId: ModelsSalonId,
+    params?: StaffOperationsListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof staffOperationsList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  const queryOptions = getStaffOperationsListQueryOptions(salonId,params,options)
 
-  query.queryKey = queryOptions.queryKey
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  return query
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
+
+
 
 /**
  * 新しいスタッフを登録し、プロフィール情報や担当メニューの設定を開始します。
@@ -277,108 +185,83 @@ export type staffOperationsCreateResponse400 = {
   data: ModelsError
   status: 400
 }
+    
+export type staffOperationsCreateResponseComposite = staffOperationsCreateResponse201 | staffOperationsCreateResponse400;
+    
+export type staffOperationsCreateResponse = staffOperationsCreateResponseComposite & {
+  headers: Headers;
+}
 
-export type staffOperationsCreateResponseComposite =
-  | staffOperationsCreateResponse201
-  | staffOperationsCreateResponse400
+export const getStaffOperationsCreateUrl = (salonId: ModelsSalonId,) => {
 
-export type staffOperationsCreateResponse =
-  staffOperationsCreateResponseComposite & {
-    headers: Headers
-  }
 
-export const getStaffOperationsCreateUrl = (salonId: ModelsSalonId) => {
+  
+
   return `/api/v1/salons/${salonId}/staff`
 }
 
-export const staffOperationsCreate = async (
-  salonId: ModelsSalonId,
-  modelsCreateStaffRequest: ModelsCreateStaffRequest,
-  options?: RequestInit
-): Promise<staffOperationsCreateResponse> => {
-  return customInstance<staffOperationsCreateResponse>(
-    getStaffOperationsCreateUrl(salonId),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsCreateStaffRequest),
-    }
-  )
-}
-
-export const getStaffOperationsCreateMutationOptions = <
-  TError = ModelsError,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof staffOperationsCreate>>,
-    TError,
-    { salonId: ModelsSalonId; data: ModelsCreateStaffRequest },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof staffOperationsCreate>>,
-  TError,
-  { salonId: ModelsSalonId; data: ModelsCreateStaffRequest },
-  TContext
-> => {
-  const mutationKey = ['staffOperationsCreate']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof staffOperationsCreate>>,
-    { salonId: ModelsSalonId; data: ModelsCreateStaffRequest }
-  > = (props) => {
-    const { salonId, data } = props ?? {}
-
-    return staffOperationsCreate(salonId, data, requestOptions)
+export const staffOperationsCreate = async (salonId: ModelsSalonId,
+    modelsCreateStaffRequest: ModelsCreateStaffRequest, options?: RequestInit): Promise<staffOperationsCreateResponse> => {
+  
+  return customInstance<staffOperationsCreateResponse>(getStaffOperationsCreateUrl(salonId),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      modelsCreateStaffRequest,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type StaffOperationsCreateMutationResult = NonNullable<
-  Awaited<ReturnType<typeof staffOperationsCreate>>
->
-export type StaffOperationsCreateMutationBody = ModelsCreateStaffRequest
-export type StaffOperationsCreateMutationError = ModelsError
 
-/**
+
+export const getStaffOperationsCreateMutationOptions = <TError = ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof staffOperationsCreate>>, TError,{salonId: ModelsSalonId;data: ModelsCreateStaffRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof staffOperationsCreate>>, TError,{salonId: ModelsSalonId;data: ModelsCreateStaffRequest}, TContext> => {
+
+const mutationKey = ['staffOperationsCreate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof staffOperationsCreate>>, {salonId: ModelsSalonId;data: ModelsCreateStaffRequest}> = (props) => {
+          const {salonId,data} = props ?? {};
+
+          return  staffOperationsCreate(salonId,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type StaffOperationsCreateMutationResult = NonNullable<Awaited<ReturnType<typeof staffOperationsCreate>>>
+    export type StaffOperationsCreateMutationBody = ModelsCreateStaffRequest
+    export type StaffOperationsCreateMutationError = ModelsError
+
+    /**
  * @summary Create staff member
  */
-export const useStaffOperationsCreate = <
-  TError = ModelsError,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof staffOperationsCreate>>,
-      TError,
-      { salonId: ModelsSalonId; data: ModelsCreateStaffRequest },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof staffOperationsCreate>>,
-  TError,
-  { salonId: ModelsSalonId; data: ModelsCreateStaffRequest },
-  TContext
-> => {
-  const mutationOptions = getStaffOperationsCreateMutationOptions(options)
+export const useStaffOperationsCreate = <TError = ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof staffOperationsCreate>>, TError,{salonId: ModelsSalonId;data: ModelsCreateStaffRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof staffOperationsCreate>>,
+        TError,
+        {salonId: ModelsSalonId;data: ModelsCreateStaffRequest},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getStaffOperationsCreateMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 特定スタッフの詳細情報を取得し、顧客向け表示や社内確認に利用します。
  * @summary Get staff member
  */
@@ -391,198 +274,112 @@ export type staffOperationsGetResponse404 = {
   data: ModelsError
   status: 404
 }
-
-export type staffOperationsGetResponseComposite =
-  | staffOperationsGetResponse200
-  | staffOperationsGetResponse404
-
+    
+export type staffOperationsGetResponseComposite = staffOperationsGetResponse200 | staffOperationsGetResponse404;
+    
 export type staffOperationsGetResponse = staffOperationsGetResponseComposite & {
-  headers: Headers
+  headers: Headers;
 }
 
-export const getStaffOperationsGetUrl = (
-  salonId: ModelsSalonId,
-  id: ModelsStaffId
-) => {
+export const getStaffOperationsGetUrl = (salonId: ModelsSalonId,
+    id: ModelsStaffId,) => {
+
+
+  
+
   return `/api/v1/salons/${salonId}/staff/${id}`
 }
 
-export const staffOperationsGet = async (
-  salonId: ModelsSalonId,
-  id: ModelsStaffId,
-  options?: RequestInit
-): Promise<staffOperationsGetResponse> => {
-  return customInstance<staffOperationsGetResponse>(
-    getStaffOperationsGetUrl(salonId, id),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getStaffOperationsGetQueryKey = (
-  salonId?: ModelsSalonId,
-  id?: ModelsStaffId
-) => {
-  return [`/api/v1/salons/${salonId}/staff/${id}`] as const
-}
-
-export const getStaffOperationsGetQueryOptions = <
-  TData = Awaited<ReturnType<typeof staffOperationsGet>>,
-  TError = ModelsError,
->(
-  salonId: ModelsSalonId,
-  id: ModelsStaffId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof staffOperationsGet>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const staffOperationsGet = async (salonId: ModelsSalonId,
+    id: ModelsStaffId, options?: RequestInit): Promise<staffOperationsGetResponse> => {
+  
+  return customInstance<staffOperationsGetResponse>(getStaffOperationsGetUrl(salonId,id),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getStaffOperationsGetQueryKey = (salonId?: ModelsSalonId,
+    id?: ModelsStaffId,) => {
+    return [`/api/v1/salons/${salonId}/staff/${id}`] as const;
+    }
+
+    
+export const getStaffOperationsGetQueryOptions = <TData = Awaited<ReturnType<typeof staffOperationsGet>>, TError = ModelsError>(salonId: ModelsSalonId,
+    id: ModelsStaffId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof staffOperationsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ?? getStaffOperationsGetQueryKey(salonId, id)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof staffOperationsGet>>
-  > = ({ signal }) =>
-    staffOperationsGet(salonId, id, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getStaffOperationsGetQueryKey(salonId,id);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!(salonId && id),
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof staffOperationsGet>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof staffOperationsGet>>> = ({ signal }) => staffOperationsGet(salonId,id, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(salonId && id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof staffOperationsGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type StaffOperationsGetQueryResult = NonNullable<
-  Awaited<ReturnType<typeof staffOperationsGet>>
->
+export type StaffOperationsGetQueryResult = NonNullable<Awaited<ReturnType<typeof staffOperationsGet>>>
 export type StaffOperationsGetQueryError = ModelsError
 
-export function useStaffOperationsGet<
-  TData = Awaited<ReturnType<typeof staffOperationsGet>>,
-  TError = ModelsError,
->(
-  salonId: ModelsSalonId,
-  id: ModelsStaffId,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof staffOperationsGet>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useStaffOperationsGet<TData = Awaited<ReturnType<typeof staffOperationsGet>>, TError = ModelsError>(
+ salonId: ModelsSalonId,
+    id: ModelsStaffId, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof staffOperationsGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof staffOperationsGet>>,
           TError,
           Awaited<ReturnType<typeof staffOperationsGet>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useStaffOperationsGet<
-  TData = Awaited<ReturnType<typeof staffOperationsGet>>,
-  TError = ModelsError,
->(
-  salonId: ModelsSalonId,
-  id: ModelsStaffId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof staffOperationsGet>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useStaffOperationsGet<TData = Awaited<ReturnType<typeof staffOperationsGet>>, TError = ModelsError>(
+ salonId: ModelsSalonId,
+    id: ModelsStaffId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof staffOperationsGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof staffOperationsGet>>,
           TError,
           Awaited<ReturnType<typeof staffOperationsGet>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useStaffOperationsGet<
-  TData = Awaited<ReturnType<typeof staffOperationsGet>>,
-  TError = ModelsError,
->(
-  salonId: ModelsSalonId,
-  id: ModelsStaffId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof staffOperationsGet>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useStaffOperationsGet<TData = Awaited<ReturnType<typeof staffOperationsGet>>, TError = ModelsError>(
+ salonId: ModelsSalonId,
+    id: ModelsStaffId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof staffOperationsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get staff member
  */
 
-export function useStaffOperationsGet<
-  TData = Awaited<ReturnType<typeof staffOperationsGet>>,
-  TError = ModelsError,
->(
-  salonId: ModelsSalonId,
-  id: ModelsStaffId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof staffOperationsGet>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getStaffOperationsGetQueryOptions(salonId, id, options)
+export function useStaffOperationsGet<TData = Awaited<ReturnType<typeof staffOperationsGet>>, TError = ModelsError>(
+ salonId: ModelsSalonId,
+    id: ModelsStaffId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof staffOperationsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  const queryOptions = getStaffOperationsGetQueryOptions(salonId,id,options)
 
-  query.queryKey = queryOptions.queryKey
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  return query
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
+
+
 
 /**
  * スタッフのプロフィールや担当メニュー、表示可否を更新します。
@@ -602,125 +399,85 @@ export type staffOperationsUpdateResponse404 = {
   data: ModelsError
   status: 404
 }
+    
+export type staffOperationsUpdateResponseComposite = staffOperationsUpdateResponse200 | staffOperationsUpdateResponse400 | staffOperationsUpdateResponse404;
+    
+export type staffOperationsUpdateResponse = staffOperationsUpdateResponseComposite & {
+  headers: Headers;
+}
 
-export type staffOperationsUpdateResponseComposite =
-  | staffOperationsUpdateResponse200
-  | staffOperationsUpdateResponse400
-  | staffOperationsUpdateResponse404
+export const getStaffOperationsUpdateUrl = (salonId: ModelsSalonId,
+    id: ModelsStaffId,) => {
 
-export type staffOperationsUpdateResponse =
-  staffOperationsUpdateResponseComposite & {
-    headers: Headers
-  }
 
-export const getStaffOperationsUpdateUrl = (
-  salonId: ModelsSalonId,
-  id: ModelsStaffId
-) => {
+  
+
   return `/api/v1/salons/${salonId}/staff/${id}`
 }
 
-export const staffOperationsUpdate = async (
-  salonId: ModelsSalonId,
-  id: ModelsStaffId,
-  modelsUpdateStaffRequest: ModelsUpdateStaffRequest,
-  options?: RequestInit
-): Promise<staffOperationsUpdateResponse> => {
-  return customInstance<staffOperationsUpdateResponse>(
-    getStaffOperationsUpdateUrl(salonId, id),
-    {
-      ...options,
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsUpdateStaffRequest),
-    }
-  )
-}
-
-export const getStaffOperationsUpdateMutationOptions = <
-  TError = ModelsError | ModelsError,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof staffOperationsUpdate>>,
-    TError,
-    {
-      salonId: ModelsSalonId
-      id: ModelsStaffId
-      data: ModelsUpdateStaffRequest
-    },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof staffOperationsUpdate>>,
-  TError,
-  { salonId: ModelsSalonId; id: ModelsStaffId; data: ModelsUpdateStaffRequest },
-  TContext
-> => {
-  const mutationKey = ['staffOperationsUpdate']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof staffOperationsUpdate>>,
-    {
-      salonId: ModelsSalonId
-      id: ModelsStaffId
-      data: ModelsUpdateStaffRequest
-    }
-  > = (props) => {
-    const { salonId, id, data } = props ?? {}
-
-    return staffOperationsUpdate(salonId, id, data, requestOptions)
+export const staffOperationsUpdate = async (salonId: ModelsSalonId,
+    id: ModelsStaffId,
+    modelsUpdateStaffRequest: ModelsUpdateStaffRequest, options?: RequestInit): Promise<staffOperationsUpdateResponse> => {
+  
+  return customInstance<staffOperationsUpdateResponse>(getStaffOperationsUpdateUrl(salonId,id),
+  {      
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      modelsUpdateStaffRequest,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type StaffOperationsUpdateMutationResult = NonNullable<
-  Awaited<ReturnType<typeof staffOperationsUpdate>>
->
-export type StaffOperationsUpdateMutationBody = ModelsUpdateStaffRequest
-export type StaffOperationsUpdateMutationError = ModelsError | ModelsError
 
-/**
+
+export const getStaffOperationsUpdateMutationOptions = <TError = ModelsError | ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof staffOperationsUpdate>>, TError,{salonId: ModelsSalonId;id: ModelsStaffId;data: ModelsUpdateStaffRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof staffOperationsUpdate>>, TError,{salonId: ModelsSalonId;id: ModelsStaffId;data: ModelsUpdateStaffRequest}, TContext> => {
+
+const mutationKey = ['staffOperationsUpdate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof staffOperationsUpdate>>, {salonId: ModelsSalonId;id: ModelsStaffId;data: ModelsUpdateStaffRequest}> = (props) => {
+          const {salonId,id,data} = props ?? {};
+
+          return  staffOperationsUpdate(salonId,id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type StaffOperationsUpdateMutationResult = NonNullable<Awaited<ReturnType<typeof staffOperationsUpdate>>>
+    export type StaffOperationsUpdateMutationBody = ModelsUpdateStaffRequest
+    export type StaffOperationsUpdateMutationError = ModelsError | ModelsError
+
+    /**
  * @summary Update staff member
  */
-export const useStaffOperationsUpdate = <
-  TError = ModelsError | ModelsError,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof staffOperationsUpdate>>,
-      TError,
-      {
-        salonId: ModelsSalonId
-        id: ModelsStaffId
-        data: ModelsUpdateStaffRequest
-      },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof staffOperationsUpdate>>,
-  TError,
-  { salonId: ModelsSalonId; id: ModelsStaffId; data: ModelsUpdateStaffRequest },
-  TContext
-> => {
-  const mutationOptions = getStaffOperationsUpdateMutationOptions(options)
+export const useStaffOperationsUpdate = <TError = ModelsError | ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof staffOperationsUpdate>>, TError,{salonId: ModelsSalonId;id: ModelsStaffId;data: ModelsUpdateStaffRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof staffOperationsUpdate>>,
+        TError,
+        {salonId: ModelsSalonId;id: ModelsStaffId;data: ModelsUpdateStaffRequest},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getStaffOperationsUpdateMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 退職や契約終了に伴いスタッフを削除し、予約導線から除外します。
  * @summary Delete staff member
  */
@@ -733,109 +490,83 @@ export type staffOperationsDeleteResponse404 = {
   data: ModelsError
   status: 404
 }
+    
+export type staffOperationsDeleteResponseComposite = staffOperationsDeleteResponse204 | staffOperationsDeleteResponse404;
+    
+export type staffOperationsDeleteResponse = staffOperationsDeleteResponseComposite & {
+  headers: Headers;
+}
 
-export type staffOperationsDeleteResponseComposite =
-  | staffOperationsDeleteResponse204
-  | staffOperationsDeleteResponse404
+export const getStaffOperationsDeleteUrl = (salonId: ModelsSalonId,
+    id: ModelsStaffId,) => {
 
-export type staffOperationsDeleteResponse =
-  staffOperationsDeleteResponseComposite & {
-    headers: Headers
-  }
 
-export const getStaffOperationsDeleteUrl = (
-  salonId: ModelsSalonId,
-  id: ModelsStaffId
-) => {
+  
+
   return `/api/v1/salons/${salonId}/staff/${id}`
 }
 
-export const staffOperationsDelete = async (
-  salonId: ModelsSalonId,
-  id: ModelsStaffId,
-  options?: RequestInit
-): Promise<staffOperationsDeleteResponse> => {
-  return customInstance<staffOperationsDeleteResponse>(
-    getStaffOperationsDeleteUrl(salonId, id),
-    {
-      ...options,
-      method: 'DELETE',
-    }
-  )
-}
-
-export const getStaffOperationsDeleteMutationOptions = <
-  TError = ModelsError,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof staffOperationsDelete>>,
-    TError,
-    { salonId: ModelsSalonId; id: ModelsStaffId },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof staffOperationsDelete>>,
-  TError,
-  { salonId: ModelsSalonId; id: ModelsStaffId },
-  TContext
-> => {
-  const mutationKey = ['staffOperationsDelete']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof staffOperationsDelete>>,
-    { salonId: ModelsSalonId; id: ModelsStaffId }
-  > = (props) => {
-    const { salonId, id } = props ?? {}
-
-    return staffOperationsDelete(salonId, id, requestOptions)
+export const staffOperationsDelete = async (salonId: ModelsSalonId,
+    id: ModelsStaffId, options?: RequestInit): Promise<staffOperationsDeleteResponse> => {
+  
+  return customInstance<staffOperationsDeleteResponse>(getStaffOperationsDeleteUrl(salonId,id),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type StaffOperationsDeleteMutationResult = NonNullable<
-  Awaited<ReturnType<typeof staffOperationsDelete>>
->
 
-export type StaffOperationsDeleteMutationError = ModelsError
 
-/**
+export const getStaffOperationsDeleteMutationOptions = <TError = ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof staffOperationsDelete>>, TError,{salonId: ModelsSalonId;id: ModelsStaffId}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof staffOperationsDelete>>, TError,{salonId: ModelsSalonId;id: ModelsStaffId}, TContext> => {
+
+const mutationKey = ['staffOperationsDelete'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof staffOperationsDelete>>, {salonId: ModelsSalonId;id: ModelsStaffId}> = (props) => {
+          const {salonId,id} = props ?? {};
+
+          return  staffOperationsDelete(salonId,id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type StaffOperationsDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof staffOperationsDelete>>>
+    
+    export type StaffOperationsDeleteMutationError = ModelsError
+
+    /**
  * @summary Delete staff member
  */
-export const useStaffOperationsDelete = <
-  TError = ModelsError,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof staffOperationsDelete>>,
-      TError,
-      { salonId: ModelsSalonId; id: ModelsStaffId },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof staffOperationsDelete>>,
-  TError,
-  { salonId: ModelsSalonId; id: ModelsStaffId },
-  TContext
-> => {
-  const mutationOptions = getStaffOperationsDeleteMutationOptions(options)
+export const useStaffOperationsDelete = <TError = ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof staffOperationsDelete>>, TError,{salonId: ModelsSalonId;id: ModelsStaffId}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof staffOperationsDelete>>,
+        TError,
+        {salonId: ModelsSalonId;id: ModelsStaffId},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getStaffOperationsDeleteMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 指定日のスタッフ空き状況を取得し、予約枠の提案や調整に活用します。
  * @summary Get staff availability
  */
@@ -843,230 +574,127 @@ export type staffOperationsGetAvailabilityResponse200 = {
   data: ModelsStaffAvailability[]
   status: 200
 }
+    
+export type staffOperationsGetAvailabilityResponseComposite = staffOperationsGetAvailabilityResponse200;
+    
+export type staffOperationsGetAvailabilityResponse = staffOperationsGetAvailabilityResponseComposite & {
+  headers: Headers;
+}
 
-export type staffOperationsGetAvailabilityResponseComposite =
-  staffOperationsGetAvailabilityResponse200
-
-export type staffOperationsGetAvailabilityResponse =
-  staffOperationsGetAvailabilityResponseComposite & {
-    headers: Headers
-  }
-
-export const getStaffOperationsGetAvailabilityUrl = (
-  salonId: ModelsSalonId,
-  id: ModelsStaffId,
-  params: StaffOperationsGetAvailabilityParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getStaffOperationsGetAvailabilityUrl = (salonId: ModelsSalonId,
+    id: ModelsStaffId,
+    params: StaffOperationsGetAvailabilityParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v1/salons/${salonId}/staff/${id}/availability?${stringifiedParams}`
-    : `/api/v1/salons/${salonId}/staff/${id}/availability`
+  return stringifiedParams.length > 0 ? `/api/v1/salons/${salonId}/staff/${id}/availability?${stringifiedParams}` : `/api/v1/salons/${salonId}/staff/${id}/availability`
 }
 
-export const staffOperationsGetAvailability = async (
-  salonId: ModelsSalonId,
-  id: ModelsStaffId,
-  params: StaffOperationsGetAvailabilityParams,
-  options?: RequestInit
-): Promise<staffOperationsGetAvailabilityResponse> => {
-  return customInstance<staffOperationsGetAvailabilityResponse>(
-    getStaffOperationsGetAvailabilityUrl(salonId, id, params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getStaffOperationsGetAvailabilityQueryKey = (
-  salonId?: ModelsSalonId,
-  id?: ModelsStaffId,
-  params?: StaffOperationsGetAvailabilityParams
-) => {
-  return [
-    `/api/v1/salons/${salonId}/staff/${id}/availability`,
-    ...(params ? [params] : []),
-  ] as const
-}
-
-export const getStaffOperationsGetAvailabilityQueryOptions = <
-  TData = Awaited<ReturnType<typeof staffOperationsGetAvailability>>,
-  TError = unknown,
->(
-  salonId: ModelsSalonId,
-  id: ModelsStaffId,
-  params: StaffOperationsGetAvailabilityParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof staffOperationsGetAvailability>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const staffOperationsGetAvailability = async (salonId: ModelsSalonId,
+    id: ModelsStaffId,
+    params: StaffOperationsGetAvailabilityParams, options?: RequestInit): Promise<staffOperationsGetAvailabilityResponse> => {
+  
+  return customInstance<staffOperationsGetAvailabilityResponse>(getStaffOperationsGetAvailabilityUrl(salonId,id,params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getStaffOperationsGetAvailabilityQueryKey = (salonId?: ModelsSalonId,
+    id?: ModelsStaffId,
+    params?: StaffOperationsGetAvailabilityParams,) => {
+    return [`/api/v1/salons/${salonId}/staff/${id}/availability`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getStaffOperationsGetAvailabilityQueryOptions = <TData = Awaited<ReturnType<typeof staffOperationsGetAvailability>>, TError = unknown>(salonId: ModelsSalonId,
+    id: ModelsStaffId,
+    params: StaffOperationsGetAvailabilityParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof staffOperationsGetAvailability>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ??
-    getStaffOperationsGetAvailabilityQueryKey(salonId, id, params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof staffOperationsGetAvailability>>
-  > = ({ signal }) =>
-    staffOperationsGetAvailability(salonId, id, params, {
-      signal,
-      ...requestOptions,
-    })
+  const queryKey =  queryOptions?.queryKey ?? getStaffOperationsGetAvailabilityQueryKey(salonId,id,params);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!(salonId && id),
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof staffOperationsGetAvailability>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof staffOperationsGetAvailability>>> = ({ signal }) => staffOperationsGetAvailability(salonId,id,params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(salonId && id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof staffOperationsGetAvailability>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type StaffOperationsGetAvailabilityQueryResult = NonNullable<
-  Awaited<ReturnType<typeof staffOperationsGetAvailability>>
->
+export type StaffOperationsGetAvailabilityQueryResult = NonNullable<Awaited<ReturnType<typeof staffOperationsGetAvailability>>>
 export type StaffOperationsGetAvailabilityQueryError = unknown
 
-export function useStaffOperationsGetAvailability<
-  TData = Awaited<ReturnType<typeof staffOperationsGetAvailability>>,
-  TError = unknown,
->(
-  salonId: ModelsSalonId,
-  id: ModelsStaffId,
-  params: StaffOperationsGetAvailabilityParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof staffOperationsGetAvailability>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useStaffOperationsGetAvailability<TData = Awaited<ReturnType<typeof staffOperationsGetAvailability>>, TError = unknown>(
+ salonId: ModelsSalonId,
+    id: ModelsStaffId,
+    params: StaffOperationsGetAvailabilityParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof staffOperationsGetAvailability>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof staffOperationsGetAvailability>>,
           TError,
           Awaited<ReturnType<typeof staffOperationsGetAvailability>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useStaffOperationsGetAvailability<
-  TData = Awaited<ReturnType<typeof staffOperationsGetAvailability>>,
-  TError = unknown,
->(
-  salonId: ModelsSalonId,
-  id: ModelsStaffId,
-  params: StaffOperationsGetAvailabilityParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof staffOperationsGetAvailability>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useStaffOperationsGetAvailability<TData = Awaited<ReturnType<typeof staffOperationsGetAvailability>>, TError = unknown>(
+ salonId: ModelsSalonId,
+    id: ModelsStaffId,
+    params: StaffOperationsGetAvailabilityParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof staffOperationsGetAvailability>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof staffOperationsGetAvailability>>,
           TError,
           Awaited<ReturnType<typeof staffOperationsGetAvailability>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useStaffOperationsGetAvailability<
-  TData = Awaited<ReturnType<typeof staffOperationsGetAvailability>>,
-  TError = unknown,
->(
-  salonId: ModelsSalonId,
-  id: ModelsStaffId,
-  params: StaffOperationsGetAvailabilityParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof staffOperationsGetAvailability>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useStaffOperationsGetAvailability<TData = Awaited<ReturnType<typeof staffOperationsGetAvailability>>, TError = unknown>(
+ salonId: ModelsSalonId,
+    id: ModelsStaffId,
+    params: StaffOperationsGetAvailabilityParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof staffOperationsGetAvailability>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get staff availability
  */
 
-export function useStaffOperationsGetAvailability<
-  TData = Awaited<ReturnType<typeof staffOperationsGetAvailability>>,
-  TError = unknown,
->(
-  salonId: ModelsSalonId,
-  id: ModelsStaffId,
-  params: StaffOperationsGetAvailabilityParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof staffOperationsGetAvailability>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getStaffOperationsGetAvailabilityQueryOptions(
-    salonId,
-    id,
-    params,
-    options
-  )
+export function useStaffOperationsGetAvailability<TData = Awaited<ReturnType<typeof staffOperationsGetAvailability>>, TError = unknown>(
+ salonId: ModelsSalonId,
+    id: ModelsStaffId,
+    params: StaffOperationsGetAvailabilityParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof staffOperationsGetAvailability>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  const queryOptions = getStaffOperationsGetAvailabilityQueryOptions(salonId,id,params,options)
 
-  query.queryKey = queryOptions.queryKey
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  return query
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
+
+
 
 /**
  * スタッフの稼働予定を更新し、シフト変更や臨時休みを反映します。
@@ -1081,134 +709,85 @@ export type staffOperationsUpdateAvailabilityResponse400 = {
   data: ModelsError
   status: 400
 }
+    
+export type staffOperationsUpdateAvailabilityResponseComposite = staffOperationsUpdateAvailabilityResponse200 | staffOperationsUpdateAvailabilityResponse400;
+    
+export type staffOperationsUpdateAvailabilityResponse = staffOperationsUpdateAvailabilityResponseComposite & {
+  headers: Headers;
+}
 
-export type staffOperationsUpdateAvailabilityResponseComposite =
-  | staffOperationsUpdateAvailabilityResponse200
-  | staffOperationsUpdateAvailabilityResponse400
+export const getStaffOperationsUpdateAvailabilityUrl = (salonId: ModelsSalonId,
+    id: ModelsStaffId,) => {
 
-export type staffOperationsUpdateAvailabilityResponse =
-  staffOperationsUpdateAvailabilityResponseComposite & {
-    headers: Headers
-  }
 
-export const getStaffOperationsUpdateAvailabilityUrl = (
-  salonId: ModelsSalonId,
-  id: ModelsStaffId
-) => {
+  
+
   return `/api/v1/salons/${salonId}/staff/${id}/availability`
 }
 
-export const staffOperationsUpdateAvailability = async (
-  salonId: ModelsSalonId,
-  id: ModelsStaffId,
-  modelsStaffAvailability: ModelsStaffAvailability[],
-  options?: RequestInit
-): Promise<staffOperationsUpdateAvailabilityResponse> => {
-  return customInstance<staffOperationsUpdateAvailabilityResponse>(
-    getStaffOperationsUpdateAvailabilityUrl(salonId, id),
-    {
-      ...options,
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsStaffAvailability),
-    }
-  )
-}
-
-export const getStaffOperationsUpdateAvailabilityMutationOptions = <
-  TError = ModelsError,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof staffOperationsUpdateAvailability>>,
-    TError,
-    {
-      salonId: ModelsSalonId
-      id: ModelsStaffId
-      data: ModelsStaffAvailability[]
-    },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof staffOperationsUpdateAvailability>>,
-  TError,
-  {
-    salonId: ModelsSalonId
-    id: ModelsStaffId
-    data: ModelsStaffAvailability[]
-  },
-  TContext
-> => {
-  const mutationKey = ['staffOperationsUpdateAvailability']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof staffOperationsUpdateAvailability>>,
-    {
-      salonId: ModelsSalonId
-      id: ModelsStaffId
-      data: ModelsStaffAvailability[]
-    }
-  > = (props) => {
-    const { salonId, id, data } = props ?? {}
-
-    return staffOperationsUpdateAvailability(salonId, id, data, requestOptions)
+export const staffOperationsUpdateAvailability = async (salonId: ModelsSalonId,
+    id: ModelsStaffId,
+    modelsStaffAvailability: ModelsStaffAvailability[], options?: RequestInit): Promise<staffOperationsUpdateAvailabilityResponse> => {
+  
+  return customInstance<staffOperationsUpdateAvailabilityResponse>(getStaffOperationsUpdateAvailabilityUrl(salonId,id),
+  {      
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      modelsStaffAvailability,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type StaffOperationsUpdateAvailabilityMutationResult = NonNullable<
-  Awaited<ReturnType<typeof staffOperationsUpdateAvailability>>
->
-export type StaffOperationsUpdateAvailabilityMutationBody =
-  ModelsStaffAvailability[]
-export type StaffOperationsUpdateAvailabilityMutationError = ModelsError
 
-/**
+
+export const getStaffOperationsUpdateAvailabilityMutationOptions = <TError = ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof staffOperationsUpdateAvailability>>, TError,{salonId: ModelsSalonId;id: ModelsStaffId;data: ModelsStaffAvailability[]}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof staffOperationsUpdateAvailability>>, TError,{salonId: ModelsSalonId;id: ModelsStaffId;data: ModelsStaffAvailability[]}, TContext> => {
+
+const mutationKey = ['staffOperationsUpdateAvailability'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof staffOperationsUpdateAvailability>>, {salonId: ModelsSalonId;id: ModelsStaffId;data: ModelsStaffAvailability[]}> = (props) => {
+          const {salonId,id,data} = props ?? {};
+
+          return  staffOperationsUpdateAvailability(salonId,id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type StaffOperationsUpdateAvailabilityMutationResult = NonNullable<Awaited<ReturnType<typeof staffOperationsUpdateAvailability>>>
+    export type StaffOperationsUpdateAvailabilityMutationBody = ModelsStaffAvailability[]
+    export type StaffOperationsUpdateAvailabilityMutationError = ModelsError
+
+    /**
  * @summary Update staff availability
  */
-export const useStaffOperationsUpdateAvailability = <
-  TError = ModelsError,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof staffOperationsUpdateAvailability>>,
-      TError,
-      {
-        salonId: ModelsSalonId
-        id: ModelsStaffId
-        data: ModelsStaffAvailability[]
-      },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof staffOperationsUpdateAvailability>>,
-  TError,
-  {
-    salonId: ModelsSalonId
-    id: ModelsStaffId
-    data: ModelsStaffAvailability[]
-  },
-  TContext
-> => {
-  const mutationOptions =
-    getStaffOperationsUpdateAvailabilityMutationOptions(options)
+export const useStaffOperationsUpdateAvailability = <TError = ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof staffOperationsUpdateAvailability>>, TError,{salonId: ModelsSalonId;id: ModelsStaffId;data: ModelsStaffAvailability[]}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof staffOperationsUpdateAvailability>>,
+        TError,
+        {salonId: ModelsSalonId;id: ModelsStaffId;data: ModelsStaffAvailability[]},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getStaffOperationsUpdateAvailabilityMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 専門分野や地域条件でスタッフを横断検索し、顧客の指名ニーズに応えます。
  * @summary Search staff across all salons
  */
@@ -1216,198 +795,109 @@ export type globalStaffOperationsSearchStaffResponse200 = {
   data: GlobalStaffOperationsSearchStaff200
   status: 200
 }
+    
+export type globalStaffOperationsSearchStaffResponseComposite = globalStaffOperationsSearchStaffResponse200;
+    
+export type globalStaffOperationsSearchStaffResponse = globalStaffOperationsSearchStaffResponseComposite & {
+  headers: Headers;
+}
 
-export type globalStaffOperationsSearchStaffResponseComposite =
-  globalStaffOperationsSearchStaffResponse200
-
-export type globalStaffOperationsSearchStaffResponse =
-  globalStaffOperationsSearchStaffResponseComposite & {
-    headers: Headers
-  }
-
-export const getGlobalStaffOperationsSearchStaffUrl = (
-  params?: GlobalStaffOperationsSearchStaffParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getGlobalStaffOperationsSearchStaffUrl = (params?: GlobalStaffOperationsSearchStaffParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v1/staff/search?${stringifiedParams}`
-    : `/api/v1/staff/search`
+  return stringifiedParams.length > 0 ? `/api/v1/staff/search?${stringifiedParams}` : `/api/v1/staff/search`
 }
 
-export const globalStaffOperationsSearchStaff = async (
-  params?: GlobalStaffOperationsSearchStaffParams,
-  options?: RequestInit
-): Promise<globalStaffOperationsSearchStaffResponse> => {
-  return customInstance<globalStaffOperationsSearchStaffResponse>(
-    getGlobalStaffOperationsSearchStaffUrl(params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getGlobalStaffOperationsSearchStaffQueryKey = (
-  params?: GlobalStaffOperationsSearchStaffParams
-) => {
-  return [`/api/v1/staff/search`, ...(params ? [params] : [])] as const
-}
-
-export const getGlobalStaffOperationsSearchStaffQueryOptions = <
-  TData = Awaited<ReturnType<typeof globalStaffOperationsSearchStaff>>,
-  TError = unknown,
->(
-  params?: GlobalStaffOperationsSearchStaffParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof globalStaffOperationsSearchStaff>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const globalStaffOperationsSearchStaff = async (params?: GlobalStaffOperationsSearchStaffParams, options?: RequestInit): Promise<globalStaffOperationsSearchStaffResponse> => {
+  
+  return customInstance<globalStaffOperationsSearchStaffResponse>(getGlobalStaffOperationsSearchStaffUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getGlobalStaffOperationsSearchStaffQueryKey = (params?: GlobalStaffOperationsSearchStaffParams,) => {
+    return [`/api/v1/staff/search`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getGlobalStaffOperationsSearchStaffQueryOptions = <TData = Awaited<ReturnType<typeof globalStaffOperationsSearchStaff>>, TError = unknown>(params?: GlobalStaffOperationsSearchStaffParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof globalStaffOperationsSearchStaff>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ??
-    getGlobalStaffOperationsSearchStaffQueryKey(params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof globalStaffOperationsSearchStaff>>
-  > = ({ signal }) =>
-    globalStaffOperationsSearchStaff(params, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getGlobalStaffOperationsSearchStaffQueryKey(params);
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof globalStaffOperationsSearchStaff>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof globalStaffOperationsSearchStaff>>> = ({ signal }) => globalStaffOperationsSearchStaff(params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof globalStaffOperationsSearchStaff>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GlobalStaffOperationsSearchStaffQueryResult = NonNullable<
-  Awaited<ReturnType<typeof globalStaffOperationsSearchStaff>>
->
+export type GlobalStaffOperationsSearchStaffQueryResult = NonNullable<Awaited<ReturnType<typeof globalStaffOperationsSearchStaff>>>
 export type GlobalStaffOperationsSearchStaffQueryError = unknown
 
-export function useGlobalStaffOperationsSearchStaff<
-  TData = Awaited<ReturnType<typeof globalStaffOperationsSearchStaff>>,
-  TError = unknown,
->(
-  params: undefined | GlobalStaffOperationsSearchStaffParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof globalStaffOperationsSearchStaff>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useGlobalStaffOperationsSearchStaff<TData = Awaited<ReturnType<typeof globalStaffOperationsSearchStaff>>, TError = unknown>(
+ params: undefined |  GlobalStaffOperationsSearchStaffParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof globalStaffOperationsSearchStaff>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof globalStaffOperationsSearchStaff>>,
           TError,
           Awaited<ReturnType<typeof globalStaffOperationsSearchStaff>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useGlobalStaffOperationsSearchStaff<
-  TData = Awaited<ReturnType<typeof globalStaffOperationsSearchStaff>>,
-  TError = unknown,
->(
-  params?: GlobalStaffOperationsSearchStaffParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof globalStaffOperationsSearchStaff>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGlobalStaffOperationsSearchStaff<TData = Awaited<ReturnType<typeof globalStaffOperationsSearchStaff>>, TError = unknown>(
+ params?: GlobalStaffOperationsSearchStaffParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof globalStaffOperationsSearchStaff>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof globalStaffOperationsSearchStaff>>,
           TError,
           Awaited<ReturnType<typeof globalStaffOperationsSearchStaff>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useGlobalStaffOperationsSearchStaff<
-  TData = Awaited<ReturnType<typeof globalStaffOperationsSearchStaff>>,
-  TError = unknown,
->(
-  params?: GlobalStaffOperationsSearchStaffParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof globalStaffOperationsSearchStaff>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGlobalStaffOperationsSearchStaff<TData = Awaited<ReturnType<typeof globalStaffOperationsSearchStaff>>, TError = unknown>(
+ params?: GlobalStaffOperationsSearchStaffParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof globalStaffOperationsSearchStaff>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Search staff across all salons
  */
 
-export function useGlobalStaffOperationsSearchStaff<
-  TData = Awaited<ReturnType<typeof globalStaffOperationsSearchStaff>>,
-  TError = unknown,
->(
-  params?: GlobalStaffOperationsSearchStaffParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof globalStaffOperationsSearchStaff>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getGlobalStaffOperationsSearchStaffQueryOptions(
-    params,
-    options
-  )
+export function useGlobalStaffOperationsSearchStaff<TData = Awaited<ReturnType<typeof globalStaffOperationsSearchStaff>>, TError = unknown>(
+ params?: GlobalStaffOperationsSearchStaffParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof globalStaffOperationsSearchStaff>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  const queryOptions = getGlobalStaffOperationsSearchStaffQueryOptions(params,options)
 
-  query.queryKey = queryOptions.queryKey
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  return query
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
+
+
+

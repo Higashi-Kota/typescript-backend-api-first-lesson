@@ -5,93 +5,93 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsReviewId } from './modelsReviewId'
-import type { ModelsSalonId } from './modelsSalonId'
-import type { ModelsCustomerId } from './modelsCustomerId'
-import type { ModelsBookingId } from './modelsBookingId'
+import type { ModelsReviewId } from './modelsReviewId';
+import type { ModelsSalonId } from './modelsSalonId';
+import type { ModelsCustomerId } from './modelsCustomerId';
+import type { ModelsBookingId } from './modelsBookingId';
 
 /**
  * レビューモデル - 施術後の顧客体験を定量・定性的に記録し、サロン品質の改善と信頼性向上に活用する
  */
 export interface ModelsReview {
   /** レビューを一意に識別するID */
-  id: ModelsReviewId
+  id: ModelsReviewId;
   /** レビュー対象のサロンID */
-  salonId: ModelsSalonId
+  salonId: ModelsSalonId;
   /** レビューを投稿した顧客ID */
-  customerId: ModelsCustomerId
+  customerId: ModelsCustomerId;
   /** 紐づく来店予約を示すID (DBカラム booking_id と整合) */
-  bookingId: ModelsBookingId
+  bookingId: ModelsBookingId;
   /**
    * 評価対象のスタッフID - セルフサービスやスタッフ特定不要の施術の場合はnull
    * @nullable
    */
-  staffId: string | null
+  staffId: string | null;
   /** 全体満足度の評価値 (例: 1〜5) */
-  overallRating: number
+  overallRating: number;
   /**
    * 自由記述のレビューコメント - 評価のみでコメントなしのシンプルレビューの場合はnull
    * @nullable
    */
-  comment: string | null
+  comment: string | null;
   /**
    * レビュータイトルや要約 - タイトル未設定の簡易レビューの場合はnull
    * @nullable
    */
-  title: string | null
+  title: string | null;
   /**
    * 施術サービスそのものに対する評価値 - 個別評価をしない総合評価のみのレビューの場合はnull
    * @nullable
    */
-  serviceRating: number | null
+  serviceRating: number | null;
   /**
    * スタッフの接客・技術に対する評価値 - スタッフ評価省略またはセルフサービスの場合はnull
    * @nullable
    */
-  staffRating: number | null
+  staffRating: number | null;
   /**
    * 店内の清潔さ・衛生面に対する評価値 - 清潔さ評価を省略したレビューの場合はnull
    * @nullable
    */
-  cleanlinessRating: number | null
+  cleanlinessRating: number | null;
   /**
    * 価格に対する価値・コストパフォーマンス評価値 - 価格評価を省略したレビューの場合はnull
    * @nullable
    */
-  valueRating: number | null
+  valueRating: number | null;
   /**
    * レビューに添付された画像URLの一覧 - 画像添付なしのテキストのみレビューの場合はnull
    * @nullable
    */
-  imageUrls: string[] | null
+  imageUrls: string[] | null;
   /** 実来店が確認済みかを表す検証フラグ */
-  isVerified: boolean
+  isVerified: boolean;
   /** レビューが「参考になった」と評価された累積回数 */
-  helpfulCount: number
+  helpfulCount: number;
   /** 不適切報告が入った累積回数 */
-  reportCount: number
+  reportCount: number;
   /**
    * サロン運営からの公式返信本文 - オーナー未返信のレビューの場合はnull
    * @nullable
    */
-  ownerResponse: string | null
+  ownerResponse: string | null;
   /**
    * 運営が返信した日時 (UTC) - オーナー未返信のレビューの場合はnull
    * @nullable
    */
-  ownerRespondedAt: string | null
+  ownerRespondedAt: string | null;
   /** レコード作成日時。 */
-  createdAt: string
+  createdAt: string;
   /**
    * レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull
    * @nullable
    */
-  createdBy: string | null
+  createdBy: string | null;
   /** レコード最終更新日時。 */
-  updatedAt: string
+  updatedAt: string;
   /**
    * レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull
    * @nullable
    */
-  updatedBy: string | null
+  updatedBy: string | null;
 }

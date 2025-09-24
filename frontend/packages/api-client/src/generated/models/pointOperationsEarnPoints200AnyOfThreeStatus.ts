@@ -9,10 +9,10 @@
 /**
  * 固定値error。エラー結果であることを示す。
  */
-export type PointOperationsEarnPoints200AnyOfThreeStatus =
-  (typeof PointOperationsEarnPoints200AnyOfThreeStatus)[keyof typeof PointOperationsEarnPoints200AnyOfThreeStatus]
+export type PointOperationsEarnPoints200AnyOfThreeStatus = typeof PointOperationsEarnPoints200AnyOfThreeStatus[keyof typeof PointOperationsEarnPoints200AnyOfThreeStatus];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PointOperationsEarnPoints200AnyOfThreeStatus = {
   error: 'error',
-} as const
+} as const;

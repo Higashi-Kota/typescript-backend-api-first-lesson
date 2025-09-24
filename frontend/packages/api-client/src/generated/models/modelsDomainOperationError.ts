@@ -5,8 +5,8 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsDomainErrorDetails } from './modelsDomainErrorDetails'
-import type { ModelsProblemDetails } from './modelsProblemDetails'
+import type { ModelsDomainErrorDetails } from './modelsDomainErrorDetails';
+import type { ModelsProblemDetails } from './modelsProblemDetails';
 
 /**
  * ドメイン操作で発生したエラーのコンテキストモデル。
@@ -14,19 +14,19 @@ import type { ModelsProblemDetails } from './modelsProblemDetails'
  */
 export interface ModelsDomainOperationError {
   /** ドメインエラーの詳細情報。ビジネスロジック層で発生した要因を保持する。 */
-  domainError: ModelsDomainErrorDetails
+  domainError: ModelsDomainErrorDetails;
   /** HTTP レスポンスとして返却可能な ProblemDetails。クライアントへの通知に使用。 */
-  problemDetails: ModelsProblemDetails
+  problemDetails: ModelsProblemDetails;
   /** エラーが発生した日時 (UTC)。再発防止のタイムライン分析に活用。 */
-  occurredAt: string
+  occurredAt: string;
   /**
    * エラーが発生した操作名やユースケース。例: `CreateReservation`。操作名が特定できない場合はnull
    * @nullable
    */
-  operation: string | null
+  operation: string | null;
   /**
    * デバッグ用のスタックトレース。開発・検証環境のみで出力する。本番環境ではnull
    * @nullable
    */
-  stackTrace: string | null
+  stackTrace: string | null;
 }

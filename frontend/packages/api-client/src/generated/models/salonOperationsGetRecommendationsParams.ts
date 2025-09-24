@@ -5,43 +5,43 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsCustomerId } from './modelsCustomerId'
-import type { ModelsServiceCategoryType } from './modelsServiceCategoryType'
-import type { SalonOperationsGetRecommendationsPriceRange } from './salonOperationsGetRecommendationsPriceRange'
-import type { ModelsCursorPaginationParamsLimitParameter } from './modelsCursorPaginationParamsLimitParameter'
-import type { ModelsCursorPaginationParamsCursorParameter } from './modelsCursorPaginationParamsCursorParameter'
-import type { ModelsCursorPaginationParamsSortByParameter } from './modelsCursorPaginationParamsSortByParameter'
-import type { ModelsCursorPaginationParamsSortOrderParameter } from './modelsCursorPaginationParamsSortOrderParameter'
+import type { ModelsCustomerId } from './modelsCustomerId';
+import type { ModelsServiceCategoryType } from './modelsServiceCategoryType';
+import type { SalonOperationsGetRecommendationsPriceRange } from './salonOperationsGetRecommendationsPriceRange';
+import type { ModelsCursorPaginationParamsLimitParameter } from './modelsCursorPaginationParamsLimitParameter';
+import type { ModelsCursorPaginationParamsCursorParameter } from './modelsCursorPaginationParamsCursorParameter';
+import type { ModelsCursorPaginationParamsSortByParameter } from './modelsCursorPaginationParamsSortByParameter';
+import type { ModelsCursorPaginationParamsSortOrderParameter } from './modelsCursorPaginationParamsSortOrderParameter';
 
 export type SalonOperationsGetRecommendationsParams = {
-  /**
-   * パーソナライズ対象となる顧客ID
-   */
-  customerId?: ModelsCustomerId
-  /**
-   * 興味のあるサービスカテゴリ
-   */
-  categories?: ModelsServiceCategoryType[]
-  /**
-   * 希望する価格帯
-   */
-  priceRange?: SalonOperationsGetRecommendationsPriceRange
-  /**
-   * 1ページあたりの取得件数上限 (1〜100)。指定が無い場合は既定値 20 を適用。
-   * @minimum 1
-   * @maximum 100
-   */
-  limit?: ModelsCursorPaginationParamsLimitParameter
-  /**
-   * 次ページを指し示すカーソル。前回レスポンスの `meta.nextCursor` を設定する。
-   */
-  cursor?: ModelsCursorPaginationParamsCursorParameter
-  /**
-   * ソート対象フィールド。予約日時や作成日時など業務軸を指定する。
-   */
-  sortBy?: ModelsCursorPaginationParamsSortByParameter
-  /**
-   * ソート順序。`asc` は昇順、`desc` は降順を表す。
-   */
-  sortOrder?: ModelsCursorPaginationParamsSortOrderParameter
-}
+/**
+ * パーソナライズ対象となる顧客ID
+ */
+customerId?: ModelsCustomerId;
+/**
+ * 興味のあるサービスカテゴリ
+ */
+categories?: ModelsServiceCategoryType[];
+/**
+ * 希望する価格帯
+ */
+priceRange?: SalonOperationsGetRecommendationsPriceRange;
+/**
+ * 1ページあたりの取得件数上限 (1〜100)。指定が無い場合は既定値 20 を適用。
+ * @minimum 1
+ * @maximum 100
+ */
+limit?: ModelsCursorPaginationParamsLimitParameter;
+/**
+ * 次ページを指し示すカーソル。前回レスポンスの `meta.nextCursor` を設定する。
+ */
+cursor?: ModelsCursorPaginationParamsCursorParameter;
+/**
+ * ソート対象フィールド。予約日時や作成日時など業務軸を指定する。
+ */
+sortBy?: ModelsCursorPaginationParamsSortByParameter;
+/**
+ * ソート順序。`asc` は昇順、`desc` は降順を表す。
+ */
+sortOrder?: ModelsCursorPaginationParamsSortOrderParameter;
+};

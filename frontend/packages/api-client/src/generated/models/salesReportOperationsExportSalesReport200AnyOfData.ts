@@ -10,5 +10,5 @@
  * 成功時に返却するドメインデータ。
  */
 export type SalesReportOperationsExportSalesReport200AnyOfData = {
-  downloadUrl: string
-}
+  downloadUrl: string;
+};

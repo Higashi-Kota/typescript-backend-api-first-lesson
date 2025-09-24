@@ -17,8 +17,8 @@ completed: 完了 - サービス提供が終了した状態
 cancelled: キャンセル - 予約がキャンセルされた状態
 no_show: 無断キャンセル - 顧客が連絡なしに来店しなかった状態
  */
-export type ModelsBookingStatusCodeType =
-  (typeof ModelsBookingStatusCodeType)[keyof typeof ModelsBookingStatusCodeType]
+export type ModelsBookingStatusCodeType = typeof ModelsBookingStatusCodeType[keyof typeof ModelsBookingStatusCodeType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsBookingStatusCodeType = {
@@ -29,4 +29,4 @@ export const ModelsBookingStatusCodeType = {
   completed: 'completed',
   cancelled: 'cancelled',
   no_show: 'no_show',
-} as const
+} as const;

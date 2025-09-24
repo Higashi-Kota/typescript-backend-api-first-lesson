@@ -5,34 +5,34 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsInventoryId } from './modelsInventoryId'
-import type { ModelsStockMovementCreateRequestType } from './modelsStockMovementCreateRequestType'
+import type { ModelsInventoryId } from './modelsInventoryId';
+import type { ModelsStockMovementCreateRequestType } from './modelsStockMovementCreateRequestType';
 
 /**
  * 在庫移動処理を登録する入力モデル
  */
 export interface ModelsStockMovementCreateRequest {
   /** 対象在庫 ID */
-  inventoryId: ModelsInventoryId
+  inventoryId: ModelsInventoryId;
   /** 在庫操作区分 */
-  type: ModelsStockMovementCreateRequestType
+  type: ModelsStockMovementCreateRequestType;
   /** 操作数量 */
-  quantity: number
+  quantity: number;
   /** 操作理由 */
-  reason: string
+  reason: string;
   /**
    * 関連する発注 ID
    * @nullable
    */
-  orderId: string | null
+  orderId: string | null;
   /**
    * 関連する施術記録 ID
    * @nullable
    */
-  treatmentRecordId: string | null
+  treatmentRecordId: string | null;
   /**
    * 備考メモ
    * @nullable
    */
-  notes: string | null
+  notes: string | null;
 }

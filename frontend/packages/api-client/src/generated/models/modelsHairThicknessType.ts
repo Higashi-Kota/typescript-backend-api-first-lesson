@@ -13,12 +13,12 @@ fine: 細毛 - 柔らかく細い髪、ボリュームが出にくい
 medium: 普通毛 - 平均的な太さの髪、扱いやすい
 thick: 太毛 - しっかりとした太い髪、ボリュームが出やすい
  */
-export type ModelsHairThicknessType =
-  (typeof ModelsHairThicknessType)[keyof typeof ModelsHairThicknessType]
+export type ModelsHairThicknessType = typeof ModelsHairThicknessType[keyof typeof ModelsHairThicknessType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsHairThicknessType = {
   fine: 'fine',
   medium: 'medium',
   thick: 'thick',
-} as const
+} as const;

@@ -12,30 +12,30 @@
  */
 export interface ModelsAuditTrail {
   /** レコード作成日時 (UTC)。 */
-  createdAt: string
+  createdAt: string;
   /** レコードを作成したユーザーID またはサービス名。 */
-  createdBy: string
+  createdBy: string;
   /** 最終更新日時 (UTC)。 */
-  updatedAt: string
+  updatedAt: string;
   /** 最後に更新したユーザーID またはサービス名。 */
-  updatedBy: string
+  updatedBy: string;
   /** 楽観的ロックに使用するバージョン番号。 */
-  version: number
+  version: number;
   /** 論理削除フラグ。true の場合は通常の検索結果から除外する。 */
-  isDeleted: boolean
+  isDeleted: boolean;
   /**
    * 削除操作が実行された日時 (UTC)。削除されていない場合はnull
    * @nullable
    */
-  deletedAt: string | null
+  deletedAt: string | null;
   /**
    * 削除操作を実施したユーザーID またはサービス名。削除されていない場合はnull
    * @nullable
    */
-  deletedBy: string | null
+  deletedBy: string | null;
   /**
    * 削除理由や補足メモ。カスタマーサポート対応に利用する。理由が不要または削除されていない場合はnull
    * @nullable
    */
-  deletionReason: string | null
+  deletionReason: string | null;
 }

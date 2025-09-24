@@ -10,4 +10,4 @@
  * 履歴に紐づく追加メタデータ
  * @nullable
  */
-export type ModelsPaymentHistoryMetadata = { [key: string]: unknown } | null
+export type ModelsPaymentHistoryMetadata = {[key: string]: unknown} | null;

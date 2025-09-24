@@ -9,4 +9,4 @@
 /**
  * システム利用者（顧客・スタッフ・管理者）を一意に識別するブランド付きUUID。
  */
-export type ModelsUserId = string
+export type ModelsUserId = string;

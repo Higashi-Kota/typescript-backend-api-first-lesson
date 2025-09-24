@@ -9,4 +9,4 @@
 /**
  * 検索対象期間の開始日時。
  */
-export type ModelsDateRangeFilterStartDateParameter = string
+export type ModelsDateRangeFilterStartDateParameter = string;

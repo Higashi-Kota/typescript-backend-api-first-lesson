@@ -2,7 +2,7 @@ import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
 import * as schema from '../../schema'
 
 export async function seedSalons(
-  db: PostgresJsDatabase<typeof schema>
+  db: PostgresJsDatabase<typeof schema>,
 ): Promise<string[]> {
   const salons = await db
     .insert(schema.salons)

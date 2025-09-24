@@ -5,12 +5,10 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsDecimal } from './modelsDecimal'
+import type { ModelsDecimal } from './modelsDecimal';
 
 /**
  * 条件に応じた倍率設定。固定倍率または他の計算方法を使用する場合はnull
  * @nullable
  */
-export type ModelsPricingFactorMultipliers = {
-  [key: string]: ModelsDecimal
-} | null
+export type ModelsPricingFactorMultipliers = {[key: string]: ModelsDecimal} | null;

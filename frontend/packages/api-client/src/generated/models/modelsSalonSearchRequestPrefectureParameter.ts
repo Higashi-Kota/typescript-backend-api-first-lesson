@@ -9,4 +9,4 @@
 /**
  * 都道府県名による絞り込み
  */
-export type ModelsSalonSearchRequestPrefectureParameter = string
+export type ModelsSalonSearchRequestPrefectureParameter = string;

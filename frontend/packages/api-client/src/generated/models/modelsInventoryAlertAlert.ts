@@ -9,8 +9,8 @@
 /**
  * アラート種別
  */
-export type ModelsInventoryAlertAlert =
-  (typeof ModelsInventoryAlertAlert)[keyof typeof ModelsInventoryAlertAlert]
+export type ModelsInventoryAlertAlert = typeof ModelsInventoryAlertAlert[keyof typeof ModelsInventoryAlertAlert];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsInventoryAlertAlert = {
@@ -18,4 +18,4 @@ export const ModelsInventoryAlertAlert = {
   expiring: 'expiring',
   expired: 'expired',
   overstock: 'overstock',
-} as const
+} as const;

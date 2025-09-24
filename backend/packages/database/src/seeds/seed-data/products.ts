@@ -8,7 +8,7 @@ export interface ProductSeedResult {
 
 export async function seedProducts(
   db: PostgresJsDatabase<typeof schema>,
-  salonIds: string[]
+  salonIds: string[],
 ): Promise<ProductSeedResult> {
   const products = []
 
@@ -180,7 +180,7 @@ export async function seedProducts(
       requiresLotTracking: false,
       expiryMonths: 36,
       isActive: true,
-    }
+    },
   )
 
   // Products for Salon 2 (Spa focused)
@@ -227,7 +227,7 @@ export async function seedProducts(
       requiresLotTracking: true,
       expiryMonths: 18,
       isActive: true,
-    }
+    },
   )
 
   const insertedProducts = await db

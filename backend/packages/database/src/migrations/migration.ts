@@ -26,12 +26,12 @@ export class ProgrammaticMigration {
   private async setupSchema(schemaName: string): Promise<void> {
     if (schemaName !== 'public') {
       await this.db.execute(
-        sql`CREATE SCHEMA IF NOT EXISTS ${sql.identifier(schemaName)}`
+        sql`CREATE SCHEMA IF NOT EXISTS ${sql.identifier(schemaName)}`,
       )
     }
 
     await this.db.execute(
-      sql`SET search_path TO ${sql.identifier(schemaName)}, public`
+      sql`SET search_path TO ${sql.identifier(schemaName)}, public`,
     )
   }
 
@@ -55,7 +55,7 @@ export class ProgrammaticMigration {
       await this.db.execute(sql.raw(cleanedSql))
 
       console.log(
-        `Database setup completed successfully in schema: ${schemaName}`
+        `Database setup completed successfully in schema: ${schemaName}`,
       )
     } catch (error) {
       console.error('Database setup failed:', error)
@@ -79,7 +79,7 @@ export class ProgrammaticMigration {
     } else {
       // For test schemas, just drop the entire schema
       await this.db.execute(
-        sql`DROP SCHEMA IF EXISTS ${sql.identifier(schemaName)} CASCADE`
+        sql`DROP SCHEMA IF EXISTS ${sql.identifier(schemaName)} CASCADE`,
       )
     }
 

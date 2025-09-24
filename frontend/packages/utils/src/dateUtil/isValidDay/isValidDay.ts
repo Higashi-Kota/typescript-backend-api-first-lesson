@@ -1,15 +1,13 @@
 import { getYear, isAfter, isBefore, isValid } from 'date-fns'
-
-import type { AllowFormatValue } from '../types'
-
 import {
   DEFAULT_ENABLE_END_YEAR,
   DEFAULT_ENABLE_START_YEAR,
 } from '../constants'
+import type { AllowFormatValue } from '../types'
 
 export const isValidDay = (
   inputDay: Date,
-  formatString: AllowFormatValue = 'yyyy-MM-dd'
+  formatString: AllowFormatValue = 'yyyy-MM-dd',
 ): boolean => {
   if (!isValid(inputDay)) {
     return false

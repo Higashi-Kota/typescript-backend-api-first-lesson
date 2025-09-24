@@ -9,4 +9,4 @@
 /**
  * 更新対象フィールドをカンマ区切りで列挙した文字列。例: `name,address.street`。
  */
-export type ModelsFieldMaskParameter = string
+export type ModelsFieldMaskParameter = string;

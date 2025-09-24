@@ -9,12 +9,12 @@
 /**
  * 重要度レベル
  */
-export type ModelsInventoryAlertSeverity =
-  (typeof ModelsInventoryAlertSeverity)[keyof typeof ModelsInventoryAlertSeverity]
+export type ModelsInventoryAlertSeverity = typeof ModelsInventoryAlertSeverity[keyof typeof ModelsInventoryAlertSeverity];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsInventoryAlertSeverity = {
   info: 'info',
   warning: 'warning',
   critical: 'critical',
-} as const
+} as const;

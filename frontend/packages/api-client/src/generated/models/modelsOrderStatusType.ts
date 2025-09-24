@@ -17,8 +17,8 @@ shipped: 発送済み - サプライヤーから商品が発送された状態
 delivered: 配送完了 - 商品が到着し、受領が完了した状態
 cancelled: キャンセル - 発注が取り消された状態
  */
-export type ModelsOrderStatusType =
-  (typeof ModelsOrderStatusType)[keyof typeof ModelsOrderStatusType]
+export type ModelsOrderStatusType = typeof ModelsOrderStatusType[keyof typeof ModelsOrderStatusType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsOrderStatusType = {
@@ -29,4 +29,4 @@ export const ModelsOrderStatusType = {
   shipped: 'shipped',
   delivered: 'delivered',
   cancelled: 'cancelled',
-} as const
+} as const;

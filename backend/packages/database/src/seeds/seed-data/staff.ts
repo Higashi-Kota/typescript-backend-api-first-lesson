@@ -13,7 +13,7 @@ export async function seedStaff(
   salonIds: string[],
   userIds?: {
     staffUserIds: string[]
-  }
+  },
 ): Promise<StaffSeedResult> {
   const salonId1 = salonIds[0]
   const salonId2 = salonIds[1]

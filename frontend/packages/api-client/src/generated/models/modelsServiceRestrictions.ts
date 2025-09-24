@@ -5,8 +5,8 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsServiceRestrictionsRequiredStaffLevel } from './modelsServiceRestrictionsRequiredStaffLevel'
-import type { ModelsServiceRestrictionsMaxBookingsPerCustomer } from './modelsServiceRestrictionsMaxBookingsPerCustomer'
+import type { ModelsServiceRestrictionsRequiredStaffLevel } from './modelsServiceRestrictionsRequiredStaffLevel';
+import type { ModelsServiceRestrictionsMaxBookingsPerCustomer } from './modelsServiceRestrictionsMaxBookingsPerCustomer';
 
 /**
  * サービス提供時の制約条件
@@ -16,30 +16,30 @@ export interface ModelsServiceRestrictions {
    * 必要なスタッフレベル。全スタッフが対応可能な場合はnull
    * @nullable
    */
-  requiredStaffLevel: ModelsServiceRestrictionsRequiredStaffLevel
+  requiredStaffLevel: ModelsServiceRestrictionsRequiredStaffLevel;
   /**
    * 必要資格の一覧。特別な資格が不要な場合はnull
    * @nullable
    */
-  requiredCertifications: string[] | null
+  requiredCertifications: string[] | null;
   /**
    * 同時提供可能な最大件数。同時提供制限がない場合はnull
    * @nullable
    */
-  maxConcurrent: number | null
+  maxConcurrent: number | null;
   /**
    * 再予約までの最短間隔（日）。連続予約可能な場合はnull
    * @nullable
    */
-  minIntervalDays: number | null
+  minIntervalDays: number | null;
   /**
    * 顧客ごとの予約上限設定。予約回数制限がない場合はnull
    * @nullable
    */
-  maxBookingsPerCustomer: ModelsServiceRestrictionsMaxBookingsPerCustomer
+  maxBookingsPerCustomer: ModelsServiceRestrictionsMaxBookingsPerCustomer;
   /**
    * 提供不可日（ブラックアウト）一覧。特定の除外日がない場合はnull
    * @nullable
    */
-  blackoutDates: string[] | null
+  blackoutDates: string[] | null;
 }

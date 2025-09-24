@@ -9,4 +9,4 @@
 /**
  * 任意メタデータの更新。
  */
-export type ModelsBookingUpdateRequestMetadata = { [key: string]: unknown }
+export type ModelsBookingUpdateRequestMetadata = {[key: string]: unknown};

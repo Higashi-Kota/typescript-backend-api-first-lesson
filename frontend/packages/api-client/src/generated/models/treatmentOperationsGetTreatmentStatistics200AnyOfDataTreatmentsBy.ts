@@ -6,5 +6,4 @@
  * OpenAPI spec version: 2.0
  */
 
-export type TreatmentOperationsGetTreatmentStatistics200AnyOfDataTreatmentsBy =
-  { [key: string]: number }
+export type TreatmentOperationsGetTreatmentStatistics200AnyOfDataTreatmentsBy = {[key: string]: number};

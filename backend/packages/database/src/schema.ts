@@ -229,17 +229,17 @@ export const notificationLogs = pgTable(
   (table) => [
     index('idx_notification_logs_created_at').using(
       'btree',
-      table.createdAt.asc().nullsLast().op('timestamptz_ops')
+      table.createdAt.asc().nullsLast().op('timestamptz_ops'),
     ),
     index('idx_notification_logs_notification_type').using(
       'btree',
-      table.notificationType.asc().nullsLast().op('enum_ops')
+      table.notificationType.asc().nullsLast().op('enum_ops'),
     ),
     index('idx_notification_logs_recipient_id').using(
       'btree',
-      table.recipientId.asc().nullsLast().op('uuid_ops')
+      table.recipientId.asc().nullsLast().op('uuid_ops'),
     ),
-  ]
+  ],
 )
 
 export const bookings = pgTable(
@@ -286,31 +286,31 @@ export const bookings = pgTable(
   (table) => [
     index('idx_bookings_booking_date').using(
       'btree',
-      table.bookingDate.asc().nullsLast().op('date_ops')
+      table.bookingDate.asc().nullsLast().op('date_ops'),
     ),
     index('idx_bookings_booking_number').using(
       'btree',
-      table.bookingNumber.asc().nullsLast().op('text_ops')
+      table.bookingNumber.asc().nullsLast().op('text_ops'),
     ),
     index('idx_bookings_customer_id').using(
       'btree',
-      table.customerId.asc().nullsLast().op('uuid_ops')
+      table.customerId.asc().nullsLast().op('uuid_ops'),
     ),
     index('idx_bookings_salon_id').using(
       'btree',
-      table.salonId.asc().nullsLast().op('uuid_ops')
+      table.salonId.asc().nullsLast().op('uuid_ops'),
     ),
     index('idx_bookings_staff_id').using(
       'btree',
-      table.staffId.asc().nullsLast().op('uuid_ops')
+      table.staffId.asc().nullsLast().op('uuid_ops'),
     ),
     index('idx_bookings_start_time').using(
       'btree',
-      table.startTime.asc().nullsLast().op('timestamptz_ops')
+      table.startTime.asc().nullsLast().op('timestamptz_ops'),
     ),
     index('idx_bookings_status').using(
       'btree',
-      table.status.asc().nullsLast().op('enum_ops')
+      table.status.asc().nullsLast().op('enum_ops'),
     ),
     foreignKey({
       columns: [table.salonId],
@@ -328,7 +328,7 @@ export const bookings = pgTable(
       name: 'bookings_staff_id_fk',
     }).onDelete('restrict'),
     unique('bookings_booking_number_unique').on(table.bookingNumber),
-  ]
+  ],
 )
 
 export const bookingServices = pgTable(
@@ -359,15 +359,15 @@ export const bookingServices = pgTable(
   (table) => [
     index('idx_booking_services_booking_id').using(
       'btree',
-      table.bookingId.asc().nullsLast().op('uuid_ops')
+      table.bookingId.asc().nullsLast().op('uuid_ops'),
     ),
     index('idx_booking_services_service_id').using(
       'btree',
-      table.serviceId.asc().nullsLast().op('uuid_ops')
+      table.serviceId.asc().nullsLast().op('uuid_ops'),
     ),
     index('idx_booking_services_staff_id').using(
       'btree',
-      table.staffId.asc().nullsLast().op('uuid_ops')
+      table.staffId.asc().nullsLast().op('uuid_ops'),
     ),
     foreignKey({
       columns: [table.bookingId],
@@ -384,7 +384,7 @@ export const bookingServices = pgTable(
       foreignColumns: [staff.id],
       name: 'booking_services_staff_id_fk',
     }).onDelete('restrict'),
-  ]
+  ],
 )
 
 export const services = pgTable(
@@ -427,27 +427,27 @@ export const services = pgTable(
   (table) => [
     index('idx_services_availability').using(
       'btree',
-      table.availability.asc().nullsLast().op('enum_ops')
+      table.availability.asc().nullsLast().op('enum_ops'),
     ),
     index('idx_services_category_id').using(
       'btree',
-      table.categoryId.asc().nullsLast().op('uuid_ops')
+      table.categoryId.asc().nullsLast().op('uuid_ops'),
     ),
     index('idx_services_deleted_at').using(
       'btree',
-      table.deletedAt.asc().nullsLast().op('timestamptz_ops')
+      table.deletedAt.asc().nullsLast().op('timestamptz_ops'),
     ),
     index('idx_services_pricing_strategy').using(
       'btree',
-      table.pricingStrategy.asc().nullsLast().op('enum_ops')
+      table.pricingStrategy.asc().nullsLast().op('enum_ops'),
     ),
     index('idx_services_salon_id').using(
       'btree',
-      table.salonId.asc().nullsLast().op('uuid_ops')
+      table.salonId.asc().nullsLast().op('uuid_ops'),
     ),
     index('idx_services_service_status').using(
       'btree',
-      table.serviceStatus.asc().nullsLast().op('enum_ops')
+      table.serviceStatus.asc().nullsLast().op('enum_ops'),
     ),
     foreignKey({
       columns: [table.salonId],
@@ -459,7 +459,7 @@ export const services = pgTable(
       foreignColumns: [serviceCategories.id],
       name: 'services_category_id_fk',
     }).onDelete('set null'),
-  ]
+  ],
 )
 
 export const staff = pgTable(
@@ -505,19 +505,19 @@ export const staff = pgTable(
   (table) => [
     index('idx_staff_deleted_at').using(
       'btree',
-      table.deletedAt.asc().nullsLast().op('timestamptz_ops')
+      table.deletedAt.asc().nullsLast().op('timestamptz_ops'),
     ),
     index('idx_staff_email').using(
       'btree',
-      table.email.asc().nullsLast().op('text_ops')
+      table.email.asc().nullsLast().op('text_ops'),
     ),
     index('idx_staff_salon_id').using(
       'btree',
-      table.salonId.asc().nullsLast().op('uuid_ops')
+      table.salonId.asc().nullsLast().op('uuid_ops'),
     ),
     index('idx_staff_user_id').using(
       'btree',
-      table.userId.asc().nullsLast().op('uuid_ops')
+      table.userId.asc().nullsLast().op('uuid_ops'),
     ),
     foreignKey({
       columns: [table.salonId],
@@ -526,7 +526,7 @@ export const staff = pgTable(
     }).onDelete('cascade'),
     unique('staff_code_salon_unique').on(table.salonId, table.staffCode),
     unique('staff_email_unique').on(table.email),
-  ]
+  ],
 )
 
 export const bookingStatusHistories = pgTable(
@@ -546,18 +546,18 @@ export const bookingStatusHistories = pgTable(
   (table) => [
     index('idx_booking_status_histories_booking_id').using(
       'btree',
-      table.bookingId.asc().nullsLast().op('uuid_ops')
+      table.bookingId.asc().nullsLast().op('uuid_ops'),
     ),
     index('idx_booking_status_histories_created_at').using(
       'btree',
-      table.createdAt.asc().nullsLast().op('timestamptz_ops')
+      table.createdAt.asc().nullsLast().op('timestamptz_ops'),
     ),
     foreignKey({
       columns: [table.bookingId],
       foreignColumns: [bookings.id],
       name: 'booking_status_histories_booking_id_fk',
     }).onDelete('cascade'),
-  ]
+  ],
 )
 
 export const salons = pgTable(
@@ -602,22 +602,22 @@ export const salons = pgTable(
   (table) => [
     index('idx_salons_deleted_at').using(
       'btree',
-      table.deletedAt.asc().nullsLast().op('timestamptz_ops')
+      table.deletedAt.asc().nullsLast().op('timestamptz_ops'),
     ),
     index('idx_salons_email').using(
       'btree',
-      table.email.asc().nullsLast().op('text_ops')
+      table.email.asc().nullsLast().op('text_ops'),
     ),
     index('idx_salons_rating').using(
       'btree',
-      table.rating.asc().nullsLast().op('numeric_ops')
+      table.rating.asc().nullsLast().op('numeric_ops'),
     ),
     index('idx_salons_review_count').using(
       'btree',
-      table.reviewCount.asc().nullsLast().op('int4_ops')
+      table.reviewCount.asc().nullsLast().op('int4_ops'),
     ),
     unique('salons_email_unique').on(table.email),
-  ]
+  ],
 )
 
 export const customers = pgTable(
@@ -673,31 +673,31 @@ export const customers = pgTable(
   (table) => [
     index('idx_customers_customer_status').using(
       'btree',
-      table.customerStatus.asc().nullsLast().op('enum_ops')
+      table.customerStatus.asc().nullsLast().op('enum_ops'),
     ),
     index('idx_customers_deleted_at').using(
       'btree',
-      table.deletedAt.asc().nullsLast().op('timestamptz_ops')
+      table.deletedAt.asc().nullsLast().op('timestamptz_ops'),
     ),
     index('idx_customers_email').using(
       'btree',
-      table.email.asc().nullsLast().op('text_ops')
+      table.email.asc().nullsLast().op('text_ops'),
     ),
     index('idx_customers_hair_type').using(
       'btree',
-      table.hairType.asc().nullsLast().op('enum_ops')
+      table.hairType.asc().nullsLast().op('enum_ops'),
     ),
     index('idx_customers_membership_tier').using(
       'btree',
-      table.membershipTier.asc().nullsLast().op('enum_ops')
+      table.membershipTier.asc().nullsLast().op('enum_ops'),
     ),
     index('idx_customers_phone_number').using(
       'btree',
-      table.phoneNumber.asc().nullsLast().op('text_ops')
+      table.phoneNumber.asc().nullsLast().op('text_ops'),
     ),
     index('idx_customers_user_id').using(
       'btree',
-      table.userId.asc().nullsLast().op('uuid_ops')
+      table.userId.asc().nullsLast().op('uuid_ops'),
     ),
     foreignKey({
       columns: [table.referredBy],
@@ -706,7 +706,7 @@ export const customers = pgTable(
     }).onDelete('set null'),
     unique('customers_email_unique').on(table.email),
     unique('customers_referral_code_unique').on(table.referralCode),
-  ]
+  ],
 )
 
 export const customerAllergies = pgTable(
@@ -731,14 +731,14 @@ export const customerAllergies = pgTable(
   (table) => [
     index('idx_customer_allergies_customer_id').using(
       'btree',
-      table.customerId.asc().nullsLast().op('uuid_ops')
+      table.customerId.asc().nullsLast().op('uuid_ops'),
     ),
     foreignKey({
       columns: [table.customerId],
       foreignColumns: [customers.id],
       name: 'customer_allergies_customer_id_fk',
     }).onDelete('cascade'),
-  ]
+  ],
 )
 
 export const customerPoints = pgTable(
@@ -760,22 +760,22 @@ export const customerPoints = pgTable(
   (table) => [
     index('idx_customer_points_created_at').using(
       'btree',
-      table.createdAt.asc().nullsLast().op('timestamptz_ops')
+      table.createdAt.asc().nullsLast().op('timestamptz_ops'),
     ),
     index('idx_customer_points_customer_id').using(
       'btree',
-      table.customerId.asc().nullsLast().op('uuid_ops')
+      table.customerId.asc().nullsLast().op('uuid_ops'),
     ),
     index('idx_customer_points_expiry_date').using(
       'btree',
-      table.expiryDate.asc().nullsLast().op('date_ops')
+      table.expiryDate.asc().nullsLast().op('date_ops'),
     ),
     foreignKey({
       columns: [table.customerId],
       foreignColumns: [customers.id],
       name: 'customer_points_customer_id_fk',
     }).onDelete('cascade'),
-  ]
+  ],
 )
 
 export const customerPreferences = pgTable(
@@ -800,7 +800,7 @@ export const customerPreferences = pgTable(
   (table) => [
     index('idx_customer_preferences_customer_id').using(
       'btree',
-      table.customerId.asc().nullsLast().op('uuid_ops')
+      table.customerId.asc().nullsLast().op('uuid_ops'),
     ),
     foreignKey({
       columns: [table.customerId],
@@ -813,7 +813,7 @@ export const customerPreferences = pgTable(
       name: 'customer_preferences_staff_id_fk',
     }).onDelete('set null'),
     unique('customer_preferences_unique').on(table.customerId),
-  ]
+  ],
 )
 
 export const dailySummaries = pgTable(
@@ -851,11 +851,11 @@ export const dailySummaries = pgTable(
   (table) => [
     index('idx_daily_summaries_salon_id').using(
       'btree',
-      table.salonId.asc().nullsLast().op('uuid_ops')
+      table.salonId.asc().nullsLast().op('uuid_ops'),
     ),
     index('idx_daily_summaries_summary_date').using(
       'btree',
-      table.summaryDate.asc().nullsLast().op('date_ops')
+      table.summaryDate.asc().nullsLast().op('date_ops'),
     ),
     foreignKey({
       columns: [table.salonId],
@@ -863,7 +863,7 @@ export const dailySummaries = pgTable(
       name: 'daily_summaries_salon_id_fk',
     }).onDelete('cascade'),
     unique('daily_summaries_unique').on(table.salonId, table.summaryDate),
-  ]
+  ],
 )
 
 export const inventory = pgTable(
@@ -892,19 +892,19 @@ export const inventory = pgTable(
   (table) => [
     index('idx_inventory_expiry_date').using(
       'btree',
-      table.expiryDate.asc().nullsLast().op('date_ops')
+      table.expiryDate.asc().nullsLast().op('date_ops'),
     ),
     index('idx_inventory_lot_number').using(
       'btree',
-      table.lotNumber.asc().nullsLast().op('text_ops')
+      table.lotNumber.asc().nullsLast().op('text_ops'),
     ),
     index('idx_inventory_product_id').using(
       'btree',
-      table.productId.asc().nullsLast().op('uuid_ops')
+      table.productId.asc().nullsLast().op('uuid_ops'),
     ),
     index('idx_inventory_salon_id').using(
       'btree',
-      table.salonId.asc().nullsLast().op('uuid_ops')
+      table.salonId.asc().nullsLast().op('uuid_ops'),
     ),
     foreignKey({
       columns: [table.salonId],
@@ -919,9 +919,9 @@ export const inventory = pgTable(
     unique('inventory_unique').on(
       table.salonId,
       table.productId,
-      table.lotNumber
+      table.lotNumber,
     ),
-  ]
+  ],
 )
 
 export const products = pgTable(
@@ -964,19 +964,19 @@ export const products = pgTable(
   (table) => [
     index('idx_products_barcode').using(
       'btree',
-      table.barcode.asc().nullsLast().op('text_ops')
+      table.barcode.asc().nullsLast().op('text_ops'),
     ),
     index('idx_products_deleted_at').using(
       'btree',
-      table.deletedAt.asc().nullsLast().op('timestamptz_ops')
+      table.deletedAt.asc().nullsLast().op('timestamptz_ops'),
     ),
     index('idx_products_product_code').using(
       'btree',
-      table.productCode.asc().nullsLast().op('text_ops')
+      table.productCode.asc().nullsLast().op('text_ops'),
     ),
     index('idx_products_salon_id').using(
       'btree',
-      table.salonId.asc().nullsLast().op('uuid_ops')
+      table.salonId.asc().nullsLast().op('uuid_ops'),
     ),
     foreignKey({
       columns: [table.salonId],
@@ -984,7 +984,7 @@ export const products = pgTable(
       name: 'products_salon_id_fk',
     }).onDelete('cascade'),
     unique('products_code_salon_unique').on(table.salonId, table.productCode),
-  ]
+  ],
 )
 
 export const inventoryTransactions = pgTable(
@@ -1013,23 +1013,23 @@ export const inventoryTransactions = pgTable(
   (table) => [
     index('idx_inventory_transactions_created_at').using(
       'btree',
-      table.createdAt.asc().nullsLast().op('timestamptz_ops')
+      table.createdAt.asc().nullsLast().op('timestamptz_ops'),
     ),
     index('idx_inventory_transactions_inventory_id').using(
       'btree',
-      table.inventoryId.asc().nullsLast().op('uuid_ops')
+      table.inventoryId.asc().nullsLast().op('uuid_ops'),
     ),
     index('idx_inventory_transactions_product_id').using(
       'btree',
-      table.productId.asc().nullsLast().op('uuid_ops')
+      table.productId.asc().nullsLast().op('uuid_ops'),
     ),
     index('idx_inventory_transactions_salon_id').using(
       'btree',
-      table.salonId.asc().nullsLast().op('uuid_ops')
+      table.salonId.asc().nullsLast().op('uuid_ops'),
     ),
     index('idx_inventory_transactions_transaction_type').using(
       'btree',
-      table.transactionType.asc().nullsLast().op('enum_ops')
+      table.transactionType.asc().nullsLast().op('enum_ops'),
     ),
     foreignKey({
       columns: [table.salonId],
@@ -1046,7 +1046,7 @@ export const inventoryTransactions = pgTable(
       foreignColumns: [inventory.id],
       name: 'inventory_transactions_inventory_id_fk',
     }).onDelete('set null'),
-  ]
+  ],
 )
 
 export const membershipTiers = pgTable(
@@ -1078,7 +1078,7 @@ export const membershipTiers = pgTable(
   (table) => [
     index('idx_membership_tiers_salon_id').using(
       'btree',
-      table.salonId.asc().nullsLast().op('uuid_ops')
+      table.salonId.asc().nullsLast().op('uuid_ops'),
     ),
     foreignKey({
       columns: [table.salonId],
@@ -1086,7 +1086,7 @@ export const membershipTiers = pgTable(
       name: 'membership_tiers_salon_id_fk',
     }).onDelete('cascade'),
     unique('membership_tiers_unique').on(table.salonId, table.tier),
-  ]
+  ],
 )
 
 export const openingHours = pgTable(
@@ -1111,18 +1111,18 @@ export const openingHours = pgTable(
   (table) => [
     index('idx_opening_hours_date').using(
       'btree',
-      table.date.asc().nullsLast().op('date_ops')
+      table.date.asc().nullsLast().op('date_ops'),
     ),
     index('idx_opening_hours_salon_id').using(
       'btree',
-      table.salonId.asc().nullsLast().op('uuid_ops')
+      table.salonId.asc().nullsLast().op('uuid_ops'),
     ),
     foreignKey({
       columns: [table.salonId],
       foreignColumns: [salons.id],
       name: 'opening_hours_salon_id_fk',
     }).onDelete('cascade'),
-  ]
+  ],
 )
 
 export const paymentMethods = pgTable(
@@ -1152,14 +1152,14 @@ export const paymentMethods = pgTable(
   (table) => [
     index('idx_payment_methods_salon_id').using(
       'btree',
-      table.salonId.asc().nullsLast().op('uuid_ops')
+      table.salonId.asc().nullsLast().op('uuid_ops'),
     ),
     foreignKey({
       columns: [table.salonId],
       foreignColumns: [salons.id],
       name: 'payment_methods_salon_id_fk',
     }).onDelete('cascade'),
-  ]
+  ],
 )
 
 export const sales = pgTable(
@@ -1194,27 +1194,27 @@ export const sales = pgTable(
   (table) => [
     index('idx_sales_booking_id').using(
       'btree',
-      table.bookingId.asc().nullsLast().op('uuid_ops')
+      table.bookingId.asc().nullsLast().op('uuid_ops'),
     ),
     index('idx_sales_customer_id').using(
       'btree',
-      table.customerId.asc().nullsLast().op('uuid_ops')
+      table.customerId.asc().nullsLast().op('uuid_ops'),
     ),
     index('idx_sales_sale_date').using(
       'btree',
-      table.saleDate.asc().nullsLast().op('date_ops')
+      table.saleDate.asc().nullsLast().op('date_ops'),
     ),
     index('idx_sales_sale_number').using(
       'btree',
-      table.saleNumber.asc().nullsLast().op('text_ops')
+      table.saleNumber.asc().nullsLast().op('text_ops'),
     ),
     index('idx_sales_salon_id').using(
       'btree',
-      table.salonId.asc().nullsLast().op('uuid_ops')
+      table.salonId.asc().nullsLast().op('uuid_ops'),
     ),
     index('idx_sales_staff_id').using(
       'btree',
-      table.staffId.asc().nullsLast().op('uuid_ops')
+      table.staffId.asc().nullsLast().op('uuid_ops'),
     ),
     foreignKey({
       columns: [table.salonId],
@@ -1237,7 +1237,7 @@ export const sales = pgTable(
       name: 'sales_booking_id_fk',
     }).onDelete('restrict'),
     unique('sales_sale_number_unique').on(table.saleNumber),
-  ]
+  ],
 )
 
 export const paymentTransactions = pgTable(
@@ -1271,19 +1271,19 @@ export const paymentTransactions = pgTable(
   (table) => [
     index('idx_payment_transactions_payment_method_id').using(
       'btree',
-      table.paymentMethodId.asc().nullsLast().op('uuid_ops')
+      table.paymentMethodId.asc().nullsLast().op('uuid_ops'),
     ),
     index('idx_payment_transactions_sale_id').using(
       'btree',
-      table.saleId.asc().nullsLast().op('uuid_ops')
+      table.saleId.asc().nullsLast().op('uuid_ops'),
     ),
     index('idx_payment_transactions_status').using(
       'btree',
-      table.status.asc().nullsLast().op('enum_ops')
+      table.status.asc().nullsLast().op('enum_ops'),
     ),
     index('idx_payment_transactions_transaction_number').using(
       'btree',
-      table.transactionNumber.asc().nullsLast().op('text_ops')
+      table.transactionNumber.asc().nullsLast().op('text_ops'),
     ),
     foreignKey({
       columns: [table.saleId],
@@ -1296,9 +1296,9 @@ export const paymentTransactions = pgTable(
       name: 'payment_transactions_payment_method_id_fk',
     }).onDelete('restrict'),
     unique('payment_transactions_transaction_number_unique').on(
-      table.transactionNumber
+      table.transactionNumber,
     ),
-  ]
+  ],
 )
 
 export const reviews = pgTable(
@@ -1333,23 +1333,23 @@ export const reviews = pgTable(
   (table) => [
     index('idx_reviews_booking_id').using(
       'btree',
-      table.bookingId.asc().nullsLast().op('uuid_ops')
+      table.bookingId.asc().nullsLast().op('uuid_ops'),
     ),
     index('idx_reviews_customer_id').using(
       'btree',
-      table.customerId.asc().nullsLast().op('uuid_ops')
+      table.customerId.asc().nullsLast().op('uuid_ops'),
     ),
     index('idx_reviews_overall_rating').using(
       'btree',
-      table.overallRating.asc().nullsLast().op('int4_ops')
+      table.overallRating.asc().nullsLast().op('int4_ops'),
     ),
     index('idx_reviews_salon_id').using(
       'btree',
-      table.salonId.asc().nullsLast().op('uuid_ops')
+      table.salonId.asc().nullsLast().op('uuid_ops'),
     ),
     index('idx_reviews_staff_id').using(
       'btree',
-      table.staffId.asc().nullsLast().op('uuid_ops')
+      table.staffId.asc().nullsLast().op('uuid_ops'),
     ),
     foreignKey({
       columns: [table.salonId],
@@ -1372,7 +1372,7 @@ export const reviews = pgTable(
       name: 'reviews_staff_id_fk',
     }).onDelete('set null'),
     unique('reviews_booking_unique').on(table.bookingId),
-  ]
+  ],
 )
 
 export const salesDetails = pgTable(
@@ -1400,11 +1400,11 @@ export const salesDetails = pgTable(
   (table) => [
     index('idx_sales_details_sale_id').using(
       'btree',
-      table.saleId.asc().nullsLast().op('uuid_ops')
+      table.saleId.asc().nullsLast().op('uuid_ops'),
     ),
     index('idx_sales_details_staff_id').using(
       'btree',
-      table.staffId.asc().nullsLast().op('uuid_ops')
+      table.staffId.asc().nullsLast().op('uuid_ops'),
     ),
     foreignKey({
       columns: [table.saleId],
@@ -1416,7 +1416,7 @@ export const salesDetails = pgTable(
       foreignColumns: [staff.id],
       name: 'sales_details_staff_id_fk',
     }).onDelete('restrict'),
-  ]
+  ],
 )
 
 export const serviceCategories = pgTable(
@@ -1442,11 +1442,11 @@ export const serviceCategories = pgTable(
   (table) => [
     index('idx_service_categories_parent_id').using(
       'btree',
-      table.parentId.asc().nullsLast().op('uuid_ops')
+      table.parentId.asc().nullsLast().op('uuid_ops'),
     ),
     index('idx_service_categories_salon_id').using(
       'btree',
-      table.salonId.asc().nullsLast().op('uuid_ops')
+      table.salonId.asc().nullsLast().op('uuid_ops'),
     ),
     foreignKey({
       columns: [table.salonId],
@@ -1458,7 +1458,7 @@ export const serviceCategories = pgTable(
       foreignColumns: [table.id],
       name: 'service_categories_parent_id_fk',
     }).onDelete('set null'),
-  ]
+  ],
 )
 
 export const serviceOptions = pgTable(
@@ -1485,14 +1485,14 @@ export const serviceOptions = pgTable(
   (table) => [
     index('idx_service_options_service_id').using(
       'btree',
-      table.serviceId.asc().nullsLast().op('uuid_ops')
+      table.serviceId.asc().nullsLast().op('uuid_ops'),
     ),
     foreignKey({
       columns: [table.serviceId],
       foreignColumns: [services.id],
       name: 'service_options_service_id_fk',
     }).onDelete('cascade'),
-  ]
+  ],
 )
 
 export const users = pgTable(
@@ -1534,23 +1534,23 @@ export const users = pgTable(
   (table) => [
     index('idx_users_customer_id').using(
       'btree',
-      table.customerId.asc().nullsLast().op('uuid_ops')
+      table.customerId.asc().nullsLast().op('uuid_ops'),
     ),
     index('idx_users_deleted_at').using(
       'btree',
-      table.deletedAt.asc().nullsLast().op('timestamptz_ops')
+      table.deletedAt.asc().nullsLast().op('timestamptz_ops'),
     ),
     index('idx_users_email').using(
       'btree',
-      table.email.asc().nullsLast().op('text_ops')
+      table.email.asc().nullsLast().op('text_ops'),
     ),
     index('idx_users_staff_id').using(
       'btree',
-      table.staffId.asc().nullsLast().op('uuid_ops')
+      table.staffId.asc().nullsLast().op('uuid_ops'),
     ),
     index('idx_users_two_factor_status').using(
       'btree',
-      table.twoFactorStatus.asc().nullsLast().op('enum_ops')
+      table.twoFactorStatus.asc().nullsLast().op('enum_ops'),
     ),
     foreignKey({
       columns: [table.customerId],
@@ -1563,7 +1563,7 @@ export const users = pgTable(
       name: 'users_staff_id_fk',
     }).onDelete('set null'),
     unique('users_email_unique').on(table.email),
-  ]
+  ],
 )
 
 export const sessions = pgTable(
@@ -1589,23 +1589,23 @@ export const sessions = pgTable(
   (table) => [
     index('idx_sessions_authentication_state').using(
       'btree',
-      table.authenticationState.asc().nullsLast().op('enum_ops')
+      table.authenticationState.asc().nullsLast().op('enum_ops'),
     ),
     index('idx_sessions_expires_at').using(
       'btree',
-      table.expiresAt.asc().nullsLast().op('timestamptz_ops')
+      table.expiresAt.asc().nullsLast().op('timestamptz_ops'),
     ),
     index('idx_sessions_refresh_token').using(
       'btree',
-      table.refreshToken.asc().nullsLast().op('text_ops')
+      table.refreshToken.asc().nullsLast().op('text_ops'),
     ),
     index('idx_sessions_token').using(
       'btree',
-      table.token.asc().nullsLast().op('text_ops')
+      table.token.asc().nullsLast().op('text_ops'),
     ),
     index('idx_sessions_user_id').using(
       'btree',
-      table.userId.asc().nullsLast().op('uuid_ops')
+      table.userId.asc().nullsLast().op('uuid_ops'),
     ),
     foreignKey({
       columns: [table.userId],
@@ -1614,7 +1614,7 @@ export const sessions = pgTable(
     }).onDelete('cascade'),
     unique('sessions_token_unique').on(table.token),
     unique('sessions_refresh_token_unique').on(table.refreshToken),
-  ]
+  ],
 )
 
 export const staffPerformances = pgTable(
@@ -1656,15 +1656,15 @@ export const staffPerformances = pgTable(
   (table) => [
     index('idx_staff_performances_period_start').using(
       'btree',
-      table.periodStart.asc().nullsLast().op('date_ops')
+      table.periodStart.asc().nullsLast().op('date_ops'),
     ),
     index('idx_staff_performances_period_type').using(
       'btree',
-      table.periodType.asc().nullsLast().op('text_ops')
+      table.periodType.asc().nullsLast().op('text_ops'),
     ),
     index('idx_staff_performances_staff_id').using(
       'btree',
-      table.staffId.asc().nullsLast().op('uuid_ops')
+      table.staffId.asc().nullsLast().op('uuid_ops'),
     ),
     foreignKey({
       columns: [table.staffId],
@@ -1674,9 +1674,9 @@ export const staffPerformances = pgTable(
     unique('staff_performances_unique').on(
       table.staffId,
       table.periodStart,
-      table.periodType
+      table.periodType,
     ),
-  ]
+  ],
 )
 
 export const staffSchedules = pgTable(
@@ -1703,22 +1703,22 @@ export const staffSchedules = pgTable(
   (table) => [
     index('idx_staff_schedules_date').using(
       'btree',
-      table.date.asc().nullsLast().op('date_ops')
+      table.date.asc().nullsLast().op('date_ops'),
     ),
     index('idx_staff_schedules_day_of_week').using(
       'btree',
-      table.dayOfWeek.asc().nullsLast().op('enum_ops')
+      table.dayOfWeek.asc().nullsLast().op('enum_ops'),
     ),
     index('idx_staff_schedules_staff_id').using(
       'btree',
-      table.staffId.asc().nullsLast().op('uuid_ops')
+      table.staffId.asc().nullsLast().op('uuid_ops'),
     ),
     foreignKey({
       columns: [table.staffId],
       foreignColumns: [staff.id],
       name: 'staff_schedules_staff_id_fk',
     }).onDelete('cascade'),
-  ]
+  ],
 )
 
 export const staffSkills = pgTable(
@@ -1741,11 +1741,11 @@ export const staffSkills = pgTable(
   (table) => [
     index('idx_staff_skills_service_id').using(
       'btree',
-      table.serviceId.asc().nullsLast().op('uuid_ops')
+      table.serviceId.asc().nullsLast().op('uuid_ops'),
     ),
     index('idx_staff_skills_staff_id').using(
       'btree',
-      table.staffId.asc().nullsLast().op('uuid_ops')
+      table.staffId.asc().nullsLast().op('uuid_ops'),
     ),
     foreignKey({
       columns: [table.staffId],
@@ -1753,7 +1753,7 @@ export const staffSkills = pgTable(
       name: 'staff_skills_staff_id_fk',
     }).onDelete('cascade'),
     unique('staff_skills_unique').on(table.staffId, table.serviceId),
-  ]
+  ],
 )
 
 export const treatmentRecords = pgTable(
@@ -1788,15 +1788,15 @@ export const treatmentRecords = pgTable(
   (table) => [
     index('idx_treatment_records_booking_id').using(
       'btree',
-      table.bookingId.asc().nullsLast().op('uuid_ops')
+      table.bookingId.asc().nullsLast().op('uuid_ops'),
     ),
     index('idx_treatment_records_customer_id').using(
       'btree',
-      table.customerId.asc().nullsLast().op('uuid_ops')
+      table.customerId.asc().nullsLast().op('uuid_ops'),
     ),
     index('idx_treatment_records_staff_id').using(
       'btree',
-      table.staffId.asc().nullsLast().op('uuid_ops')
+      table.staffId.asc().nullsLast().op('uuid_ops'),
     ),
     foreignKey({
       columns: [table.bookingId],
@@ -1814,7 +1814,7 @@ export const treatmentRecords = pgTable(
       name: 'treatment_records_staff_id_fk',
     }).onDelete('restrict'),
     unique('treatment_records_booking_unique').on(table.bookingId),
-  ]
+  ],
 )
 
 export const treatmentMaterials = pgTable(
@@ -1834,11 +1834,11 @@ export const treatmentMaterials = pgTable(
   (table) => [
     index('idx_treatment_materials_product_id').using(
       'btree',
-      table.productId.asc().nullsLast().op('uuid_ops')
+      table.productId.asc().nullsLast().op('uuid_ops'),
     ),
     index('idx_treatment_materials_treatment_record_id').using(
       'btree',
-      table.treatmentRecordId.asc().nullsLast().op('uuid_ops')
+      table.treatmentRecordId.asc().nullsLast().op('uuid_ops'),
     ),
     foreignKey({
       columns: [table.treatmentRecordId],
@@ -1850,7 +1850,7 @@ export const treatmentMaterials = pgTable(
       foreignColumns: [products.id],
       name: 'treatment_materials_product_id_fk',
     }).onDelete('restrict'),
-  ]
+  ],
 )
 
 export const treatmentPhotos = pgTable(
@@ -1873,16 +1873,16 @@ export const treatmentPhotos = pgTable(
   (table) => [
     index('idx_treatment_photos_photo_type').using(
       'btree',
-      table.photoType.asc().nullsLast().op('text_ops')
+      table.photoType.asc().nullsLast().op('text_ops'),
     ),
     index('idx_treatment_photos_treatment_record_id').using(
       'btree',
-      table.treatmentRecordId.asc().nullsLast().op('uuid_ops')
+      table.treatmentRecordId.asc().nullsLast().op('uuid_ops'),
     ),
     foreignKey({
       columns: [table.treatmentRecordId],
       foreignColumns: [treatmentRecords.id],
       name: 'treatment_photos_treatment_record_id_fk',
     }).onDelete('cascade'),
-  ]
+  ],
 )

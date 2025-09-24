@@ -11,5 +11,5 @@
  */
 export interface ModelsAuthTwoFactorVerifyRequest {
   /** 認証アプリが生成したTOTPコード。 */
-  code: string
+  code: string;
 }

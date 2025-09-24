@@ -9,4 +9,4 @@
 /**
  * 最低評価値による絞り込み
  */
-export type ModelsSalonSearchRequestMinRatingParameter = number
+export type ModelsSalonSearchRequestMinRatingParameter = number;

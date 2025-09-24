@@ -10,4 +10,4 @@
  * 外部サービス連携向けのメタデータ
  * @nullable
  */
-export type ModelsPaymentMetadata = { [key: string]: unknown } | null
+export type ModelsPaymentMetadata = {[key: string]: unknown} | null;

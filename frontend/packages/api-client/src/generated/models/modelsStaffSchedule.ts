@@ -5,28 +5,28 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsDayOfWeekType } from './modelsDayOfWeekType'
-import type { ModelsTimeSlot } from './modelsTimeSlot'
-import type { ModelsStaffScheduleEffectivePeriod } from './modelsStaffScheduleEffectivePeriod'
+import type { ModelsDayOfWeekType } from './modelsDayOfWeekType';
+import type { ModelsTimeSlot } from './modelsTimeSlot';
+import type { ModelsStaffScheduleEffectivePeriod } from './modelsStaffScheduleEffectivePeriod';
 
 /**
  * スタッフシフトモデル - 通常勤務スケジュールと休憩時間、適用期間を定義し、予約可能時間の算出に利用する
  */
 export interface ModelsStaffSchedule {
   /** 対象となる曜日 */
-  dayOfWeek: ModelsDayOfWeekType
+  dayOfWeek: ModelsDayOfWeekType;
   /** 勤務開始時刻 (フォーマット例: HH:mm) */
-  startTime: string
+  startTime: string;
   /** 勤務終了時刻 (フォーマット例: HH:mm) */
-  endTime: string
+  endTime: string;
   /**
    * 当日の休憩時間帯リスト - 休憩なしのフル勤務の場合はnull
    * @nullable
    */
-  breakTime: ModelsTimeSlot[] | null
+  breakTime: ModelsTimeSlot[] | null;
   /**
    * シフトが有効となる期間 - 無期限スケジュールの場合はnull
    * @nullable
    */
-  effectivePeriod: ModelsStaffScheduleEffectivePeriod
+  effectivePeriod: ModelsStaffScheduleEffectivePeriod;
 }

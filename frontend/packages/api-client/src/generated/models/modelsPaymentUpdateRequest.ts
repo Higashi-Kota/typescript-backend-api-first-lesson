@@ -5,45 +5,45 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsPaymentMethodType } from './modelsPaymentMethodType'
-import type { ModelsPaymentStatusUpdate } from './modelsPaymentStatusUpdate'
-import type { ModelsMoneyUpdate } from './modelsMoneyUpdate'
-import type { ModelsPaymentUpdateRequestDepositApplied } from './modelsPaymentUpdateRequestDepositApplied'
-import type { ModelsPaymentUpdateRequestMetadata } from './modelsPaymentUpdateRequestMetadata'
+import type { ModelsPaymentMethodType } from './modelsPaymentMethodType';
+import type { ModelsPaymentStatusUpdate } from './modelsPaymentStatusUpdate';
+import type { ModelsMoneyUpdate } from './modelsMoneyUpdate';
+import type { ModelsPaymentUpdateRequestDepositApplied } from './modelsPaymentUpdateRequestDepositApplied';
+import type { ModelsPaymentUpdateRequestMetadata } from './modelsPaymentUpdateRequestMetadata';
 
 /**
  * 決済情報の更新入力モデル
  */
 export interface ModelsPaymentUpdateRequest {
   /** 変更後の支払い方法 */
-  method?: ModelsPaymentMethodType
+  method?: ModelsPaymentMethodType;
   /** 変更後の支払い状態 */
-  status?: ModelsPaymentStatusUpdate
+  status?: ModelsPaymentStatusUpdate;
   /** 再計算した未収残高 */
-  outstandingAmount?: ModelsMoneyUpdate
+  outstandingAmount?: ModelsMoneyUpdate;
   /**
    * 更新後の預り金額（null 指定で解除）
    * @nullable
    */
-  depositApplied?: ModelsPaymentUpdateRequestDepositApplied
+  depositApplied?: ModelsPaymentUpdateRequestDepositApplied;
   /**
    * 更新後の外部参照番号（null 指定で解除）
    * @nullable
    */
-  externalReference?: string | null
+  externalReference?: string | null;
   /**
    * 更新後のレシート番号（null 指定で解除）
    * @nullable
    */
-  receiptNumber?: string | null
+  receiptNumber?: string | null;
   /**
    * 更新後の備考（null 指定で解除）
    * @nullable
    */
-  notes?: string | null
+  notes?: string | null;
   /**
    * 更新後のメタデータ（null 指定で解除）
    * @nullable
    */
-  metadata?: ModelsPaymentUpdateRequestMetadata
+  metadata?: ModelsPaymentUpdateRequestMetadata;
 }

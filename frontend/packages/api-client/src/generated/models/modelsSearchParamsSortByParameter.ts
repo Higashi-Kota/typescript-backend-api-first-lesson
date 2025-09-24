@@ -9,4 +9,4 @@
 /**
  * 並び替え対象カラム名。
  */
-export type ModelsSearchParamsSortByParameter = string
+export type ModelsSearchParamsSortByParameter = string;

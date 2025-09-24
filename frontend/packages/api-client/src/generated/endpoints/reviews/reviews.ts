@@ -5,7 +5,10 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import { useMutation, useQuery } from '@tanstack/react-query'
+import {
+  useMutation,
+  useQuery
+} from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -18,8 +21,8 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult,
-} from '@tanstack/react-query'
+  UseQueryResult
+} from '@tanstack/react-query';
 
 import type {
   ModelsError,
@@ -38,16 +41,19 @@ import type {
   SalonReviewOperationsGetSalonReviews200,
   SalonReviewOperationsGetSalonReviewsParams,
   StaffReviewOperationsGetStaffReviews200,
-  StaffReviewOperationsGetStaffReviewsParams,
-} from '../../models'
+  StaffReviewOperationsGetStaffReviewsParams
+} from '../../models';
 
-import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher'
+import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher';
 
-type AwaitedInput<T> = PromiseLike<T> | T
+type AwaitedInput<T> = PromiseLike<T> | T;
 
-type Awaited<O> = O extends AwaitedInput<infer T> ? T : never
+      type Awaited<O> = O extends AwaitedInput<infer T> ? T : never;
 
-type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
+
 
 /**
  * 顧客やスタッフ、評価点でレビューを絞り込み、店舗運営の改善材料を抽出します。
@@ -57,197 +63,111 @@ export type reviewOperationsListResponse200 = {
   data: ReviewOperationsList200
   status: 200
 }
+    
+export type reviewOperationsListResponseComposite = reviewOperationsListResponse200;
+    
+export type reviewOperationsListResponse = reviewOperationsListResponseComposite & {
+  headers: Headers;
+}
 
-export type reviewOperationsListResponseComposite =
-  reviewOperationsListResponse200
-
-export type reviewOperationsListResponse =
-  reviewOperationsListResponseComposite & {
-    headers: Headers
-  }
-
-export const getReviewOperationsListUrl = (
-  params?: ReviewOperationsListParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getReviewOperationsListUrl = (params?: ReviewOperationsListParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v1/reviews?${stringifiedParams}`
-    : `/api/v1/reviews`
+  return stringifiedParams.length > 0 ? `/api/v1/reviews?${stringifiedParams}` : `/api/v1/reviews`
 }
 
-export const reviewOperationsList = async (
-  params?: ReviewOperationsListParams,
-  options?: RequestInit
-): Promise<reviewOperationsListResponse> => {
-  return customInstance<reviewOperationsListResponse>(
-    getReviewOperationsListUrl(params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getReviewOperationsListQueryKey = (
-  params?: ReviewOperationsListParams
-) => {
-  return [`/api/v1/reviews`, ...(params ? [params] : [])] as const
-}
-
-export const getReviewOperationsListQueryOptions = <
-  TData = Awaited<ReturnType<typeof reviewOperationsList>>,
-  TError = unknown,
->(
-  params?: ReviewOperationsListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof reviewOperationsList>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const reviewOperationsList = async (params?: ReviewOperationsListParams, options?: RequestInit): Promise<reviewOperationsListResponse> => {
+  
+  return customInstance<reviewOperationsListResponse>(getReviewOperationsListUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getReviewOperationsListQueryKey = (params?: ReviewOperationsListParams,) => {
+    return [`/api/v1/reviews`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getReviewOperationsListQueryOptions = <TData = Awaited<ReturnType<typeof reviewOperationsList>>, TError = unknown>(params?: ReviewOperationsListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof reviewOperationsList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ?? getReviewOperationsListQueryKey(params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof reviewOperationsList>>
-  > = ({ signal }) =>
-    reviewOperationsList(params, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getReviewOperationsListQueryKey(params);
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof reviewOperationsList>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof reviewOperationsList>>> = ({ signal }) => reviewOperationsList(params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof reviewOperationsList>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type ReviewOperationsListQueryResult = NonNullable<
-  Awaited<ReturnType<typeof reviewOperationsList>>
->
+export type ReviewOperationsListQueryResult = NonNullable<Awaited<ReturnType<typeof reviewOperationsList>>>
 export type ReviewOperationsListQueryError = unknown
 
-export function useReviewOperationsList<
-  TData = Awaited<ReturnType<typeof reviewOperationsList>>,
-  TError = unknown,
->(
-  params: undefined | ReviewOperationsListParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof reviewOperationsList>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useReviewOperationsList<TData = Awaited<ReturnType<typeof reviewOperationsList>>, TError = unknown>(
+ params: undefined |  ReviewOperationsListParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof reviewOperationsList>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof reviewOperationsList>>,
           TError,
           Awaited<ReturnType<typeof reviewOperationsList>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useReviewOperationsList<
-  TData = Awaited<ReturnType<typeof reviewOperationsList>>,
-  TError = unknown,
->(
-  params?: ReviewOperationsListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof reviewOperationsList>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useReviewOperationsList<TData = Awaited<ReturnType<typeof reviewOperationsList>>, TError = unknown>(
+ params?: ReviewOperationsListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof reviewOperationsList>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof reviewOperationsList>>,
           TError,
           Awaited<ReturnType<typeof reviewOperationsList>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useReviewOperationsList<
-  TData = Awaited<ReturnType<typeof reviewOperationsList>>,
-  TError = unknown,
->(
-  params?: ReviewOperationsListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof reviewOperationsList>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useReviewOperationsList<TData = Awaited<ReturnType<typeof reviewOperationsList>>, TError = unknown>(
+ params?: ReviewOperationsListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof reviewOperationsList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary List reviews
  */
 
-export function useReviewOperationsList<
-  TData = Awaited<ReturnType<typeof reviewOperationsList>>,
-  TError = unknown,
->(
-  params?: ReviewOperationsListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof reviewOperationsList>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getReviewOperationsListQueryOptions(params, options)
+export function useReviewOperationsList<TData = Awaited<ReturnType<typeof reviewOperationsList>>, TError = unknown>(
+ params?: ReviewOperationsListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof reviewOperationsList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  const queryOptions = getReviewOperationsListQueryOptions(params,options)
 
-  query.queryKey = queryOptions.queryKey
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  return query
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
+
+
 
 /**
  * 施術完了後に顧客がレビューを投稿し、サービス品質の可視化と信頼獲得につなげます。
@@ -267,108 +187,82 @@ export type reviewOperationsCreateResponse409 = {
   data: ModelsError
   status: 409
 }
-
-export type reviewOperationsCreateResponseComposite =
-  | reviewOperationsCreateResponse201
-  | reviewOperationsCreateResponse400
-  | reviewOperationsCreateResponse409
-
-export type reviewOperationsCreateResponse =
-  reviewOperationsCreateResponseComposite & {
-    headers: Headers
-  }
+    
+export type reviewOperationsCreateResponseComposite = reviewOperationsCreateResponse201 | reviewOperationsCreateResponse400 | reviewOperationsCreateResponse409;
+    
+export type reviewOperationsCreateResponse = reviewOperationsCreateResponseComposite & {
+  headers: Headers;
+}
 
 export const getReviewOperationsCreateUrl = () => {
+
+
+  
+
   return `/api/v1/reviews`
 }
 
-export const reviewOperationsCreate = async (
-  modelsReviewCreateRequest: ModelsReviewCreateRequest,
-  options?: RequestInit
-): Promise<reviewOperationsCreateResponse> => {
-  return customInstance<reviewOperationsCreateResponse>(
-    getReviewOperationsCreateUrl(),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsReviewCreateRequest),
-    }
-  )
-}
-
-export const getReviewOperationsCreateMutationOptions = <
-  TError = ModelsError | ModelsError,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof reviewOperationsCreate>>,
-    TError,
-    { data: ModelsReviewCreateRequest },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof reviewOperationsCreate>>,
-  TError,
-  { data: ModelsReviewCreateRequest },
-  TContext
-> => {
-  const mutationKey = ['reviewOperationsCreate']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof reviewOperationsCreate>>,
-    { data: ModelsReviewCreateRequest }
-  > = (props) => {
-    const { data } = props ?? {}
-
-    return reviewOperationsCreate(data, requestOptions)
+export const reviewOperationsCreate = async (modelsReviewCreateRequest: ModelsReviewCreateRequest, options?: RequestInit): Promise<reviewOperationsCreateResponse> => {
+  
+  return customInstance<reviewOperationsCreateResponse>(getReviewOperationsCreateUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      modelsReviewCreateRequest,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type ReviewOperationsCreateMutationResult = NonNullable<
-  Awaited<ReturnType<typeof reviewOperationsCreate>>
->
-export type ReviewOperationsCreateMutationBody = ModelsReviewCreateRequest
-export type ReviewOperationsCreateMutationError = ModelsError | ModelsError
 
-/**
+
+export const getReviewOperationsCreateMutationOptions = <TError = ModelsError | ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reviewOperationsCreate>>, TError,{data: ModelsReviewCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof reviewOperationsCreate>>, TError,{data: ModelsReviewCreateRequest}, TContext> => {
+
+const mutationKey = ['reviewOperationsCreate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof reviewOperationsCreate>>, {data: ModelsReviewCreateRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  reviewOperationsCreate(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ReviewOperationsCreateMutationResult = NonNullable<Awaited<ReturnType<typeof reviewOperationsCreate>>>
+    export type ReviewOperationsCreateMutationBody = ModelsReviewCreateRequest
+    export type ReviewOperationsCreateMutationError = ModelsError | ModelsError
+
+    /**
  * @summary Create review
  */
-export const useReviewOperationsCreate = <
-  TError = ModelsError | ModelsError,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof reviewOperationsCreate>>,
-      TError,
-      { data: ModelsReviewCreateRequest },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof reviewOperationsCreate>>,
-  TError,
-  { data: ModelsReviewCreateRequest },
-  TContext
-> => {
-  const mutationOptions = getReviewOperationsCreateMutationOptions(options)
+export const useReviewOperationsCreate = <TError = ModelsError | ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reviewOperationsCreate>>, TError,{data: ModelsReviewCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof reviewOperationsCreate>>,
+        TError,
+        {data: ModelsReviewCreateRequest},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getReviewOperationsCreateMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 単一レビューの詳細を表示し、コメント内容や評価指標を確認します。
  * @summary Get review
  */
@@ -381,185 +275,104 @@ export type reviewOperationsGetResponse404 = {
   data: ModelsError
   status: 404
 }
+    
+export type reviewOperationsGetResponseComposite = reviewOperationsGetResponse200 | reviewOperationsGetResponse404;
+    
+export type reviewOperationsGetResponse = reviewOperationsGetResponseComposite & {
+  headers: Headers;
+}
 
-export type reviewOperationsGetResponseComposite =
-  | reviewOperationsGetResponse200
-  | reviewOperationsGetResponse404
+export const getReviewOperationsGetUrl = (id: ModelsReviewId,) => {
 
-export type reviewOperationsGetResponse =
-  reviewOperationsGetResponseComposite & {
-    headers: Headers
-  }
 
-export const getReviewOperationsGetUrl = (id: ModelsReviewId) => {
+  
+
   return `/api/v1/reviews/${id}`
 }
 
-export const reviewOperationsGet = async (
-  id: ModelsReviewId,
-  options?: RequestInit
-): Promise<reviewOperationsGetResponse> => {
-  return customInstance<reviewOperationsGetResponse>(
-    getReviewOperationsGetUrl(id),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getReviewOperationsGetQueryKey = (id?: ModelsReviewId) => {
-  return [`/api/v1/reviews/${id}`] as const
-}
-
-export const getReviewOperationsGetQueryOptions = <
-  TData = Awaited<ReturnType<typeof reviewOperationsGet>>,
-  TError = ModelsError,
->(
-  id: ModelsReviewId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof reviewOperationsGet>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const reviewOperationsGet = async (id: ModelsReviewId, options?: RequestInit): Promise<reviewOperationsGetResponse> => {
+  
+  return customInstance<reviewOperationsGetResponse>(getReviewOperationsGetUrl(id),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getReviewOperationsGetQueryKey = (id?: ModelsReviewId,) => {
+    return [`/api/v1/reviews/${id}`] as const;
+    }
+
+    
+export const getReviewOperationsGetQueryOptions = <TData = Awaited<ReturnType<typeof reviewOperationsGet>>, TError = ModelsError>(id: ModelsReviewId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof reviewOperationsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey = queryOptions?.queryKey ?? getReviewOperationsGetQueryKey(id)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof reviewOperationsGet>>
-  > = ({ signal }) => reviewOperationsGet(id, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getReviewOperationsGetQueryKey(id);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!id,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof reviewOperationsGet>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof reviewOperationsGet>>> = ({ signal }) => reviewOperationsGet(id, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof reviewOperationsGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type ReviewOperationsGetQueryResult = NonNullable<
-  Awaited<ReturnType<typeof reviewOperationsGet>>
->
+export type ReviewOperationsGetQueryResult = NonNullable<Awaited<ReturnType<typeof reviewOperationsGet>>>
 export type ReviewOperationsGetQueryError = ModelsError
 
-export function useReviewOperationsGet<
-  TData = Awaited<ReturnType<typeof reviewOperationsGet>>,
-  TError = ModelsError,
->(
-  id: ModelsReviewId,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof reviewOperationsGet>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useReviewOperationsGet<TData = Awaited<ReturnType<typeof reviewOperationsGet>>, TError = ModelsError>(
+ id: ModelsReviewId, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof reviewOperationsGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof reviewOperationsGet>>,
           TError,
           Awaited<ReturnType<typeof reviewOperationsGet>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useReviewOperationsGet<
-  TData = Awaited<ReturnType<typeof reviewOperationsGet>>,
-  TError = ModelsError,
->(
-  id: ModelsReviewId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof reviewOperationsGet>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useReviewOperationsGet<TData = Awaited<ReturnType<typeof reviewOperationsGet>>, TError = ModelsError>(
+ id: ModelsReviewId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof reviewOperationsGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof reviewOperationsGet>>,
           TError,
           Awaited<ReturnType<typeof reviewOperationsGet>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useReviewOperationsGet<
-  TData = Awaited<ReturnType<typeof reviewOperationsGet>>,
-  TError = ModelsError,
->(
-  id: ModelsReviewId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof reviewOperationsGet>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useReviewOperationsGet<TData = Awaited<ReturnType<typeof reviewOperationsGet>>, TError = ModelsError>(
+ id: ModelsReviewId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof reviewOperationsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get review
  */
 
-export function useReviewOperationsGet<
-  TData = Awaited<ReturnType<typeof reviewOperationsGet>>,
-  TError = ModelsError,
->(
-  id: ModelsReviewId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof reviewOperationsGet>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getReviewOperationsGetQueryOptions(id, options)
+export function useReviewOperationsGet<TData = Awaited<ReturnType<typeof reviewOperationsGet>>, TError = ModelsError>(
+ id: ModelsReviewId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof reviewOperationsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  const queryOptions = getReviewOperationsGetQueryOptions(id,options)
 
-  query.queryKey = queryOptions.queryKey
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  return query
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
+
+
 
 /**
  * 顧客が投稿後のレビューを修正し、誤記修正や追記を反映します。
@@ -579,109 +392,83 @@ export type reviewOperationsUpdateResponse404 = {
   data: ModelsError
   status: 404
 }
+    
+export type reviewOperationsUpdateResponseComposite = reviewOperationsUpdateResponse200 | reviewOperationsUpdateResponse403 | reviewOperationsUpdateResponse404;
+    
+export type reviewOperationsUpdateResponse = reviewOperationsUpdateResponseComposite & {
+  headers: Headers;
+}
 
-export type reviewOperationsUpdateResponseComposite =
-  | reviewOperationsUpdateResponse200
-  | reviewOperationsUpdateResponse403
-  | reviewOperationsUpdateResponse404
+export const getReviewOperationsUpdateUrl = (id: ModelsReviewId,) => {
 
-export type reviewOperationsUpdateResponse =
-  reviewOperationsUpdateResponseComposite & {
-    headers: Headers
-  }
 
-export const getReviewOperationsUpdateUrl = (id: ModelsReviewId) => {
+  
+
   return `/api/v1/reviews/${id}`
 }
 
-export const reviewOperationsUpdate = async (
-  id: ModelsReviewId,
-  modelsReviewUpdateRequest: ModelsReviewUpdateRequest,
-  options?: RequestInit
-): Promise<reviewOperationsUpdateResponse> => {
-  return customInstance<reviewOperationsUpdateResponse>(
-    getReviewOperationsUpdateUrl(id),
-    {
-      ...options,
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsReviewUpdateRequest),
-    }
-  )
-}
-
-export const getReviewOperationsUpdateMutationOptions = <
-  TError = ModelsError | ModelsError,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof reviewOperationsUpdate>>,
-    TError,
-    { id: ModelsReviewId; data: ModelsReviewUpdateRequest },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof reviewOperationsUpdate>>,
-  TError,
-  { id: ModelsReviewId; data: ModelsReviewUpdateRequest },
-  TContext
-> => {
-  const mutationKey = ['reviewOperationsUpdate']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof reviewOperationsUpdate>>,
-    { id: ModelsReviewId; data: ModelsReviewUpdateRequest }
-  > = (props) => {
-    const { id, data } = props ?? {}
-
-    return reviewOperationsUpdate(id, data, requestOptions)
+export const reviewOperationsUpdate = async (id: ModelsReviewId,
+    modelsReviewUpdateRequest: ModelsReviewUpdateRequest, options?: RequestInit): Promise<reviewOperationsUpdateResponse> => {
+  
+  return customInstance<reviewOperationsUpdateResponse>(getReviewOperationsUpdateUrl(id),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      modelsReviewUpdateRequest,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type ReviewOperationsUpdateMutationResult = NonNullable<
-  Awaited<ReturnType<typeof reviewOperationsUpdate>>
->
-export type ReviewOperationsUpdateMutationBody = ModelsReviewUpdateRequest
-export type ReviewOperationsUpdateMutationError = ModelsError | ModelsError
 
-/**
+
+export const getReviewOperationsUpdateMutationOptions = <TError = ModelsError | ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reviewOperationsUpdate>>, TError,{id: ModelsReviewId;data: ModelsReviewUpdateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof reviewOperationsUpdate>>, TError,{id: ModelsReviewId;data: ModelsReviewUpdateRequest}, TContext> => {
+
+const mutationKey = ['reviewOperationsUpdate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof reviewOperationsUpdate>>, {id: ModelsReviewId;data: ModelsReviewUpdateRequest}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  reviewOperationsUpdate(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ReviewOperationsUpdateMutationResult = NonNullable<Awaited<ReturnType<typeof reviewOperationsUpdate>>>
+    export type ReviewOperationsUpdateMutationBody = ModelsReviewUpdateRequest
+    export type ReviewOperationsUpdateMutationError = ModelsError | ModelsError
+
+    /**
  * @summary Update review
  */
-export const useReviewOperationsUpdate = <
-  TError = ModelsError | ModelsError,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof reviewOperationsUpdate>>,
-      TError,
-      { id: ModelsReviewId; data: ModelsReviewUpdateRequest },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof reviewOperationsUpdate>>,
-  TError,
-  { id: ModelsReviewId; data: ModelsReviewUpdateRequest },
-  TContext
-> => {
-  const mutationOptions = getReviewOperationsUpdateMutationOptions(options)
+export const useReviewOperationsUpdate = <TError = ModelsError | ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reviewOperationsUpdate>>, TError,{id: ModelsReviewId;data: ModelsReviewUpdateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof reviewOperationsUpdate>>,
+        TError,
+        {id: ModelsReviewId;data: ModelsReviewUpdateRequest},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getReviewOperationsUpdateMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * レビューの削除要請に応じて投稿を非表示または除去し、コンプライアンスを維持します。
  * @summary Delete review
  */
@@ -699,106 +486,81 @@ export type reviewOperationsDeleteResponse404 = {
   data: ModelsError
   status: 404
 }
+    
+export type reviewOperationsDeleteResponseComposite = reviewOperationsDeleteResponse204 | reviewOperationsDeleteResponse403 | reviewOperationsDeleteResponse404;
+    
+export type reviewOperationsDeleteResponse = reviewOperationsDeleteResponseComposite & {
+  headers: Headers;
+}
 
-export type reviewOperationsDeleteResponseComposite =
-  | reviewOperationsDeleteResponse204
-  | reviewOperationsDeleteResponse403
-  | reviewOperationsDeleteResponse404
+export const getReviewOperationsDeleteUrl = (id: ModelsReviewId,) => {
 
-export type reviewOperationsDeleteResponse =
-  reviewOperationsDeleteResponseComposite & {
-    headers: Headers
-  }
 
-export const getReviewOperationsDeleteUrl = (id: ModelsReviewId) => {
+  
+
   return `/api/v1/reviews/${id}`
 }
 
-export const reviewOperationsDelete = async (
-  id: ModelsReviewId,
-  options?: RequestInit
-): Promise<reviewOperationsDeleteResponse> => {
-  return customInstance<reviewOperationsDeleteResponse>(
-    getReviewOperationsDeleteUrl(id),
-    {
-      ...options,
-      method: 'DELETE',
-    }
-  )
-}
-
-export const getReviewOperationsDeleteMutationOptions = <
-  TError = ModelsError | ModelsError,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof reviewOperationsDelete>>,
-    TError,
-    { id: ModelsReviewId },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof reviewOperationsDelete>>,
-  TError,
-  { id: ModelsReviewId },
-  TContext
-> => {
-  const mutationKey = ['reviewOperationsDelete']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof reviewOperationsDelete>>,
-    { id: ModelsReviewId }
-  > = (props) => {
-    const { id } = props ?? {}
-
-    return reviewOperationsDelete(id, requestOptions)
+export const reviewOperationsDelete = async (id: ModelsReviewId, options?: RequestInit): Promise<reviewOperationsDeleteResponse> => {
+  
+  return customInstance<reviewOperationsDeleteResponse>(getReviewOperationsDeleteUrl(id),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type ReviewOperationsDeleteMutationResult = NonNullable<
-  Awaited<ReturnType<typeof reviewOperationsDelete>>
->
 
-export type ReviewOperationsDeleteMutationError = ModelsError | ModelsError
 
-/**
+export const getReviewOperationsDeleteMutationOptions = <TError = ModelsError | ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reviewOperationsDelete>>, TError,{id: ModelsReviewId}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof reviewOperationsDelete>>, TError,{id: ModelsReviewId}, TContext> => {
+
+const mutationKey = ['reviewOperationsDelete'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof reviewOperationsDelete>>, {id: ModelsReviewId}> = (props) => {
+          const {id} = props ?? {};
+
+          return  reviewOperationsDelete(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ReviewOperationsDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof reviewOperationsDelete>>>
+    
+    export type ReviewOperationsDeleteMutationError = ModelsError | ModelsError
+
+    /**
  * @summary Delete review
  */
-export const useReviewOperationsDelete = <
-  TError = ModelsError | ModelsError,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof reviewOperationsDelete>>,
-      TError,
-      { id: ModelsReviewId },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof reviewOperationsDelete>>,
-  TError,
-  { id: ModelsReviewId },
-  TContext
-> => {
-  const mutationOptions = getReviewOperationsDeleteMutationOptions(options)
+export const useReviewOperationsDelete = <TError = ModelsError | ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reviewOperationsDelete>>, TError,{id: ModelsReviewId}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof reviewOperationsDelete>>,
+        TError,
+        {id: ModelsReviewId},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getReviewOperationsDeleteMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 他の利用者に役立つレビューをマーキングし、信頼性の高い声を強調します。
  * @summary Mark review as helpful
  */
@@ -811,105 +573,81 @@ export type reviewOperationsMarkHelpfulResponse404 = {
   data: ModelsError
   status: 404
 }
+    
+export type reviewOperationsMarkHelpfulResponseComposite = reviewOperationsMarkHelpfulResponse200 | reviewOperationsMarkHelpfulResponse404;
+    
+export type reviewOperationsMarkHelpfulResponse = reviewOperationsMarkHelpfulResponseComposite & {
+  headers: Headers;
+}
 
-export type reviewOperationsMarkHelpfulResponseComposite =
-  | reviewOperationsMarkHelpfulResponse200
-  | reviewOperationsMarkHelpfulResponse404
+export const getReviewOperationsMarkHelpfulUrl = (id: ModelsReviewId,) => {
 
-export type reviewOperationsMarkHelpfulResponse =
-  reviewOperationsMarkHelpfulResponseComposite & {
-    headers: Headers
-  }
 
-export const getReviewOperationsMarkHelpfulUrl = (id: ModelsReviewId) => {
+  
+
   return `/api/v1/reviews/${id}/helpful`
 }
 
-export const reviewOperationsMarkHelpful = async (
-  id: ModelsReviewId,
-  options?: RequestInit
-): Promise<reviewOperationsMarkHelpfulResponse> => {
-  return customInstance<reviewOperationsMarkHelpfulResponse>(
-    getReviewOperationsMarkHelpfulUrl(id),
-    {
-      ...options,
-      method: 'POST',
-    }
-  )
-}
-
-export const getReviewOperationsMarkHelpfulMutationOptions = <
-  TError = ModelsError,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof reviewOperationsMarkHelpful>>,
-    TError,
-    { id: ModelsReviewId },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof reviewOperationsMarkHelpful>>,
-  TError,
-  { id: ModelsReviewId },
-  TContext
-> => {
-  const mutationKey = ['reviewOperationsMarkHelpful']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof reviewOperationsMarkHelpful>>,
-    { id: ModelsReviewId }
-  > = (props) => {
-    const { id } = props ?? {}
-
-    return reviewOperationsMarkHelpful(id, requestOptions)
+export const reviewOperationsMarkHelpful = async (id: ModelsReviewId, options?: RequestInit): Promise<reviewOperationsMarkHelpfulResponse> => {
+  
+  return customInstance<reviewOperationsMarkHelpfulResponse>(getReviewOperationsMarkHelpfulUrl(id),
+  {      
+    ...options,
+    method: 'POST'
+    
+    
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type ReviewOperationsMarkHelpfulMutationResult = NonNullable<
-  Awaited<ReturnType<typeof reviewOperationsMarkHelpful>>
->
 
-export type ReviewOperationsMarkHelpfulMutationError = ModelsError
 
-/**
+export const getReviewOperationsMarkHelpfulMutationOptions = <TError = ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reviewOperationsMarkHelpful>>, TError,{id: ModelsReviewId}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof reviewOperationsMarkHelpful>>, TError,{id: ModelsReviewId}, TContext> => {
+
+const mutationKey = ['reviewOperationsMarkHelpful'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof reviewOperationsMarkHelpful>>, {id: ModelsReviewId}> = (props) => {
+          const {id} = props ?? {};
+
+          return  reviewOperationsMarkHelpful(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ReviewOperationsMarkHelpfulMutationResult = NonNullable<Awaited<ReturnType<typeof reviewOperationsMarkHelpful>>>
+    
+    export type ReviewOperationsMarkHelpfulMutationError = ModelsError
+
+    /**
  * @summary Mark review as helpful
  */
-export const useReviewOperationsMarkHelpful = <
-  TError = ModelsError,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof reviewOperationsMarkHelpful>>,
-      TError,
-      { id: ModelsReviewId },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof reviewOperationsMarkHelpful>>,
-  TError,
-  { id: ModelsReviewId },
-  TContext
-> => {
-  const mutationOptions = getReviewOperationsMarkHelpfulMutationOptions(options)
+export const useReviewOperationsMarkHelpful = <TError = ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reviewOperationsMarkHelpful>>, TError,{id: ModelsReviewId}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof reviewOperationsMarkHelpful>>,
+        TError,
+        {id: ModelsReviewId},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getReviewOperationsMarkHelpfulMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 不適切な内容や虚偽が疑われるレビューを通報し、運営による対応フローへ送ります。
  * @summary Report review
  */
@@ -922,108 +660,83 @@ export type reviewOperationsReportResponse404 = {
   data: ModelsError
   status: 404
 }
+    
+export type reviewOperationsReportResponseComposite = reviewOperationsReportResponse200 | reviewOperationsReportResponse404;
+    
+export type reviewOperationsReportResponse = reviewOperationsReportResponseComposite & {
+  headers: Headers;
+}
 
-export type reviewOperationsReportResponseComposite =
-  | reviewOperationsReportResponse200
-  | reviewOperationsReportResponse404
+export const getReviewOperationsReportUrl = (id: ModelsReviewId,) => {
 
-export type reviewOperationsReportResponse =
-  reviewOperationsReportResponseComposite & {
-    headers: Headers
-  }
 
-export const getReviewOperationsReportUrl = (id: ModelsReviewId) => {
+  
+
   return `/api/v1/reviews/${id}/report`
 }
 
-export const reviewOperationsReport = async (
-  id: ModelsReviewId,
-  reviewOperationsReportBody: ReviewOperationsReportBody,
-  options?: RequestInit
-): Promise<reviewOperationsReportResponse> => {
-  return customInstance<reviewOperationsReportResponse>(
-    getReviewOperationsReportUrl(id),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(reviewOperationsReportBody),
-    }
-  )
-}
-
-export const getReviewOperationsReportMutationOptions = <
-  TError = ModelsError,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof reviewOperationsReport>>,
-    TError,
-    { id: ModelsReviewId; data: ReviewOperationsReportBody },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof reviewOperationsReport>>,
-  TError,
-  { id: ModelsReviewId; data: ReviewOperationsReportBody },
-  TContext
-> => {
-  const mutationKey = ['reviewOperationsReport']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof reviewOperationsReport>>,
-    { id: ModelsReviewId; data: ReviewOperationsReportBody }
-  > = (props) => {
-    const { id, data } = props ?? {}
-
-    return reviewOperationsReport(id, data, requestOptions)
+export const reviewOperationsReport = async (id: ModelsReviewId,
+    reviewOperationsReportBody: ReviewOperationsReportBody, options?: RequestInit): Promise<reviewOperationsReportResponse> => {
+  
+  return customInstance<reviewOperationsReportResponse>(getReviewOperationsReportUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      reviewOperationsReportBody,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type ReviewOperationsReportMutationResult = NonNullable<
-  Awaited<ReturnType<typeof reviewOperationsReport>>
->
-export type ReviewOperationsReportMutationBody = ReviewOperationsReportBody
-export type ReviewOperationsReportMutationError = ModelsError
 
-/**
+
+export const getReviewOperationsReportMutationOptions = <TError = ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reviewOperationsReport>>, TError,{id: ModelsReviewId;data: ReviewOperationsReportBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof reviewOperationsReport>>, TError,{id: ModelsReviewId;data: ReviewOperationsReportBody}, TContext> => {
+
+const mutationKey = ['reviewOperationsReport'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof reviewOperationsReport>>, {id: ModelsReviewId;data: ReviewOperationsReportBody}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  reviewOperationsReport(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ReviewOperationsReportMutationResult = NonNullable<Awaited<ReturnType<typeof reviewOperationsReport>>>
+    export type ReviewOperationsReportMutationBody = ReviewOperationsReportBody
+    export type ReviewOperationsReportMutationError = ModelsError
+
+    /**
  * @summary Report review
  */
-export const useReviewOperationsReport = <
-  TError = ModelsError,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof reviewOperationsReport>>,
-      TError,
-      { id: ModelsReviewId; data: ReviewOperationsReportBody },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof reviewOperationsReport>>,
-  TError,
-  { id: ModelsReviewId; data: ReviewOperationsReportBody },
-  TContext
-> => {
-  const mutationOptions = getReviewOperationsReportMutationOptions(options)
+export const useReviewOperationsReport = <TError = ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reviewOperationsReport>>, TError,{id: ModelsReviewId;data: ReviewOperationsReportBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof reviewOperationsReport>>,
+        TError,
+        {id: ModelsReviewId;data: ReviewOperationsReportBody},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getReviewOperationsReportMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * サロンに紐づくレビュー一覧を取得し、並び替え条件に応じて顧客の声を提示します。
  * @summary Get salon reviews
  */
@@ -1031,221 +744,119 @@ export type salonReviewOperationsGetSalonReviewsResponse200 = {
   data: SalonReviewOperationsGetSalonReviews200
   status: 200
 }
+    
+export type salonReviewOperationsGetSalonReviewsResponseComposite = salonReviewOperationsGetSalonReviewsResponse200;
+    
+export type salonReviewOperationsGetSalonReviewsResponse = salonReviewOperationsGetSalonReviewsResponseComposite & {
+  headers: Headers;
+}
 
-export type salonReviewOperationsGetSalonReviewsResponseComposite =
-  salonReviewOperationsGetSalonReviewsResponse200
-
-export type salonReviewOperationsGetSalonReviewsResponse =
-  salonReviewOperationsGetSalonReviewsResponseComposite & {
-    headers: Headers
-  }
-
-export const getSalonReviewOperationsGetSalonReviewsUrl = (
-  salonId: ModelsSalonId,
-  params?: SalonReviewOperationsGetSalonReviewsParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getSalonReviewOperationsGetSalonReviewsUrl = (salonId: ModelsSalonId,
+    params?: SalonReviewOperationsGetSalonReviewsParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v1/salons/${salonId}/reviews?${stringifiedParams}`
-    : `/api/v1/salons/${salonId}/reviews`
+  return stringifiedParams.length > 0 ? `/api/v1/salons/${salonId}/reviews?${stringifiedParams}` : `/api/v1/salons/${salonId}/reviews`
 }
 
-export const salonReviewOperationsGetSalonReviews = async (
-  salonId: ModelsSalonId,
-  params?: SalonReviewOperationsGetSalonReviewsParams,
-  options?: RequestInit
-): Promise<salonReviewOperationsGetSalonReviewsResponse> => {
-  return customInstance<salonReviewOperationsGetSalonReviewsResponse>(
-    getSalonReviewOperationsGetSalonReviewsUrl(salonId, params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getSalonReviewOperationsGetSalonReviewsQueryKey = (
-  salonId?: ModelsSalonId,
-  params?: SalonReviewOperationsGetSalonReviewsParams
-) => {
-  return [
-    `/api/v1/salons/${salonId}/reviews`,
-    ...(params ? [params] : []),
-  ] as const
-}
-
-export const getSalonReviewOperationsGetSalonReviewsQueryOptions = <
-  TData = Awaited<ReturnType<typeof salonReviewOperationsGetSalonReviews>>,
-  TError = unknown,
->(
-  salonId: ModelsSalonId,
-  params?: SalonReviewOperationsGetSalonReviewsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonReviewOperationsGetSalonReviews>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const salonReviewOperationsGetSalonReviews = async (salonId: ModelsSalonId,
+    params?: SalonReviewOperationsGetSalonReviewsParams, options?: RequestInit): Promise<salonReviewOperationsGetSalonReviewsResponse> => {
+  
+  return customInstance<salonReviewOperationsGetSalonReviewsResponse>(getSalonReviewOperationsGetSalonReviewsUrl(salonId,params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getSalonReviewOperationsGetSalonReviewsQueryKey = (salonId?: ModelsSalonId,
+    params?: SalonReviewOperationsGetSalonReviewsParams,) => {
+    return [`/api/v1/salons/${salonId}/reviews`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getSalonReviewOperationsGetSalonReviewsQueryOptions = <TData = Awaited<ReturnType<typeof salonReviewOperationsGetSalonReviews>>, TError = unknown>(salonId: ModelsSalonId,
+    params?: SalonReviewOperationsGetSalonReviewsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonReviewOperationsGetSalonReviews>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ??
-    getSalonReviewOperationsGetSalonReviewsQueryKey(salonId, params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof salonReviewOperationsGetSalonReviews>>
-  > = ({ signal }) =>
-    salonReviewOperationsGetSalonReviews(salonId, params, {
-      signal,
-      ...requestOptions,
-    })
+  const queryKey =  queryOptions?.queryKey ?? getSalonReviewOperationsGetSalonReviewsQueryKey(salonId,params);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!salonId,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof salonReviewOperationsGetSalonReviews>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof salonReviewOperationsGetSalonReviews>>> = ({ signal }) => salonReviewOperationsGetSalonReviews(salonId,params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(salonId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof salonReviewOperationsGetSalonReviews>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type SalonReviewOperationsGetSalonReviewsQueryResult = NonNullable<
-  Awaited<ReturnType<typeof salonReviewOperationsGetSalonReviews>>
->
+export type SalonReviewOperationsGetSalonReviewsQueryResult = NonNullable<Awaited<ReturnType<typeof salonReviewOperationsGetSalonReviews>>>
 export type SalonReviewOperationsGetSalonReviewsQueryError = unknown
 
-export function useSalonReviewOperationsGetSalonReviews<
-  TData = Awaited<ReturnType<typeof salonReviewOperationsGetSalonReviews>>,
-  TError = unknown,
->(
-  salonId: ModelsSalonId,
-  params: undefined | SalonReviewOperationsGetSalonReviewsParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonReviewOperationsGetSalonReviews>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useSalonReviewOperationsGetSalonReviews<TData = Awaited<ReturnType<typeof salonReviewOperationsGetSalonReviews>>, TError = unknown>(
+ salonId: ModelsSalonId,
+    params: undefined |  SalonReviewOperationsGetSalonReviewsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonReviewOperationsGetSalonReviews>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof salonReviewOperationsGetSalonReviews>>,
           TError,
           Awaited<ReturnType<typeof salonReviewOperationsGetSalonReviews>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSalonReviewOperationsGetSalonReviews<
-  TData = Awaited<ReturnType<typeof salonReviewOperationsGetSalonReviews>>,
-  TError = unknown,
->(
-  salonId: ModelsSalonId,
-  params?: SalonReviewOperationsGetSalonReviewsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonReviewOperationsGetSalonReviews>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSalonReviewOperationsGetSalonReviews<TData = Awaited<ReturnType<typeof salonReviewOperationsGetSalonReviews>>, TError = unknown>(
+ salonId: ModelsSalonId,
+    params?: SalonReviewOperationsGetSalonReviewsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonReviewOperationsGetSalonReviews>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof salonReviewOperationsGetSalonReviews>>,
           TError,
           Awaited<ReturnType<typeof salonReviewOperationsGetSalonReviews>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSalonReviewOperationsGetSalonReviews<
-  TData = Awaited<ReturnType<typeof salonReviewOperationsGetSalonReviews>>,
-  TError = unknown,
->(
-  salonId: ModelsSalonId,
-  params?: SalonReviewOperationsGetSalonReviewsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonReviewOperationsGetSalonReviews>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSalonReviewOperationsGetSalonReviews<TData = Awaited<ReturnType<typeof salonReviewOperationsGetSalonReviews>>, TError = unknown>(
+ salonId: ModelsSalonId,
+    params?: SalonReviewOperationsGetSalonReviewsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonReviewOperationsGetSalonReviews>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get salon reviews
  */
 
-export function useSalonReviewOperationsGetSalonReviews<
-  TData = Awaited<ReturnType<typeof salonReviewOperationsGetSalonReviews>>,
-  TError = unknown,
->(
-  salonId: ModelsSalonId,
-  params?: SalonReviewOperationsGetSalonReviewsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonReviewOperationsGetSalonReviews>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getSalonReviewOperationsGetSalonReviewsQueryOptions(
-    salonId,
-    params,
-    options
-  )
+export function useSalonReviewOperationsGetSalonReviews<TData = Awaited<ReturnType<typeof salonReviewOperationsGetSalonReviews>>, TError = unknown>(
+ salonId: ModelsSalonId,
+    params?: SalonReviewOperationsGetSalonReviewsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonReviewOperationsGetSalonReviews>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  const queryOptions = getSalonReviewOperationsGetSalonReviewsQueryOptions(salonId,params,options)
 
-  query.queryKey = queryOptions.queryKey
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  return query
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
+
+
 
 /**
  * サロン全体の平均評価や件数などの概要指標を取得し、ダッシュボード表示に利用します。
@@ -1255,194 +866,104 @@ export type salonReviewOperationsGetSummaryResponse200 = {
   data: ModelsReviewSummary
   status: 200
 }
+    
+export type salonReviewOperationsGetSummaryResponseComposite = salonReviewOperationsGetSummaryResponse200;
+    
+export type salonReviewOperationsGetSummaryResponse = salonReviewOperationsGetSummaryResponseComposite & {
+  headers: Headers;
+}
 
-export type salonReviewOperationsGetSummaryResponseComposite =
-  salonReviewOperationsGetSummaryResponse200
+export const getSalonReviewOperationsGetSummaryUrl = (salonId: ModelsSalonId,) => {
 
-export type salonReviewOperationsGetSummaryResponse =
-  salonReviewOperationsGetSummaryResponseComposite & {
-    headers: Headers
-  }
 
-export const getSalonReviewOperationsGetSummaryUrl = (
-  salonId: ModelsSalonId
-) => {
+  
+
   return `/api/v1/salons/${salonId}/reviews/summary`
 }
 
-export const salonReviewOperationsGetSummary = async (
-  salonId: ModelsSalonId,
-  options?: RequestInit
-): Promise<salonReviewOperationsGetSummaryResponse> => {
-  return customInstance<salonReviewOperationsGetSummaryResponse>(
-    getSalonReviewOperationsGetSummaryUrl(salonId),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getSalonReviewOperationsGetSummaryQueryKey = (
-  salonId?: ModelsSalonId
-) => {
-  return [`/api/v1/salons/${salonId}/reviews/summary`] as const
-}
-
-export const getSalonReviewOperationsGetSummaryQueryOptions = <
-  TData = Awaited<ReturnType<typeof salonReviewOperationsGetSummary>>,
-  TError = unknown,
->(
-  salonId: ModelsSalonId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonReviewOperationsGetSummary>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const salonReviewOperationsGetSummary = async (salonId: ModelsSalonId, options?: RequestInit): Promise<salonReviewOperationsGetSummaryResponse> => {
+  
+  return customInstance<salonReviewOperationsGetSummaryResponse>(getSalonReviewOperationsGetSummaryUrl(salonId),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getSalonReviewOperationsGetSummaryQueryKey = (salonId?: ModelsSalonId,) => {
+    return [`/api/v1/salons/${salonId}/reviews/summary`] as const;
+    }
+
+    
+export const getSalonReviewOperationsGetSummaryQueryOptions = <TData = Awaited<ReturnType<typeof salonReviewOperationsGetSummary>>, TError = unknown>(salonId: ModelsSalonId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonReviewOperationsGetSummary>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ??
-    getSalonReviewOperationsGetSummaryQueryKey(salonId)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof salonReviewOperationsGetSummary>>
-  > = ({ signal }) =>
-    salonReviewOperationsGetSummary(salonId, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getSalonReviewOperationsGetSummaryQueryKey(salonId);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!salonId,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof salonReviewOperationsGetSummary>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof salonReviewOperationsGetSummary>>> = ({ signal }) => salonReviewOperationsGetSummary(salonId, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(salonId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof salonReviewOperationsGetSummary>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type SalonReviewOperationsGetSummaryQueryResult = NonNullable<
-  Awaited<ReturnType<typeof salonReviewOperationsGetSummary>>
->
+export type SalonReviewOperationsGetSummaryQueryResult = NonNullable<Awaited<ReturnType<typeof salonReviewOperationsGetSummary>>>
 export type SalonReviewOperationsGetSummaryQueryError = unknown
 
-export function useSalonReviewOperationsGetSummary<
-  TData = Awaited<ReturnType<typeof salonReviewOperationsGetSummary>>,
-  TError = unknown,
->(
-  salonId: ModelsSalonId,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonReviewOperationsGetSummary>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useSalonReviewOperationsGetSummary<TData = Awaited<ReturnType<typeof salonReviewOperationsGetSummary>>, TError = unknown>(
+ salonId: ModelsSalonId, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonReviewOperationsGetSummary>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof salonReviewOperationsGetSummary>>,
           TError,
           Awaited<ReturnType<typeof salonReviewOperationsGetSummary>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSalonReviewOperationsGetSummary<
-  TData = Awaited<ReturnType<typeof salonReviewOperationsGetSummary>>,
-  TError = unknown,
->(
-  salonId: ModelsSalonId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonReviewOperationsGetSummary>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSalonReviewOperationsGetSummary<TData = Awaited<ReturnType<typeof salonReviewOperationsGetSummary>>, TError = unknown>(
+ salonId: ModelsSalonId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonReviewOperationsGetSummary>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof salonReviewOperationsGetSummary>>,
           TError,
           Awaited<ReturnType<typeof salonReviewOperationsGetSummary>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSalonReviewOperationsGetSummary<
-  TData = Awaited<ReturnType<typeof salonReviewOperationsGetSummary>>,
-  TError = unknown,
->(
-  salonId: ModelsSalonId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonReviewOperationsGetSummary>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSalonReviewOperationsGetSummary<TData = Awaited<ReturnType<typeof salonReviewOperationsGetSummary>>, TError = unknown>(
+ salonId: ModelsSalonId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonReviewOperationsGetSummary>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get salon reviews summary
  */
 
-export function useSalonReviewOperationsGetSummary<
-  TData = Awaited<ReturnType<typeof salonReviewOperationsGetSummary>>,
-  TError = unknown,
->(
-  salonId: ModelsSalonId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonReviewOperationsGetSummary>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getSalonReviewOperationsGetSummaryQueryOptions(
-    salonId,
-    options
-  )
+export function useSalonReviewOperationsGetSummary<TData = Awaited<ReturnType<typeof salonReviewOperationsGetSummary>>, TError = unknown>(
+ salonId: ModelsSalonId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonReviewOperationsGetSummary>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  const queryOptions = getSalonReviewOperationsGetSummaryQueryOptions(salonId,options)
 
-  query.queryKey = queryOptions.queryKey
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  return query
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
+
+
 
 /**
  * 特定スタッフに紐づくレビュー一覧を取得し、個別フィードバックとして活用します。
@@ -1452,221 +973,119 @@ export type staffReviewOperationsGetStaffReviewsResponse200 = {
   data: StaffReviewOperationsGetStaffReviews200
   status: 200
 }
+    
+export type staffReviewOperationsGetStaffReviewsResponseComposite = staffReviewOperationsGetStaffReviewsResponse200;
+    
+export type staffReviewOperationsGetStaffReviewsResponse = staffReviewOperationsGetStaffReviewsResponseComposite & {
+  headers: Headers;
+}
 
-export type staffReviewOperationsGetStaffReviewsResponseComposite =
-  staffReviewOperationsGetStaffReviewsResponse200
-
-export type staffReviewOperationsGetStaffReviewsResponse =
-  staffReviewOperationsGetStaffReviewsResponseComposite & {
-    headers: Headers
-  }
-
-export const getStaffReviewOperationsGetStaffReviewsUrl = (
-  staffId: ModelsStaffId,
-  params?: StaffReviewOperationsGetStaffReviewsParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getStaffReviewOperationsGetStaffReviewsUrl = (staffId: ModelsStaffId,
+    params?: StaffReviewOperationsGetStaffReviewsParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v1/staff/${staffId}/reviews?${stringifiedParams}`
-    : `/api/v1/staff/${staffId}/reviews`
+  return stringifiedParams.length > 0 ? `/api/v1/staff/${staffId}/reviews?${stringifiedParams}` : `/api/v1/staff/${staffId}/reviews`
 }
 
-export const staffReviewOperationsGetStaffReviews = async (
-  staffId: ModelsStaffId,
-  params?: StaffReviewOperationsGetStaffReviewsParams,
-  options?: RequestInit
-): Promise<staffReviewOperationsGetStaffReviewsResponse> => {
-  return customInstance<staffReviewOperationsGetStaffReviewsResponse>(
-    getStaffReviewOperationsGetStaffReviewsUrl(staffId, params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getStaffReviewOperationsGetStaffReviewsQueryKey = (
-  staffId?: ModelsStaffId,
-  params?: StaffReviewOperationsGetStaffReviewsParams
-) => {
-  return [
-    `/api/v1/staff/${staffId}/reviews`,
-    ...(params ? [params] : []),
-  ] as const
-}
-
-export const getStaffReviewOperationsGetStaffReviewsQueryOptions = <
-  TData = Awaited<ReturnType<typeof staffReviewOperationsGetStaffReviews>>,
-  TError = unknown,
->(
-  staffId: ModelsStaffId,
-  params?: StaffReviewOperationsGetStaffReviewsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof staffReviewOperationsGetStaffReviews>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const staffReviewOperationsGetStaffReviews = async (staffId: ModelsStaffId,
+    params?: StaffReviewOperationsGetStaffReviewsParams, options?: RequestInit): Promise<staffReviewOperationsGetStaffReviewsResponse> => {
+  
+  return customInstance<staffReviewOperationsGetStaffReviewsResponse>(getStaffReviewOperationsGetStaffReviewsUrl(staffId,params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getStaffReviewOperationsGetStaffReviewsQueryKey = (staffId?: ModelsStaffId,
+    params?: StaffReviewOperationsGetStaffReviewsParams,) => {
+    return [`/api/v1/staff/${staffId}/reviews`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getStaffReviewOperationsGetStaffReviewsQueryOptions = <TData = Awaited<ReturnType<typeof staffReviewOperationsGetStaffReviews>>, TError = unknown>(staffId: ModelsStaffId,
+    params?: StaffReviewOperationsGetStaffReviewsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof staffReviewOperationsGetStaffReviews>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ??
-    getStaffReviewOperationsGetStaffReviewsQueryKey(staffId, params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof staffReviewOperationsGetStaffReviews>>
-  > = ({ signal }) =>
-    staffReviewOperationsGetStaffReviews(staffId, params, {
-      signal,
-      ...requestOptions,
-    })
+  const queryKey =  queryOptions?.queryKey ?? getStaffReviewOperationsGetStaffReviewsQueryKey(staffId,params);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!staffId,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof staffReviewOperationsGetStaffReviews>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof staffReviewOperationsGetStaffReviews>>> = ({ signal }) => staffReviewOperationsGetStaffReviews(staffId,params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(staffId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof staffReviewOperationsGetStaffReviews>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type StaffReviewOperationsGetStaffReviewsQueryResult = NonNullable<
-  Awaited<ReturnType<typeof staffReviewOperationsGetStaffReviews>>
->
+export type StaffReviewOperationsGetStaffReviewsQueryResult = NonNullable<Awaited<ReturnType<typeof staffReviewOperationsGetStaffReviews>>>
 export type StaffReviewOperationsGetStaffReviewsQueryError = unknown
 
-export function useStaffReviewOperationsGetStaffReviews<
-  TData = Awaited<ReturnType<typeof staffReviewOperationsGetStaffReviews>>,
-  TError = unknown,
->(
-  staffId: ModelsStaffId,
-  params: undefined | StaffReviewOperationsGetStaffReviewsParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof staffReviewOperationsGetStaffReviews>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useStaffReviewOperationsGetStaffReviews<TData = Awaited<ReturnType<typeof staffReviewOperationsGetStaffReviews>>, TError = unknown>(
+ staffId: ModelsStaffId,
+    params: undefined |  StaffReviewOperationsGetStaffReviewsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof staffReviewOperationsGetStaffReviews>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof staffReviewOperationsGetStaffReviews>>,
           TError,
           Awaited<ReturnType<typeof staffReviewOperationsGetStaffReviews>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useStaffReviewOperationsGetStaffReviews<
-  TData = Awaited<ReturnType<typeof staffReviewOperationsGetStaffReviews>>,
-  TError = unknown,
->(
-  staffId: ModelsStaffId,
-  params?: StaffReviewOperationsGetStaffReviewsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof staffReviewOperationsGetStaffReviews>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useStaffReviewOperationsGetStaffReviews<TData = Awaited<ReturnType<typeof staffReviewOperationsGetStaffReviews>>, TError = unknown>(
+ staffId: ModelsStaffId,
+    params?: StaffReviewOperationsGetStaffReviewsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof staffReviewOperationsGetStaffReviews>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof staffReviewOperationsGetStaffReviews>>,
           TError,
           Awaited<ReturnType<typeof staffReviewOperationsGetStaffReviews>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useStaffReviewOperationsGetStaffReviews<
-  TData = Awaited<ReturnType<typeof staffReviewOperationsGetStaffReviews>>,
-  TError = unknown,
->(
-  staffId: ModelsStaffId,
-  params?: StaffReviewOperationsGetStaffReviewsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof staffReviewOperationsGetStaffReviews>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useStaffReviewOperationsGetStaffReviews<TData = Awaited<ReturnType<typeof staffReviewOperationsGetStaffReviews>>, TError = unknown>(
+ staffId: ModelsStaffId,
+    params?: StaffReviewOperationsGetStaffReviewsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof staffReviewOperationsGetStaffReviews>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get staff reviews
  */
 
-export function useStaffReviewOperationsGetStaffReviews<
-  TData = Awaited<ReturnType<typeof staffReviewOperationsGetStaffReviews>>,
-  TError = unknown,
->(
-  staffId: ModelsStaffId,
-  params?: StaffReviewOperationsGetStaffReviewsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof staffReviewOperationsGetStaffReviews>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getStaffReviewOperationsGetStaffReviewsQueryOptions(
-    staffId,
-    params,
-    options
-  )
+export function useStaffReviewOperationsGetStaffReviews<TData = Awaited<ReturnType<typeof staffReviewOperationsGetStaffReviews>>, TError = unknown>(
+ staffId: ModelsStaffId,
+    params?: StaffReviewOperationsGetStaffReviewsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof staffReviewOperationsGetStaffReviews>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  const queryOptions = getStaffReviewOperationsGetStaffReviewsQueryOptions(staffId,params,options)
 
-  query.queryKey = queryOptions.queryKey
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  return query
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
+
+
 
 /**
  * スタッフ別の平均評価やレビュー数を集計し、人事評価や表彰に用います。
@@ -1676,191 +1095,102 @@ export type staffReviewOperationsGetStaffSummaryResponse200 = {
   data: ModelsReviewSummary
   status: 200
 }
+    
+export type staffReviewOperationsGetStaffSummaryResponseComposite = staffReviewOperationsGetStaffSummaryResponse200;
+    
+export type staffReviewOperationsGetStaffSummaryResponse = staffReviewOperationsGetStaffSummaryResponseComposite & {
+  headers: Headers;
+}
 
-export type staffReviewOperationsGetStaffSummaryResponseComposite =
-  staffReviewOperationsGetStaffSummaryResponse200
+export const getStaffReviewOperationsGetStaffSummaryUrl = (staffId: ModelsStaffId,) => {
 
-export type staffReviewOperationsGetStaffSummaryResponse =
-  staffReviewOperationsGetStaffSummaryResponseComposite & {
-    headers: Headers
-  }
 
-export const getStaffReviewOperationsGetStaffSummaryUrl = (
-  staffId: ModelsStaffId
-) => {
+  
+
   return `/api/v1/staff/${staffId}/reviews/summary`
 }
 
-export const staffReviewOperationsGetStaffSummary = async (
-  staffId: ModelsStaffId,
-  options?: RequestInit
-): Promise<staffReviewOperationsGetStaffSummaryResponse> => {
-  return customInstance<staffReviewOperationsGetStaffSummaryResponse>(
-    getStaffReviewOperationsGetStaffSummaryUrl(staffId),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getStaffReviewOperationsGetStaffSummaryQueryKey = (
-  staffId?: ModelsStaffId
-) => {
-  return [`/api/v1/staff/${staffId}/reviews/summary`] as const
-}
-
-export const getStaffReviewOperationsGetStaffSummaryQueryOptions = <
-  TData = Awaited<ReturnType<typeof staffReviewOperationsGetStaffSummary>>,
-  TError = unknown,
->(
-  staffId: ModelsStaffId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof staffReviewOperationsGetStaffSummary>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const staffReviewOperationsGetStaffSummary = async (staffId: ModelsStaffId, options?: RequestInit): Promise<staffReviewOperationsGetStaffSummaryResponse> => {
+  
+  return customInstance<staffReviewOperationsGetStaffSummaryResponse>(getStaffReviewOperationsGetStaffSummaryUrl(staffId),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getStaffReviewOperationsGetStaffSummaryQueryKey = (staffId?: ModelsStaffId,) => {
+    return [`/api/v1/staff/${staffId}/reviews/summary`] as const;
+    }
+
+    
+export const getStaffReviewOperationsGetStaffSummaryQueryOptions = <TData = Awaited<ReturnType<typeof staffReviewOperationsGetStaffSummary>>, TError = unknown>(staffId: ModelsStaffId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof staffReviewOperationsGetStaffSummary>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ??
-    getStaffReviewOperationsGetStaffSummaryQueryKey(staffId)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof staffReviewOperationsGetStaffSummary>>
-  > = ({ signal }) =>
-    staffReviewOperationsGetStaffSummary(staffId, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getStaffReviewOperationsGetStaffSummaryQueryKey(staffId);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!staffId,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof staffReviewOperationsGetStaffSummary>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof staffReviewOperationsGetStaffSummary>>> = ({ signal }) => staffReviewOperationsGetStaffSummary(staffId, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(staffId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof staffReviewOperationsGetStaffSummary>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type StaffReviewOperationsGetStaffSummaryQueryResult = NonNullable<
-  Awaited<ReturnType<typeof staffReviewOperationsGetStaffSummary>>
->
+export type StaffReviewOperationsGetStaffSummaryQueryResult = NonNullable<Awaited<ReturnType<typeof staffReviewOperationsGetStaffSummary>>>
 export type StaffReviewOperationsGetStaffSummaryQueryError = unknown
 
-export function useStaffReviewOperationsGetStaffSummary<
-  TData = Awaited<ReturnType<typeof staffReviewOperationsGetStaffSummary>>,
-  TError = unknown,
->(
-  staffId: ModelsStaffId,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof staffReviewOperationsGetStaffSummary>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useStaffReviewOperationsGetStaffSummary<TData = Awaited<ReturnType<typeof staffReviewOperationsGetStaffSummary>>, TError = unknown>(
+ staffId: ModelsStaffId, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof staffReviewOperationsGetStaffSummary>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof staffReviewOperationsGetStaffSummary>>,
           TError,
           Awaited<ReturnType<typeof staffReviewOperationsGetStaffSummary>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useStaffReviewOperationsGetStaffSummary<
-  TData = Awaited<ReturnType<typeof staffReviewOperationsGetStaffSummary>>,
-  TError = unknown,
->(
-  staffId: ModelsStaffId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof staffReviewOperationsGetStaffSummary>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useStaffReviewOperationsGetStaffSummary<TData = Awaited<ReturnType<typeof staffReviewOperationsGetStaffSummary>>, TError = unknown>(
+ staffId: ModelsStaffId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof staffReviewOperationsGetStaffSummary>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof staffReviewOperationsGetStaffSummary>>,
           TError,
           Awaited<ReturnType<typeof staffReviewOperationsGetStaffSummary>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useStaffReviewOperationsGetStaffSummary<
-  TData = Awaited<ReturnType<typeof staffReviewOperationsGetStaffSummary>>,
-  TError = unknown,
->(
-  staffId: ModelsStaffId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof staffReviewOperationsGetStaffSummary>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useStaffReviewOperationsGetStaffSummary<TData = Awaited<ReturnType<typeof staffReviewOperationsGetStaffSummary>>, TError = unknown>(
+ staffId: ModelsStaffId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof staffReviewOperationsGetStaffSummary>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get staff reviews summary
  */
 
-export function useStaffReviewOperationsGetStaffSummary<
-  TData = Awaited<ReturnType<typeof staffReviewOperationsGetStaffSummary>>,
-  TError = unknown,
->(
-  staffId: ModelsStaffId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof staffReviewOperationsGetStaffSummary>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getStaffReviewOperationsGetStaffSummaryQueryOptions(
-    staffId,
-    options
-  )
+export function useStaffReviewOperationsGetStaffSummary<TData = Awaited<ReturnType<typeof staffReviewOperationsGetStaffSummary>>, TError = unknown>(
+ staffId: ModelsStaffId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof staffReviewOperationsGetStaffSummary>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  const queryOptions = getStaffReviewOperationsGetStaffSummaryQueryOptions(staffId,options)
 
-  query.queryKey = queryOptions.queryKey
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  return query
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
+
+
+

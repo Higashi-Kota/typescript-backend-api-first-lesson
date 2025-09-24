@@ -9,4 +9,4 @@
 /**
  * 次ページを指し示すカーソル。前回レスポンスの `meta.nextCursor` を設定する。
  */
-export type ModelsCursorPaginationParamsCursorParameter = string
+export type ModelsCursorPaginationParamsCursorParameter = string;

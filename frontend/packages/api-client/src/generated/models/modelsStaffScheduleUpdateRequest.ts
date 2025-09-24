@@ -5,25 +5,25 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsBusinessHours } from './modelsBusinessHours'
-import type { ModelsScheduleException } from './modelsScheduleException'
+import type { ModelsBusinessHours } from './modelsBusinessHours';
+import type { ModelsScheduleException } from './modelsScheduleException';
 
 /**
  * スタッフの勤務スケジュールを更新するためのリクエスト
  */
 export interface ModelsStaffScheduleUpdateRequest {
   /** 更新後の通常勤務時間帯一覧 */
-  regularHours: ModelsBusinessHours[]
+  regularHours: ModelsBusinessHours[];
   /**
    * 休暇や特例などの例外設定一覧。例外がない場合はnull
    * @nullable
    */
-  exceptions: ModelsScheduleException[] | null
+  exceptions: ModelsScheduleException[] | null;
   /** 更新内容の適用開始日時 */
-  effectiveFrom: string
+  effectiveFrom: string;
   /**
    * 適用終了日時。無期限の場合はnull
    * @nullable
    */
-  effectiveTo: string | null
+  effectiveTo: string | null;
 }

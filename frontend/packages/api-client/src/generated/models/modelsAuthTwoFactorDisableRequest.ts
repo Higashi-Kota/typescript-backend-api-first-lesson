@@ -11,7 +11,7 @@
  */
 export interface ModelsAuthTwoFactorDisableRequest {
   /** 本人確認のための現在パスワード。 */
-  password: string
+  password: string;
   /** 無効化確認のための現在TOTPコード。 */
-  code: string
+  code: string;
 }

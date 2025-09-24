@@ -4,7 +4,7 @@
  * @returns true if exactly one file exists, false otherwise
  */
 export const isSingleFile = (
-  files: File | FileList | File[] | null | undefined
+  files: File | FileList | File[] | null | undefined,
 ): boolean => {
   if (files == null) {
     return false

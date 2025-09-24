@@ -5,75 +5,75 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsInventoryId } from './modelsInventoryId'
-import type { ModelsSalonId } from './modelsSalonId'
-import type { ModelsStockMovementType } from './modelsStockMovementType'
-import type { ModelsStaffId } from './modelsStaffId'
-import type { ModelsStockMovementMetadata } from './modelsStockMovementMetadata'
+import type { ModelsInventoryId } from './modelsInventoryId';
+import type { ModelsSalonId } from './modelsSalonId';
+import type { ModelsStockMovementType } from './modelsStockMovementType';
+import type { ModelsStaffId } from './modelsStaffId';
+import type { ModelsStockMovementMetadata } from './modelsStockMovementMetadata';
 
 /**
  * 在庫の移動履歴
  */
 export interface ModelsStockMovement {
   /** トランザクション ID */
-  id: string
+  id: string;
   /** 対象在庫アイテム ID */
-  itemId: ModelsInventoryId
+  itemId: ModelsInventoryId;
   /** 処理を行うサロン ID */
-  salonId: ModelsSalonId
+  salonId: ModelsSalonId;
   /** 在庫操作区分（入庫/出庫/調整/移動） */
-  type: ModelsStockMovementType
+  type: ModelsStockMovementType;
   /** 操作した数量 */
-  quantity: number
+  quantity: number;
   /** 操作理由 */
-  reason: string
+  reason: string;
   /** 操作を担当したスタッフ ID */
-  performedBy: ModelsStaffId
+  performedBy: ModelsStaffId;
   /** 操作日時 */
-  occurredAt: string
+  occurredAt: string;
   /**
    * 関連する外部参照 ID
    * @nullable
    */
-  referenceId: string | null
+  referenceId: string | null;
   /**
    * 備考メモ
    * @nullable
    */
-  notes: string | null
+  notes: string | null;
   /**
    * 追加のメタデータ
    * @nullable
    */
-  metadata: ModelsStockMovementMetadata
+  metadata: ModelsStockMovementMetadata;
   /** 対象在庫アイテム ID */
-  inventoryId: ModelsInventoryId
+  inventoryId: ModelsInventoryId;
   /** 移動後の在庫数量 */
-  stockAfter: number
+  stockAfter: number;
   /**
    * 紐づく発注 ID
    * @nullable
    */
-  orderId: string | null
+  orderId: string | null;
   /**
    * 紐づく施術記録 ID
    * @nullable
    */
-  treatmentRecordId: string | null
+  treatmentRecordId: string | null;
   /** 移動が確定した日時 */
-  movedAt: string
+  movedAt: string;
   /** レコード作成日時。 */
-  createdAt: string
+  createdAt: string;
   /**
    * レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull
    * @nullable
    */
-  createdBy: string | null
+  createdBy: string | null;
   /** レコード最終更新日時。 */
-  updatedAt: string
+  updatedAt: string;
   /**
    * レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull
    * @nullable
    */
-  updatedBy: string | null
+  updatedBy: string | null;
 }

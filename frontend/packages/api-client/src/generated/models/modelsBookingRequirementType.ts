@@ -17,8 +17,8 @@ gender_restriction: 性別制限 - 性別による利用制限
 membership: 会員限定 - 特定の会員ランク以上の制限
 preparation: 事前準備 - 顧客が事前に行うべき準備
  */
-export type ModelsBookingRequirementType =
-  (typeof ModelsBookingRequirementType)[keyof typeof ModelsBookingRequirementType]
+export type ModelsBookingRequirementType = typeof ModelsBookingRequirementType[keyof typeof ModelsBookingRequirementType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsBookingRequirementType = {
@@ -29,4 +29,4 @@ export const ModelsBookingRequirementType = {
   gender_restriction: 'gender_restriction',
   membership: 'membership',
   preparation: 'preparation',
-} as const
+} as const;

@@ -9,10 +9,10 @@
 /**
  * 固定値no_show。無断キャンセル状態であることを示す。
  */
-export type ModelsNoShowBookingStatusType =
-  (typeof ModelsNoShowBookingStatusType)[keyof typeof ModelsNoShowBookingStatusType]
+export type ModelsNoShowBookingStatusType = typeof ModelsNoShowBookingStatusType[keyof typeof ModelsNoShowBookingStatusType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsNoShowBookingStatusType = {
   no_show: 'no_show',
-} as const
+} as const;

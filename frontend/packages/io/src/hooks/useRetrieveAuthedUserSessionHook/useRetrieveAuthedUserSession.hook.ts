@@ -1,17 +1,16 @@
 import type { ApplicationErrorData } from '@beauty-salon-frontend/types'
+import type { ShallowNullish } from '@beauty-salon-frontend/utils'
+import { factory } from '../../factory'
 import type {
   InputRetrieveAuthedUserSession,
   ResponseAuthedUserSessionData,
 } from '../../factory/retrieveAuthedUserSession'
-
-import type { ShallowNullish } from '@beauty-salon-frontend/utils'
-import { factory } from '../../factory'
 import { useAuthedQuery } from '../../hocs'
 import { SESSION_KEY } from '../../types/session'
 
 const authRepository = factory.createRepository()
 export const useRetrieveAuthedUserSessionHook = (
-  payload: ShallowNullish<InputRetrieveAuthedUserSession>
+  payload: ShallowNullish<InputRetrieveAuthedUserSession>,
 ) => {
   const { data, error, refetch } = useAuthedQuery<
     [typeof SESSION_KEY, typeof payload],

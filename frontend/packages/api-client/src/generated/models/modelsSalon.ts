@@ -5,62 +5,62 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsSalonId } from './modelsSalonId'
-import type { ModelsAddress } from './modelsAddress'
-import type { ModelsContactInfo } from './modelsContactInfo'
-import type { ModelsOpeningHours } from './modelsOpeningHours'
-import type { ModelsBusinessHours } from './modelsBusinessHours'
+import type { ModelsSalonId } from './modelsSalonId';
+import type { ModelsAddress } from './modelsAddress';
+import type { ModelsContactInfo } from './modelsContactInfo';
+import type { ModelsOpeningHours } from './modelsOpeningHours';
+import type { ModelsBusinessHours } from './modelsBusinessHours';
 
 /**
  * サロン基本情報モデル - 美容室の店舗情報、顧客向け公開情報、運営に必要な基礎データを一元管理する
  */
 export interface ModelsSalon {
   /** サロンを一意に識別するID */
-  id: ModelsSalonId
+  id: ModelsSalonId;
   /** 公式名称またはブランド名称 */
-  name: string
+  name: string;
   /**
    * サロンの特徴やコンセプトを伝える説明文。未設定の場合はnull
    * @nullable
    */
-  description: string | null
+  description: string | null;
   /** 所在地・アクセス・郵便番号等を含む住所情報 */
-  address: ModelsAddress
+  address: ModelsAddress;
   /** 電話・メール・SNS等の問い合わせ窓口情報 */
-  contactInfo: ModelsContactInfo
+  contactInfo: ModelsContactInfo;
   /** 曜日別の基本営業時間帯一覧 */
-  openingHours: ModelsOpeningHours[]
+  openingHours: ModelsOpeningHours[];
   /**
    * 季節やキャンペーン等に合わせた営業スケジュール。通常営業時間のみの場合はnull
    * @nullable
    */
-  businessHours: ModelsBusinessHours[] | null
+  businessHours: ModelsBusinessHours[] | null;
   /** 店舗写真や内装画像のURL一覧 */
-  imageUrls: string[]
+  imageUrls: string[];
   /** 設備・サービス・こだわりポイント等の特徴タグ一覧 */
-  features: string[]
+  features: string[];
   /**
    * 顧客レビューから算出した平均評価。レビュー未登録の場合はnull
    * @nullable
    */
-  rating: number | null
+  rating: number | null;
   /**
    * 蓄積されたレビュー件数。レビュー未登録の場合はnull
    * @nullable
    */
-  reviewCount: number | null
+  reviewCount: number | null;
   /** レコード作成日時。 */
-  createdAt: string
+  createdAt: string;
   /**
    * レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull
    * @nullable
    */
-  createdBy: string | null
+  createdBy: string | null;
   /** レコード最終更新日時。 */
-  updatedAt: string
+  updatedAt: string;
   /**
    * レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull
    * @nullable
    */
-  updatedBy: string | null
+  updatedBy: string | null;
 }

@@ -9,8 +9,8 @@
 /**
  * 在庫操作区分（入庫/出庫/調整/移動）
  */
-export type ModelsInventoryTransactionType =
-  (typeof ModelsInventoryTransactionType)[keyof typeof ModelsInventoryTransactionType]
+export type ModelsInventoryTransactionType = typeof ModelsInventoryTransactionType[keyof typeof ModelsInventoryTransactionType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsInventoryTransactionType = {
@@ -18,4 +18,4 @@ export const ModelsInventoryTransactionType = {
   out: 'out',
   adjustment: 'adjustment',
   transfer: 'transfer',
-} as const
+} as const;

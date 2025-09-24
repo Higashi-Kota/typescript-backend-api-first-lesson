@@ -9,4 +9,4 @@
 /**
  * 施術記録やカウンセリングメモを識別するブランド付きUUID。
  */
-export type ModelsTreatmentRecordId = string
+export type ModelsTreatmentRecordId = string;

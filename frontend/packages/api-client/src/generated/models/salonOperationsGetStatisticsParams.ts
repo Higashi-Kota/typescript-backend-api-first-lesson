@@ -7,8 +7,8 @@
  */
 
 export type SalonOperationsGetStatisticsParams = {
-  /**
-   * 集計期間（例: '7d', '1m', '3m'）
-   */
-  period?: string
-}
+/**
+ * 集計期間（例: '7d', '1m', '3m'）
+ */
+period?: string;
+};

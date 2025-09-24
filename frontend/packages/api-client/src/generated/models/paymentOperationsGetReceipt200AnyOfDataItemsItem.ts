@@ -6,6 +6,4 @@
  * OpenAPI spec version: 2.0
  */
 
-export type PaymentOperationsGetReceipt200AnyOfDataItemsItem = {
-  [key: string]: unknown
-}
+export type PaymentOperationsGetReceipt200AnyOfDataItemsItem = {[key: string]: unknown};

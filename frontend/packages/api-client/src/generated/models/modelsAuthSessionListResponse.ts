@@ -5,14 +5,14 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsSession } from './modelsSession'
+import type { ModelsSession } from './modelsSession';
 
 /**
  * アクティブなセッション一覧を返すレスポンス。
  */
 export interface ModelsAuthSessionListResponse {
   /** 稼働中のセッション配列。 */
-  sessions: ModelsSession[]
+  sessions: ModelsSession[];
   /** 該当セッションの総数。 */
-  total: number
+  total: number;
 }

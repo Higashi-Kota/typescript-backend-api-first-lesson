@@ -6,10 +6,10 @@
  * OpenAPI spec version: 2.0
  */
 
-export type ModelsDomainErrorFactoryAlreadyExistsType =
-  (typeof ModelsDomainErrorFactoryAlreadyExistsType)[keyof typeof ModelsDomainErrorFactoryAlreadyExistsType]
+export type ModelsDomainErrorFactoryAlreadyExistsType = typeof ModelsDomainErrorFactoryAlreadyExistsType[keyof typeof ModelsDomainErrorFactoryAlreadyExistsType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsDomainErrorFactoryAlreadyExistsType = {
   ALREADY_EXISTS: 'ALREADY_EXISTS',
-} as const
+} as const;

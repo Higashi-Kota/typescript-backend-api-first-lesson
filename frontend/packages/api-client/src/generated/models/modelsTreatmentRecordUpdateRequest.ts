@@ -5,8 +5,8 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsMaterialUsage } from './modelsMaterialUsage'
-import type { ModelsAttachmentId } from './modelsAttachmentId'
+import type { ModelsMaterialUsage } from './modelsMaterialUsage';
+import type { ModelsAttachmentId } from './modelsAttachmentId';
 
 /**
  * 施術記録を更新する入力モデル
@@ -16,25 +16,25 @@ export interface ModelsTreatmentRecordUpdateRequest {
    * 施術メモ - 特記事項がない通常施術の場合はnull、null指定で値をリセット可能
    * @nullable
    */
-  notes?: string | null
+  notes?: string | null;
   /**
    * 使用した資材一覧 - カットのみなど商材を使用しない施術の場合はnull、null指定で値をリセット可能
    * @nullable
    */
-  usedMaterials?: ModelsMaterialUsage[] | null
+  usedMaterials?: ModelsMaterialUsage[] | null;
   /**
    * 顧客フィードバック - 施術直後でフィードバック未収集の場合はnull、null指定で値をリセット可能
    * @nullable
    */
-  customerFeedback?: string | null
+  customerFeedback?: string | null;
   /**
    * 次回来店への提案内容 - 特に提案事項がない場合や定期メンテナンスのみの場合はnull、null指定で値をリセット可能
    * @nullable
    */
-  nextRecommendations?: string | null
+  nextRecommendations?: string | null;
   /**
    * 施術前後写真 ID - 写真撮影を希望しない顧客や撮影が不要な施術の場合はnull、null指定で値をリセット可能
    * @nullable
    */
-  photos?: ModelsAttachmentId[] | null
+  photos?: ModelsAttachmentId[] | null;
 }

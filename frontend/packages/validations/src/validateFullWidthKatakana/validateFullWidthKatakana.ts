@@ -1,4 +1,4 @@
-import { type Result, err, ok } from 'neverthrow'
+import { err, ok, type Result } from 'neverthrow'
 import { z } from 'zod'
 
 // 全角カタカナのスキーマ定義
@@ -12,7 +12,7 @@ type FullWidthKatakana = z.infer<typeof FullWidthKatakanaSchema>
  * @returns 検証結果
  */
 export const validateFullWidthKatakana = (
-  data: unknown
+  data: unknown,
 ): Result<FullWidthKatakana, z.ZodError> => {
   const parsed = FullWidthKatakanaSchema.safeParse(data)
 

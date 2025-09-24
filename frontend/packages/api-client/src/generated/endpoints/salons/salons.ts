@@ -5,7 +5,10 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import { useMutation, useQuery } from '@tanstack/react-query'
+import {
+  useMutation,
+  useQuery
+} from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -18,8 +21,8 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult,
-} from '@tanstack/react-query'
+  UseQueryResult
+} from '@tanstack/react-query';
 
 import type {
   ModelsBatchGetRequest,
@@ -64,16 +67,19 @@ import type {
   SalonOperationsGetStatistics200,
   SalonOperationsGetStatisticsParams,
   SalonOperationsSubscribe201,
-  SalonOperationsUpdateStaffSchedule200,
-} from '../../models'
+  SalonOperationsUpdateStaffSchedule200
+} from '../../models';
 
-import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher'
+import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher';
 
-type AwaitedInput<T> = PromiseLike<T> | T
+type AwaitedInput<T> = PromiseLike<T> | T;
 
-type Awaited<O> = O extends AwaitedInput<infer T> ? T : never
+      type Awaited<O> = O extends AwaitedInput<infer T> ? T : never;
 
-type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
+
 
 /**
  * ページネーションやフィルター条件を指定して対象リソースを一覧取得します。業務画面のリスト表示に利用します。
@@ -98,182 +104,117 @@ export type salonCrudListResponse429 = {
   data: ModelsProblemDetails
   status: 429
 }
-
-export type salonCrudListResponseComposite =
-  | salonCrudListResponse200
-  | salonCrudListResponse400
-  | salonCrudListResponse401
-  | salonCrudListResponse429
-
+    
+export type salonCrudListResponseComposite = salonCrudListResponse200 | salonCrudListResponse400 | salonCrudListResponse401 | salonCrudListResponse429;
+    
 export type salonCrudListResponse = salonCrudListResponseComposite & {
-  headers: Headers
+  headers: Headers;
 }
 
-export const getSalonCrudListUrl = (params?: SalonCrudListParams) => {
-  const normalizedParams = new URLSearchParams()
+export const getSalonCrudListUrl = (params?: SalonCrudListParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
-    const explodeParameters = ['categories', 'features', 'facetFields']
+    const explodeParameters = ["categories","features","facetFields"];
 
     if (Array.isArray(value) && explodeParameters.includes(key)) {
-      value.forEach((v) =>
-        normalizedParams.append(key, v === null ? 'null' : v.toString())
-      )
-      return
+      value.forEach((v) => normalizedParams.append(key, v === null ? 'null' : v.toString()));
+      return;
     }
-
+      
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v1/salons/?${stringifiedParams}`
-    : `/api/v1/salons/`
+  return stringifiedParams.length > 0 ? `/api/v1/salons/?${stringifiedParams}` : `/api/v1/salons/`
 }
 
-export const salonCrudList = async (
-  params?: SalonCrudListParams,
-  options?: RequestInit
-): Promise<salonCrudListResponse> => {
-  return customInstance<salonCrudListResponse>(getSalonCrudListUrl(params), {
+export const salonCrudList = async (params?: SalonCrudListParams, options?: RequestInit): Promise<salonCrudListResponse> => {
+  
+  return customInstance<salonCrudListResponse>(getSalonCrudListUrl(params),
+  {      
     ...options,
-    method: 'GET',
-  })
-}
-
-export const getSalonCrudListQueryKey = (params?: SalonCrudListParams) => {
-  return [`/api/v1/salons/`, ...(params ? [params] : [])] as const
-}
-
-export const getSalonCrudListQueryOptions = <
-  TData = Awaited<ReturnType<typeof salonCrudList>>,
-  TError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails,
->(
-  params?: SalonCrudListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof salonCrudList>>, TError, TData>
-    >
-    request?: SecondParameter<typeof customInstance>
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getSalonCrudListQueryKey = (params?: SalonCrudListParams,) => {
+    return [`/api/v1/salons/`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getSalonCrudListQueryOptions = <TData = Awaited<ReturnType<typeof salonCrudList>>, TError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails>(params?: SalonCrudListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonCrudList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey = queryOptions?.queryKey ?? getSalonCrudListQueryKey(params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof salonCrudList>>> = ({
-    signal,
-  }) => salonCrudList(params, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getSalonCrudListQueryKey(params);
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof salonCrudList>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof salonCrudList>>> = ({ signal }) => salonCrudList(params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof salonCrudList>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type SalonCrudListQueryResult = NonNullable<
-  Awaited<ReturnType<typeof salonCrudList>>
->
-export type SalonCrudListQueryError =
-  | ModelsProblemDetails
-  | ModelsProblemDetails
-  | ModelsProblemDetails
+export type SalonCrudListQueryResult = NonNullable<Awaited<ReturnType<typeof salonCrudList>>>
+export type SalonCrudListQueryError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails
 
-export function useSalonCrudList<
-  TData = Awaited<ReturnType<typeof salonCrudList>>,
-  TError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails,
->(
-  params: undefined | SalonCrudListParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof salonCrudList>>, TError, TData>
-    > &
-      Pick<
+
+export function useSalonCrudList<TData = Awaited<ReturnType<typeof salonCrudList>>, TError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails>(
+ params: undefined |  SalonCrudListParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonCrudList>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof salonCrudList>>,
           TError,
           Awaited<ReturnType<typeof salonCrudList>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSalonCrudList<
-  TData = Awaited<ReturnType<typeof salonCrudList>>,
-  TError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails,
->(
-  params?: SalonCrudListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof salonCrudList>>, TError, TData>
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSalonCrudList<TData = Awaited<ReturnType<typeof salonCrudList>>, TError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails>(
+ params?: SalonCrudListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonCrudList>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof salonCrudList>>,
           TError,
           Awaited<ReturnType<typeof salonCrudList>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSalonCrudList<
-  TData = Awaited<ReturnType<typeof salonCrudList>>,
-  TError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails,
->(
-  params?: SalonCrudListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof salonCrudList>>, TError, TData>
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSalonCrudList<TData = Awaited<ReturnType<typeof salonCrudList>>, TError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails>(
+ params?: SalonCrudListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonCrudList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary List {Name} resources
  */
 
-export function useSalonCrudList<
-  TData = Awaited<ReturnType<typeof salonCrudList>>,
-  TError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails,
->(
-  params?: SalonCrudListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof salonCrudList>>, TError, TData>
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getSalonCrudListQueryOptions(params, options)
+export function useSalonCrudList<TData = Awaited<ReturnType<typeof salonCrudList>>, TError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails>(
+ params?: SalonCrudListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonCrudList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  const queryOptions = getSalonCrudListQueryOptions(params,options)
 
-  query.queryKey = queryOptions.queryKey
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  return query
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
+
+
 
 /**
  * 新規リソースを作成し、作成時のバリデーションや重複チェック結果を返却します。
@@ -303,118 +244,82 @@ export type salonCrudCreateResponse422 = {
   data: ModelsProblemDetails
   status: 422
 }
-
-export type salonCrudCreateResponseComposite =
-  | salonCrudCreateResponse201
-  | salonCrudCreateResponse400
-  | salonCrudCreateResponse401
-  | salonCrudCreateResponse409
-  | salonCrudCreateResponse422
-
+    
+export type salonCrudCreateResponseComposite = salonCrudCreateResponse201 | salonCrudCreateResponse400 | salonCrudCreateResponse401 | salonCrudCreateResponse409 | salonCrudCreateResponse422;
+    
 export type salonCrudCreateResponse = salonCrudCreateResponseComposite & {
-  headers: Headers
+  headers: Headers;
 }
 
 export const getSalonCrudCreateUrl = () => {
+
+
+  
+
   return `/api/v1/salons/`
 }
 
-export const salonCrudCreate = async (
-  modelsCreateSalonRequest: ModelsCreateSalonRequest,
-  options?: RequestInit
-): Promise<salonCrudCreateResponse> => {
-  return customInstance<salonCrudCreateResponse>(getSalonCrudCreateUrl(), {
+export const salonCrudCreate = async (modelsCreateSalonRequest: ModelsCreateSalonRequest, options?: RequestInit): Promise<salonCrudCreateResponse> => {
+  
+  return customInstance<salonCrudCreateResponse>(getSalonCrudCreateUrl(),
+  {      
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(modelsCreateSalonRequest),
-  })
-}
-
-export const getSalonCrudCreateMutationOptions = <
-  TError =
-    | ModelsProblemDetails
-    | ModelsProblemDetails
-    | ModelsProblemDetails
-    | ModelsProblemDetails,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof salonCrudCreate>>,
-    TError,
-    { data: ModelsCreateSalonRequest },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof salonCrudCreate>>,
-  TError,
-  { data: ModelsCreateSalonRequest },
-  TContext
-> => {
-  const mutationKey = ['salonCrudCreate']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof salonCrudCreate>>,
-    { data: ModelsCreateSalonRequest }
-  > = (props) => {
-    const { data } = props ?? {}
-
-    return salonCrudCreate(data, requestOptions)
+    body: JSON.stringify(
+      modelsCreateSalonRequest,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type SalonCrudCreateMutationResult = NonNullable<
-  Awaited<ReturnType<typeof salonCrudCreate>>
->
-export type SalonCrudCreateMutationBody = ModelsCreateSalonRequest
-export type SalonCrudCreateMutationError =
-  | ModelsProblemDetails
-  | ModelsProblemDetails
-  | ModelsProblemDetails
-  | ModelsProblemDetails
 
-/**
+
+export const getSalonCrudCreateMutationOptions = <TError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salonCrudCreate>>, TError,{data: ModelsCreateSalonRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof salonCrudCreate>>, TError,{data: ModelsCreateSalonRequest}, TContext> => {
+
+const mutationKey = ['salonCrudCreate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof salonCrudCreate>>, {data: ModelsCreateSalonRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  salonCrudCreate(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SalonCrudCreateMutationResult = NonNullable<Awaited<ReturnType<typeof salonCrudCreate>>>
+    export type SalonCrudCreateMutationBody = ModelsCreateSalonRequest
+    export type SalonCrudCreateMutationError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails
+
+    /**
  * @summary Create new {Name}
  */
-export const useSalonCrudCreate = <
-  TError =
-    | ModelsProblemDetails
-    | ModelsProblemDetails
-    | ModelsProblemDetails
-    | ModelsProblemDetails,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof salonCrudCreate>>,
-      TError,
-      { data: ModelsCreateSalonRequest },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof salonCrudCreate>>,
-  TError,
-  { data: ModelsCreateSalonRequest },
-  TContext
-> => {
-  const mutationOptions = getSalonCrudCreateMutationOptions(options)
+export const useSalonCrudCreate = <TError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salonCrudCreate>>, TError,{data: ModelsCreateSalonRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof salonCrudCreate>>,
+        TError,
+        {data: ModelsCreateSalonRequest},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getSalonCrudCreateMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 複数IDをまとめて取得し、一覧画面の遅延読み込みや外部連携に利用します。
  * @summary Batch get {Name} resources
  */
@@ -432,106 +337,82 @@ export type salonCrudBatchGetResponse401 = {
   data: ModelsProblemDetails
   status: 401
 }
-
-export type salonCrudBatchGetResponseComposite =
-  | salonCrudBatchGetResponse200
-  | salonCrudBatchGetResponse400
-  | salonCrudBatchGetResponse401
-
+    
+export type salonCrudBatchGetResponseComposite = salonCrudBatchGetResponse200 | salonCrudBatchGetResponse400 | salonCrudBatchGetResponse401;
+    
 export type salonCrudBatchGetResponse = salonCrudBatchGetResponseComposite & {
-  headers: Headers
+  headers: Headers;
 }
 
 export const getSalonCrudBatchGetUrl = () => {
+
+
+  
+
   return `/api/v1/salons/batch/get`
 }
 
-export const salonCrudBatchGet = async (
-  modelsBatchGetRequest: ModelsBatchGetRequest,
-  options?: RequestInit
-): Promise<salonCrudBatchGetResponse> => {
-  return customInstance<salonCrudBatchGetResponse>(getSalonCrudBatchGetUrl(), {
+export const salonCrudBatchGet = async (modelsBatchGetRequest: ModelsBatchGetRequest, options?: RequestInit): Promise<salonCrudBatchGetResponse> => {
+  
+  return customInstance<salonCrudBatchGetResponse>(getSalonCrudBatchGetUrl(),
+  {      
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(modelsBatchGetRequest),
-  })
-}
-
-export const getSalonCrudBatchGetMutationOptions = <
-  TError = ModelsProblemDetails | ModelsProblemDetails,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof salonCrudBatchGet>>,
-    TError,
-    { data: ModelsBatchGetRequest },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof salonCrudBatchGet>>,
-  TError,
-  { data: ModelsBatchGetRequest },
-  TContext
-> => {
-  const mutationKey = ['salonCrudBatchGet']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof salonCrudBatchGet>>,
-    { data: ModelsBatchGetRequest }
-  > = (props) => {
-    const { data } = props ?? {}
-
-    return salonCrudBatchGet(data, requestOptions)
+    body: JSON.stringify(
+      modelsBatchGetRequest,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type SalonCrudBatchGetMutationResult = NonNullable<
-  Awaited<ReturnType<typeof salonCrudBatchGet>>
->
-export type SalonCrudBatchGetMutationBody = ModelsBatchGetRequest
-export type SalonCrudBatchGetMutationError =
-  | ModelsProblemDetails
-  | ModelsProblemDetails
 
-/**
+
+export const getSalonCrudBatchGetMutationOptions = <TError = ModelsProblemDetails | ModelsProblemDetails,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salonCrudBatchGet>>, TError,{data: ModelsBatchGetRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof salonCrudBatchGet>>, TError,{data: ModelsBatchGetRequest}, TContext> => {
+
+const mutationKey = ['salonCrudBatchGet'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof salonCrudBatchGet>>, {data: ModelsBatchGetRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  salonCrudBatchGet(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SalonCrudBatchGetMutationResult = NonNullable<Awaited<ReturnType<typeof salonCrudBatchGet>>>
+    export type SalonCrudBatchGetMutationBody = ModelsBatchGetRequest
+    export type SalonCrudBatchGetMutationError = ModelsProblemDetails | ModelsProblemDetails
+
+    /**
  * @summary Batch get {Name} resources
  */
-export const useSalonCrudBatchGet = <
-  TError = ModelsProblemDetails | ModelsProblemDetails,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof salonCrudBatchGet>>,
-      TError,
-      { data: ModelsBatchGetRequest },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof salonCrudBatchGet>>,
-  TError,
-  { data: ModelsBatchGetRequest },
-  TContext
-> => {
-  const mutationOptions = getSalonCrudBatchGetMutationOptions(options)
+export const useSalonCrudBatchGet = <TError = ModelsProblemDetails | ModelsProblemDetails,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salonCrudBatchGet>>, TError,{data: ModelsBatchGetRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof salonCrudBatchGet>>,
+        TError,
+        {data: ModelsBatchGetRequest},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getSalonCrudBatchGetMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 複数リソースを一括作成し、結果を成功・失敗に分けて返却します。
  * @summary Bulk create {Name} resources
  */
@@ -549,110 +430,82 @@ export type salonCrudBulkCreateResponse401 = {
   data: ModelsProblemDetails
   status: 401
 }
-
-export type salonCrudBulkCreateResponseComposite =
-  | salonCrudBulkCreateResponse207
-  | salonCrudBulkCreateResponse400
-  | salonCrudBulkCreateResponse401
-
-export type salonCrudBulkCreateResponse =
-  salonCrudBulkCreateResponseComposite & {
-    headers: Headers
-  }
+    
+export type salonCrudBulkCreateResponseComposite = salonCrudBulkCreateResponse207 | salonCrudBulkCreateResponse400 | salonCrudBulkCreateResponse401;
+    
+export type salonCrudBulkCreateResponse = salonCrudBulkCreateResponseComposite & {
+  headers: Headers;
+}
 
 export const getSalonCrudBulkCreateUrl = () => {
+
+
+  
+
   return `/api/v1/salons/bulk`
 }
 
-export const salonCrudBulkCreate = async (
-  salonCrudBulkCreateBody: SalonCrudBulkCreateBody,
-  options?: RequestInit
-): Promise<salonCrudBulkCreateResponse> => {
-  return customInstance<salonCrudBulkCreateResponse>(
-    getSalonCrudBulkCreateUrl(),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(salonCrudBulkCreateBody),
-    }
-  )
-}
-
-export const getSalonCrudBulkCreateMutationOptions = <
-  TError = ModelsProblemDetails | ModelsProblemDetails,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof salonCrudBulkCreate>>,
-    TError,
-    { data: SalonCrudBulkCreateBody },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof salonCrudBulkCreate>>,
-  TError,
-  { data: SalonCrudBulkCreateBody },
-  TContext
-> => {
-  const mutationKey = ['salonCrudBulkCreate']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof salonCrudBulkCreate>>,
-    { data: SalonCrudBulkCreateBody }
-  > = (props) => {
-    const { data } = props ?? {}
-
-    return salonCrudBulkCreate(data, requestOptions)
+export const salonCrudBulkCreate = async (salonCrudBulkCreateBody: SalonCrudBulkCreateBody, options?: RequestInit): Promise<salonCrudBulkCreateResponse> => {
+  
+  return customInstance<salonCrudBulkCreateResponse>(getSalonCrudBulkCreateUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      salonCrudBulkCreateBody,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type SalonCrudBulkCreateMutationResult = NonNullable<
-  Awaited<ReturnType<typeof salonCrudBulkCreate>>
->
-export type SalonCrudBulkCreateMutationBody = SalonCrudBulkCreateBody
-export type SalonCrudBulkCreateMutationError =
-  | ModelsProblemDetails
-  | ModelsProblemDetails
 
-/**
+
+export const getSalonCrudBulkCreateMutationOptions = <TError = ModelsProblemDetails | ModelsProblemDetails,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salonCrudBulkCreate>>, TError,{data: SalonCrudBulkCreateBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof salonCrudBulkCreate>>, TError,{data: SalonCrudBulkCreateBody}, TContext> => {
+
+const mutationKey = ['salonCrudBulkCreate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof salonCrudBulkCreate>>, {data: SalonCrudBulkCreateBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  salonCrudBulkCreate(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SalonCrudBulkCreateMutationResult = NonNullable<Awaited<ReturnType<typeof salonCrudBulkCreate>>>
+    export type SalonCrudBulkCreateMutationBody = SalonCrudBulkCreateBody
+    export type SalonCrudBulkCreateMutationError = ModelsProblemDetails | ModelsProblemDetails
+
+    /**
  * @summary Bulk create {Name} resources
  */
-export const useSalonCrudBulkCreate = <
-  TError = ModelsProblemDetails | ModelsProblemDetails,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof salonCrudBulkCreate>>,
-      TError,
-      { data: SalonCrudBulkCreateBody },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof salonCrudBulkCreate>>,
-  TError,
-  { data: SalonCrudBulkCreateBody },
-  TContext
-> => {
-  const mutationOptions = getSalonCrudBulkCreateMutationOptions(options)
+export const useSalonCrudBulkCreate = <TError = ModelsProblemDetails | ModelsProblemDetails,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salonCrudBulkCreate>>, TError,{data: SalonCrudBulkCreateBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof salonCrudBulkCreate>>,
+        TError,
+        {data: SalonCrudBulkCreateBody},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getSalonCrudBulkCreateMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 複数リソースの更新をまとめて受け付け、バージョン整合性を保ちながら処理します。
  * @summary Bulk update {Name} resources
  */
@@ -670,110 +523,82 @@ export type salonCrudBulkUpdateResponse401 = {
   data: ModelsProblemDetails
   status: 401
 }
-
-export type salonCrudBulkUpdateResponseComposite =
-  | salonCrudBulkUpdateResponse207
-  | salonCrudBulkUpdateResponse400
-  | salonCrudBulkUpdateResponse401
-
-export type salonCrudBulkUpdateResponse =
-  salonCrudBulkUpdateResponseComposite & {
-    headers: Headers
-  }
+    
+export type salonCrudBulkUpdateResponseComposite = salonCrudBulkUpdateResponse207 | salonCrudBulkUpdateResponse400 | salonCrudBulkUpdateResponse401;
+    
+export type salonCrudBulkUpdateResponse = salonCrudBulkUpdateResponseComposite & {
+  headers: Headers;
+}
 
 export const getSalonCrudBulkUpdateUrl = () => {
+
+
+  
+
   return `/api/v1/salons/bulk`
 }
 
-export const salonCrudBulkUpdate = async (
-  salonCrudBulkUpdateBody: SalonCrudBulkUpdateBody,
-  options?: RequestInit
-): Promise<salonCrudBulkUpdateResponse> => {
-  return customInstance<salonCrudBulkUpdateResponse>(
-    getSalonCrudBulkUpdateUrl(),
-    {
-      ...options,
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(salonCrudBulkUpdateBody),
-    }
-  )
-}
-
-export const getSalonCrudBulkUpdateMutationOptions = <
-  TError = ModelsProblemDetails | ModelsProblemDetails,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof salonCrudBulkUpdate>>,
-    TError,
-    { data: SalonCrudBulkUpdateBody },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof salonCrudBulkUpdate>>,
-  TError,
-  { data: SalonCrudBulkUpdateBody },
-  TContext
-> => {
-  const mutationKey = ['salonCrudBulkUpdate']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof salonCrudBulkUpdate>>,
-    { data: SalonCrudBulkUpdateBody }
-  > = (props) => {
-    const { data } = props ?? {}
-
-    return salonCrudBulkUpdate(data, requestOptions)
+export const salonCrudBulkUpdate = async (salonCrudBulkUpdateBody: SalonCrudBulkUpdateBody, options?: RequestInit): Promise<salonCrudBulkUpdateResponse> => {
+  
+  return customInstance<salonCrudBulkUpdateResponse>(getSalonCrudBulkUpdateUrl(),
+  {      
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      salonCrudBulkUpdateBody,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type SalonCrudBulkUpdateMutationResult = NonNullable<
-  Awaited<ReturnType<typeof salonCrudBulkUpdate>>
->
-export type SalonCrudBulkUpdateMutationBody = SalonCrudBulkUpdateBody
-export type SalonCrudBulkUpdateMutationError =
-  | ModelsProblemDetails
-  | ModelsProblemDetails
 
-/**
+
+export const getSalonCrudBulkUpdateMutationOptions = <TError = ModelsProblemDetails | ModelsProblemDetails,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salonCrudBulkUpdate>>, TError,{data: SalonCrudBulkUpdateBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof salonCrudBulkUpdate>>, TError,{data: SalonCrudBulkUpdateBody}, TContext> => {
+
+const mutationKey = ['salonCrudBulkUpdate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof salonCrudBulkUpdate>>, {data: SalonCrudBulkUpdateBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  salonCrudBulkUpdate(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SalonCrudBulkUpdateMutationResult = NonNullable<Awaited<ReturnType<typeof salonCrudBulkUpdate>>>
+    export type SalonCrudBulkUpdateMutationBody = SalonCrudBulkUpdateBody
+    export type SalonCrudBulkUpdateMutationError = ModelsProblemDetails | ModelsProblemDetails
+
+    /**
  * @summary Bulk update {Name} resources
  */
-export const useSalonCrudBulkUpdate = <
-  TError = ModelsProblemDetails | ModelsProblemDetails,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof salonCrudBulkUpdate>>,
-      TError,
-      { data: SalonCrudBulkUpdateBody },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof salonCrudBulkUpdate>>,
-  TError,
-  { data: SalonCrudBulkUpdateBody },
-  TContext
-> => {
-  const mutationOptions = getSalonCrudBulkUpdateMutationOptions(options)
+export const useSalonCrudBulkUpdate = <TError = ModelsProblemDetails | ModelsProblemDetails,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salonCrudBulkUpdate>>, TError,{data: SalonCrudBulkUpdateBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof salonCrudBulkUpdate>>,
+        TError,
+        {data: SalonCrudBulkUpdateBody},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getSalonCrudBulkUpdateMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 複数リソースを一括削除し、成功可否ごとの結果を返却します。
  * @summary Bulk delete {Name} resources
  */
@@ -791,110 +616,82 @@ export type salonCrudBulkDeleteResponse401 = {
   data: ModelsProblemDetails
   status: 401
 }
-
-export type salonCrudBulkDeleteResponseComposite =
-  | salonCrudBulkDeleteResponse207
-  | salonCrudBulkDeleteResponse400
-  | salonCrudBulkDeleteResponse401
-
-export type salonCrudBulkDeleteResponse =
-  salonCrudBulkDeleteResponseComposite & {
-    headers: Headers
-  }
+    
+export type salonCrudBulkDeleteResponseComposite = salonCrudBulkDeleteResponse207 | salonCrudBulkDeleteResponse400 | salonCrudBulkDeleteResponse401;
+    
+export type salonCrudBulkDeleteResponse = salonCrudBulkDeleteResponseComposite & {
+  headers: Headers;
+}
 
 export const getSalonCrudBulkDeleteUrl = () => {
+
+
+  
+
   return `/api/v1/salons/bulk`
 }
 
-export const salonCrudBulkDelete = async (
-  salonCrudBulkDeleteBody: SalonCrudBulkDeleteBody,
-  options?: RequestInit
-): Promise<salonCrudBulkDeleteResponse> => {
-  return customInstance<salonCrudBulkDeleteResponse>(
-    getSalonCrudBulkDeleteUrl(),
-    {
-      ...options,
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(salonCrudBulkDeleteBody),
-    }
-  )
-}
-
-export const getSalonCrudBulkDeleteMutationOptions = <
-  TError = ModelsProblemDetails | ModelsProblemDetails,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof salonCrudBulkDelete>>,
-    TError,
-    { data: SalonCrudBulkDeleteBody },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof salonCrudBulkDelete>>,
-  TError,
-  { data: SalonCrudBulkDeleteBody },
-  TContext
-> => {
-  const mutationKey = ['salonCrudBulkDelete']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof salonCrudBulkDelete>>,
-    { data: SalonCrudBulkDeleteBody }
-  > = (props) => {
-    const { data } = props ?? {}
-
-    return salonCrudBulkDelete(data, requestOptions)
+export const salonCrudBulkDelete = async (salonCrudBulkDeleteBody: SalonCrudBulkDeleteBody, options?: RequestInit): Promise<salonCrudBulkDeleteResponse> => {
+  
+  return customInstance<salonCrudBulkDeleteResponse>(getSalonCrudBulkDeleteUrl(),
+  {      
+    ...options,
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      salonCrudBulkDeleteBody,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type SalonCrudBulkDeleteMutationResult = NonNullable<
-  Awaited<ReturnType<typeof salonCrudBulkDelete>>
->
-export type SalonCrudBulkDeleteMutationBody = SalonCrudBulkDeleteBody
-export type SalonCrudBulkDeleteMutationError =
-  | ModelsProblemDetails
-  | ModelsProblemDetails
 
-/**
+
+export const getSalonCrudBulkDeleteMutationOptions = <TError = ModelsProblemDetails | ModelsProblemDetails,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salonCrudBulkDelete>>, TError,{data: SalonCrudBulkDeleteBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof salonCrudBulkDelete>>, TError,{data: SalonCrudBulkDeleteBody}, TContext> => {
+
+const mutationKey = ['salonCrudBulkDelete'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof salonCrudBulkDelete>>, {data: SalonCrudBulkDeleteBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  salonCrudBulkDelete(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SalonCrudBulkDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof salonCrudBulkDelete>>>
+    export type SalonCrudBulkDeleteMutationBody = SalonCrudBulkDeleteBody
+    export type SalonCrudBulkDeleteMutationError = ModelsProblemDetails | ModelsProblemDetails
+
+    /**
  * @summary Bulk delete {Name} resources
  */
-export const useSalonCrudBulkDelete = <
-  TError = ModelsProblemDetails | ModelsProblemDetails,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof salonCrudBulkDelete>>,
-      TError,
-      { data: SalonCrudBulkDeleteBody },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof salonCrudBulkDelete>>,
-  TError,
-  { data: SalonCrudBulkDeleteBody },
-  TContext
-> => {
-  const mutationOptions = getSalonCrudBulkDeleteMutationOptions(options)
+export const useSalonCrudBulkDelete = <TError = ModelsProblemDetails | ModelsProblemDetails,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salonCrudBulkDelete>>, TError,{data: SalonCrudBulkDeleteBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof salonCrudBulkDelete>>,
+        TError,
+        {data: SalonCrudBulkDeleteBody},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getSalonCrudBulkDeleteMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 検索結果を指定形式でエクスポートし、帳票出力や外部共有に活用します。
  * @summary Export {Name} search results
  */
@@ -912,106 +709,82 @@ export type salonCrudExportResponse401 = {
   data: ModelsProblemDetails
   status: 401
 }
-
-export type salonCrudExportResponseComposite =
-  | salonCrudExportResponse202
-  | salonCrudExportResponse400
-  | salonCrudExportResponse401
-
+    
+export type salonCrudExportResponseComposite = salonCrudExportResponse202 | salonCrudExportResponse400 | salonCrudExportResponse401;
+    
 export type salonCrudExportResponse = salonCrudExportResponseComposite & {
-  headers: Headers
+  headers: Headers;
 }
 
 export const getSalonCrudExportUrl = () => {
+
+
+  
+
   return `/api/v1/salons/export`
 }
 
-export const salonCrudExport = async (
-  salonCrudExportBody: SalonCrudExportBody,
-  options?: RequestInit
-): Promise<salonCrudExportResponse> => {
-  return customInstance<salonCrudExportResponse>(getSalonCrudExportUrl(), {
+export const salonCrudExport = async (salonCrudExportBody: SalonCrudExportBody, options?: RequestInit): Promise<salonCrudExportResponse> => {
+  
+  return customInstance<salonCrudExportResponse>(getSalonCrudExportUrl(),
+  {      
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(salonCrudExportBody),
-  })
-}
-
-export const getSalonCrudExportMutationOptions = <
-  TError = ModelsProblemDetails | ModelsProblemDetails,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof salonCrudExport>>,
-    TError,
-    { data: SalonCrudExportBody },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof salonCrudExport>>,
-  TError,
-  { data: SalonCrudExportBody },
-  TContext
-> => {
-  const mutationKey = ['salonCrudExport']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof salonCrudExport>>,
-    { data: SalonCrudExportBody }
-  > = (props) => {
-    const { data } = props ?? {}
-
-    return salonCrudExport(data, requestOptions)
+    body: JSON.stringify(
+      salonCrudExportBody,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type SalonCrudExportMutationResult = NonNullable<
-  Awaited<ReturnType<typeof salonCrudExport>>
->
-export type SalonCrudExportMutationBody = SalonCrudExportBody
-export type SalonCrudExportMutationError =
-  | ModelsProblemDetails
-  | ModelsProblemDetails
 
-/**
+
+export const getSalonCrudExportMutationOptions = <TError = ModelsProblemDetails | ModelsProblemDetails,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salonCrudExport>>, TError,{data: SalonCrudExportBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof salonCrudExport>>, TError,{data: SalonCrudExportBody}, TContext> => {
+
+const mutationKey = ['salonCrudExport'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof salonCrudExport>>, {data: SalonCrudExportBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  salonCrudExport(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SalonCrudExportMutationResult = NonNullable<Awaited<ReturnType<typeof salonCrudExport>>>
+    export type SalonCrudExportMutationBody = SalonCrudExportBody
+    export type SalonCrudExportMutationError = ModelsProblemDetails | ModelsProblemDetails
+
+    /**
  * @summary Export {Name} search results
  */
-export const useSalonCrudExport = <
-  TError = ModelsProblemDetails | ModelsProblemDetails,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof salonCrudExport>>,
-      TError,
-      { data: SalonCrudExportBody },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof salonCrudExport>>,
-  TError,
-  { data: SalonCrudExportBody },
-  TContext
-> => {
-  const mutationOptions = getSalonCrudExportMutationOptions(options)
+export const useSalonCrudExport = <TError = ModelsProblemDetails | ModelsProblemDetails,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salonCrudExport>>, TError,{data: SalonCrudExportBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof salonCrudExport>>,
+        TError,
+        {data: SalonCrudExportBody},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getSalonCrudExportMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 位置情報と希望条件から近隣サロンを検索し、顧客に最適な選択肢を提示します。
  * @summary Get nearby salons
  */
@@ -1024,207 +797,117 @@ export type salonOperationsGetNearbyResponse400 = {
   data: ModelsProblemDetails
   status: 400
 }
+    
+export type salonOperationsGetNearbyResponseComposite = salonOperationsGetNearbyResponse200 | salonOperationsGetNearbyResponse400;
+    
+export type salonOperationsGetNearbyResponse = salonOperationsGetNearbyResponseComposite & {
+  headers: Headers;
+}
 
-export type salonOperationsGetNearbyResponseComposite =
-  | salonOperationsGetNearbyResponse200
-  | salonOperationsGetNearbyResponse400
-
-export type salonOperationsGetNearbyResponse =
-  salonOperationsGetNearbyResponseComposite & {
-    headers: Headers
-  }
-
-export const getSalonOperationsGetNearbyUrl = (
-  params: SalonOperationsGetNearbyParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getSalonOperationsGetNearbyUrl = (params: SalonOperationsGetNearbyParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
-    const explodeParameters = ['categories']
+    const explodeParameters = ["categories"];
 
     if (Array.isArray(value) && explodeParameters.includes(key)) {
-      value.forEach((v) =>
-        normalizedParams.append(key, v === null ? 'null' : v.toString())
-      )
-      return
+      value.forEach((v) => normalizedParams.append(key, v === null ? 'null' : v.toString()));
+      return;
     }
-
+      
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v1/salons/nearby?${stringifiedParams}`
-    : `/api/v1/salons/nearby`
+  return stringifiedParams.length > 0 ? `/api/v1/salons/nearby?${stringifiedParams}` : `/api/v1/salons/nearby`
 }
 
-export const salonOperationsGetNearby = async (
-  params: SalonOperationsGetNearbyParams,
-  options?: RequestInit
-): Promise<salonOperationsGetNearbyResponse> => {
-  return customInstance<salonOperationsGetNearbyResponse>(
-    getSalonOperationsGetNearbyUrl(params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getSalonOperationsGetNearbyQueryKey = (
-  params?: SalonOperationsGetNearbyParams
-) => {
-  return [`/api/v1/salons/nearby`, ...(params ? [params] : [])] as const
-}
-
-export const getSalonOperationsGetNearbyQueryOptions = <
-  TData = Awaited<ReturnType<typeof salonOperationsGetNearby>>,
-  TError = ModelsProblemDetails,
->(
-  params: SalonOperationsGetNearbyParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonOperationsGetNearby>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const salonOperationsGetNearby = async (params: SalonOperationsGetNearbyParams, options?: RequestInit): Promise<salonOperationsGetNearbyResponse> => {
+  
+  return customInstance<salonOperationsGetNearbyResponse>(getSalonOperationsGetNearbyUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getSalonOperationsGetNearbyQueryKey = (params?: SalonOperationsGetNearbyParams,) => {
+    return [`/api/v1/salons/nearby`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getSalonOperationsGetNearbyQueryOptions = <TData = Awaited<ReturnType<typeof salonOperationsGetNearby>>, TError = ModelsProblemDetails>(params: SalonOperationsGetNearbyParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonOperationsGetNearby>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ?? getSalonOperationsGetNearbyQueryKey(params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof salonOperationsGetNearby>>
-  > = ({ signal }) =>
-    salonOperationsGetNearby(params, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getSalonOperationsGetNearbyQueryKey(params);
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof salonOperationsGetNearby>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof salonOperationsGetNearby>>> = ({ signal }) => salonOperationsGetNearby(params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof salonOperationsGetNearby>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type SalonOperationsGetNearbyQueryResult = NonNullable<
-  Awaited<ReturnType<typeof salonOperationsGetNearby>>
->
+export type SalonOperationsGetNearbyQueryResult = NonNullable<Awaited<ReturnType<typeof salonOperationsGetNearby>>>
 export type SalonOperationsGetNearbyQueryError = ModelsProblemDetails
 
-export function useSalonOperationsGetNearby<
-  TData = Awaited<ReturnType<typeof salonOperationsGetNearby>>,
-  TError = ModelsProblemDetails,
->(
-  params: SalonOperationsGetNearbyParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonOperationsGetNearby>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useSalonOperationsGetNearby<TData = Awaited<ReturnType<typeof salonOperationsGetNearby>>, TError = ModelsProblemDetails>(
+ params: SalonOperationsGetNearbyParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonOperationsGetNearby>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof salonOperationsGetNearby>>,
           TError,
           Awaited<ReturnType<typeof salonOperationsGetNearby>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSalonOperationsGetNearby<
-  TData = Awaited<ReturnType<typeof salonOperationsGetNearby>>,
-  TError = ModelsProblemDetails,
->(
-  params: SalonOperationsGetNearbyParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonOperationsGetNearby>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSalonOperationsGetNearby<TData = Awaited<ReturnType<typeof salonOperationsGetNearby>>, TError = ModelsProblemDetails>(
+ params: SalonOperationsGetNearbyParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonOperationsGetNearby>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof salonOperationsGetNearby>>,
           TError,
           Awaited<ReturnType<typeof salonOperationsGetNearby>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSalonOperationsGetNearby<
-  TData = Awaited<ReturnType<typeof salonOperationsGetNearby>>,
-  TError = ModelsProblemDetails,
->(
-  params: SalonOperationsGetNearbyParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonOperationsGetNearby>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSalonOperationsGetNearby<TData = Awaited<ReturnType<typeof salonOperationsGetNearby>>, TError = ModelsProblemDetails>(
+ params: SalonOperationsGetNearbyParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonOperationsGetNearby>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get nearby salons
  */
 
-export function useSalonOperationsGetNearby<
-  TData = Awaited<ReturnType<typeof salonOperationsGetNearby>>,
-  TError = ModelsProblemDetails,
->(
-  params: SalonOperationsGetNearbyParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonOperationsGetNearby>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getSalonOperationsGetNearbyQueryOptions(params, options)
+export function useSalonOperationsGetNearby<TData = Awaited<ReturnType<typeof salonOperationsGetNearby>>, TError = ModelsProblemDetails>(
+ params: SalonOperationsGetNearbyParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonOperationsGetNearby>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  const queryOptions = getSalonOperationsGetNearbyQueryOptions(params,options)
 
-  query.queryKey = queryOptions.queryKey
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  return query
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
+
+
 
 /**
  * 顧客の嗜好や履歴にもとづきおすすめサロンを提示し、再来店促進や新規獲得を支援します。
@@ -1239,214 +922,117 @@ export type salonOperationsGetRecommendationsResponse401 = {
   data: ModelsProblemDetails
   status: 401
 }
+    
+export type salonOperationsGetRecommendationsResponseComposite = salonOperationsGetRecommendationsResponse200 | salonOperationsGetRecommendationsResponse401;
+    
+export type salonOperationsGetRecommendationsResponse = salonOperationsGetRecommendationsResponseComposite & {
+  headers: Headers;
+}
 
-export type salonOperationsGetRecommendationsResponseComposite =
-  | salonOperationsGetRecommendationsResponse200
-  | salonOperationsGetRecommendationsResponse401
-
-export type salonOperationsGetRecommendationsResponse =
-  salonOperationsGetRecommendationsResponseComposite & {
-    headers: Headers
-  }
-
-export const getSalonOperationsGetRecommendationsUrl = (
-  params?: SalonOperationsGetRecommendationsParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getSalonOperationsGetRecommendationsUrl = (params?: SalonOperationsGetRecommendationsParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
-    const explodeParameters = ['categories']
+    const explodeParameters = ["categories"];
 
     if (Array.isArray(value) && explodeParameters.includes(key)) {
-      value.forEach((v) =>
-        normalizedParams.append(key, v === null ? 'null' : v.toString())
-      )
-      return
+      value.forEach((v) => normalizedParams.append(key, v === null ? 'null' : v.toString()));
+      return;
     }
-
+      
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v1/salons/recommendations?${stringifiedParams}`
-    : `/api/v1/salons/recommendations`
+  return stringifiedParams.length > 0 ? `/api/v1/salons/recommendations?${stringifiedParams}` : `/api/v1/salons/recommendations`
 }
 
-export const salonOperationsGetRecommendations = async (
-  params?: SalonOperationsGetRecommendationsParams,
-  options?: RequestInit
-): Promise<salonOperationsGetRecommendationsResponse> => {
-  return customInstance<salonOperationsGetRecommendationsResponse>(
-    getSalonOperationsGetRecommendationsUrl(params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getSalonOperationsGetRecommendationsQueryKey = (
-  params?: SalonOperationsGetRecommendationsParams
-) => {
-  return [
-    `/api/v1/salons/recommendations`,
-    ...(params ? [params] : []),
-  ] as const
-}
-
-export const getSalonOperationsGetRecommendationsQueryOptions = <
-  TData = Awaited<ReturnType<typeof salonOperationsGetRecommendations>>,
-  TError = ModelsProblemDetails,
->(
-  params?: SalonOperationsGetRecommendationsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonOperationsGetRecommendations>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const salonOperationsGetRecommendations = async (params?: SalonOperationsGetRecommendationsParams, options?: RequestInit): Promise<salonOperationsGetRecommendationsResponse> => {
+  
+  return customInstance<salonOperationsGetRecommendationsResponse>(getSalonOperationsGetRecommendationsUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getSalonOperationsGetRecommendationsQueryKey = (params?: SalonOperationsGetRecommendationsParams,) => {
+    return [`/api/v1/salons/recommendations`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getSalonOperationsGetRecommendationsQueryOptions = <TData = Awaited<ReturnType<typeof salonOperationsGetRecommendations>>, TError = ModelsProblemDetails>(params?: SalonOperationsGetRecommendationsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonOperationsGetRecommendations>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ??
-    getSalonOperationsGetRecommendationsQueryKey(params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof salonOperationsGetRecommendations>>
-  > = ({ signal }) =>
-    salonOperationsGetRecommendations(params, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getSalonOperationsGetRecommendationsQueryKey(params);
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof salonOperationsGetRecommendations>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof salonOperationsGetRecommendations>>> = ({ signal }) => salonOperationsGetRecommendations(params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof salonOperationsGetRecommendations>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type SalonOperationsGetRecommendationsQueryResult = NonNullable<
-  Awaited<ReturnType<typeof salonOperationsGetRecommendations>>
->
+export type SalonOperationsGetRecommendationsQueryResult = NonNullable<Awaited<ReturnType<typeof salonOperationsGetRecommendations>>>
 export type SalonOperationsGetRecommendationsQueryError = ModelsProblemDetails
 
-export function useSalonOperationsGetRecommendations<
-  TData = Awaited<ReturnType<typeof salonOperationsGetRecommendations>>,
-  TError = ModelsProblemDetails,
->(
-  params: undefined | SalonOperationsGetRecommendationsParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonOperationsGetRecommendations>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useSalonOperationsGetRecommendations<TData = Awaited<ReturnType<typeof salonOperationsGetRecommendations>>, TError = ModelsProblemDetails>(
+ params: undefined |  SalonOperationsGetRecommendationsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonOperationsGetRecommendations>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof salonOperationsGetRecommendations>>,
           TError,
           Awaited<ReturnType<typeof salonOperationsGetRecommendations>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSalonOperationsGetRecommendations<
-  TData = Awaited<ReturnType<typeof salonOperationsGetRecommendations>>,
-  TError = ModelsProblemDetails,
->(
-  params?: SalonOperationsGetRecommendationsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonOperationsGetRecommendations>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSalonOperationsGetRecommendations<TData = Awaited<ReturnType<typeof salonOperationsGetRecommendations>>, TError = ModelsProblemDetails>(
+ params?: SalonOperationsGetRecommendationsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonOperationsGetRecommendations>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof salonOperationsGetRecommendations>>,
           TError,
           Awaited<ReturnType<typeof salonOperationsGetRecommendations>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSalonOperationsGetRecommendations<
-  TData = Awaited<ReturnType<typeof salonOperationsGetRecommendations>>,
-  TError = ModelsProblemDetails,
->(
-  params?: SalonOperationsGetRecommendationsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonOperationsGetRecommendations>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSalonOperationsGetRecommendations<TData = Awaited<ReturnType<typeof salonOperationsGetRecommendations>>, TError = ModelsProblemDetails>(
+ params?: SalonOperationsGetRecommendationsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonOperationsGetRecommendations>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get personalized salon recommendations
  */
 
-export function useSalonOperationsGetRecommendations<
-  TData = Awaited<ReturnType<typeof salonOperationsGetRecommendations>>,
-  TError = ModelsProblemDetails,
->(
-  params?: SalonOperationsGetRecommendationsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonOperationsGetRecommendations>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getSalonOperationsGetRecommendationsQueryOptions(
-    params,
-    options
-  )
+export function useSalonOperationsGetRecommendations<TData = Awaited<ReturnType<typeof salonOperationsGetRecommendations>>, TError = ModelsProblemDetails>(
+ params?: SalonOperationsGetRecommendationsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonOperationsGetRecommendations>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  const queryOptions = getSalonOperationsGetRecommendationsQueryOptions(params,options)
 
-  query.queryKey = queryOptions.queryKey
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  return query
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
+
+
 
 /**
  * ファセットや複合条件を利用してリソースを検索し、結果と統計情報を返却します。
@@ -1466,203 +1052,117 @@ export type salonCrudSearchResponse401 = {
   data: ModelsProblemDetails
   status: 401
 }
-
-export type salonCrudSearchResponseComposite =
-  | salonCrudSearchResponse200
-  | salonCrudSearchResponse400
-  | salonCrudSearchResponse401
-
+    
+export type salonCrudSearchResponseComposite = salonCrudSearchResponse200 | salonCrudSearchResponse400 | salonCrudSearchResponse401;
+    
 export type salonCrudSearchResponse = salonCrudSearchResponseComposite & {
-  headers: Headers
+  headers: Headers;
 }
 
-export const getSalonCrudSearchUrl = (params?: SalonCrudSearchParams) => {
-  const normalizedParams = new URLSearchParams()
+export const getSalonCrudSearchUrl = (params?: SalonCrudSearchParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
-    const explodeParameters = ['categories', 'features', 'facetFields']
+    const explodeParameters = ["categories","features","facetFields"];
 
     if (Array.isArray(value) && explodeParameters.includes(key)) {
-      value.forEach((v) =>
-        normalizedParams.append(key, v === null ? 'null' : v.toString())
-      )
-      return
+      value.forEach((v) => normalizedParams.append(key, v === null ? 'null' : v.toString()));
+      return;
     }
-
+      
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v1/salons/search?${stringifiedParams}`
-    : `/api/v1/salons/search`
+  return stringifiedParams.length > 0 ? `/api/v1/salons/search?${stringifiedParams}` : `/api/v1/salons/search`
 }
 
-export const salonCrudSearch = async (
-  params?: SalonCrudSearchParams,
-  options?: RequestInit
-): Promise<salonCrudSearchResponse> => {
-  return customInstance<salonCrudSearchResponse>(
-    getSalonCrudSearchUrl(params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getSalonCrudSearchQueryKey = (params?: SalonCrudSearchParams) => {
-  return [`/api/v1/salons/search`, ...(params ? [params] : [])] as const
-}
-
-export const getSalonCrudSearchQueryOptions = <
-  TData = Awaited<ReturnType<typeof salonCrudSearch>>,
-  TError = ModelsProblemDetails | ModelsProblemDetails,
->(
-  params?: SalonCrudSearchParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonCrudSearch>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const salonCrudSearch = async (params?: SalonCrudSearchParams, options?: RequestInit): Promise<salonCrudSearchResponse> => {
+  
+  return customInstance<salonCrudSearchResponse>(getSalonCrudSearchUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getSalonCrudSearchQueryKey = (params?: SalonCrudSearchParams,) => {
+    return [`/api/v1/salons/search`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getSalonCrudSearchQueryOptions = <TData = Awaited<ReturnType<typeof salonCrudSearch>>, TError = ModelsProblemDetails | ModelsProblemDetails>(params?: SalonCrudSearchParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonCrudSearch>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey = queryOptions?.queryKey ?? getSalonCrudSearchQueryKey(params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof salonCrudSearch>>> = ({
-    signal,
-  }) => salonCrudSearch(params, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getSalonCrudSearchQueryKey(params);
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof salonCrudSearch>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof salonCrudSearch>>> = ({ signal }) => salonCrudSearch(params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof salonCrudSearch>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type SalonCrudSearchQueryResult = NonNullable<
-  Awaited<ReturnType<typeof salonCrudSearch>>
->
-export type SalonCrudSearchQueryError =
-  | ModelsProblemDetails
-  | ModelsProblemDetails
+export type SalonCrudSearchQueryResult = NonNullable<Awaited<ReturnType<typeof salonCrudSearch>>>
+export type SalonCrudSearchQueryError = ModelsProblemDetails | ModelsProblemDetails
 
-export function useSalonCrudSearch<
-  TData = Awaited<ReturnType<typeof salonCrudSearch>>,
-  TError = ModelsProblemDetails | ModelsProblemDetails,
->(
-  params: undefined | SalonCrudSearchParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonCrudSearch>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useSalonCrudSearch<TData = Awaited<ReturnType<typeof salonCrudSearch>>, TError = ModelsProblemDetails | ModelsProblemDetails>(
+ params: undefined |  SalonCrudSearchParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonCrudSearch>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof salonCrudSearch>>,
           TError,
           Awaited<ReturnType<typeof salonCrudSearch>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSalonCrudSearch<
-  TData = Awaited<ReturnType<typeof salonCrudSearch>>,
-  TError = ModelsProblemDetails | ModelsProblemDetails,
->(
-  params?: SalonCrudSearchParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonCrudSearch>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSalonCrudSearch<TData = Awaited<ReturnType<typeof salonCrudSearch>>, TError = ModelsProblemDetails | ModelsProblemDetails>(
+ params?: SalonCrudSearchParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonCrudSearch>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof salonCrudSearch>>,
           TError,
           Awaited<ReturnType<typeof salonCrudSearch>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSalonCrudSearch<
-  TData = Awaited<ReturnType<typeof salonCrudSearch>>,
-  TError = ModelsProblemDetails | ModelsProblemDetails,
->(
-  params?: SalonCrudSearchParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonCrudSearch>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSalonCrudSearch<TData = Awaited<ReturnType<typeof salonCrudSearch>>, TError = ModelsProblemDetails | ModelsProblemDetails>(
+ params?: SalonCrudSearchParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonCrudSearch>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Search {Name} resources
  */
 
-export function useSalonCrudSearch<
-  TData = Awaited<ReturnType<typeof salonCrudSearch>>,
-  TError = ModelsProblemDetails | ModelsProblemDetails,
->(
-  params?: SalonCrudSearchParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonCrudSearch>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getSalonCrudSearchQueryOptions(params, options)
+export function useSalonCrudSearch<TData = Awaited<ReturnType<typeof salonCrudSearch>>, TError = ModelsProblemDetails | ModelsProblemDetails>(
+ params?: SalonCrudSearchParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonCrudSearch>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  const queryOptions = getSalonCrudSearchQueryOptions(params,options)
 
-  query.queryKey = queryOptions.queryKey
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  return query
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
+
+
 
 /**
  * IDを指定して単一リソースを取得し、詳細表示や編集フォームの初期値に使用します。
@@ -1687,190 +1187,119 @@ export type salonCrudGetResponse404 = {
   data: ModelsProblemDetails
   status: 404
 }
-
-export type salonCrudGetResponseComposite =
-  | salonCrudGetResponse200
-  | salonCrudGetResponse304
-  | salonCrudGetResponse401
-  | salonCrudGetResponse404
-
+    
+export type salonCrudGetResponseComposite = salonCrudGetResponse200 | salonCrudGetResponse304 | salonCrudGetResponse401 | salonCrudGetResponse404;
+    
 export type salonCrudGetResponse = salonCrudGetResponseComposite & {
-  headers: Headers
+  headers: Headers;
 }
 
-export const getSalonCrudGetUrl = (
-  id: ModelsSalonId,
-  params?: SalonCrudGetParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getSalonCrudGetUrl = (id: ModelsSalonId,
+    params?: SalonCrudGetParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v1/salons/${id}?${stringifiedParams}`
-    : `/api/v1/salons/${id}`
+  return stringifiedParams.length > 0 ? `/api/v1/salons/${id}?${stringifiedParams}` : `/api/v1/salons/${id}`
 }
 
-export const salonCrudGet = async (
-  id: ModelsSalonId,
-  params?: SalonCrudGetParams,
-  options?: RequestInit
-): Promise<salonCrudGetResponse> => {
-  return customInstance<salonCrudGetResponse>(getSalonCrudGetUrl(id, params), {
+export const salonCrudGet = async (id: ModelsSalonId,
+    params?: SalonCrudGetParams, options?: RequestInit): Promise<salonCrudGetResponse> => {
+  
+  return customInstance<salonCrudGetResponse>(getSalonCrudGetUrl(id,params),
+  {      
     ...options,
-    method: 'GET',
-  })
-}
-
-export const getSalonCrudGetQueryKey = (
-  id?: ModelsSalonId,
-  params?: SalonCrudGetParams
-) => {
-  return [`/api/v1/salons/${id}`, ...(params ? [params] : [])] as const
-}
-
-export const getSalonCrudGetQueryOptions = <
-  TData = Awaited<ReturnType<typeof salonCrudGet>>,
-  TError = null | ModelsProblemDetails | ModelsProblemDetails,
->(
-  id: ModelsSalonId,
-  params?: SalonCrudGetParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof salonCrudGet>>, TError, TData>
-    >
-    request?: SecondParameter<typeof customInstance>
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getSalonCrudGetQueryKey = (id?: ModelsSalonId,
+    params?: SalonCrudGetParams,) => {
+    return [`/api/v1/salons/${id}`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getSalonCrudGetQueryOptions = <TData = Awaited<ReturnType<typeof salonCrudGet>>, TError = null | ModelsProblemDetails | ModelsProblemDetails>(id: ModelsSalonId,
+    params?: SalonCrudGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonCrudGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey = queryOptions?.queryKey ?? getSalonCrudGetQueryKey(id, params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof salonCrudGet>>> = ({
-    signal,
-  }) => salonCrudGet(id, params, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getSalonCrudGetQueryKey(id,params);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!id,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof salonCrudGet>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof salonCrudGet>>> = ({ signal }) => salonCrudGet(id,params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof salonCrudGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type SalonCrudGetQueryResult = NonNullable<
-  Awaited<ReturnType<typeof salonCrudGet>>
->
-export type SalonCrudGetQueryError =
-  | null
-  | ModelsProblemDetails
-  | ModelsProblemDetails
+export type SalonCrudGetQueryResult = NonNullable<Awaited<ReturnType<typeof salonCrudGet>>>
+export type SalonCrudGetQueryError = null | ModelsProblemDetails | ModelsProblemDetails
 
-export function useSalonCrudGet<
-  TData = Awaited<ReturnType<typeof salonCrudGet>>,
-  TError = null | ModelsProblemDetails | ModelsProblemDetails,
->(
-  id: ModelsSalonId,
-  params: undefined | SalonCrudGetParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof salonCrudGet>>, TError, TData>
-    > &
-      Pick<
+
+export function useSalonCrudGet<TData = Awaited<ReturnType<typeof salonCrudGet>>, TError = null | ModelsProblemDetails | ModelsProblemDetails>(
+ id: ModelsSalonId,
+    params: undefined |  SalonCrudGetParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonCrudGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof salonCrudGet>>,
           TError,
           Awaited<ReturnType<typeof salonCrudGet>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSalonCrudGet<
-  TData = Awaited<ReturnType<typeof salonCrudGet>>,
-  TError = null | ModelsProblemDetails | ModelsProblemDetails,
->(
-  id: ModelsSalonId,
-  params?: SalonCrudGetParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof salonCrudGet>>, TError, TData>
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSalonCrudGet<TData = Awaited<ReturnType<typeof salonCrudGet>>, TError = null | ModelsProblemDetails | ModelsProblemDetails>(
+ id: ModelsSalonId,
+    params?: SalonCrudGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonCrudGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof salonCrudGet>>,
           TError,
           Awaited<ReturnType<typeof salonCrudGet>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSalonCrudGet<
-  TData = Awaited<ReturnType<typeof salonCrudGet>>,
-  TError = null | ModelsProblemDetails | ModelsProblemDetails,
->(
-  id: ModelsSalonId,
-  params?: SalonCrudGetParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof salonCrudGet>>, TError, TData>
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSalonCrudGet<TData = Awaited<ReturnType<typeof salonCrudGet>>, TError = null | ModelsProblemDetails | ModelsProblemDetails>(
+ id: ModelsSalonId,
+    params?: SalonCrudGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonCrudGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get {Name} by ID
  */
 
-export function useSalonCrudGet<
-  TData = Awaited<ReturnType<typeof salonCrudGet>>,
-  TError = null | ModelsProblemDetails | ModelsProblemDetails,
->(
-  id: ModelsSalonId,
-  params?: SalonCrudGetParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof salonCrudGet>>, TError, TData>
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getSalonCrudGetQueryOptions(id, params, options)
+export function useSalonCrudGet<TData = Awaited<ReturnType<typeof salonCrudGet>>, TError = null | ModelsProblemDetails | ModelsProblemDetails>(
+ id: ModelsSalonId,
+    params?: SalonCrudGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonCrudGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  const queryOptions = getSalonCrudGetQueryOptions(id,params,options)
 
-  query.queryKey = queryOptions.queryKey
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  return query
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
+
+
 
 /**
  * 既存リソースを全項目更新し、最新状態とバージョン情報を返却します。
@@ -1905,123 +1334,83 @@ export type salonCrudUpdateResponse422 = {
   data: ModelsProblemDetails
   status: 422
 }
-
-export type salonCrudUpdateResponseComposite =
-  | salonCrudUpdateResponse200
-  | salonCrudUpdateResponse400
-  | salonCrudUpdateResponse401
-  | salonCrudUpdateResponse404
-  | salonCrudUpdateResponse409
-  | salonCrudUpdateResponse422
-
+    
+export type salonCrudUpdateResponseComposite = salonCrudUpdateResponse200 | salonCrudUpdateResponse400 | salonCrudUpdateResponse401 | salonCrudUpdateResponse404 | salonCrudUpdateResponse409 | salonCrudUpdateResponse422;
+    
 export type salonCrudUpdateResponse = salonCrudUpdateResponseComposite & {
-  headers: Headers
+  headers: Headers;
 }
 
-export const getSalonCrudUpdateUrl = (id: ModelsSalonId) => {
+export const getSalonCrudUpdateUrl = (id: ModelsSalonId,) => {
+
+
+  
+
   return `/api/v1/salons/${id}`
 }
 
-export const salonCrudUpdate = async (
-  id: ModelsSalonId,
-  modelsUpdateSalonRequest: ModelsUpdateSalonRequest,
-  options?: RequestInit
-): Promise<salonCrudUpdateResponse> => {
-  return customInstance<salonCrudUpdateResponse>(getSalonCrudUpdateUrl(id), {
+export const salonCrudUpdate = async (id: ModelsSalonId,
+    modelsUpdateSalonRequest: ModelsUpdateSalonRequest, options?: RequestInit): Promise<salonCrudUpdateResponse> => {
+  
+  return customInstance<salonCrudUpdateResponse>(getSalonCrudUpdateUrl(id),
+  {      
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(modelsUpdateSalonRequest),
-  })
-}
-
-export const getSalonCrudUpdateMutationOptions = <
-  TError =
-    | ModelsProblemDetails
-    | ModelsProblemDetails
-    | ModelsProblemDetails
-    | ModelsProblemDetails
-    | ModelsProblemDetails,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof salonCrudUpdate>>,
-    TError,
-    { id: ModelsSalonId; data: ModelsUpdateSalonRequest },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof salonCrudUpdate>>,
-  TError,
-  { id: ModelsSalonId; data: ModelsUpdateSalonRequest },
-  TContext
-> => {
-  const mutationKey = ['salonCrudUpdate']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof salonCrudUpdate>>,
-    { id: ModelsSalonId; data: ModelsUpdateSalonRequest }
-  > = (props) => {
-    const { id, data } = props ?? {}
-
-    return salonCrudUpdate(id, data, requestOptions)
+    body: JSON.stringify(
+      modelsUpdateSalonRequest,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type SalonCrudUpdateMutationResult = NonNullable<
-  Awaited<ReturnType<typeof salonCrudUpdate>>
->
-export type SalonCrudUpdateMutationBody = ModelsUpdateSalonRequest
-export type SalonCrudUpdateMutationError =
-  | ModelsProblemDetails
-  | ModelsProblemDetails
-  | ModelsProblemDetails
-  | ModelsProblemDetails
-  | ModelsProblemDetails
 
-/**
+
+export const getSalonCrudUpdateMutationOptions = <TError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salonCrudUpdate>>, TError,{id: ModelsSalonId;data: ModelsUpdateSalonRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof salonCrudUpdate>>, TError,{id: ModelsSalonId;data: ModelsUpdateSalonRequest}, TContext> => {
+
+const mutationKey = ['salonCrudUpdate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof salonCrudUpdate>>, {id: ModelsSalonId;data: ModelsUpdateSalonRequest}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  salonCrudUpdate(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SalonCrudUpdateMutationResult = NonNullable<Awaited<ReturnType<typeof salonCrudUpdate>>>
+    export type SalonCrudUpdateMutationBody = ModelsUpdateSalonRequest
+    export type SalonCrudUpdateMutationError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails
+
+    /**
  * @summary Update {Name}
  */
-export const useSalonCrudUpdate = <
-  TError =
-    | ModelsProblemDetails
-    | ModelsProblemDetails
-    | ModelsProblemDetails
-    | ModelsProblemDetails
-    | ModelsProblemDetails,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof salonCrudUpdate>>,
-      TError,
-      { id: ModelsSalonId; data: ModelsUpdateSalonRequest },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof salonCrudUpdate>>,
-  TError,
-  { id: ModelsSalonId; data: ModelsUpdateSalonRequest },
-  TContext
-> => {
-  const mutationOptions = getSalonCrudUpdateMutationOptions(options)
+export const useSalonCrudUpdate = <TError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salonCrudUpdate>>, TError,{id: ModelsSalonId;data: ModelsUpdateSalonRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof salonCrudUpdate>>,
+        TError,
+        {id: ModelsSalonId;data: ModelsUpdateSalonRequest},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getSalonCrudUpdateMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 必要なフィールドのみを部分更新し、変更差分を効率的に反映します。
  * @summary Partially update {Name}
  */
@@ -2054,162 +1443,92 @@ export type salonCrudPatchResponse422 = {
   data: ModelsProblemDetails
   status: 422
 }
-
-export type salonCrudPatchResponseComposite =
-  | salonCrudPatchResponse200
-  | salonCrudPatchResponse400
-  | salonCrudPatchResponse401
-  | salonCrudPatchResponse404
-  | salonCrudPatchResponse409
-  | salonCrudPatchResponse422
-
+    
+export type salonCrudPatchResponseComposite = salonCrudPatchResponse200 | salonCrudPatchResponse400 | salonCrudPatchResponse401 | salonCrudPatchResponse404 | salonCrudPatchResponse409 | salonCrudPatchResponse422;
+    
 export type salonCrudPatchResponse = salonCrudPatchResponseComposite & {
-  headers: Headers
+  headers: Headers;
 }
 
-export const getSalonCrudPatchUrl = (
-  id: ModelsSalonId,
-  params?: SalonCrudPatchParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getSalonCrudPatchUrl = (id: ModelsSalonId,
+    params?: SalonCrudPatchParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v1/salons/${id}?${stringifiedParams}`
-    : `/api/v1/salons/${id}`
+  return stringifiedParams.length > 0 ? `/api/v1/salons/${id}?${stringifiedParams}` : `/api/v1/salons/${id}`
 }
 
-export const salonCrudPatch = async (
-  id: ModelsSalonId,
-  modelsUpdateSalonRequestUpdate: ModelsUpdateSalonRequestUpdate,
-  params?: SalonCrudPatchParams,
-  options?: RequestInit
-): Promise<salonCrudPatchResponse> => {
-  return customInstance<salonCrudPatchResponse>(
-    getSalonCrudPatchUrl(id, params),
-    {
-      ...options,
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsUpdateSalonRequestUpdate),
-    }
-  )
-}
-
-export const getSalonCrudPatchMutationOptions = <
-  TError =
-    | ModelsProblemDetails
-    | ModelsProblemDetails
-    | ModelsProblemDetails
-    | ModelsProblemDetails
-    | ModelsProblemDetails,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof salonCrudPatch>>,
-    TError,
-    {
-      id: ModelsSalonId
-      data: ModelsUpdateSalonRequestUpdate
-      params?: SalonCrudPatchParams
-    },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof salonCrudPatch>>,
-  TError,
-  {
-    id: ModelsSalonId
-    data: ModelsUpdateSalonRequestUpdate
-    params?: SalonCrudPatchParams
-  },
-  TContext
-> => {
-  const mutationKey = ['salonCrudPatch']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof salonCrudPatch>>,
-    {
-      id: ModelsSalonId
-      data: ModelsUpdateSalonRequestUpdate
-      params?: SalonCrudPatchParams
-    }
-  > = (props) => {
-    const { id, data, params } = props ?? {}
-
-    return salonCrudPatch(id, data, params, requestOptions)
+export const salonCrudPatch = async (id: ModelsSalonId,
+    modelsUpdateSalonRequestUpdate: ModelsUpdateSalonRequestUpdate,
+    params?: SalonCrudPatchParams, options?: RequestInit): Promise<salonCrudPatchResponse> => {
+  
+  return customInstance<salonCrudPatchResponse>(getSalonCrudPatchUrl(id,params),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      modelsUpdateSalonRequestUpdate,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type SalonCrudPatchMutationResult = NonNullable<
-  Awaited<ReturnType<typeof salonCrudPatch>>
->
-export type SalonCrudPatchMutationBody = ModelsUpdateSalonRequestUpdate
-export type SalonCrudPatchMutationError =
-  | ModelsProblemDetails
-  | ModelsProblemDetails
-  | ModelsProblemDetails
-  | ModelsProblemDetails
-  | ModelsProblemDetails
 
-/**
+
+export const getSalonCrudPatchMutationOptions = <TError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salonCrudPatch>>, TError,{id: ModelsSalonId;data: ModelsUpdateSalonRequestUpdate;params?: SalonCrudPatchParams}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof salonCrudPatch>>, TError,{id: ModelsSalonId;data: ModelsUpdateSalonRequestUpdate;params?: SalonCrudPatchParams}, TContext> => {
+
+const mutationKey = ['salonCrudPatch'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof salonCrudPatch>>, {id: ModelsSalonId;data: ModelsUpdateSalonRequestUpdate;params?: SalonCrudPatchParams}> = (props) => {
+          const {id,data,params} = props ?? {};
+
+          return  salonCrudPatch(id,data,params,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SalonCrudPatchMutationResult = NonNullable<Awaited<ReturnType<typeof salonCrudPatch>>>
+    export type SalonCrudPatchMutationBody = ModelsUpdateSalonRequestUpdate
+    export type SalonCrudPatchMutationError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails
+
+    /**
  * @summary Partially update {Name}
  */
-export const useSalonCrudPatch = <
-  TError =
-    | ModelsProblemDetails
-    | ModelsProblemDetails
-    | ModelsProblemDetails
-    | ModelsProblemDetails
-    | ModelsProblemDetails,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof salonCrudPatch>>,
-      TError,
-      {
-        id: ModelsSalonId
-        data: ModelsUpdateSalonRequestUpdate
-        params?: SalonCrudPatchParams
-      },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof salonCrudPatch>>,
-  TError,
-  {
-    id: ModelsSalonId
-    data: ModelsUpdateSalonRequestUpdate
-    params?: SalonCrudPatchParams
-  },
-  TContext
-> => {
-  const mutationOptions = getSalonCrudPatchMutationOptions(options)
+export const useSalonCrudPatch = <TError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salonCrudPatch>>, TError,{id: ModelsSalonId;data: ModelsUpdateSalonRequestUpdate;params?: SalonCrudPatchParams}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof salonCrudPatch>>,
+        TError,
+        {id: ModelsSalonId;data: ModelsUpdateSalonRequestUpdate;params?: SalonCrudPatchParams},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getSalonCrudPatchMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * リソースを削除し、必要に応じて論理削除か物理削除かを選択します。
  * @summary Delete {Name}
  */
@@ -2232,125 +1551,90 @@ export type salonCrudDeleteResponse409 = {
   data: ModelsProblemDetails
   status: 409
 }
-
-export type salonCrudDeleteResponseComposite =
-  | salonCrudDeleteResponse204
-  | salonCrudDeleteResponse401
-  | salonCrudDeleteResponse404
-  | salonCrudDeleteResponse409
-
+    
+export type salonCrudDeleteResponseComposite = salonCrudDeleteResponse204 | salonCrudDeleteResponse401 | salonCrudDeleteResponse404 | salonCrudDeleteResponse409;
+    
 export type salonCrudDeleteResponse = salonCrudDeleteResponseComposite & {
-  headers: Headers
+  headers: Headers;
 }
 
-export const getSalonCrudDeleteUrl = (
-  id: ModelsSalonId,
-  params?: SalonCrudDeleteParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getSalonCrudDeleteUrl = (id: ModelsSalonId,
+    params?: SalonCrudDeleteParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v1/salons/${id}?${stringifiedParams}`
-    : `/api/v1/salons/${id}`
+  return stringifiedParams.length > 0 ? `/api/v1/salons/${id}?${stringifiedParams}` : `/api/v1/salons/${id}`
 }
 
-export const salonCrudDelete = async (
-  id: ModelsSalonId,
-  params?: SalonCrudDeleteParams,
-  options?: RequestInit
-): Promise<salonCrudDeleteResponse> => {
-  return customInstance<salonCrudDeleteResponse>(
-    getSalonCrudDeleteUrl(id, params),
-    {
-      ...options,
-      method: 'DELETE',
-    }
-  )
-}
-
-export const getSalonCrudDeleteMutationOptions = <
-  TError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof salonCrudDelete>>,
-    TError,
-    { id: ModelsSalonId; params?: SalonCrudDeleteParams },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof salonCrudDelete>>,
-  TError,
-  { id: ModelsSalonId; params?: SalonCrudDeleteParams },
-  TContext
-> => {
-  const mutationKey = ['salonCrudDelete']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof salonCrudDelete>>,
-    { id: ModelsSalonId; params?: SalonCrudDeleteParams }
-  > = (props) => {
-    const { id, params } = props ?? {}
-
-    return salonCrudDelete(id, params, requestOptions)
+export const salonCrudDelete = async (id: ModelsSalonId,
+    params?: SalonCrudDeleteParams, options?: RequestInit): Promise<salonCrudDeleteResponse> => {
+  
+  return customInstance<salonCrudDeleteResponse>(getSalonCrudDeleteUrl(id,params),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type SalonCrudDeleteMutationResult = NonNullable<
-  Awaited<ReturnType<typeof salonCrudDelete>>
->
 
-export type SalonCrudDeleteMutationError =
-  | ModelsProblemDetails
-  | ModelsProblemDetails
-  | ModelsProblemDetails
 
-/**
+export const getSalonCrudDeleteMutationOptions = <TError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salonCrudDelete>>, TError,{id: ModelsSalonId;params?: SalonCrudDeleteParams}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof salonCrudDelete>>, TError,{id: ModelsSalonId;params?: SalonCrudDeleteParams}, TContext> => {
+
+const mutationKey = ['salonCrudDelete'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof salonCrudDelete>>, {id: ModelsSalonId;params?: SalonCrudDeleteParams}> = (props) => {
+          const {id,params} = props ?? {};
+
+          return  salonCrudDelete(id,params,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SalonCrudDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof salonCrudDelete>>>
+    
+    export type SalonCrudDeleteMutationError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails
+
+    /**
  * @summary Delete {Name}
  */
-export const useSalonCrudDelete = <
-  TError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof salonCrudDelete>>,
-      TError,
-      { id: ModelsSalonId; params?: SalonCrudDeleteParams },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof salonCrudDelete>>,
-  TError,
-  { id: ModelsSalonId; params?: SalonCrudDeleteParams },
-  TContext
-> => {
-  const mutationOptions = getSalonCrudDeleteMutationOptions(options)
+export const useSalonCrudDelete = <TError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salonCrudDelete>>, TError,{id: ModelsSalonId;params?: SalonCrudDeleteParams}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof salonCrudDelete>>,
+        TError,
+        {id: ModelsSalonId;params?: SalonCrudDeleteParams},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getSalonCrudDeleteMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 希望日時にサロン全体で対応可能な枠があるかを判定し、予約導線での可用性表示に利用します。
  * @summary Check salon availability
  */
@@ -2368,113 +1652,83 @@ export type salonOperationsCheckAvailabilityResponse404 = {
   data: ModelsProblemDetails
   status: 404
 }
+    
+export type salonOperationsCheckAvailabilityResponseComposite = salonOperationsCheckAvailabilityResponse200 | salonOperationsCheckAvailabilityResponse400 | salonOperationsCheckAvailabilityResponse404;
+    
+export type salonOperationsCheckAvailabilityResponse = salonOperationsCheckAvailabilityResponseComposite & {
+  headers: Headers;
+}
 
-export type salonOperationsCheckAvailabilityResponseComposite =
-  | salonOperationsCheckAvailabilityResponse200
-  | salonOperationsCheckAvailabilityResponse400
-  | salonOperationsCheckAvailabilityResponse404
+export const getSalonOperationsCheckAvailabilityUrl = (id: ModelsSalonId,) => {
 
-export type salonOperationsCheckAvailabilityResponse =
-  salonOperationsCheckAvailabilityResponseComposite & {
-    headers: Headers
-  }
 
-export const getSalonOperationsCheckAvailabilityUrl = (id: ModelsSalonId) => {
+  
+
   return `/api/v1/salons/${id}/availability`
 }
 
-export const salonOperationsCheckAvailability = async (
-  id: ModelsSalonId,
-  modelsSalonAvailabilityRequest: ModelsSalonAvailabilityRequest,
-  options?: RequestInit
-): Promise<salonOperationsCheckAvailabilityResponse> => {
-  return customInstance<salonOperationsCheckAvailabilityResponse>(
-    getSalonOperationsCheckAvailabilityUrl(id),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsSalonAvailabilityRequest),
-    }
-  )
-}
-
-export const getSalonOperationsCheckAvailabilityMutationOptions = <
-  TError = ModelsProblemDetails | ModelsProblemDetails,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof salonOperationsCheckAvailability>>,
-    TError,
-    { id: ModelsSalonId; data: ModelsSalonAvailabilityRequest },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof salonOperationsCheckAvailability>>,
-  TError,
-  { id: ModelsSalonId; data: ModelsSalonAvailabilityRequest },
-  TContext
-> => {
-  const mutationKey = ['salonOperationsCheckAvailability']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof salonOperationsCheckAvailability>>,
-    { id: ModelsSalonId; data: ModelsSalonAvailabilityRequest }
-  > = (props) => {
-    const { id, data } = props ?? {}
-
-    return salonOperationsCheckAvailability(id, data, requestOptions)
+export const salonOperationsCheckAvailability = async (id: ModelsSalonId,
+    modelsSalonAvailabilityRequest: ModelsSalonAvailabilityRequest, options?: RequestInit): Promise<salonOperationsCheckAvailabilityResponse> => {
+  
+  return customInstance<salonOperationsCheckAvailabilityResponse>(getSalonOperationsCheckAvailabilityUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      modelsSalonAvailabilityRequest,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type SalonOperationsCheckAvailabilityMutationResult = NonNullable<
-  Awaited<ReturnType<typeof salonOperationsCheckAvailability>>
->
-export type SalonOperationsCheckAvailabilityMutationBody =
-  ModelsSalonAvailabilityRequest
-export type SalonOperationsCheckAvailabilityMutationError =
-  | ModelsProblemDetails
-  | ModelsProblemDetails
 
-/**
+
+export const getSalonOperationsCheckAvailabilityMutationOptions = <TError = ModelsProblemDetails | ModelsProblemDetails,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salonOperationsCheckAvailability>>, TError,{id: ModelsSalonId;data: ModelsSalonAvailabilityRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof salonOperationsCheckAvailability>>, TError,{id: ModelsSalonId;data: ModelsSalonAvailabilityRequest}, TContext> => {
+
+const mutationKey = ['salonOperationsCheckAvailability'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof salonOperationsCheckAvailability>>, {id: ModelsSalonId;data: ModelsSalonAvailabilityRequest}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  salonOperationsCheckAvailability(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SalonOperationsCheckAvailabilityMutationResult = NonNullable<Awaited<ReturnType<typeof salonOperationsCheckAvailability>>>
+    export type SalonOperationsCheckAvailabilityMutationBody = ModelsSalonAvailabilityRequest
+    export type SalonOperationsCheckAvailabilityMutationError = ModelsProblemDetails | ModelsProblemDetails
+
+    /**
  * @summary Check salon availability
  */
-export const useSalonOperationsCheckAvailability = <
-  TError = ModelsProblemDetails | ModelsProblemDetails,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof salonOperationsCheckAvailability>>,
-      TError,
-      { id: ModelsSalonId; data: ModelsSalonAvailabilityRequest },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof salonOperationsCheckAvailability>>,
-  TError,
-  { id: ModelsSalonId; data: ModelsSalonAvailabilityRequest },
-  TContext
-> => {
-  const mutationOptions =
-    getSalonOperationsCheckAvailabilityMutationOptions(options)
+export const useSalonOperationsCheckAvailability = <TError = ModelsProblemDetails | ModelsProblemDetails,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salonOperationsCheckAvailability>>, TError,{id: ModelsSalonId;data: ModelsSalonAvailabilityRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof salonOperationsCheckAvailability>>,
+        TError,
+        {id: ModelsSalonId;data: ModelsSalonAvailabilityRequest},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getSalonOperationsCheckAvailabilityMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 対象リソースの監査履歴を取得し、変更者や変更内容を追跡します。
  * @summary Get {Name} audit history
  */
@@ -2492,214 +1746,119 @@ export type salonCrudGetHistoryResponse404 = {
   data: ModelsProblemDetails
   status: 404
 }
+    
+export type salonCrudGetHistoryResponseComposite = salonCrudGetHistoryResponse200 | salonCrudGetHistoryResponse401 | salonCrudGetHistoryResponse404;
+    
+export type salonCrudGetHistoryResponse = salonCrudGetHistoryResponseComposite & {
+  headers: Headers;
+}
 
-export type salonCrudGetHistoryResponseComposite =
-  | salonCrudGetHistoryResponse200
-  | salonCrudGetHistoryResponse401
-  | salonCrudGetHistoryResponse404
-
-export type salonCrudGetHistoryResponse =
-  salonCrudGetHistoryResponseComposite & {
-    headers: Headers
-  }
-
-export const getSalonCrudGetHistoryUrl = (
-  id: ModelsSalonId,
-  params?: SalonCrudGetHistoryParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getSalonCrudGetHistoryUrl = (id: ModelsSalonId,
+    params?: SalonCrudGetHistoryParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v1/salons/${id}/history?${stringifiedParams}`
-    : `/api/v1/salons/${id}/history`
+  return stringifiedParams.length > 0 ? `/api/v1/salons/${id}/history?${stringifiedParams}` : `/api/v1/salons/${id}/history`
 }
 
-export const salonCrudGetHistory = async (
-  id: ModelsSalonId,
-  params?: SalonCrudGetHistoryParams,
-  options?: RequestInit
-): Promise<salonCrudGetHistoryResponse> => {
-  return customInstance<salonCrudGetHistoryResponse>(
-    getSalonCrudGetHistoryUrl(id, params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getSalonCrudGetHistoryQueryKey = (
-  id?: ModelsSalonId,
-  params?: SalonCrudGetHistoryParams
-) => {
-  return [`/api/v1/salons/${id}/history`, ...(params ? [params] : [])] as const
-}
-
-export const getSalonCrudGetHistoryQueryOptions = <
-  TData = Awaited<ReturnType<typeof salonCrudGetHistory>>,
-  TError = ModelsProblemDetails | ModelsProblemDetails,
->(
-  id: ModelsSalonId,
-  params?: SalonCrudGetHistoryParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonCrudGetHistory>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const salonCrudGetHistory = async (id: ModelsSalonId,
+    params?: SalonCrudGetHistoryParams, options?: RequestInit): Promise<salonCrudGetHistoryResponse> => {
+  
+  return customInstance<salonCrudGetHistoryResponse>(getSalonCrudGetHistoryUrl(id,params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getSalonCrudGetHistoryQueryKey = (id?: ModelsSalonId,
+    params?: SalonCrudGetHistoryParams,) => {
+    return [`/api/v1/salons/${id}/history`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getSalonCrudGetHistoryQueryOptions = <TData = Awaited<ReturnType<typeof salonCrudGetHistory>>, TError = ModelsProblemDetails | ModelsProblemDetails>(id: ModelsSalonId,
+    params?: SalonCrudGetHistoryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonCrudGetHistory>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ?? getSalonCrudGetHistoryQueryKey(id, params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof salonCrudGetHistory>>
-  > = ({ signal }) =>
-    salonCrudGetHistory(id, params, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getSalonCrudGetHistoryQueryKey(id,params);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!id,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof salonCrudGetHistory>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof salonCrudGetHistory>>> = ({ signal }) => salonCrudGetHistory(id,params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof salonCrudGetHistory>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type SalonCrudGetHistoryQueryResult = NonNullable<
-  Awaited<ReturnType<typeof salonCrudGetHistory>>
->
-export type SalonCrudGetHistoryQueryError =
-  | ModelsProblemDetails
-  | ModelsProblemDetails
+export type SalonCrudGetHistoryQueryResult = NonNullable<Awaited<ReturnType<typeof salonCrudGetHistory>>>
+export type SalonCrudGetHistoryQueryError = ModelsProblemDetails | ModelsProblemDetails
 
-export function useSalonCrudGetHistory<
-  TData = Awaited<ReturnType<typeof salonCrudGetHistory>>,
-  TError = ModelsProblemDetails | ModelsProblemDetails,
->(
-  id: ModelsSalonId,
-  params: undefined | SalonCrudGetHistoryParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonCrudGetHistory>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useSalonCrudGetHistory<TData = Awaited<ReturnType<typeof salonCrudGetHistory>>, TError = ModelsProblemDetails | ModelsProblemDetails>(
+ id: ModelsSalonId,
+    params: undefined |  SalonCrudGetHistoryParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonCrudGetHistory>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof salonCrudGetHistory>>,
           TError,
           Awaited<ReturnType<typeof salonCrudGetHistory>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSalonCrudGetHistory<
-  TData = Awaited<ReturnType<typeof salonCrudGetHistory>>,
-  TError = ModelsProblemDetails | ModelsProblemDetails,
->(
-  id: ModelsSalonId,
-  params?: SalonCrudGetHistoryParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonCrudGetHistory>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSalonCrudGetHistory<TData = Awaited<ReturnType<typeof salonCrudGetHistory>>, TError = ModelsProblemDetails | ModelsProblemDetails>(
+ id: ModelsSalonId,
+    params?: SalonCrudGetHistoryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonCrudGetHistory>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof salonCrudGetHistory>>,
           TError,
           Awaited<ReturnType<typeof salonCrudGetHistory>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSalonCrudGetHistory<
-  TData = Awaited<ReturnType<typeof salonCrudGetHistory>>,
-  TError = ModelsProblemDetails | ModelsProblemDetails,
->(
-  id: ModelsSalonId,
-  params?: SalonCrudGetHistoryParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonCrudGetHistory>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSalonCrudGetHistory<TData = Awaited<ReturnType<typeof salonCrudGetHistory>>, TError = ModelsProblemDetails | ModelsProblemDetails>(
+ id: ModelsSalonId,
+    params?: SalonCrudGetHistoryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonCrudGetHistory>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get {Name} audit history
  */
 
-export function useSalonCrudGetHistory<
-  TData = Awaited<ReturnType<typeof salonCrudGetHistory>>,
-  TError = ModelsProblemDetails | ModelsProblemDetails,
->(
-  id: ModelsSalonId,
-  params?: SalonCrudGetHistoryParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonCrudGetHistory>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getSalonCrudGetHistoryQueryOptions(id, params, options)
+export function useSalonCrudGetHistory<TData = Awaited<ReturnType<typeof salonCrudGetHistory>>, TError = ModelsProblemDetails | ModelsProblemDetails>(
+ id: ModelsSalonId,
+    params?: SalonCrudGetHistoryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonCrudGetHistory>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  const queryOptions = getSalonCrudGetHistoryQueryOptions(id,params,options)
 
-  query.queryKey = queryOptions.queryKey
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  return query
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
+
+
 
 /**
  * 掲載中のサロン画像を削除し、ブランドトーンの統一や情報更新を行います。
@@ -2719,112 +1878,83 @@ export type salonOperationsDeleteImageResponse404 = {
   data: ModelsProblemDetails
   status: 404
 }
+    
+export type salonOperationsDeleteImageResponseComposite = salonOperationsDeleteImageResponse204 | salonOperationsDeleteImageResponse401 | salonOperationsDeleteImageResponse404;
+    
+export type salonOperationsDeleteImageResponse = salonOperationsDeleteImageResponseComposite & {
+  headers: Headers;
+}
 
-export type salonOperationsDeleteImageResponseComposite =
-  | salonOperationsDeleteImageResponse204
-  | salonOperationsDeleteImageResponse401
-  | salonOperationsDeleteImageResponse404
+export const getSalonOperationsDeleteImageUrl = (id: ModelsSalonId,
+    imageId: string,) => {
 
-export type salonOperationsDeleteImageResponse =
-  salonOperationsDeleteImageResponseComposite & {
-    headers: Headers
-  }
 
-export const getSalonOperationsDeleteImageUrl = (
-  id: ModelsSalonId,
-  imageId: string
-) => {
+  
+
   return `/api/v1/salons/${id}/images/${imageId}`
 }
 
-export const salonOperationsDeleteImage = async (
-  id: ModelsSalonId,
-  imageId: string,
-  options?: RequestInit
-): Promise<salonOperationsDeleteImageResponse> => {
-  return customInstance<salonOperationsDeleteImageResponse>(
-    getSalonOperationsDeleteImageUrl(id, imageId),
-    {
-      ...options,
-      method: 'DELETE',
-    }
-  )
-}
-
-export const getSalonOperationsDeleteImageMutationOptions = <
-  TError = ModelsProblemDetails | ModelsProblemDetails,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof salonOperationsDeleteImage>>,
-    TError,
-    { id: ModelsSalonId; imageId: string },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof salonOperationsDeleteImage>>,
-  TError,
-  { id: ModelsSalonId; imageId: string },
-  TContext
-> => {
-  const mutationKey = ['salonOperationsDeleteImage']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof salonOperationsDeleteImage>>,
-    { id: ModelsSalonId; imageId: string }
-  > = (props) => {
-    const { id, imageId } = props ?? {}
-
-    return salonOperationsDeleteImage(id, imageId, requestOptions)
+export const salonOperationsDeleteImage = async (id: ModelsSalonId,
+    imageId: string, options?: RequestInit): Promise<salonOperationsDeleteImageResponse> => {
+  
+  return customInstance<salonOperationsDeleteImageResponse>(getSalonOperationsDeleteImageUrl(id,imageId),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type SalonOperationsDeleteImageMutationResult = NonNullable<
-  Awaited<ReturnType<typeof salonOperationsDeleteImage>>
->
 
-export type SalonOperationsDeleteImageMutationError =
-  | ModelsProblemDetails
-  | ModelsProblemDetails
 
-/**
+export const getSalonOperationsDeleteImageMutationOptions = <TError = ModelsProblemDetails | ModelsProblemDetails,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salonOperationsDeleteImage>>, TError,{id: ModelsSalonId;imageId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof salonOperationsDeleteImage>>, TError,{id: ModelsSalonId;imageId: string}, TContext> => {
+
+const mutationKey = ['salonOperationsDeleteImage'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof salonOperationsDeleteImage>>, {id: ModelsSalonId;imageId: string}> = (props) => {
+          const {id,imageId} = props ?? {};
+
+          return  salonOperationsDeleteImage(id,imageId,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SalonOperationsDeleteImageMutationResult = NonNullable<Awaited<ReturnType<typeof salonOperationsDeleteImage>>>
+    
+    export type SalonOperationsDeleteImageMutationError = ModelsProblemDetails | ModelsProblemDetails
+
+    /**
  * @summary Delete salon image
  */
-export const useSalonOperationsDeleteImage = <
-  TError = ModelsProblemDetails | ModelsProblemDetails,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof salonOperationsDeleteImage>>,
-      TError,
-      { id: ModelsSalonId; imageId: string },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof salonOperationsDeleteImage>>,
-  TError,
-  { id: ModelsSalonId; imageId: string },
-  TContext
-> => {
-  const mutationOptions = getSalonOperationsDeleteImageMutationOptions(options)
+export const useSalonOperationsDeleteImage = <TError = ModelsProblemDetails | ModelsProblemDetails,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salonOperationsDeleteImage>>, TError,{id: ModelsSalonId;imageId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof salonOperationsDeleteImage>>,
+        TError,
+        {id: ModelsSalonId;imageId: string},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getSalonOperationsDeleteImageMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 削除済みリソースを復元し、誤削除への迅速なリカバリを可能にします。
  * @summary Restore deleted {Name}
  */
@@ -2847,106 +1977,81 @@ export type salonCrudRestoreResponse409 = {
   data: ModelsProblemDetails
   status: 409
 }
-
-export type salonCrudRestoreResponseComposite =
-  | salonCrudRestoreResponse200
-  | salonCrudRestoreResponse401
-  | salonCrudRestoreResponse404
-  | salonCrudRestoreResponse409
-
+    
+export type salonCrudRestoreResponseComposite = salonCrudRestoreResponse200 | salonCrudRestoreResponse401 | salonCrudRestoreResponse404 | salonCrudRestoreResponse409;
+    
 export type salonCrudRestoreResponse = salonCrudRestoreResponseComposite & {
-  headers: Headers
+  headers: Headers;
 }
 
-export const getSalonCrudRestoreUrl = (id: ModelsSalonId) => {
+export const getSalonCrudRestoreUrl = (id: ModelsSalonId,) => {
+
+
+  
+
   return `/api/v1/salons/${id}/restore`
 }
 
-export const salonCrudRestore = async (
-  id: ModelsSalonId,
-  options?: RequestInit
-): Promise<salonCrudRestoreResponse> => {
-  return customInstance<salonCrudRestoreResponse>(getSalonCrudRestoreUrl(id), {
+export const salonCrudRestore = async (id: ModelsSalonId, options?: RequestInit): Promise<salonCrudRestoreResponse> => {
+  
+  return customInstance<salonCrudRestoreResponse>(getSalonCrudRestoreUrl(id),
+  {      
     ...options,
-    method: 'POST',
-  })
-}
-
-export const getSalonCrudRestoreMutationOptions = <
-  TError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof salonCrudRestore>>,
-    TError,
-    { id: ModelsSalonId },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof salonCrudRestore>>,
-  TError,
-  { id: ModelsSalonId },
-  TContext
-> => {
-  const mutationKey = ['salonCrudRestore']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof salonCrudRestore>>,
-    { id: ModelsSalonId }
-  > = (props) => {
-    const { id } = props ?? {}
-
-    return salonCrudRestore(id, requestOptions)
+    method: 'POST'
+    
+    
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type SalonCrudRestoreMutationResult = NonNullable<
-  Awaited<ReturnType<typeof salonCrudRestore>>
->
 
-export type SalonCrudRestoreMutationError =
-  | ModelsProblemDetails
-  | ModelsProblemDetails
-  | ModelsProblemDetails
 
-/**
+export const getSalonCrudRestoreMutationOptions = <TError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salonCrudRestore>>, TError,{id: ModelsSalonId}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof salonCrudRestore>>, TError,{id: ModelsSalonId}, TContext> => {
+
+const mutationKey = ['salonCrudRestore'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof salonCrudRestore>>, {id: ModelsSalonId}> = (props) => {
+          const {id} = props ?? {};
+
+          return  salonCrudRestore(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SalonCrudRestoreMutationResult = NonNullable<Awaited<ReturnType<typeof salonCrudRestore>>>
+    
+    export type SalonCrudRestoreMutationError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails
+
+    /**
  * @summary Restore deleted {Name}
  */
-export const useSalonCrudRestore = <
-  TError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof salonCrudRestore>>,
-      TError,
-      { id: ModelsSalonId },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof salonCrudRestore>>,
-  TError,
-  { id: ModelsSalonId },
-  TContext
-> => {
-  const mutationOptions = getSalonCrudRestoreMutationOptions(options)
+export const useSalonCrudRestore = <TError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salonCrudRestore>>, TError,{id: ModelsSalonId}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof salonCrudRestore>>,
+        TError,
+        {id: ModelsSalonId},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getSalonCrudRestoreMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * サロン所属スタッフのシフトを更新し、予約枠や勤怠管理との整合を取ります。
  * @summary Update staff schedule
  */
@@ -2974,149 +2079,85 @@ export type salonOperationsUpdateStaffScheduleResponse409 = {
   data: ModelsProblemDetails
   status: 409
 }
+    
+export type salonOperationsUpdateStaffScheduleResponseComposite = salonOperationsUpdateStaffScheduleResponse200 | salonOperationsUpdateStaffScheduleResponse400 | salonOperationsUpdateStaffScheduleResponse401 | salonOperationsUpdateStaffScheduleResponse404 | salonOperationsUpdateStaffScheduleResponse409;
+    
+export type salonOperationsUpdateStaffScheduleResponse = salonOperationsUpdateStaffScheduleResponseComposite & {
+  headers: Headers;
+}
 
-export type salonOperationsUpdateStaffScheduleResponseComposite =
-  | salonOperationsUpdateStaffScheduleResponse200
-  | salonOperationsUpdateStaffScheduleResponse400
-  | salonOperationsUpdateStaffScheduleResponse401
-  | salonOperationsUpdateStaffScheduleResponse404
-  | salonOperationsUpdateStaffScheduleResponse409
+export const getSalonOperationsUpdateStaffScheduleUrl = (id: ModelsSalonId,
+    staffId: ModelsStaffId,) => {
 
-export type salonOperationsUpdateStaffScheduleResponse =
-  salonOperationsUpdateStaffScheduleResponseComposite & {
-    headers: Headers
-  }
 
-export const getSalonOperationsUpdateStaffScheduleUrl = (
-  id: ModelsSalonId,
-  staffId: ModelsStaffId
-) => {
+  
+
   return `/api/v1/salons/${id}/staff/${staffId}/schedule`
 }
 
-export const salonOperationsUpdateStaffSchedule = async (
-  id: ModelsSalonId,
-  staffId: ModelsStaffId,
-  modelsStaffScheduleUpdateRequest: ModelsStaffScheduleUpdateRequest,
-  options?: RequestInit
-): Promise<salonOperationsUpdateStaffScheduleResponse> => {
-  return customInstance<salonOperationsUpdateStaffScheduleResponse>(
-    getSalonOperationsUpdateStaffScheduleUrl(id, staffId),
-    {
-      ...options,
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsStaffScheduleUpdateRequest),
-    }
-  )
-}
-
-export const getSalonOperationsUpdateStaffScheduleMutationOptions = <
-  TError =
-    | ModelsProblemDetails
-    | ModelsProblemDetails
-    | ModelsProblemDetails
-    | ModelsProblemDetails,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof salonOperationsUpdateStaffSchedule>>,
-    TError,
-    {
-      id: ModelsSalonId
-      staffId: ModelsStaffId
-      data: ModelsStaffScheduleUpdateRequest
-    },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof salonOperationsUpdateStaffSchedule>>,
-  TError,
-  {
-    id: ModelsSalonId
-    staffId: ModelsStaffId
-    data: ModelsStaffScheduleUpdateRequest
-  },
-  TContext
-> => {
-  const mutationKey = ['salonOperationsUpdateStaffSchedule']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof salonOperationsUpdateStaffSchedule>>,
-    {
-      id: ModelsSalonId
-      staffId: ModelsStaffId
-      data: ModelsStaffScheduleUpdateRequest
-    }
-  > = (props) => {
-    const { id, staffId, data } = props ?? {}
-
-    return salonOperationsUpdateStaffSchedule(id, staffId, data, requestOptions)
+export const salonOperationsUpdateStaffSchedule = async (id: ModelsSalonId,
+    staffId: ModelsStaffId,
+    modelsStaffScheduleUpdateRequest: ModelsStaffScheduleUpdateRequest, options?: RequestInit): Promise<salonOperationsUpdateStaffScheduleResponse> => {
+  
+  return customInstance<salonOperationsUpdateStaffScheduleResponse>(getSalonOperationsUpdateStaffScheduleUrl(id,staffId),
+  {      
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      modelsStaffScheduleUpdateRequest,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type SalonOperationsUpdateStaffScheduleMutationResult = NonNullable<
-  Awaited<ReturnType<typeof salonOperationsUpdateStaffSchedule>>
->
-export type SalonOperationsUpdateStaffScheduleMutationBody =
-  ModelsStaffScheduleUpdateRequest
-export type SalonOperationsUpdateStaffScheduleMutationError =
-  | ModelsProblemDetails
-  | ModelsProblemDetails
-  | ModelsProblemDetails
-  | ModelsProblemDetails
 
-/**
+
+export const getSalonOperationsUpdateStaffScheduleMutationOptions = <TError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salonOperationsUpdateStaffSchedule>>, TError,{id: ModelsSalonId;staffId: ModelsStaffId;data: ModelsStaffScheduleUpdateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof salonOperationsUpdateStaffSchedule>>, TError,{id: ModelsSalonId;staffId: ModelsStaffId;data: ModelsStaffScheduleUpdateRequest}, TContext> => {
+
+const mutationKey = ['salonOperationsUpdateStaffSchedule'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof salonOperationsUpdateStaffSchedule>>, {id: ModelsSalonId;staffId: ModelsStaffId;data: ModelsStaffScheduleUpdateRequest}> = (props) => {
+          const {id,staffId,data} = props ?? {};
+
+          return  salonOperationsUpdateStaffSchedule(id,staffId,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SalonOperationsUpdateStaffScheduleMutationResult = NonNullable<Awaited<ReturnType<typeof salonOperationsUpdateStaffSchedule>>>
+    export type SalonOperationsUpdateStaffScheduleMutationBody = ModelsStaffScheduleUpdateRequest
+    export type SalonOperationsUpdateStaffScheduleMutationError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails
+
+    /**
  * @summary Update staff schedule
  */
-export const useSalonOperationsUpdateStaffSchedule = <
-  TError =
-    | ModelsProblemDetails
-    | ModelsProblemDetails
-    | ModelsProblemDetails
-    | ModelsProblemDetails,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof salonOperationsUpdateStaffSchedule>>,
-      TError,
-      {
-        id: ModelsSalonId
-        staffId: ModelsStaffId
-        data: ModelsStaffScheduleUpdateRequest
-      },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof salonOperationsUpdateStaffSchedule>>,
-  TError,
-  {
-    id: ModelsSalonId
-    staffId: ModelsStaffId
-    data: ModelsStaffScheduleUpdateRequest
-  },
-  TContext
-> => {
-  const mutationOptions =
-    getSalonOperationsUpdateStaffScheduleMutationOptions(options)
+export const useSalonOperationsUpdateStaffSchedule = <TError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salonOperationsUpdateStaffSchedule>>, TError,{id: ModelsSalonId;staffId: ModelsStaffId;data: ModelsStaffScheduleUpdateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof salonOperationsUpdateStaffSchedule>>,
+        TError,
+        {id: ModelsSalonId;staffId: ModelsStaffId;data: ModelsStaffScheduleUpdateRequest},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getSalonOperationsUpdateStaffScheduleMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * サロンの売上や予約件数など主要指標を取得し、経営判断や施策検討に活用します。
  * @summary Get salon statistics
  */
@@ -3134,222 +2175,119 @@ export type salonOperationsGetStatisticsResponse404 = {
   data: ModelsProblemDetails
   status: 404
 }
+    
+export type salonOperationsGetStatisticsResponseComposite = salonOperationsGetStatisticsResponse200 | salonOperationsGetStatisticsResponse401 | salonOperationsGetStatisticsResponse404;
+    
+export type salonOperationsGetStatisticsResponse = salonOperationsGetStatisticsResponseComposite & {
+  headers: Headers;
+}
 
-export type salonOperationsGetStatisticsResponseComposite =
-  | salonOperationsGetStatisticsResponse200
-  | salonOperationsGetStatisticsResponse401
-  | salonOperationsGetStatisticsResponse404
-
-export type salonOperationsGetStatisticsResponse =
-  salonOperationsGetStatisticsResponseComposite & {
-    headers: Headers
-  }
-
-export const getSalonOperationsGetStatisticsUrl = (
-  id: ModelsSalonId,
-  params?: SalonOperationsGetStatisticsParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getSalonOperationsGetStatisticsUrl = (id: ModelsSalonId,
+    params?: SalonOperationsGetStatisticsParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v1/salons/${id}/statistics?${stringifiedParams}`
-    : `/api/v1/salons/${id}/statistics`
+  return stringifiedParams.length > 0 ? `/api/v1/salons/${id}/statistics?${stringifiedParams}` : `/api/v1/salons/${id}/statistics`
 }
 
-export const salonOperationsGetStatistics = async (
-  id: ModelsSalonId,
-  params?: SalonOperationsGetStatisticsParams,
-  options?: RequestInit
-): Promise<salonOperationsGetStatisticsResponse> => {
-  return customInstance<salonOperationsGetStatisticsResponse>(
-    getSalonOperationsGetStatisticsUrl(id, params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getSalonOperationsGetStatisticsQueryKey = (
-  id?: ModelsSalonId,
-  params?: SalonOperationsGetStatisticsParams
-) => {
-  return [
-    `/api/v1/salons/${id}/statistics`,
-    ...(params ? [params] : []),
-  ] as const
-}
-
-export const getSalonOperationsGetStatisticsQueryOptions = <
-  TData = Awaited<ReturnType<typeof salonOperationsGetStatistics>>,
-  TError = ModelsProblemDetails | ModelsProblemDetails,
->(
-  id: ModelsSalonId,
-  params?: SalonOperationsGetStatisticsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonOperationsGetStatistics>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const salonOperationsGetStatistics = async (id: ModelsSalonId,
+    params?: SalonOperationsGetStatisticsParams, options?: RequestInit): Promise<salonOperationsGetStatisticsResponse> => {
+  
+  return customInstance<salonOperationsGetStatisticsResponse>(getSalonOperationsGetStatisticsUrl(id,params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getSalonOperationsGetStatisticsQueryKey = (id?: ModelsSalonId,
+    params?: SalonOperationsGetStatisticsParams,) => {
+    return [`/api/v1/salons/${id}/statistics`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getSalonOperationsGetStatisticsQueryOptions = <TData = Awaited<ReturnType<typeof salonOperationsGetStatistics>>, TError = ModelsProblemDetails | ModelsProblemDetails>(id: ModelsSalonId,
+    params?: SalonOperationsGetStatisticsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonOperationsGetStatistics>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ??
-    getSalonOperationsGetStatisticsQueryKey(id, params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof salonOperationsGetStatistics>>
-  > = ({ signal }) =>
-    salonOperationsGetStatistics(id, params, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getSalonOperationsGetStatisticsQueryKey(id,params);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!id,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof salonOperationsGetStatistics>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof salonOperationsGetStatistics>>> = ({ signal }) => salonOperationsGetStatistics(id,params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof salonOperationsGetStatistics>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type SalonOperationsGetStatisticsQueryResult = NonNullable<
-  Awaited<ReturnType<typeof salonOperationsGetStatistics>>
->
-export type SalonOperationsGetStatisticsQueryError =
-  | ModelsProblemDetails
-  | ModelsProblemDetails
+export type SalonOperationsGetStatisticsQueryResult = NonNullable<Awaited<ReturnType<typeof salonOperationsGetStatistics>>>
+export type SalonOperationsGetStatisticsQueryError = ModelsProblemDetails | ModelsProblemDetails
 
-export function useSalonOperationsGetStatistics<
-  TData = Awaited<ReturnType<typeof salonOperationsGetStatistics>>,
-  TError = ModelsProblemDetails | ModelsProblemDetails,
->(
-  id: ModelsSalonId,
-  params: undefined | SalonOperationsGetStatisticsParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonOperationsGetStatistics>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useSalonOperationsGetStatistics<TData = Awaited<ReturnType<typeof salonOperationsGetStatistics>>, TError = ModelsProblemDetails | ModelsProblemDetails>(
+ id: ModelsSalonId,
+    params: undefined |  SalonOperationsGetStatisticsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonOperationsGetStatistics>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof salonOperationsGetStatistics>>,
           TError,
           Awaited<ReturnType<typeof salonOperationsGetStatistics>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSalonOperationsGetStatistics<
-  TData = Awaited<ReturnType<typeof salonOperationsGetStatistics>>,
-  TError = ModelsProblemDetails | ModelsProblemDetails,
->(
-  id: ModelsSalonId,
-  params?: SalonOperationsGetStatisticsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonOperationsGetStatistics>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSalonOperationsGetStatistics<TData = Awaited<ReturnType<typeof salonOperationsGetStatistics>>, TError = ModelsProblemDetails | ModelsProblemDetails>(
+ id: ModelsSalonId,
+    params?: SalonOperationsGetStatisticsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonOperationsGetStatistics>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof salonOperationsGetStatistics>>,
           TError,
           Awaited<ReturnType<typeof salonOperationsGetStatistics>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSalonOperationsGetStatistics<
-  TData = Awaited<ReturnType<typeof salonOperationsGetStatistics>>,
-  TError = ModelsProblemDetails | ModelsProblemDetails,
->(
-  id: ModelsSalonId,
-  params?: SalonOperationsGetStatisticsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonOperationsGetStatistics>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSalonOperationsGetStatistics<TData = Awaited<ReturnType<typeof salonOperationsGetStatistics>>, TError = ModelsProblemDetails | ModelsProblemDetails>(
+ id: ModelsSalonId,
+    params?: SalonOperationsGetStatisticsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonOperationsGetStatistics>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get salon statistics
  */
 
-export function useSalonOperationsGetStatistics<
-  TData = Awaited<ReturnType<typeof salonOperationsGetStatistics>>,
-  TError = ModelsProblemDetails | ModelsProblemDetails,
->(
-  id: ModelsSalonId,
-  params?: SalonOperationsGetStatisticsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonOperationsGetStatistics>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getSalonOperationsGetStatisticsQueryOptions(
-    id,
-    params,
-    options
-  )
+export function useSalonOperationsGetStatistics<TData = Awaited<ReturnType<typeof salonOperationsGetStatistics>>, TError = ModelsProblemDetails | ModelsProblemDetails>(
+ id: ModelsSalonId,
+    params?: SalonOperationsGetStatisticsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonOperationsGetStatistics>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  const queryOptions = getSalonOperationsGetStatisticsQueryOptions(id,params,options)
 
-  query.queryKey = queryOptions.queryKey
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  return query
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
+
+
 
 /**
  * サロンのニュースやキャンペーン更新を購読登録し、ロイヤル顧客との接点を強化します。
@@ -3379,124 +2317,83 @@ export type salonOperationsSubscribeResponse409 = {
   data: ModelsProblemDetails
   status: 409
 }
+    
+export type salonOperationsSubscribeResponseComposite = salonOperationsSubscribeResponse201 | salonOperationsSubscribeResponse400 | salonOperationsSubscribeResponse401 | salonOperationsSubscribeResponse404 | salonOperationsSubscribeResponse409;
+    
+export type salonOperationsSubscribeResponse = salonOperationsSubscribeResponseComposite & {
+  headers: Headers;
+}
 
-export type salonOperationsSubscribeResponseComposite =
-  | salonOperationsSubscribeResponse201
-  | salonOperationsSubscribeResponse400
-  | salonOperationsSubscribeResponse401
-  | salonOperationsSubscribeResponse404
-  | salonOperationsSubscribeResponse409
+export const getSalonOperationsSubscribeUrl = (id: ModelsSalonId,) => {
 
-export type salonOperationsSubscribeResponse =
-  salonOperationsSubscribeResponseComposite & {
-    headers: Headers
-  }
 
-export const getSalonOperationsSubscribeUrl = (id: ModelsSalonId) => {
+  
+
   return `/api/v1/salons/${id}/subscribe`
 }
 
-export const salonOperationsSubscribe = async (
-  id: ModelsSalonId,
-  modelsSalonSubscriptionRequest: ModelsSalonSubscriptionRequest,
-  options?: RequestInit
-): Promise<salonOperationsSubscribeResponse> => {
-  return customInstance<salonOperationsSubscribeResponse>(
-    getSalonOperationsSubscribeUrl(id),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsSalonSubscriptionRequest),
-    }
-  )
-}
-
-export const getSalonOperationsSubscribeMutationOptions = <
-  TError =
-    | ModelsProblemDetails
-    | ModelsProblemDetails
-    | ModelsProblemDetails
-    | ModelsProblemDetails,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof salonOperationsSubscribe>>,
-    TError,
-    { id: ModelsSalonId; data: ModelsSalonSubscriptionRequest },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof salonOperationsSubscribe>>,
-  TError,
-  { id: ModelsSalonId; data: ModelsSalonSubscriptionRequest },
-  TContext
-> => {
-  const mutationKey = ['salonOperationsSubscribe']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof salonOperationsSubscribe>>,
-    { id: ModelsSalonId; data: ModelsSalonSubscriptionRequest }
-  > = (props) => {
-    const { id, data } = props ?? {}
-
-    return salonOperationsSubscribe(id, data, requestOptions)
+export const salonOperationsSubscribe = async (id: ModelsSalonId,
+    modelsSalonSubscriptionRequest: ModelsSalonSubscriptionRequest, options?: RequestInit): Promise<salonOperationsSubscribeResponse> => {
+  
+  return customInstance<salonOperationsSubscribeResponse>(getSalonOperationsSubscribeUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      modelsSalonSubscriptionRequest,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type SalonOperationsSubscribeMutationResult = NonNullable<
-  Awaited<ReturnType<typeof salonOperationsSubscribe>>
->
-export type SalonOperationsSubscribeMutationBody =
-  ModelsSalonSubscriptionRequest
-export type SalonOperationsSubscribeMutationError =
-  | ModelsProblemDetails
-  | ModelsProblemDetails
-  | ModelsProblemDetails
-  | ModelsProblemDetails
 
-/**
+
+export const getSalonOperationsSubscribeMutationOptions = <TError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salonOperationsSubscribe>>, TError,{id: ModelsSalonId;data: ModelsSalonSubscriptionRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof salonOperationsSubscribe>>, TError,{id: ModelsSalonId;data: ModelsSalonSubscriptionRequest}, TContext> => {
+
+const mutationKey = ['salonOperationsSubscribe'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof salonOperationsSubscribe>>, {id: ModelsSalonId;data: ModelsSalonSubscriptionRequest}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  salonOperationsSubscribe(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SalonOperationsSubscribeMutationResult = NonNullable<Awaited<ReturnType<typeof salonOperationsSubscribe>>>
+    export type SalonOperationsSubscribeMutationBody = ModelsSalonSubscriptionRequest
+    export type SalonOperationsSubscribeMutationError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails
+
+    /**
  * @summary Subscribe to salon updates
  */
-export const useSalonOperationsSubscribe = <
-  TError =
-    | ModelsProblemDetails
-    | ModelsProblemDetails
-    | ModelsProblemDetails
-    | ModelsProblemDetails,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof salonOperationsSubscribe>>,
-      TError,
-      { id: ModelsSalonId; data: ModelsSalonSubscriptionRequest },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof salonOperationsSubscribe>>,
-  TError,
-  { id: ModelsSalonId; data: ModelsSalonSubscriptionRequest },
-  TContext
-> => {
-  const mutationOptions = getSalonOperationsSubscribeMutationOptions(options)
+export const useSalonOperationsSubscribe = <TError = ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails | ModelsProblemDetails,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salonOperationsSubscribe>>, TError,{id: ModelsSalonId;data: ModelsSalonSubscriptionRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof salonOperationsSubscribe>>,
+        TError,
+        {id: ModelsSalonId;data: ModelsSalonSubscriptionRequest},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getSalonOperationsSubscribeMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 指定したバージョンのリソース状態を取得し、過去状態の確認や比較に利用します。
  * @summary Get {Name} version
  */
@@ -3514,199 +2411,110 @@ export type salonCrudGetVersionResponse404 = {
   data: ModelsProblemDetails
   status: 404
 }
+    
+export type salonCrudGetVersionResponseComposite = salonCrudGetVersionResponse200 | salonCrudGetVersionResponse401 | salonCrudGetVersionResponse404;
+    
+export type salonCrudGetVersionResponse = salonCrudGetVersionResponseComposite & {
+  headers: Headers;
+}
 
-export type salonCrudGetVersionResponseComposite =
-  | salonCrudGetVersionResponse200
-  | salonCrudGetVersionResponse401
-  | salonCrudGetVersionResponse404
+export const getSalonCrudGetVersionUrl = (id: ModelsSalonId,
+    version: number,) => {
 
-export type salonCrudGetVersionResponse =
-  salonCrudGetVersionResponseComposite & {
-    headers: Headers
-  }
 
-export const getSalonCrudGetVersionUrl = (
-  id: ModelsSalonId,
-  version: number
-) => {
+  
+
   return `/api/v1/salons/${id}/versions/${version}`
 }
 
-export const salonCrudGetVersion = async (
-  id: ModelsSalonId,
-  version: number,
-  options?: RequestInit
-): Promise<salonCrudGetVersionResponse> => {
-  return customInstance<salonCrudGetVersionResponse>(
-    getSalonCrudGetVersionUrl(id, version),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getSalonCrudGetVersionQueryKey = (
-  id?: ModelsSalonId,
-  version?: number
-) => {
-  return [`/api/v1/salons/${id}/versions/${version}`] as const
-}
-
-export const getSalonCrudGetVersionQueryOptions = <
-  TData = Awaited<ReturnType<typeof salonCrudGetVersion>>,
-  TError = ModelsProblemDetails | ModelsProblemDetails,
->(
-  id: ModelsSalonId,
-  version: number,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonCrudGetVersion>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const salonCrudGetVersion = async (id: ModelsSalonId,
+    version: number, options?: RequestInit): Promise<salonCrudGetVersionResponse> => {
+  
+  return customInstance<salonCrudGetVersionResponse>(getSalonCrudGetVersionUrl(id,version),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getSalonCrudGetVersionQueryKey = (id?: ModelsSalonId,
+    version?: number,) => {
+    return [`/api/v1/salons/${id}/versions/${version}`] as const;
+    }
+
+    
+export const getSalonCrudGetVersionQueryOptions = <TData = Awaited<ReturnType<typeof salonCrudGetVersion>>, TError = ModelsProblemDetails | ModelsProblemDetails>(id: ModelsSalonId,
+    version: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonCrudGetVersion>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ?? getSalonCrudGetVersionQueryKey(id, version)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof salonCrudGetVersion>>
-  > = ({ signal }) =>
-    salonCrudGetVersion(id, version, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getSalonCrudGetVersionQueryKey(id,version);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!(id && version),
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof salonCrudGetVersion>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof salonCrudGetVersion>>> = ({ signal }) => salonCrudGetVersion(id,version, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id && version), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof salonCrudGetVersion>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type SalonCrudGetVersionQueryResult = NonNullable<
-  Awaited<ReturnType<typeof salonCrudGetVersion>>
->
-export type SalonCrudGetVersionQueryError =
-  | ModelsProblemDetails
-  | ModelsProblemDetails
+export type SalonCrudGetVersionQueryResult = NonNullable<Awaited<ReturnType<typeof salonCrudGetVersion>>>
+export type SalonCrudGetVersionQueryError = ModelsProblemDetails | ModelsProblemDetails
 
-export function useSalonCrudGetVersion<
-  TData = Awaited<ReturnType<typeof salonCrudGetVersion>>,
-  TError = ModelsProblemDetails | ModelsProblemDetails,
->(
-  id: ModelsSalonId,
-  version: number,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonCrudGetVersion>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useSalonCrudGetVersion<TData = Awaited<ReturnType<typeof salonCrudGetVersion>>, TError = ModelsProblemDetails | ModelsProblemDetails>(
+ id: ModelsSalonId,
+    version: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonCrudGetVersion>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof salonCrudGetVersion>>,
           TError,
           Awaited<ReturnType<typeof salonCrudGetVersion>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSalonCrudGetVersion<
-  TData = Awaited<ReturnType<typeof salonCrudGetVersion>>,
-  TError = ModelsProblemDetails | ModelsProblemDetails,
->(
-  id: ModelsSalonId,
-  version: number,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonCrudGetVersion>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSalonCrudGetVersion<TData = Awaited<ReturnType<typeof salonCrudGetVersion>>, TError = ModelsProblemDetails | ModelsProblemDetails>(
+ id: ModelsSalonId,
+    version: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonCrudGetVersion>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof salonCrudGetVersion>>,
           TError,
           Awaited<ReturnType<typeof salonCrudGetVersion>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSalonCrudGetVersion<
-  TData = Awaited<ReturnType<typeof salonCrudGetVersion>>,
-  TError = ModelsProblemDetails | ModelsProblemDetails,
->(
-  id: ModelsSalonId,
-  version: number,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonCrudGetVersion>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSalonCrudGetVersion<TData = Awaited<ReturnType<typeof salonCrudGetVersion>>, TError = ModelsProblemDetails | ModelsProblemDetails>(
+ id: ModelsSalonId,
+    version: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonCrudGetVersion>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get {Name} version
  */
 
-export function useSalonCrudGetVersion<
-  TData = Awaited<ReturnType<typeof salonCrudGetVersion>>,
-  TError = ModelsProblemDetails | ModelsProblemDetails,
->(
-  id: ModelsSalonId,
-  version: number,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salonCrudGetVersion>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getSalonCrudGetVersionQueryOptions(id, version, options)
+export function useSalonCrudGetVersion<TData = Awaited<ReturnType<typeof salonCrudGetVersion>>, TError = ModelsProblemDetails | ModelsProblemDetails>(
+ id: ModelsSalonId,
+    version: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salonCrudGetVersion>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  const queryOptions = getSalonCrudGetVersionQueryOptions(id,version,options)
 
-  query.queryKey = queryOptions.queryKey
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  return query
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
+
+
+

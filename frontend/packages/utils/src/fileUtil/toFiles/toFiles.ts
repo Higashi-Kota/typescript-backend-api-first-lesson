@@ -4,7 +4,7 @@
  * @returns Array of File objects
  */
 export const toFiles = (
-  input: File | FileList | File[] | null | undefined
+  input: File | FileList | File[] | null | undefined,
 ): File[] => {
   if (input == null) {
     return []

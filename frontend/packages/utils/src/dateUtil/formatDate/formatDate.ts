@@ -14,7 +14,7 @@ import type { AllowFormatValue } from '../types'
 export const formatDate = (
   date: Date | string,
   formatString: AllowFormatValue = 'yyyy-MM-dd',
-  preserveUTC = true
+  preserveUTC = true,
 ): string => {
   // 文字列かつUTC保持モードの場合
   if (typeof date === 'string' && preserveUTC) {

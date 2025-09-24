@@ -8,7 +8,7 @@
 
 export type CustomerOperationsRequestDeletionBody = {
   /** 削除を希望する理由 */
-  reason: string
+  reason: string;
   /** 削除に伴う影響を理解しているか */
-  confirmed: boolean
-}
+  confirmed: boolean;
+};

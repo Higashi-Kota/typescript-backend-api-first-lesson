@@ -9,4 +9,4 @@
 /**
  * アクセス許可や操作権限を識別するブランド付きUUID。
  */
-export type ModelsPermissionId = string
+export type ModelsPermissionId = string;

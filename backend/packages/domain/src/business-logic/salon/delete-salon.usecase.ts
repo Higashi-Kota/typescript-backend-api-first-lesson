@@ -1,14 +1,14 @@
 import { Result } from '@beauty-salon-backend/utility'
 import type { SalonId } from '../../models/salon'
-import { DomainErrors } from '../../shared'
 import type { DomainError } from '../../shared'
+import { DomainErrors } from '../../shared'
 import { BaseSalonUseCase } from './_shared/base-salon.usecase'
 
 export class DeleteSalonUseCase extends BaseSalonUseCase {
   async execute(id: SalonId): Promise<Result<boolean, DomainError>> {
     if (!this.isValidUuid(id)) {
       return Result.error(
-        DomainErrors.validation('Invalid salon ID format', 'INVALID_SALON_ID')
+        DomainErrors.validation('Invalid salon ID format', 'INVALID_SALON_ID'),
       )
     }
 

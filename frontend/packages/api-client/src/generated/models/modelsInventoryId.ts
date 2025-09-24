@@ -9,4 +9,4 @@
 /**
  * 在庫アイテムや消耗品を識別するブランド付きUUID。
  */
-export type ModelsInventoryId = string
+export type ModelsInventoryId = string;

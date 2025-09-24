@@ -6,7 +6,7 @@ import type {
 
 export interface SessionFactory {
   retrieveAuthedUserSession(
-    payload: InputRetrieveAuthedUserSession
+    payload: InputRetrieveAuthedUserSession,
   ): OutputRetrieveAuthedUserSession
 }
 

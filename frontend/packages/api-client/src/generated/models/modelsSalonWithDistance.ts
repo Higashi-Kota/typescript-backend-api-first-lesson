@@ -5,30 +5,25 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsSalon } from './modelsSalon'
+import type { ModelsSalon } from './modelsSalon';
 
 /**
  * 検索基準地点からの距離情報を付与したサロンモデル
  */
 export type ModelsSalonWithDistance = ModelsSalon & {
   /** 基準地点からの距離（km） */
-  distance: number
+  distance: number;
   /**
    * 想定移動時間（分）。計算不可の場合はnull
    * @nullable
    */
-  travelTime: number | null
-} & Required<
-    Pick<
-      ModelsSalon & {
-        /** 基準地点からの距離（km） */
-        distance: number
-        /**
-         * 想定移動時間（分）。計算不可の場合はnull
-         * @nullable
-         */
-        travelTime: number | null
-      },
-      'distance' | 'travelTime'
-    >
-  >
+  travelTime: number | null;
+} & Required<Pick<ModelsSalon & {
+  /** 基準地点からの距離（km） */
+  distance: number;
+  /**
+   * 想定移動時間（分）。計算不可の場合はnull
+   * @nullable
+   */
+  travelTime: number | null;
+}, 'distance' | 'travelTime'>>;

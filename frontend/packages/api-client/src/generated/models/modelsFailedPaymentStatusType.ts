@@ -9,10 +9,10 @@
 /**
  * 状態種別（failed 固定値）
  */
-export type ModelsFailedPaymentStatusType =
-  (typeof ModelsFailedPaymentStatusType)[keyof typeof ModelsFailedPaymentStatusType]
+export type ModelsFailedPaymentStatusType = typeof ModelsFailedPaymentStatusType[keyof typeof ModelsFailedPaymentStatusType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsFailedPaymentStatusType = {
   failed: 'failed',
-} as const
+} as const;

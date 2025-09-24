@@ -40,7 +40,7 @@ export interface FetchAuthSessionOptions {
 }
 
 export async function fetchAuthSession(
-  _options?: FetchAuthSessionOptions
+  _options?: FetchAuthSessionOptions,
 ): Promise<AuthSession> {
   // Skeleton implementation - returns mock session data
   const mockJWT: JWT = {

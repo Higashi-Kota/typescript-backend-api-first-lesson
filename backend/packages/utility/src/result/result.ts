@@ -14,7 +14,7 @@ export const Result = {
   },
 
   isSuccess<T, E>(
-    result: Result<T, E>
+    result: Result<T, E>,
   ): result is { type: 'success'; data: T } {
     return result.type === 'success'
   },
@@ -39,7 +39,7 @@ export const Result = {
 
   flatMap<T, E, U>(
     result: Result<T, E>,
-    fn: (data: T) => Result<U, E>
+    fn: (data: T) => Result<U, E>,
   ): Result<U, E> {
     return match(result)
       .with({ type: 'success' }, ({ data }) => fn(data))
@@ -53,7 +53,7 @@ export const Result = {
       return Result.success(data)
     } catch (error) {
       return Result.error(
-        error instanceof Error ? error : new Error(String(error))
+        error instanceof Error ? error : new Error(String(error)),
       )
     }
   },
@@ -63,7 +63,7 @@ export const Result = {
       .with({ type: 'success' }, ({ data }) => data)
       .with({ type: 'error' }, ({ error }) => {
         throw new Error(
-          `Attempted to unwrap an error result: ${JSON.stringify(error)}`
+          `Attempted to unwrap an error result: ${JSON.stringify(error)}`,
         )
       })
       .exhaustive()

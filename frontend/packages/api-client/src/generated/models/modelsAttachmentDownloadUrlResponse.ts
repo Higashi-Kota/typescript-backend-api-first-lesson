@@ -11,7 +11,7 @@
  */
 export interface ModelsAttachmentDownloadUrlResponse {
   /** 一時的に有効なダウンロード用URL。 */
-  downloadUrl: string
+  downloadUrl: string;
   /** 署名付きURLの有効期限。 */
-  expiresAt: string
+  expiresAt: string;
 }

@@ -9,10 +9,10 @@
 /**
  * 固定値confirmed。確定状態であることを示す。
  */
-export type ModelsConfirmedBookingStatusUpdateType =
-  (typeof ModelsConfirmedBookingStatusUpdateType)[keyof typeof ModelsConfirmedBookingStatusUpdateType]
+export type ModelsConfirmedBookingStatusUpdateType = typeof ModelsConfirmedBookingStatusUpdateType[keyof typeof ModelsConfirmedBookingStatusUpdateType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsConfirmedBookingStatusUpdateType = {
   confirmed: 'confirmed',
-} as const
+} as const;

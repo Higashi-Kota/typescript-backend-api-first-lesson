@@ -10,4 +10,4 @@
  * 期待される値や制約条件。入力補助やUI表示のガイダンスに使用する。制約が明示不要な場合はnull
  * @nullable
  */
-export type ModelsValidationErrorConstraint = unknown | null
+export type ModelsValidationErrorConstraint = unknown | null;

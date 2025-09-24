@@ -7,5 +7,5 @@
  */
 
 export type SystemOperationsReady200 = {
-  ready: boolean
-}
+  ready: boolean;
+};

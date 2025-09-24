@@ -6,10 +6,10 @@
  * OpenAPI spec version: 2.0
  */
 
-export type ModelsDomainErrorFactoryUnauthorizedDefaultCode =
-  (typeof ModelsDomainErrorFactoryUnauthorizedDefaultCode)[keyof typeof ModelsDomainErrorFactoryUnauthorizedDefaultCode]
+export type ModelsDomainErrorFactoryUnauthorizedDefaultCode = typeof ModelsDomainErrorFactoryUnauthorizedDefaultCode[keyof typeof ModelsDomainErrorFactoryUnauthorizedDefaultCode];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsDomainErrorFactoryUnauthorizedDefaultCode = {
   AUTHENTICATION_REQUIRED: 'AUTHENTICATION_REQUIRED',
-} as const
+} as const;

@@ -9,10 +9,10 @@
 /**
  * 状態種別（processing 固定値）
  */
-export type ModelsProcessingPaymentStatusType =
-  (typeof ModelsProcessingPaymentStatusType)[keyof typeof ModelsProcessingPaymentStatusType]
+export type ModelsProcessingPaymentStatusType = typeof ModelsProcessingPaymentStatusType[keyof typeof ModelsProcessingPaymentStatusType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsProcessingPaymentStatusType = {
   processing: 'processing',
-} as const
+} as const;

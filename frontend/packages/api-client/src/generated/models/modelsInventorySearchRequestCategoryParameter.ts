@@ -9,4 +9,4 @@
 /**
  * カテゴリでの絞り込み
  */
-export type ModelsInventorySearchRequestCategoryParameter = string
+export type ModelsInventorySearchRequestCategoryParameter = string;

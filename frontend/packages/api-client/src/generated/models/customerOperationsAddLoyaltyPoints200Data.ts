@@ -11,7 +11,7 @@
  */
 export type CustomerOperationsAddLoyaltyPoints200Data = {
   /** 更新後のポイント残高 */
-  balance: number
+  balance: number;
   /** トランザクションID */
-  transactionId: string
-}
+  transactionId: string;
+};

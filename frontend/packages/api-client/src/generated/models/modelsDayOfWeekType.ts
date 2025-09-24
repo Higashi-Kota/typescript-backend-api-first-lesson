@@ -17,8 +17,8 @@ friday: 金曜日
 saturday: 土曜日
 sunday: 日曜日
  */
-export type ModelsDayOfWeekType =
-  (typeof ModelsDayOfWeekType)[keyof typeof ModelsDayOfWeekType]
+export type ModelsDayOfWeekType = typeof ModelsDayOfWeekType[keyof typeof ModelsDayOfWeekType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsDayOfWeekType = {
@@ -29,4 +29,4 @@ export const ModelsDayOfWeekType = {
   friday: 'friday',
   saturday: 'saturday',
   sunday: 'sunday',
-} as const
+} as const;

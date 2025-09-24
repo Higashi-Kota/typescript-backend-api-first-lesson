@@ -5,7 +5,10 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import { useMutation, useQuery } from '@tanstack/react-query'
+import {
+  useMutation,
+  useQuery
+} from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -18,8 +21,8 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult,
-} from '@tanstack/react-query'
+  UseQueryResult
+} from '@tanstack/react-query';
 
 import type {
   SalesReportOperationsExportSalesReport200,
@@ -33,16 +36,19 @@ import type {
   SalesReportOperationsGetSalesReport200,
   SalesReportOperationsGetSalesReportParams,
   SalesReportOperationsGetSalesTrends200,
-  SalesReportOperationsGetSalesTrendsParams,
-} from '../../models'
+  SalesReportOperationsGetSalesTrendsParams
+} from '../../models';
 
-import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher'
+import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher';
 
-type AwaitedInput<T> = PromiseLike<T> | T
+type AwaitedInput<T> = PromiseLike<T> | T;
 
-type Awaited<O> = O extends AwaitedInput<infer T> ? T : never
+      type Awaited<O> = O extends AwaitedInput<infer T> ? T : never;
 
-type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
+
 
 /**
  * Get sales report for a period
@@ -51,198 +57,108 @@ export type salesReportOperationsGetSalesReportResponse200 = {
   data: SalesReportOperationsGetSalesReport200
   status: 200
 }
+    
+export type salesReportOperationsGetSalesReportResponseComposite = salesReportOperationsGetSalesReportResponse200;
+    
+export type salesReportOperationsGetSalesReportResponse = salesReportOperationsGetSalesReportResponseComposite & {
+  headers: Headers;
+}
 
-export type salesReportOperationsGetSalesReportResponseComposite =
-  salesReportOperationsGetSalesReportResponse200
-
-export type salesReportOperationsGetSalesReportResponse =
-  salesReportOperationsGetSalesReportResponseComposite & {
-    headers: Headers
-  }
-
-export const getSalesReportOperationsGetSalesReportUrl = (
-  params: SalesReportOperationsGetSalesReportParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getSalesReportOperationsGetSalesReportUrl = (params: SalesReportOperationsGetSalesReportParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/sales-reports?${stringifiedParams}`
-    : `/sales-reports`
+  return stringifiedParams.length > 0 ? `/sales-reports?${stringifiedParams}` : `/sales-reports`
 }
 
-export const salesReportOperationsGetSalesReport = async (
-  params: SalesReportOperationsGetSalesReportParams,
-  options?: RequestInit
-): Promise<salesReportOperationsGetSalesReportResponse> => {
-  return customInstance<salesReportOperationsGetSalesReportResponse>(
-    getSalesReportOperationsGetSalesReportUrl(params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getSalesReportOperationsGetSalesReportQueryKey = (
-  params?: SalesReportOperationsGetSalesReportParams
-) => {
-  return [`/sales-reports`, ...(params ? [params] : [])] as const
-}
-
-export const getSalesReportOperationsGetSalesReportQueryOptions = <
-  TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>,
-  TError = unknown,
->(
-  params: SalesReportOperationsGetSalesReportParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const salesReportOperationsGetSalesReport = async (params: SalesReportOperationsGetSalesReportParams, options?: RequestInit): Promise<salesReportOperationsGetSalesReportResponse> => {
+  
+  return customInstance<salesReportOperationsGetSalesReportResponse>(getSalesReportOperationsGetSalesReportUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getSalesReportOperationsGetSalesReportQueryKey = (params?: SalesReportOperationsGetSalesReportParams,) => {
+    return [`/sales-reports`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getSalesReportOperationsGetSalesReportQueryOptions = <TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>, TError = unknown>(params: SalesReportOperationsGetSalesReportParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ??
-    getSalesReportOperationsGetSalesReportQueryKey(params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>
-  > = ({ signal }) =>
-    salesReportOperationsGetSalesReport(params, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getSalesReportOperationsGetSalesReportQueryKey(params);
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>> = ({ signal }) => salesReportOperationsGetSalesReport(params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type SalesReportOperationsGetSalesReportQueryResult = NonNullable<
-  Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>
->
+export type SalesReportOperationsGetSalesReportQueryResult = NonNullable<Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>>
 export type SalesReportOperationsGetSalesReportQueryError = unknown
 
-export function useSalesReportOperationsGetSalesReport<
-  TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>,
-  TError = unknown,
->(
-  params: SalesReportOperationsGetSalesReportParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useSalesReportOperationsGetSalesReport<TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>, TError = unknown>(
+ params: SalesReportOperationsGetSalesReportParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>,
           TError,
           Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSalesReportOperationsGetSalesReport<
-  TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>,
-  TError = unknown,
->(
-  params: SalesReportOperationsGetSalesReportParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSalesReportOperationsGetSalesReport<TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>, TError = unknown>(
+ params: SalesReportOperationsGetSalesReportParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>,
           TError,
           Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSalesReportOperationsGetSalesReport<
-  TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>,
-  TError = unknown,
->(
-  params: SalesReportOperationsGetSalesReportParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSalesReportOperationsGetSalesReport<TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>, TError = unknown>(
+ params: SalesReportOperationsGetSalesReportParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useSalesReportOperationsGetSalesReport<TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>, TError = unknown>(
+ params: SalesReportOperationsGetSalesReportParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getSalesReportOperationsGetSalesReportQueryOptions(params,options)
+
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
 
-export function useSalesReportOperationsGetSalesReport<
-  TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>,
-  TError = unknown,
->(
-  params: SalesReportOperationsGetSalesReportParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salesReportOperationsGetSalesReport>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getSalesReportOperationsGetSalesReportQueryOptions(
-    params,
-    options
-  )
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-
-  query.queryKey = queryOptions.queryKey
-
-  return query
-}
 
 /**
  * Get sales by service category
@@ -251,201 +167,108 @@ export type salesReportOperationsGetSalesByCategoryResponse200 = {
   data: SalesReportOperationsGetSalesByCategory200
   status: 200
 }
+    
+export type salesReportOperationsGetSalesByCategoryResponseComposite = salesReportOperationsGetSalesByCategoryResponse200;
+    
+export type salesReportOperationsGetSalesByCategoryResponse = salesReportOperationsGetSalesByCategoryResponseComposite & {
+  headers: Headers;
+}
 
-export type salesReportOperationsGetSalesByCategoryResponseComposite =
-  salesReportOperationsGetSalesByCategoryResponse200
-
-export type salesReportOperationsGetSalesByCategoryResponse =
-  salesReportOperationsGetSalesByCategoryResponseComposite & {
-    headers: Headers
-  }
-
-export const getSalesReportOperationsGetSalesByCategoryUrl = (
-  params: SalesReportOperationsGetSalesByCategoryParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getSalesReportOperationsGetSalesByCategoryUrl = (params: SalesReportOperationsGetSalesByCategoryParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/sales-reports/by-category?${stringifiedParams}`
-    : `/sales-reports/by-category`
+  return stringifiedParams.length > 0 ? `/sales-reports/by-category?${stringifiedParams}` : `/sales-reports/by-category`
 }
 
-export const salesReportOperationsGetSalesByCategory = async (
-  params: SalesReportOperationsGetSalesByCategoryParams,
-  options?: RequestInit
-): Promise<salesReportOperationsGetSalesByCategoryResponse> => {
-  return customInstance<salesReportOperationsGetSalesByCategoryResponse>(
-    getSalesReportOperationsGetSalesByCategoryUrl(params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getSalesReportOperationsGetSalesByCategoryQueryKey = (
-  params?: SalesReportOperationsGetSalesByCategoryParams
-) => {
-  return [`/sales-reports/by-category`, ...(params ? [params] : [])] as const
-}
-
-export const getSalesReportOperationsGetSalesByCategoryQueryOptions = <
-  TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesByCategory>>,
-  TError = unknown,
->(
-  params: SalesReportOperationsGetSalesByCategoryParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salesReportOperationsGetSalesByCategory>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const salesReportOperationsGetSalesByCategory = async (params: SalesReportOperationsGetSalesByCategoryParams, options?: RequestInit): Promise<salesReportOperationsGetSalesByCategoryResponse> => {
+  
+  return customInstance<salesReportOperationsGetSalesByCategoryResponse>(getSalesReportOperationsGetSalesByCategoryUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getSalesReportOperationsGetSalesByCategoryQueryKey = (params?: SalesReportOperationsGetSalesByCategoryParams,) => {
+    return [`/sales-reports/by-category`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getSalesReportOperationsGetSalesByCategoryQueryOptions = <TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesByCategory>>, TError = unknown>(params: SalesReportOperationsGetSalesByCategoryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salesReportOperationsGetSalesByCategory>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ??
-    getSalesReportOperationsGetSalesByCategoryQueryKey(params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof salesReportOperationsGetSalesByCategory>>
-  > = ({ signal }) =>
-    salesReportOperationsGetSalesByCategory(params, {
-      signal,
-      ...requestOptions,
-    })
+  const queryKey =  queryOptions?.queryKey ?? getSalesReportOperationsGetSalesByCategoryQueryKey(params);
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof salesReportOperationsGetSalesByCategory>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof salesReportOperationsGetSalesByCategory>>> = ({ signal }) => salesReportOperationsGetSalesByCategory(params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof salesReportOperationsGetSalesByCategory>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type SalesReportOperationsGetSalesByCategoryQueryResult = NonNullable<
-  Awaited<ReturnType<typeof salesReportOperationsGetSalesByCategory>>
->
+export type SalesReportOperationsGetSalesByCategoryQueryResult = NonNullable<Awaited<ReturnType<typeof salesReportOperationsGetSalesByCategory>>>
 export type SalesReportOperationsGetSalesByCategoryQueryError = unknown
 
-export function useSalesReportOperationsGetSalesByCategory<
-  TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesByCategory>>,
-  TError = unknown,
->(
-  params: SalesReportOperationsGetSalesByCategoryParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salesReportOperationsGetSalesByCategory>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useSalesReportOperationsGetSalesByCategory<TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesByCategory>>, TError = unknown>(
+ params: SalesReportOperationsGetSalesByCategoryParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof salesReportOperationsGetSalesByCategory>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof salesReportOperationsGetSalesByCategory>>,
           TError,
           Awaited<ReturnType<typeof salesReportOperationsGetSalesByCategory>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSalesReportOperationsGetSalesByCategory<
-  TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesByCategory>>,
-  TError = unknown,
->(
-  params: SalesReportOperationsGetSalesByCategoryParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salesReportOperationsGetSalesByCategory>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSalesReportOperationsGetSalesByCategory<TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesByCategory>>, TError = unknown>(
+ params: SalesReportOperationsGetSalesByCategoryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salesReportOperationsGetSalesByCategory>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof salesReportOperationsGetSalesByCategory>>,
           TError,
           Awaited<ReturnType<typeof salesReportOperationsGetSalesByCategory>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSalesReportOperationsGetSalesByCategory<
-  TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesByCategory>>,
-  TError = unknown,
->(
-  params: SalesReportOperationsGetSalesByCategoryParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salesReportOperationsGetSalesByCategory>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSalesReportOperationsGetSalesByCategory<TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesByCategory>>, TError = unknown>(
+ params: SalesReportOperationsGetSalesByCategoryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salesReportOperationsGetSalesByCategory>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useSalesReportOperationsGetSalesByCategory<TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesByCategory>>, TError = unknown>(
+ params: SalesReportOperationsGetSalesByCategoryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salesReportOperationsGetSalesByCategory>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getSalesReportOperationsGetSalesByCategoryQueryOptions(params,options)
+
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
 
-export function useSalesReportOperationsGetSalesByCategory<
-  TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesByCategory>>,
-  TError = unknown,
->(
-  params: SalesReportOperationsGetSalesByCategoryParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salesReportOperationsGetSalesByCategory>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getSalesReportOperationsGetSalesByCategoryQueryOptions(
-    params,
-    options
-  )
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-
-  query.queryKey = queryOptions.queryKey
-
-  return query
-}
 
 /**
  * Get sales by staff
@@ -454,198 +277,108 @@ export type salesReportOperationsGetSalesByStaffResponse200 = {
   data: SalesReportOperationsGetSalesByStaff200
   status: 200
 }
+    
+export type salesReportOperationsGetSalesByStaffResponseComposite = salesReportOperationsGetSalesByStaffResponse200;
+    
+export type salesReportOperationsGetSalesByStaffResponse = salesReportOperationsGetSalesByStaffResponseComposite & {
+  headers: Headers;
+}
 
-export type salesReportOperationsGetSalesByStaffResponseComposite =
-  salesReportOperationsGetSalesByStaffResponse200
-
-export type salesReportOperationsGetSalesByStaffResponse =
-  salesReportOperationsGetSalesByStaffResponseComposite & {
-    headers: Headers
-  }
-
-export const getSalesReportOperationsGetSalesByStaffUrl = (
-  params: SalesReportOperationsGetSalesByStaffParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getSalesReportOperationsGetSalesByStaffUrl = (params: SalesReportOperationsGetSalesByStaffParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/sales-reports/by-staff?${stringifiedParams}`
-    : `/sales-reports/by-staff`
+  return stringifiedParams.length > 0 ? `/sales-reports/by-staff?${stringifiedParams}` : `/sales-reports/by-staff`
 }
 
-export const salesReportOperationsGetSalesByStaff = async (
-  params: SalesReportOperationsGetSalesByStaffParams,
-  options?: RequestInit
-): Promise<salesReportOperationsGetSalesByStaffResponse> => {
-  return customInstance<salesReportOperationsGetSalesByStaffResponse>(
-    getSalesReportOperationsGetSalesByStaffUrl(params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getSalesReportOperationsGetSalesByStaffQueryKey = (
-  params?: SalesReportOperationsGetSalesByStaffParams
-) => {
-  return [`/sales-reports/by-staff`, ...(params ? [params] : [])] as const
-}
-
-export const getSalesReportOperationsGetSalesByStaffQueryOptions = <
-  TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesByStaff>>,
-  TError = unknown,
->(
-  params: SalesReportOperationsGetSalesByStaffParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salesReportOperationsGetSalesByStaff>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const salesReportOperationsGetSalesByStaff = async (params: SalesReportOperationsGetSalesByStaffParams, options?: RequestInit): Promise<salesReportOperationsGetSalesByStaffResponse> => {
+  
+  return customInstance<salesReportOperationsGetSalesByStaffResponse>(getSalesReportOperationsGetSalesByStaffUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getSalesReportOperationsGetSalesByStaffQueryKey = (params?: SalesReportOperationsGetSalesByStaffParams,) => {
+    return [`/sales-reports/by-staff`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getSalesReportOperationsGetSalesByStaffQueryOptions = <TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesByStaff>>, TError = unknown>(params: SalesReportOperationsGetSalesByStaffParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salesReportOperationsGetSalesByStaff>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ??
-    getSalesReportOperationsGetSalesByStaffQueryKey(params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof salesReportOperationsGetSalesByStaff>>
-  > = ({ signal }) =>
-    salesReportOperationsGetSalesByStaff(params, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getSalesReportOperationsGetSalesByStaffQueryKey(params);
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof salesReportOperationsGetSalesByStaff>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof salesReportOperationsGetSalesByStaff>>> = ({ signal }) => salesReportOperationsGetSalesByStaff(params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof salesReportOperationsGetSalesByStaff>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type SalesReportOperationsGetSalesByStaffQueryResult = NonNullable<
-  Awaited<ReturnType<typeof salesReportOperationsGetSalesByStaff>>
->
+export type SalesReportOperationsGetSalesByStaffQueryResult = NonNullable<Awaited<ReturnType<typeof salesReportOperationsGetSalesByStaff>>>
 export type SalesReportOperationsGetSalesByStaffQueryError = unknown
 
-export function useSalesReportOperationsGetSalesByStaff<
-  TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesByStaff>>,
-  TError = unknown,
->(
-  params: SalesReportOperationsGetSalesByStaffParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salesReportOperationsGetSalesByStaff>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useSalesReportOperationsGetSalesByStaff<TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesByStaff>>, TError = unknown>(
+ params: SalesReportOperationsGetSalesByStaffParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof salesReportOperationsGetSalesByStaff>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof salesReportOperationsGetSalesByStaff>>,
           TError,
           Awaited<ReturnType<typeof salesReportOperationsGetSalesByStaff>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSalesReportOperationsGetSalesByStaff<
-  TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesByStaff>>,
-  TError = unknown,
->(
-  params: SalesReportOperationsGetSalesByStaffParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salesReportOperationsGetSalesByStaff>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSalesReportOperationsGetSalesByStaff<TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesByStaff>>, TError = unknown>(
+ params: SalesReportOperationsGetSalesByStaffParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salesReportOperationsGetSalesByStaff>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof salesReportOperationsGetSalesByStaff>>,
           TError,
           Awaited<ReturnType<typeof salesReportOperationsGetSalesByStaff>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSalesReportOperationsGetSalesByStaff<
-  TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesByStaff>>,
-  TError = unknown,
->(
-  params: SalesReportOperationsGetSalesByStaffParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salesReportOperationsGetSalesByStaff>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSalesReportOperationsGetSalesByStaff<TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesByStaff>>, TError = unknown>(
+ params: SalesReportOperationsGetSalesByStaffParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salesReportOperationsGetSalesByStaff>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useSalesReportOperationsGetSalesByStaff<TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesByStaff>>, TError = unknown>(
+ params: SalesReportOperationsGetSalesByStaffParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salesReportOperationsGetSalesByStaff>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getSalesReportOperationsGetSalesByStaffQueryOptions(params,options)
+
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
 
-export function useSalesReportOperationsGetSalesByStaff<
-  TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesByStaff>>,
-  TError = unknown,
->(
-  params: SalesReportOperationsGetSalesByStaffParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salesReportOperationsGetSalesByStaff>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getSalesReportOperationsGetSalesByStaffQueryOptions(
-    params,
-    options
-  )
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-
-  query.queryKey = queryOptions.queryKey
-
-  return query
-}
 
 /**
  * Get daily sales summary
@@ -654,198 +387,108 @@ export type salesReportOperationsGetDailySalesResponse200 = {
   data: SalesReportOperationsGetDailySales200
   status: 200
 }
+    
+export type salesReportOperationsGetDailySalesResponseComposite = salesReportOperationsGetDailySalesResponse200;
+    
+export type salesReportOperationsGetDailySalesResponse = salesReportOperationsGetDailySalesResponseComposite & {
+  headers: Headers;
+}
 
-export type salesReportOperationsGetDailySalesResponseComposite =
-  salesReportOperationsGetDailySalesResponse200
-
-export type salesReportOperationsGetDailySalesResponse =
-  salesReportOperationsGetDailySalesResponseComposite & {
-    headers: Headers
-  }
-
-export const getSalesReportOperationsGetDailySalesUrl = (
-  params: SalesReportOperationsGetDailySalesParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getSalesReportOperationsGetDailySalesUrl = (params: SalesReportOperationsGetDailySalesParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/sales-reports/daily?${stringifiedParams}`
-    : `/sales-reports/daily`
+  return stringifiedParams.length > 0 ? `/sales-reports/daily?${stringifiedParams}` : `/sales-reports/daily`
 }
 
-export const salesReportOperationsGetDailySales = async (
-  params: SalesReportOperationsGetDailySalesParams,
-  options?: RequestInit
-): Promise<salesReportOperationsGetDailySalesResponse> => {
-  return customInstance<salesReportOperationsGetDailySalesResponse>(
-    getSalesReportOperationsGetDailySalesUrl(params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getSalesReportOperationsGetDailySalesQueryKey = (
-  params?: SalesReportOperationsGetDailySalesParams
-) => {
-  return [`/sales-reports/daily`, ...(params ? [params] : [])] as const
-}
-
-export const getSalesReportOperationsGetDailySalesQueryOptions = <
-  TData = Awaited<ReturnType<typeof salesReportOperationsGetDailySales>>,
-  TError = unknown,
->(
-  params: SalesReportOperationsGetDailySalesParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salesReportOperationsGetDailySales>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const salesReportOperationsGetDailySales = async (params: SalesReportOperationsGetDailySalesParams, options?: RequestInit): Promise<salesReportOperationsGetDailySalesResponse> => {
+  
+  return customInstance<salesReportOperationsGetDailySalesResponse>(getSalesReportOperationsGetDailySalesUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getSalesReportOperationsGetDailySalesQueryKey = (params?: SalesReportOperationsGetDailySalesParams,) => {
+    return [`/sales-reports/daily`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getSalesReportOperationsGetDailySalesQueryOptions = <TData = Awaited<ReturnType<typeof salesReportOperationsGetDailySales>>, TError = unknown>(params: SalesReportOperationsGetDailySalesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salesReportOperationsGetDailySales>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ??
-    getSalesReportOperationsGetDailySalesQueryKey(params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof salesReportOperationsGetDailySales>>
-  > = ({ signal }) =>
-    salesReportOperationsGetDailySales(params, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getSalesReportOperationsGetDailySalesQueryKey(params);
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof salesReportOperationsGetDailySales>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof salesReportOperationsGetDailySales>>> = ({ signal }) => salesReportOperationsGetDailySales(params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof salesReportOperationsGetDailySales>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type SalesReportOperationsGetDailySalesQueryResult = NonNullable<
-  Awaited<ReturnType<typeof salesReportOperationsGetDailySales>>
->
+export type SalesReportOperationsGetDailySalesQueryResult = NonNullable<Awaited<ReturnType<typeof salesReportOperationsGetDailySales>>>
 export type SalesReportOperationsGetDailySalesQueryError = unknown
 
-export function useSalesReportOperationsGetDailySales<
-  TData = Awaited<ReturnType<typeof salesReportOperationsGetDailySales>>,
-  TError = unknown,
->(
-  params: SalesReportOperationsGetDailySalesParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salesReportOperationsGetDailySales>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useSalesReportOperationsGetDailySales<TData = Awaited<ReturnType<typeof salesReportOperationsGetDailySales>>, TError = unknown>(
+ params: SalesReportOperationsGetDailySalesParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof salesReportOperationsGetDailySales>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof salesReportOperationsGetDailySales>>,
           TError,
           Awaited<ReturnType<typeof salesReportOperationsGetDailySales>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSalesReportOperationsGetDailySales<
-  TData = Awaited<ReturnType<typeof salesReportOperationsGetDailySales>>,
-  TError = unknown,
->(
-  params: SalesReportOperationsGetDailySalesParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salesReportOperationsGetDailySales>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSalesReportOperationsGetDailySales<TData = Awaited<ReturnType<typeof salesReportOperationsGetDailySales>>, TError = unknown>(
+ params: SalesReportOperationsGetDailySalesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salesReportOperationsGetDailySales>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof salesReportOperationsGetDailySales>>,
           TError,
           Awaited<ReturnType<typeof salesReportOperationsGetDailySales>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSalesReportOperationsGetDailySales<
-  TData = Awaited<ReturnType<typeof salesReportOperationsGetDailySales>>,
-  TError = unknown,
->(
-  params: SalesReportOperationsGetDailySalesParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salesReportOperationsGetDailySales>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSalesReportOperationsGetDailySales<TData = Awaited<ReturnType<typeof salesReportOperationsGetDailySales>>, TError = unknown>(
+ params: SalesReportOperationsGetDailySalesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salesReportOperationsGetDailySales>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useSalesReportOperationsGetDailySales<TData = Awaited<ReturnType<typeof salesReportOperationsGetDailySales>>, TError = unknown>(
+ params: SalesReportOperationsGetDailySalesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salesReportOperationsGetDailySales>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getSalesReportOperationsGetDailySalesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
 
-export function useSalesReportOperationsGetDailySales<
-  TData = Awaited<ReturnType<typeof salesReportOperationsGetDailySales>>,
-  TError = unknown,
->(
-  params: SalesReportOperationsGetDailySalesParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salesReportOperationsGetDailySales>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getSalesReportOperationsGetDailySalesQueryOptions(
-    params,
-    options
-  )
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-
-  query.queryKey = queryOptions.queryKey
-
-  return query
-}
 
 /**
  * Export sales report
@@ -854,300 +497,185 @@ export type salesReportOperationsExportSalesReportResponse200 = {
   data: SalesReportOperationsExportSalesReport200
   status: 200
 }
-
-export type salesReportOperationsExportSalesReportResponseComposite =
-  salesReportOperationsExportSalesReportResponse200
-
-export type salesReportOperationsExportSalesReportResponse =
-  salesReportOperationsExportSalesReportResponseComposite & {
-    headers: Headers
-  }
+    
+export type salesReportOperationsExportSalesReportResponseComposite = salesReportOperationsExportSalesReportResponse200;
+    
+export type salesReportOperationsExportSalesReportResponse = salesReportOperationsExportSalesReportResponseComposite & {
+  headers: Headers;
+}
 
 export const getSalesReportOperationsExportSalesReportUrl = () => {
+
+
+  
+
   return `/sales-reports/export`
 }
 
-export const salesReportOperationsExportSalesReport = async (
-  salesReportOperationsExportSalesReportBody: SalesReportOperationsExportSalesReportBody,
-  options?: RequestInit
-): Promise<salesReportOperationsExportSalesReportResponse> => {
-  return customInstance<salesReportOperationsExportSalesReportResponse>(
-    getSalesReportOperationsExportSalesReportUrl(),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(salesReportOperationsExportSalesReportBody),
-    }
-  )
-}
-
-export const getSalesReportOperationsExportSalesReportMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof salesReportOperationsExportSalesReport>>,
-    TError,
-    { data: SalesReportOperationsExportSalesReportBody },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof salesReportOperationsExportSalesReport>>,
-  TError,
-  { data: SalesReportOperationsExportSalesReportBody },
-  TContext
-> => {
-  const mutationKey = ['salesReportOperationsExportSalesReport']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof salesReportOperationsExportSalesReport>>,
-    { data: SalesReportOperationsExportSalesReportBody }
-  > = (props) => {
-    const { data } = props ?? {}
-
-    return salesReportOperationsExportSalesReport(data, requestOptions)
+export const salesReportOperationsExportSalesReport = async (salesReportOperationsExportSalesReportBody: SalesReportOperationsExportSalesReportBody, options?: RequestInit): Promise<salesReportOperationsExportSalesReportResponse> => {
+  
+  return customInstance<salesReportOperationsExportSalesReportResponse>(getSalesReportOperationsExportSalesReportUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      salesReportOperationsExportSalesReportBody,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type SalesReportOperationsExportSalesReportMutationResult = NonNullable<
-  Awaited<ReturnType<typeof salesReportOperationsExportSalesReport>>
->
-export type SalesReportOperationsExportSalesReportMutationBody =
-  SalesReportOperationsExportSalesReportBody
-export type SalesReportOperationsExportSalesReportMutationError = unknown
 
-export const useSalesReportOperationsExportSalesReport = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof salesReportOperationsExportSalesReport>>,
-      TError,
-      { data: SalesReportOperationsExportSalesReportBody },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof salesReportOperationsExportSalesReport>>,
-  TError,
-  { data: SalesReportOperationsExportSalesReportBody },
-  TContext
-> => {
-  const mutationOptions =
-    getSalesReportOperationsExportSalesReportMutationOptions(options)
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+export const getSalesReportOperationsExportSalesReportMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salesReportOperationsExportSalesReport>>, TError,{data: SalesReportOperationsExportSalesReportBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof salesReportOperationsExportSalesReport>>, TError,{data: SalesReportOperationsExportSalesReportBody}, TContext> => {
+
+const mutationKey = ['salesReportOperationsExportSalesReport'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof salesReportOperationsExportSalesReport>>, {data: SalesReportOperationsExportSalesReportBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  salesReportOperationsExportSalesReport(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SalesReportOperationsExportSalesReportMutationResult = NonNullable<Awaited<ReturnType<typeof salesReportOperationsExportSalesReport>>>
+    export type SalesReportOperationsExportSalesReportMutationBody = SalesReportOperationsExportSalesReportBody
+    export type SalesReportOperationsExportSalesReportMutationError = unknown
+
+    export const useSalesReportOperationsExportSalesReport = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof salesReportOperationsExportSalesReport>>, TError,{data: SalesReportOperationsExportSalesReportBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof salesReportOperationsExportSalesReport>>,
+        TError,
+        {data: SalesReportOperationsExportSalesReportBody},
+        TContext
+      > => {
+
+      const mutationOptions = getSalesReportOperationsExportSalesReportMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * Get sales trends
  */
 export type salesReportOperationsGetSalesTrendsResponse200 = {
   data: SalesReportOperationsGetSalesTrends200
   status: 200
 }
+    
+export type salesReportOperationsGetSalesTrendsResponseComposite = salesReportOperationsGetSalesTrendsResponse200;
+    
+export type salesReportOperationsGetSalesTrendsResponse = salesReportOperationsGetSalesTrendsResponseComposite & {
+  headers: Headers;
+}
 
-export type salesReportOperationsGetSalesTrendsResponseComposite =
-  salesReportOperationsGetSalesTrendsResponse200
-
-export type salesReportOperationsGetSalesTrendsResponse =
-  salesReportOperationsGetSalesTrendsResponseComposite & {
-    headers: Headers
-  }
-
-export const getSalesReportOperationsGetSalesTrendsUrl = (
-  params: SalesReportOperationsGetSalesTrendsParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getSalesReportOperationsGetSalesTrendsUrl = (params: SalesReportOperationsGetSalesTrendsParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/sales-reports/trends?${stringifiedParams}`
-    : `/sales-reports/trends`
+  return stringifiedParams.length > 0 ? `/sales-reports/trends?${stringifiedParams}` : `/sales-reports/trends`
 }
 
-export const salesReportOperationsGetSalesTrends = async (
-  params: SalesReportOperationsGetSalesTrendsParams,
-  options?: RequestInit
-): Promise<salesReportOperationsGetSalesTrendsResponse> => {
-  return customInstance<salesReportOperationsGetSalesTrendsResponse>(
-    getSalesReportOperationsGetSalesTrendsUrl(params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getSalesReportOperationsGetSalesTrendsQueryKey = (
-  params?: SalesReportOperationsGetSalesTrendsParams
-) => {
-  return [`/sales-reports/trends`, ...(params ? [params] : [])] as const
-}
-
-export const getSalesReportOperationsGetSalesTrendsQueryOptions = <
-  TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesTrends>>,
-  TError = unknown,
->(
-  params: SalesReportOperationsGetSalesTrendsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salesReportOperationsGetSalesTrends>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const salesReportOperationsGetSalesTrends = async (params: SalesReportOperationsGetSalesTrendsParams, options?: RequestInit): Promise<salesReportOperationsGetSalesTrendsResponse> => {
+  
+  return customInstance<salesReportOperationsGetSalesTrendsResponse>(getSalesReportOperationsGetSalesTrendsUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getSalesReportOperationsGetSalesTrendsQueryKey = (params?: SalesReportOperationsGetSalesTrendsParams,) => {
+    return [`/sales-reports/trends`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getSalesReportOperationsGetSalesTrendsQueryOptions = <TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesTrends>>, TError = unknown>(params: SalesReportOperationsGetSalesTrendsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salesReportOperationsGetSalesTrends>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ??
-    getSalesReportOperationsGetSalesTrendsQueryKey(params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof salesReportOperationsGetSalesTrends>>
-  > = ({ signal }) =>
-    salesReportOperationsGetSalesTrends(params, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getSalesReportOperationsGetSalesTrendsQueryKey(params);
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof salesReportOperationsGetSalesTrends>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof salesReportOperationsGetSalesTrends>>> = ({ signal }) => salesReportOperationsGetSalesTrends(params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof salesReportOperationsGetSalesTrends>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type SalesReportOperationsGetSalesTrendsQueryResult = NonNullable<
-  Awaited<ReturnType<typeof salesReportOperationsGetSalesTrends>>
->
+export type SalesReportOperationsGetSalesTrendsQueryResult = NonNullable<Awaited<ReturnType<typeof salesReportOperationsGetSalesTrends>>>
 export type SalesReportOperationsGetSalesTrendsQueryError = unknown
 
-export function useSalesReportOperationsGetSalesTrends<
-  TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesTrends>>,
-  TError = unknown,
->(
-  params: SalesReportOperationsGetSalesTrendsParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salesReportOperationsGetSalesTrends>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useSalesReportOperationsGetSalesTrends<TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesTrends>>, TError = unknown>(
+ params: SalesReportOperationsGetSalesTrendsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof salesReportOperationsGetSalesTrends>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof salesReportOperationsGetSalesTrends>>,
           TError,
           Awaited<ReturnType<typeof salesReportOperationsGetSalesTrends>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSalesReportOperationsGetSalesTrends<
-  TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesTrends>>,
-  TError = unknown,
->(
-  params: SalesReportOperationsGetSalesTrendsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salesReportOperationsGetSalesTrends>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSalesReportOperationsGetSalesTrends<TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesTrends>>, TError = unknown>(
+ params: SalesReportOperationsGetSalesTrendsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salesReportOperationsGetSalesTrends>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof salesReportOperationsGetSalesTrends>>,
           TError,
           Awaited<ReturnType<typeof salesReportOperationsGetSalesTrends>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useSalesReportOperationsGetSalesTrends<
-  TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesTrends>>,
-  TError = unknown,
->(
-  params: SalesReportOperationsGetSalesTrendsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salesReportOperationsGetSalesTrends>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSalesReportOperationsGetSalesTrends<TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesTrends>>, TError = unknown>(
+ params: SalesReportOperationsGetSalesTrendsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salesReportOperationsGetSalesTrends>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useSalesReportOperationsGetSalesTrends<TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesTrends>>, TError = unknown>(
+ params: SalesReportOperationsGetSalesTrendsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof salesReportOperationsGetSalesTrends>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getSalesReportOperationsGetSalesTrendsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
 
-export function useSalesReportOperationsGetSalesTrends<
-  TData = Awaited<ReturnType<typeof salesReportOperationsGetSalesTrends>>,
-  TError = unknown,
->(
-  params: SalesReportOperationsGetSalesTrendsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof salesReportOperationsGetSalesTrends>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getSalesReportOperationsGetSalesTrendsQueryOptions(
-    params,
-    options
-  )
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
 
-  query.queryKey = queryOptions.queryKey
-
-  return query
-}

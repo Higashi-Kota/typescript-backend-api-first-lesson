@@ -1,5 +1,4 @@
 // Models
-export * from './generated/models'
 
 // Endpoints
 export * from './generated/endpoints/access-control/access-control'
@@ -26,3 +25,4 @@ export * from './generated/endpoints/staff/staff'
 export * from './generated/endpoints/system/system'
 export * from './generated/endpoints/treatments/treatments'
 export * from './generated/endpoints/user-roles/user-roles'
+export * from './generated/models'

@@ -23,7 +23,7 @@ declare global {
 export function getTestDb(): Database {
   if (!globalThis.__TEST_DB__) {
     throw new Error(
-      'Test database not initialized. Make sure setup.ts has run.'
+      'Test database not initialized. Make sure setup.ts has run.',
     )
   }
   return globalThis.__TEST_DB__

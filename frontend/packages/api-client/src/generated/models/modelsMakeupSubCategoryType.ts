@@ -14,8 +14,8 @@ event_makeup: イベントメイク - パーティーやイベント用の華や
 bridal_makeup: ブライダルメイク - 花嫁向けの特別なメイクアップ
 photoshoot_makeup: 撮影用メイク - 写真撮影用のプロフェッショナルメイク
  */
-export type ModelsMakeupSubCategoryType =
-  (typeof ModelsMakeupSubCategoryType)[keyof typeof ModelsMakeupSubCategoryType]
+export type ModelsMakeupSubCategoryType = typeof ModelsMakeupSubCategoryType[keyof typeof ModelsMakeupSubCategoryType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsMakeupSubCategoryType = {
@@ -23,4 +23,4 @@ export const ModelsMakeupSubCategoryType = {
   event_makeup: 'event_makeup',
   bridal_makeup: 'bridal_makeup',
   photoshoot_makeup: 'photoshoot_makeup',
-} as const
+} as const;

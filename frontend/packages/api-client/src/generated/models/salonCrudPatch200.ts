@@ -5,9 +5,9 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsSalon } from './modelsSalon'
-import type { SalonCrudPatch200Meta } from './salonCrudPatch200Meta'
-import type { SalonCrudPatch200Links } from './salonCrudPatch200Links'
+import type { ModelsSalon } from './modelsSalon';
+import type { SalonCrudPatch200Meta } from './salonCrudPatch200Meta';
+import type { SalonCrudPatch200Links } from './salonCrudPatch200Links';
 
 /**
  * API 成功レスポンスの共通ラッパーモデル。
@@ -15,15 +15,15 @@ import type { SalonCrudPatch200Links } from './salonCrudPatch200Links'
  */
 export type SalonCrudPatch200 = {
   /** レスポンスの主体となるビジネスデータ。 */
-  data: ModelsSalon
+  data: ModelsSalon;
   /**
    * リクエスト識別子やバージョン情報など共通メタデータ。メタ情報が不要な場合はnull
    * @nullable
    */
-  meta: SalonCrudPatch200Meta
+  meta: SalonCrudPatch200Meta;
   /**
    * 関連リソースや次アクションへのリンク情報。リンクがない場合はnull
    * @nullable
    */
-  links: SalonCrudPatch200Links
-}
+  links: SalonCrudPatch200Links;
+};

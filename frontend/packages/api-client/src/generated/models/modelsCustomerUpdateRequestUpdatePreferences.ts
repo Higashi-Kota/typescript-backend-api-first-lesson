@@ -9,6 +9,4 @@
 /**
  * 顧客の好みや要望。カスタム設定情報
  */
-export type ModelsCustomerUpdateRequestUpdatePreferences = {
-  [key: string]: unknown
-}
+export type ModelsCustomerUpdateRequestUpdatePreferences = {[key: string]: unknown};

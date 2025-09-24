@@ -10,6 +10,6 @@
  * 成功時に返却するドメインデータ。
  */
 export type PointOperationsProcessExpiredPoints200AnyOfData = {
-  processedCount: number
-  totalPoints: number
-}
+  processedCount: number;
+  totalPoints: number;
+};

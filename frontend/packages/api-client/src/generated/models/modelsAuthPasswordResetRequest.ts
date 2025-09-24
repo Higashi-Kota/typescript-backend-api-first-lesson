@@ -11,5 +11,5 @@
  */
 export interface ModelsAuthPasswordResetRequest {
   /** 対象アカウントのメールアドレス。 */
-  email: string
+  email: string;
 }

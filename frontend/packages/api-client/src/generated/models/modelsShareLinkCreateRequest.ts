@@ -14,20 +14,20 @@ export interface ModelsShareLinkCreateRequest {
    * 共有リンクの有効期限。無期限の場合はnull。
    * @nullable
    */
-  expiresAt: string | null
+  expiresAt: string | null;
   /**
    * 許可する最大ダウンロード回数。無制限の場合はnull。
    * @nullable
    */
-  maxDownloads: number | null
+  maxDownloads: number | null;
   /**
    * 共有リンク保護用のパスワード。パスワード保護なしの場合はnull。
    * @nullable
    */
-  password: string | null
+  password: string | null;
   /**
    * アクセスを許可するメールアドレス一覧。制限なしの場合はnull。
    * @nullable
    */
-  allowedEmails: string[] | null
+  allowedEmails: string[] | null;
 }

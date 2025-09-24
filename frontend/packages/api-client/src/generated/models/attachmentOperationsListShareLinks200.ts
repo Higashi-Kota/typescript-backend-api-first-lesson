@@ -5,11 +5,7 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsShareLink } from './modelsShareLink'
-import type { ModelsError } from './modelsError'
+import type { ModelsShareLink } from './modelsShareLink';
+import type { ModelsError } from './modelsError';
 
-export type AttachmentOperationsListShareLinks200 =
-  | ModelsShareLink[]
-  | ModelsError
-  | ModelsError
-  | ModelsError
+export type AttachmentOperationsListShareLinks200 = ModelsShareLink[] | ModelsError | ModelsError | ModelsError;

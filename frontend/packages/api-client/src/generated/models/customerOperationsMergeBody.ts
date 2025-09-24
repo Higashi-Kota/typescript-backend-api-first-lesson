@@ -5,14 +5,14 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsCustomerId } from './modelsCustomerId'
-import type { CustomerOperationsMergeBodyConflictResolution } from './customerOperationsMergeBodyConflictResolution'
+import type { ModelsCustomerId } from './modelsCustomerId';
+import type { CustomerOperationsMergeBodyConflictResolution } from './customerOperationsMergeBodyConflictResolution';
 
 export type CustomerOperationsMergeBody = {
   /** 統合後も残すメイン顧客ID */
-  primaryCustomerId: ModelsCustomerId
+  primaryCustomerId: ModelsCustomerId;
   /** 統合して削除するサブ顧客ID */
-  secondaryCustomerId: ModelsCustomerId
+  secondaryCustomerId: ModelsCustomerId;
   /** 重複データの優先ルール */
-  conflictResolution?: CustomerOperationsMergeBodyConflictResolution
-}
+  conflictResolution?: CustomerOperationsMergeBodyConflictResolution;
+};

@@ -11,19 +11,19 @@
  */
 export interface ModelsAttachmentCreateRequest {
   /** HTTPリクエストで送信されるファイル本体。 */
-  file: string
+  file: string;
   /** アップロード時に指定されたファイル名。 */
-  filename: string
+  filename: string;
   /** ファイルのContent-Type。 */
-  content: string
+  content: string;
   /**
    * ファイルを関連付けるサロンID。全社共通ファイルの場合はnull。
    * @nullable
    */
-  salonId: string | null
+  salonId: string | null;
   /**
    * タグ情報を表すJSON文字列。タグを設定しない場合はnull。
    * @nullable
    */
-  tags: string | null
+  tags: string | null;
 }

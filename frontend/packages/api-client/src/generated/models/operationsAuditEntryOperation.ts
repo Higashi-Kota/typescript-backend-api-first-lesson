@@ -9,8 +9,8 @@
 /**
  * Operation performed
  */
-export type OperationsAuditEntryOperation =
-  (typeof OperationsAuditEntryOperation)[keyof typeof OperationsAuditEntryOperation]
+export type OperationsAuditEntryOperation = typeof OperationsAuditEntryOperation[keyof typeof OperationsAuditEntryOperation];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const OperationsAuditEntryOperation = {
@@ -18,4 +18,4 @@ export const OperationsAuditEntryOperation = {
   update: 'update',
   delete: 'delete',
   restore: 'restore',
-} as const
+} as const;

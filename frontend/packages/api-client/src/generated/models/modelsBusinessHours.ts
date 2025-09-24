@@ -5,33 +5,33 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsDayOfWeekType } from './modelsDayOfWeekType'
-import type { ModelsTimeSlot } from './modelsTimeSlot'
-import type { ModelsBusinessHoursEffectivePeriod } from './modelsBusinessHoursEffectivePeriod'
+import type { ModelsDayOfWeekType } from './modelsDayOfWeekType';
+import type { ModelsTimeSlot } from './modelsTimeSlot';
+import type { ModelsBusinessHoursEffectivePeriod } from './modelsBusinessHoursEffectivePeriod';
 
 /**
  * 曜日単位で管理する営業スケジュール設定。
  */
 export interface ModelsBusinessHours {
   /** 設定の対象となる曜日。 */
-  dayOfWeek: ModelsDayOfWeekType
+  dayOfWeek: ModelsDayOfWeekType;
   /** 営業時間帯の一覧。複数設定で分割営業に対応。 */
-  operatingSlots: ModelsTimeSlot[]
+  operatingSlots: ModelsTimeSlot[];
   /**
    * 休憩時間や中断時間帯の一覧。休憩がない場合はnull
    * @nullable
    */
-  breakSlots: ModelsTimeSlot[] | null
+  breakSlots: ModelsTimeSlot[] | null;
   /** 当該曜日を休業扱いとする場合のフラグ。既定値はfalse。 */
-  isClosed: boolean
+  isClosed: boolean;
   /**
    * 季節営業などの適用期間。通年有効の場合はnull
    * @nullable
    */
-  effectivePeriod: ModelsBusinessHoursEffectivePeriod
+  effectivePeriod: ModelsBusinessHoursEffectivePeriod;
   /**
    * 営業基準となるタイムゾーンID。サロン既定値を使用する場合はnull
    * @nullable
    */
-  timezone: string | null
+  timezone: string | null;
 }

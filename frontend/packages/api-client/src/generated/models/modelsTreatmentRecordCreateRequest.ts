@@ -5,61 +5,61 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsBookingId } from './modelsBookingId'
-import type { ModelsCustomerId } from './modelsCustomerId'
-import type { ModelsStaffId } from './modelsStaffId'
-import type { ModelsTreatmentType } from './modelsTreatmentType'
-import type { ModelsServiceId } from './modelsServiceId'
-import type { ModelsMaterialUsage } from './modelsMaterialUsage'
+import type { ModelsBookingId } from './modelsBookingId';
+import type { ModelsCustomerId } from './modelsCustomerId';
+import type { ModelsStaffId } from './modelsStaffId';
+import type { ModelsTreatmentType } from './modelsTreatmentType';
+import type { ModelsServiceId } from './modelsServiceId';
+import type { ModelsMaterialUsage } from './modelsMaterialUsage';
 
 /**
  * 施術記録を新規登録する入力モデル
  */
 export interface ModelsTreatmentRecordCreateRequest {
   /** 紐づく予約 ID */
-  bookingId: ModelsBookingId
+  bookingId: ModelsBookingId;
   /** 施術を受けた顧客 ID */
-  customerId: ModelsCustomerId
+  customerId: ModelsCustomerId;
   /** 施術担当スタッフ ID */
-  staffId: ModelsStaffId
+  staffId: ModelsStaffId;
   /** 施術タイプ */
-  treatment: ModelsTreatmentType
+  treatment: ModelsTreatmentType;
   /** 提供したサービス ID 一覧 */
-  serviceIds: ModelsServiceId[]
+  serviceIds: ModelsServiceId[];
   /** 施術開始日時 */
-  startTime: string
+  startTime: string;
   /** 施術終了日時 */
-  endTime: string
+  endTime: string;
   /**
    * 施術メモ - 特記事項がない通常施術の場合はnull
    * @nullable
    */
-  notes: string | null
+  notes: string | null;
   /**
    * 使用した資材一覧 - カットのみなど商材を使用しない施術の場合はnull
    * @nullable
    */
-  usedMaterials: ModelsMaterialUsage[] | null
+  usedMaterials: ModelsMaterialUsage[] | null;
   /**
    * 顧客フィードバック - 施術直後でフィードバック未収集の場合はnull
    * @nullable
    */
-  customerFeedback: string | null
+  customerFeedback: string | null;
   /**
    * 次回来店への提案内容 - 特に提案事項がない場合や定期メンテナンスのみの場合はnull
    * @nullable
    */
-  nextRecommendations: string | null
+  nextRecommendations: string | null;
   /** 請求総額 */
-  totalAmount: number
+  totalAmount: number;
   /**
    * 割引額 - 割引を適用しない定価施術の場合はnull
    * @nullable
    */
-  discountAmount: number | null
+  discountAmount: number | null;
   /**
    * 付与ポイント数 - ポイント対象外の施術やポイント制度未導入サロンの場合はnull
    * @nullable
    */
-  pointsEarned: number | null
+  pointsEarned: number | null;
 }

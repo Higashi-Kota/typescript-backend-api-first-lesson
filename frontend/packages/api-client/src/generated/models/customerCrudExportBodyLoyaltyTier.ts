@@ -9,8 +9,8 @@
 /**
  * ロイヤルティティアでフィルタ
  */
-export type CustomerCrudExportBodyLoyaltyTier =
-  (typeof CustomerCrudExportBodyLoyaltyTier)[keyof typeof CustomerCrudExportBodyLoyaltyTier]
+export type CustomerCrudExportBodyLoyaltyTier = typeof CustomerCrudExportBodyLoyaltyTier[keyof typeof CustomerCrudExportBodyLoyaltyTier];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CustomerCrudExportBodyLoyaltyTier = {
@@ -18,4 +18,4 @@ export const CustomerCrudExportBodyLoyaltyTier = {
   silver: 'silver',
   gold: 'gold',
   platinum: 'platinum',
-} as const
+} as const;

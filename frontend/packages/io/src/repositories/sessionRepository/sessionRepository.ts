@@ -10,7 +10,7 @@ import { fetchAuthSession } from '../../libs/auth'
 
 export class SessionRepository implements SessionFactory {
   async retrieveAuthedUserSession(
-    _payload: InputRetrieveAuthedUserSession
+    _payload: InputRetrieveAuthedUserSession,
   ): OutputRetrieveAuthedUserSession {
     async function requestToBE(): Promise<ResponseAuthedUserSessionData> {
       return await fetchAuthSession({ forceRefresh: true })

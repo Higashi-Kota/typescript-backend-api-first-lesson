@@ -18,8 +18,8 @@ ombre: オンブレ - 根元から毛先にかけてグラデーション染め
 bleach: ブリーチ - 髪の色を抜く脱色サービス
 color_correction: カラーコレクション - 色ムラや失敗したカラーの修正
  */
-export type ModelsColorSubCategoryType =
-  (typeof ModelsColorSubCategoryType)[keyof typeof ModelsColorSubCategoryType]
+export type ModelsColorSubCategoryType = typeof ModelsColorSubCategoryType[keyof typeof ModelsColorSubCategoryType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsColorSubCategoryType = {
@@ -31,4 +31,4 @@ export const ModelsColorSubCategoryType = {
   ombre: 'ombre',
   bleach: 'bleach',
   color_correction: 'color_correction',
-} as const
+} as const;

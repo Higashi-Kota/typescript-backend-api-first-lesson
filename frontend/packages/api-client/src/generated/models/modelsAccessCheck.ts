@@ -11,19 +11,19 @@
  */
 export interface ModelsAccessCheck {
   /** 権限を判定するユーザー ID */
-  userId: string
+  userId: string;
   /** 対象リソースの識別子 */
-  resource: string
+  resource: string;
   /** 実行したい操作区分 */
-  action: string
+  action: string;
   /**
    * サロン単位での権限チェック時のサロン ID - システム全体権限のチェック時はnull
    * @nullable
    */
-  salonId: string | null
+  salonId: string | null;
   /**
    * リソース固有の ID - リソース種別全体への権限チェック時はnull
    * @nullable
    */
-  resourceId: string | null
+  resourceId: string | null;
 }

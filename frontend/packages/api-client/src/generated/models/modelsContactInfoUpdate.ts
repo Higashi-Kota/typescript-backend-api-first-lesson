@@ -11,17 +11,17 @@
  */
 export interface ModelsContactInfoUpdate {
   /** 主要連絡先として利用するメールアドレス。 */
-  email?: string
+  email?: string;
   /** 主要連絡先として利用する電話番号。 */
-  phoneNumber?: string
+  phoneNumber?: string;
   /**
    * 緊急連絡用などの予備電話番号。未登録の場合はnull
    * @nullable
    */
-  alternativePhone?: string | null
+  alternativePhone?: string | null;
   /**
    * 公式サイトや予約ページのURL。ウェブサイトがない場合はnull
    * @nullable
    */
-  websiteUrl?: string | null
+  websiteUrl?: string | null;
 }

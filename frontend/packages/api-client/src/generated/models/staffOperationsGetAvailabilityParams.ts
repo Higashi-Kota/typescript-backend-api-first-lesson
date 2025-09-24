@@ -7,5 +7,5 @@
  */
 
 export type StaffOperationsGetAvailabilityParams = {
-  date: string
-}
+date: string;
+};

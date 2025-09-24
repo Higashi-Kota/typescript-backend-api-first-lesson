@@ -10,9 +10,8 @@
  * 顧客獲得チャネル。不明の場合はnull
  * @nullable
  */
-export type ModelsCustomerMetadataSource =
-  | (typeof ModelsCustomerMetadataSource)[keyof typeof ModelsCustomerMetadataSource]
-  | null
+export type ModelsCustomerMetadataSource = typeof ModelsCustomerMetadataSource[keyof typeof ModelsCustomerMetadataSource] | null;
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsCustomerMetadataSource = {
@@ -22,4 +21,4 @@ export const ModelsCustomerMetadataSource = {
   referral: 'referral',
   social_media: 'social_media',
   advertisement: 'advertisement',
-} as const
+} as const;

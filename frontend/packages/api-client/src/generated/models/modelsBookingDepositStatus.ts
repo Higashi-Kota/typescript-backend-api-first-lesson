@@ -9,8 +9,8 @@
 /**
  * デポジットの状態区分（pending: 入金待ち／paid: 入金済み／refunded: 返金済み／forfeited: 没収）。
  */
-export type ModelsBookingDepositStatus =
-  (typeof ModelsBookingDepositStatus)[keyof typeof ModelsBookingDepositStatus]
+export type ModelsBookingDepositStatus = typeof ModelsBookingDepositStatus[keyof typeof ModelsBookingDepositStatus];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsBookingDepositStatus = {
@@ -18,4 +18,4 @@ export const ModelsBookingDepositStatus = {
   paid: 'paid',
   refunded: 'refunded',
   forfeited: 'forfeited',
-} as const
+} as const;

@@ -9,10 +9,10 @@
 /**
  * 固定値success。成功結果であることを示す。
  */
-export type InventoryAlertOperationsAcknowledgeAlert200AnyOfStatus =
-  (typeof InventoryAlertOperationsAcknowledgeAlert200AnyOfStatus)[keyof typeof InventoryAlertOperationsAcknowledgeAlert200AnyOfStatus]
+export type InventoryAlertOperationsAcknowledgeAlert200AnyOfStatus = typeof InventoryAlertOperationsAcknowledgeAlert200AnyOfStatus[keyof typeof InventoryAlertOperationsAcknowledgeAlert200AnyOfStatus];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const InventoryAlertOperationsAcknowledgeAlert200AnyOfStatus = {
   success: 'success',
-} as const
+} as const;

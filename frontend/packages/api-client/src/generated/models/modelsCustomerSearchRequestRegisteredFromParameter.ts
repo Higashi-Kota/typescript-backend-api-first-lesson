@@ -9,4 +9,4 @@
 /**
  * 登録日開始でフィルタ
  */
-export type ModelsCustomerSearchRequestRegisteredFromParameter = string
+export type ModelsCustomerSearchRequestRegisteredFromParameter = string;

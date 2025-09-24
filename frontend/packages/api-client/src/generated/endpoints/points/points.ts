@@ -5,7 +5,10 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import { useMutation, useQuery } from '@tanstack/react-query'
+import {
+  useMutation,
+  useQuery
+} from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -18,8 +21,8 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult,
-} from '@tanstack/react-query'
+  UseQueryResult
+} from '@tanstack/react-query';
 
 import type {
   ModelsCustomerId,
@@ -33,16 +36,19 @@ import type {
   PointOperationsGetPointTransactionsParams,
   PointOperationsProcessExpiredPoints200,
   PointOperationsProcessExpiredPointsBody,
-  PointOperationsUsePoints200,
-} from '../../models'
+  PointOperationsUsePoints200
+} from '../../models';
 
-import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher'
+import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher';
 
-type AwaitedInput<T> = PromiseLike<T> | T
+type AwaitedInput<T> = PromiseLike<T> | T;
 
-type Awaited<O> = O extends AwaitedInput<infer T> ? T : never
+      type Awaited<O> = O extends AwaitedInput<infer T> ? T : never;
 
-type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
+
 
 /**
  * Adjust customer points
@@ -51,295 +57,180 @@ export type pointOperationsAdjustPointsResponse200 = {
   data: PointOperationsAdjustPoints200
   status: 200
 }
-
-export type pointOperationsAdjustPointsResponseComposite =
-  pointOperationsAdjustPointsResponse200
-
-export type pointOperationsAdjustPointsResponse =
-  pointOperationsAdjustPointsResponseComposite & {
-    headers: Headers
-  }
+    
+export type pointOperationsAdjustPointsResponseComposite = pointOperationsAdjustPointsResponse200;
+    
+export type pointOperationsAdjustPointsResponse = pointOperationsAdjustPointsResponseComposite & {
+  headers: Headers;
+}
 
 export const getPointOperationsAdjustPointsUrl = () => {
+
+
+  
+
   return `/points/adjust`
 }
 
-export const pointOperationsAdjustPoints = async (
-  modelsPointTransactionCreateRequest: ModelsPointTransactionCreateRequest,
-  options?: RequestInit
-): Promise<pointOperationsAdjustPointsResponse> => {
-  return customInstance<pointOperationsAdjustPointsResponse>(
-    getPointOperationsAdjustPointsUrl(),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsPointTransactionCreateRequest),
-    }
-  )
-}
-
-export const getPointOperationsAdjustPointsMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof pointOperationsAdjustPoints>>,
-    TError,
-    { data: ModelsPointTransactionCreateRequest },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof pointOperationsAdjustPoints>>,
-  TError,
-  { data: ModelsPointTransactionCreateRequest },
-  TContext
-> => {
-  const mutationKey = ['pointOperationsAdjustPoints']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof pointOperationsAdjustPoints>>,
-    { data: ModelsPointTransactionCreateRequest }
-  > = (props) => {
-    const { data } = props ?? {}
-
-    return pointOperationsAdjustPoints(data, requestOptions)
+export const pointOperationsAdjustPoints = async (modelsPointTransactionCreateRequest: ModelsPointTransactionCreateRequest, options?: RequestInit): Promise<pointOperationsAdjustPointsResponse> => {
+  
+  return customInstance<pointOperationsAdjustPointsResponse>(getPointOperationsAdjustPointsUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      modelsPointTransactionCreateRequest,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type PointOperationsAdjustPointsMutationResult = NonNullable<
-  Awaited<ReturnType<typeof pointOperationsAdjustPoints>>
->
-export type PointOperationsAdjustPointsMutationBody =
-  ModelsPointTransactionCreateRequest
-export type PointOperationsAdjustPointsMutationError = unknown
 
-export const usePointOperationsAdjustPoints = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof pointOperationsAdjustPoints>>,
-      TError,
-      { data: ModelsPointTransactionCreateRequest },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof pointOperationsAdjustPoints>>,
-  TError,
-  { data: ModelsPointTransactionCreateRequest },
-  TContext
-> => {
-  const mutationOptions = getPointOperationsAdjustPointsMutationOptions(options)
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+export const getPointOperationsAdjustPointsMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pointOperationsAdjustPoints>>, TError,{data: ModelsPointTransactionCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof pointOperationsAdjustPoints>>, TError,{data: ModelsPointTransactionCreateRequest}, TContext> => {
+
+const mutationKey = ['pointOperationsAdjustPoints'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof pointOperationsAdjustPoints>>, {data: ModelsPointTransactionCreateRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  pointOperationsAdjustPoints(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PointOperationsAdjustPointsMutationResult = NonNullable<Awaited<ReturnType<typeof pointOperationsAdjustPoints>>>
+    export type PointOperationsAdjustPointsMutationBody = ModelsPointTransactionCreateRequest
+    export type PointOperationsAdjustPointsMutationError = unknown
+
+    export const usePointOperationsAdjustPoints = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pointOperationsAdjustPoints>>, TError,{data: ModelsPointTransactionCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof pointOperationsAdjustPoints>>,
+        TError,
+        {data: ModelsPointTransactionCreateRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getPointOperationsAdjustPointsMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * Get customer point balance
  */
 export type pointOperationsGetPointBalanceResponse200 = {
   data: PointOperationsGetPointBalance200
   status: 200
 }
+    
+export type pointOperationsGetPointBalanceResponseComposite = pointOperationsGetPointBalanceResponse200;
+    
+export type pointOperationsGetPointBalanceResponse = pointOperationsGetPointBalanceResponseComposite & {
+  headers: Headers;
+}
 
-export type pointOperationsGetPointBalanceResponseComposite =
-  pointOperationsGetPointBalanceResponse200
+export const getPointOperationsGetPointBalanceUrl = (customerId: ModelsCustomerId,) => {
 
-export type pointOperationsGetPointBalanceResponse =
-  pointOperationsGetPointBalanceResponseComposite & {
-    headers: Headers
-  }
 
-export const getPointOperationsGetPointBalanceUrl = (
-  customerId: ModelsCustomerId
-) => {
+  
+
   return `/points/customer/${customerId}/balance`
 }
 
-export const pointOperationsGetPointBalance = async (
-  customerId: ModelsCustomerId,
-  options?: RequestInit
-): Promise<pointOperationsGetPointBalanceResponse> => {
-  return customInstance<pointOperationsGetPointBalanceResponse>(
-    getPointOperationsGetPointBalanceUrl(customerId),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getPointOperationsGetPointBalanceQueryKey = (
-  customerId?: ModelsCustomerId
-) => {
-  return [`/points/customer/${customerId}/balance`] as const
-}
-
-export const getPointOperationsGetPointBalanceQueryOptions = <
-  TData = Awaited<ReturnType<typeof pointOperationsGetPointBalance>>,
-  TError = unknown,
->(
-  customerId: ModelsCustomerId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof pointOperationsGetPointBalance>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const pointOperationsGetPointBalance = async (customerId: ModelsCustomerId, options?: RequestInit): Promise<pointOperationsGetPointBalanceResponse> => {
+  
+  return customInstance<pointOperationsGetPointBalanceResponse>(getPointOperationsGetPointBalanceUrl(customerId),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getPointOperationsGetPointBalanceQueryKey = (customerId?: ModelsCustomerId,) => {
+    return [`/points/customer/${customerId}/balance`] as const;
+    }
+
+    
+export const getPointOperationsGetPointBalanceQueryOptions = <TData = Awaited<ReturnType<typeof pointOperationsGetPointBalance>>, TError = unknown>(customerId: ModelsCustomerId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof pointOperationsGetPointBalance>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ??
-    getPointOperationsGetPointBalanceQueryKey(customerId)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof pointOperationsGetPointBalance>>
-  > = ({ signal }) =>
-    pointOperationsGetPointBalance(customerId, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getPointOperationsGetPointBalanceQueryKey(customerId);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!customerId,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof pointOperationsGetPointBalance>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof pointOperationsGetPointBalance>>> = ({ signal }) => pointOperationsGetPointBalance(customerId, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(customerId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof pointOperationsGetPointBalance>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type PointOperationsGetPointBalanceQueryResult = NonNullable<
-  Awaited<ReturnType<typeof pointOperationsGetPointBalance>>
->
+export type PointOperationsGetPointBalanceQueryResult = NonNullable<Awaited<ReturnType<typeof pointOperationsGetPointBalance>>>
 export type PointOperationsGetPointBalanceQueryError = unknown
 
-export function usePointOperationsGetPointBalance<
-  TData = Awaited<ReturnType<typeof pointOperationsGetPointBalance>>,
-  TError = unknown,
->(
-  customerId: ModelsCustomerId,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof pointOperationsGetPointBalance>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function usePointOperationsGetPointBalance<TData = Awaited<ReturnType<typeof pointOperationsGetPointBalance>>, TError = unknown>(
+ customerId: ModelsCustomerId, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof pointOperationsGetPointBalance>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof pointOperationsGetPointBalance>>,
           TError,
           Awaited<ReturnType<typeof pointOperationsGetPointBalance>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function usePointOperationsGetPointBalance<
-  TData = Awaited<ReturnType<typeof pointOperationsGetPointBalance>>,
-  TError = unknown,
->(
-  customerId: ModelsCustomerId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof pointOperationsGetPointBalance>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function usePointOperationsGetPointBalance<TData = Awaited<ReturnType<typeof pointOperationsGetPointBalance>>, TError = unknown>(
+ customerId: ModelsCustomerId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof pointOperationsGetPointBalance>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof pointOperationsGetPointBalance>>,
           TError,
           Awaited<ReturnType<typeof pointOperationsGetPointBalance>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function usePointOperationsGetPointBalance<
-  TData = Awaited<ReturnType<typeof pointOperationsGetPointBalance>>,
-  TError = unknown,
->(
-  customerId: ModelsCustomerId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof pointOperationsGetPointBalance>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function usePointOperationsGetPointBalance<TData = Awaited<ReturnType<typeof pointOperationsGetPointBalance>>, TError = unknown>(
+ customerId: ModelsCustomerId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof pointOperationsGetPointBalance>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function usePointOperationsGetPointBalance<TData = Awaited<ReturnType<typeof pointOperationsGetPointBalance>>, TError = unknown>(
+ customerId: ModelsCustomerId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof pointOperationsGetPointBalance>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getPointOperationsGetPointBalanceQueryOptions(customerId,options)
+
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
 
-export function usePointOperationsGetPointBalance<
-  TData = Awaited<ReturnType<typeof pointOperationsGetPointBalance>>,
-  TError = unknown,
->(
-  customerId: ModelsCustomerId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof pointOperationsGetPointBalance>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getPointOperationsGetPointBalanceQueryOptions(
-    customerId,
-    options
-  )
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-
-  query.queryKey = queryOptions.queryKey
-
-  return query
-}
 
 /**
  * Get expiring points
@@ -348,218 +239,116 @@ export type pointOperationsGetExpiringPointsResponse200 = {
   data: PointOperationsGetExpiringPoints200
   status: 200
 }
+    
+export type pointOperationsGetExpiringPointsResponseComposite = pointOperationsGetExpiringPointsResponse200;
+    
+export type pointOperationsGetExpiringPointsResponse = pointOperationsGetExpiringPointsResponseComposite & {
+  headers: Headers;
+}
 
-export type pointOperationsGetExpiringPointsResponseComposite =
-  pointOperationsGetExpiringPointsResponse200
-
-export type pointOperationsGetExpiringPointsResponse =
-  pointOperationsGetExpiringPointsResponseComposite & {
-    headers: Headers
-  }
-
-export const getPointOperationsGetExpiringPointsUrl = (
-  customerId: ModelsCustomerId,
-  params?: PointOperationsGetExpiringPointsParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getPointOperationsGetExpiringPointsUrl = (customerId: ModelsCustomerId,
+    params?: PointOperationsGetExpiringPointsParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/points/customer/${customerId}/expiring?${stringifiedParams}`
-    : `/points/customer/${customerId}/expiring`
+  return stringifiedParams.length > 0 ? `/points/customer/${customerId}/expiring?${stringifiedParams}` : `/points/customer/${customerId}/expiring`
 }
 
-export const pointOperationsGetExpiringPoints = async (
-  customerId: ModelsCustomerId,
-  params?: PointOperationsGetExpiringPointsParams,
-  options?: RequestInit
-): Promise<pointOperationsGetExpiringPointsResponse> => {
-  return customInstance<pointOperationsGetExpiringPointsResponse>(
-    getPointOperationsGetExpiringPointsUrl(customerId, params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getPointOperationsGetExpiringPointsQueryKey = (
-  customerId?: ModelsCustomerId,
-  params?: PointOperationsGetExpiringPointsParams
-) => {
-  return [
-    `/points/customer/${customerId}/expiring`,
-    ...(params ? [params] : []),
-  ] as const
-}
-
-export const getPointOperationsGetExpiringPointsQueryOptions = <
-  TData = Awaited<ReturnType<typeof pointOperationsGetExpiringPoints>>,
-  TError = unknown,
->(
-  customerId: ModelsCustomerId,
-  params?: PointOperationsGetExpiringPointsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof pointOperationsGetExpiringPoints>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const pointOperationsGetExpiringPoints = async (customerId: ModelsCustomerId,
+    params?: PointOperationsGetExpiringPointsParams, options?: RequestInit): Promise<pointOperationsGetExpiringPointsResponse> => {
+  
+  return customInstance<pointOperationsGetExpiringPointsResponse>(getPointOperationsGetExpiringPointsUrl(customerId,params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getPointOperationsGetExpiringPointsQueryKey = (customerId?: ModelsCustomerId,
+    params?: PointOperationsGetExpiringPointsParams,) => {
+    return [`/points/customer/${customerId}/expiring`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getPointOperationsGetExpiringPointsQueryOptions = <TData = Awaited<ReturnType<typeof pointOperationsGetExpiringPoints>>, TError = unknown>(customerId: ModelsCustomerId,
+    params?: PointOperationsGetExpiringPointsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof pointOperationsGetExpiringPoints>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ??
-    getPointOperationsGetExpiringPointsQueryKey(customerId, params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof pointOperationsGetExpiringPoints>>
-  > = ({ signal }) =>
-    pointOperationsGetExpiringPoints(customerId, params, {
-      signal,
-      ...requestOptions,
-    })
+  const queryKey =  queryOptions?.queryKey ?? getPointOperationsGetExpiringPointsQueryKey(customerId,params);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!customerId,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof pointOperationsGetExpiringPoints>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof pointOperationsGetExpiringPoints>>> = ({ signal }) => pointOperationsGetExpiringPoints(customerId,params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(customerId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof pointOperationsGetExpiringPoints>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type PointOperationsGetExpiringPointsQueryResult = NonNullable<
-  Awaited<ReturnType<typeof pointOperationsGetExpiringPoints>>
->
+export type PointOperationsGetExpiringPointsQueryResult = NonNullable<Awaited<ReturnType<typeof pointOperationsGetExpiringPoints>>>
 export type PointOperationsGetExpiringPointsQueryError = unknown
 
-export function usePointOperationsGetExpiringPoints<
-  TData = Awaited<ReturnType<typeof pointOperationsGetExpiringPoints>>,
-  TError = unknown,
->(
-  customerId: ModelsCustomerId,
-  params: undefined | PointOperationsGetExpiringPointsParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof pointOperationsGetExpiringPoints>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function usePointOperationsGetExpiringPoints<TData = Awaited<ReturnType<typeof pointOperationsGetExpiringPoints>>, TError = unknown>(
+ customerId: ModelsCustomerId,
+    params: undefined |  PointOperationsGetExpiringPointsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof pointOperationsGetExpiringPoints>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof pointOperationsGetExpiringPoints>>,
           TError,
           Awaited<ReturnType<typeof pointOperationsGetExpiringPoints>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function usePointOperationsGetExpiringPoints<
-  TData = Awaited<ReturnType<typeof pointOperationsGetExpiringPoints>>,
-  TError = unknown,
->(
-  customerId: ModelsCustomerId,
-  params?: PointOperationsGetExpiringPointsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof pointOperationsGetExpiringPoints>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function usePointOperationsGetExpiringPoints<TData = Awaited<ReturnType<typeof pointOperationsGetExpiringPoints>>, TError = unknown>(
+ customerId: ModelsCustomerId,
+    params?: PointOperationsGetExpiringPointsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof pointOperationsGetExpiringPoints>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof pointOperationsGetExpiringPoints>>,
           TError,
           Awaited<ReturnType<typeof pointOperationsGetExpiringPoints>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function usePointOperationsGetExpiringPoints<
-  TData = Awaited<ReturnType<typeof pointOperationsGetExpiringPoints>>,
-  TError = unknown,
->(
-  customerId: ModelsCustomerId,
-  params?: PointOperationsGetExpiringPointsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof pointOperationsGetExpiringPoints>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function usePointOperationsGetExpiringPoints<TData = Awaited<ReturnType<typeof pointOperationsGetExpiringPoints>>, TError = unknown>(
+ customerId: ModelsCustomerId,
+    params?: PointOperationsGetExpiringPointsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof pointOperationsGetExpiringPoints>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function usePointOperationsGetExpiringPoints<TData = Awaited<ReturnType<typeof pointOperationsGetExpiringPoints>>, TError = unknown>(
+ customerId: ModelsCustomerId,
+    params?: PointOperationsGetExpiringPointsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof pointOperationsGetExpiringPoints>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getPointOperationsGetExpiringPointsQueryOptions(customerId,params,options)
+
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
 
-export function usePointOperationsGetExpiringPoints<
-  TData = Awaited<ReturnType<typeof pointOperationsGetExpiringPoints>>,
-  TError = unknown,
->(
-  customerId: ModelsCustomerId,
-  params?: PointOperationsGetExpiringPointsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof pointOperationsGetExpiringPoints>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getPointOperationsGetExpiringPointsQueryOptions(
-    customerId,
-    params,
-    options
-  )
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-
-  query.queryKey = queryOptions.queryKey
-
-  return query
-}
 
 /**
  * Get point transaction history
@@ -568,218 +357,116 @@ export type pointOperationsGetPointTransactionsResponse200 = {
   data: PointOperationsGetPointTransactions200
   status: 200
 }
+    
+export type pointOperationsGetPointTransactionsResponseComposite = pointOperationsGetPointTransactionsResponse200;
+    
+export type pointOperationsGetPointTransactionsResponse = pointOperationsGetPointTransactionsResponseComposite & {
+  headers: Headers;
+}
 
-export type pointOperationsGetPointTransactionsResponseComposite =
-  pointOperationsGetPointTransactionsResponse200
-
-export type pointOperationsGetPointTransactionsResponse =
-  pointOperationsGetPointTransactionsResponseComposite & {
-    headers: Headers
-  }
-
-export const getPointOperationsGetPointTransactionsUrl = (
-  customerId: ModelsCustomerId,
-  params?: PointOperationsGetPointTransactionsParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getPointOperationsGetPointTransactionsUrl = (customerId: ModelsCustomerId,
+    params?: PointOperationsGetPointTransactionsParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/points/customer/${customerId}/transactions?${stringifiedParams}`
-    : `/points/customer/${customerId}/transactions`
+  return stringifiedParams.length > 0 ? `/points/customer/${customerId}/transactions?${stringifiedParams}` : `/points/customer/${customerId}/transactions`
 }
 
-export const pointOperationsGetPointTransactions = async (
-  customerId: ModelsCustomerId,
-  params?: PointOperationsGetPointTransactionsParams,
-  options?: RequestInit
-): Promise<pointOperationsGetPointTransactionsResponse> => {
-  return customInstance<pointOperationsGetPointTransactionsResponse>(
-    getPointOperationsGetPointTransactionsUrl(customerId, params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getPointOperationsGetPointTransactionsQueryKey = (
-  customerId?: ModelsCustomerId,
-  params?: PointOperationsGetPointTransactionsParams
-) => {
-  return [
-    `/points/customer/${customerId}/transactions`,
-    ...(params ? [params] : []),
-  ] as const
-}
-
-export const getPointOperationsGetPointTransactionsQueryOptions = <
-  TData = Awaited<ReturnType<typeof pointOperationsGetPointTransactions>>,
-  TError = unknown,
->(
-  customerId: ModelsCustomerId,
-  params?: PointOperationsGetPointTransactionsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof pointOperationsGetPointTransactions>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const pointOperationsGetPointTransactions = async (customerId: ModelsCustomerId,
+    params?: PointOperationsGetPointTransactionsParams, options?: RequestInit): Promise<pointOperationsGetPointTransactionsResponse> => {
+  
+  return customInstance<pointOperationsGetPointTransactionsResponse>(getPointOperationsGetPointTransactionsUrl(customerId,params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getPointOperationsGetPointTransactionsQueryKey = (customerId?: ModelsCustomerId,
+    params?: PointOperationsGetPointTransactionsParams,) => {
+    return [`/points/customer/${customerId}/transactions`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getPointOperationsGetPointTransactionsQueryOptions = <TData = Awaited<ReturnType<typeof pointOperationsGetPointTransactions>>, TError = unknown>(customerId: ModelsCustomerId,
+    params?: PointOperationsGetPointTransactionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof pointOperationsGetPointTransactions>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ??
-    getPointOperationsGetPointTransactionsQueryKey(customerId, params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof pointOperationsGetPointTransactions>>
-  > = ({ signal }) =>
-    pointOperationsGetPointTransactions(customerId, params, {
-      signal,
-      ...requestOptions,
-    })
+  const queryKey =  queryOptions?.queryKey ?? getPointOperationsGetPointTransactionsQueryKey(customerId,params);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!customerId,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof pointOperationsGetPointTransactions>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof pointOperationsGetPointTransactions>>> = ({ signal }) => pointOperationsGetPointTransactions(customerId,params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(customerId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof pointOperationsGetPointTransactions>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type PointOperationsGetPointTransactionsQueryResult = NonNullable<
-  Awaited<ReturnType<typeof pointOperationsGetPointTransactions>>
->
+export type PointOperationsGetPointTransactionsQueryResult = NonNullable<Awaited<ReturnType<typeof pointOperationsGetPointTransactions>>>
 export type PointOperationsGetPointTransactionsQueryError = unknown
 
-export function usePointOperationsGetPointTransactions<
-  TData = Awaited<ReturnType<typeof pointOperationsGetPointTransactions>>,
-  TError = unknown,
->(
-  customerId: ModelsCustomerId,
-  params: undefined | PointOperationsGetPointTransactionsParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof pointOperationsGetPointTransactions>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function usePointOperationsGetPointTransactions<TData = Awaited<ReturnType<typeof pointOperationsGetPointTransactions>>, TError = unknown>(
+ customerId: ModelsCustomerId,
+    params: undefined |  PointOperationsGetPointTransactionsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof pointOperationsGetPointTransactions>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof pointOperationsGetPointTransactions>>,
           TError,
           Awaited<ReturnType<typeof pointOperationsGetPointTransactions>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function usePointOperationsGetPointTransactions<
-  TData = Awaited<ReturnType<typeof pointOperationsGetPointTransactions>>,
-  TError = unknown,
->(
-  customerId: ModelsCustomerId,
-  params?: PointOperationsGetPointTransactionsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof pointOperationsGetPointTransactions>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function usePointOperationsGetPointTransactions<TData = Awaited<ReturnType<typeof pointOperationsGetPointTransactions>>, TError = unknown>(
+ customerId: ModelsCustomerId,
+    params?: PointOperationsGetPointTransactionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof pointOperationsGetPointTransactions>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof pointOperationsGetPointTransactions>>,
           TError,
           Awaited<ReturnType<typeof pointOperationsGetPointTransactions>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function usePointOperationsGetPointTransactions<
-  TData = Awaited<ReturnType<typeof pointOperationsGetPointTransactions>>,
-  TError = unknown,
->(
-  customerId: ModelsCustomerId,
-  params?: PointOperationsGetPointTransactionsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof pointOperationsGetPointTransactions>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function usePointOperationsGetPointTransactions<TData = Awaited<ReturnType<typeof pointOperationsGetPointTransactions>>, TError = unknown>(
+ customerId: ModelsCustomerId,
+    params?: PointOperationsGetPointTransactionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof pointOperationsGetPointTransactions>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function usePointOperationsGetPointTransactions<TData = Awaited<ReturnType<typeof pointOperationsGetPointTransactions>>, TError = unknown>(
+ customerId: ModelsCustomerId,
+    params?: PointOperationsGetPointTransactionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof pointOperationsGetPointTransactions>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getPointOperationsGetPointTransactionsQueryOptions(customerId,params,options)
+
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
 
-export function usePointOperationsGetPointTransactions<
-  TData = Awaited<ReturnType<typeof pointOperationsGetPointTransactions>>,
-  TError = unknown,
->(
-  customerId: ModelsCustomerId,
-  params?: PointOperationsGetPointTransactionsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof pointOperationsGetPointTransactions>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getPointOperationsGetPointTransactionsQueryOptions(
-    customerId,
-    params,
-    options
-  )
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-
-  query.queryKey = queryOptions.queryKey
-
-  return query
-}
 
 /**
  * Add points to customer
@@ -788,309 +475,234 @@ export type pointOperationsEarnPointsResponse200 = {
   data: PointOperationsEarnPoints200
   status: 200
 }
-
-export type pointOperationsEarnPointsResponseComposite =
-  pointOperationsEarnPointsResponse200
-
-export type pointOperationsEarnPointsResponse =
-  pointOperationsEarnPointsResponseComposite & {
-    headers: Headers
-  }
+    
+export type pointOperationsEarnPointsResponseComposite = pointOperationsEarnPointsResponse200;
+    
+export type pointOperationsEarnPointsResponse = pointOperationsEarnPointsResponseComposite & {
+  headers: Headers;
+}
 
 export const getPointOperationsEarnPointsUrl = () => {
+
+
+  
+
   return `/points/earn`
 }
 
-export const pointOperationsEarnPoints = async (
-  modelsPointTransactionCreateRequest: ModelsPointTransactionCreateRequest,
-  options?: RequestInit
-): Promise<pointOperationsEarnPointsResponse> => {
-  return customInstance<pointOperationsEarnPointsResponse>(
-    getPointOperationsEarnPointsUrl(),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsPointTransactionCreateRequest),
-    }
-  )
-}
-
-export const getPointOperationsEarnPointsMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof pointOperationsEarnPoints>>,
-    TError,
-    { data: ModelsPointTransactionCreateRequest },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof pointOperationsEarnPoints>>,
-  TError,
-  { data: ModelsPointTransactionCreateRequest },
-  TContext
-> => {
-  const mutationKey = ['pointOperationsEarnPoints']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof pointOperationsEarnPoints>>,
-    { data: ModelsPointTransactionCreateRequest }
-  > = (props) => {
-    const { data } = props ?? {}
-
-    return pointOperationsEarnPoints(data, requestOptions)
+export const pointOperationsEarnPoints = async (modelsPointTransactionCreateRequest: ModelsPointTransactionCreateRequest, options?: RequestInit): Promise<pointOperationsEarnPointsResponse> => {
+  
+  return customInstance<pointOperationsEarnPointsResponse>(getPointOperationsEarnPointsUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      modelsPointTransactionCreateRequest,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type PointOperationsEarnPointsMutationResult = NonNullable<
-  Awaited<ReturnType<typeof pointOperationsEarnPoints>>
->
-export type PointOperationsEarnPointsMutationBody =
-  ModelsPointTransactionCreateRequest
-export type PointOperationsEarnPointsMutationError = unknown
 
-export const usePointOperationsEarnPoints = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof pointOperationsEarnPoints>>,
-      TError,
-      { data: ModelsPointTransactionCreateRequest },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof pointOperationsEarnPoints>>,
-  TError,
-  { data: ModelsPointTransactionCreateRequest },
-  TContext
-> => {
-  const mutationOptions = getPointOperationsEarnPointsMutationOptions(options)
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+export const getPointOperationsEarnPointsMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pointOperationsEarnPoints>>, TError,{data: ModelsPointTransactionCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof pointOperationsEarnPoints>>, TError,{data: ModelsPointTransactionCreateRequest}, TContext> => {
+
+const mutationKey = ['pointOperationsEarnPoints'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof pointOperationsEarnPoints>>, {data: ModelsPointTransactionCreateRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  pointOperationsEarnPoints(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PointOperationsEarnPointsMutationResult = NonNullable<Awaited<ReturnType<typeof pointOperationsEarnPoints>>>
+    export type PointOperationsEarnPointsMutationBody = ModelsPointTransactionCreateRequest
+    export type PointOperationsEarnPointsMutationError = unknown
+
+    export const usePointOperationsEarnPoints = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pointOperationsEarnPoints>>, TError,{data: ModelsPointTransactionCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof pointOperationsEarnPoints>>,
+        TError,
+        {data: ModelsPointTransactionCreateRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getPointOperationsEarnPointsMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * Process expired points
  */
 export type pointOperationsProcessExpiredPointsResponse200 = {
   data: PointOperationsProcessExpiredPoints200
   status: 200
 }
-
-export type pointOperationsProcessExpiredPointsResponseComposite =
-  pointOperationsProcessExpiredPointsResponse200
-
-export type pointOperationsProcessExpiredPointsResponse =
-  pointOperationsProcessExpiredPointsResponseComposite & {
-    headers: Headers
-  }
+    
+export type pointOperationsProcessExpiredPointsResponseComposite = pointOperationsProcessExpiredPointsResponse200;
+    
+export type pointOperationsProcessExpiredPointsResponse = pointOperationsProcessExpiredPointsResponseComposite & {
+  headers: Headers;
+}
 
 export const getPointOperationsProcessExpiredPointsUrl = () => {
+
+
+  
+
   return `/points/expire`
 }
 
-export const pointOperationsProcessExpiredPoints = async (
-  pointOperationsProcessExpiredPointsBody: PointOperationsProcessExpiredPointsBody,
-  options?: RequestInit
-): Promise<pointOperationsProcessExpiredPointsResponse> => {
-  return customInstance<pointOperationsProcessExpiredPointsResponse>(
-    getPointOperationsProcessExpiredPointsUrl(),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(pointOperationsProcessExpiredPointsBody),
-    }
-  )
-}
-
-export const getPointOperationsProcessExpiredPointsMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof pointOperationsProcessExpiredPoints>>,
-    TError,
-    { data: PointOperationsProcessExpiredPointsBody },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof pointOperationsProcessExpiredPoints>>,
-  TError,
-  { data: PointOperationsProcessExpiredPointsBody },
-  TContext
-> => {
-  const mutationKey = ['pointOperationsProcessExpiredPoints']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof pointOperationsProcessExpiredPoints>>,
-    { data: PointOperationsProcessExpiredPointsBody }
-  > = (props) => {
-    const { data } = props ?? {}
-
-    return pointOperationsProcessExpiredPoints(data, requestOptions)
+export const pointOperationsProcessExpiredPoints = async (pointOperationsProcessExpiredPointsBody: PointOperationsProcessExpiredPointsBody, options?: RequestInit): Promise<pointOperationsProcessExpiredPointsResponse> => {
+  
+  return customInstance<pointOperationsProcessExpiredPointsResponse>(getPointOperationsProcessExpiredPointsUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      pointOperationsProcessExpiredPointsBody,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type PointOperationsProcessExpiredPointsMutationResult = NonNullable<
-  Awaited<ReturnType<typeof pointOperationsProcessExpiredPoints>>
->
-export type PointOperationsProcessExpiredPointsMutationBody =
-  PointOperationsProcessExpiredPointsBody
-export type PointOperationsProcessExpiredPointsMutationError = unknown
 
-export const usePointOperationsProcessExpiredPoints = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof pointOperationsProcessExpiredPoints>>,
-      TError,
-      { data: PointOperationsProcessExpiredPointsBody },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof pointOperationsProcessExpiredPoints>>,
-  TError,
-  { data: PointOperationsProcessExpiredPointsBody },
-  TContext
-> => {
-  const mutationOptions =
-    getPointOperationsProcessExpiredPointsMutationOptions(options)
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+export const getPointOperationsProcessExpiredPointsMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pointOperationsProcessExpiredPoints>>, TError,{data: PointOperationsProcessExpiredPointsBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof pointOperationsProcessExpiredPoints>>, TError,{data: PointOperationsProcessExpiredPointsBody}, TContext> => {
+
+const mutationKey = ['pointOperationsProcessExpiredPoints'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof pointOperationsProcessExpiredPoints>>, {data: PointOperationsProcessExpiredPointsBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  pointOperationsProcessExpiredPoints(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PointOperationsProcessExpiredPointsMutationResult = NonNullable<Awaited<ReturnType<typeof pointOperationsProcessExpiredPoints>>>
+    export type PointOperationsProcessExpiredPointsMutationBody = PointOperationsProcessExpiredPointsBody
+    export type PointOperationsProcessExpiredPointsMutationError = unknown
+
+    export const usePointOperationsProcessExpiredPoints = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pointOperationsProcessExpiredPoints>>, TError,{data: PointOperationsProcessExpiredPointsBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof pointOperationsProcessExpiredPoints>>,
+        TError,
+        {data: PointOperationsProcessExpiredPointsBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPointOperationsProcessExpiredPointsMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * Use customer points
  */
 export type pointOperationsUsePointsResponse200 = {
   data: PointOperationsUsePoints200
   status: 200
 }
-
-export type pointOperationsUsePointsResponseComposite =
-  pointOperationsUsePointsResponse200
-
-export type pointOperationsUsePointsResponse =
-  pointOperationsUsePointsResponseComposite & {
-    headers: Headers
-  }
+    
+export type pointOperationsUsePointsResponseComposite = pointOperationsUsePointsResponse200;
+    
+export type pointOperationsUsePointsResponse = pointOperationsUsePointsResponseComposite & {
+  headers: Headers;
+}
 
 export const getPointOperationsUsePointsUrl = () => {
+
+
+  
+
   return `/points/use`
 }
 
-export const pointOperationsUsePoints = async (
-  modelsPointTransactionCreateRequest: ModelsPointTransactionCreateRequest,
-  options?: RequestInit
-): Promise<pointOperationsUsePointsResponse> => {
-  return customInstance<pointOperationsUsePointsResponse>(
-    getPointOperationsUsePointsUrl(),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsPointTransactionCreateRequest),
-    }
-  )
-}
-
-export const getPointOperationsUsePointsMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof pointOperationsUsePoints>>,
-    TError,
-    { data: ModelsPointTransactionCreateRequest },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof pointOperationsUsePoints>>,
-  TError,
-  { data: ModelsPointTransactionCreateRequest },
-  TContext
-> => {
-  const mutationKey = ['pointOperationsUsePoints']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof pointOperationsUsePoints>>,
-    { data: ModelsPointTransactionCreateRequest }
-  > = (props) => {
-    const { data } = props ?? {}
-
-    return pointOperationsUsePoints(data, requestOptions)
+export const pointOperationsUsePoints = async (modelsPointTransactionCreateRequest: ModelsPointTransactionCreateRequest, options?: RequestInit): Promise<pointOperationsUsePointsResponse> => {
+  
+  return customInstance<pointOperationsUsePointsResponse>(getPointOperationsUsePointsUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      modelsPointTransactionCreateRequest,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type PointOperationsUsePointsMutationResult = NonNullable<
-  Awaited<ReturnType<typeof pointOperationsUsePoints>>
->
-export type PointOperationsUsePointsMutationBody =
-  ModelsPointTransactionCreateRequest
-export type PointOperationsUsePointsMutationError = unknown
 
-export const usePointOperationsUsePoints = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof pointOperationsUsePoints>>,
-      TError,
-      { data: ModelsPointTransactionCreateRequest },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof pointOperationsUsePoints>>,
-  TError,
-  { data: ModelsPointTransactionCreateRequest },
-  TContext
-> => {
-  const mutationOptions = getPointOperationsUsePointsMutationOptions(options)
 
-  return useMutation(mutationOptions, queryClient)
-}
+export const getPointOperationsUsePointsMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pointOperationsUsePoints>>, TError,{data: ModelsPointTransactionCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof pointOperationsUsePoints>>, TError,{data: ModelsPointTransactionCreateRequest}, TContext> => {
+
+const mutationKey = ['pointOperationsUsePoints'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof pointOperationsUsePoints>>, {data: ModelsPointTransactionCreateRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  pointOperationsUsePoints(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PointOperationsUsePointsMutationResult = NonNullable<Awaited<ReturnType<typeof pointOperationsUsePoints>>>
+    export type PointOperationsUsePointsMutationBody = ModelsPointTransactionCreateRequest
+    export type PointOperationsUsePointsMutationError = unknown
+
+    export const usePointOperationsUsePoints = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pointOperationsUsePoints>>, TError,{data: ModelsPointTransactionCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof pointOperationsUsePoints>>,
+        TError,
+        {data: ModelsPointTransactionCreateRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getPointOperationsUsePointsMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    

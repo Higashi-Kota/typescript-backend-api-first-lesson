@@ -5,46 +5,46 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsRefundId } from './modelsRefundId'
-import type { ModelsPaymentId } from './modelsPaymentId'
-import type { ModelsMoney } from './modelsMoney'
-import type { ModelsRefundStatus } from './modelsRefundStatus'
-import type { ModelsRefundMethod } from './modelsRefundMethod'
+import type { ModelsRefundId } from './modelsRefundId';
+import type { ModelsPaymentId } from './modelsPaymentId';
+import type { ModelsMoney } from './modelsMoney';
+import type { ModelsRefundStatus } from './modelsRefundStatus';
+import type { ModelsRefundMethod } from './modelsRefundMethod';
 
 /**
  * 返金処理の記録
  */
 export interface ModelsRefund {
   /** 返金 ID */
-  id: ModelsRefundId
+  id: ModelsRefundId;
   /** 元となる決済 ID */
-  paymentId: ModelsPaymentId
+  paymentId: ModelsPaymentId;
   /** 返金金額 */
-  amount: ModelsMoney
+  amount: ModelsMoney;
   /** 返金理由 */
-  reason: string
+  reason: string;
   /** 返金処理日時 */
-  refundedAt: string
+  refundedAt: string;
   /** 返金処理の進捗状態 */
-  status: ModelsRefundStatus
+  status: ModelsRefundStatus;
   /**
    * 返金処理を担当したスタッフ ID
    * @nullable
    */
-  processedBy: string | null
+  processedBy: string | null;
   /**
    * 返金に使用した支払い方法
    * @nullable
    */
-  method: ModelsRefundMethod
+  method: ModelsRefundMethod;
   /**
    * 外部返金参照コード
    * @nullable
    */
-  referenceCode: string | null
+  referenceCode: string | null;
   /**
    * 返金処理に関する備考
    * @nullable
    */
-  notes: string | null
+  notes: string | null;
 }

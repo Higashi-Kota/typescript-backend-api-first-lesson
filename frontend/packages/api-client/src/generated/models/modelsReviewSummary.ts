@@ -5,16 +5,16 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsReviewSummaryRatingDistribution } from './modelsReviewSummaryRatingDistribution'
+import type { ModelsReviewSummaryRatingDistribution } from './modelsReviewSummaryRatingDistribution';
 
 /**
  * レビュー集計モデル - 平均評価や件数分布を保持し、ダッシュボードやランキング表示に活用する
  */
 export interface ModelsReviewSummary {
   /** 全体平均評価 (小数) */
-  averageRating: number
+  averageRating: number;
   /** レビュー総件数 */
-  totalReviews: number
+  totalReviews: number;
   /** 評価値ごとのレビュー件数分布 */
-  ratingDistribution: ModelsReviewSummaryRatingDistribution
+  ratingDistribution: ModelsReviewSummaryRatingDistribution;
 }

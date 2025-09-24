@@ -9,4 +9,4 @@
 /**
  * ソート対象フィールド。予約日時や作成日時など業務軸を指定する。
  */
-export type ModelsCursorPaginationParamsSortByParameter = string
+export type ModelsCursorPaginationParamsSortByParameter = string;

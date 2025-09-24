@@ -10,7 +10,7 @@
  * 成功時に返却するドメインデータ。
  */
 export type UserRoleTypeOperationsBulkAssignRoles200AnyOfData = {
-  assigned: number
-  failed: number
-  errors?: string[]
-}
+  assigned: number;
+  failed: number;
+  errors?: string[];
+};

@@ -9,4 +9,4 @@
 /**
  * ファセット集計を有効化するかどうか。true で各項目の件数を集計する。
  */
-export type ModelsAdvancedSearchParamsFacetsParameter = boolean
+export type ModelsAdvancedSearchParamsFacetsParameter = boolean;

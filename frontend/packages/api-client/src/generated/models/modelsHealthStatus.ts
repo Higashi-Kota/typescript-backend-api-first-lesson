@@ -5,9 +5,9 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsHealthStatusStatus } from './modelsHealthStatusStatus'
-import type { ModelsHealthCheck } from './modelsHealthCheck'
-import type { ModelsHealthStatusMetadata } from './modelsHealthStatusMetadata'
+import type { ModelsHealthStatusStatus } from './modelsHealthStatusStatus';
+import type { ModelsHealthCheck } from './modelsHealthCheck';
+import type { ModelsHealthStatusMetadata } from './modelsHealthStatusMetadata';
 
 /**
  * API ヘルスチェック結果モデル。
@@ -15,16 +15,16 @@ import type { ModelsHealthStatusMetadata } from './modelsHealthStatusMetadata'
  */
 export interface ModelsHealthStatus {
   /** システム全体の稼働状態。`healthy` は正常、`degraded` は性能低下、`unhealthy` は停止を表す。 */
-  status: ModelsHealthStatusStatus
+  status: ModelsHealthStatusStatus;
   /** 稼働中の API バージョン。運用チームのバージョン管理に利用。 */
-  version: string
+  version: string;
   /** 判定実行時点のサーバー時刻 (UTC)。 */
-  timestamp: string
+  timestamp: string;
   /** 各内部サービスや依存コンポーネントのヘルスチェック結果一覧。 */
-  checks: ModelsHealthCheck[]
+  checks: ModelsHealthCheck[];
   /**
    * 監視環境固有の追加メタ情報。必要に応じてキーを拡張する。追加情報がない場合はnull
    * @nullable
    */
-  metadata: ModelsHealthStatusMetadata
+  metadata: ModelsHealthStatusMetadata;
 }

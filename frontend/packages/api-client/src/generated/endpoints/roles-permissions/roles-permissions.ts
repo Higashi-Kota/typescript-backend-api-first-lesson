@@ -5,7 +5,10 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import { useMutation, useQuery } from '@tanstack/react-query'
+import {
+  useMutation,
+  useQuery
+} from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -18,8 +21,8 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult,
-} from '@tanstack/react-query'
+  UseQueryResult
+} from '@tanstack/react-query';
 
 import type {
   ModelsRoleCreateRequest,
@@ -33,16 +36,19 @@ import type {
   RoleOperationsGetSystemRoles200,
   RoleOperationsListRoles200,
   RoleOperationsListRolesParams,
-  RoleOperationsUpdateRole200,
-} from '../../models'
+  RoleOperationsUpdateRole200
+} from '../../models';
 
-import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher'
+import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher';
 
-type AwaitedInput<T> = PromiseLike<T> | T
+type AwaitedInput<T> = PromiseLike<T> | T;
 
-type Awaited<O> = O extends AwaitedInput<infer T> ? T : never
+      type Awaited<O> = O extends AwaitedInput<infer T> ? T : never;
 
-type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
+
 
 /**
  * List all roles
@@ -51,192 +57,108 @@ export type roleOperationsListRolesResponse200 = {
   data: RoleOperationsListRoles200
   status: 200
 }
+    
+export type roleOperationsListRolesResponseComposite = roleOperationsListRolesResponse200;
+    
+export type roleOperationsListRolesResponse = roleOperationsListRolesResponseComposite & {
+  headers: Headers;
+}
 
-export type roleOperationsListRolesResponseComposite =
-  roleOperationsListRolesResponse200
-
-export type roleOperationsListRolesResponse =
-  roleOperationsListRolesResponseComposite & {
-    headers: Headers
-  }
-
-export const getRoleOperationsListRolesUrl = (
-  params?: RoleOperationsListRolesParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getRoleOperationsListRolesUrl = (params?: RoleOperationsListRolesParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0 ? `/roles?${stringifiedParams}` : `/roles`
 }
 
-export const roleOperationsListRoles = async (
-  params?: RoleOperationsListRolesParams,
-  options?: RequestInit
-): Promise<roleOperationsListRolesResponse> => {
-  return customInstance<roleOperationsListRolesResponse>(
-    getRoleOperationsListRolesUrl(params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getRoleOperationsListRolesQueryKey = (
-  params?: RoleOperationsListRolesParams
-) => {
-  return [`/roles`, ...(params ? [params] : [])] as const
-}
-
-export const getRoleOperationsListRolesQueryOptions = <
-  TData = Awaited<ReturnType<typeof roleOperationsListRoles>>,
-  TError = unknown,
->(
-  params?: RoleOperationsListRolesParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof roleOperationsListRoles>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const roleOperationsListRoles = async (params?: RoleOperationsListRolesParams, options?: RequestInit): Promise<roleOperationsListRolesResponse> => {
+  
+  return customInstance<roleOperationsListRolesResponse>(getRoleOperationsListRolesUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getRoleOperationsListRolesQueryKey = (params?: RoleOperationsListRolesParams,) => {
+    return [`/roles`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getRoleOperationsListRolesQueryOptions = <TData = Awaited<ReturnType<typeof roleOperationsListRoles>>, TError = unknown>(params?: RoleOperationsListRolesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof roleOperationsListRoles>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ?? getRoleOperationsListRolesQueryKey(params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof roleOperationsListRoles>>
-  > = ({ signal }) =>
-    roleOperationsListRoles(params, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getRoleOperationsListRolesQueryKey(params);
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof roleOperationsListRoles>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof roleOperationsListRoles>>> = ({ signal }) => roleOperationsListRoles(params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof roleOperationsListRoles>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type RoleOperationsListRolesQueryResult = NonNullable<
-  Awaited<ReturnType<typeof roleOperationsListRoles>>
->
+export type RoleOperationsListRolesQueryResult = NonNullable<Awaited<ReturnType<typeof roleOperationsListRoles>>>
 export type RoleOperationsListRolesQueryError = unknown
 
-export function useRoleOperationsListRoles<
-  TData = Awaited<ReturnType<typeof roleOperationsListRoles>>,
-  TError = unknown,
->(
-  params: undefined | RoleOperationsListRolesParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof roleOperationsListRoles>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useRoleOperationsListRoles<TData = Awaited<ReturnType<typeof roleOperationsListRoles>>, TError = unknown>(
+ params: undefined |  RoleOperationsListRolesParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof roleOperationsListRoles>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof roleOperationsListRoles>>,
           TError,
           Awaited<ReturnType<typeof roleOperationsListRoles>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useRoleOperationsListRoles<
-  TData = Awaited<ReturnType<typeof roleOperationsListRoles>>,
-  TError = unknown,
->(
-  params?: RoleOperationsListRolesParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof roleOperationsListRoles>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useRoleOperationsListRoles<TData = Awaited<ReturnType<typeof roleOperationsListRoles>>, TError = unknown>(
+ params?: RoleOperationsListRolesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof roleOperationsListRoles>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof roleOperationsListRoles>>,
           TError,
           Awaited<ReturnType<typeof roleOperationsListRoles>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useRoleOperationsListRoles<
-  TData = Awaited<ReturnType<typeof roleOperationsListRoles>>,
-  TError = unknown,
->(
-  params?: RoleOperationsListRolesParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof roleOperationsListRoles>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useRoleOperationsListRoles<TData = Awaited<ReturnType<typeof roleOperationsListRoles>>, TError = unknown>(
+ params?: RoleOperationsListRolesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof roleOperationsListRoles>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useRoleOperationsListRoles<TData = Awaited<ReturnType<typeof roleOperationsListRoles>>, TError = unknown>(
+ params?: RoleOperationsListRolesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof roleOperationsListRoles>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getRoleOperationsListRolesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
 
-export function useRoleOperationsListRoles<
-  TData = Awaited<ReturnType<typeof roleOperationsListRoles>>,
-  TError = unknown,
->(
-  params?: RoleOperationsListRolesParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof roleOperationsListRoles>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getRoleOperationsListRolesQueryOptions(params, options)
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-
-  query.queryKey = queryOptions.queryKey
-
-  return query
-}
 
 /**
  * Create new role
@@ -245,273 +167,180 @@ export type roleOperationsCreateRoleResponse200 = {
   data: RoleOperationsCreateRole200
   status: 200
 }
-
-export type roleOperationsCreateRoleResponseComposite =
-  roleOperationsCreateRoleResponse200
-
-export type roleOperationsCreateRoleResponse =
-  roleOperationsCreateRoleResponseComposite & {
-    headers: Headers
-  }
+    
+export type roleOperationsCreateRoleResponseComposite = roleOperationsCreateRoleResponse200;
+    
+export type roleOperationsCreateRoleResponse = roleOperationsCreateRoleResponseComposite & {
+  headers: Headers;
+}
 
 export const getRoleOperationsCreateRoleUrl = () => {
+
+
+  
+
   return `/roles`
 }
 
-export const roleOperationsCreateRole = async (
-  modelsRoleCreateRequest: ModelsRoleCreateRequest,
-  options?: RequestInit
-): Promise<roleOperationsCreateRoleResponse> => {
-  return customInstance<roleOperationsCreateRoleResponse>(
-    getRoleOperationsCreateRoleUrl(),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsRoleCreateRequest),
-    }
-  )
-}
-
-export const getRoleOperationsCreateRoleMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof roleOperationsCreateRole>>,
-    TError,
-    { data: ModelsRoleCreateRequest },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof roleOperationsCreateRole>>,
-  TError,
-  { data: ModelsRoleCreateRequest },
-  TContext
-> => {
-  const mutationKey = ['roleOperationsCreateRole']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof roleOperationsCreateRole>>,
-    { data: ModelsRoleCreateRequest }
-  > = (props) => {
-    const { data } = props ?? {}
-
-    return roleOperationsCreateRole(data, requestOptions)
+export const roleOperationsCreateRole = async (modelsRoleCreateRequest: ModelsRoleCreateRequest, options?: RequestInit): Promise<roleOperationsCreateRoleResponse> => {
+  
+  return customInstance<roleOperationsCreateRoleResponse>(getRoleOperationsCreateRoleUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      modelsRoleCreateRequest,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type RoleOperationsCreateRoleMutationResult = NonNullable<
-  Awaited<ReturnType<typeof roleOperationsCreateRole>>
->
-export type RoleOperationsCreateRoleMutationBody = ModelsRoleCreateRequest
-export type RoleOperationsCreateRoleMutationError = unknown
 
-export const useRoleOperationsCreateRole = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof roleOperationsCreateRole>>,
-      TError,
-      { data: ModelsRoleCreateRequest },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof roleOperationsCreateRole>>,
-  TError,
-  { data: ModelsRoleCreateRequest },
-  TContext
-> => {
-  const mutationOptions = getRoleOperationsCreateRoleMutationOptions(options)
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+export const getRoleOperationsCreateRoleMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof roleOperationsCreateRole>>, TError,{data: ModelsRoleCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof roleOperationsCreateRole>>, TError,{data: ModelsRoleCreateRequest}, TContext> => {
+
+const mutationKey = ['roleOperationsCreateRole'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof roleOperationsCreateRole>>, {data: ModelsRoleCreateRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  roleOperationsCreateRole(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RoleOperationsCreateRoleMutationResult = NonNullable<Awaited<ReturnType<typeof roleOperationsCreateRole>>>
+    export type RoleOperationsCreateRoleMutationBody = ModelsRoleCreateRequest
+    export type RoleOperationsCreateRoleMutationError = unknown
+
+    export const useRoleOperationsCreateRole = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof roleOperationsCreateRole>>, TError,{data: ModelsRoleCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof roleOperationsCreateRole>>,
+        TError,
+        {data: ModelsRoleCreateRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getRoleOperationsCreateRoleMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * Get system roles
  */
 export type roleOperationsGetSystemRolesResponse200 = {
   data: RoleOperationsGetSystemRoles200
   status: 200
 }
-
-export type roleOperationsGetSystemRolesResponseComposite =
-  roleOperationsGetSystemRolesResponse200
-
-export type roleOperationsGetSystemRolesResponse =
-  roleOperationsGetSystemRolesResponseComposite & {
-    headers: Headers
-  }
+    
+export type roleOperationsGetSystemRolesResponseComposite = roleOperationsGetSystemRolesResponse200;
+    
+export type roleOperationsGetSystemRolesResponse = roleOperationsGetSystemRolesResponseComposite & {
+  headers: Headers;
+}
 
 export const getRoleOperationsGetSystemRolesUrl = () => {
+
+
+  
+
   return `/roles/system`
 }
 
-export const roleOperationsGetSystemRoles = async (
-  options?: RequestInit
-): Promise<roleOperationsGetSystemRolesResponse> => {
-  return customInstance<roleOperationsGetSystemRolesResponse>(
-    getRoleOperationsGetSystemRolesUrl(),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
+export const roleOperationsGetSystemRoles = async ( options?: RequestInit): Promise<roleOperationsGetSystemRolesResponse> => {
+  
+  return customInstance<roleOperationsGetSystemRolesResponse>(getRoleOperationsGetSystemRolesUrl(),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
 
 export const getRoleOperationsGetSystemRolesQueryKey = () => {
-  return [`/roles/system`] as const
+    return [`/roles/system`] as const;
+    }
+
+    
+export const getRoleOperationsGetSystemRolesQueryOptions = <TData = Awaited<ReturnType<typeof roleOperationsGetSystemRoles>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof roleOperationsGetSystemRoles>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getRoleOperationsGetSystemRolesQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof roleOperationsGetSystemRoles>>> = ({ signal }) => roleOperationsGetSystemRoles({ signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof roleOperationsGetSystemRoles>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export const getRoleOperationsGetSystemRolesQueryOptions = <
-  TData = Awaited<ReturnType<typeof roleOperationsGetSystemRoles>>,
-  TError = unknown,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<
-      Awaited<ReturnType<typeof roleOperationsGetSystemRoles>>,
-      TError,
-      TData
-    >
-  >
-  request?: SecondParameter<typeof customInstance>
-}) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
-
-  const queryKey =
-    queryOptions?.queryKey ?? getRoleOperationsGetSystemRolesQueryKey()
-
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof roleOperationsGetSystemRoles>>
-  > = ({ signal }) =>
-    roleOperationsGetSystemRoles({ signal, ...requestOptions })
-
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof roleOperationsGetSystemRoles>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type RoleOperationsGetSystemRolesQueryResult = NonNullable<
-  Awaited<ReturnType<typeof roleOperationsGetSystemRoles>>
->
+export type RoleOperationsGetSystemRolesQueryResult = NonNullable<Awaited<ReturnType<typeof roleOperationsGetSystemRoles>>>
 export type RoleOperationsGetSystemRolesQueryError = unknown
 
-export function useRoleOperationsGetSystemRoles<
-  TData = Awaited<ReturnType<typeof roleOperationsGetSystemRoles>>,
-  TError = unknown,
->(
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof roleOperationsGetSystemRoles>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useRoleOperationsGetSystemRoles<TData = Awaited<ReturnType<typeof roleOperationsGetSystemRoles>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof roleOperationsGetSystemRoles>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof roleOperationsGetSystemRoles>>,
           TError,
           Awaited<ReturnType<typeof roleOperationsGetSystemRoles>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useRoleOperationsGetSystemRoles<
-  TData = Awaited<ReturnType<typeof roleOperationsGetSystemRoles>>,
-  TError = unknown,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof roleOperationsGetSystemRoles>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useRoleOperationsGetSystemRoles<TData = Awaited<ReturnType<typeof roleOperationsGetSystemRoles>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof roleOperationsGetSystemRoles>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof roleOperationsGetSystemRoles>>,
           TError,
           Awaited<ReturnType<typeof roleOperationsGetSystemRoles>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useRoleOperationsGetSystemRoles<
-  TData = Awaited<ReturnType<typeof roleOperationsGetSystemRoles>>,
-  TError = unknown,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof roleOperationsGetSystemRoles>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useRoleOperationsGetSystemRoles<TData = Awaited<ReturnType<typeof roleOperationsGetSystemRoles>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof roleOperationsGetSystemRoles>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useRoleOperationsGetSystemRoles<
-  TData = Awaited<ReturnType<typeof roleOperationsGetSystemRoles>>,
-  TError = unknown,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof roleOperationsGetSystemRoles>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
+export function useRoleOperationsGetSystemRoles<TData = Awaited<ReturnType<typeof roleOperationsGetSystemRoles>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof roleOperationsGetSystemRoles>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
   const queryOptions = getRoleOperationsGetSystemRolesQueryOptions(options)
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  query.queryKey = queryOptions.queryKey
+  query.queryKey = queryOptions.queryKey ;
 
-  return query
+  return query;
 }
+
+
 
 /**
  * Get role by ID
@@ -520,182 +349,101 @@ export type roleOperationsGetRoleResponse200 = {
   data: RoleOperationsGetRole200
   status: 200
 }
+    
+export type roleOperationsGetRoleResponseComposite = roleOperationsGetRoleResponse200;
+    
+export type roleOperationsGetRoleResponse = roleOperationsGetRoleResponseComposite & {
+  headers: Headers;
+}
 
-export type roleOperationsGetRoleResponseComposite =
-  roleOperationsGetRoleResponse200
+export const getRoleOperationsGetRoleUrl = (id: ModelsRoleId,) => {
 
-export type roleOperationsGetRoleResponse =
-  roleOperationsGetRoleResponseComposite & {
-    headers: Headers
-  }
 
-export const getRoleOperationsGetRoleUrl = (id: ModelsRoleId) => {
+  
+
   return `/roles/${id}`
 }
 
-export const roleOperationsGetRole = async (
-  id: ModelsRoleId,
-  options?: RequestInit
-): Promise<roleOperationsGetRoleResponse> => {
-  return customInstance<roleOperationsGetRoleResponse>(
-    getRoleOperationsGetRoleUrl(id),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getRoleOperationsGetRoleQueryKey = (id?: ModelsRoleId) => {
-  return [`/roles/${id}`] as const
-}
-
-export const getRoleOperationsGetRoleQueryOptions = <
-  TData = Awaited<ReturnType<typeof roleOperationsGetRole>>,
-  TError = unknown,
->(
-  id: ModelsRoleId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof roleOperationsGetRole>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const roleOperationsGetRole = async (id: ModelsRoleId, options?: RequestInit): Promise<roleOperationsGetRoleResponse> => {
+  
+  return customInstance<roleOperationsGetRoleResponse>(getRoleOperationsGetRoleUrl(id),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getRoleOperationsGetRoleQueryKey = (id?: ModelsRoleId,) => {
+    return [`/roles/${id}`] as const;
+    }
+
+    
+export const getRoleOperationsGetRoleQueryOptions = <TData = Awaited<ReturnType<typeof roleOperationsGetRole>>, TError = unknown>(id: ModelsRoleId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof roleOperationsGetRole>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ?? getRoleOperationsGetRoleQueryKey(id)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof roleOperationsGetRole>>
-  > = ({ signal }) => roleOperationsGetRole(id, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getRoleOperationsGetRoleQueryKey(id);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!id,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof roleOperationsGetRole>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof roleOperationsGetRole>>> = ({ signal }) => roleOperationsGetRole(id, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof roleOperationsGetRole>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type RoleOperationsGetRoleQueryResult = NonNullable<
-  Awaited<ReturnType<typeof roleOperationsGetRole>>
->
+export type RoleOperationsGetRoleQueryResult = NonNullable<Awaited<ReturnType<typeof roleOperationsGetRole>>>
 export type RoleOperationsGetRoleQueryError = unknown
 
-export function useRoleOperationsGetRole<
-  TData = Awaited<ReturnType<typeof roleOperationsGetRole>>,
-  TError = unknown,
->(
-  id: ModelsRoleId,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof roleOperationsGetRole>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useRoleOperationsGetRole<TData = Awaited<ReturnType<typeof roleOperationsGetRole>>, TError = unknown>(
+ id: ModelsRoleId, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof roleOperationsGetRole>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof roleOperationsGetRole>>,
           TError,
           Awaited<ReturnType<typeof roleOperationsGetRole>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useRoleOperationsGetRole<
-  TData = Awaited<ReturnType<typeof roleOperationsGetRole>>,
-  TError = unknown,
->(
-  id: ModelsRoleId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof roleOperationsGetRole>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useRoleOperationsGetRole<TData = Awaited<ReturnType<typeof roleOperationsGetRole>>, TError = unknown>(
+ id: ModelsRoleId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof roleOperationsGetRole>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof roleOperationsGetRole>>,
           TError,
           Awaited<ReturnType<typeof roleOperationsGetRole>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useRoleOperationsGetRole<
-  TData = Awaited<ReturnType<typeof roleOperationsGetRole>>,
-  TError = unknown,
->(
-  id: ModelsRoleId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof roleOperationsGetRole>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useRoleOperationsGetRole<TData = Awaited<ReturnType<typeof roleOperationsGetRole>>, TError = unknown>(
+ id: ModelsRoleId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof roleOperationsGetRole>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useRoleOperationsGetRole<TData = Awaited<ReturnType<typeof roleOperationsGetRole>>, TError = unknown>(
+ id: ModelsRoleId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof roleOperationsGetRole>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getRoleOperationsGetRoleQueryOptions(id,options)
+
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
 
-export function useRoleOperationsGetRole<
-  TData = Awaited<ReturnType<typeof roleOperationsGetRole>>,
-  TError = unknown,
->(
-  id: ModelsRoleId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof roleOperationsGetRole>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getRoleOperationsGetRoleQueryOptions(id, options)
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-
-  query.queryKey = queryOptions.queryKey
-
-  return query
-}
 
 /**
  * Update role
@@ -704,305 +452,235 @@ export type roleOperationsUpdateRoleResponse200 = {
   data: RoleOperationsUpdateRole200
   status: 200
 }
+    
+export type roleOperationsUpdateRoleResponseComposite = roleOperationsUpdateRoleResponse200;
+    
+export type roleOperationsUpdateRoleResponse = roleOperationsUpdateRoleResponseComposite & {
+  headers: Headers;
+}
 
-export type roleOperationsUpdateRoleResponseComposite =
-  roleOperationsUpdateRoleResponse200
+export const getRoleOperationsUpdateRoleUrl = (id: ModelsRoleId,) => {
 
-export type roleOperationsUpdateRoleResponse =
-  roleOperationsUpdateRoleResponseComposite & {
-    headers: Headers
-  }
 
-export const getRoleOperationsUpdateRoleUrl = (id: ModelsRoleId) => {
+  
+
   return `/roles/${id}`
 }
 
-export const roleOperationsUpdateRole = async (
-  id: ModelsRoleId,
-  modelsRoleUpdateRequest: ModelsRoleUpdateRequest,
-  options?: RequestInit
-): Promise<roleOperationsUpdateRoleResponse> => {
-  return customInstance<roleOperationsUpdateRoleResponse>(
-    getRoleOperationsUpdateRoleUrl(id),
-    {
-      ...options,
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsRoleUpdateRequest),
-    }
-  )
-}
-
-export const getRoleOperationsUpdateRoleMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof roleOperationsUpdateRole>>,
-    TError,
-    { id: ModelsRoleId; data: ModelsRoleUpdateRequest },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof roleOperationsUpdateRole>>,
-  TError,
-  { id: ModelsRoleId; data: ModelsRoleUpdateRequest },
-  TContext
-> => {
-  const mutationKey = ['roleOperationsUpdateRole']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof roleOperationsUpdateRole>>,
-    { id: ModelsRoleId; data: ModelsRoleUpdateRequest }
-  > = (props) => {
-    const { id, data } = props ?? {}
-
-    return roleOperationsUpdateRole(id, data, requestOptions)
+export const roleOperationsUpdateRole = async (id: ModelsRoleId,
+    modelsRoleUpdateRequest: ModelsRoleUpdateRequest, options?: RequestInit): Promise<roleOperationsUpdateRoleResponse> => {
+  
+  return customInstance<roleOperationsUpdateRoleResponse>(getRoleOperationsUpdateRoleUrl(id),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      modelsRoleUpdateRequest,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type RoleOperationsUpdateRoleMutationResult = NonNullable<
-  Awaited<ReturnType<typeof roleOperationsUpdateRole>>
->
-export type RoleOperationsUpdateRoleMutationBody = ModelsRoleUpdateRequest
-export type RoleOperationsUpdateRoleMutationError = unknown
 
-export const useRoleOperationsUpdateRole = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof roleOperationsUpdateRole>>,
-      TError,
-      { id: ModelsRoleId; data: ModelsRoleUpdateRequest },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof roleOperationsUpdateRole>>,
-  TError,
-  { id: ModelsRoleId; data: ModelsRoleUpdateRequest },
-  TContext
-> => {
-  const mutationOptions = getRoleOperationsUpdateRoleMutationOptions(options)
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+export const getRoleOperationsUpdateRoleMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof roleOperationsUpdateRole>>, TError,{id: ModelsRoleId;data: ModelsRoleUpdateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof roleOperationsUpdateRole>>, TError,{id: ModelsRoleId;data: ModelsRoleUpdateRequest}, TContext> => {
+
+const mutationKey = ['roleOperationsUpdateRole'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof roleOperationsUpdateRole>>, {id: ModelsRoleId;data: ModelsRoleUpdateRequest}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  roleOperationsUpdateRole(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RoleOperationsUpdateRoleMutationResult = NonNullable<Awaited<ReturnType<typeof roleOperationsUpdateRole>>>
+    export type RoleOperationsUpdateRoleMutationBody = ModelsRoleUpdateRequest
+    export type RoleOperationsUpdateRoleMutationError = unknown
+
+    export const useRoleOperationsUpdateRole = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof roleOperationsUpdateRole>>, TError,{id: ModelsRoleId;data: ModelsRoleUpdateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof roleOperationsUpdateRole>>,
+        TError,
+        {id: ModelsRoleId;data: ModelsRoleUpdateRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getRoleOperationsUpdateRoleMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * Delete role
  */
 export type roleOperationsDeleteRoleResponse200 = {
   data: RoleOperationsDeleteRole200
   status: 200
 }
+    
+export type roleOperationsDeleteRoleResponseComposite = roleOperationsDeleteRoleResponse200;
+    
+export type roleOperationsDeleteRoleResponse = roleOperationsDeleteRoleResponseComposite & {
+  headers: Headers;
+}
 
-export type roleOperationsDeleteRoleResponseComposite =
-  roleOperationsDeleteRoleResponse200
+export const getRoleOperationsDeleteRoleUrl = (id: ModelsRoleId,) => {
 
-export type roleOperationsDeleteRoleResponse =
-  roleOperationsDeleteRoleResponseComposite & {
-    headers: Headers
-  }
 
-export const getRoleOperationsDeleteRoleUrl = (id: ModelsRoleId) => {
+  
+
   return `/roles/${id}`
 }
 
-export const roleOperationsDeleteRole = async (
-  id: ModelsRoleId,
-  options?: RequestInit
-): Promise<roleOperationsDeleteRoleResponse> => {
-  return customInstance<roleOperationsDeleteRoleResponse>(
-    getRoleOperationsDeleteRoleUrl(id),
-    {
-      ...options,
-      method: 'DELETE',
-    }
-  )
-}
-
-export const getRoleOperationsDeleteRoleMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof roleOperationsDeleteRole>>,
-    TError,
-    { id: ModelsRoleId },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof roleOperationsDeleteRole>>,
-  TError,
-  { id: ModelsRoleId },
-  TContext
-> => {
-  const mutationKey = ['roleOperationsDeleteRole']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof roleOperationsDeleteRole>>,
-    { id: ModelsRoleId }
-  > = (props) => {
-    const { id } = props ?? {}
-
-    return roleOperationsDeleteRole(id, requestOptions)
+export const roleOperationsDeleteRole = async (id: ModelsRoleId, options?: RequestInit): Promise<roleOperationsDeleteRoleResponse> => {
+  
+  return customInstance<roleOperationsDeleteRoleResponse>(getRoleOperationsDeleteRoleUrl(id),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type RoleOperationsDeleteRoleMutationResult = NonNullable<
-  Awaited<ReturnType<typeof roleOperationsDeleteRole>>
->
 
-export type RoleOperationsDeleteRoleMutationError = unknown
 
-export const useRoleOperationsDeleteRole = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof roleOperationsDeleteRole>>,
-      TError,
-      { id: ModelsRoleId },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof roleOperationsDeleteRole>>,
-  TError,
-  { id: ModelsRoleId },
-  TContext
-> => {
-  const mutationOptions = getRoleOperationsDeleteRoleMutationOptions(options)
+export const getRoleOperationsDeleteRoleMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof roleOperationsDeleteRole>>, TError,{id: ModelsRoleId}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof roleOperationsDeleteRole>>, TError,{id: ModelsRoleId}, TContext> => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+const mutationKey = ['roleOperationsDeleteRole'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof roleOperationsDeleteRole>>, {id: ModelsRoleId}> = (props) => {
+          const {id} = props ?? {};
+
+          return  roleOperationsDeleteRole(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RoleOperationsDeleteRoleMutationResult = NonNullable<Awaited<ReturnType<typeof roleOperationsDeleteRole>>>
+    
+    export type RoleOperationsDeleteRoleMutationError = unknown
+
+    export const useRoleOperationsDeleteRole = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof roleOperationsDeleteRole>>, TError,{id: ModelsRoleId}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof roleOperationsDeleteRole>>,
+        TError,
+        {id: ModelsRoleId},
+        TContext
+      > => {
+
+      const mutationOptions = getRoleOperationsDeleteRoleMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * Clone role
  */
 export type roleOperationsCloneRoleResponse200 = {
   data: RoleOperationsCloneRole200
   status: 200
 }
+    
+export type roleOperationsCloneRoleResponseComposite = roleOperationsCloneRoleResponse200;
+    
+export type roleOperationsCloneRoleResponse = roleOperationsCloneRoleResponseComposite & {
+  headers: Headers;
+}
 
-export type roleOperationsCloneRoleResponseComposite =
-  roleOperationsCloneRoleResponse200
+export const getRoleOperationsCloneRoleUrl = (id: ModelsRoleId,) => {
 
-export type roleOperationsCloneRoleResponse =
-  roleOperationsCloneRoleResponseComposite & {
-    headers: Headers
-  }
 
-export const getRoleOperationsCloneRoleUrl = (id: ModelsRoleId) => {
+  
+
   return `/roles/${id}/clone`
 }
 
-export const roleOperationsCloneRole = async (
-  id: ModelsRoleId,
-  roleOperationsCloneRoleBody: RoleOperationsCloneRoleBody,
-  options?: RequestInit
-): Promise<roleOperationsCloneRoleResponse> => {
-  return customInstance<roleOperationsCloneRoleResponse>(
-    getRoleOperationsCloneRoleUrl(id),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(roleOperationsCloneRoleBody),
-    }
-  )
-}
-
-export const getRoleOperationsCloneRoleMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof roleOperationsCloneRole>>,
-    TError,
-    { id: ModelsRoleId; data: RoleOperationsCloneRoleBody },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof roleOperationsCloneRole>>,
-  TError,
-  { id: ModelsRoleId; data: RoleOperationsCloneRoleBody },
-  TContext
-> => {
-  const mutationKey = ['roleOperationsCloneRole']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof roleOperationsCloneRole>>,
-    { id: ModelsRoleId; data: RoleOperationsCloneRoleBody }
-  > = (props) => {
-    const { id, data } = props ?? {}
-
-    return roleOperationsCloneRole(id, data, requestOptions)
+export const roleOperationsCloneRole = async (id: ModelsRoleId,
+    roleOperationsCloneRoleBody: RoleOperationsCloneRoleBody, options?: RequestInit): Promise<roleOperationsCloneRoleResponse> => {
+  
+  return customInstance<roleOperationsCloneRoleResponse>(getRoleOperationsCloneRoleUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      roleOperationsCloneRoleBody,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type RoleOperationsCloneRoleMutationResult = NonNullable<
-  Awaited<ReturnType<typeof roleOperationsCloneRole>>
->
-export type RoleOperationsCloneRoleMutationBody = RoleOperationsCloneRoleBody
-export type RoleOperationsCloneRoleMutationError = unknown
 
-export const useRoleOperationsCloneRole = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof roleOperationsCloneRole>>,
-      TError,
-      { id: ModelsRoleId; data: RoleOperationsCloneRoleBody },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof roleOperationsCloneRole>>,
-  TError,
-  { id: ModelsRoleId; data: RoleOperationsCloneRoleBody },
-  TContext
-> => {
-  const mutationOptions = getRoleOperationsCloneRoleMutationOptions(options)
 
-  return useMutation(mutationOptions, queryClient)
-}
+export const getRoleOperationsCloneRoleMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof roleOperationsCloneRole>>, TError,{id: ModelsRoleId;data: RoleOperationsCloneRoleBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof roleOperationsCloneRole>>, TError,{id: ModelsRoleId;data: RoleOperationsCloneRoleBody}, TContext> => {
+
+const mutationKey = ['roleOperationsCloneRole'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof roleOperationsCloneRole>>, {id: ModelsRoleId;data: RoleOperationsCloneRoleBody}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  roleOperationsCloneRole(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RoleOperationsCloneRoleMutationResult = NonNullable<Awaited<ReturnType<typeof roleOperationsCloneRole>>>
+    export type RoleOperationsCloneRoleMutationBody = RoleOperationsCloneRoleBody
+    export type RoleOperationsCloneRoleMutationError = unknown
+
+    export const useRoleOperationsCloneRole = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof roleOperationsCloneRole>>, TError,{id: ModelsRoleId;data: RoleOperationsCloneRoleBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof roleOperationsCloneRole>>,
+        TError,
+        {id: ModelsRoleId;data: RoleOperationsCloneRoleBody},
+        TContext
+      > => {
+
+      const mutationOptions = getRoleOperationsCloneRoleMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    

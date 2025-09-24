@@ -5,55 +5,46 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsBooking } from './modelsBooking'
-import type { ModelsReservationDetail } from './modelsReservationDetail'
-import type { ModelsPaymentHistory } from './modelsPaymentHistory'
-import type { ModelsWaitlistEntry } from './modelsWaitlistEntry'
+import type { ModelsBooking } from './modelsBooking';
+import type { ModelsReservationDetail } from './modelsReservationDetail';
+import type { ModelsPaymentHistory } from './modelsPaymentHistory';
+import type { ModelsWaitlistEntry } from './modelsWaitlistEntry';
 
 /**
  * 予約と関連情報をまとめた詳細ビュー。
  */
 export type ModelsBookingDetail = ModelsBooking & {
   /** 紐づく予約リクエストの詳細一覧。 */
-  reservations: ModelsReservationDetail[]
+  reservations: ModelsReservationDetail[];
   /** 顧客の表示名。 */
-  customerName: string
+  customerName: string;
   /** サロンの表示名。 */
-  salonName: string
+  salonName: string;
   /**
    * 決済履歴の一覧。決済履歴がない場合はnull。
    * @nullable
    */
-  paymentHistory: ModelsPaymentHistory[] | null
+  paymentHistory: ModelsPaymentHistory[] | null;
   /**
    * ウェイティングリストの履歴。ウェイティングリストに登録したことがない場合はnull。
    * @nullable
    */
-  waitlistHistory: ModelsWaitlistEntry[] | null
-} & Required<
-    Pick<
-      ModelsBooking & {
-        /** 紐づく予約リクエストの詳細一覧。 */
-        reservations: ModelsReservationDetail[]
-        /** 顧客の表示名。 */
-        customerName: string
-        /** サロンの表示名。 */
-        salonName: string
-        /**
-         * 決済履歴の一覧。決済履歴がない場合はnull。
-         * @nullable
-         */
-        paymentHistory: ModelsPaymentHistory[] | null
-        /**
-         * ウェイティングリストの履歴。ウェイティングリストに登録したことがない場合はnull。
-         * @nullable
-         */
-        waitlistHistory: ModelsWaitlistEntry[] | null
-      },
-      | 'reservations'
-      | 'customerName'
-      | 'salonName'
-      | 'paymentHistory'
-      | 'waitlistHistory'
-    >
-  >
+  waitlistHistory: ModelsWaitlistEntry[] | null;
+} & Required<Pick<ModelsBooking & {
+  /** 紐づく予約リクエストの詳細一覧。 */
+  reservations: ModelsReservationDetail[];
+  /** 顧客の表示名。 */
+  customerName: string;
+  /** サロンの表示名。 */
+  salonName: string;
+  /**
+   * 決済履歴の一覧。決済履歴がない場合はnull。
+   * @nullable
+   */
+  paymentHistory: ModelsPaymentHistory[] | null;
+  /**
+   * ウェイティングリストの履歴。ウェイティングリストに登録したことがない場合はnull。
+   * @nullable
+   */
+  waitlistHistory: ModelsWaitlistEntry[] | null;
+}, 'reservations' | 'customerName' | 'salonName' | 'paymentHistory' | 'waitlistHistory'>>;

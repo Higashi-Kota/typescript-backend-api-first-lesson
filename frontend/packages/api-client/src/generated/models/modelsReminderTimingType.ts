@@ -14,8 +14,8 @@ three_hours_before: 3時間前 - 予約時刻の3時間前に通知
 one_hour_before: 1時間前 - 予約時刻の1時間前に通知
 thirty_minutes_before: 30分前 - 予約時刻の30分前に通知
  */
-export type ModelsReminderTimingType =
-  (typeof ModelsReminderTimingType)[keyof typeof ModelsReminderTimingType]
+export type ModelsReminderTimingType = typeof ModelsReminderTimingType[keyof typeof ModelsReminderTimingType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsReminderTimingType = {
@@ -23,4 +23,4 @@ export const ModelsReminderTimingType = {
   three_hours_before: 'three_hours_before',
   one_hour_before: 'one_hour_before',
   thirty_minutes_before: 'thirty_minutes_before',
-} as const
+} as const;

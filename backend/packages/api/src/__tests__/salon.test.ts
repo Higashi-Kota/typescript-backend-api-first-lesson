@@ -19,8 +19,8 @@ describe('Salon API Integration Tests', () => {
       const getNextDate = (dayOffset: number): string => {
         const date = new Date()
         date.setDate(date.getDate() + dayOffset)
-        // biome-ignore lint/style/noNonNullAssertion: <explanation>
-        return date.toISOString().split('T')[0]!
+        const [dateStr = '2020-10-08'] = date.toISOString().split('T')
+        return dateStr
       }
 
       const salonData = {
@@ -120,7 +120,7 @@ describe('Salon API Integration Tests', () => {
       expect(response.body.data).toBeDefined()
       expect(response.body.data.name).toBe(salonData.name)
       expect(response.body.data.contactInfo?.email).toBe(
-        salonData.contactInfo.email
+        salonData.contactInfo.email,
       )
 
       // Verify database state
@@ -168,7 +168,7 @@ describe('Salon API Integration Tests', () => {
         .expect(400)
 
       expect(response.body.type).toBe(
-        'https://example.com/probs/validation-error'
+        'https://example.com/probs/validation-error',
       )
       expect(response.body.detail).toContain('Validation failed')
     })
@@ -180,7 +180,7 @@ describe('Salon API Integration Tests', () => {
         .expect(400)
 
       expect(response.body.type).toBe(
-        'https://example.com/probs/validation-error'
+        'https://example.com/probs/validation-error',
       )
       expect(response.body.detail).toContain('Validation failed')
     })
@@ -334,7 +334,7 @@ describe('Salon API Integration Tests', () => {
         .expect(400)
 
       expect(response.body.type).toBe(
-        'https://example.com/probs/validation-error'
+        'https://example.com/probs/validation-error',
       )
     })
   })
@@ -381,12 +381,12 @@ describe('Salon API Integration Tests', () => {
       expect(response.body.links).toBeDefined()
       expect(response.body.links.self).toBe(`/salons/${salonId}`)
       expect(response.body.data.contactInfo.email).toBe(
-        updateData.contactInfo.email
+        updateData.contactInfo.email,
       )
 
       // Verify database state
       const result = await db.execute(
-        sql`SELECT * FROM salons WHERE id = ${salonId}`
+        sql`SELECT * FROM salons WHERE id = ${salonId}`,
       )
       expect(result[0]?.name).toBe(updateData.name)
       expect(result[0]?.email).toBe(updateData.contactInfo.email)
@@ -435,7 +435,7 @@ describe('Salon API Integration Tests', () => {
 
       // Verify salon is soft-deleted (deletedAt is set, not actually removed)
       const result = await db.execute(
-        sql`SELECT * FROM salons WHERE id = ${salonId}`
+        sql`SELECT * FROM salons WHERE id = ${salonId}`,
       )
       expect(result).toHaveLength(1)
       expect(result[0]?.deletedAt).not.toBeNull()

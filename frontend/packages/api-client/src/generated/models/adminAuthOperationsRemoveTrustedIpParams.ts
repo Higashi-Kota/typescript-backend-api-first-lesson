@@ -7,5 +7,5 @@
  */
 
 export type AdminAuthOperationsRemoveTrustedIpParams = {
-  ipAddress: string
-}
+ipAddress: string;
+};

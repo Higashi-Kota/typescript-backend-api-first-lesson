@@ -9,4 +9,4 @@
 /**
  * 外部システム連携向けメタデータ
  */
-export type ModelsPaymentCreateRequestMetadata = { [key: string]: unknown }
+export type ModelsPaymentCreateRequestMetadata = {[key: string]: unknown};

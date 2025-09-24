@@ -15,8 +15,8 @@ locked: ロック - ログイン失敗回数超過によりロックされたア
 suspended: 停止 - 管理者によって停止されたアカウント
 deleted: 削除済み - 削除されたアカウント
  */
-export type ModelsUserAccountStatusType =
-  (typeof ModelsUserAccountStatusType)[keyof typeof ModelsUserAccountStatusType]
+export type ModelsUserAccountStatusType = typeof ModelsUserAccountStatusType[keyof typeof ModelsUserAccountStatusType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsUserAccountStatusType = {
@@ -25,4 +25,4 @@ export const ModelsUserAccountStatusType = {
   locked: 'locked',
   suspended: 'suspended',
   deleted: 'deleted',
-} as const
+} as const;

@@ -11,5 +11,5 @@
  */
 export interface ModelsAuthEmailVerificationRequest {
   /** メールに記載された確認トークン。 */
-  token: string
+  token: string;
 }

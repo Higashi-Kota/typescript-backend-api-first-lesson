@@ -5,7 +5,10 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import { useMutation, useQuery } from '@tanstack/react-query'
+import {
+  useMutation,
+  useQuery
+} from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -18,8 +21,8 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult,
-} from '@tanstack/react-query'
+  UseQueryResult
+} from '@tanstack/react-query';
 
 import type {
   AccessControlOperationsCheckAccess200,
@@ -31,16 +34,19 @@ import type {
   AccessControlOperationsValidatePermissions200,
   AccessControlOperationsValidatePermissionsBody,
   ModelsAccessCheck,
-  ModelsPermissionCheckRequest,
-} from '../../models'
+  ModelsPermissionCheckRequest
+} from '../../models';
 
-import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher'
+import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher';
 
-type AwaitedInput<T> = PromiseLike<T> | T
+type AwaitedInput<T> = PromiseLike<T> | T;
 
-type Awaited<O> = O extends AwaitedInput<infer T> ? T : never
+      type Awaited<O> = O extends AwaitedInput<infer T> ? T : never;
 
-type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
+
 
 /**
  * Check user access
@@ -49,427 +55,274 @@ export type accessControlOperationsCheckAccessResponse200 = {
   data: AccessControlOperationsCheckAccess200
   status: 200
 }
-
-export type accessControlOperationsCheckAccessResponseComposite =
-  accessControlOperationsCheckAccessResponse200
-
-export type accessControlOperationsCheckAccessResponse =
-  accessControlOperationsCheckAccessResponseComposite & {
-    headers: Headers
-  }
+    
+export type accessControlOperationsCheckAccessResponseComposite = accessControlOperationsCheckAccessResponse200;
+    
+export type accessControlOperationsCheckAccessResponse = accessControlOperationsCheckAccessResponseComposite & {
+  headers: Headers;
+}
 
 export const getAccessControlOperationsCheckAccessUrl = () => {
+
+
+  
+
   return `/access-control/check`
 }
 
-export const accessControlOperationsCheckAccess = async (
-  modelsAccessCheck: ModelsAccessCheck,
-  options?: RequestInit
-): Promise<accessControlOperationsCheckAccessResponse> => {
-  return customInstance<accessControlOperationsCheckAccessResponse>(
-    getAccessControlOperationsCheckAccessUrl(),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsAccessCheck),
-    }
-  )
-}
-
-export const getAccessControlOperationsCheckAccessMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof accessControlOperationsCheckAccess>>,
-    TError,
-    { data: ModelsAccessCheck },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof accessControlOperationsCheckAccess>>,
-  TError,
-  { data: ModelsAccessCheck },
-  TContext
-> => {
-  const mutationKey = ['accessControlOperationsCheckAccess']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof accessControlOperationsCheckAccess>>,
-    { data: ModelsAccessCheck }
-  > = (props) => {
-    const { data } = props ?? {}
-
-    return accessControlOperationsCheckAccess(data, requestOptions)
+export const accessControlOperationsCheckAccess = async (modelsAccessCheck: ModelsAccessCheck, options?: RequestInit): Promise<accessControlOperationsCheckAccessResponse> => {
+  
+  return customInstance<accessControlOperationsCheckAccessResponse>(getAccessControlOperationsCheckAccessUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      modelsAccessCheck,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type AccessControlOperationsCheckAccessMutationResult = NonNullable<
-  Awaited<ReturnType<typeof accessControlOperationsCheckAccess>>
->
-export type AccessControlOperationsCheckAccessMutationBody = ModelsAccessCheck
-export type AccessControlOperationsCheckAccessMutationError = unknown
 
-export const useAccessControlOperationsCheckAccess = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof accessControlOperationsCheckAccess>>,
-      TError,
-      { data: ModelsAccessCheck },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof accessControlOperationsCheckAccess>>,
-  TError,
-  { data: ModelsAccessCheck },
-  TContext
-> => {
-  const mutationOptions =
-    getAccessControlOperationsCheckAccessMutationOptions(options)
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+export const getAccessControlOperationsCheckAccessMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof accessControlOperationsCheckAccess>>, TError,{data: ModelsAccessCheck}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof accessControlOperationsCheckAccess>>, TError,{data: ModelsAccessCheck}, TContext> => {
+
+const mutationKey = ['accessControlOperationsCheckAccess'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof accessControlOperationsCheckAccess>>, {data: ModelsAccessCheck}> = (props) => {
+          const {data} = props ?? {};
+
+          return  accessControlOperationsCheckAccess(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AccessControlOperationsCheckAccessMutationResult = NonNullable<Awaited<ReturnType<typeof accessControlOperationsCheckAccess>>>
+    export type AccessControlOperationsCheckAccessMutationBody = ModelsAccessCheck
+    export type AccessControlOperationsCheckAccessMutationError = unknown
+
+    export const useAccessControlOperationsCheckAccess = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof accessControlOperationsCheckAccess>>, TError,{data: ModelsAccessCheck}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof accessControlOperationsCheckAccess>>,
+        TError,
+        {data: ModelsAccessCheck},
+        TContext
+      > => {
+
+      const mutationOptions = getAccessControlOperationsCheckAccessMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * Check multiple permissions
  */
 export type accessControlOperationsCheckPermissionsResponse200 = {
   data: AccessControlOperationsCheckPermissions200
   status: 200
 }
-
-export type accessControlOperationsCheckPermissionsResponseComposite =
-  accessControlOperationsCheckPermissionsResponse200
-
-export type accessControlOperationsCheckPermissionsResponse =
-  accessControlOperationsCheckPermissionsResponseComposite & {
-    headers: Headers
-  }
+    
+export type accessControlOperationsCheckPermissionsResponseComposite = accessControlOperationsCheckPermissionsResponse200;
+    
+export type accessControlOperationsCheckPermissionsResponse = accessControlOperationsCheckPermissionsResponseComposite & {
+  headers: Headers;
+}
 
 export const getAccessControlOperationsCheckPermissionsUrl = () => {
+
+
+  
+
   return `/access-control/check-permissions`
 }
 
-export const accessControlOperationsCheckPermissions = async (
-  modelsPermissionCheckRequest: ModelsPermissionCheckRequest,
-  options?: RequestInit
-): Promise<accessControlOperationsCheckPermissionsResponse> => {
-  return customInstance<accessControlOperationsCheckPermissionsResponse>(
-    getAccessControlOperationsCheckPermissionsUrl(),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsPermissionCheckRequest),
-    }
-  )
-}
-
-export const getAccessControlOperationsCheckPermissionsMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof accessControlOperationsCheckPermissions>>,
-    TError,
-    { data: ModelsPermissionCheckRequest },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof accessControlOperationsCheckPermissions>>,
-  TError,
-  { data: ModelsPermissionCheckRequest },
-  TContext
-> => {
-  const mutationKey = ['accessControlOperationsCheckPermissions']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof accessControlOperationsCheckPermissions>>,
-    { data: ModelsPermissionCheckRequest }
-  > = (props) => {
-    const { data } = props ?? {}
-
-    return accessControlOperationsCheckPermissions(data, requestOptions)
+export const accessControlOperationsCheckPermissions = async (modelsPermissionCheckRequest: ModelsPermissionCheckRequest, options?: RequestInit): Promise<accessControlOperationsCheckPermissionsResponse> => {
+  
+  return customInstance<accessControlOperationsCheckPermissionsResponse>(getAccessControlOperationsCheckPermissionsUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      modelsPermissionCheckRequest,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type AccessControlOperationsCheckPermissionsMutationResult = NonNullable<
-  Awaited<ReturnType<typeof accessControlOperationsCheckPermissions>>
->
-export type AccessControlOperationsCheckPermissionsMutationBody =
-  ModelsPermissionCheckRequest
-export type AccessControlOperationsCheckPermissionsMutationError = unknown
 
-export const useAccessControlOperationsCheckPermissions = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof accessControlOperationsCheckPermissions>>,
-      TError,
-      { data: ModelsPermissionCheckRequest },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof accessControlOperationsCheckPermissions>>,
-  TError,
-  { data: ModelsPermissionCheckRequest },
-  TContext
-> => {
-  const mutationOptions =
-    getAccessControlOperationsCheckPermissionsMutationOptions(options)
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+export const getAccessControlOperationsCheckPermissionsMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof accessControlOperationsCheckPermissions>>, TError,{data: ModelsPermissionCheckRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof accessControlOperationsCheckPermissions>>, TError,{data: ModelsPermissionCheckRequest}, TContext> => {
+
+const mutationKey = ['accessControlOperationsCheckPermissions'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof accessControlOperationsCheckPermissions>>, {data: ModelsPermissionCheckRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  accessControlOperationsCheckPermissions(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AccessControlOperationsCheckPermissionsMutationResult = NonNullable<Awaited<ReturnType<typeof accessControlOperationsCheckPermissions>>>
+    export type AccessControlOperationsCheckPermissionsMutationBody = ModelsPermissionCheckRequest
+    export type AccessControlOperationsCheckPermissionsMutationError = unknown
+
+    export const useAccessControlOperationsCheckPermissions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof accessControlOperationsCheckPermissions>>, TError,{data: ModelsPermissionCheckRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof accessControlOperationsCheckPermissions>>,
+        TError,
+        {data: ModelsPermissionCheckRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getAccessControlOperationsCheckPermissionsMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * Get resource access list
  */
 export type accessControlOperationsGetResourceAccessResponse200 = {
   data: AccessControlOperationsGetResourceAccess200
   status: 200
 }
+    
+export type accessControlOperationsGetResourceAccessResponseComposite = accessControlOperationsGetResourceAccessResponse200;
+    
+export type accessControlOperationsGetResourceAccessResponse = accessControlOperationsGetResourceAccessResponseComposite & {
+  headers: Headers;
+}
 
-export type accessControlOperationsGetResourceAccessResponseComposite =
-  accessControlOperationsGetResourceAccessResponse200
-
-export type accessControlOperationsGetResourceAccessResponse =
-  accessControlOperationsGetResourceAccessResponseComposite & {
-    headers: Headers
-  }
-
-export const getAccessControlOperationsGetResourceAccessUrl = (
-  resource: string,
-  params?: AccessControlOperationsGetResourceAccessParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getAccessControlOperationsGetResourceAccessUrl = (resource: string,
+    params?: AccessControlOperationsGetResourceAccessParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/access-control/resource/${resource}/access?${stringifiedParams}`
-    : `/access-control/resource/${resource}/access`
+  return stringifiedParams.length > 0 ? `/access-control/resource/${resource}/access?${stringifiedParams}` : `/access-control/resource/${resource}/access`
 }
 
-export const accessControlOperationsGetResourceAccess = async (
-  resource: string,
-  params?: AccessControlOperationsGetResourceAccessParams,
-  options?: RequestInit
-): Promise<accessControlOperationsGetResourceAccessResponse> => {
-  return customInstance<accessControlOperationsGetResourceAccessResponse>(
-    getAccessControlOperationsGetResourceAccessUrl(resource, params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getAccessControlOperationsGetResourceAccessQueryKey = (
-  resource?: string,
-  params?: AccessControlOperationsGetResourceAccessParams
-) => {
-  return [
-    `/access-control/resource/${resource}/access`,
-    ...(params ? [params] : []),
-  ] as const
-}
-
-export const getAccessControlOperationsGetResourceAccessQueryOptions = <
-  TData = Awaited<ReturnType<typeof accessControlOperationsGetResourceAccess>>,
-  TError = unknown,
->(
-  resource: string,
-  params?: AccessControlOperationsGetResourceAccessParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof accessControlOperationsGetResourceAccess>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const accessControlOperationsGetResourceAccess = async (resource: string,
+    params?: AccessControlOperationsGetResourceAccessParams, options?: RequestInit): Promise<accessControlOperationsGetResourceAccessResponse> => {
+  
+  return customInstance<accessControlOperationsGetResourceAccessResponse>(getAccessControlOperationsGetResourceAccessUrl(resource,params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getAccessControlOperationsGetResourceAccessQueryKey = (resource?: string,
+    params?: AccessControlOperationsGetResourceAccessParams,) => {
+    return [`/access-control/resource/${resource}/access`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getAccessControlOperationsGetResourceAccessQueryOptions = <TData = Awaited<ReturnType<typeof accessControlOperationsGetResourceAccess>>, TError = unknown>(resource: string,
+    params?: AccessControlOperationsGetResourceAccessParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof accessControlOperationsGetResourceAccess>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ??
-    getAccessControlOperationsGetResourceAccessQueryKey(resource, params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof accessControlOperationsGetResourceAccess>>
-  > = ({ signal }) =>
-    accessControlOperationsGetResourceAccess(resource, params, {
-      signal,
-      ...requestOptions,
-    })
+  const queryKey =  queryOptions?.queryKey ?? getAccessControlOperationsGetResourceAccessQueryKey(resource,params);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!resource,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof accessControlOperationsGetResourceAccess>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof accessControlOperationsGetResourceAccess>>> = ({ signal }) => accessControlOperationsGetResourceAccess(resource,params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(resource), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof accessControlOperationsGetResourceAccess>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type AccessControlOperationsGetResourceAccessQueryResult = NonNullable<
-  Awaited<ReturnType<typeof accessControlOperationsGetResourceAccess>>
->
+export type AccessControlOperationsGetResourceAccessQueryResult = NonNullable<Awaited<ReturnType<typeof accessControlOperationsGetResourceAccess>>>
 export type AccessControlOperationsGetResourceAccessQueryError = unknown
 
-export function useAccessControlOperationsGetResourceAccess<
-  TData = Awaited<ReturnType<typeof accessControlOperationsGetResourceAccess>>,
-  TError = unknown,
->(
-  resource: string,
-  params: undefined | AccessControlOperationsGetResourceAccessParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof accessControlOperationsGetResourceAccess>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useAccessControlOperationsGetResourceAccess<TData = Awaited<ReturnType<typeof accessControlOperationsGetResourceAccess>>, TError = unknown>(
+ resource: string,
+    params: undefined |  AccessControlOperationsGetResourceAccessParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof accessControlOperationsGetResourceAccess>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof accessControlOperationsGetResourceAccess>>,
           TError,
           Awaited<ReturnType<typeof accessControlOperationsGetResourceAccess>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useAccessControlOperationsGetResourceAccess<
-  TData = Awaited<ReturnType<typeof accessControlOperationsGetResourceAccess>>,
-  TError = unknown,
->(
-  resource: string,
-  params?: AccessControlOperationsGetResourceAccessParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof accessControlOperationsGetResourceAccess>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useAccessControlOperationsGetResourceAccess<TData = Awaited<ReturnType<typeof accessControlOperationsGetResourceAccess>>, TError = unknown>(
+ resource: string,
+    params?: AccessControlOperationsGetResourceAccessParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof accessControlOperationsGetResourceAccess>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof accessControlOperationsGetResourceAccess>>,
           TError,
           Awaited<ReturnType<typeof accessControlOperationsGetResourceAccess>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useAccessControlOperationsGetResourceAccess<
-  TData = Awaited<ReturnType<typeof accessControlOperationsGetResourceAccess>>,
-  TError = unknown,
->(
-  resource: string,
-  params?: AccessControlOperationsGetResourceAccessParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof accessControlOperationsGetResourceAccess>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useAccessControlOperationsGetResourceAccess<TData = Awaited<ReturnType<typeof accessControlOperationsGetResourceAccess>>, TError = unknown>(
+ resource: string,
+    params?: AccessControlOperationsGetResourceAccessParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof accessControlOperationsGetResourceAccess>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useAccessControlOperationsGetResourceAccess<TData = Awaited<ReturnType<typeof accessControlOperationsGetResourceAccess>>, TError = unknown>(
+ resource: string,
+    params?: AccessControlOperationsGetResourceAccessParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof accessControlOperationsGetResourceAccess>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getAccessControlOperationsGetResourceAccessQueryOptions(resource,params,options)
+
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
 
-export function useAccessControlOperationsGetResourceAccess<
-  TData = Awaited<ReturnType<typeof accessControlOperationsGetResourceAccess>>,
-  TError = unknown,
->(
-  resource: string,
-  params?: AccessControlOperationsGetResourceAccessParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof accessControlOperationsGetResourceAccess>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getAccessControlOperationsGetResourceAccessQueryOptions(
-    resource,
-    params,
-    options
-  )
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-
-  query.queryKey = queryOptions.queryKey
-
-  return query
-}
 
 /**
  * Get user effective permissions
@@ -478,218 +331,116 @@ export type accessControlOperationsGetUserPermissionsResponse200 = {
   data: AccessControlOperationsGetUserPermissions200
   status: 200
 }
+    
+export type accessControlOperationsGetUserPermissionsResponseComposite = accessControlOperationsGetUserPermissionsResponse200;
+    
+export type accessControlOperationsGetUserPermissionsResponse = accessControlOperationsGetUserPermissionsResponseComposite & {
+  headers: Headers;
+}
 
-export type accessControlOperationsGetUserPermissionsResponseComposite =
-  accessControlOperationsGetUserPermissionsResponse200
-
-export type accessControlOperationsGetUserPermissionsResponse =
-  accessControlOperationsGetUserPermissionsResponseComposite & {
-    headers: Headers
-  }
-
-export const getAccessControlOperationsGetUserPermissionsUrl = (
-  userId: string,
-  params?: AccessControlOperationsGetUserPermissionsParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getAccessControlOperationsGetUserPermissionsUrl = (userId: string,
+    params?: AccessControlOperationsGetUserPermissionsParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/access-control/user/${userId}/permissions?${stringifiedParams}`
-    : `/access-control/user/${userId}/permissions`
+  return stringifiedParams.length > 0 ? `/access-control/user/${userId}/permissions?${stringifiedParams}` : `/access-control/user/${userId}/permissions`
 }
 
-export const accessControlOperationsGetUserPermissions = async (
-  userId: string,
-  params?: AccessControlOperationsGetUserPermissionsParams,
-  options?: RequestInit
-): Promise<accessControlOperationsGetUserPermissionsResponse> => {
-  return customInstance<accessControlOperationsGetUserPermissionsResponse>(
-    getAccessControlOperationsGetUserPermissionsUrl(userId, params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getAccessControlOperationsGetUserPermissionsQueryKey = (
-  userId?: string,
-  params?: AccessControlOperationsGetUserPermissionsParams
-) => {
-  return [
-    `/access-control/user/${userId}/permissions`,
-    ...(params ? [params] : []),
-  ] as const
-}
-
-export const getAccessControlOperationsGetUserPermissionsQueryOptions = <
-  TData = Awaited<ReturnType<typeof accessControlOperationsGetUserPermissions>>,
-  TError = unknown,
->(
-  userId: string,
-  params?: AccessControlOperationsGetUserPermissionsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof accessControlOperationsGetUserPermissions>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const accessControlOperationsGetUserPermissions = async (userId: string,
+    params?: AccessControlOperationsGetUserPermissionsParams, options?: RequestInit): Promise<accessControlOperationsGetUserPermissionsResponse> => {
+  
+  return customInstance<accessControlOperationsGetUserPermissionsResponse>(getAccessControlOperationsGetUserPermissionsUrl(userId,params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getAccessControlOperationsGetUserPermissionsQueryKey = (userId?: string,
+    params?: AccessControlOperationsGetUserPermissionsParams,) => {
+    return [`/access-control/user/${userId}/permissions`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getAccessControlOperationsGetUserPermissionsQueryOptions = <TData = Awaited<ReturnType<typeof accessControlOperationsGetUserPermissions>>, TError = unknown>(userId: string,
+    params?: AccessControlOperationsGetUserPermissionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof accessControlOperationsGetUserPermissions>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ??
-    getAccessControlOperationsGetUserPermissionsQueryKey(userId, params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof accessControlOperationsGetUserPermissions>>
-  > = ({ signal }) =>
-    accessControlOperationsGetUserPermissions(userId, params, {
-      signal,
-      ...requestOptions,
-    })
+  const queryKey =  queryOptions?.queryKey ?? getAccessControlOperationsGetUserPermissionsQueryKey(userId,params);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!userId,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof accessControlOperationsGetUserPermissions>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof accessControlOperationsGetUserPermissions>>> = ({ signal }) => accessControlOperationsGetUserPermissions(userId,params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(userId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof accessControlOperationsGetUserPermissions>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type AccessControlOperationsGetUserPermissionsQueryResult = NonNullable<
-  Awaited<ReturnType<typeof accessControlOperationsGetUserPermissions>>
->
+export type AccessControlOperationsGetUserPermissionsQueryResult = NonNullable<Awaited<ReturnType<typeof accessControlOperationsGetUserPermissions>>>
 export type AccessControlOperationsGetUserPermissionsQueryError = unknown
 
-export function useAccessControlOperationsGetUserPermissions<
-  TData = Awaited<ReturnType<typeof accessControlOperationsGetUserPermissions>>,
-  TError = unknown,
->(
-  userId: string,
-  params: undefined | AccessControlOperationsGetUserPermissionsParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof accessControlOperationsGetUserPermissions>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useAccessControlOperationsGetUserPermissions<TData = Awaited<ReturnType<typeof accessControlOperationsGetUserPermissions>>, TError = unknown>(
+ userId: string,
+    params: undefined |  AccessControlOperationsGetUserPermissionsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof accessControlOperationsGetUserPermissions>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof accessControlOperationsGetUserPermissions>>,
           TError,
           Awaited<ReturnType<typeof accessControlOperationsGetUserPermissions>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useAccessControlOperationsGetUserPermissions<
-  TData = Awaited<ReturnType<typeof accessControlOperationsGetUserPermissions>>,
-  TError = unknown,
->(
-  userId: string,
-  params?: AccessControlOperationsGetUserPermissionsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof accessControlOperationsGetUserPermissions>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useAccessControlOperationsGetUserPermissions<TData = Awaited<ReturnType<typeof accessControlOperationsGetUserPermissions>>, TError = unknown>(
+ userId: string,
+    params?: AccessControlOperationsGetUserPermissionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof accessControlOperationsGetUserPermissions>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof accessControlOperationsGetUserPermissions>>,
           TError,
           Awaited<ReturnType<typeof accessControlOperationsGetUserPermissions>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useAccessControlOperationsGetUserPermissions<
-  TData = Awaited<ReturnType<typeof accessControlOperationsGetUserPermissions>>,
-  TError = unknown,
->(
-  userId: string,
-  params?: AccessControlOperationsGetUserPermissionsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof accessControlOperationsGetUserPermissions>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useAccessControlOperationsGetUserPermissions<TData = Awaited<ReturnType<typeof accessControlOperationsGetUserPermissions>>, TError = unknown>(
+ userId: string,
+    params?: AccessControlOperationsGetUserPermissionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof accessControlOperationsGetUserPermissions>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useAccessControlOperationsGetUserPermissions<TData = Awaited<ReturnType<typeof accessControlOperationsGetUserPermissions>>, TError = unknown>(
+ userId: string,
+    params?: AccessControlOperationsGetUserPermissionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof accessControlOperationsGetUserPermissions>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getAccessControlOperationsGetUserPermissionsQueryOptions(userId,params,options)
+
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
 
-export function useAccessControlOperationsGetUserPermissions<
-  TData = Awaited<ReturnType<typeof accessControlOperationsGetUserPermissions>>,
-  TError = unknown,
->(
-  userId: string,
-  params?: AccessControlOperationsGetUserPermissionsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof accessControlOperationsGetUserPermissions>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getAccessControlOperationsGetUserPermissionsQueryOptions(
-    userId,
-    params,
-    options
-  )
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-
-  query.queryKey = queryOptions.queryKey
-
-  return query
-}
 
 /**
  * Validate role permissions
@@ -698,102 +449,76 @@ export type accessControlOperationsValidatePermissionsResponse200 = {
   data: AccessControlOperationsValidatePermissions200
   status: 200
 }
-
-export type accessControlOperationsValidatePermissionsResponseComposite =
-  accessControlOperationsValidatePermissionsResponse200
-
-export type accessControlOperationsValidatePermissionsResponse =
-  accessControlOperationsValidatePermissionsResponseComposite & {
-    headers: Headers
-  }
+    
+export type accessControlOperationsValidatePermissionsResponseComposite = accessControlOperationsValidatePermissionsResponse200;
+    
+export type accessControlOperationsValidatePermissionsResponse = accessControlOperationsValidatePermissionsResponseComposite & {
+  headers: Headers;
+}
 
 export const getAccessControlOperationsValidatePermissionsUrl = () => {
+
+
+  
+
   return `/access-control/validate`
 }
 
-export const accessControlOperationsValidatePermissions = async (
-  accessControlOperationsValidatePermissionsBody: AccessControlOperationsValidatePermissionsBody,
-  options?: RequestInit
-): Promise<accessControlOperationsValidatePermissionsResponse> => {
-  return customInstance<accessControlOperationsValidatePermissionsResponse>(
-    getAccessControlOperationsValidatePermissionsUrl(),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(accessControlOperationsValidatePermissionsBody),
-    }
-  )
-}
-
-export const getAccessControlOperationsValidatePermissionsMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof accessControlOperationsValidatePermissions>>,
-    TError,
-    { data: AccessControlOperationsValidatePermissionsBody },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof accessControlOperationsValidatePermissions>>,
-  TError,
-  { data: AccessControlOperationsValidatePermissionsBody },
-  TContext
-> => {
-  const mutationKey = ['accessControlOperationsValidatePermissions']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof accessControlOperationsValidatePermissions>>,
-    { data: AccessControlOperationsValidatePermissionsBody }
-  > = (props) => {
-    const { data } = props ?? {}
-
-    return accessControlOperationsValidatePermissions(data, requestOptions)
+export const accessControlOperationsValidatePermissions = async (accessControlOperationsValidatePermissionsBody: AccessControlOperationsValidatePermissionsBody, options?: RequestInit): Promise<accessControlOperationsValidatePermissionsResponse> => {
+  
+  return customInstance<accessControlOperationsValidatePermissionsResponse>(getAccessControlOperationsValidatePermissionsUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      accessControlOperationsValidatePermissionsBody,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type AccessControlOperationsValidatePermissionsMutationResult =
-  NonNullable<
-    Awaited<ReturnType<typeof accessControlOperationsValidatePermissions>>
-  >
-export type AccessControlOperationsValidatePermissionsMutationBody =
-  AccessControlOperationsValidatePermissionsBody
-export type AccessControlOperationsValidatePermissionsMutationError = unknown
 
-export const useAccessControlOperationsValidatePermissions = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof accessControlOperationsValidatePermissions>>,
-      TError,
-      { data: AccessControlOperationsValidatePermissionsBody },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof accessControlOperationsValidatePermissions>>,
-  TError,
-  { data: AccessControlOperationsValidatePermissionsBody },
-  TContext
-> => {
-  const mutationOptions =
-    getAccessControlOperationsValidatePermissionsMutationOptions(options)
 
-  return useMutation(mutationOptions, queryClient)
-}
+export const getAccessControlOperationsValidatePermissionsMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof accessControlOperationsValidatePermissions>>, TError,{data: AccessControlOperationsValidatePermissionsBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof accessControlOperationsValidatePermissions>>, TError,{data: AccessControlOperationsValidatePermissionsBody}, TContext> => {
+
+const mutationKey = ['accessControlOperationsValidatePermissions'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof accessControlOperationsValidatePermissions>>, {data: AccessControlOperationsValidatePermissionsBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  accessControlOperationsValidatePermissions(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AccessControlOperationsValidatePermissionsMutationResult = NonNullable<Awaited<ReturnType<typeof accessControlOperationsValidatePermissions>>>
+    export type AccessControlOperationsValidatePermissionsMutationBody = AccessControlOperationsValidatePermissionsBody
+    export type AccessControlOperationsValidatePermissionsMutationError = unknown
+
+    export const useAccessControlOperationsValidatePermissions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof accessControlOperationsValidatePermissions>>, TError,{data: AccessControlOperationsValidatePermissionsBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof accessControlOperationsValidatePermissions>>,
+        TError,
+        {data: AccessControlOperationsValidatePermissionsBody},
+        TContext
+      > => {
+
+      const mutationOptions = getAccessControlOperationsValidatePermissionsMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    

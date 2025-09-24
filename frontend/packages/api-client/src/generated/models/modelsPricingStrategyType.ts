@@ -16,8 +16,8 @@ package: パッケージ価格 - 複数サービスをセットで提供
 membership: 会員価格 - 会員ランクに応じた特別価格
 custom: カスタム価格 - 個別に設定される特別価格
  */
-export type ModelsPricingStrategyType =
-  (typeof ModelsPricingStrategyType)[keyof typeof ModelsPricingStrategyType]
+export type ModelsPricingStrategyType = typeof ModelsPricingStrategyType[keyof typeof ModelsPricingStrategyType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsPricingStrategyType = {
@@ -27,4 +27,4 @@ export const ModelsPricingStrategyType = {
   package: 'package',
   membership: 'membership',
   custom: 'custom',
-} as const
+} as const;

@@ -9,4 +9,4 @@
 /**
  * 税率や金額計算で用いる汎用小数型。
  */
-export type ModelsDecimal = number
+export type ModelsDecimal = number;

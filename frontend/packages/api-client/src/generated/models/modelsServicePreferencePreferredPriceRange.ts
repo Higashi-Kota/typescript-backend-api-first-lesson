@@ -5,11 +5,10 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsPriceRangeFilter } from './modelsPriceRangeFilter'
+import type { ModelsPriceRangeFilter } from './modelsPriceRangeFilter';
 
 /**
  * 希望価格帯。特に希望がない場合はnull
  * @nullable
  */
-export type ModelsServicePreferencePreferredPriceRange =
-  ModelsPriceRangeFilter | null
+export type ModelsServicePreferencePreferredPriceRange = ModelsPriceRangeFilter | null;

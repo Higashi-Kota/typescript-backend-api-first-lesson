@@ -1,9 +1,7 @@
-import { useQuery } from '@tanstack/react-query'
-
 import {
-  type Omit,
   isEmpty,
   isNullOrUndefined,
+  type Omit,
 } from '@beauty-salon-frontend/utils'
 import type {
   QueryFunction,
@@ -11,6 +9,7 @@ import type {
   UseQueryOptions,
   UseQueryResult,
 } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { factory } from '../../factory'
 import { setAuthorizationHeader } from '../../libs'
 import type { TokenCacheItem } from '../../manager/sessionManager'
@@ -34,11 +33,11 @@ export const useAuthedQuery = <
   TError,
   TData = TQueryFnData,
 >(
-  options: RequiredQueryFnOptions<TQueryFnData, TError, TData, TQueryKey>
+  options: RequiredQueryFnOptions<TQueryFnData, TError, TData, TQueryKey>,
 ): UseQueryResult<TData, TError> => {
   const wrappedQueryFn = async (...args: unknown[]) => {
     const tokenCacheManager = new SessionManager<TokenCacheItem, TQueryFnData>(
-      SESSION_KEY
+      SESSION_KEY,
     )
 
     // トークンキャッシュをチェック

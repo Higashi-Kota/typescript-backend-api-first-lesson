@@ -5,34 +5,34 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsSalonStatisticsMonthlyRevenue } from './modelsSalonStatisticsMonthlyRevenue'
-import type { ModelsServiceSummary } from './modelsServiceSummary'
-import type { ModelsTimeSlot } from './modelsTimeSlot'
+import type { ModelsSalonStatisticsMonthlyRevenue } from './modelsSalonStatisticsMonthlyRevenue';
+import type { ModelsServiceSummary } from './modelsServiceSummary';
+import type { ModelsTimeSlot } from './modelsTimeSlot';
 
 /**
  * サロン運営指標を集計したダッシュボード向けレスポンスモデル
  */
 export interface ModelsSalonStatistics {
   /** 登録されている提供メニューの総数 */
-  totalServices: number
+  totalServices: number;
   /** 在籍スタッフの総数 */
-  totalStaff: number
+  totalStaff: number;
   /**
    * レビューから算出した平均評価。レビュー未登録の場合はnull
    * @nullable
    */
-  averageRating: number | null
+  averageRating: number | null;
   /** 累計レビュー件数 */
-  totalReviews: number
+  totalReviews: number;
   /** 当月の予約件数合計 */
-  monthlyBookings: number
+  monthlyBookings: number;
   /**
    * 当月の売上総額。売上未集計の場合はnull
    * @nullable
    */
-  monthlyRevenue: ModelsSalonStatisticsMonthlyRevenue
+  monthlyRevenue: ModelsSalonStatisticsMonthlyRevenue;
   /** 人気の高いサービス一覧 */
-  popularServices: ModelsServiceSummary[]
+  popularServices: ModelsServiceSummary[];
   /** 予約が集中する時間帯の一覧 */
-  busyHours: ModelsTimeSlot[]
+  busyHours: ModelsTimeSlot[];
 }

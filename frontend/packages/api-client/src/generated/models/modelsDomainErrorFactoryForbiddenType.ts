@@ -6,10 +6,10 @@
  * OpenAPI spec version: 2.0
  */
 
-export type ModelsDomainErrorFactoryForbiddenType =
-  (typeof ModelsDomainErrorFactoryForbiddenType)[keyof typeof ModelsDomainErrorFactoryForbiddenType]
+export type ModelsDomainErrorFactoryForbiddenType = typeof ModelsDomainErrorFactoryForbiddenType[keyof typeof ModelsDomainErrorFactoryForbiddenType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsDomainErrorFactoryForbiddenType = {
   FORBIDDEN: 'FORBIDDEN',
-} as const
+} as const;

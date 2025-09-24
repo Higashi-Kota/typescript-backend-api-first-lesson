@@ -15,8 +15,8 @@ manager: マネージャー - サロンの管理業務を担当する管理者
 admin: 管理者 - システム全体の管理権限を持つユーザー
 owner: オーナー - サロンの所有者、最高権限を保持
  */
-export type ModelsUserRoleType =
-  (typeof ModelsUserRoleType)[keyof typeof ModelsUserRoleType]
+export type ModelsUserRoleType = typeof ModelsUserRoleType[keyof typeof ModelsUserRoleType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsUserRoleType = {
@@ -25,4 +25,4 @@ export const ModelsUserRoleType = {
   manager: 'manager',
   admin: 'admin',
   owner: 'owner',
-} as const
+} as const;

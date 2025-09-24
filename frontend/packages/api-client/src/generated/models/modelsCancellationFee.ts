@@ -11,12 +11,12 @@
  */
 export interface ModelsCancellationFee {
   /** キャンセル料金を適用する期限（時間） */
-  hours: number
+  hours: number;
   /** キャンセル料金率（%） */
-  percentage: number
+  percentage: number;
   /**
    * 固定額で設定するキャンセル料金。パーセンテージベースの料金設定の場合はnull
    * @nullable
    */
-  fixedAmount: number | null
+  fixedAmount: number | null;
 }

@@ -1,8 +1,6 @@
-import { P, match } from 'ts-pattern'
-
-import type { ApplicationErrorData } from '../../_types/applicationError'
-
 import { isNullOrUndefined } from '@beauty-salon-frontend/utils'
+import { match, P } from 'ts-pattern'
+import type { ApplicationErrorData } from '../../_types/applicationError'
 import {
   DEFAULT_ERROR_MESSAGE,
   DEFAULT_ERROR_STATUS,

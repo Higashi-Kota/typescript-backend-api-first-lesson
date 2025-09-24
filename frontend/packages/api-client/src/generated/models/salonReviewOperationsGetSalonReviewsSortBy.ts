@@ -6,12 +6,12 @@
  * OpenAPI spec version: 2.0
  */
 
-export type SalonReviewOperationsGetSalonReviewsSortBy =
-  (typeof SalonReviewOperationsGetSalonReviewsSortBy)[keyof typeof SalonReviewOperationsGetSalonReviewsSortBy]
+export type SalonReviewOperationsGetSalonReviewsSortBy = typeof SalonReviewOperationsGetSalonReviewsSortBy[keyof typeof SalonReviewOperationsGetSalonReviewsSortBy];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SalonReviewOperationsGetSalonReviewsSortBy = {
   recent: 'recent',
   rating: 'rating',
   helpful: 'helpful',
-} as const
+} as const;

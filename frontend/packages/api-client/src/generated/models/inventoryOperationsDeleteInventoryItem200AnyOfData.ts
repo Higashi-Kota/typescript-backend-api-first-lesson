@@ -9,6 +9,4 @@
 /**
  * 成功時に返却するドメインデータ。
  */
-export type InventoryOperationsDeleteInventoryItem200AnyOfData = {
-  [key: string]: unknown
-}
+export type InventoryOperationsDeleteInventoryItem200AnyOfData = { [key: string]: unknown };

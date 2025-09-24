@@ -3,7 +3,7 @@ import * as schema from '../../schema'
 
 export async function seedMembershipTiers(
   db: PostgresJsDatabase<typeof schema>,
-  salonIds: string[]
+  salonIds: string[],
 ): Promise<string[]> {
   const membershipTiers = []
 
@@ -103,7 +103,7 @@ export async function seedMembershipTiers(
         color: '#4B0082',
         sortOrder: 5,
         isActive: true,
-      }
+      },
     )
   }
 

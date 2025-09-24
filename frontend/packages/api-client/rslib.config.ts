@@ -40,7 +40,7 @@ export default defineConfig({
       setup(api) {
         api.onAfterBuild(() => {
           console.log(
-            '✅ @beauty-salon-frontend/api-client built successfully!'
+            '✅ @beauty-salon-frontend/api-client built successfully!',
           )
         })
       },

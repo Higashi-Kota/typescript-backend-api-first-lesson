@@ -6,10 +6,10 @@
  * OpenAPI spec version: 2.0
  */
 
-export type ModelsDomainErrorFactoryUnauthorizedHttpStatus =
-  (typeof ModelsDomainErrorFactoryUnauthorizedHttpStatus)[keyof typeof ModelsDomainErrorFactoryUnauthorizedHttpStatus]
+export type ModelsDomainErrorFactoryUnauthorizedHttpStatus = typeof ModelsDomainErrorFactoryUnauthorizedHttpStatus[keyof typeof ModelsDomainErrorFactoryUnauthorizedHttpStatus];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsDomainErrorFactoryUnauthorizedHttpStatus = {
   NUMBER_401: 401,
-} as const
+} as const;

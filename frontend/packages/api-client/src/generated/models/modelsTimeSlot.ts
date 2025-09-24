@@ -11,7 +11,7 @@
  */
 export interface ModelsTimeSlot {
   /** 開始時刻（HH:mm形式、24時間表記）。 */
-  startTime: string
+  startTime: string;
   /** 終了時刻（HH:mm形式、24時間表記）。 */
-  endTime: string
+  endTime: string;
 }

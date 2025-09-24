@@ -14,8 +14,8 @@ authenticated: 認証済み - 正常にログインしている状態
 pending_two_factor: 2要素認証待ち - 2要素認証の入力を待っている状態
 locked: ロック中 - アカウントがロックされている状態
  */
-export type ModelsAuthenticationStateType =
-  (typeof ModelsAuthenticationStateType)[keyof typeof ModelsAuthenticationStateType]
+export type ModelsAuthenticationStateType = typeof ModelsAuthenticationStateType[keyof typeof ModelsAuthenticationStateType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsAuthenticationStateType = {
@@ -23,4 +23,4 @@ export const ModelsAuthenticationStateType = {
   authenticated: 'authenticated',
   pending_two_factor: 'pending_two_factor',
   locked: 'locked',
-} as const
+} as const;

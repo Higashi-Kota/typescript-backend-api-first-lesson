@@ -9,4 +9,4 @@
 /**
  * レスポンスに含めるフィールドのカンマ区切りリスト。データ転送量の最適化に活用。
  */
-export type ModelsAdvancedSearchParamsFieldsParameter = string
+export type ModelsAdvancedSearchParamsFieldsParameter = string;

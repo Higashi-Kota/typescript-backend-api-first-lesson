@@ -9,10 +9,10 @@
 /**
  * 固定値draft。下書き状態であることを示す。
  */
-export type ModelsDraftBookingStatusType =
-  (typeof ModelsDraftBookingStatusType)[keyof typeof ModelsDraftBookingStatusType]
+export type ModelsDraftBookingStatusType = typeof ModelsDraftBookingStatusType[keyof typeof ModelsDraftBookingStatusType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsDraftBookingStatusType = {
   draft: 'draft',
-} as const
+} as const;

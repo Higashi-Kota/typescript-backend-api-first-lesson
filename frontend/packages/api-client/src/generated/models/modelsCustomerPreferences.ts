@@ -5,57 +5,57 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsCustomerPreferencesStylePreferences } from './modelsCustomerPreferencesStylePreferences'
-import type { ModelsCustomerPreferencesServicePreferences } from './modelsCustomerPreferencesServicePreferences'
-import type { ModelsCustomerPreferencesCommunicationPreferences } from './modelsCustomerPreferencesCommunicationPreferences'
-import type { ModelsStaffId } from './modelsStaffId'
-import type { ModelsDayOfWeekType } from './modelsDayOfWeekType'
-import type { ModelsTimeSlot } from './modelsTimeSlot'
+import type { ModelsCustomerPreferencesStylePreferences } from './modelsCustomerPreferencesStylePreferences';
+import type { ModelsCustomerPreferencesServicePreferences } from './modelsCustomerPreferencesServicePreferences';
+import type { ModelsCustomerPreferencesCommunicationPreferences } from './modelsCustomerPreferencesCommunicationPreferences';
+import type { ModelsStaffId } from './modelsStaffId';
+import type { ModelsDayOfWeekType } from './modelsDayOfWeekType';
+import type { ModelsTimeSlot } from './modelsTimeSlot';
 
 export interface ModelsCustomerPreferences {
   /**
    * スタイルの好み設定。設定がない場合はnull
    * @nullable
    */
-  stylePreferences: ModelsCustomerPreferencesStylePreferences
+  stylePreferences: ModelsCustomerPreferencesStylePreferences;
   /**
    * サービスの好み設定。設定がない場合はnull
    * @nullable
    */
-  servicePreferences: ModelsCustomerPreferencesServicePreferences
+  servicePreferences: ModelsCustomerPreferencesServicePreferences;
   /**
    * 連絡方法の好み設定。設定がない場合はnull
    * @nullable
    */
-  communicationPreferences: ModelsCustomerPreferencesCommunicationPreferences
+  communicationPreferences: ModelsCustomerPreferencesCommunicationPreferences;
   /**
    * 希望スタッフ一覧。指名がない場合はnull
    * @nullable
    */
-  preferredStaff: ModelsStaffId[] | null
+  preferredStaff: ModelsStaffId[] | null;
   /**
    * 避けたいスタッフ一覧。特にない場合はnull
    * @nullable
    */
-  avoidStaff: ModelsStaffId[] | null
+  avoidStaff: ModelsStaffId[] | null;
   /**
    * 希望曜日一覧。特に希望がない場合はnull
    * @nullable
    */
-  preferredDayOfWeek: ModelsDayOfWeekType[] | null
+  preferredDayOfWeek: ModelsDayOfWeekType[] | null;
   /**
    * 希望時間帯一覧。特に希望がない場合はnull
    * @nullable
    */
-  preferredTimeSlots: ModelsTimeSlot[] | null
+  preferredTimeSlots: ModelsTimeSlot[] | null;
   /**
    * 特別なリクエスト。特にない場合はnull
    * @nullable
    */
-  specialRequests: string | null
+  specialRequests: string | null;
   /**
    * 希望言語。日本語で問題ない場合はnull
    * @nullable
    */
-  language: string | null
+  language: string | null;
 }

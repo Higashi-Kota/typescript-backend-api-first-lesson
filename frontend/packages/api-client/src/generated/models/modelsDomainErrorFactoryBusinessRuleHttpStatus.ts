@@ -6,10 +6,10 @@
  * OpenAPI spec version: 2.0
  */
 
-export type ModelsDomainErrorFactoryBusinessRuleHttpStatus =
-  (typeof ModelsDomainErrorFactoryBusinessRuleHttpStatus)[keyof typeof ModelsDomainErrorFactoryBusinessRuleHttpStatus]
+export type ModelsDomainErrorFactoryBusinessRuleHttpStatus = typeof ModelsDomainErrorFactoryBusinessRuleHttpStatus[keyof typeof ModelsDomainErrorFactoryBusinessRuleHttpStatus];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsDomainErrorFactoryBusinessRuleHttpStatus = {
   NUMBER_422: 422,
-} as const
+} as const;

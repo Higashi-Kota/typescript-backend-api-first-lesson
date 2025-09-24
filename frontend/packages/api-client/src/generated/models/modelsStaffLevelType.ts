@@ -15,8 +15,8 @@ senior: シニア - 上級レベル、高度な技術と経験を保有
 expert: エキスパート - 専門家レベル、特殊技術や指導が可能
 director: ディレクター - 管理職レベル、サロンの技術的な指導を担当
  */
-export type ModelsStaffLevelType =
-  (typeof ModelsStaffLevelType)[keyof typeof ModelsStaffLevelType]
+export type ModelsStaffLevelType = typeof ModelsStaffLevelType[keyof typeof ModelsStaffLevelType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsStaffLevelType = {
@@ -25,4 +25,4 @@ export const ModelsStaffLevelType = {
   senior: 'senior',
   expert: 'expert',
   director: 'director',
-} as const
+} as const;

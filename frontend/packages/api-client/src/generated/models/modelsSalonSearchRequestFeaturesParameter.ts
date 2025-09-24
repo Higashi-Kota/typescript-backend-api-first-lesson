@@ -9,4 +9,4 @@
 /**
  * 設備やこだわり条件などの特徴タグによる絞り込み
  */
-export type ModelsSalonSearchRequestFeaturesParameter = string[]
+export type ModelsSalonSearchRequestFeaturesParameter = string[];

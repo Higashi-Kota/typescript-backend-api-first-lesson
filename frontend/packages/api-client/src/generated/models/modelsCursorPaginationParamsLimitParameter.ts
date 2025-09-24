@@ -9,4 +9,4 @@
 /**
  * 1ページあたりの取得件数上限 (1〜100)。指定が無い場合は既定値 20 を適用。
  */
-export type ModelsCursorPaginationParamsLimitParameter = number
+export type ModelsCursorPaginationParamsLimitParameter = number;

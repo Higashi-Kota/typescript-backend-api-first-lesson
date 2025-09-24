@@ -15,8 +15,8 @@ suspended: 停止中 - 一時的に利用が停止されている状態
 deleted: 削除済み - アカウントが論理削除された状態
 blacklisted: ブラックリスト - 利用を禁止された状態
  */
-export type ModelsCustomerSearchRequestStatusParameter =
-  (typeof ModelsCustomerSearchRequestStatusParameter)[keyof typeof ModelsCustomerSearchRequestStatusParameter]
+export type ModelsCustomerSearchRequestStatusParameter = typeof ModelsCustomerSearchRequestStatusParameter[keyof typeof ModelsCustomerSearchRequestStatusParameter];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsCustomerSearchRequestStatusParameter = {
@@ -25,4 +25,4 @@ export const ModelsCustomerSearchRequestStatusParameter = {
   suspended: 'suspended',
   deleted: 'deleted',
   blacklisted: 'blacklisted',
-} as const
+} as const;

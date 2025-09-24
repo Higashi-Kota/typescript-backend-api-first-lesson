@@ -6,10 +6,10 @@
  * OpenAPI spec version: 2.0
  */
 
-export type ModelsDomainErrorFactoryAlreadyExistsHttpStatus =
-  (typeof ModelsDomainErrorFactoryAlreadyExistsHttpStatus)[keyof typeof ModelsDomainErrorFactoryAlreadyExistsHttpStatus]
+export type ModelsDomainErrorFactoryAlreadyExistsHttpStatus = typeof ModelsDomainErrorFactoryAlreadyExistsHttpStatus[keyof typeof ModelsDomainErrorFactoryAlreadyExistsHttpStatus];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsDomainErrorFactoryAlreadyExistsHttpStatus = {
   NUMBER_409: 409,
-} as const
+} as const;

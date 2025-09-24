@@ -9,8 +9,8 @@
 /**
  * 返金処理の進捗状態
  */
-export type ModelsRefundStatus =
-  (typeof ModelsRefundStatus)[keyof typeof ModelsRefundStatus]
+export type ModelsRefundStatus = typeof ModelsRefundStatus[keyof typeof ModelsRefundStatus];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsRefundStatus = {
@@ -18,4 +18,4 @@ export const ModelsRefundStatus = {
   processing: 'processing',
   completed: 'completed',
   failed: 'failed',
-} as const
+} as const;

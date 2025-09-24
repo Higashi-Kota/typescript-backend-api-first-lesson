@@ -9,4 +9,4 @@
 /**
  * 決済取引や請求のレコードを識別するブランド付きUUID。
  */
-export type ModelsPaymentId = string
+export type ModelsPaymentId = string;

@@ -9,4 +9,4 @@
 /**
  * 1ページあたりの取得件数。省略時は20件。
  */
-export type ModelsPaginationParamsLimitParameter = number
+export type ModelsPaginationParamsLimitParameter = number;

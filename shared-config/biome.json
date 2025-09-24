@@ -1,80 +1,107 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.2.4/schema.json",
   "files": {
-    "ignore": [
-      "**/*dist",
-      "**/node_modules",
-      "**/.next",
-      "**/pkg",
-      "**/coverage",
-      "**/generated",
-      "**/*.d.ts",
-      "**/package-lock.json",
-      "**/pnpm-lock.yaml",
-      "**/yarn.lock"
+    "includes": [
+      "**",
+      "!**/api-client",
+      "!**/generated",
+      "!**/dist",
+      "!**/node_modules",
+      "!**/.next",
+      "!**/pkg",
+      "!**/coverage",
+      "!**/tsconfig.*.json",
+      "!**/package.json",
+      "!**/vite-env.d.ts",
+      "!**/dev-dist",
+      "!**/storybook-static"
     ],
     "ignoreUnknown": false
   },
   "formatter": {
     "enabled": true,
+    "formatWithErrors": false,
     "indentStyle": "space",
-    "indentWidth": 2
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 80,
+    "attributePosition": "auto"
   },
   "javascript": {
     "formatter": {
+      "enabled": true,
+      "lineEnding": "lf",
+      "lineWidth": 80,
+      "indentWidth": 2,
+      "indentStyle": "space",
       "quoteStyle": "single",
+      "jsxQuoteStyle": "single",
+      "quoteProperties": "asNeeded",
+      "trailingCommas": "all",
       "semicolons": "asNeeded",
-      "trailingCommas": "es5"
+      "arrowParentheses": "always",
+      "bracketSpacing": true,
+      "bracketSameLine": false,
+      "attributePosition": "auto"
     }
   },
-  "json": {
-    "formatter": {
-      "enabled": true,
-      "indentStyle": "space",
-      "indentWidth": 2,
-      "trailingCommas": "none"
+  "css": {
+    "linter": {
+      "enabled": true
     },
-    "parser": {
-      "allowComments": true,
-      "allowTrailingCommas": false
+    "formatter": {
+      "enabled": true
     }
   },
   "linter": {
     "enabled": true,
-    "ignore": ["**/dist"],
+    "includes": ["**", "!**/dist"],
     "rules": {
-      "correctness": {
-        "noUnusedImports": "error",
-        "noUnusedVariables": "error",
-        "useArrayLiterals": "off",
-        "useExhaustiveDependencies": "error"
-      },
       "recommended": true,
-      "style": {
-        "noVar": "error",
-        "useAsConstAssertion": "error",
-        "useConst": "error",
-        "noNegationElse": "warn",
-        "useBlockStatements": "warn"
-      },
       "suspicious": {
         "noExplicitAny": "error",
-        "noImplicitAnyLet": "error",
-        "noDoubleEquals": "warn",
-        "noConfusingVoidType": "error",
-        "useValidTypeof": "error"
+        "noArrayIndexKey": "warn"
+      },
+      "style": {
+        "useImportType": "error",
+        "useExportType": "error",
+        "noNonNullAssertion": "warn"
       },
       "complexity": {
-        "useSimplifiedLogicExpression": "warn"
+        "noBannedTypes": "error",
+        "noUselessFragments": "error"
+      },
+      "correctness": {
+        "noUnusedVariables": "error",
+        "noUnusedImports": "error",
+        "useExhaustiveDependencies": "warn"
+      },
+      "performance": {
+        "noAccumulatingSpread": "error"
       }
     }
   },
-  "organizeImports": {
-    "enabled": true
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
   },
   "vcs": {
+    "enabled": true,
     "clientKind": "git",
-    "enabled": false,
     "useIgnoreFile": false
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["**/*.css"],
+      "css": {
+        "linter": {
+          "enabled": false
+        }
+      }
+    }
+  ]
 }

@@ -19,8 +19,8 @@ INTERNAL_ERROR: 内部エラー - システム内部で予期しないエラー�
 DATABASE_ERROR: データベースエラー - データベース操作中のエラー
 EXTERNAL_SERVICE_ERROR: 外部サービスエラー - 外部APIやサービスでのエラー
  */
-export type ModelsDomainErrorType =
-  (typeof ModelsDomainErrorType)[keyof typeof ModelsDomainErrorType]
+export type ModelsDomainErrorType = typeof ModelsDomainErrorType[keyof typeof ModelsDomainErrorType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsDomainErrorType = {
@@ -33,4 +33,4 @@ export const ModelsDomainErrorType = {
   INTERNAL_ERROR: 'INTERNAL_ERROR',
   DATABASE_ERROR: 'DATABASE_ERROR',
   EXTERNAL_SERVICE_ERROR: 'EXTERNAL_SERVICE_ERROR',
-} as const
+} as const;

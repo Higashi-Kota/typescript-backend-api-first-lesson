@@ -1,9 +1,9 @@
 import type {
+  DistributedOmit as _DistributedOmit,
+  DistributedPick as _DistributedPick,
   Except,
   KeysOfUnion,
   Simplify,
-  DistributedOmit as _DistributedOmit,
-  DistributedPick as _DistributedPick,
 } from 'type-fest'
 import type {
   DeepNonNullable as _DeepNonNullable,

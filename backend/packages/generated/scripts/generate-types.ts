@@ -12,7 +12,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const CONFIG = {
   openApiPath: resolve(
     __dirname,
-    '../../../../specs/tsp-output/@typespec/openapi3/generated/openapi.yaml'
+    '../../../../specs/tsp-output/@typespec/openapi3/generated/openapi.yaml',
   ),
   outputDir: resolve(__dirname, '../src'),
   tempFile: 'api-types-temp.ts',
@@ -124,7 +124,7 @@ function createApiTypesFile(baseTypes: string): string {
     // "Models.EnumName": ...
     const enumRegex = new RegExp(
       `(\\s*)/\\*\\*[^*]*\\*+(?:[^/*][^*]*\\*+)*/\\s*${fullEnumName.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')}:`,
-      'gm'
+      'gm',
     )
 
     processedTypes = processedTypes.replace(enumRegex, (_match, indent) => {
@@ -166,7 +166,7 @@ ${processedTypes}
  */
 async function generateAdditionalFiles(
   openApiPath: string,
-  outputDir: string
+  outputDir: string,
 ): Promise<void> {
   const openApiContent = readFileSync(openApiPath, 'utf-8')
   const openApi = parse(openApiContent)

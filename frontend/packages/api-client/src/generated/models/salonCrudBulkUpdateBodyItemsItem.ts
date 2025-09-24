@@ -5,34 +5,34 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsAddress } from './modelsAddress'
-import type { ModelsContactInfo } from './modelsContactInfo'
-import type { ModelsOpeningHours } from './modelsOpeningHours'
-import type { ModelsBusinessHours } from './modelsBusinessHours'
-import type { ModelsSalonId } from './modelsSalonId'
+import type { ModelsAddress } from './modelsAddress';
+import type { ModelsContactInfo } from './modelsContactInfo';
+import type { ModelsOpeningHours } from './modelsOpeningHours';
+import type { ModelsBusinessHours } from './modelsBusinessHours';
+import type { ModelsSalonId } from './modelsSalonId';
 
 export type SalonCrudBulkUpdateBodyItemsItem = {
   /** 名称変更を行う場合に指定 */
-  name?: string
+  name?: string;
   /**
    * 紹介文を更新する場合に指定（null指定で初期化可能）
    * @nullable
    */
-  description?: string | null
+  description?: string | null;
   /** 住所情報の差し替えが必要な場合に指定 */
-  address?: ModelsAddress
+  address?: ModelsAddress;
   /** 電話番号やメールアドレス等の連絡先を更新する場合に指定 */
-  contactInfo?: ModelsContactInfo
+  contactInfo?: ModelsContactInfo;
   /** 通常営業時間の更新が必要な場合に指定 */
-  openingHours?: ModelsOpeningHours[]
+  openingHours?: ModelsOpeningHours[];
   /**
    * 特別営業時間やシフト設定の更新に利用（null指定で初期化可能）
    * @nullable
    */
-  businessHours?: ModelsBusinessHours[] | null
+  businessHours?: ModelsBusinessHours[] | null;
   /** 画像URLリストを更新する場合に指定 */
-  imageUrls?: string[]
+  imageUrls?: string[];
   /** 特徴タグの追加・削除を行う場合に指定 */
-  features?: string[]
-  id: ModelsSalonId
-}
+  features?: string[];
+  id: ModelsSalonId;
+};

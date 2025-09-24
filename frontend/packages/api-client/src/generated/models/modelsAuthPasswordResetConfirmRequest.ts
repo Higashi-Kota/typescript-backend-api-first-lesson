@@ -11,7 +11,7 @@
  */
 export interface ModelsAuthPasswordResetConfirmRequest {
   /** メールで受け取った再設定トークン。 */
-  token: string
+  token: string;
   /** 新しいパスワード。 */
-  newPassword: string
+  newPassword: string;
 }

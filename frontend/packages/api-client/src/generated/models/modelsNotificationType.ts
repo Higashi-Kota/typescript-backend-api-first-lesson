@@ -14,8 +14,8 @@ sms: SMS - ショートメッセージサービスによる通知
 push: プッシュ通知 - モバイルアプリのプッシュ通知
 line: LINE - LINEメッセージングサービスによる通知
  */
-export type ModelsNotificationType =
-  (typeof ModelsNotificationType)[keyof typeof ModelsNotificationType]
+export type ModelsNotificationType = typeof ModelsNotificationType[keyof typeof ModelsNotificationType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsNotificationType = {
@@ -23,4 +23,4 @@ export const ModelsNotificationType = {
   sms: 'sms',
   push: 'push',
   line: 'line',
-} as const
+} as const;

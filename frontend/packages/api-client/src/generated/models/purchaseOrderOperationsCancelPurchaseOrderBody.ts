@@ -7,5 +7,5 @@
  */
 
 export type PurchaseOrderOperationsCancelPurchaseOrderBody = {
-  reason: string
-}
+  reason: string;
+};

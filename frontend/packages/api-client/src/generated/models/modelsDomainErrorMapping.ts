@@ -5,8 +5,8 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsDomainErrorType } from './modelsDomainErrorType'
-import type { ModelsErrorCodeType } from './modelsErrorCodeType'
+import type { ModelsDomainErrorType } from './modelsDomainErrorType';
+import type { ModelsErrorCodeType } from './modelsErrorCodeType';
 
 /**
  * ドメインエラータイプとシステム標準エラーコードの対応表モデル。
@@ -14,9 +14,9 @@ import type { ModelsErrorCodeType } from './modelsErrorCodeType'
  */
 export interface ModelsDomainErrorMapping {
   /** ドメインエラータイプ。ビジネス層で識別されるカテゴリ。 */
-  domainType: ModelsDomainErrorType
+  domainType: ModelsDomainErrorType;
   /** 対応する標準エラーコード。`ErrorCodeType` を参照する。 */
-  errorCode: ModelsErrorCodeType
+  errorCode: ModelsErrorCodeType;
   /** レスポンスに適用する HTTP ステータスコード。 */
-  httpStatus: number
+  httpStatus: number;
 }

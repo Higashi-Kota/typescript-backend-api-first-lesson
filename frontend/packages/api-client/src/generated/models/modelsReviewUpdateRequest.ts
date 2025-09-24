@@ -11,40 +11,40 @@
  */
 export interface ModelsReviewUpdateRequest {
   /** 更新後の全体満足度評価 */
-  overallRating?: number
+  overallRating?: number;
   /**
    * 更新後のコメント本文（null指定で初期化可能）
    * @nullable
    */
-  comment?: string | null
+  comment?: string | null;
   /**
    * 更新後のレビュータイトル（null指定で初期化可能）
    * @nullable
    */
-  title?: string | null
+  title?: string | null;
   /**
    * 更新後のサービス品質評価（null指定で初期化可能）
    * @nullable
    */
-  serviceRating?: number | null
+  serviceRating?: number | null;
   /**
    * 更新後のスタッフ評価（null指定で初期化可能）
    * @nullable
    */
-  staffRating?: number | null
+  staffRating?: number | null;
   /**
    * 更新後の清潔さ評価（null指定で初期化可能）
    * @nullable
    */
-  cleanlinessRating?: number | null
+  cleanlinessRating?: number | null;
   /**
    * 更新後の価格価値評価（null指定で初期化可能）
    * @nullable
    */
-  valueRating?: number | null
+  valueRating?: number | null;
   /**
    * 画像URL一覧の更新内容（null指定で初期化可能）
    * @nullable
    */
-  imageUrls?: string[] | null
+  imageUrls?: string[] | null;
 }

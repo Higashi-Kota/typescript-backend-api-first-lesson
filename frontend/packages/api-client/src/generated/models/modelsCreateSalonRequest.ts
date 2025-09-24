@@ -5,35 +5,35 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsAddress } from './modelsAddress'
-import type { ModelsContactInfo } from './modelsContactInfo'
-import type { ModelsOpeningHours } from './modelsOpeningHours'
-import type { ModelsBusinessHours } from './modelsBusinessHours'
+import type { ModelsAddress } from './modelsAddress';
+import type { ModelsContactInfo } from './modelsContactInfo';
+import type { ModelsOpeningHours } from './modelsOpeningHours';
+import type { ModelsBusinessHours } from './modelsBusinessHours';
 
 /**
  * サロン新規登録リクエスト - 全項目のキーが必須で、値は業務要件に応じてnull許可
  */
 export interface ModelsCreateSalonRequest {
   /** 新規登録時に必須となるサロン名 */
-  name: string
+  name: string;
   /**
    * サロン紹介文。未設定の場合はnull
    * @nullable
    */
-  description: string | null
+  description: string | null;
   /** 店舗の正規住所・連絡先配送先 */
-  address: ModelsAddress
+  address: ModelsAddress;
   /** 顧客問い合わせ用の電話やメール情報 */
-  contactInfo: ModelsContactInfo
+  contactInfo: ModelsContactInfo;
   /** 通常営業日の営業時間設定一覧 */
-  openingHours: ModelsOpeningHours[]
+  openingHours: ModelsOpeningHours[];
   /**
    * 特別営業スケジュールやシフト連動の営業時間。通常営業時間のみの場合はnull
    * @nullable
    */
-  businessHours: ModelsBusinessHours[] | null
+  businessHours: ModelsBusinessHours[] | null;
   /** 店舗写真やメニュー画像のURL一覧 */
-  imageUrls: string[]
+  imageUrls: string[];
   /** バリアフリー対応や個室有無などの特徴タグ一覧 */
-  features: string[]
+  features: string[];
 }

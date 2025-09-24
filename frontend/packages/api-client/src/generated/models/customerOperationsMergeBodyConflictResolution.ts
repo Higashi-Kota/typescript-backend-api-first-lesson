@@ -9,12 +9,12 @@
 /**
  * 重複データの優先ルール
  */
-export type CustomerOperationsMergeBodyConflictResolution =
-  (typeof CustomerOperationsMergeBodyConflictResolution)[keyof typeof CustomerOperationsMergeBodyConflictResolution]
+export type CustomerOperationsMergeBodyConflictResolution = typeof CustomerOperationsMergeBodyConflictResolution[keyof typeof CustomerOperationsMergeBodyConflictResolution];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CustomerOperationsMergeBodyConflictResolution = {
   keep_primary: 'keep_primary',
   keep_secondary: 'keep_secondary',
   keep_newest: 'keep_newest',
-} as const
+} as const;

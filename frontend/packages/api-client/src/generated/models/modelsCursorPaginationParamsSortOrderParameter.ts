@@ -6,11 +6,11 @@
  * OpenAPI spec version: 2.0
  */
 
-export type ModelsCursorPaginationParamsSortOrderParameter =
-  (typeof ModelsCursorPaginationParamsSortOrderParameter)[keyof typeof ModelsCursorPaginationParamsSortOrderParameter]
+export type ModelsCursorPaginationParamsSortOrderParameter = typeof ModelsCursorPaginationParamsSortOrderParameter[keyof typeof ModelsCursorPaginationParamsSortOrderParameter];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsCursorPaginationParamsSortOrderParameter = {
   asc: 'asc',
   desc: 'desc',
-} as const
+} as const;

@@ -41,7 +41,7 @@ export default defineConfig({
       setup(api) {
         api.onAfterBuild(() => {
           console.log(
-            '✅ @beauty-salon-backend/infrastructure built successfully!'
+            '✅ @beauty-salon-backend/infrastructure built successfully!',
           )
         })
       },

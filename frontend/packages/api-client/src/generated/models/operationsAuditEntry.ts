@@ -5,38 +5,38 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { OperationsAuditEntryOperation } from './operationsAuditEntryOperation'
-import type { OperationsChangeSet } from './operationsChangeSet'
-import type { OperationsAuditEntryMetadata } from './operationsAuditEntryMetadata'
+import type { OperationsAuditEntryOperation } from './operationsAuditEntryOperation';
+import type { OperationsChangeSet } from './operationsChangeSet';
+import type { OperationsAuditEntryMetadata } from './operationsAuditEntryMetadata';
 
 /**
  * 監査ログ1件分の詳細を保持するモデルです。誰がいつどのような変更を行ったかを記録します。
  */
 export interface OperationsAuditEntry {
   /** Audit entry ID */
-  id: string
+  id: string;
   /** Entity ID */
-  entityId: string
+  entityId: string;
   /** Entity type */
-  entity: string
+  entity: string;
   /** Operation performed */
-  operation: OperationsAuditEntryOperation
+  operation: OperationsAuditEntryOperation;
   /** User who performed the operation */
-  userId: string
+  userId: string;
   /** User display name */
-  userName?: string
+  userName?: string;
   /** IP address */
-  ipAddress?: string
+  ipAddress?: string;
   /** User agent */
-  userAgent?: string
+  userAgent?: string;
   /** Timestamp of the operation */
-  timestamp: string
+  timestamp: string;
   /** Changes made */
-  changes?: OperationsChangeSet[]
+  changes?: OperationsChangeSet[];
   /** Entity snapshot before change */
-  before?: unknown
+  before?: unknown;
   /** Entity snapshot after change */
-  after?: unknown
+  after?: unknown;
   /** Additional metadata */
-  metadata?: OperationsAuditEntryMetadata
+  metadata?: OperationsAuditEntryMetadata;
 }

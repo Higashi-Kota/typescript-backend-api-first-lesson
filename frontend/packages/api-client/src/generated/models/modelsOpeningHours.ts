@@ -5,36 +5,36 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsDayOfWeekType } from './modelsDayOfWeekType'
+import type { ModelsDayOfWeekType } from './modelsDayOfWeekType';
 
 /**
  * 曜日別の営業時間を管理するモデル。
  */
 export interface ModelsOpeningHours {
   /** 対象となる曜日 */
-  dayOfWeek: ModelsDayOfWeekType
+  dayOfWeek: ModelsDayOfWeekType;
   /** 日付 */
-  date: string
+  date: string;
   /**
    * 開店時刻（HH:mm形式）。休業日の場合はnull
    * @nullable
    */
-  openTime: string | null
+  openTime: string | null;
   /**
    * 閉店時刻（HH:mm形式）。休業日の場合はnull
    * @nullable
    */
-  closeTime: string | null
+  closeTime: string | null;
   /** 休業日かどうかを示すフラグ。 */
-  isHoliday: boolean
+  isHoliday: boolean;
   /**
    * 祝日名称や社内呼称などの休業理由。通常営業日または理由不要の場合はnull
    * @nullable
    */
-  holidayName: string | null
+  holidayName: string | null;
   /**
    * 備考や注意事項。特記事項がない場合はnull
    * @nullable
    */
-  notes: string | null
+  notes: string | null;
 }

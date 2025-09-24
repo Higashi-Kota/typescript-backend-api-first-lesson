@@ -5,39 +5,39 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsPricingFactorType } from './modelsPricingFactorType'
-import type { ModelsPricingFactorMultipliers } from './modelsPricingFactorMultipliers'
-import type { ModelsSeason } from './modelsSeason'
+import type { ModelsPricingFactorType } from './modelsPricingFactorType';
+import type { ModelsPricingFactorMultipliers } from './modelsPricingFactorMultipliers';
+import type { ModelsSeason } from './modelsSeason';
 
 /**
  * 料金調整に使用する変動要因
  */
 export interface ModelsPricingFactor {
   /** 変動要因の種類 */
-  type: ModelsPricingFactorType
+  type: ModelsPricingFactorType;
   /**
    * 条件に応じた倍率設定。固定倍率または他の計算方法を使用する場合はnull
    * @nullable
    */
-  multipliers: ModelsPricingFactorMultipliers
+  multipliers: ModelsPricingFactorMultipliers;
   /**
    * ピーク時間帯の指定（HH:mm形式）。時間帯による料金変動がない場合はnull
    * @nullable
    */
-  peakHours: string[] | null
+  peakHours: string[] | null;
   /**
    * ピーク時間帯に適用する倍率。ピーク時間設定がない場合はnull
    * @nullable
    */
-  peakMultiplier: number | null
+  peakMultiplier: number | null;
   /**
    * 需要に応じた閾値設定。需要ベースの料金調整を行わない場合はnull
    * @nullable
    */
-  threshold: number | null
+  threshold: number | null;
   /**
    * 季節要因の詳細設定。季節による価格変動がない場合はnull
    * @nullable
    */
-  seasons: ModelsSeason[] | null
+  seasons: ModelsSeason[] | null;
 }

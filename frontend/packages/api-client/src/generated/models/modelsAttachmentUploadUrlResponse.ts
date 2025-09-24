@@ -11,9 +11,9 @@
  */
 export interface ModelsAttachmentUploadUrlResponse {
   /** 一時的に有効なアップロード用URL。 */
-  uploadUrl: string
+  uploadUrl: string;
   /** 生成されたストレージキー。アップロード完了後の識別に使用。 */
-  key: string
+  key: string;
   /** 署名付きURLの有効期限。 */
-  expiresAt: string
+  expiresAt: string;
 }

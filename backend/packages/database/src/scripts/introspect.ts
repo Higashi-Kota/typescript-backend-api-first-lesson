@@ -55,7 +55,7 @@ async function main() {
       console.log('📦 Moving generated schema.ts to src/schema.ts...')
       const schemaContent = fs.readFileSync(
         path.join(migrationsDir, 'schema.ts'),
-        'utf8'
+        'utf8',
       )
       fs.writeFileSync(path.join(srcDir, 'schema.ts'), schemaContent)
     }
@@ -64,7 +64,7 @@ async function main() {
       console.log('📦 Moving generated relations.ts to src/relations.ts...')
       const relationsContent = fs.readFileSync(
         path.join(migrationsDir, 'relations.ts'),
-        'utf8'
+        'utf8',
       )
       fs.writeFileSync(path.join(srcDir, 'relations.ts'), relationsContent)
     }

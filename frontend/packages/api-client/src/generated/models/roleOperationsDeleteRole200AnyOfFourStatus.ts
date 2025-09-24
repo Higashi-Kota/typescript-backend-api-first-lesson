@@ -9,10 +9,10 @@
 /**
  * 固定値error。エラー結果であることを示す。
  */
-export type RoleOperationsDeleteRole200AnyOfFourStatus =
-  (typeof RoleOperationsDeleteRole200AnyOfFourStatus)[keyof typeof RoleOperationsDeleteRole200AnyOfFourStatus]
+export type RoleOperationsDeleteRole200AnyOfFourStatus = typeof RoleOperationsDeleteRole200AnyOfFourStatus[keyof typeof RoleOperationsDeleteRole200AnyOfFourStatus];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const RoleOperationsDeleteRole200AnyOfFourStatus = {
   error: 'error',
-} as const
+} as const;

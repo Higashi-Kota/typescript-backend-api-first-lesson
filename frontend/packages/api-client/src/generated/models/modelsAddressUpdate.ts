@@ -11,16 +11,16 @@
  */
 export interface ModelsAddressUpdate {
   /** 番地や建物名を含む詳細住所。 */
-  street?: string
+  street?: string;
   /** 市区町村名。 */
-  city?: string
+  city?: string;
   /** 都道府県名。 */
-  prefecture?: string
+  prefecture?: string;
   /**
    * 郵便番号。未登録の場合はnull
    * @nullable
    */
-  postalCode?: string | null
+  postalCode?: string | null;
   /** 国名。既定値はJapan。 */
-  country?: string
+  country?: string;
 }

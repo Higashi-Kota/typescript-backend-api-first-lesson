@@ -9,10 +9,10 @@
 /**
  * 固定値error。エラー結果であることを示す。
  */
-export type AccessControlOperationsValidatePermissions200AnyOfFourStatus =
-  (typeof AccessControlOperationsValidatePermissions200AnyOfFourStatus)[keyof typeof AccessControlOperationsValidatePermissions200AnyOfFourStatus]
+export type AccessControlOperationsValidatePermissions200AnyOfFourStatus = typeof AccessControlOperationsValidatePermissions200AnyOfFourStatus[keyof typeof AccessControlOperationsValidatePermissions200AnyOfFourStatus];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const AccessControlOperationsValidatePermissions200AnyOfFourStatus = {
   error: 'error',
-} as const
+} as const;

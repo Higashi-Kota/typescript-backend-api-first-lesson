@@ -5,62 +5,62 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsBookingRequirementType } from './modelsBookingRequirementType'
+import type { ModelsBookingRequirementType } from './modelsBookingRequirementType';
 
 /**
  * サービス予約時に必要な要件詳細
  */
 export interface ModelsBookingRequirementDetail {
   /** 要件の種類 */
-  type: ModelsBookingRequirementType
+  type: ModelsBookingRequirementType;
   /**
    * 金額要件（例: デポジット額）。金額指定が不要な要件の場合はnull
    * @nullable
    */
-  amount: number | null
+  amount: number | null;
   /**
    * 割合で設定する要件（%）。固定額または割合設定が不要な要件の場合はnull
    * @nullable
    */
-  percentage: number | null
+  percentage: number | null;
   /**
    * 必須かどうか。デフォルトで任意の要件の場合はnull（falseと同義）
    * @nullable
    */
-  required: boolean | null
+  required: boolean | null;
   /**
    * 所要時間や準備時間（分）。時間指定が不要な要件の場合はnull
    * @nullable
    */
-  duration: number | null
+  duration: number | null;
   /**
    * 何日前までに対応が必要か。事前対応が不要な要件の場合はnull
    * @nullable
    */
-  daysInAdvance: number | null
+  daysInAdvance: number | null;
   /**
    * 利用可能な最低年齢。年齢制限がない要件の場合はnull
    * @nullable
    */
-  minAge: number | null
+  minAge: number | null;
   /**
    * 利用可能な最高年齢。年齢上限がない要件の場合はnull
    * @nullable
    */
-  maxAge: number | null
+  maxAge: number | null;
   /**
    * 利用可能な性別の制限。性別制限がない要件の場合はnull
    * @nullable
    */
-  allowedGenders: string[] | null
+  allowedGenders: string[] | null;
   /**
    * 必要な会員ランク。会員限定でない、またはランク指定がない要件の場合はnull
    * @nullable
    */
-  requiredTier: string | null
+  requiredTier: string | null;
   /**
    * 顧客への具体的な指示。特別な準備や指示が不要な要件の場合はnull
    * @nullable
    */
-  instructions: string[] | null
+  instructions: string[] | null;
 }

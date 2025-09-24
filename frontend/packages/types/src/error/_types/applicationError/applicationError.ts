@@ -26,7 +26,7 @@ export abstract class ApplicationError extends Error {
 }
 
 export const isApplicationError = (
-  error: unknown
+  error: unknown,
 ): error is ApplicationError => {
   if (!hasNameProps(error)) {
     return false

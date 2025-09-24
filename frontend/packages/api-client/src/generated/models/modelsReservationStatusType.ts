@@ -15,8 +15,8 @@ cancelled: キャンセル済み - 顧客またはサロン側により予約が
 completed: 完了 - 予約された施術が実施され、サービス提供が完了した状態
 no_show: 無断キャンセル - 顧客が事前連絡なしに来店しなかった状態
  */
-export type ModelsReservationStatusType =
-  (typeof ModelsReservationStatusType)[keyof typeof ModelsReservationStatusType]
+export type ModelsReservationStatusType = typeof ModelsReservationStatusType[keyof typeof ModelsReservationStatusType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsReservationStatusType = {
@@ -25,4 +25,4 @@ export const ModelsReservationStatusType = {
   cancelled: 'cancelled',
   completed: 'completed',
   no_show: 'no_show',
-} as const
+} as const;

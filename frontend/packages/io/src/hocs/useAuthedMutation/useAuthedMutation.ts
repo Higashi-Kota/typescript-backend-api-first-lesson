@@ -1,14 +1,14 @@
 import {
-  type Omit,
   isEmpty,
   isNullOrUndefined,
+  type Omit,
 } from '@beauty-salon-frontend/utils'
-import { useMutation } from '@tanstack/react-query'
 import type {
   MutationFunction,
   UseMutationOptions,
   UseMutationResult,
 } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { factory } from '../../factory'
 import { setAuthorizationHeader } from '../../libs'
 import type { TokenCacheItem } from '../../manager/sessionManager'
@@ -22,14 +22,14 @@ type RequiredMutationFnOptions<TData, TError, TVariables, TContext> = {
 } & Omit<UseMutationOptions<TData, TError, TVariables, TContext>, 'mutationFn'>
 
 export const useAuthedMutation = <TData, TError, TVariables, TContext>(
-  options: RequiredMutationFnOptions<TData, TError, TVariables, TContext>
+  options: RequiredMutationFnOptions<TData, TError, TVariables, TContext>,
 ): UseMutationResult<TData, TError, TVariables, TContext> => {
   const wrappedMutationFn: MutationFunction<TData, TVariables> = async (
     variables,
-    context
+    context,
   ) => {
     const tokenCacheManager = new SessionManager<TokenCacheItem, TData>(
-      SESSION_KEY
+      SESSION_KEY,
     )
 
     // トークンキャッシュをチェック

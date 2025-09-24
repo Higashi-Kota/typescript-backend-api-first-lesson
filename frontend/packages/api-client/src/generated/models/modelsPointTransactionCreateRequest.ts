@@ -5,27 +5,27 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsCustomerId } from './modelsCustomerId'
-import type { ModelsPointTransactionCreateRequestType } from './modelsPointTransactionCreateRequestType'
-import type { ModelsPaymentId } from './modelsPaymentId'
-import type { ModelsBookingId } from './modelsBookingId'
+import type { ModelsCustomerId } from './modelsCustomerId';
+import type { ModelsPointTransactionCreateRequestType } from './modelsPointTransactionCreateRequestType';
+import type { ModelsPaymentId } from './modelsPaymentId';
+import type { ModelsBookingId } from './modelsBookingId';
 
 /**
  * ポイント取引を登録する入力モデル
  */
 export interface ModelsPointTransactionCreateRequest {
   /** 対象顧客 ID */
-  customerId: ModelsCustomerId
+  customerId: ModelsCustomerId;
   /** ポイント取引種別 */
-  type: ModelsPointTransactionCreateRequestType
+  type: ModelsPointTransactionCreateRequestType;
   /** ポイント変動量 */
-  points: number
+  points: number;
   /** 関連する決済 ID */
-  paymentId?: ModelsPaymentId
+  paymentId?: ModelsPaymentId;
   /** 関連する予約 ID */
-  bookingId?: ModelsBookingId
+  bookingId?: ModelsBookingId;
   /** 取引内容の説明 */
-  description: string
+  description: string;
   /** ポイントの有効期限 */
-  expiresAt?: string
+  expiresAt?: string;
 }

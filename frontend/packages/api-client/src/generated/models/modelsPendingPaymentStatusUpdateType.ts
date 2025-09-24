@@ -9,10 +9,10 @@
 /**
  * 状態種別（pending 固定値）
  */
-export type ModelsPendingPaymentStatusUpdateType =
-  (typeof ModelsPendingPaymentStatusUpdateType)[keyof typeof ModelsPendingPaymentStatusUpdateType]
+export type ModelsPendingPaymentStatusUpdateType = typeof ModelsPendingPaymentStatusUpdateType[keyof typeof ModelsPendingPaymentStatusUpdateType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsPendingPaymentStatusUpdateType = {
   pending: 'pending',
-} as const
+} as const;

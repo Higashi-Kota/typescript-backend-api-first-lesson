@@ -59,7 +59,7 @@ const AllowFormatPattern = {
 } as const
 
 const AllowFormatPatterns = Object.entries(AllowFormatPattern).map(
-  (entry) => entry[1]
+  (entry) => entry[1],
 )
 export type AllowFormat = (typeof AllowFormatPatterns)[number]
 export type AllowFormatValue = ValueUnion<Pick<AllowFormat, 'value'>>

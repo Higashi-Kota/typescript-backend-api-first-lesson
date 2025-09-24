@@ -18,8 +18,8 @@ receptionist: 受付 - フロントデスク業務の権限
 customer: 顧客 - 顧客セルフサービスの権限
 guest: ゲスト - 限定的なゲストアクセス権限
  */
-export type ModelsSystemRoleType =
-  (typeof ModelsSystemRoleType)[keyof typeof ModelsSystemRoleType]
+export type ModelsSystemRoleType = typeof ModelsSystemRoleType[keyof typeof ModelsSystemRoleType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsSystemRoleType = {
@@ -31,4 +31,4 @@ export const ModelsSystemRoleType = {
   receptionist: 'receptionist',
   customer: 'customer',
   guest: 'guest',
-} as const
+} as const;

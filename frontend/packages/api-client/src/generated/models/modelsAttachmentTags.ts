@@ -10,4 +10,4 @@
  * ラベリングや検索に利用するタグ情報のセット。タグ付けをしていない場合はnull。
  * @nullable
  */
-export type ModelsAttachmentTags = { [key: string]: string } | null
+export type ModelsAttachmentTags = {[key: string]: string} | null;

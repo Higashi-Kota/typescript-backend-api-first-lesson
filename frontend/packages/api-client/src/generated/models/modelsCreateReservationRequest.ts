@@ -5,28 +5,28 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsSalonId } from './modelsSalonId'
-import type { ModelsCustomerId } from './modelsCustomerId'
-import type { ModelsStaffId } from './modelsStaffId'
-import type { ModelsServiceId } from './modelsServiceId'
+import type { ModelsSalonId } from './modelsSalonId';
+import type { ModelsCustomerId } from './modelsCustomerId';
+import type { ModelsStaffId } from './modelsStaffId';
+import type { ModelsServiceId } from './modelsServiceId';
 
 /**
  * 予約作成リクエスト - 新規予約登録時に必要なサロン・顧客・メニュー・希望日時の情報を受け取る
  */
 export interface ModelsCreateReservationRequest {
   /** 予約対象のサロンID */
-  salonId: ModelsSalonId
+  salonId: ModelsSalonId;
   /** 予約を申し込む顧客ID */
-  customerId: ModelsCustomerId
+  customerId: ModelsCustomerId;
   /** 担当予定のスタッフID */
-  staffId: ModelsStaffId
+  staffId: ModelsStaffId;
   /** 希望する施術メニューID */
-  serviceId: ModelsServiceId
+  serviceId: ModelsServiceId;
   /** 希望する施術開始日時 (UTC) */
-  startTime: string
+  startTime: string;
   /**
    * 顧客要望や注意事項のメモ - 特記事項がない標準予約の場合はnull
    * @nullable
    */
-  notes: string | null
+  notes: string | null;
 }

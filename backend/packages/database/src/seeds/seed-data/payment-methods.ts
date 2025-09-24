@@ -8,7 +8,7 @@ export interface PaymentMethodSeedResult {
 
 export async function seedPaymentMethods(
   db: PostgresJsDatabase<typeof schema>,
-  salonIds: string[]
+  salonIds: string[],
 ): Promise<PaymentMethodSeedResult> {
   const paymentMethods = []
 
@@ -114,7 +114,7 @@ export async function seedPaymentMethods(
         isOfflineEnabled: true,
         sortOrder: 7,
         isActive: true,
-      }
+      },
     )
   }
 

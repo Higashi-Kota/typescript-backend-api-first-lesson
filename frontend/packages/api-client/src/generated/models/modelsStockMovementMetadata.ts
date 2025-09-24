@@ -10,4 +10,4 @@
  * 追加のメタデータ
  * @nullable
  */
-export type ModelsStockMovementMetadata = { [key: string]: unknown } | null
+export type ModelsStockMovementMetadata = {[key: string]: unknown} | null;

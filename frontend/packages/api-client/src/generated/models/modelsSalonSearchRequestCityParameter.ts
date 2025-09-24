@@ -9,4 +9,4 @@
 /**
  * 市区町村名による絞り込み
  */
-export type ModelsSalonSearchRequestCityParameter = string
+export type ModelsSalonSearchRequestCityParameter = string;

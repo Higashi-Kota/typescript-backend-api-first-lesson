@@ -19,7 +19,7 @@ dotenv.config({ path: path.join(rootPath, '.env') })
 async function main() {
   console.log('🏗️ Generating setup.sql from current schema...')
   console.log(
-    'This will create sql/setup.sql from the current schema definition'
+    'This will create sql/setup.sql from the current schema definition',
   )
   console.log('')
 
@@ -33,7 +33,7 @@ async function main() {
         env: {
           ...process.env,
         },
-      }
+      },
     )
 
     if (stderr) {

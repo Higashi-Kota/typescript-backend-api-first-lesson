@@ -9,4 +9,4 @@
 /**
  * サービスカテゴリやメニュー分類を識別するブランド付きUUID。
  */
-export type ModelsCategoryId = string
+export type ModelsCategoryId = string;

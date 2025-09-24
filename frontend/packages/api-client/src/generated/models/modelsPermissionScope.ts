@@ -10,13 +10,12 @@
  * 権限の適用範囲（own/salon/all） - 範囲指定が不要なグローバル権限の場合はnull
  * @nullable
  */
-export type ModelsPermissionScope =
-  | (typeof ModelsPermissionScope)[keyof typeof ModelsPermissionScope]
-  | null
+export type ModelsPermissionScope = typeof ModelsPermissionScope[keyof typeof ModelsPermissionScope] | null;
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsPermissionScope = {
   own: 'own',
   salon: 'salon',
   all: 'all',
-} as const
+} as const;

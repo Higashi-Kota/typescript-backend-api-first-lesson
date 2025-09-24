@@ -5,44 +5,44 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsCategoryId } from './modelsCategoryId'
-import type { ModelsServiceId } from './modelsServiceId'
-import type { ModelsStaffId } from './modelsStaffId'
+import type { ModelsCategoryId } from './modelsCategoryId';
+import type { ModelsServiceId } from './modelsServiceId';
+import type { ModelsStaffId } from './modelsStaffId';
 
 /**
  * サービス間・スタッフとの関連情報
  */
 export interface ModelsServiceAssociations {
   /** 紐づくカテゴリ ID */
-  categoryId: ModelsCategoryId
+  categoryId: ModelsCategoryId;
   /**
    * 親サービス ID。独立したサービスで親を持たない場合はnull
    * @nullable
    */
-  parentServiceId: string | null
+  parentServiceId: string | null;
   /**
    * 子サービス ID 一覧。子サービスを持たない場合はnull
    * @nullable
    */
-  childServiceIds: ModelsServiceId[] | null
+  childServiceIds: ModelsServiceId[] | null;
   /**
    * 予約時に必須のサービス ID。前提サービスがない独立したサービスの場合はnull
    * @nullable
    */
-  requiredServiceIds: ModelsServiceId[] | null
+  requiredServiceIds: ModelsServiceId[] | null;
   /**
    * 併用を推奨するサービス ID。推奨する組み合わせがない場合はnull
    * @nullable
    */
-  recommendedServiceIds: ModelsServiceId[] | null
+  recommendedServiceIds: ModelsServiceId[] | null;
   /**
    * 施術資格を持つスタッフ ID。全スタッフが対応可能な場合はnull
    * @nullable
    */
-  qualifiedStaffIds: ModelsStaffId[] | null
+  qualifiedStaffIds: ModelsStaffId[] | null;
   /**
    * 優先的に担当させたいスタッフ ID。特定の優先スタッフがいない場合はnull
    * @nullable
    */
-  preferredStaffIds: ModelsStaffId[] | null
+  preferredStaffIds: ModelsStaffId[] | null;
 }

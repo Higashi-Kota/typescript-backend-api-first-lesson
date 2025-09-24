@@ -6,12 +6,12 @@
  * OpenAPI spec version: 2.0
  */
 
-export type SalesReportOperationsGetSalesTrendsPeriod =
-  (typeof SalesReportOperationsGetSalesTrendsPeriod)[keyof typeof SalesReportOperationsGetSalesTrendsPeriod]
+export type SalesReportOperationsGetSalesTrendsPeriod = typeof SalesReportOperationsGetSalesTrendsPeriod[keyof typeof SalesReportOperationsGetSalesTrendsPeriod];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SalesReportOperationsGetSalesTrendsPeriod = {
   daily: 'daily',
   weekly: 'weekly',
   monthly: 'monthly',
-} as const
+} as const;

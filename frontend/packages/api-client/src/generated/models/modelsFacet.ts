@@ -12,7 +12,7 @@
  */
 export interface ModelsFacet {
   /** ファセットの値。例: `メンズ向け` や `個室あり`。 */
-  value: string
+  value: string;
   /** 該当値に一致する件数。 */
-  count: number
+  count: number;
 }

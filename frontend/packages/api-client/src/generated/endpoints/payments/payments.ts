@@ -5,7 +5,10 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import { useMutation, useQuery } from '@tanstack/react-query'
+import {
+  useMutation,
+  useQuery
+} from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -18,8 +21,8 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult,
-} from '@tanstack/react-query'
+  UseQueryResult
+} from '@tanstack/react-query';
 
 import type {
   ModelsCustomerId,
@@ -40,16 +43,19 @@ import type {
   PaymentOperationsListPaymentsParams,
   PaymentOperationsProcessPayment200,
   PaymentOperationsProcessRefund200,
-  PaymentOperationsUpdatePayment200,
-} from '../../models'
+  PaymentOperationsUpdatePayment200
+} from '../../models';
 
-import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher'
+import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher';
 
-type AwaitedInput<T> = PromiseLike<T> | T
+type AwaitedInput<T> = PromiseLike<T> | T;
 
-type Awaited<O> = O extends AwaitedInput<infer T> ? T : never
+      type Awaited<O> = O extends AwaitedInput<infer T> ? T : never;
 
-type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
+
 
 /**
  * List payments with filters
@@ -58,197 +64,108 @@ export type paymentOperationsListPaymentsResponse200 = {
   data: PaymentOperationsListPayments200
   status: 200
 }
+    
+export type paymentOperationsListPaymentsResponseComposite = paymentOperationsListPaymentsResponse200;
+    
+export type paymentOperationsListPaymentsResponse = paymentOperationsListPaymentsResponseComposite & {
+  headers: Headers;
+}
 
-export type paymentOperationsListPaymentsResponseComposite =
-  paymentOperationsListPaymentsResponse200
-
-export type paymentOperationsListPaymentsResponse =
-  paymentOperationsListPaymentsResponseComposite & {
-    headers: Headers
-  }
-
-export const getPaymentOperationsListPaymentsUrl = (
-  params?: PaymentOperationsListPaymentsParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getPaymentOperationsListPaymentsUrl = (params?: PaymentOperationsListPaymentsParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/payments?${stringifiedParams}`
-    : `/payments`
+  return stringifiedParams.length > 0 ? `/payments?${stringifiedParams}` : `/payments`
 }
 
-export const paymentOperationsListPayments = async (
-  params?: PaymentOperationsListPaymentsParams,
-  options?: RequestInit
-): Promise<paymentOperationsListPaymentsResponse> => {
-  return customInstance<paymentOperationsListPaymentsResponse>(
-    getPaymentOperationsListPaymentsUrl(params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getPaymentOperationsListPaymentsQueryKey = (
-  params?: PaymentOperationsListPaymentsParams
-) => {
-  return [`/payments`, ...(params ? [params] : [])] as const
-}
-
-export const getPaymentOperationsListPaymentsQueryOptions = <
-  TData = Awaited<ReturnType<typeof paymentOperationsListPayments>>,
-  TError = unknown,
->(
-  params?: PaymentOperationsListPaymentsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof paymentOperationsListPayments>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const paymentOperationsListPayments = async (params?: PaymentOperationsListPaymentsParams, options?: RequestInit): Promise<paymentOperationsListPaymentsResponse> => {
+  
+  return customInstance<paymentOperationsListPaymentsResponse>(getPaymentOperationsListPaymentsUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getPaymentOperationsListPaymentsQueryKey = (params?: PaymentOperationsListPaymentsParams,) => {
+    return [`/payments`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getPaymentOperationsListPaymentsQueryOptions = <TData = Awaited<ReturnType<typeof paymentOperationsListPayments>>, TError = unknown>(params?: PaymentOperationsListPaymentsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof paymentOperationsListPayments>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ?? getPaymentOperationsListPaymentsQueryKey(params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof paymentOperationsListPayments>>
-  > = ({ signal }) =>
-    paymentOperationsListPayments(params, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getPaymentOperationsListPaymentsQueryKey(params);
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof paymentOperationsListPayments>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof paymentOperationsListPayments>>> = ({ signal }) => paymentOperationsListPayments(params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof paymentOperationsListPayments>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type PaymentOperationsListPaymentsQueryResult = NonNullable<
-  Awaited<ReturnType<typeof paymentOperationsListPayments>>
->
+export type PaymentOperationsListPaymentsQueryResult = NonNullable<Awaited<ReturnType<typeof paymentOperationsListPayments>>>
 export type PaymentOperationsListPaymentsQueryError = unknown
 
-export function usePaymentOperationsListPayments<
-  TData = Awaited<ReturnType<typeof paymentOperationsListPayments>>,
-  TError = unknown,
->(
-  params: undefined | PaymentOperationsListPaymentsParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof paymentOperationsListPayments>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function usePaymentOperationsListPayments<TData = Awaited<ReturnType<typeof paymentOperationsListPayments>>, TError = unknown>(
+ params: undefined |  PaymentOperationsListPaymentsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof paymentOperationsListPayments>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof paymentOperationsListPayments>>,
           TError,
           Awaited<ReturnType<typeof paymentOperationsListPayments>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function usePaymentOperationsListPayments<
-  TData = Awaited<ReturnType<typeof paymentOperationsListPayments>>,
-  TError = unknown,
->(
-  params?: PaymentOperationsListPaymentsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof paymentOperationsListPayments>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function usePaymentOperationsListPayments<TData = Awaited<ReturnType<typeof paymentOperationsListPayments>>, TError = unknown>(
+ params?: PaymentOperationsListPaymentsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof paymentOperationsListPayments>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof paymentOperationsListPayments>>,
           TError,
           Awaited<ReturnType<typeof paymentOperationsListPayments>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function usePaymentOperationsListPayments<
-  TData = Awaited<ReturnType<typeof paymentOperationsListPayments>>,
-  TError = unknown,
->(
-  params?: PaymentOperationsListPaymentsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof paymentOperationsListPayments>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function usePaymentOperationsListPayments<TData = Awaited<ReturnType<typeof paymentOperationsListPayments>>, TError = unknown>(
+ params?: PaymentOperationsListPaymentsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof paymentOperationsListPayments>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function usePaymentOperationsListPayments<TData = Awaited<ReturnType<typeof paymentOperationsListPayments>>, TError = unknown>(
+ params?: PaymentOperationsListPaymentsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof paymentOperationsListPayments>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getPaymentOperationsListPaymentsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
 
-export function usePaymentOperationsListPayments<
-  TData = Awaited<ReturnType<typeof paymentOperationsListPayments>>,
-  TError = unknown,
->(
-  params?: PaymentOperationsListPaymentsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof paymentOperationsListPayments>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getPaymentOperationsListPaymentsQueryOptions(
-    params,
-    options
-  )
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-
-  query.queryKey = queryOptions.queryKey
-
-  return query
-}
 
 /**
  * Create new payment
@@ -257,428 +174,274 @@ export type paymentOperationsCreatePaymentResponse200 = {
   data: PaymentOperationsCreatePayment200
   status: 200
 }
-
-export type paymentOperationsCreatePaymentResponseComposite =
-  paymentOperationsCreatePaymentResponse200
-
-export type paymentOperationsCreatePaymentResponse =
-  paymentOperationsCreatePaymentResponseComposite & {
-    headers: Headers
-  }
+    
+export type paymentOperationsCreatePaymentResponseComposite = paymentOperationsCreatePaymentResponse200;
+    
+export type paymentOperationsCreatePaymentResponse = paymentOperationsCreatePaymentResponseComposite & {
+  headers: Headers;
+}
 
 export const getPaymentOperationsCreatePaymentUrl = () => {
+
+
+  
+
   return `/payments`
 }
 
-export const paymentOperationsCreatePayment = async (
-  modelsPaymentCreateRequest: ModelsPaymentCreateRequest,
-  options?: RequestInit
-): Promise<paymentOperationsCreatePaymentResponse> => {
-  return customInstance<paymentOperationsCreatePaymentResponse>(
-    getPaymentOperationsCreatePaymentUrl(),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsPaymentCreateRequest),
-    }
-  )
-}
-
-export const getPaymentOperationsCreatePaymentMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof paymentOperationsCreatePayment>>,
-    TError,
-    { data: ModelsPaymentCreateRequest },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof paymentOperationsCreatePayment>>,
-  TError,
-  { data: ModelsPaymentCreateRequest },
-  TContext
-> => {
-  const mutationKey = ['paymentOperationsCreatePayment']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof paymentOperationsCreatePayment>>,
-    { data: ModelsPaymentCreateRequest }
-  > = (props) => {
-    const { data } = props ?? {}
-
-    return paymentOperationsCreatePayment(data, requestOptions)
+export const paymentOperationsCreatePayment = async (modelsPaymentCreateRequest: ModelsPaymentCreateRequest, options?: RequestInit): Promise<paymentOperationsCreatePaymentResponse> => {
+  
+  return customInstance<paymentOperationsCreatePaymentResponse>(getPaymentOperationsCreatePaymentUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      modelsPaymentCreateRequest,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type PaymentOperationsCreatePaymentMutationResult = NonNullable<
-  Awaited<ReturnType<typeof paymentOperationsCreatePayment>>
->
-export type PaymentOperationsCreatePaymentMutationBody =
-  ModelsPaymentCreateRequest
-export type PaymentOperationsCreatePaymentMutationError = unknown
 
-export const usePaymentOperationsCreatePayment = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof paymentOperationsCreatePayment>>,
-      TError,
-      { data: ModelsPaymentCreateRequest },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof paymentOperationsCreatePayment>>,
-  TError,
-  { data: ModelsPaymentCreateRequest },
-  TContext
-> => {
-  const mutationOptions =
-    getPaymentOperationsCreatePaymentMutationOptions(options)
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+export const getPaymentOperationsCreatePaymentMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof paymentOperationsCreatePayment>>, TError,{data: ModelsPaymentCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof paymentOperationsCreatePayment>>, TError,{data: ModelsPaymentCreateRequest}, TContext> => {
+
+const mutationKey = ['paymentOperationsCreatePayment'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof paymentOperationsCreatePayment>>, {data: ModelsPaymentCreateRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  paymentOperationsCreatePayment(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PaymentOperationsCreatePaymentMutationResult = NonNullable<Awaited<ReturnType<typeof paymentOperationsCreatePayment>>>
+    export type PaymentOperationsCreatePaymentMutationBody = ModelsPaymentCreateRequest
+    export type PaymentOperationsCreatePaymentMutationError = unknown
+
+    export const usePaymentOperationsCreatePayment = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof paymentOperationsCreatePayment>>, TError,{data: ModelsPaymentCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof paymentOperationsCreatePayment>>,
+        TError,
+        {data: ModelsPaymentCreateRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getPaymentOperationsCreatePaymentMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * Calculate payment summary
  */
 export type paymentOperationsCalculatePaymentResponse200 = {
   data: PaymentOperationsCalculatePayment200
   status: 200
 }
-
-export type paymentOperationsCalculatePaymentResponseComposite =
-  paymentOperationsCalculatePaymentResponse200
-
-export type paymentOperationsCalculatePaymentResponse =
-  paymentOperationsCalculatePaymentResponseComposite & {
-    headers: Headers
-  }
+    
+export type paymentOperationsCalculatePaymentResponseComposite = paymentOperationsCalculatePaymentResponse200;
+    
+export type paymentOperationsCalculatePaymentResponse = paymentOperationsCalculatePaymentResponseComposite & {
+  headers: Headers;
+}
 
 export const getPaymentOperationsCalculatePaymentUrl = () => {
+
+
+  
+
   return `/payments/calculate`
 }
 
-export const paymentOperationsCalculatePayment = async (
-  paymentOperationsCalculatePaymentBody: PaymentOperationsCalculatePaymentBody,
-  options?: RequestInit
-): Promise<paymentOperationsCalculatePaymentResponse> => {
-  return customInstance<paymentOperationsCalculatePaymentResponse>(
-    getPaymentOperationsCalculatePaymentUrl(),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(paymentOperationsCalculatePaymentBody),
-    }
-  )
-}
-
-export const getPaymentOperationsCalculatePaymentMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof paymentOperationsCalculatePayment>>,
-    TError,
-    { data: PaymentOperationsCalculatePaymentBody },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof paymentOperationsCalculatePayment>>,
-  TError,
-  { data: PaymentOperationsCalculatePaymentBody },
-  TContext
-> => {
-  const mutationKey = ['paymentOperationsCalculatePayment']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof paymentOperationsCalculatePayment>>,
-    { data: PaymentOperationsCalculatePaymentBody }
-  > = (props) => {
-    const { data } = props ?? {}
-
-    return paymentOperationsCalculatePayment(data, requestOptions)
+export const paymentOperationsCalculatePayment = async (paymentOperationsCalculatePaymentBody: PaymentOperationsCalculatePaymentBody, options?: RequestInit): Promise<paymentOperationsCalculatePaymentResponse> => {
+  
+  return customInstance<paymentOperationsCalculatePaymentResponse>(getPaymentOperationsCalculatePaymentUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      paymentOperationsCalculatePaymentBody,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type PaymentOperationsCalculatePaymentMutationResult = NonNullable<
-  Awaited<ReturnType<typeof paymentOperationsCalculatePayment>>
->
-export type PaymentOperationsCalculatePaymentMutationBody =
-  PaymentOperationsCalculatePaymentBody
-export type PaymentOperationsCalculatePaymentMutationError = unknown
 
-export const usePaymentOperationsCalculatePayment = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof paymentOperationsCalculatePayment>>,
-      TError,
-      { data: PaymentOperationsCalculatePaymentBody },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof paymentOperationsCalculatePayment>>,
-  TError,
-  { data: PaymentOperationsCalculatePaymentBody },
-  TContext
-> => {
-  const mutationOptions =
-    getPaymentOperationsCalculatePaymentMutationOptions(options)
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+export const getPaymentOperationsCalculatePaymentMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof paymentOperationsCalculatePayment>>, TError,{data: PaymentOperationsCalculatePaymentBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof paymentOperationsCalculatePayment>>, TError,{data: PaymentOperationsCalculatePaymentBody}, TContext> => {
+
+const mutationKey = ['paymentOperationsCalculatePayment'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof paymentOperationsCalculatePayment>>, {data: PaymentOperationsCalculatePaymentBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  paymentOperationsCalculatePayment(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PaymentOperationsCalculatePaymentMutationResult = NonNullable<Awaited<ReturnType<typeof paymentOperationsCalculatePayment>>>
+    export type PaymentOperationsCalculatePaymentMutationBody = PaymentOperationsCalculatePaymentBody
+    export type PaymentOperationsCalculatePaymentMutationError = unknown
+
+    export const usePaymentOperationsCalculatePayment = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof paymentOperationsCalculatePayment>>, TError,{data: PaymentOperationsCalculatePaymentBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof paymentOperationsCalculatePayment>>,
+        TError,
+        {data: PaymentOperationsCalculatePaymentBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPaymentOperationsCalculatePaymentMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * Get customer payment history
  */
 export type paymentOperationsGetCustomerPaymentsResponse200 = {
   data: PaymentOperationsGetCustomerPayments200
   status: 200
 }
+    
+export type paymentOperationsGetCustomerPaymentsResponseComposite = paymentOperationsGetCustomerPaymentsResponse200;
+    
+export type paymentOperationsGetCustomerPaymentsResponse = paymentOperationsGetCustomerPaymentsResponseComposite & {
+  headers: Headers;
+}
 
-export type paymentOperationsGetCustomerPaymentsResponseComposite =
-  paymentOperationsGetCustomerPaymentsResponse200
-
-export type paymentOperationsGetCustomerPaymentsResponse =
-  paymentOperationsGetCustomerPaymentsResponseComposite & {
-    headers: Headers
-  }
-
-export const getPaymentOperationsGetCustomerPaymentsUrl = (
-  customerId: ModelsCustomerId,
-  params?: PaymentOperationsGetCustomerPaymentsParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getPaymentOperationsGetCustomerPaymentsUrl = (customerId: ModelsCustomerId,
+    params?: PaymentOperationsGetCustomerPaymentsParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/payments/customer/${customerId}?${stringifiedParams}`
-    : `/payments/customer/${customerId}`
+  return stringifiedParams.length > 0 ? `/payments/customer/${customerId}?${stringifiedParams}` : `/payments/customer/${customerId}`
 }
 
-export const paymentOperationsGetCustomerPayments = async (
-  customerId: ModelsCustomerId,
-  params?: PaymentOperationsGetCustomerPaymentsParams,
-  options?: RequestInit
-): Promise<paymentOperationsGetCustomerPaymentsResponse> => {
-  return customInstance<paymentOperationsGetCustomerPaymentsResponse>(
-    getPaymentOperationsGetCustomerPaymentsUrl(customerId, params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getPaymentOperationsGetCustomerPaymentsQueryKey = (
-  customerId?: ModelsCustomerId,
-  params?: PaymentOperationsGetCustomerPaymentsParams
-) => {
-  return [
-    `/payments/customer/${customerId}`,
-    ...(params ? [params] : []),
-  ] as const
-}
-
-export const getPaymentOperationsGetCustomerPaymentsQueryOptions = <
-  TData = Awaited<ReturnType<typeof paymentOperationsGetCustomerPayments>>,
-  TError = unknown,
->(
-  customerId: ModelsCustomerId,
-  params?: PaymentOperationsGetCustomerPaymentsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof paymentOperationsGetCustomerPayments>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const paymentOperationsGetCustomerPayments = async (customerId: ModelsCustomerId,
+    params?: PaymentOperationsGetCustomerPaymentsParams, options?: RequestInit): Promise<paymentOperationsGetCustomerPaymentsResponse> => {
+  
+  return customInstance<paymentOperationsGetCustomerPaymentsResponse>(getPaymentOperationsGetCustomerPaymentsUrl(customerId,params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getPaymentOperationsGetCustomerPaymentsQueryKey = (customerId?: ModelsCustomerId,
+    params?: PaymentOperationsGetCustomerPaymentsParams,) => {
+    return [`/payments/customer/${customerId}`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getPaymentOperationsGetCustomerPaymentsQueryOptions = <TData = Awaited<ReturnType<typeof paymentOperationsGetCustomerPayments>>, TError = unknown>(customerId: ModelsCustomerId,
+    params?: PaymentOperationsGetCustomerPaymentsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof paymentOperationsGetCustomerPayments>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ??
-    getPaymentOperationsGetCustomerPaymentsQueryKey(customerId, params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof paymentOperationsGetCustomerPayments>>
-  > = ({ signal }) =>
-    paymentOperationsGetCustomerPayments(customerId, params, {
-      signal,
-      ...requestOptions,
-    })
+  const queryKey =  queryOptions?.queryKey ?? getPaymentOperationsGetCustomerPaymentsQueryKey(customerId,params);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!customerId,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof paymentOperationsGetCustomerPayments>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof paymentOperationsGetCustomerPayments>>> = ({ signal }) => paymentOperationsGetCustomerPayments(customerId,params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(customerId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof paymentOperationsGetCustomerPayments>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type PaymentOperationsGetCustomerPaymentsQueryResult = NonNullable<
-  Awaited<ReturnType<typeof paymentOperationsGetCustomerPayments>>
->
+export type PaymentOperationsGetCustomerPaymentsQueryResult = NonNullable<Awaited<ReturnType<typeof paymentOperationsGetCustomerPayments>>>
 export type PaymentOperationsGetCustomerPaymentsQueryError = unknown
 
-export function usePaymentOperationsGetCustomerPayments<
-  TData = Awaited<ReturnType<typeof paymentOperationsGetCustomerPayments>>,
-  TError = unknown,
->(
-  customerId: ModelsCustomerId,
-  params: undefined | PaymentOperationsGetCustomerPaymentsParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof paymentOperationsGetCustomerPayments>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function usePaymentOperationsGetCustomerPayments<TData = Awaited<ReturnType<typeof paymentOperationsGetCustomerPayments>>, TError = unknown>(
+ customerId: ModelsCustomerId,
+    params: undefined |  PaymentOperationsGetCustomerPaymentsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof paymentOperationsGetCustomerPayments>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof paymentOperationsGetCustomerPayments>>,
           TError,
           Awaited<ReturnType<typeof paymentOperationsGetCustomerPayments>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function usePaymentOperationsGetCustomerPayments<
-  TData = Awaited<ReturnType<typeof paymentOperationsGetCustomerPayments>>,
-  TError = unknown,
->(
-  customerId: ModelsCustomerId,
-  params?: PaymentOperationsGetCustomerPaymentsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof paymentOperationsGetCustomerPayments>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function usePaymentOperationsGetCustomerPayments<TData = Awaited<ReturnType<typeof paymentOperationsGetCustomerPayments>>, TError = unknown>(
+ customerId: ModelsCustomerId,
+    params?: PaymentOperationsGetCustomerPaymentsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof paymentOperationsGetCustomerPayments>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof paymentOperationsGetCustomerPayments>>,
           TError,
           Awaited<ReturnType<typeof paymentOperationsGetCustomerPayments>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function usePaymentOperationsGetCustomerPayments<
-  TData = Awaited<ReturnType<typeof paymentOperationsGetCustomerPayments>>,
-  TError = unknown,
->(
-  customerId: ModelsCustomerId,
-  params?: PaymentOperationsGetCustomerPaymentsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof paymentOperationsGetCustomerPayments>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function usePaymentOperationsGetCustomerPayments<TData = Awaited<ReturnType<typeof paymentOperationsGetCustomerPayments>>, TError = unknown>(
+ customerId: ModelsCustomerId,
+    params?: PaymentOperationsGetCustomerPaymentsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof paymentOperationsGetCustomerPayments>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function usePaymentOperationsGetCustomerPayments<TData = Awaited<ReturnType<typeof paymentOperationsGetCustomerPayments>>, TError = unknown>(
+ customerId: ModelsCustomerId,
+    params?: PaymentOperationsGetCustomerPaymentsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof paymentOperationsGetCustomerPayments>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getPaymentOperationsGetCustomerPaymentsQueryOptions(customerId,params,options)
+
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
 
-export function usePaymentOperationsGetCustomerPayments<
-  TData = Awaited<ReturnType<typeof paymentOperationsGetCustomerPayments>>,
-  TError = unknown,
->(
-  customerId: ModelsCustomerId,
-  params?: PaymentOperationsGetCustomerPaymentsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof paymentOperationsGetCustomerPayments>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getPaymentOperationsGetCustomerPaymentsQueryOptions(
-    customerId,
-    params,
-    options
-  )
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-
-  query.queryKey = queryOptions.queryKey
-
-  return query
-}
 
 /**
  * Get payment by ID
@@ -687,185 +450,101 @@ export type paymentOperationsGetPaymentResponse200 = {
   data: PaymentOperationsGetPayment200
   status: 200
 }
+    
+export type paymentOperationsGetPaymentResponseComposite = paymentOperationsGetPaymentResponse200;
+    
+export type paymentOperationsGetPaymentResponse = paymentOperationsGetPaymentResponseComposite & {
+  headers: Headers;
+}
 
-export type paymentOperationsGetPaymentResponseComposite =
-  paymentOperationsGetPaymentResponse200
+export const getPaymentOperationsGetPaymentUrl = (id: ModelsPaymentId,) => {
 
-export type paymentOperationsGetPaymentResponse =
-  paymentOperationsGetPaymentResponseComposite & {
-    headers: Headers
-  }
 
-export const getPaymentOperationsGetPaymentUrl = (id: ModelsPaymentId) => {
+  
+
   return `/payments/${id}`
 }
 
-export const paymentOperationsGetPayment = async (
-  id: ModelsPaymentId,
-  options?: RequestInit
-): Promise<paymentOperationsGetPaymentResponse> => {
-  return customInstance<paymentOperationsGetPaymentResponse>(
-    getPaymentOperationsGetPaymentUrl(id),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getPaymentOperationsGetPaymentQueryKey = (
-  id?: ModelsPaymentId
-) => {
-  return [`/payments/${id}`] as const
-}
-
-export const getPaymentOperationsGetPaymentQueryOptions = <
-  TData = Awaited<ReturnType<typeof paymentOperationsGetPayment>>,
-  TError = unknown,
->(
-  id: ModelsPaymentId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof paymentOperationsGetPayment>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const paymentOperationsGetPayment = async (id: ModelsPaymentId, options?: RequestInit): Promise<paymentOperationsGetPaymentResponse> => {
+  
+  return customInstance<paymentOperationsGetPaymentResponse>(getPaymentOperationsGetPaymentUrl(id),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getPaymentOperationsGetPaymentQueryKey = (id?: ModelsPaymentId,) => {
+    return [`/payments/${id}`] as const;
+    }
+
+    
+export const getPaymentOperationsGetPaymentQueryOptions = <TData = Awaited<ReturnType<typeof paymentOperationsGetPayment>>, TError = unknown>(id: ModelsPaymentId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof paymentOperationsGetPayment>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ?? getPaymentOperationsGetPaymentQueryKey(id)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof paymentOperationsGetPayment>>
-  > = ({ signal }) =>
-    paymentOperationsGetPayment(id, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getPaymentOperationsGetPaymentQueryKey(id);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!id,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof paymentOperationsGetPayment>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof paymentOperationsGetPayment>>> = ({ signal }) => paymentOperationsGetPayment(id, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof paymentOperationsGetPayment>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type PaymentOperationsGetPaymentQueryResult = NonNullable<
-  Awaited<ReturnType<typeof paymentOperationsGetPayment>>
->
+export type PaymentOperationsGetPaymentQueryResult = NonNullable<Awaited<ReturnType<typeof paymentOperationsGetPayment>>>
 export type PaymentOperationsGetPaymentQueryError = unknown
 
-export function usePaymentOperationsGetPayment<
-  TData = Awaited<ReturnType<typeof paymentOperationsGetPayment>>,
-  TError = unknown,
->(
-  id: ModelsPaymentId,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof paymentOperationsGetPayment>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function usePaymentOperationsGetPayment<TData = Awaited<ReturnType<typeof paymentOperationsGetPayment>>, TError = unknown>(
+ id: ModelsPaymentId, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof paymentOperationsGetPayment>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof paymentOperationsGetPayment>>,
           TError,
           Awaited<ReturnType<typeof paymentOperationsGetPayment>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function usePaymentOperationsGetPayment<
-  TData = Awaited<ReturnType<typeof paymentOperationsGetPayment>>,
-  TError = unknown,
->(
-  id: ModelsPaymentId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof paymentOperationsGetPayment>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function usePaymentOperationsGetPayment<TData = Awaited<ReturnType<typeof paymentOperationsGetPayment>>, TError = unknown>(
+ id: ModelsPaymentId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof paymentOperationsGetPayment>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof paymentOperationsGetPayment>>,
           TError,
           Awaited<ReturnType<typeof paymentOperationsGetPayment>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function usePaymentOperationsGetPayment<
-  TData = Awaited<ReturnType<typeof paymentOperationsGetPayment>>,
-  TError = unknown,
->(
-  id: ModelsPaymentId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof paymentOperationsGetPayment>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function usePaymentOperationsGetPayment<TData = Awaited<ReturnType<typeof paymentOperationsGetPayment>>, TError = unknown>(
+ id: ModelsPaymentId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof paymentOperationsGetPayment>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function usePaymentOperationsGetPayment<TData = Awaited<ReturnType<typeof paymentOperationsGetPayment>>, TError = unknown>(
+ id: ModelsPaymentId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof paymentOperationsGetPayment>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getPaymentOperationsGetPaymentQueryOptions(id,options)
+
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
 
-export function usePaymentOperationsGetPayment<
-  TData = Awaited<ReturnType<typeof paymentOperationsGetPayment>>,
-  TError = unknown,
->(
-  id: ModelsPaymentId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof paymentOperationsGetPayment>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getPaymentOperationsGetPaymentQueryOptions(id, options)
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-
-  query.queryKey = queryOptions.queryKey
-
-  return query
-}
 
 /**
  * Update payment status
@@ -874,499 +553,339 @@ export type paymentOperationsUpdatePaymentResponse200 = {
   data: PaymentOperationsUpdatePayment200
   status: 200
 }
+    
+export type paymentOperationsUpdatePaymentResponseComposite = paymentOperationsUpdatePaymentResponse200;
+    
+export type paymentOperationsUpdatePaymentResponse = paymentOperationsUpdatePaymentResponseComposite & {
+  headers: Headers;
+}
 
-export type paymentOperationsUpdatePaymentResponseComposite =
-  paymentOperationsUpdatePaymentResponse200
+export const getPaymentOperationsUpdatePaymentUrl = (id: ModelsPaymentId,) => {
 
-export type paymentOperationsUpdatePaymentResponse =
-  paymentOperationsUpdatePaymentResponseComposite & {
-    headers: Headers
-  }
 
-export const getPaymentOperationsUpdatePaymentUrl = (id: ModelsPaymentId) => {
+  
+
   return `/payments/${id}`
 }
 
-export const paymentOperationsUpdatePayment = async (
-  id: ModelsPaymentId,
-  modelsPaymentUpdateRequest: ModelsPaymentUpdateRequest,
-  options?: RequestInit
-): Promise<paymentOperationsUpdatePaymentResponse> => {
-  return customInstance<paymentOperationsUpdatePaymentResponse>(
-    getPaymentOperationsUpdatePaymentUrl(id),
-    {
-      ...options,
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsPaymentUpdateRequest),
-    }
-  )
-}
-
-export const getPaymentOperationsUpdatePaymentMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof paymentOperationsUpdatePayment>>,
-    TError,
-    { id: ModelsPaymentId; data: ModelsPaymentUpdateRequest },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof paymentOperationsUpdatePayment>>,
-  TError,
-  { id: ModelsPaymentId; data: ModelsPaymentUpdateRequest },
-  TContext
-> => {
-  const mutationKey = ['paymentOperationsUpdatePayment']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof paymentOperationsUpdatePayment>>,
-    { id: ModelsPaymentId; data: ModelsPaymentUpdateRequest }
-  > = (props) => {
-    const { id, data } = props ?? {}
-
-    return paymentOperationsUpdatePayment(id, data, requestOptions)
+export const paymentOperationsUpdatePayment = async (id: ModelsPaymentId,
+    modelsPaymentUpdateRequest: ModelsPaymentUpdateRequest, options?: RequestInit): Promise<paymentOperationsUpdatePaymentResponse> => {
+  
+  return customInstance<paymentOperationsUpdatePaymentResponse>(getPaymentOperationsUpdatePaymentUrl(id),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      modelsPaymentUpdateRequest,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type PaymentOperationsUpdatePaymentMutationResult = NonNullable<
-  Awaited<ReturnType<typeof paymentOperationsUpdatePayment>>
->
-export type PaymentOperationsUpdatePaymentMutationBody =
-  ModelsPaymentUpdateRequest
-export type PaymentOperationsUpdatePaymentMutationError = unknown
 
-export const usePaymentOperationsUpdatePayment = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof paymentOperationsUpdatePayment>>,
-      TError,
-      { id: ModelsPaymentId; data: ModelsPaymentUpdateRequest },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof paymentOperationsUpdatePayment>>,
-  TError,
-  { id: ModelsPaymentId; data: ModelsPaymentUpdateRequest },
-  TContext
-> => {
-  const mutationOptions =
-    getPaymentOperationsUpdatePaymentMutationOptions(options)
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+export const getPaymentOperationsUpdatePaymentMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof paymentOperationsUpdatePayment>>, TError,{id: ModelsPaymentId;data: ModelsPaymentUpdateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof paymentOperationsUpdatePayment>>, TError,{id: ModelsPaymentId;data: ModelsPaymentUpdateRequest}, TContext> => {
+
+const mutationKey = ['paymentOperationsUpdatePayment'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof paymentOperationsUpdatePayment>>, {id: ModelsPaymentId;data: ModelsPaymentUpdateRequest}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  paymentOperationsUpdatePayment(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PaymentOperationsUpdatePaymentMutationResult = NonNullable<Awaited<ReturnType<typeof paymentOperationsUpdatePayment>>>
+    export type PaymentOperationsUpdatePaymentMutationBody = ModelsPaymentUpdateRequest
+    export type PaymentOperationsUpdatePaymentMutationError = unknown
+
+    export const usePaymentOperationsUpdatePayment = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof paymentOperationsUpdatePayment>>, TError,{id: ModelsPaymentId;data: ModelsPaymentUpdateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof paymentOperationsUpdatePayment>>,
+        TError,
+        {id: ModelsPaymentId;data: ModelsPaymentUpdateRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getPaymentOperationsUpdatePaymentMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * Cancel payment
  */
 export type paymentOperationsCancelPaymentResponse200 = {
   data: PaymentOperationsCancelPayment200
   status: 200
 }
+    
+export type paymentOperationsCancelPaymentResponseComposite = paymentOperationsCancelPaymentResponse200;
+    
+export type paymentOperationsCancelPaymentResponse = paymentOperationsCancelPaymentResponseComposite & {
+  headers: Headers;
+}
 
-export type paymentOperationsCancelPaymentResponseComposite =
-  paymentOperationsCancelPaymentResponse200
+export const getPaymentOperationsCancelPaymentUrl = (id: ModelsPaymentId,) => {
 
-export type paymentOperationsCancelPaymentResponse =
-  paymentOperationsCancelPaymentResponseComposite & {
-    headers: Headers
-  }
 
-export const getPaymentOperationsCancelPaymentUrl = (id: ModelsPaymentId) => {
+  
+
   return `/payments/${id}/cancel`
 }
 
-export const paymentOperationsCancelPayment = async (
-  id: ModelsPaymentId,
-  paymentOperationsCancelPaymentBody: PaymentOperationsCancelPaymentBody,
-  options?: RequestInit
-): Promise<paymentOperationsCancelPaymentResponse> => {
-  return customInstance<paymentOperationsCancelPaymentResponse>(
-    getPaymentOperationsCancelPaymentUrl(id),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(paymentOperationsCancelPaymentBody),
-    }
-  )
-}
-
-export const getPaymentOperationsCancelPaymentMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof paymentOperationsCancelPayment>>,
-    TError,
-    { id: ModelsPaymentId; data: PaymentOperationsCancelPaymentBody },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof paymentOperationsCancelPayment>>,
-  TError,
-  { id: ModelsPaymentId; data: PaymentOperationsCancelPaymentBody },
-  TContext
-> => {
-  const mutationKey = ['paymentOperationsCancelPayment']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof paymentOperationsCancelPayment>>,
-    { id: ModelsPaymentId; data: PaymentOperationsCancelPaymentBody }
-  > = (props) => {
-    const { id, data } = props ?? {}
-
-    return paymentOperationsCancelPayment(id, data, requestOptions)
+export const paymentOperationsCancelPayment = async (id: ModelsPaymentId,
+    paymentOperationsCancelPaymentBody: PaymentOperationsCancelPaymentBody, options?: RequestInit): Promise<paymentOperationsCancelPaymentResponse> => {
+  
+  return customInstance<paymentOperationsCancelPaymentResponse>(getPaymentOperationsCancelPaymentUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      paymentOperationsCancelPaymentBody,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type PaymentOperationsCancelPaymentMutationResult = NonNullable<
-  Awaited<ReturnType<typeof paymentOperationsCancelPayment>>
->
-export type PaymentOperationsCancelPaymentMutationBody =
-  PaymentOperationsCancelPaymentBody
-export type PaymentOperationsCancelPaymentMutationError = unknown
 
-export const usePaymentOperationsCancelPayment = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof paymentOperationsCancelPayment>>,
-      TError,
-      { id: ModelsPaymentId; data: PaymentOperationsCancelPaymentBody },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof paymentOperationsCancelPayment>>,
-  TError,
-  { id: ModelsPaymentId; data: PaymentOperationsCancelPaymentBody },
-  TContext
-> => {
-  const mutationOptions =
-    getPaymentOperationsCancelPaymentMutationOptions(options)
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+export const getPaymentOperationsCancelPaymentMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof paymentOperationsCancelPayment>>, TError,{id: ModelsPaymentId;data: PaymentOperationsCancelPaymentBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof paymentOperationsCancelPayment>>, TError,{id: ModelsPaymentId;data: PaymentOperationsCancelPaymentBody}, TContext> => {
+
+const mutationKey = ['paymentOperationsCancelPayment'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof paymentOperationsCancelPayment>>, {id: ModelsPaymentId;data: PaymentOperationsCancelPaymentBody}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  paymentOperationsCancelPayment(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PaymentOperationsCancelPaymentMutationResult = NonNullable<Awaited<ReturnType<typeof paymentOperationsCancelPayment>>>
+    export type PaymentOperationsCancelPaymentMutationBody = PaymentOperationsCancelPaymentBody
+    export type PaymentOperationsCancelPaymentMutationError = unknown
+
+    export const usePaymentOperationsCancelPayment = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof paymentOperationsCancelPayment>>, TError,{id: ModelsPaymentId;data: PaymentOperationsCancelPaymentBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof paymentOperationsCancelPayment>>,
+        TError,
+        {id: ModelsPaymentId;data: PaymentOperationsCancelPaymentBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPaymentOperationsCancelPaymentMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * Process payment
  */
 export type paymentOperationsProcessPaymentResponse200 = {
   data: PaymentOperationsProcessPayment200
   status: 200
 }
+    
+export type paymentOperationsProcessPaymentResponseComposite = paymentOperationsProcessPaymentResponse200;
+    
+export type paymentOperationsProcessPaymentResponse = paymentOperationsProcessPaymentResponseComposite & {
+  headers: Headers;
+}
 
-export type paymentOperationsProcessPaymentResponseComposite =
-  paymentOperationsProcessPaymentResponse200
+export const getPaymentOperationsProcessPaymentUrl = (id: ModelsPaymentId,) => {
 
-export type paymentOperationsProcessPaymentResponse =
-  paymentOperationsProcessPaymentResponseComposite & {
-    headers: Headers
-  }
 
-export const getPaymentOperationsProcessPaymentUrl = (id: ModelsPaymentId) => {
+  
+
   return `/payments/${id}/process`
 }
 
-export const paymentOperationsProcessPayment = async (
-  id: ModelsPaymentId,
-  options?: RequestInit
-): Promise<paymentOperationsProcessPaymentResponse> => {
-  return customInstance<paymentOperationsProcessPaymentResponse>(
-    getPaymentOperationsProcessPaymentUrl(id),
-    {
-      ...options,
-      method: 'POST',
-    }
-  )
-}
-
-export const getPaymentOperationsProcessPaymentMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof paymentOperationsProcessPayment>>,
-    TError,
-    { id: ModelsPaymentId },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof paymentOperationsProcessPayment>>,
-  TError,
-  { id: ModelsPaymentId },
-  TContext
-> => {
-  const mutationKey = ['paymentOperationsProcessPayment']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof paymentOperationsProcessPayment>>,
-    { id: ModelsPaymentId }
-  > = (props) => {
-    const { id } = props ?? {}
-
-    return paymentOperationsProcessPayment(id, requestOptions)
+export const paymentOperationsProcessPayment = async (id: ModelsPaymentId, options?: RequestInit): Promise<paymentOperationsProcessPaymentResponse> => {
+  
+  return customInstance<paymentOperationsProcessPaymentResponse>(getPaymentOperationsProcessPaymentUrl(id),
+  {      
+    ...options,
+    method: 'POST'
+    
+    
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type PaymentOperationsProcessPaymentMutationResult = NonNullable<
-  Awaited<ReturnType<typeof paymentOperationsProcessPayment>>
->
 
-export type PaymentOperationsProcessPaymentMutationError = unknown
 
-export const usePaymentOperationsProcessPayment = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof paymentOperationsProcessPayment>>,
-      TError,
-      { id: ModelsPaymentId },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof paymentOperationsProcessPayment>>,
-  TError,
-  { id: ModelsPaymentId },
-  TContext
-> => {
-  const mutationOptions =
-    getPaymentOperationsProcessPaymentMutationOptions(options)
+export const getPaymentOperationsProcessPaymentMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof paymentOperationsProcessPayment>>, TError,{id: ModelsPaymentId}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof paymentOperationsProcessPayment>>, TError,{id: ModelsPaymentId}, TContext> => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+const mutationKey = ['paymentOperationsProcessPayment'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof paymentOperationsProcessPayment>>, {id: ModelsPaymentId}> = (props) => {
+          const {id} = props ?? {};
+
+          return  paymentOperationsProcessPayment(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PaymentOperationsProcessPaymentMutationResult = NonNullable<Awaited<ReturnType<typeof paymentOperationsProcessPayment>>>
+    
+    export type PaymentOperationsProcessPaymentMutationError = unknown
+
+    export const usePaymentOperationsProcessPayment = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof paymentOperationsProcessPayment>>, TError,{id: ModelsPaymentId}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof paymentOperationsProcessPayment>>,
+        TError,
+        {id: ModelsPaymentId},
+        TContext
+      > => {
+
+      const mutationOptions = getPaymentOperationsProcessPaymentMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * Get payment receipt
  */
 export type paymentOperationsGetReceiptResponse200 = {
   data: PaymentOperationsGetReceipt200
   status: 200
 }
+    
+export type paymentOperationsGetReceiptResponseComposite = paymentOperationsGetReceiptResponse200;
+    
+export type paymentOperationsGetReceiptResponse = paymentOperationsGetReceiptResponseComposite & {
+  headers: Headers;
+}
 
-export type paymentOperationsGetReceiptResponseComposite =
-  paymentOperationsGetReceiptResponse200
+export const getPaymentOperationsGetReceiptUrl = (id: ModelsPaymentId,) => {
 
-export type paymentOperationsGetReceiptResponse =
-  paymentOperationsGetReceiptResponseComposite & {
-    headers: Headers
-  }
 
-export const getPaymentOperationsGetReceiptUrl = (id: ModelsPaymentId) => {
+  
+
   return `/payments/${id}/receipt`
 }
 
-export const paymentOperationsGetReceipt = async (
-  id: ModelsPaymentId,
-  options?: RequestInit
-): Promise<paymentOperationsGetReceiptResponse> => {
-  return customInstance<paymentOperationsGetReceiptResponse>(
-    getPaymentOperationsGetReceiptUrl(id),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getPaymentOperationsGetReceiptQueryKey = (
-  id?: ModelsPaymentId
-) => {
-  return [`/payments/${id}/receipt`] as const
-}
-
-export const getPaymentOperationsGetReceiptQueryOptions = <
-  TData = Awaited<ReturnType<typeof paymentOperationsGetReceipt>>,
-  TError = unknown,
->(
-  id: ModelsPaymentId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof paymentOperationsGetReceipt>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const paymentOperationsGetReceipt = async (id: ModelsPaymentId, options?: RequestInit): Promise<paymentOperationsGetReceiptResponse> => {
+  
+  return customInstance<paymentOperationsGetReceiptResponse>(getPaymentOperationsGetReceiptUrl(id),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getPaymentOperationsGetReceiptQueryKey = (id?: ModelsPaymentId,) => {
+    return [`/payments/${id}/receipt`] as const;
+    }
+
+    
+export const getPaymentOperationsGetReceiptQueryOptions = <TData = Awaited<ReturnType<typeof paymentOperationsGetReceipt>>, TError = unknown>(id: ModelsPaymentId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof paymentOperationsGetReceipt>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ?? getPaymentOperationsGetReceiptQueryKey(id)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof paymentOperationsGetReceipt>>
-  > = ({ signal }) =>
-    paymentOperationsGetReceipt(id, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getPaymentOperationsGetReceiptQueryKey(id);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!id,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof paymentOperationsGetReceipt>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof paymentOperationsGetReceipt>>> = ({ signal }) => paymentOperationsGetReceipt(id, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof paymentOperationsGetReceipt>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type PaymentOperationsGetReceiptQueryResult = NonNullable<
-  Awaited<ReturnType<typeof paymentOperationsGetReceipt>>
->
+export type PaymentOperationsGetReceiptQueryResult = NonNullable<Awaited<ReturnType<typeof paymentOperationsGetReceipt>>>
 export type PaymentOperationsGetReceiptQueryError = unknown
 
-export function usePaymentOperationsGetReceipt<
-  TData = Awaited<ReturnType<typeof paymentOperationsGetReceipt>>,
-  TError = unknown,
->(
-  id: ModelsPaymentId,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof paymentOperationsGetReceipt>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function usePaymentOperationsGetReceipt<TData = Awaited<ReturnType<typeof paymentOperationsGetReceipt>>, TError = unknown>(
+ id: ModelsPaymentId, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof paymentOperationsGetReceipt>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof paymentOperationsGetReceipt>>,
           TError,
           Awaited<ReturnType<typeof paymentOperationsGetReceipt>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function usePaymentOperationsGetReceipt<
-  TData = Awaited<ReturnType<typeof paymentOperationsGetReceipt>>,
-  TError = unknown,
->(
-  id: ModelsPaymentId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof paymentOperationsGetReceipt>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function usePaymentOperationsGetReceipt<TData = Awaited<ReturnType<typeof paymentOperationsGetReceipt>>, TError = unknown>(
+ id: ModelsPaymentId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof paymentOperationsGetReceipt>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof paymentOperationsGetReceipt>>,
           TError,
           Awaited<ReturnType<typeof paymentOperationsGetReceipt>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function usePaymentOperationsGetReceipt<
-  TData = Awaited<ReturnType<typeof paymentOperationsGetReceipt>>,
-  TError = unknown,
->(
-  id: ModelsPaymentId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof paymentOperationsGetReceipt>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function usePaymentOperationsGetReceipt<TData = Awaited<ReturnType<typeof paymentOperationsGetReceipt>>, TError = unknown>(
+ id: ModelsPaymentId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof paymentOperationsGetReceipt>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function usePaymentOperationsGetReceipt<TData = Awaited<ReturnType<typeof paymentOperationsGetReceipt>>, TError = unknown>(
+ id: ModelsPaymentId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof paymentOperationsGetReceipt>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getPaymentOperationsGetReceiptQueryOptions(id,options)
+
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
 
-export function usePaymentOperationsGetReceipt<
-  TData = Awaited<ReturnType<typeof paymentOperationsGetReceipt>>,
-  TError = unknown,
->(
-  id: ModelsPaymentId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof paymentOperationsGetReceipt>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getPaymentOperationsGetReceiptQueryOptions(id, options)
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-
-  query.queryKey = queryOptions.queryKey
-
-  return query
-}
 
 /**
  * Process refund
@@ -1375,102 +894,77 @@ export type paymentOperationsProcessRefundResponse200 = {
   data: PaymentOperationsProcessRefund200
   status: 200
 }
+    
+export type paymentOperationsProcessRefundResponseComposite = paymentOperationsProcessRefundResponse200;
+    
+export type paymentOperationsProcessRefundResponse = paymentOperationsProcessRefundResponseComposite & {
+  headers: Headers;
+}
 
-export type paymentOperationsProcessRefundResponseComposite =
-  paymentOperationsProcessRefundResponse200
+export const getPaymentOperationsProcessRefundUrl = (id: ModelsPaymentId,) => {
 
-export type paymentOperationsProcessRefundResponse =
-  paymentOperationsProcessRefundResponseComposite & {
-    headers: Headers
-  }
 
-export const getPaymentOperationsProcessRefundUrl = (id: ModelsPaymentId) => {
+  
+
   return `/payments/${id}/refund`
 }
 
-export const paymentOperationsProcessRefund = async (
-  id: ModelsPaymentId,
-  modelsRefundCreateRequest: ModelsRefundCreateRequest,
-  options?: RequestInit
-): Promise<paymentOperationsProcessRefundResponse> => {
-  return customInstance<paymentOperationsProcessRefundResponse>(
-    getPaymentOperationsProcessRefundUrl(id),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsRefundCreateRequest),
-    }
-  )
-}
-
-export const getPaymentOperationsProcessRefundMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof paymentOperationsProcessRefund>>,
-    TError,
-    { id: ModelsPaymentId; data: ModelsRefundCreateRequest },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof paymentOperationsProcessRefund>>,
-  TError,
-  { id: ModelsPaymentId; data: ModelsRefundCreateRequest },
-  TContext
-> => {
-  const mutationKey = ['paymentOperationsProcessRefund']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof paymentOperationsProcessRefund>>,
-    { id: ModelsPaymentId; data: ModelsRefundCreateRequest }
-  > = (props) => {
-    const { id, data } = props ?? {}
-
-    return paymentOperationsProcessRefund(id, data, requestOptions)
+export const paymentOperationsProcessRefund = async (id: ModelsPaymentId,
+    modelsRefundCreateRequest: ModelsRefundCreateRequest, options?: RequestInit): Promise<paymentOperationsProcessRefundResponse> => {
+  
+  return customInstance<paymentOperationsProcessRefundResponse>(getPaymentOperationsProcessRefundUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      modelsRefundCreateRequest,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type PaymentOperationsProcessRefundMutationResult = NonNullable<
-  Awaited<ReturnType<typeof paymentOperationsProcessRefund>>
->
-export type PaymentOperationsProcessRefundMutationBody =
-  ModelsRefundCreateRequest
-export type PaymentOperationsProcessRefundMutationError = unknown
 
-export const usePaymentOperationsProcessRefund = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof paymentOperationsProcessRefund>>,
-      TError,
-      { id: ModelsPaymentId; data: ModelsRefundCreateRequest },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof paymentOperationsProcessRefund>>,
-  TError,
-  { id: ModelsPaymentId; data: ModelsRefundCreateRequest },
-  TContext
-> => {
-  const mutationOptions =
-    getPaymentOperationsProcessRefundMutationOptions(options)
 
-  return useMutation(mutationOptions, queryClient)
-}
+export const getPaymentOperationsProcessRefundMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof paymentOperationsProcessRefund>>, TError,{id: ModelsPaymentId;data: ModelsRefundCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof paymentOperationsProcessRefund>>, TError,{id: ModelsPaymentId;data: ModelsRefundCreateRequest}, TContext> => {
+
+const mutationKey = ['paymentOperationsProcessRefund'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof paymentOperationsProcessRefund>>, {id: ModelsPaymentId;data: ModelsRefundCreateRequest}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  paymentOperationsProcessRefund(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PaymentOperationsProcessRefundMutationResult = NonNullable<Awaited<ReturnType<typeof paymentOperationsProcessRefund>>>
+    export type PaymentOperationsProcessRefundMutationBody = ModelsRefundCreateRequest
+    export type PaymentOperationsProcessRefundMutationError = unknown
+
+    export const usePaymentOperationsProcessRefund = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof paymentOperationsProcessRefund>>, TError,{id: ModelsPaymentId;data: ModelsRefundCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof paymentOperationsProcessRefund>>,
+        TError,
+        {id: ModelsPaymentId;data: ModelsRefundCreateRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getPaymentOperationsProcessRefundMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    

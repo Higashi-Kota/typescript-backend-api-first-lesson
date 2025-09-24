@@ -5,55 +5,55 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsPointTransactionId } from './modelsPointTransactionId'
-import type { ModelsCustomerId } from './modelsCustomerId'
-import type { ModelsPointTransactionType } from './modelsPointTransactionType'
+import type { ModelsPointTransactionId } from './modelsPointTransactionId';
+import type { ModelsCustomerId } from './modelsCustomerId';
+import type { ModelsPointTransactionType } from './modelsPointTransactionType';
 
 /**
  * 顧客ポイントの付与・利用履歴
  */
 export interface ModelsPointTransaction {
   /** ポイント取引 ID */
-  id: ModelsPointTransactionId
+  id: ModelsPointTransactionId;
   /** 対象顧客 ID */
-  customerId: ModelsCustomerId
+  customerId: ModelsCustomerId;
   /** 取引種別（獲得・利用など） */
-  type: ModelsPointTransactionType
+  type: ModelsPointTransactionType;
   /** ポイント変動量（獲得は正、利用は負） */
-  points: number
+  points: number;
   /** 取引後のポイント残高 */
-  balanceAfter: number
+  balanceAfter: number;
   /**
    * 関連する決済 ID
    * @nullable
    */
-  paymentId: string | null
+  paymentId: string | null;
   /**
    * 関連する予約 ID
    * @nullable
    */
-  bookingId: string | null
+  bookingId: string | null;
   /** 取引内容の説明 */
-  description: string
+  description: string;
   /**
    * 獲得ポイントの有効期限
    * @nullable
    */
-  expiresAt: string | null
+  expiresAt: string | null;
   /** 取引発生日時 */
-  transactedAt: string
+  transactedAt: string;
   /** レコード作成日時。 */
-  createdAt: string
+  createdAt: string;
   /**
    * レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull
    * @nullable
    */
-  createdBy: string | null
+  createdBy: string | null;
   /** レコード最終更新日時。 */
-  updatedAt: string
+  updatedAt: string;
   /**
    * レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull
    * @nullable
    */
-  updatedBy: string | null
+  updatedBy: string | null;
 }

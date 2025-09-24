@@ -31,7 +31,7 @@ export const Pagination = {
   createResult<T>(
     items: T[],
     totalItems: number,
-    params: PaginationParams
+    params: PaginationParams,
   ): PaginatedResult<T> {
     const currentPage = Math.floor(params.offset / params.limit) + 1
     const totalPages = Math.ceil(totalItems / params.limit)

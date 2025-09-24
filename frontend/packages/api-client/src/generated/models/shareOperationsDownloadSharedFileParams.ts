@@ -7,5 +7,5 @@
  */
 
 export type ShareOperationsDownloadSharedFileParams = {
-  password?: string
-}
+password?: string;
+};

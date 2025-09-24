@@ -10,7 +10,7 @@ export interface UserSeedResult {
 }
 
 export async function seedUsers(
-  db: PostgresJsDatabase<typeof schema>
+  db: PostgresJsDatabase<typeof schema>,
 ): Promise<UserSeedResult> {
   // Create admin user
   const adminUser = await db

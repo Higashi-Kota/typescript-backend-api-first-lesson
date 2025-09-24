@@ -1,15 +1,15 @@
 import { Result } from '@beauty-salon-backend/utility'
 import { SalonReadMapper } from '../../mappers/read/salon.mapper'
 import type { ApiSalon, SalonId } from '../../models/salon'
-import { DomainErrors } from '../../shared'
 import type { DomainError } from '../../shared'
+import { DomainErrors } from '../../shared'
 import { BaseSalonUseCase } from './_shared/base-salon.usecase'
 
 export class GetSalonUseCase extends BaseSalonUseCase {
   async execute(id: SalonId): Promise<Result<ApiSalon, DomainError>> {
     if (!this.isValidUuid(id)) {
       return Result.error(
-        DomainErrors.validation('Invalid salon ID format', 'INVALID_SALON_ID')
+        DomainErrors.validation('Invalid salon ID format', 'INVALID_SALON_ID'),
       )
     }
 

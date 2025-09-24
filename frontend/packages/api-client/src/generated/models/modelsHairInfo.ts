@@ -5,21 +5,21 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsHairType } from './modelsHairType'
-import type { ModelsHairThicknessType } from './modelsHairThicknessType'
+import type { ModelsHairType } from './modelsHairType';
+import type { ModelsHairThicknessType } from './modelsHairThicknessType';
 
 export interface ModelsHairInfo {
   /** 髪質タイプ。髪のクセや形状の分類 */
-  type: ModelsHairType
+  type: ModelsHairType;
   /** 髪の太さ。一本あたりの毛髪の太さ */
-  thickness: ModelsHairThicknessType
+  thickness: ModelsHairThicknessType;
   /** 髪の状態リスト。ダメージや健康状態の詳細 */
-  condition: string[]
+  condition: string[];
   /** 化学処理履歴。カラーやパーマ等の施術履歴 */
-  chemicalHistory: string[]
+  chemicalHistory: string[];
   /**
    * 髪質に関する備考。特記事項がない場合はnull
    * @nullable
    */
-  notes: string | null
+  notes: string | null;
 }

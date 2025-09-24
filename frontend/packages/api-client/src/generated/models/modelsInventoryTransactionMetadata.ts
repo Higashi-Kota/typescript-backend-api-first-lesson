@@ -10,6 +10,4 @@
  * 追加のメタデータ
  * @nullable
  */
-export type ModelsInventoryTransactionMetadata = {
-  [key: string]: unknown
-} | null
+export type ModelsInventoryTransactionMetadata = {[key: string]: unknown} | null;

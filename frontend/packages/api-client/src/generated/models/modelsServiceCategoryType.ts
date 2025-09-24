@@ -16,8 +16,8 @@ treatment: トリートメント - ヘアトリートメント、ヘアケア等
 spa: スパ - ヘッドスパ、リラクゼーション等の癒し系サービス
 other: その他 - 上記カテゴリーに分類されないサービス
  */
-export type ModelsServiceCategoryType =
-  (typeof ModelsServiceCategoryType)[keyof typeof ModelsServiceCategoryType]
+export type ModelsServiceCategoryType = typeof ModelsServiceCategoryType[keyof typeof ModelsServiceCategoryType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsServiceCategoryType = {
@@ -27,4 +27,4 @@ export const ModelsServiceCategoryType = {
   treatment: 'treatment',
   spa: 'spa',
   other: 'other',
-} as const
+} as const;

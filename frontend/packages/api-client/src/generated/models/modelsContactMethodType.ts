@@ -14,8 +14,8 @@ sms: SMS - ショートメッセージサービスによる連絡方法
 phone: 電話 - 音声通話による連絡方法
 push: プッシュ通知 - アプリ内プッシュ通知による連絡方法
  */
-export type ModelsContactMethodType =
-  (typeof ModelsContactMethodType)[keyof typeof ModelsContactMethodType]
+export type ModelsContactMethodType = typeof ModelsContactMethodType[keyof typeof ModelsContactMethodType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsContactMethodType = {
@@ -23,4 +23,4 @@ export const ModelsContactMethodType = {
   sms: 'sms',
   phone: 'phone',
   push: 'push',
-} as const
+} as const;

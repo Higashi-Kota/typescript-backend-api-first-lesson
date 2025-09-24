@@ -5,39 +5,39 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsSalonId } from './modelsSalonId'
-import type { ModelsCustomerId } from './modelsCustomerId'
-import type { ModelsBookingId } from './modelsBookingId'
-import type { ModelsTreatmentRecordId } from './modelsTreatmentRecordId'
-import type { ModelsPaymentMethodType } from './modelsPaymentMethodType'
-import type { ModelsPaymentAmounts } from './modelsPaymentAmounts'
-import type { ModelsMoney } from './modelsMoney'
-import type { ModelsPaymentCreateRequestMetadata } from './modelsPaymentCreateRequestMetadata'
+import type { ModelsSalonId } from './modelsSalonId';
+import type { ModelsCustomerId } from './modelsCustomerId';
+import type { ModelsBookingId } from './modelsBookingId';
+import type { ModelsTreatmentRecordId } from './modelsTreatmentRecordId';
+import type { ModelsPaymentMethodType } from './modelsPaymentMethodType';
+import type { ModelsPaymentAmounts } from './modelsPaymentAmounts';
+import type { ModelsMoney } from './modelsMoney';
+import type { ModelsPaymentCreateRequestMetadata } from './modelsPaymentCreateRequestMetadata';
 
 /**
  * 決済登録時に利用する入力モデル
  */
 export interface ModelsPaymentCreateRequest {
   /** 決済を登録するサロン ID */
-  salonId: ModelsSalonId
+  salonId: ModelsSalonId;
   /** 支払う顧客 ID */
-  customerId: ModelsCustomerId
+  customerId: ModelsCustomerId;
   /** 紐づく予約 ID */
-  bookingId?: ModelsBookingId
+  bookingId?: ModelsBookingId;
   /** 紐づく施術記録 ID */
-  treatmentRecordId?: ModelsTreatmentRecordId
+  treatmentRecordId?: ModelsTreatmentRecordId;
   /** 利用する支払い方法 */
-  method: ModelsPaymentMethodType
+  method: ModelsPaymentMethodType;
   /** 請求金額の内訳 */
-  amounts: ModelsPaymentAmounts
+  amounts: ModelsPaymentAmounts;
   /** 使用するポイント数 */
-  pointsUsed?: number
+  pointsUsed?: number;
   /** 適用する預り金額 */
-  depositApplied?: ModelsMoney
+  depositApplied?: ModelsMoney;
   /** 外部決済参照番号 */
-  externalReference?: string
+  externalReference?: string;
   /** 備考メモ */
-  notes?: string
+  notes?: string;
   /** 外部システム連携向けメタデータ */
-  metadata?: ModelsPaymentCreateRequestMetadata
+  metadata?: ModelsPaymentCreateRequestMetadata;
 }

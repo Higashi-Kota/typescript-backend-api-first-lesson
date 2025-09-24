@@ -7,5 +7,5 @@
  */
 
 export type AuthOperationsGenerateBackupCodes200 = {
-  backupCodes: string[]
-}
+  backupCodes: string[];
+};

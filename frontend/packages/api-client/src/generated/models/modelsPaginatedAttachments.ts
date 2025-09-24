@@ -5,20 +5,20 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsAttachment } from './modelsAttachment'
+import type { ModelsAttachment } from './modelsAttachment';
 
 /**
  * 添付ファイル一覧をページネーション付きで返すレスポンスモデル。
  */
 export interface ModelsPaginatedAttachments {
   /** 該当ページの添付ファイル配列。 */
-  items: ModelsAttachment[]
+  items: ModelsAttachment[];
   /** 全体の添付ファイル件数。 */
-  total: number
+  total: number;
   /** 現在のページ番号。 */
-  page: number
+  page: number;
   /** 1ページあたりの取得件数。 */
-  limit: number
+  limit: number;
   /** 計算された総ページ数。 */
-  totalPages: number
+  totalPages: number;
 }

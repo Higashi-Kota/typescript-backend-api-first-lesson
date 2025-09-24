@@ -1,6 +1,5 @@
-import { z } from 'zod'
-
 import type { JsonValue } from 'type-fest'
+import { z } from 'zod'
 
 export const isArray = (data: unknown): data is Array<unknown> =>
   Array.isArray(data)
@@ -62,7 +61,7 @@ export const isMinusNumber = (data: unknown): data is number => {
 }
 
 export const isEmpty = (
-  data: unknown
+  data: unknown,
 ): data is '' | [] | Record<string, never> | Map<never, never> | Set<never> =>
   isEmptyString(data) ||
   isEmptyArray(data) ||
@@ -78,7 +77,7 @@ export const JsonSchema: z.ZodType<JSON> = z.lazy(() =>
     LiteralSchema,
     z.array(JsonSchema),
     z.record(z.string(), JsonSchema),
-  ])
+  ]),
 )
 
 /**

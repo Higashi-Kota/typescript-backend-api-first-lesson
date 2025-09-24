@@ -9,4 +9,4 @@
 /**
  * 検索キーワード。qパラメータのエイリアス
  */
-export type ModelsSalonSearchRequestKeywordParameter = string
+export type ModelsSalonSearchRequestKeywordParameter = string;

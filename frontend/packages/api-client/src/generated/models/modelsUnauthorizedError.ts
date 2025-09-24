@@ -5,14 +5,14 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsUnauthorizedErrorCode } from './modelsUnauthorizedErrorCode'
+import type { ModelsUnauthorizedErrorCode } from './modelsUnauthorizedErrorCode';
 
 /**
  * 認証されていないアクセスを表す標準エラーモデル。
  */
 export interface ModelsUnauthorizedError {
   /** 固定値UNAUTHORIZED。クライアントでのハンドリングを容易にする識別子。 */
-  code: ModelsUnauthorizedErrorCode
+  code: ModelsUnauthorizedErrorCode;
   /** エラー内容を伝えるメッセージ。 */
-  message: string
+  message: string;
 }

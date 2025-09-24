@@ -9,10 +9,10 @@
 /**
  * 固定値in_progress。施術中であることを示す。
  */
-export type ModelsInProgressBookingStatusUpdateType =
-  (typeof ModelsInProgressBookingStatusUpdateType)[keyof typeof ModelsInProgressBookingStatusUpdateType]
+export type ModelsInProgressBookingStatusUpdateType = typeof ModelsInProgressBookingStatusUpdateType[keyof typeof ModelsInProgressBookingStatusUpdateType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsInProgressBookingStatusUpdateType = {
   in_progress: 'in_progress',
-} as const
+} as const;

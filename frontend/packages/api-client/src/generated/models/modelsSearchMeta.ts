@@ -5,7 +5,7 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsScoreRange } from './modelsScoreRange'
+import type { ModelsScoreRange } from './modelsScoreRange';
 
 /**
  * 検索処理に関するメタ情報モデル。
@@ -13,13 +13,13 @@ import type { ModelsScoreRange } from './modelsScoreRange'
  */
 export interface ModelsSearchMeta {
   /** 検索条件に一致した総件数。 */
-  total: number
+  total: number;
   /** 利用された検索キーワード。ログ分析やABテストで活用する。 */
-  query?: string
+  query?: string;
   /** 適用されたフィルター一覧。ユーザー選択内容を表示する際に使用。 */
-  filters?: string[]
+  filters?: string[];
   /** 検索処理に要した時間 (ミリ秒)。パフォーマンスKPIの指標。 */
-  duration: number
+  duration: number;
   /** 関連度スコアの範囲。ランキング調整やチューニングに活用する。 */
-  scoreRange?: ModelsScoreRange
+  scoreRange?: ModelsScoreRange;
 }

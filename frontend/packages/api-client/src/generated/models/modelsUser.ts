@@ -5,126 +5,126 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsAuthUserRoleType } from './modelsAuthUserRoleType'
-import type { ModelsUserAccountStatusType } from './modelsUserAccountStatusType'
-import type { ModelsTwoFactorStatusType } from './modelsTwoFactorStatusType'
-import type { ModelsUserRoleDetailProperty } from './modelsUserRoleDetailProperty'
-import type { ModelsUserAuthState } from './modelsUserAuthState'
-import type { ModelsUserEmailVerificationState } from './modelsUserEmailVerificationState'
-import type { ModelsUserPasswordResetState } from './modelsUserPasswordResetState'
+import type { ModelsAuthUserRoleType } from './modelsAuthUserRoleType';
+import type { ModelsUserAccountStatusType } from './modelsUserAccountStatusType';
+import type { ModelsTwoFactorStatusType } from './modelsTwoFactorStatusType';
+import type { ModelsUserRoleDetailProperty } from './modelsUserRoleDetailProperty';
+import type { ModelsUserAuthState } from './modelsUserAuthState';
+import type { ModelsUserEmailVerificationState } from './modelsUserEmailVerificationState';
+import type { ModelsUserPasswordResetState } from './modelsUserPasswordResetState';
 
 /**
  * 認証基盤で管理するユーザーアカウント情報。
  */
 export interface ModelsUser {
   /** ユーザーを一意に識別するID。 */
-  id: string
+  id: string;
   /** ログインに利用するメールアドレス（ユニーク）。 */
-  email: string
+  email: string;
   /** 顧客・スタッフの表示名。 */
-  name: string
+  name: string;
   /** 認証システム上での役割区分。 */
-  role: ModelsAuthUserRoleType
+  role: ModelsAuthUserRoleType;
   /** アカウントの稼働状態。 */
-  status: ModelsUserAccountStatusType
+  status: ModelsUserAccountStatusType;
   /** メールアドレスが確認済みかどうか。 */
-  emailVerified: boolean
+  emailVerified: boolean;
   /**
    * メール確認に利用するトークン。メール確認済みまたは未送信の場合はnull。
    * @nullable
    */
-  emailVerificationToken: string | null
+  emailVerificationToken: string | null;
   /**
    * メール確認トークンの有効期限。トークンが発行されていない場合はnull。
    * @nullable
    */
-  emailVerificationTokenExpiry: string | null
+  emailVerificationTokenExpiry: string | null;
   /** 2要素認証の設定状態。 */
-  twoFactorStatus: ModelsTwoFactorStatusType
+  twoFactorStatus: ModelsTwoFactorStatusType;
   /**
    * 暗号化された2要素認証シークレット。2要素認証が無効の場合はnull。
    * @nullable
    */
-  twoFactorSecret: string | null
+  twoFactorSecret: string | null;
   /**
    * 2要素認証の復旧用バックアップコード一覧。2要素認証が無効の場合はnull。
    * @nullable
    */
-  backupCodes: string[] | null
+  backupCodes: string[] | null;
   /** 連続したログイン失敗回数。 */
-  failedLoginAttempts: number
+  failedLoginAttempts: number;
   /**
    * アカウントをロックした日時。アカウントがロックされていない場合はnull。
    * @nullable
    */
-  lockedAt: string | null
+  lockedAt: string | null;
   /**
    * パスワードリセットに利用するトークン。リセットが要求されていない場合はnull。
    * @nullable
    */
-  passwordResetToken: string | null
+  passwordResetToken: string | null;
   /**
    * パスワードリセットトークンの有効期限。トークンが発行されていない場合はnull。
    * @nullable
    */
-  passwordResetTokenExpiry: string | null
+  passwordResetTokenExpiry: string | null;
   /**
    * 最後にパスワードを変更した日時。パスワード変更履歴がない場合はnull。
    * @nullable
    */
-  lastPasswordChangeAt: string | null
+  lastPasswordChangeAt: string | null;
   /**
    * 再利用防止のため保持する過去パスワードハッシュ。履歴管理をしていない場合はnull。
    * @nullable
    */
-  passwordHistory: string[] | null
+  passwordHistory: string[] | null;
   /**
    * 信頼済みIPアドレスのリスト。IP制限を設定していない場合はnull。
    * @nullable
    */
-  trustedIpAddresses: string[] | null
+  trustedIpAddresses: string[] | null;
   /**
    * ユーザーが顧客の場合の顧客プロファイルID。顧客以外の役割の場合はnull。
    * @nullable
    */
-  customerId: string | null
+  customerId: string | null;
   /**
    * ユーザーがスタッフの場合のスタッフプロファイルID。スタッフ以外の役割の場合はnull。
    * @nullable
    */
-  staffId: string | null
+  staffId: string | null;
   /**
    * 担当サロンやレベル等を含む拡張ロール情報。詳細情報が設定されていない場合はnull。
    * @nullable
    */
-  roleDetail: ModelsUserRoleDetailProperty
+  roleDetail: ModelsUserRoleDetailProperty;
   /**
    * 現在の認証状態区分。状態が未設定の場合はnull。
    * @nullable
    */
-  authState: ModelsUserAuthState
+  authState: ModelsUserAuthState;
   /**
    * メール確認状態区分。状態が未設定の場合はnull。
    * @nullable
    */
-  emailVerificationState: ModelsUserEmailVerificationState
+  emailVerificationState: ModelsUserEmailVerificationState;
   /**
    * パスワードリセット状態区分。リセットが要求されていない場合はnull。
    * @nullable
    */
-  passwordResetState: ModelsUserPasswordResetState
+  passwordResetState: ModelsUserPasswordResetState;
   /** ユーザーアカウント作成日時。 */
-  createdAt: string
+  createdAt: string;
   /** ユーザー情報の最終更新日時。 */
-  updatedAt: string
+  updatedAt: string;
   /**
    * 直近のログイン日時。一度もログインしていない場合はnull。
    * @nullable
    */
-  lastLoginAt: string | null
+  lastLoginAt: string | null;
   /**
    * 直近ログイン時のIPアドレス。ログイン履歴がない場合はnull。
    * @nullable
    */
-  lastLoginIp: string | null
+  lastLoginIp: string | null;
 }

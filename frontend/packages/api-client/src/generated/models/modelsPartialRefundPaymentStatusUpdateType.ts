@@ -9,10 +9,10 @@
 /**
  * 状態種別（partial_refund 固定値）
  */
-export type ModelsPartialRefundPaymentStatusUpdateType =
-  (typeof ModelsPartialRefundPaymentStatusUpdateType)[keyof typeof ModelsPartialRefundPaymentStatusUpdateType]
+export type ModelsPartialRefundPaymentStatusUpdateType = typeof ModelsPartialRefundPaymentStatusUpdateType[keyof typeof ModelsPartialRefundPaymentStatusUpdateType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsPartialRefundPaymentStatusUpdateType = {
   partial_refund: 'partial_refund',
-} as const
+} as const;

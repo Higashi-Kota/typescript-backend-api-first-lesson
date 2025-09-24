@@ -6,10 +6,10 @@
  * OpenAPI spec version: 2.0
  */
 
-export type ModelsDomainErrorFactoryExternalServiceType =
-  (typeof ModelsDomainErrorFactoryExternalServiceType)[keyof typeof ModelsDomainErrorFactoryExternalServiceType]
+export type ModelsDomainErrorFactoryExternalServiceType = typeof ModelsDomainErrorFactoryExternalServiceType[keyof typeof ModelsDomainErrorFactoryExternalServiceType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsDomainErrorFactoryExternalServiceType = {
   EXTERNAL_SERVICE_ERROR: 'EXTERNAL_SERVICE_ERROR',
-} as const
+} as const;

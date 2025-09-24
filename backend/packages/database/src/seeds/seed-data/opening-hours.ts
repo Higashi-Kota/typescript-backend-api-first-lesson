@@ -3,7 +3,7 @@ import * as schema from '../../schema'
 
 export async function seedOpeningHours(
   db: PostgresJsDatabase<typeof schema>,
-  salonIds: string[]
+  salonIds: string[],
 ): Promise<string[]> {
   const openingHours = []
   const daysOfWeek = [
@@ -18,7 +18,7 @@ export async function seedOpeningHours(
 
   // Helper function to get next occurrence of a day
   const getNextOccurrence = (
-    dayOfWeek: (typeof daysOfWeek)[number]
+    dayOfWeek: (typeof daysOfWeek)[number],
   ): string => {
     const today = new Date()
     const dayIndex = daysOfWeek.indexOf(dayOfWeek)
@@ -94,7 +94,7 @@ export async function seedOpeningHours(
         closeTime: '17:00:00',
         isHoliday: false,
         notes: "Early closing for New Year's Eve",
-      }
+      },
     )
   }
 

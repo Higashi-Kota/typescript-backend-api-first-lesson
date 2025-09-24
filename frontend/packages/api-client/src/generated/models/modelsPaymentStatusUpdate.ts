@@ -5,20 +5,14 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsPendingPaymentStatusUpdate } from './modelsPendingPaymentStatusUpdate'
-import type { ModelsProcessingPaymentStatusUpdate } from './modelsProcessingPaymentStatusUpdate'
-import type { ModelsCompletedPaymentStatusUpdate } from './modelsCompletedPaymentStatusUpdate'
-import type { ModelsFailedPaymentStatusUpdate } from './modelsFailedPaymentStatusUpdate'
-import type { ModelsRefundedPaymentStatusUpdate } from './modelsRefundedPaymentStatusUpdate'
-import type { ModelsPartialRefundPaymentStatusUpdate } from './modelsPartialRefundPaymentStatusUpdate'
+import type { ModelsPendingPaymentStatusUpdate } from './modelsPendingPaymentStatusUpdate';
+import type { ModelsProcessingPaymentStatusUpdate } from './modelsProcessingPaymentStatusUpdate';
+import type { ModelsCompletedPaymentStatusUpdate } from './modelsCompletedPaymentStatusUpdate';
+import type { ModelsFailedPaymentStatusUpdate } from './modelsFailedPaymentStatusUpdate';
+import type { ModelsRefundedPaymentStatusUpdate } from './modelsRefundedPaymentStatusUpdate';
+import type { ModelsPartialRefundPaymentStatusUpdate } from './modelsPartialRefundPaymentStatusUpdate';
 
 /**
  * 支払い状態の詳細情報を表すユニオン
  */
-export type ModelsPaymentStatusUpdate =
-  | ModelsPendingPaymentStatusUpdate
-  | ModelsProcessingPaymentStatusUpdate
-  | ModelsCompletedPaymentStatusUpdate
-  | ModelsFailedPaymentStatusUpdate
-  | ModelsRefundedPaymentStatusUpdate
-  | ModelsPartialRefundPaymentStatusUpdate
+export type ModelsPaymentStatusUpdate = ModelsPendingPaymentStatusUpdate | ModelsProcessingPaymentStatusUpdate | ModelsCompletedPaymentStatusUpdate | ModelsFailedPaymentStatusUpdate | ModelsRefundedPaymentStatusUpdate | ModelsPartialRefundPaymentStatusUpdate;

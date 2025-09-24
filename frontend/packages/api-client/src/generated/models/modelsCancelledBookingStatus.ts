@@ -5,22 +5,22 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsCancelledBookingStatusType } from './modelsCancelledBookingStatusType'
-import type { ModelsCancelledBookingStatusCancelledBy } from './modelsCancelledBookingStatusCancelledBy'
+import type { ModelsCancelledBookingStatusType } from './modelsCancelledBookingStatusType';
+import type { ModelsCancelledBookingStatusCancelledBy } from './modelsCancelledBookingStatusCancelledBy';
 
 /**
  * 予約がキャンセルされた場合の状態情報。
  */
 export interface ModelsCancelledBookingStatus {
   /** 固定値cancelled。キャンセル状態であることを示す。 */
-  type: ModelsCancelledBookingStatusType
+  type: ModelsCancelledBookingStatusType;
   /** キャンセルが登録された日時。 */
-  cancelledAt: string
+  cancelledAt: string;
   /**
    * キャンセル理由のメモ。理由が記録されていない場合はnull。
    * @nullable
    */
-  reason: string | null
+  reason: string | null;
   /** キャンセルを実行した主体（customer: 顧客／salon: サロン側／system: システム判断）。 */
-  cancelledBy: ModelsCancelledBookingStatusCancelledBy
+  cancelledBy: ModelsCancelledBookingStatusCancelledBy;
 }

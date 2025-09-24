@@ -14,8 +14,8 @@ scalp_massage: スカルプマッサージ - 頭皮の血行促進マッサー�
 aromatherapy: アロマテラピー - アロマオイルを使用したリラクゼーション
 relaxation: リラクゼーション - ストレス解消を目的とした総合的なケア
  */
-export type ModelsSpaSubCategoryType =
-  (typeof ModelsSpaSubCategoryType)[keyof typeof ModelsSpaSubCategoryType]
+export type ModelsSpaSubCategoryType = typeof ModelsSpaSubCategoryType[keyof typeof ModelsSpaSubCategoryType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsSpaSubCategoryType = {
@@ -23,4 +23,4 @@ export const ModelsSpaSubCategoryType = {
   scalp_massage: 'scalp_massage',
   aromatherapy: 'aromatherapy',
   relaxation: 'relaxation',
-} as const
+} as const;

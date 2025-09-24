@@ -5,26 +5,26 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsContactMethodType } from './modelsContactMethodType'
-import type { ModelsNotificationPreferences } from './modelsNotificationPreferences'
-import type { ModelsTimePreference } from './modelsTimePreference'
+import type { ModelsContactMethodType } from './modelsContactMethodType';
+import type { ModelsNotificationPreferences } from './modelsNotificationPreferences';
+import type { ModelsTimePreference } from './modelsTimePreference';
 
 /**
  * 顧客の好み設定更新リクエスト。通知設定や連絡方法の変更
  */
 export interface ModelsCustomerPreferencesUpdateRequest {
   /** 希望連絡方法 */
-  contactMethod: ModelsContactMethodType
+  contactMethod: ModelsContactMethodType;
   /** 通知設定 */
-  notifications: ModelsNotificationPreferences
+  notifications: ModelsNotificationPreferences;
   /** マーケティング配信許可状態 */
-  marketingOptIn: boolean
+  marketingOptIn: boolean;
   /** 希望言語 */
-  preferredLanguage?: string
+  preferredLanguage?: string;
   /** アクセシビリティ要件 */
-  accessibilityRequirements?: string[]
+  accessibilityRequirements?: string[];
   /** アレルギーや過敏症 */
-  allergies?: string[]
+  allergies?: string[];
   /** 希望予約時間 */
-  preferredTimes?: ModelsTimePreference[]
+  preferredTimes?: ModelsTimePreference[];
 }

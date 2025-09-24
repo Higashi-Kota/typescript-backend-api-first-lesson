@@ -14,5 +14,5 @@ export interface ModelsShareLinkAccessRequest {
    * 共有リンクのパスワード。パスワード保護されていない場合はnull。
    * @nullable
    */
-  password: string | null
+  password: string | null;
 }

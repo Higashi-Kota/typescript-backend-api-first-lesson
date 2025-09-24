@@ -15,8 +15,8 @@ gel_nail: ジェルネイル - UV/LEDライトで硬化させるジェルネイ�
 nail_art: ネイルアート - デザインや装飾を施したアートネイル
 nail_removal: ネイルリムーバル - ジェルやマニキュアの除去サービス
  */
-export type ModelsNailSubCategoryType =
-  (typeof ModelsNailSubCategoryType)[keyof typeof ModelsNailSubCategoryType]
+export type ModelsNailSubCategoryType = typeof ModelsNailSubCategoryType[keyof typeof ModelsNailSubCategoryType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsNailSubCategoryType = {
@@ -25,4 +25,4 @@ export const ModelsNailSubCategoryType = {
   gel_nail: 'gel_nail',
   nail_art: 'nail_art',
   nail_removal: 'nail_removal',
-} as const
+} as const;

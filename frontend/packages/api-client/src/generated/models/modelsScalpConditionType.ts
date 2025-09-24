@@ -14,8 +14,8 @@ dry: 乾燥 - 乾燥しやすい頭皮、保湿ケアが必要
 oily: 脂性 - 皮脂分泌が多い頭皮、洗浄力のあるケアが必要
 sensitive: 敏感 - 刺激に弱い頭皮、低刺激の製品使用が必要
  */
-export type ModelsScalpConditionType =
-  (typeof ModelsScalpConditionType)[keyof typeof ModelsScalpConditionType]
+export type ModelsScalpConditionType = typeof ModelsScalpConditionType[keyof typeof ModelsScalpConditionType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsScalpConditionType = {
@@ -24,4 +24,4 @@ export const ModelsScalpConditionType = {
   oily: 'oily',
   sensitive: 'sensitive',
   dandruff: 'dandruff',
-} as const
+} as const;

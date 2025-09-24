@@ -1,7 +1,7 @@
 import { isArray, isNullOrUndefined } from '../typeUtil'
 
 export const transformArray = <T>(
-  value: T | Array<NonNullable<T>> | null | undefined
+  value: T | Array<NonNullable<T>> | null | undefined,
 ): Array<NonNullable<T>> => {
   if (isNullOrUndefined(value)) {
     return [] as Array<NonNullable<T>>

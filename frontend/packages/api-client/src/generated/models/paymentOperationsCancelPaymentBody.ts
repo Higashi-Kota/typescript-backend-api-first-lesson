@@ -7,5 +7,5 @@
  */
 
 export type PaymentOperationsCancelPaymentBody = {
-  reason: string
-}
+  reason: string;
+};

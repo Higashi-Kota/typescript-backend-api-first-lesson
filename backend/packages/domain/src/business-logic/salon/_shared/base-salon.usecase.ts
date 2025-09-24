@@ -32,7 +32,7 @@ export abstract class BaseSalonUseCase {
   }
 
   protected validateDescription(
-    _description: string | undefined | null
+    _description: string | undefined | null,
   ): string[] {
     const errors: string[] = []
 
@@ -63,7 +63,7 @@ export abstract class BaseSalonUseCase {
   }
 
   protected validateContactInfo(
-    contactInfo: ApiUpdateSalonRequest['contactInfo']
+    contactInfo: ApiUpdateSalonRequest['contactInfo'],
   ): string[] {
     const errors: string[] = []
 
@@ -105,7 +105,7 @@ export abstract class BaseSalonUseCase {
   }
 
   protected validateUpdateContactInfo(
-    contactInfo: ApiUpdateSalonRequest['contactInfo']
+    contactInfo: ApiUpdateSalonRequest['contactInfo'],
   ): string[] {
     const errors: string[] = []
 

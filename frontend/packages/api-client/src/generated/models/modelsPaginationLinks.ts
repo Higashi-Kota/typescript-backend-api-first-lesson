@@ -12,25 +12,25 @@ API クライアントや外部連携がRESTフローで次・前のリソース
  */
 export interface ModelsPaginationLinks {
   /** 現在ページを指すリンク。 */
-  self: string
+  self: string;
   /**
    * 最初のページへのリンク。総件数が確定しない場合はnull
    * @nullable
    */
-  first: string | null
+  first: string | null;
   /**
    * 最後のページへのリンク。カーソル算出ができない場合はnull
    * @nullable
    */
-  last: string | null
+  last: string | null;
   /**
    * 次ページへのリンク。最終ページの場合はnull
    * @nullable
    */
-  next: string | null
+  next: string | null;
   /**
    * 前ページへのリンク。初回ページまたは戻り操作が不要な場合はnull
    * @nullable
    */
-  prev: string | null
+  prev: string | null;
 }

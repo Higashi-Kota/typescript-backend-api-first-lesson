@@ -7,5 +7,5 @@
  */
 
 export type SalonCrudGetParams = {
-  fields?: string
-}
+fields?: string;
+};

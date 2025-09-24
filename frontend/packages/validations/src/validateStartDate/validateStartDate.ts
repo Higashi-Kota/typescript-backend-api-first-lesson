@@ -1,4 +1,4 @@
-import { type Result, err, ok } from 'neverthrow'
+import { err, ok, type Result } from 'neverthrow'
 import { z } from 'zod'
 
 // 開始日のスキーマ定義
@@ -12,7 +12,7 @@ type StartDate = z.infer<typeof StartDateSchema>
  * @returns 検証結果
  */
 export const validateStartDate = (
-  data: unknown
+  data: unknown,
 ): Result<StartDate, z.ZodError> => {
   const parsed = StartDateSchema.safeParse(data)
 

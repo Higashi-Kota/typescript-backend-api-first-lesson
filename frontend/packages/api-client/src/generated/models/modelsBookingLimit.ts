@@ -5,14 +5,14 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsBookingLimitPeriod } from './modelsBookingLimitPeriod'
+import type { ModelsBookingLimitPeriod } from './modelsBookingLimitPeriod';
 
 /**
  * 顧客単位の予約回数制限
  */
 export interface ModelsBookingLimit {
   /** 制限期間の単位 */
-  period: ModelsBookingLimitPeriod
+  period: ModelsBookingLimitPeriod;
   /** 期間内の最大予約可能数 */
-  count: number
+  count: number;
 }

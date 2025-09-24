@@ -5,98 +5,98 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import type { ModelsPaymentId } from './modelsPaymentId'
-import type { ModelsSalonId } from './modelsSalonId'
-import type { ModelsCustomerId } from './modelsCustomerId'
-import type { ModelsPaymentMethodType } from './modelsPaymentMethodType'
-import type { ModelsPaymentStatus } from './modelsPaymentStatus'
-import type { ModelsPaymentAmounts } from './modelsPaymentAmounts'
-import type { ModelsPaymentDepositApplied } from './modelsPaymentDepositApplied'
-import type { ModelsPaymentOutstandingAmount } from './modelsPaymentOutstandingAmount'
-import type { ModelsPaymentHistory } from './modelsPaymentHistory'
-import type { ModelsRefund } from './modelsRefund'
-import type { ModelsPaymentMetadata } from './modelsPaymentMetadata'
+import type { ModelsPaymentId } from './modelsPaymentId';
+import type { ModelsSalonId } from './modelsSalonId';
+import type { ModelsCustomerId } from './modelsCustomerId';
+import type { ModelsPaymentMethodType } from './modelsPaymentMethodType';
+import type { ModelsPaymentStatus } from './modelsPaymentStatus';
+import type { ModelsPaymentAmounts } from './modelsPaymentAmounts';
+import type { ModelsPaymentDepositApplied } from './modelsPaymentDepositApplied';
+import type { ModelsPaymentOutstandingAmount } from './modelsPaymentOutstandingAmount';
+import type { ModelsPaymentHistory } from './modelsPaymentHistory';
+import type { ModelsRefund } from './modelsRefund';
+import type { ModelsPaymentMetadata } from './modelsPaymentMetadata';
 
 /**
  * サロンで発生する支払いを管理する決済記録
  */
 export interface ModelsPayment {
   /** 決済レコード ID */
-  id: ModelsPaymentId
+  id: ModelsPaymentId;
   /** 決済が紐づくサロン ID */
-  salonId: ModelsSalonId
+  salonId: ModelsSalonId;
   /** 支払いを行う顧客 ID */
-  customerId: ModelsCustomerId
+  customerId: ModelsCustomerId;
   /**
    * 関連する予約 ID
    * @nullable
    */
-  bookingId: string | null
+  bookingId: string | null;
   /**
    * 関連する施術記録 ID
    * @nullable
    */
-  treatmentRecordId: string | null
+  treatmentRecordId: string | null;
   /** 使用した支払い方法 */
-  method: ModelsPaymentMethodType
+  method: ModelsPaymentMethodType;
   /** 現在の支払い状態の詳細 */
-  status: ModelsPaymentStatus
+  status: ModelsPaymentStatus;
   /** 請求金額の内訳情報 */
-  amounts: ModelsPaymentAmounts
+  amounts: ModelsPaymentAmounts;
   /**
    * 使用したポイント数
    * @nullable
    */
-  pointsUsed: number | null
+  pointsUsed: number | null;
   /**
    * 予約時に適用した預り金額
    * @nullable
    */
-  depositApplied: ModelsPaymentDepositApplied
+  depositApplied: ModelsPaymentDepositApplied;
   /**
    * 未収残高がある場合の金額
    * @nullable
    */
-  outstandingAmount: ModelsPaymentOutstandingAmount
+  outstandingAmount: ModelsPaymentOutstandingAmount;
   /**
    * 外部決済サービスの参照番号
    * @nullable
    */
-  externalReference: string | null
+  externalReference: string | null;
   /**
    * 発行したレシート番号
    * @nullable
    */
-  receiptNumber: string | null
+  receiptNumber: string | null;
   /** 状態変遷の履歴一覧 */
-  history: ModelsPaymentHistory[]
+  history: ModelsPaymentHistory[];
   /**
    * 関連する返金記録の一覧
    * @nullable
    */
-  refunds: ModelsRefund[] | null
+  refunds: ModelsRefund[] | null;
   /**
    * 外部サービス連携向けのメタデータ
    * @nullable
    */
-  metadata: ModelsPaymentMetadata
+  metadata: ModelsPaymentMetadata;
   /**
    * スタッフ用の備考メモ
    * @nullable
    */
-  notes: string | null
+  notes: string | null;
   /** レコード作成日時。 */
-  createdAt: string
+  createdAt: string;
   /**
    * レコードを作成したユーザーID。システム自動作成または匿名作成の場合はnull
    * @nullable
    */
-  createdBy: string | null
+  createdBy: string | null;
   /** レコード最終更新日時。 */
-  updatedAt: string
+  updatedAt: string;
   /**
    * レコードを最後に更新したユーザーID。システム自動更新または匿名更新の場合はnull
    * @nullable
    */
-  updatedBy: string | null
+  updatedBy: string | null;
 }

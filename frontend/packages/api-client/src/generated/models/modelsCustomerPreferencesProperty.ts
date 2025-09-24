@@ -9,4 +9,4 @@
 /**
  * 顧客の好みや要望
  */
-export type ModelsCustomerPreferencesProperty = { [key: string]: unknown }
+export type ModelsCustomerPreferencesProperty = {[key: string]: unknown};

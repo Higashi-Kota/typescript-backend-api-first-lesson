@@ -3,7 +3,7 @@
  * Returns the first file if multiple files exist
  */
 export const convertToSingleFile = (
-  files: FileList | File[] | null | undefined
+  files: FileList | File[] | null | undefined,
 ): File | null => {
   if (files == null) {
     return null

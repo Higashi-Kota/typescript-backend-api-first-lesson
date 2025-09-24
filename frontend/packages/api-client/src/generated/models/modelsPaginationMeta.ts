@@ -15,24 +15,24 @@ export interface ModelsPaginationMeta {
    * 取得対象全体の総件数。件数計測ができない場合はnull
    * @nullable
    */
-  total: number | null
+  total: number | null;
   /** 1ページあたりの取得件数。クエリパラメータ `limit` と一致する。 */
-  limit: number
+  limit: number;
   /** 次ページが存在するかを示すフラグ。無限スクロールの継続判定に使用。 */
-  hasMore: boolean
+  hasMore: boolean;
   /**
    * 現在ページのカーソル値。次リクエストで `cursor` に指定することで同位置から再開できる。初回ページの場合はnull
    * @nullable
    */
-  cursor: string | null
+  cursor: string | null;
   /**
    * 次ページを取得するためのカーソル値。最終ページの場合はnull
    * @nullable
    */
-  nextCursor: string | null
+  nextCursor: string | null;
   /**
    * 前ページへ戻るためのカーソル値。初回ページまたは戻り操作が不要な場合はnull
    * @nullable
    */
-  prevCursor: string | null
+  prevCursor: string | null;
 }

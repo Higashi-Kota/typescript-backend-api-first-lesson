@@ -7,5 +7,5 @@
  */
 
 export type SalonCrudDeleteParams = {
-  permanent?: boolean
-}
+permanent?: boolean;
+};

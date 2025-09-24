@@ -9,8 +9,8 @@
 /**
  * ポイント取引種別
  */
-export type ModelsPointTransactionCreateRequestType =
-  (typeof ModelsPointTransactionCreateRequestType)[keyof typeof ModelsPointTransactionCreateRequestType]
+export type ModelsPointTransactionCreateRequestType = typeof ModelsPointTransactionCreateRequestType[keyof typeof ModelsPointTransactionCreateRequestType];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ModelsPointTransactionCreateRequestType = {
@@ -18,4 +18,4 @@ export const ModelsPointTransactionCreateRequestType = {
   use: 'use',
   expire: 'expire',
   adjust: 'adjust',
-} as const
+} as const;

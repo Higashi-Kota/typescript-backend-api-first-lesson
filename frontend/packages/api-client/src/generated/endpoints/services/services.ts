@@ -5,7 +5,10 @@
  * Comprehensive REST API for managing beauty salon operations including salons, staff, services, customers, reservations, bookings, treatments, payments, inventory, and access control. Built with TypeSpec for type-safe API-first development.
  * OpenAPI spec version: 2.0
  */
-import { useMutation, useQuery } from '@tanstack/react-query'
+import {
+  useMutation,
+  useQuery
+} from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -18,8 +21,8 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult,
-} from '@tanstack/react-query'
+  UseQueryResult
+} from '@tanstack/react-query';
 
 import type {
   CategoryOperationsCreateCategoryBody,
@@ -37,16 +40,19 @@ import type {
   ServiceOperationsBulkUpdate200,
   ServiceOperationsBulkUpdateBody,
   ServiceOperationsList200,
-  ServiceOperationsListParams,
-} from '../../models'
+  ServiceOperationsListParams
+} from '../../models';
 
-import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher'
+import { customInstance } from '../../../../../io/src/libs/fetcher/fetcher';
 
-type AwaitedInput<T> = PromiseLike<T> | T
+type AwaitedInput<T> = PromiseLike<T> | T;
 
-type Awaited<O> = O extends AwaitedInput<infer T> ? T : never
+      type Awaited<O> = O extends AwaitedInput<infer T> ? T : never;
 
-type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
+
 
 /**
  * サロン内の提供メニューをカテゴリ別に一覧し、予約画面や在庫管理との連携に活用します。
@@ -56,217 +62,119 @@ export type serviceOperationsListResponse200 = {
   data: ServiceOperationsList200
   status: 200
 }
+    
+export type serviceOperationsListResponseComposite = serviceOperationsListResponse200;
+    
+export type serviceOperationsListResponse = serviceOperationsListResponseComposite & {
+  headers: Headers;
+}
 
-export type serviceOperationsListResponseComposite =
-  serviceOperationsListResponse200
-
-export type serviceOperationsListResponse =
-  serviceOperationsListResponseComposite & {
-    headers: Headers
-  }
-
-export const getServiceOperationsListUrl = (
-  salonId: ModelsSalonId,
-  params?: ServiceOperationsListParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getServiceOperationsListUrl = (salonId: ModelsSalonId,
+    params?: ServiceOperationsListParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v1/salons/${salonId}/services?${stringifiedParams}`
-    : `/api/v1/salons/${salonId}/services`
+  return stringifiedParams.length > 0 ? `/api/v1/salons/${salonId}/services?${stringifiedParams}` : `/api/v1/salons/${salonId}/services`
 }
 
-export const serviceOperationsList = async (
-  salonId: ModelsSalonId,
-  params?: ServiceOperationsListParams,
-  options?: RequestInit
-): Promise<serviceOperationsListResponse> => {
-  return customInstance<serviceOperationsListResponse>(
-    getServiceOperationsListUrl(salonId, params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getServiceOperationsListQueryKey = (
-  salonId?: ModelsSalonId,
-  params?: ServiceOperationsListParams
-) => {
-  return [
-    `/api/v1/salons/${salonId}/services`,
-    ...(params ? [params] : []),
-  ] as const
-}
-
-export const getServiceOperationsListQueryOptions = <
-  TData = Awaited<ReturnType<typeof serviceOperationsList>>,
-  TError = unknown,
->(
-  salonId: ModelsSalonId,
-  params?: ServiceOperationsListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof serviceOperationsList>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const serviceOperationsList = async (salonId: ModelsSalonId,
+    params?: ServiceOperationsListParams, options?: RequestInit): Promise<serviceOperationsListResponse> => {
+  
+  return customInstance<serviceOperationsListResponse>(getServiceOperationsListUrl(salonId,params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getServiceOperationsListQueryKey = (salonId?: ModelsSalonId,
+    params?: ServiceOperationsListParams,) => {
+    return [`/api/v1/salons/${salonId}/services`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getServiceOperationsListQueryOptions = <TData = Awaited<ReturnType<typeof serviceOperationsList>>, TError = unknown>(salonId: ModelsSalonId,
+    params?: ServiceOperationsListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof serviceOperationsList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ?? getServiceOperationsListQueryKey(salonId, params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof serviceOperationsList>>
-  > = ({ signal }) =>
-    serviceOperationsList(salonId, params, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getServiceOperationsListQueryKey(salonId,params);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!salonId,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof serviceOperationsList>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof serviceOperationsList>>> = ({ signal }) => serviceOperationsList(salonId,params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(salonId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof serviceOperationsList>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type ServiceOperationsListQueryResult = NonNullable<
-  Awaited<ReturnType<typeof serviceOperationsList>>
->
+export type ServiceOperationsListQueryResult = NonNullable<Awaited<ReturnType<typeof serviceOperationsList>>>
 export type ServiceOperationsListQueryError = unknown
 
-export function useServiceOperationsList<
-  TData = Awaited<ReturnType<typeof serviceOperationsList>>,
-  TError = unknown,
->(
-  salonId: ModelsSalonId,
-  params: undefined | ServiceOperationsListParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof serviceOperationsList>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useServiceOperationsList<TData = Awaited<ReturnType<typeof serviceOperationsList>>, TError = unknown>(
+ salonId: ModelsSalonId,
+    params: undefined |  ServiceOperationsListParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof serviceOperationsList>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof serviceOperationsList>>,
           TError,
           Awaited<ReturnType<typeof serviceOperationsList>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useServiceOperationsList<
-  TData = Awaited<ReturnType<typeof serviceOperationsList>>,
-  TError = unknown,
->(
-  salonId: ModelsSalonId,
-  params?: ServiceOperationsListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof serviceOperationsList>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useServiceOperationsList<TData = Awaited<ReturnType<typeof serviceOperationsList>>, TError = unknown>(
+ salonId: ModelsSalonId,
+    params?: ServiceOperationsListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof serviceOperationsList>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof serviceOperationsList>>,
           TError,
           Awaited<ReturnType<typeof serviceOperationsList>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useServiceOperationsList<
-  TData = Awaited<ReturnType<typeof serviceOperationsList>>,
-  TError = unknown,
->(
-  salonId: ModelsSalonId,
-  params?: ServiceOperationsListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof serviceOperationsList>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useServiceOperationsList<TData = Awaited<ReturnType<typeof serviceOperationsList>>, TError = unknown>(
+ salonId: ModelsSalonId,
+    params?: ServiceOperationsListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof serviceOperationsList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary List salon services
  */
 
-export function useServiceOperationsList<
-  TData = Awaited<ReturnType<typeof serviceOperationsList>>,
-  TError = unknown,
->(
-  salonId: ModelsSalonId,
-  params?: ServiceOperationsListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof serviceOperationsList>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getServiceOperationsListQueryOptions(
-    salonId,
-    params,
-    options
-  )
+export function useServiceOperationsList<TData = Awaited<ReturnType<typeof serviceOperationsList>>, TError = unknown>(
+ salonId: ModelsSalonId,
+    params?: ServiceOperationsListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof serviceOperationsList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  const queryOptions = getServiceOperationsListQueryOptions(salonId,params,options)
 
-  query.queryKey = queryOptions.queryKey
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  return query
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
+
+
 
 /**
  * 新しい施術メニューを登録し、価格・施術時間・提供条件を設定します。
@@ -281,108 +189,83 @@ export type serviceOperationsCreateResponse400 = {
   data: ModelsError
   status: 400
 }
+    
+export type serviceOperationsCreateResponseComposite = serviceOperationsCreateResponse201 | serviceOperationsCreateResponse400;
+    
+export type serviceOperationsCreateResponse = serviceOperationsCreateResponseComposite & {
+  headers: Headers;
+}
 
-export type serviceOperationsCreateResponseComposite =
-  | serviceOperationsCreateResponse201
-  | serviceOperationsCreateResponse400
+export const getServiceOperationsCreateUrl = (salonId: ModelsSalonId,) => {
 
-export type serviceOperationsCreateResponse =
-  serviceOperationsCreateResponseComposite & {
-    headers: Headers
-  }
 
-export const getServiceOperationsCreateUrl = (salonId: ModelsSalonId) => {
+  
+
   return `/api/v1/salons/${salonId}/services`
 }
 
-export const serviceOperationsCreate = async (
-  salonId: ModelsSalonId,
-  modelsCreateServiceRequest: ModelsCreateServiceRequest,
-  options?: RequestInit
-): Promise<serviceOperationsCreateResponse> => {
-  return customInstance<serviceOperationsCreateResponse>(
-    getServiceOperationsCreateUrl(salonId),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsCreateServiceRequest),
-    }
-  )
-}
-
-export const getServiceOperationsCreateMutationOptions = <
-  TError = ModelsError,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof serviceOperationsCreate>>,
-    TError,
-    { salonId: ModelsSalonId; data: ModelsCreateServiceRequest },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof serviceOperationsCreate>>,
-  TError,
-  { salonId: ModelsSalonId; data: ModelsCreateServiceRequest },
-  TContext
-> => {
-  const mutationKey = ['serviceOperationsCreate']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof serviceOperationsCreate>>,
-    { salonId: ModelsSalonId; data: ModelsCreateServiceRequest }
-  > = (props) => {
-    const { salonId, data } = props ?? {}
-
-    return serviceOperationsCreate(salonId, data, requestOptions)
+export const serviceOperationsCreate = async (salonId: ModelsSalonId,
+    modelsCreateServiceRequest: ModelsCreateServiceRequest, options?: RequestInit): Promise<serviceOperationsCreateResponse> => {
+  
+  return customInstance<serviceOperationsCreateResponse>(getServiceOperationsCreateUrl(salonId),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      modelsCreateServiceRequest,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type ServiceOperationsCreateMutationResult = NonNullable<
-  Awaited<ReturnType<typeof serviceOperationsCreate>>
->
-export type ServiceOperationsCreateMutationBody = ModelsCreateServiceRequest
-export type ServiceOperationsCreateMutationError = ModelsError
 
-/**
+
+export const getServiceOperationsCreateMutationOptions = <TError = ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof serviceOperationsCreate>>, TError,{salonId: ModelsSalonId;data: ModelsCreateServiceRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof serviceOperationsCreate>>, TError,{salonId: ModelsSalonId;data: ModelsCreateServiceRequest}, TContext> => {
+
+const mutationKey = ['serviceOperationsCreate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof serviceOperationsCreate>>, {salonId: ModelsSalonId;data: ModelsCreateServiceRequest}> = (props) => {
+          const {salonId,data} = props ?? {};
+
+          return  serviceOperationsCreate(salonId,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ServiceOperationsCreateMutationResult = NonNullable<Awaited<ReturnType<typeof serviceOperationsCreate>>>
+    export type ServiceOperationsCreateMutationBody = ModelsCreateServiceRequest
+    export type ServiceOperationsCreateMutationError = ModelsError
+
+    /**
  * @summary Create service
  */
-export const useServiceOperationsCreate = <
-  TError = ModelsError,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof serviceOperationsCreate>>,
-      TError,
-      { salonId: ModelsSalonId; data: ModelsCreateServiceRequest },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof serviceOperationsCreate>>,
-  TError,
-  { salonId: ModelsSalonId; data: ModelsCreateServiceRequest },
-  TContext
-> => {
-  const mutationOptions = getServiceOperationsCreateMutationOptions(options)
+export const useServiceOperationsCreate = <TError = ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof serviceOperationsCreate>>, TError,{salonId: ModelsSalonId;data: ModelsCreateServiceRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof serviceOperationsCreate>>,
+        TError,
+        {salonId: ModelsSalonId;data: ModelsCreateServiceRequest},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getServiceOperationsCreateMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 複数メニューの共通項目を一括更新し、季節キャンペーンや価格調整を効率化します。
  * @summary Bulk update services
  */
@@ -390,108 +273,83 @@ export type serviceOperationsBulkUpdateResponse200 = {
   data: ServiceOperationsBulkUpdate200
   status: 200
 }
+    
+export type serviceOperationsBulkUpdateResponseComposite = serviceOperationsBulkUpdateResponse200;
+    
+export type serviceOperationsBulkUpdateResponse = serviceOperationsBulkUpdateResponseComposite & {
+  headers: Headers;
+}
 
-export type serviceOperationsBulkUpdateResponseComposite =
-  serviceOperationsBulkUpdateResponse200
+export const getServiceOperationsBulkUpdateUrl = (salonId: ModelsSalonId,) => {
 
-export type serviceOperationsBulkUpdateResponse =
-  serviceOperationsBulkUpdateResponseComposite & {
-    headers: Headers
-  }
 
-export const getServiceOperationsBulkUpdateUrl = (salonId: ModelsSalonId) => {
+  
+
   return `/api/v1/salons/${salonId}/services/bulk`
 }
 
-export const serviceOperationsBulkUpdate = async (
-  salonId: ModelsSalonId,
-  serviceOperationsBulkUpdateBody: ServiceOperationsBulkUpdateBody,
-  options?: RequestInit
-): Promise<serviceOperationsBulkUpdateResponse> => {
-  return customInstance<serviceOperationsBulkUpdateResponse>(
-    getServiceOperationsBulkUpdateUrl(salonId),
-    {
-      ...options,
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(serviceOperationsBulkUpdateBody),
-    }
-  )
-}
-
-export const getServiceOperationsBulkUpdateMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof serviceOperationsBulkUpdate>>,
-    TError,
-    { salonId: ModelsSalonId; data: ServiceOperationsBulkUpdateBody },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof serviceOperationsBulkUpdate>>,
-  TError,
-  { salonId: ModelsSalonId; data: ServiceOperationsBulkUpdateBody },
-  TContext
-> => {
-  const mutationKey = ['serviceOperationsBulkUpdate']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof serviceOperationsBulkUpdate>>,
-    { salonId: ModelsSalonId; data: ServiceOperationsBulkUpdateBody }
-  > = (props) => {
-    const { salonId, data } = props ?? {}
-
-    return serviceOperationsBulkUpdate(salonId, data, requestOptions)
+export const serviceOperationsBulkUpdate = async (salonId: ModelsSalonId,
+    serviceOperationsBulkUpdateBody: ServiceOperationsBulkUpdateBody, options?: RequestInit): Promise<serviceOperationsBulkUpdateResponse> => {
+  
+  return customInstance<serviceOperationsBulkUpdateResponse>(getServiceOperationsBulkUpdateUrl(salonId),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      serviceOperationsBulkUpdateBody,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type ServiceOperationsBulkUpdateMutationResult = NonNullable<
-  Awaited<ReturnType<typeof serviceOperationsBulkUpdate>>
->
-export type ServiceOperationsBulkUpdateMutationBody =
-  ServiceOperationsBulkUpdateBody
-export type ServiceOperationsBulkUpdateMutationError = unknown
 
-/**
+
+export const getServiceOperationsBulkUpdateMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof serviceOperationsBulkUpdate>>, TError,{salonId: ModelsSalonId;data: ServiceOperationsBulkUpdateBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof serviceOperationsBulkUpdate>>, TError,{salonId: ModelsSalonId;data: ServiceOperationsBulkUpdateBody}, TContext> => {
+
+const mutationKey = ['serviceOperationsBulkUpdate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof serviceOperationsBulkUpdate>>, {salonId: ModelsSalonId;data: ServiceOperationsBulkUpdateBody}> = (props) => {
+          const {salonId,data} = props ?? {};
+
+          return  serviceOperationsBulkUpdate(salonId,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ServiceOperationsBulkUpdateMutationResult = NonNullable<Awaited<ReturnType<typeof serviceOperationsBulkUpdate>>>
+    export type ServiceOperationsBulkUpdateMutationBody = ServiceOperationsBulkUpdateBody
+    export type ServiceOperationsBulkUpdateMutationError = unknown
+
+    /**
  * @summary Bulk update services
  */
-export const useServiceOperationsBulkUpdate = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof serviceOperationsBulkUpdate>>,
-      TError,
-      { salonId: ModelsSalonId; data: ServiceOperationsBulkUpdateBody },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof serviceOperationsBulkUpdate>>,
-  TError,
-  { salonId: ModelsSalonId; data: ServiceOperationsBulkUpdateBody },
-  TContext
-> => {
-  const mutationOptions = getServiceOperationsBulkUpdateMutationOptions(options)
+export const useServiceOperationsBulkUpdate = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof serviceOperationsBulkUpdate>>, TError,{salonId: ModelsSalonId;data: ServiceOperationsBulkUpdateBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof serviceOperationsBulkUpdate>>,
+        TError,
+        {salonId: ModelsSalonId;data: ServiceOperationsBulkUpdateBody},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getServiceOperationsBulkUpdateMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 特定メニューの詳細情報を取得し、予約システムやスタッフ教育に必要な内容を確認します。
  * @summary Get service
  */
@@ -504,199 +362,112 @@ export type serviceOperationsGetResponse404 = {
   data: ModelsError
   status: 404
 }
+    
+export type serviceOperationsGetResponseComposite = serviceOperationsGetResponse200 | serviceOperationsGetResponse404;
+    
+export type serviceOperationsGetResponse = serviceOperationsGetResponseComposite & {
+  headers: Headers;
+}
 
-export type serviceOperationsGetResponseComposite =
-  | serviceOperationsGetResponse200
-  | serviceOperationsGetResponse404
+export const getServiceOperationsGetUrl = (salonId: ModelsSalonId,
+    id: ModelsServiceId,) => {
 
-export type serviceOperationsGetResponse =
-  serviceOperationsGetResponseComposite & {
-    headers: Headers
-  }
 
-export const getServiceOperationsGetUrl = (
-  salonId: ModelsSalonId,
-  id: ModelsServiceId
-) => {
+  
+
   return `/api/v1/salons/${salonId}/services/${id}`
 }
 
-export const serviceOperationsGet = async (
-  salonId: ModelsSalonId,
-  id: ModelsServiceId,
-  options?: RequestInit
-): Promise<serviceOperationsGetResponse> => {
-  return customInstance<serviceOperationsGetResponse>(
-    getServiceOperationsGetUrl(salonId, id),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getServiceOperationsGetQueryKey = (
-  salonId?: ModelsSalonId,
-  id?: ModelsServiceId
-) => {
-  return [`/api/v1/salons/${salonId}/services/${id}`] as const
-}
-
-export const getServiceOperationsGetQueryOptions = <
-  TData = Awaited<ReturnType<typeof serviceOperationsGet>>,
-  TError = ModelsError,
->(
-  salonId: ModelsSalonId,
-  id: ModelsServiceId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof serviceOperationsGet>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const serviceOperationsGet = async (salonId: ModelsSalonId,
+    id: ModelsServiceId, options?: RequestInit): Promise<serviceOperationsGetResponse> => {
+  
+  return customInstance<serviceOperationsGetResponse>(getServiceOperationsGetUrl(salonId,id),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getServiceOperationsGetQueryKey = (salonId?: ModelsSalonId,
+    id?: ModelsServiceId,) => {
+    return [`/api/v1/salons/${salonId}/services/${id}`] as const;
+    }
+
+    
+export const getServiceOperationsGetQueryOptions = <TData = Awaited<ReturnType<typeof serviceOperationsGet>>, TError = ModelsError>(salonId: ModelsSalonId,
+    id: ModelsServiceId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof serviceOperationsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ?? getServiceOperationsGetQueryKey(salonId, id)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof serviceOperationsGet>>
-  > = ({ signal }) =>
-    serviceOperationsGet(salonId, id, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getServiceOperationsGetQueryKey(salonId,id);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!(salonId && id),
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof serviceOperationsGet>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof serviceOperationsGet>>> = ({ signal }) => serviceOperationsGet(salonId,id, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(salonId && id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof serviceOperationsGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type ServiceOperationsGetQueryResult = NonNullable<
-  Awaited<ReturnType<typeof serviceOperationsGet>>
->
+export type ServiceOperationsGetQueryResult = NonNullable<Awaited<ReturnType<typeof serviceOperationsGet>>>
 export type ServiceOperationsGetQueryError = ModelsError
 
-export function useServiceOperationsGet<
-  TData = Awaited<ReturnType<typeof serviceOperationsGet>>,
-  TError = ModelsError,
->(
-  salonId: ModelsSalonId,
-  id: ModelsServiceId,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof serviceOperationsGet>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useServiceOperationsGet<TData = Awaited<ReturnType<typeof serviceOperationsGet>>, TError = ModelsError>(
+ salonId: ModelsSalonId,
+    id: ModelsServiceId, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof serviceOperationsGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof serviceOperationsGet>>,
           TError,
           Awaited<ReturnType<typeof serviceOperationsGet>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useServiceOperationsGet<
-  TData = Awaited<ReturnType<typeof serviceOperationsGet>>,
-  TError = ModelsError,
->(
-  salonId: ModelsSalonId,
-  id: ModelsServiceId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof serviceOperationsGet>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useServiceOperationsGet<TData = Awaited<ReturnType<typeof serviceOperationsGet>>, TError = ModelsError>(
+ salonId: ModelsSalonId,
+    id: ModelsServiceId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof serviceOperationsGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof serviceOperationsGet>>,
           TError,
           Awaited<ReturnType<typeof serviceOperationsGet>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useServiceOperationsGet<
-  TData = Awaited<ReturnType<typeof serviceOperationsGet>>,
-  TError = ModelsError,
->(
-  salonId: ModelsSalonId,
-  id: ModelsServiceId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof serviceOperationsGet>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useServiceOperationsGet<TData = Awaited<ReturnType<typeof serviceOperationsGet>>, TError = ModelsError>(
+ salonId: ModelsSalonId,
+    id: ModelsServiceId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof serviceOperationsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get service
  */
 
-export function useServiceOperationsGet<
-  TData = Awaited<ReturnType<typeof serviceOperationsGet>>,
-  TError = ModelsError,
->(
-  salonId: ModelsSalonId,
-  id: ModelsServiceId,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof serviceOperationsGet>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getServiceOperationsGetQueryOptions(salonId, id, options)
+export function useServiceOperationsGet<TData = Awaited<ReturnType<typeof serviceOperationsGet>>, TError = ModelsError>(
+ salonId: ModelsSalonId,
+    id: ModelsServiceId, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof serviceOperationsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  const queryOptions = getServiceOperationsGetQueryOptions(salonId,id,options)
 
-  query.queryKey = queryOptions.queryKey
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  return query
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
+
+
 
 /**
  * 既存メニューの内容を更新し、料金改定や提供条件の変更に対応します。
@@ -716,133 +487,85 @@ export type serviceOperationsUpdateResponse404 = {
   data: ModelsError
   status: 404
 }
+    
+export type serviceOperationsUpdateResponseComposite = serviceOperationsUpdateResponse200 | serviceOperationsUpdateResponse400 | serviceOperationsUpdateResponse404;
+    
+export type serviceOperationsUpdateResponse = serviceOperationsUpdateResponseComposite & {
+  headers: Headers;
+}
 
-export type serviceOperationsUpdateResponseComposite =
-  | serviceOperationsUpdateResponse200
-  | serviceOperationsUpdateResponse400
-  | serviceOperationsUpdateResponse404
+export const getServiceOperationsUpdateUrl = (salonId: ModelsSalonId,
+    id: ModelsServiceId,) => {
 
-export type serviceOperationsUpdateResponse =
-  serviceOperationsUpdateResponseComposite & {
-    headers: Headers
-  }
 
-export const getServiceOperationsUpdateUrl = (
-  salonId: ModelsSalonId,
-  id: ModelsServiceId
-) => {
+  
+
   return `/api/v1/salons/${salonId}/services/${id}`
 }
 
-export const serviceOperationsUpdate = async (
-  salonId: ModelsSalonId,
-  id: ModelsServiceId,
-  modelsUpdateServiceRequest: ModelsUpdateServiceRequest,
-  options?: RequestInit
-): Promise<serviceOperationsUpdateResponse> => {
-  return customInstance<serviceOperationsUpdateResponse>(
-    getServiceOperationsUpdateUrl(salonId, id),
-    {
-      ...options,
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(modelsUpdateServiceRequest),
-    }
-  )
-}
-
-export const getServiceOperationsUpdateMutationOptions = <
-  TError = ModelsError | ModelsError,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof serviceOperationsUpdate>>,
-    TError,
-    {
-      salonId: ModelsSalonId
-      id: ModelsServiceId
-      data: ModelsUpdateServiceRequest
-    },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof serviceOperationsUpdate>>,
-  TError,
-  {
-    salonId: ModelsSalonId
-    id: ModelsServiceId
-    data: ModelsUpdateServiceRequest
-  },
-  TContext
-> => {
-  const mutationKey = ['serviceOperationsUpdate']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof serviceOperationsUpdate>>,
-    {
-      salonId: ModelsSalonId
-      id: ModelsServiceId
-      data: ModelsUpdateServiceRequest
-    }
-  > = (props) => {
-    const { salonId, id, data } = props ?? {}
-
-    return serviceOperationsUpdate(salonId, id, data, requestOptions)
+export const serviceOperationsUpdate = async (salonId: ModelsSalonId,
+    id: ModelsServiceId,
+    modelsUpdateServiceRequest: ModelsUpdateServiceRequest, options?: RequestInit): Promise<serviceOperationsUpdateResponse> => {
+  
+  return customInstance<serviceOperationsUpdateResponse>(getServiceOperationsUpdateUrl(salonId,id),
+  {      
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      modelsUpdateServiceRequest,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type ServiceOperationsUpdateMutationResult = NonNullable<
-  Awaited<ReturnType<typeof serviceOperationsUpdate>>
->
-export type ServiceOperationsUpdateMutationBody = ModelsUpdateServiceRequest
-export type ServiceOperationsUpdateMutationError = ModelsError | ModelsError
 
-/**
+
+export const getServiceOperationsUpdateMutationOptions = <TError = ModelsError | ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof serviceOperationsUpdate>>, TError,{salonId: ModelsSalonId;id: ModelsServiceId;data: ModelsUpdateServiceRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof serviceOperationsUpdate>>, TError,{salonId: ModelsSalonId;id: ModelsServiceId;data: ModelsUpdateServiceRequest}, TContext> => {
+
+const mutationKey = ['serviceOperationsUpdate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof serviceOperationsUpdate>>, {salonId: ModelsSalonId;id: ModelsServiceId;data: ModelsUpdateServiceRequest}> = (props) => {
+          const {salonId,id,data} = props ?? {};
+
+          return  serviceOperationsUpdate(salonId,id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ServiceOperationsUpdateMutationResult = NonNullable<Awaited<ReturnType<typeof serviceOperationsUpdate>>>
+    export type ServiceOperationsUpdateMutationBody = ModelsUpdateServiceRequest
+    export type ServiceOperationsUpdateMutationError = ModelsError | ModelsError
+
+    /**
  * @summary Update service
  */
-export const useServiceOperationsUpdate = <
-  TError = ModelsError | ModelsError,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof serviceOperationsUpdate>>,
-      TError,
-      {
-        salonId: ModelsSalonId
-        id: ModelsServiceId
-        data: ModelsUpdateServiceRequest
-      },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof serviceOperationsUpdate>>,
-  TError,
-  {
-    salonId: ModelsSalonId
-    id: ModelsServiceId
-    data: ModelsUpdateServiceRequest
-  },
-  TContext
-> => {
-  const mutationOptions = getServiceOperationsUpdateMutationOptions(options)
+export const useServiceOperationsUpdate = <TError = ModelsError | ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof serviceOperationsUpdate>>, TError,{salonId: ModelsSalonId;id: ModelsServiceId;data: ModelsUpdateServiceRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof serviceOperationsUpdate>>,
+        TError,
+        {salonId: ModelsSalonId;id: ModelsServiceId;data: ModelsUpdateServiceRequest},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getServiceOperationsUpdateMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 提供終了となったメニューを削除し、予約導線から除外します。
  * @summary Delete service
  */
@@ -855,109 +578,83 @@ export type serviceOperationsDeleteResponse404 = {
   data: ModelsError
   status: 404
 }
+    
+export type serviceOperationsDeleteResponseComposite = serviceOperationsDeleteResponse204 | serviceOperationsDeleteResponse404;
+    
+export type serviceOperationsDeleteResponse = serviceOperationsDeleteResponseComposite & {
+  headers: Headers;
+}
 
-export type serviceOperationsDeleteResponseComposite =
-  | serviceOperationsDeleteResponse204
-  | serviceOperationsDeleteResponse404
+export const getServiceOperationsDeleteUrl = (salonId: ModelsSalonId,
+    id: ModelsServiceId,) => {
 
-export type serviceOperationsDeleteResponse =
-  serviceOperationsDeleteResponseComposite & {
-    headers: Headers
-  }
 
-export const getServiceOperationsDeleteUrl = (
-  salonId: ModelsSalonId,
-  id: ModelsServiceId
-) => {
+  
+
   return `/api/v1/salons/${salonId}/services/${id}`
 }
 
-export const serviceOperationsDelete = async (
-  salonId: ModelsSalonId,
-  id: ModelsServiceId,
-  options?: RequestInit
-): Promise<serviceOperationsDeleteResponse> => {
-  return customInstance<serviceOperationsDeleteResponse>(
-    getServiceOperationsDeleteUrl(salonId, id),
-    {
-      ...options,
-      method: 'DELETE',
-    }
-  )
-}
-
-export const getServiceOperationsDeleteMutationOptions = <
-  TError = ModelsError,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof serviceOperationsDelete>>,
-    TError,
-    { salonId: ModelsSalonId; id: ModelsServiceId },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof serviceOperationsDelete>>,
-  TError,
-  { salonId: ModelsSalonId; id: ModelsServiceId },
-  TContext
-> => {
-  const mutationKey = ['serviceOperationsDelete']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof serviceOperationsDelete>>,
-    { salonId: ModelsSalonId; id: ModelsServiceId }
-  > = (props) => {
-    const { salonId, id } = props ?? {}
-
-    return serviceOperationsDelete(salonId, id, requestOptions)
+export const serviceOperationsDelete = async (salonId: ModelsSalonId,
+    id: ModelsServiceId, options?: RequestInit): Promise<serviceOperationsDeleteResponse> => {
+  
+  return customInstance<serviceOperationsDeleteResponse>(getServiceOperationsDeleteUrl(salonId,id),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type ServiceOperationsDeleteMutationResult = NonNullable<
-  Awaited<ReturnType<typeof serviceOperationsDelete>>
->
 
-export type ServiceOperationsDeleteMutationError = ModelsError
 
-/**
+export const getServiceOperationsDeleteMutationOptions = <TError = ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof serviceOperationsDelete>>, TError,{salonId: ModelsSalonId;id: ModelsServiceId}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof serviceOperationsDelete>>, TError,{salonId: ModelsSalonId;id: ModelsServiceId}, TContext> => {
+
+const mutationKey = ['serviceOperationsDelete'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof serviceOperationsDelete>>, {salonId: ModelsSalonId;id: ModelsServiceId}> = (props) => {
+          const {salonId,id} = props ?? {};
+
+          return  serviceOperationsDelete(salonId,id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ServiceOperationsDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof serviceOperationsDelete>>>
+    
+    export type ServiceOperationsDeleteMutationError = ModelsError
+
+    /**
  * @summary Delete service
  */
-export const useServiceOperationsDelete = <
-  TError = ModelsError,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof serviceOperationsDelete>>,
-      TError,
-      { salonId: ModelsSalonId; id: ModelsServiceId },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof serviceOperationsDelete>>,
-  TError,
-  { salonId: ModelsSalonId; id: ModelsServiceId },
-  TContext
-> => {
-  const mutationOptions = getServiceOperationsDeleteMutationOptions(options)
+export const useServiceOperationsDelete = <TError = ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof serviceOperationsDelete>>, TError,{salonId: ModelsSalonId;id: ModelsServiceId}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof serviceOperationsDelete>>,
+        TError,
+        {salonId: ModelsSalonId;id: ModelsServiceId},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getServiceOperationsDeleteMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 登録済みのカテゴリ一覧を取得し、メニュー分類や表示順を管理します。
  * @summary List service categories
  */
@@ -965,201 +662,111 @@ export type categoryOperationsListCategoriesResponse200 = {
   data: CategoryOperationsListCategories200
   status: 200
 }
+    
+export type categoryOperationsListCategoriesResponseComposite = categoryOperationsListCategoriesResponse200;
+    
+export type categoryOperationsListCategoriesResponse = categoryOperationsListCategoriesResponseComposite & {
+  headers: Headers;
+}
 
-export type categoryOperationsListCategoriesResponseComposite =
-  categoryOperationsListCategoriesResponse200
-
-export type categoryOperationsListCategoriesResponse =
-  categoryOperationsListCategoriesResponseComposite & {
-    headers: Headers
-  }
-
-export const getCategoryOperationsListCategoriesUrl = (
-  params?: CategoryOperationsListCategoriesParams
-) => {
-  const normalizedParams = new URLSearchParams()
+export const getCategoryOperationsListCategoriesUrl = (params?: CategoryOperationsListCategoriesParams,) => {
+  const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
-  })
+  });
 
-  const stringifiedParams = normalizedParams.toString()
+  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/api/v1/service-categories?${stringifiedParams}`
-    : `/api/v1/service-categories`
+  return stringifiedParams.length > 0 ? `/api/v1/service-categories?${stringifiedParams}` : `/api/v1/service-categories`
 }
 
-export const categoryOperationsListCategories = async (
-  params?: CategoryOperationsListCategoriesParams,
-  options?: RequestInit
-): Promise<categoryOperationsListCategoriesResponse> => {
-  return customInstance<categoryOperationsListCategoriesResponse>(
-    getCategoryOperationsListCategoriesUrl(params),
-    {
-      ...options,
-      method: 'GET',
-    }
-  )
-}
-
-export const getCategoryOperationsListCategoriesQueryKey = (
-  params?: CategoryOperationsListCategoriesParams
-) => {
-  return [`/api/v1/service-categories`, ...(params ? [params] : [])] as const
-}
-
-export const getCategoryOperationsListCategoriesQueryOptions = <
-  TData = Awaited<ReturnType<typeof categoryOperationsListCategories>>,
-  TError = unknown,
->(
-  params?: CategoryOperationsListCategoriesParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof categoryOperationsListCategories>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
+export const categoryOperationsListCategories = async (params?: CategoryOperationsListCategoriesParams, options?: RequestInit): Promise<categoryOperationsListCategoriesResponse> => {
+  
+  return customInstance<categoryOperationsListCategoriesResponse>(getCategoryOperationsListCategoriesUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
+);}
+
+
+
+export const getCategoryOperationsListCategoriesQueryKey = (params?: CategoryOperationsListCategoriesParams,) => {
+    return [`/api/v1/service-categories`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getCategoryOperationsListCategoriesQueryOptions = <TData = Awaited<ReturnType<typeof categoryOperationsListCategories>>, TError = unknown>(params?: CategoryOperationsListCategoriesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof categoryOperationsListCategories>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey =
-    queryOptions?.queryKey ??
-    getCategoryOperationsListCategoriesQueryKey(params)
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof categoryOperationsListCategories>>
-  > = ({ signal }) =>
-    categoryOperationsListCategories(params, { signal, ...requestOptions })
+  const queryKey =  queryOptions?.queryKey ?? getCategoryOperationsListCategoriesQueryKey(params);
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof categoryOperationsListCategories>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof categoryOperationsListCategories>>> = ({ signal }) => categoryOperationsListCategories(params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof categoryOperationsListCategories>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type CategoryOperationsListCategoriesQueryResult = NonNullable<
-  Awaited<ReturnType<typeof categoryOperationsListCategories>>
->
+export type CategoryOperationsListCategoriesQueryResult = NonNullable<Awaited<ReturnType<typeof categoryOperationsListCategories>>>
 export type CategoryOperationsListCategoriesQueryError = unknown
 
-export function useCategoryOperationsListCategories<
-  TData = Awaited<ReturnType<typeof categoryOperationsListCategories>>,
-  TError = unknown,
->(
-  params: undefined | CategoryOperationsListCategoriesParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof categoryOperationsListCategories>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+export function useCategoryOperationsListCategories<TData = Awaited<ReturnType<typeof categoryOperationsListCategories>>, TError = unknown>(
+ params: undefined |  CategoryOperationsListCategoriesParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof categoryOperationsListCategories>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof categoryOperationsListCategories>>,
           TError,
           Awaited<ReturnType<typeof categoryOperationsListCategories>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useCategoryOperationsListCategories<
-  TData = Awaited<ReturnType<typeof categoryOperationsListCategories>>,
-  TError = unknown,
->(
-  params?: CategoryOperationsListCategoriesParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof categoryOperationsListCategories>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useCategoryOperationsListCategories<TData = Awaited<ReturnType<typeof categoryOperationsListCategories>>, TError = unknown>(
+ params?: CategoryOperationsListCategoriesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof categoryOperationsListCategories>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof categoryOperationsListCategories>>,
           TError,
           Awaited<ReturnType<typeof categoryOperationsListCategories>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useCategoryOperationsListCategories<
-  TData = Awaited<ReturnType<typeof categoryOperationsListCategories>>,
-  TError = unknown,
->(
-  params?: CategoryOperationsListCategoriesParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof categoryOperationsListCategories>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useCategoryOperationsListCategories<TData = Awaited<ReturnType<typeof categoryOperationsListCategories>>, TError = unknown>(
+ params?: CategoryOperationsListCategoriesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof categoryOperationsListCategories>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary List service categories
  */
 
-export function useCategoryOperationsListCategories<
-  TData = Awaited<ReturnType<typeof categoryOperationsListCategories>>,
-  TError = unknown,
->(
-  params?: CategoryOperationsListCategoriesParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof categoryOperationsListCategories>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getCategoryOperationsListCategoriesQueryOptions(
-    params,
-    options
-  )
+export function useCategoryOperationsListCategories<TData = Awaited<ReturnType<typeof categoryOperationsListCategories>>, TError = unknown>(
+ params?: CategoryOperationsListCategoriesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof categoryOperationsListCategories>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  const queryOptions = getCategoryOperationsListCategoriesQueryOptions(params,options)
 
-  query.queryKey = queryOptions.queryKey
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  return query
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
 }
+
+
 
 /**
  * 新しい施術カテゴリを作成し、階層構造や表示順を定義します。
@@ -1174,109 +781,82 @@ export type categoryOperationsCreateCategoryResponse400 = {
   data: ModelsError
   status: 400
 }
-
-export type categoryOperationsCreateCategoryResponseComposite =
-  | categoryOperationsCreateCategoryResponse201
-  | categoryOperationsCreateCategoryResponse400
-
-export type categoryOperationsCreateCategoryResponse =
-  categoryOperationsCreateCategoryResponseComposite & {
-    headers: Headers
-  }
+    
+export type categoryOperationsCreateCategoryResponseComposite = categoryOperationsCreateCategoryResponse201 | categoryOperationsCreateCategoryResponse400;
+    
+export type categoryOperationsCreateCategoryResponse = categoryOperationsCreateCategoryResponseComposite & {
+  headers: Headers;
+}
 
 export const getCategoryOperationsCreateCategoryUrl = () => {
+
+
+  
+
   return `/api/v1/service-categories`
 }
 
-export const categoryOperationsCreateCategory = async (
-  categoryOperationsCreateCategoryBody: CategoryOperationsCreateCategoryBody,
-  options?: RequestInit
-): Promise<categoryOperationsCreateCategoryResponse> => {
-  return customInstance<categoryOperationsCreateCategoryResponse>(
-    getCategoryOperationsCreateCategoryUrl(),
-    {
-      ...options,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(categoryOperationsCreateCategoryBody),
-    }
-  )
-}
-
-export const getCategoryOperationsCreateCategoryMutationOptions = <
-  TError = ModelsError,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof categoryOperationsCreateCategory>>,
-    TError,
-    { data: CategoryOperationsCreateCategoryBody },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof categoryOperationsCreateCategory>>,
-  TError,
-  { data: CategoryOperationsCreateCategoryBody },
-  TContext
-> => {
-  const mutationKey = ['categoryOperationsCreateCategory']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof categoryOperationsCreateCategory>>,
-    { data: CategoryOperationsCreateCategoryBody }
-  > = (props) => {
-    const { data } = props ?? {}
-
-    return categoryOperationsCreateCategory(data, requestOptions)
+export const categoryOperationsCreateCategory = async (categoryOperationsCreateCategoryBody: CategoryOperationsCreateCategoryBody, options?: RequestInit): Promise<categoryOperationsCreateCategoryResponse> => {
+  
+  return customInstance<categoryOperationsCreateCategoryResponse>(getCategoryOperationsCreateCategoryUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      categoryOperationsCreateCategoryBody,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type CategoryOperationsCreateCategoryMutationResult = NonNullable<
-  Awaited<ReturnType<typeof categoryOperationsCreateCategory>>
->
-export type CategoryOperationsCreateCategoryMutationBody =
-  CategoryOperationsCreateCategoryBody
-export type CategoryOperationsCreateCategoryMutationError = ModelsError
 
-/**
+
+export const getCategoryOperationsCreateCategoryMutationOptions = <TError = ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof categoryOperationsCreateCategory>>, TError,{data: CategoryOperationsCreateCategoryBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof categoryOperationsCreateCategory>>, TError,{data: CategoryOperationsCreateCategoryBody}, TContext> => {
+
+const mutationKey = ['categoryOperationsCreateCategory'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof categoryOperationsCreateCategory>>, {data: CategoryOperationsCreateCategoryBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  categoryOperationsCreateCategory(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CategoryOperationsCreateCategoryMutationResult = NonNullable<Awaited<ReturnType<typeof categoryOperationsCreateCategory>>>
+    export type CategoryOperationsCreateCategoryMutationBody = CategoryOperationsCreateCategoryBody
+    export type CategoryOperationsCreateCategoryMutationError = ModelsError
+
+    /**
  * @summary Create service category
  */
-export const useCategoryOperationsCreateCategory = <
-  TError = ModelsError,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof categoryOperationsCreateCategory>>,
-      TError,
-      { data: CategoryOperationsCreateCategoryBody },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof categoryOperationsCreateCategory>>,
-  TError,
-  { data: CategoryOperationsCreateCategoryBody },
-  TContext
-> => {
-  const mutationOptions =
-    getCategoryOperationsCreateCategoryMutationOptions(options)
+export const useCategoryOperationsCreateCategory = <TError = ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof categoryOperationsCreateCategory>>, TError,{data: CategoryOperationsCreateCategoryBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof categoryOperationsCreateCategory>>,
+        TError,
+        {data: CategoryOperationsCreateCategoryBody},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getCategoryOperationsCreateCategoryMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 既存カテゴリを更新し、名称や表示順、親子関係を調整します。
  * @summary Update service category
  */
@@ -1289,112 +869,83 @@ export type categoryOperationsUpdateCategoryResponse404 = {
   data: ModelsError
   status: 404
 }
+    
+export type categoryOperationsUpdateCategoryResponseComposite = categoryOperationsUpdateCategoryResponse200 | categoryOperationsUpdateCategoryResponse404;
+    
+export type categoryOperationsUpdateCategoryResponse = categoryOperationsUpdateCategoryResponseComposite & {
+  headers: Headers;
+}
 
-export type categoryOperationsUpdateCategoryResponseComposite =
-  | categoryOperationsUpdateCategoryResponse200
-  | categoryOperationsUpdateCategoryResponse404
+export const getCategoryOperationsUpdateCategoryUrl = (id: ModelsCategoryId,) => {
 
-export type categoryOperationsUpdateCategoryResponse =
-  categoryOperationsUpdateCategoryResponseComposite & {
-    headers: Headers
-  }
 
-export const getCategoryOperationsUpdateCategoryUrl = (
-  id: ModelsCategoryId
-) => {
+  
+
   return `/api/v1/service-categories/${id}`
 }
 
-export const categoryOperationsUpdateCategory = async (
-  id: ModelsCategoryId,
-  categoryOperationsUpdateCategoryBody: CategoryOperationsUpdateCategoryBody,
-  options?: RequestInit
-): Promise<categoryOperationsUpdateCategoryResponse> => {
-  return customInstance<categoryOperationsUpdateCategoryResponse>(
-    getCategoryOperationsUpdateCategoryUrl(id),
-    {
-      ...options,
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      body: JSON.stringify(categoryOperationsUpdateCategoryBody),
-    }
-  )
-}
-
-export const getCategoryOperationsUpdateCategoryMutationOptions = <
-  TError = ModelsError,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof categoryOperationsUpdateCategory>>,
-    TError,
-    { id: ModelsCategoryId; data: CategoryOperationsUpdateCategoryBody },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof categoryOperationsUpdateCategory>>,
-  TError,
-  { id: ModelsCategoryId; data: CategoryOperationsUpdateCategoryBody },
-  TContext
-> => {
-  const mutationKey = ['categoryOperationsUpdateCategory']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof categoryOperationsUpdateCategory>>,
-    { id: ModelsCategoryId; data: CategoryOperationsUpdateCategoryBody }
-  > = (props) => {
-    const { id, data } = props ?? {}
-
-    return categoryOperationsUpdateCategory(id, data, requestOptions)
+export const categoryOperationsUpdateCategory = async (id: ModelsCategoryId,
+    categoryOperationsUpdateCategoryBody: CategoryOperationsUpdateCategoryBody, options?: RequestInit): Promise<categoryOperationsUpdateCategoryResponse> => {
+  
+  return customInstance<categoryOperationsUpdateCategoryResponse>(getCategoryOperationsUpdateCategoryUrl(id),
+  {      
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      categoryOperationsUpdateCategoryBody,)
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type CategoryOperationsUpdateCategoryMutationResult = NonNullable<
-  Awaited<ReturnType<typeof categoryOperationsUpdateCategory>>
->
-export type CategoryOperationsUpdateCategoryMutationBody =
-  CategoryOperationsUpdateCategoryBody
-export type CategoryOperationsUpdateCategoryMutationError = ModelsError
 
-/**
+
+export const getCategoryOperationsUpdateCategoryMutationOptions = <TError = ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof categoryOperationsUpdateCategory>>, TError,{id: ModelsCategoryId;data: CategoryOperationsUpdateCategoryBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof categoryOperationsUpdateCategory>>, TError,{id: ModelsCategoryId;data: CategoryOperationsUpdateCategoryBody}, TContext> => {
+
+const mutationKey = ['categoryOperationsUpdateCategory'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof categoryOperationsUpdateCategory>>, {id: ModelsCategoryId;data: CategoryOperationsUpdateCategoryBody}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  categoryOperationsUpdateCategory(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CategoryOperationsUpdateCategoryMutationResult = NonNullable<Awaited<ReturnType<typeof categoryOperationsUpdateCategory>>>
+    export type CategoryOperationsUpdateCategoryMutationBody = CategoryOperationsUpdateCategoryBody
+    export type CategoryOperationsUpdateCategoryMutationError = ModelsError
+
+    /**
  * @summary Update service category
  */
-export const useCategoryOperationsUpdateCategory = <
-  TError = ModelsError,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof categoryOperationsUpdateCategory>>,
-      TError,
-      { id: ModelsCategoryId; data: CategoryOperationsUpdateCategoryBody },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof categoryOperationsUpdateCategory>>,
-  TError,
-  { id: ModelsCategoryId; data: CategoryOperationsUpdateCategoryBody },
-  TContext
-> => {
-  const mutationOptions =
-    getCategoryOperationsUpdateCategoryMutationOptions(options)
+export const useCategoryOperationsUpdateCategory = <TError = ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof categoryOperationsUpdateCategory>>, TError,{id: ModelsCategoryId;data: CategoryOperationsUpdateCategoryBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof categoryOperationsUpdateCategory>>,
+        TError,
+        {id: ModelsCategoryId;data: CategoryOperationsUpdateCategoryBody},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
-/**
+      const mutationOptions = getCategoryOperationsUpdateCategoryMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
  * 利用されなくなったカテゴリを削除し、メニュー構成を整理します。
  * @summary Delete service category
  */
@@ -1412,107 +963,78 @@ export type categoryOperationsDeleteCategoryResponse409 = {
   data: ModelsError
   status: 409
 }
+    
+export type categoryOperationsDeleteCategoryResponseComposite = categoryOperationsDeleteCategoryResponse204 | categoryOperationsDeleteCategoryResponse404 | categoryOperationsDeleteCategoryResponse409;
+    
+export type categoryOperationsDeleteCategoryResponse = categoryOperationsDeleteCategoryResponseComposite & {
+  headers: Headers;
+}
 
-export type categoryOperationsDeleteCategoryResponseComposite =
-  | categoryOperationsDeleteCategoryResponse204
-  | categoryOperationsDeleteCategoryResponse404
-  | categoryOperationsDeleteCategoryResponse409
+export const getCategoryOperationsDeleteCategoryUrl = (id: ModelsCategoryId,) => {
 
-export type categoryOperationsDeleteCategoryResponse =
-  categoryOperationsDeleteCategoryResponseComposite & {
-    headers: Headers
-  }
 
-export const getCategoryOperationsDeleteCategoryUrl = (
-  id: ModelsCategoryId
-) => {
+  
+
   return `/api/v1/service-categories/${id}`
 }
 
-export const categoryOperationsDeleteCategory = async (
-  id: ModelsCategoryId,
-  options?: RequestInit
-): Promise<categoryOperationsDeleteCategoryResponse> => {
-  return customInstance<categoryOperationsDeleteCategoryResponse>(
-    getCategoryOperationsDeleteCategoryUrl(id),
-    {
-      ...options,
-      method: 'DELETE',
-    }
-  )
-}
-
-export const getCategoryOperationsDeleteCategoryMutationOptions = <
-  TError = ModelsError | ModelsError,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof categoryOperationsDeleteCategory>>,
-    TError,
-    { id: ModelsCategoryId },
-    TContext
-  >
-  request?: SecondParameter<typeof customInstance>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof categoryOperationsDeleteCategory>>,
-  TError,
-  { id: ModelsCategoryId },
-  TContext
-> => {
-  const mutationKey = ['categoryOperationsDeleteCategory']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof categoryOperationsDeleteCategory>>,
-    { id: ModelsCategoryId }
-  > = (props) => {
-    const { id } = props ?? {}
-
-    return categoryOperationsDeleteCategory(id, requestOptions)
+export const categoryOperationsDeleteCategory = async (id: ModelsCategoryId, options?: RequestInit): Promise<categoryOperationsDeleteCategoryResponse> => {
+  
+  return customInstance<categoryOperationsDeleteCategoryResponse>(getCategoryOperationsDeleteCategoryUrl(id),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
   }
+);}
 
-  return { mutationFn, ...mutationOptions }
-}
 
-export type CategoryOperationsDeleteCategoryMutationResult = NonNullable<
-  Awaited<ReturnType<typeof categoryOperationsDeleteCategory>>
->
 
-export type CategoryOperationsDeleteCategoryMutationError =
-  | ModelsError
-  | ModelsError
 
-/**
+export const getCategoryOperationsDeleteCategoryMutationOptions = <TError = ModelsError | ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof categoryOperationsDeleteCategory>>, TError,{id: ModelsCategoryId}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof categoryOperationsDeleteCategory>>, TError,{id: ModelsCategoryId}, TContext> => {
+
+const mutationKey = ['categoryOperationsDeleteCategory'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof categoryOperationsDeleteCategory>>, {id: ModelsCategoryId}> = (props) => {
+          const {id} = props ?? {};
+
+          return  categoryOperationsDeleteCategory(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CategoryOperationsDeleteCategoryMutationResult = NonNullable<Awaited<ReturnType<typeof categoryOperationsDeleteCategory>>>
+    
+    export type CategoryOperationsDeleteCategoryMutationError = ModelsError | ModelsError
+
+    /**
  * @summary Delete service category
  */
-export const useCategoryOperationsDeleteCategory = <
-  TError = ModelsError | ModelsError,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof categoryOperationsDeleteCategory>>,
-      TError,
-      { id: ModelsCategoryId },
-      TContext
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof categoryOperationsDeleteCategory>>,
-  TError,
-  { id: ModelsCategoryId },
-  TContext
-> => {
-  const mutationOptions =
-    getCategoryOperationsDeleteCategoryMutationOptions(options)
+export const useCategoryOperationsDeleteCategory = <TError = ModelsError | ModelsError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof categoryOperationsDeleteCategory>>, TError,{id: ModelsCategoryId}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof categoryOperationsDeleteCategory>>,
+        TError,
+        {id: ModelsCategoryId},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient)
-}
+      const mutationOptions = getCategoryOperationsDeleteCategoryMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    
