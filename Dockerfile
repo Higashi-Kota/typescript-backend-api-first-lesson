@@ -1,5 +1,5 @@
 # Build stage
-FROM node:24.4.0-alpine AS builder
+FROM node:24.8.0-alpine AS builder
 
 # Install pnpm globally with specific version
 RUN corepack enable && corepack prepare pnpm@10.13.1 --activate
@@ -27,7 +27,7 @@ COPY . .
 RUN pnpm --filter "./backend/**" run build
 
 # Development stage
-FROM node:24.4.0-alpine AS development
+FROM node:24.8.0-alpine AS development
 
 # Install pnpm globally and development tools
 RUN apk add --no-cache bash wget && \
@@ -61,7 +61,7 @@ EXPOSE 3000
 CMD ["pnpm", "--filter", "@beauty-salon-backend/server", "dev"]
 
 # Production stage
-FROM node:24.4.0-alpine AS production
+FROM node:24.8.0-alpine AS production
 
 # Install pnpm globally and runtime dependencies
 RUN apk add --no-cache bash wget && \
