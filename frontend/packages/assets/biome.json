@@ -1,0 +1,3 @@
+{
+  "extends": ["@beauty-salon-shared/config/biome"]
+}

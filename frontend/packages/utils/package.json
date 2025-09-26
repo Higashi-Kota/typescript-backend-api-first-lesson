@@ -1,0 +1,67 @@
+{
+  "dependencies": {
+    "@date-fns/tz": "^1.4.1",
+    "date-fns": "^4.1.0",
+    "mrmime": "^2.0.1",
+    "nanoid": "^5.1.6",
+    "neverthrow": "^8.2.0",
+    "query-string": "^9.3.1",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "ts-pattern": "^5.8.0",
+    "zod": "^4.1.11"
+  },
+  "devDependencies": {
+    "@beauty-salon-shared/config": "workspace:*",
+    "@biomejs/biome": "^2.2.4",
+    "@rslib/core": "^0.14.0",
+    "@types/node": "^24.5.2",
+    "@types/react": "^19.1.13",
+    "@types/react-dom": "^19.1.9",
+    "@vitest/coverage-v8": "^3.2.4",
+    "@vitest/ui": "^3.2.4",
+    "jsdom": "^27.0.0",
+    "type-fest": "^5.0.1",
+    "typescript": "^5.9.2",
+    "utility-types": "^3.11.0",
+    "vitest": "^3.2.4"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "name": "@beauty-salon-frontend/utils",
+  "peerDependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "sideEffects": false,
+  "private": true,
+  "scripts": {
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "clean": "rm -rf dist *.tsbuildinfo",
+    "build": "NODE_ENV=production rslib build",
+    "build:dev": "NODE_ENV=development rslib build",
+    "build:test": "NODE_ENV=test rslib build",
+    "build:stg": "NODE_ENV=staging rslib build",
+    "build:prod": "NODE_ENV=production rslib build",
+    "build:watch": "NODE_ENV=development rslib build --watch",
+    "typecheck": "tsc --build",
+    "format": "biome format --write .",
+    "format:fix": "biome check . --fix --unsafe",
+    "dev": "NODE_ENV=development rslib build --watch",
+    "dev:tsc": "tsc --build --watch"
+  },
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "version": "0.0.0"
+}

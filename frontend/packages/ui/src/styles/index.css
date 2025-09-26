@@ -1,0 +1,10 @@
+/* Import base styles from theme package - must come before tailwindcss */
+@import "@beauty-salon-frontend/theme/styles/base";
+
+/* Tailwind CSS v4 setup */
+@import "tailwindcss";
+
+/* Additional source directives for UI package - scan for utility classes in local files */
+@source "../**/*.{js,ts,jsx,tsx}";
+@source "../../.storybook/**/*.{js,ts,jsx,tsx}";
+@source "../components/**/*.{stories,story}.{js,ts,jsx,tsx}";

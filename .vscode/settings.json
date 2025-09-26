@@ -1,0 +1,95 @@
+{
+  "biome.enabled": true,
+  "biome.lsp.bin": "${workspaceFolder}/node_modules/.bin/biome",
+  "editor.formatOnSave": true,
+  "editor.insertSpaces": true,
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false,
+  "editor.defaultFormatter": "biomejs.biome",
+  "[javascript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "editor.codeActionsOnSave": {
+    "source.addMissingImports": "always",
+    "source.removeUnusedImports": "always",
+    "source.fixAll.biome": "explicit",
+    "source.organizeImports.biome": "explicit"
+  },
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+
+  // TypeScript Server のメモリ制限を増やす
+  "typescript.tsserver.maxTsServerMemory": 12288,
+
+  // TypeScript Server のログを有効化（デバッグ用）
+  "typescript.tsserver.log": "verbose",
+
+  // TypeScript の自動ビルドを無効化
+  "typescript.tsc.autoDetect": "off",
+
+  // 特定のファイル/フォルダを TypeScript の監視から除外
+  "typescript.tsserver.watchOptions": {
+    "excludeDirectories": ["**/node_modules", "**/dist", "**/.git"],
+    "excludeFiles": ["**/*.js", "**/*.d.ts"]
+  },
+
+  // ファイルの監視を制限
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/**": true,
+    "**/dist/**": true,
+    "**/*.tsbuildinfo": true
+  },
+
+  // 検索から除外
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/*.tsbuildinfo": true
+  },
+
+  // TypeScript バージョンを明示的に指定
+  "typescript.tsdk": "node_modules/.pnpm/typescript@5.9.2/node_modules/typescript/lib",
+
+  // インクリメンタルビルドを有効化
+  "typescript.preferences.includePackageJsonAutoImports": "off",
+
+  // プロジェクトリファレンスの自動検出を無効化（パフォーマンス改善）
+  "typescript.disableAutomaticTypeAcquisition": true,
+
+  // Tailwind CSS IntelliSense 設定
+  "tailwindCSS.includeLanguages": {
+    "typescript": "javascript",
+    "typescriptreact": "javascript"
+  },
+  "tailwindCSS.experimental.classRegex": [
+    ["cn\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+  ],
+  // Tailwind CSS v4用の設定 - monorepo対応
+  // 各ワークスペースのCSSファイルをマッピング
+  // 1. ワークスペース別の設定: 各パッケージが独自のCSS設定でIntelliSenseを取得
+  // 2. パフォーマンス向上: VSCodeが関連する設定のみロード
+  // 3. 柔軟なマッピング: グロブパターンで細かい制御が可能
+  // @see https://github.com/tailwindlabs/tailwindcss/issues/13136#issuecomment-2672907839
+  "tailwindCSS.experimental.configFile": {
+    "./frontend/apps/portal-app/src/index.css": "frontend/apps/portal-app/**",
+    "./frontend/apps/admin-app/src/index.css": "frontend/apps/admin-app/**",
+    "./frontend/apps/dashboard-app/src/index.css": "frontend/apps/dashboard-app/**",
+    "./frontend/packages/ui/src/styles/index.css": "frontend/packages/ui/**",
+    "./frontend/packages/theme/src/styles/base.css": "frontend/packages/theme/**"
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "name": "@beauty-salon-backend/infrastructure",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./src/test/db-test-helper": {
+      "import": "./dist/test/db-test-helper.js",
+      "types": "./dist/test/db-test-helper.d.ts"
+    },
+    "./test/db-test-helper": {
+      "import": "./dist/test/db-test-helper.js",
+      "types": "./dist/test/db-test-helper.d.ts"
+    }
+  },
+  "scripts": {
+    "clean": "rm -rf dist *.tsbuildinfo",
+    "build:dev": "NODE_ENV=development rslib build && tsc --emitDeclarationOnly",
+    "build:test": "NODE_ENV=test rslib build && tsc --emitDeclarationOnly",
+    "build:stg": "NODE_ENV=staging rslib build && tsc --emitDeclarationOnly",
+    "build:prod": "NODE_ENV=production rslib build && tsc --emitDeclarationOnly",
+    "build": "NODE_ENV=production rslib build && tsc --emitDeclarationOnly",
+    "build:watch": "NODE_ENV=development rslib build --watch",
+    "dev": "NODE_ENV=development rslib build --watch",
+    "dev:tsc": "tsc --build --watch",
+    "typecheck": "tsc --noEmit",
+    "format": "biome format --write .",
+    "format:fix": "biome check . --fix --unsafe",
+    "lint": "biome lint .",
+    "lint:fix": "biome lint . --write"
+  },
+  "dependencies": {
+    "@beauty-salon-backend/config": "workspace:*",
+    "@beauty-salon-backend/database": "workspace:*",
+    "@beauty-salon-backend/domain": "workspace:*",
+    "@beauty-salon-backend/generated": "workspace:*",
+    "@beauty-salon-backend/utility": "workspace:*",
+    "drizzle-orm": "^0.44.5",
+    "postgres": "^3.4.7"
+  },
+  "devDependencies": {
+    "@beauty-salon-backend/database": "workspace:*",
+    "@beauty-salon-shared/config": "workspace:*",
+    "@biomejs/biome": "^2.2.4",
+    "@rslib/core": "^0.14.0",
+    "@types/node": "^24.5.2",
+    "typescript": "^5.9.2"
+  }
+}

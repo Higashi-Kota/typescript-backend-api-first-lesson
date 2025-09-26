@@ -1,0 +1,50 @@
+{
+  "name": "@beauty-salon-backend/generated",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "clean": "rm -rf dist *.tsbuildinfo",
+    "build:dev": "NODE_ENV=development rslib build",
+    "build:test": "NODE_ENV=test rslib build",
+    "build:stg": "NODE_ENV=staging rslib build",
+    "build:prod": "NODE_ENV=production rslib build",
+    "build": "NODE_ENV=production rslib build",
+    "build:watch": "NODE_ENV=development rslib build --watch",
+    "dev": "NODE_ENV=development rslib build --watch",
+    "generate": "tsx scripts/generate-types.ts",
+    "typecheck": "tsc --noEmit",
+    "format": "biome format --write .",
+    "format:fix": "biome check . --fix --unsafe",
+    "lint": "biome lint .",
+    "lint:fix": "biome lint . --write"
+  },
+  "dependencies": {
+    "@beauty-salon-backend/database": "workspace:*",
+    "@beauty-salon-backend/utility": "workspace:*",
+    "zod": "^4.1.11"
+  },
+  "devDependencies": {
+    "@beauty-salon-shared/config": "workspace:*",
+    "@biomejs/biome": "^2.2.4",
+    "@rslib/core": "^0.14.0",
+    "@types/node": "^24.5.2",
+    "openapi-typescript": "^7.9.1",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2",
+    "yaml": "^2.8.1"
+  }
+}

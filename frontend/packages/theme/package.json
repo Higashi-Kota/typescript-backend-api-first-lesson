@@ -1,0 +1,42 @@
+{
+  "name": "@beauty-salon-frontend/theme",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./styles/base": "./src/styles/base.css",
+    "./presets/tailwind": {
+      "types": "./dist/presets/tailwind.d.ts",
+      "import": "./dist/presets/tailwind.js"
+    }
+  },
+  "scripts": {
+    "dev": "rslib build --watch",
+    "build": "rslib build",
+    "build:dev": "NODE_ENV=development rslib build",
+    "build:test": "NODE_ENV=test rslib build",
+    "build:stg": "NODE_ENV=staging rslib build",
+    "build:prod": "NODE_ENV=production rslib build",
+    "clean": "rm -rf dist *.tsbuildinfo",
+    "typecheck": "tsc --noEmit",
+    "format": "biome format --write .",
+    "format:fix": "biome check . --fix --unsafe"
+  },
+  "dependencies": {
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "devDependencies": {
+    "@beauty-salon-shared/config": "workspace:*",
+    "@biomejs/biome": "^2.2.4",
+    "@rslib/core": "^0.14.0",
+    "@types/node": "^22.18.6",
+    "tailwindcss": "^4.1.13",
+    "typescript": "^5.9.2"
+  }
+}

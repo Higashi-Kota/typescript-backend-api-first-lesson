@@ -1,0 +1,49 @@
+{
+  "name": "@beauty-salon-backend/utility",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "clean": "rm -rf dist *.tsbuildinfo",
+    "build:dev": "NODE_ENV=development rslib build && tsc --emitDeclarationOnly",
+    "build:test": "NODE_ENV=test rslib build && tsc --emitDeclarationOnly",
+    "build:stg": "NODE_ENV=staging rslib build && tsc --emitDeclarationOnly",
+    "build:prod": "NODE_ENV=production rslib build && tsc --emitDeclarationOnly",
+    "build": "NODE_ENV=production rslib build && tsc --emitDeclarationOnly",
+    "build:watch": "NODE_ENV=development rslib build --watch",
+    "dev": "NODE_ENV=development rslib build --watch",
+    "dev:tsc": "tsc --build --watch",
+    "typecheck": "tsc --noEmit",
+    "format": "biome format --write .",
+    "format:fix": "biome check . --fix --unsafe",
+    "lint": "biome lint .",
+    "lint:fix": "biome lint . --write",
+    "test": "vitest",
+    "test:ui": "vitest --ui"
+  },
+  "dependencies": {
+    "ts-pattern": "^5.8.0",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "@beauty-salon-shared/config": "workspace:*",
+    "@biomejs/biome": "^2.2.4",
+    "@rslib/core": "^0.14.0",
+    "@types/node": "^24.5.2",
+    "@types/uuid": "^10.0.0",
+    "type-fest": "^5.0.1",
+    "typescript": "^5.9.2",
+    "utility-types": "^3.11.0",
+    "vitest": "^3.2.4"
+  }
+}

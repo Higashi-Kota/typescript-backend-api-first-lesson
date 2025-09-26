@@ -1,0 +1,20 @@
+{
+  "name": "@beauty-salon-shared/config",
+  "version": "1.0.0",
+  "description": "Shared configuration for Beauty Salon Reservation App",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./base.json": "./tsconfig/base.json",
+    "./backend.json": "./tsconfig/backend.json",
+    "./frontend.json": "./tsconfig/frontend.json",
+    "./nextjs.json": "./tsconfig/nextjs.json",
+    "./tsconfig.lib.json": "./tsconfig/tsconfig.lib.json",
+    "./tsconfig.app.json": "./tsconfig/tsconfig.app.json",
+    "./biome": "./biome.json",
+    "./postcss": "./postcss.config.js"
+  },
+  "dependencies": {
+    "postcss": "^8.5.6"
+  }
+}

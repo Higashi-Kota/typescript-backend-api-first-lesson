@@ -1,0 +1,6 @@
+/* Import theme base styles (CSS variables, etc.) - must come first */
+@import "@beauty-salon-frontend/theme/styles/base";
+
+/* Tailwind CSS v4 setup */
+@import "tailwindcss";
+@config '../tailwind.config.js';
