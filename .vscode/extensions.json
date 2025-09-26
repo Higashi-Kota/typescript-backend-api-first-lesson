@@ -1,0 +1,37 @@
+{
+  "recommendations": [
+    // Essential extensions for development
+    "biomejs.biome",                        // Biome formatter and linter
+    "bradlc.vscode-tailwindcss",            // Tailwind CSS IntelliSense for autocomplete and hover
+    "dbaeumer.vscode-eslint",               // ESLint integration (for projects that use it)
+
+    // TypeScript and JavaScript development
+    "ms-vscode.vscode-typescript-next",     // Latest TypeScript features
+
+    // Git and version control
+    "eamodio.gitlens",                      // Enhanced Git features
+    "mhutchie.git-graph",                    // Git graph visualization
+
+    // Development utilities
+    "usernamehw.errorlens",                 // Inline error display
+    "mikestead.dotenv",                      // .env file support
+    "christian-kohler.path-intellisense",   // Path autocomplete
+    "formulahendry.auto-rename-tag",        // Auto rename paired HTML/JSX tags
+    "naumovs.color-highlight",              // CSS color preview
+    "streetsidesoftware.code-spell-checker", // Spell checker
+
+    // Monorepo support
+    "orta.vscode-jest",                     // Jest test runner
+    "vitest.explorer",                      // Vitest test explorer
+
+    // Documentation
+    "yzhang.markdown-all-in-one",           // Markdown support
+
+    // Formatting
+    "esbenp.prettier-vscode"                // Prettier formatter (as fallback)
+  ],
+  "unwantedRecommendations": [
+    "ms-vscode.vscode-typescript-tslint-plugin", // Deprecated, use ESLint instead
+    "eg2.tslint"                                 // Deprecated, use ESLint instead
+  ]
+}

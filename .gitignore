@@ -1,6 +1,7 @@
 tsconfig.tsbuildinfo
 tsconfig.tsbuildinfo*
 vite.config.ts.timestamp*
+storybook-static
 
 # Dependencies
 node_modules/

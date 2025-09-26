@@ -5,6 +5,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite --force --port 3002",
+    "build:localhost": "vite build --mode localhost",
     "build:dev": "vite build --mode dev",
     "build:test": "vite build --mode test",
     "build:stg": "vite build --mode staging",
@@ -19,6 +20,7 @@
   },
   "dependencies": {
     "@beauty-salon-frontend/api-client": "workspace:*",
+    "@beauty-salon-frontend/theme": "workspace:*",
     "@beauty-salon-frontend/types": "workspace:*",
     "@beauty-salon-frontend/ui": "workspace:*",
     "@tanstack/react-query": "^5.90.2",
@@ -39,6 +41,8 @@
     "msw": "^2.11.3",
     "rollup-plugin-visualizer": "^6.0.3",
     "sass-embedded": "^1.93.2",
+    "tailwindcss": "^4.1.13",
+    "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.9.2",
     "vite": "^7.1.7",
     "vitest": "^3.2.4"

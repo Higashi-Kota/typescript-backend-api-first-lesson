@@ -12,11 +12,9 @@
     "./tsconfig.lib.json": "./tsconfig/tsconfig.lib.json",
     "./tsconfig.app.json": "./tsconfig/tsconfig.app.json",
     "./biome": "./biome.json",
-    "./tailwind.css": "./tailwind.css",
-    "./postcss": "./postcss.config.base.cjs"
+    "./postcss": "./postcss.config.js"
   },
   "dependencies": {
-    "autoprefixer": "^10.4.21",
-    "tailwindcss": "^3.4.17"
+    "postcss": "^8.5.6"
   }
 }

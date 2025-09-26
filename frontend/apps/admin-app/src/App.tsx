@@ -1,4 +1,12 @@
-import { Button, Card } from '@beauty-salon-frontend/ui'
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  EnvironmentBanner,
+} from '@beauty-salon-frontend/ui'
 import { Link, Route, Routes } from 'react-router-dom'
 import {
   Bar,
@@ -25,61 +33,95 @@ const mockData = [
 
 function Dashboard() {
   return (
-    <div className='dashboard'>
-      <h1>Dashboard</h1>
-      <div className='dashboard-stats'>
-        <Card className='stat-card'>
-          <h3>Total Appointments</h3>
-          <p className='stat-value'>165</p>
-          <p className='stat-change positive'>+12% from last week</p>
+    <div>
+      <h1 className='mb-8 text-2xl font-bold text-gray-900 dark:text-gray-100'>
+        Dashboard
+      </h1>
+      <div className='grid grid-cols-1 gap-6 mb-8 md:grid-cols-2 lg:grid-cols-4'>
+        <Card>
+          <CardHeader className='pb-2'>
+            <CardDescription>Total Appointments</CardDescription>
+            <CardTitle className='text-3xl'>165</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className='text-sm text-green-600 dark:text-green-400'>
+              +12% from last week
+            </p>
+          </CardContent>
         </Card>
-        <Card className='stat-card'>
-          <h3>Total Revenue</h3>
-          <p className='stat-value'>$21,700</p>
-          <p className='stat-change positive'>+8% from last week</p>
+        <Card>
+          <CardHeader className='pb-2'>
+            <CardDescription>Total Revenue</CardDescription>
+            <CardTitle className='text-3xl'>$21,700</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className='text-sm text-green-600 dark:text-green-400'>
+              +8% from last week
+            </p>
+          </CardContent>
         </Card>
-        <Card className='stat-card'>
-          <h3>Active Customers</h3>
-          <p className='stat-value'>342</p>
-          <p className='stat-change positive'>+5% from last week</p>
+        <Card>
+          <CardHeader className='pb-2'>
+            <CardDescription>Active Customers</CardDescription>
+            <CardTitle className='text-3xl'>342</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className='text-sm text-green-600 dark:text-green-400'>
+              +5% from last week
+            </p>
+          </CardContent>
         </Card>
-        <Card className='stat-card'>
-          <h3>Staff Utilization</h3>
-          <p className='stat-value'>87%</p>
-          <p className='stat-change negative'>-2% from last week</p>
+        <Card>
+          <CardHeader className='pb-2'>
+            <CardDescription>Staff Utilization</CardDescription>
+            <CardTitle className='text-3xl'>87%</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className='text-sm text-red-600 dark:text-red-400'>
+              -2% from last week
+            </p>
+          </CardContent>
         </Card>
       </div>
 
-      <div className='charts'>
-        <Card className='chart-card'>
-          <h3>Weekly Appointments</h3>
-          <ResponsiveContainer width='100%' height={300}>
-            <LineChart data={mockData}>
-              <CartesianGrid strokeDasharray='3 3' />
-              <XAxis dataKey='name' />
-              <YAxis />
-              <Tooltip />
-              <Line
-                type='monotone'
-                dataKey='appointments'
-                stroke='#e91e63'
-                strokeWidth={2}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+      <div className='grid grid-cols-1 gap-6 lg:grid-cols-2'>
+        <Card>
+          <CardHeader>
+            <CardTitle>Weekly Appointments</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width='100%' height={300}>
+              <LineChart data={mockData}>
+                <CartesianGrid strokeDasharray='3 3' />
+                <XAxis dataKey='name' />
+                <YAxis />
+                <Tooltip />
+                <Line
+                  type='monotone'
+                  dataKey='appointments'
+                  stroke='#e91e63'
+                  strokeWidth={2}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
         </Card>
 
-        <Card className='chart-card'>
-          <h3>Revenue by Day</h3>
-          <ResponsiveContainer width='100%' height={300}>
-            <BarChart data={mockData}>
-              <CartesianGrid strokeDasharray='3 3' />
-              <XAxis dataKey='name' />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey='revenue' fill='#9c27b0' />
-            </BarChart>
-          </ResponsiveContainer>
+        <Card>
+          <CardHeader>
+            <CardTitle>Revenue by Day</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width='100%' height={300}>
+              <BarChart data={mockData}>
+                <CartesianGrid strokeDasharray='3 3' />
+                <XAxis dataKey='name' />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey='revenue' fill='#9c27b0' />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
         </Card>
       </div>
     </div>
@@ -88,24 +130,46 @@ function Dashboard() {
 
 function Staff() {
   return (
-    <div className='staff'>
-      <h1>Staff Management</h1>
-      <Button variant='primary'>Add New Staff</Button>
-      <div className='staff-list'>
+    <div>
+      <h1 className='mb-6 text-2xl font-bold text-gray-900 dark:text-gray-100'>
+        Staff Management
+      </h1>
+      <Button variant='default' className='mb-6'>
+        Add New Staff
+      </Button>
+      <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
         <Card>
-          <h3>Sarah Johnson</h3>
-          <p>Senior Stylist</p>
-          <p>Schedule: Mon-Fri, 9:00 AM - 5:00 PM</p>
+          <CardHeader>
+            <CardTitle>Sarah Johnson</CardTitle>
+            <CardDescription>Senior Stylist</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className='text-sm text-gray-600 dark:text-gray-400'>
+              Schedule: Mon-Fri, 9:00 AM - 5:00 PM
+            </p>
+          </CardContent>
         </Card>
         <Card>
-          <h3>Mike Chen</h3>
-          <p>Nail Technician</p>
-          <p>Schedule: Tue-Sat, 10:00 AM - 6:00 PM</p>
+          <CardHeader>
+            <CardTitle>Mike Chen</CardTitle>
+            <CardDescription>Nail Technician</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className='text-sm text-gray-600 dark:text-gray-400'>
+              Schedule: Tue-Sat, 10:00 AM - 6:00 PM
+            </p>
+          </CardContent>
         </Card>
         <Card>
-          <h3>Emma Williams</h3>
-          <p>Massage Therapist</p>
-          <p>Schedule: Wed-Sun, 11:00 AM - 7:00 PM</p>
+          <CardHeader>
+            <CardTitle>Emma Williams</CardTitle>
+            <CardDescription>Massage Therapist</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className='text-sm text-gray-600 dark:text-gray-400'>
+              Schedule: Wed-Sun, 11:00 AM - 7:00 PM
+            </p>
+          </CardContent>
         </Card>
       </div>
     </div>
@@ -114,24 +178,52 @@ function Staff() {
 
 function Services() {
   return (
-    <div className='services'>
-      <h1>Service Management</h1>
-      <Button variant='primary'>Add New Service</Button>
-      <div className='service-list'>
+    <div>
+      <h1 className='mb-6 text-2xl font-bold text-gray-900 dark:text-gray-100'>
+        Service Management
+      </h1>
+      <Button variant='outline' className='mb-6'>
+        Add New Service
+      </Button>
+      <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
         <Card>
-          <h3>Hair Cut & Style</h3>
-          <p>Duration: 60 min</p>
-          <p>Price: $80</p>
+          <CardHeader>
+            <CardTitle>Hair Cut & Style</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className='text-sm text-gray-600 dark:text-gray-400'>
+              Duration: 60 min
+            </p>
+            <p className='text-sm text-gray-600 dark:text-gray-400'>
+              Price: $80
+            </p>
+          </CardContent>
         </Card>
         <Card>
-          <h3>Manicure</h3>
-          <p>Duration: 45 min</p>
-          <p>Price: $45</p>
+          <CardHeader>
+            <CardTitle>Manicure</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className='text-sm text-gray-600 dark:text-gray-400'>
+              Duration: 45 min
+            </p>
+            <p className='text-sm text-gray-600 dark:text-gray-400'>
+              Price: $45
+            </p>
+          </CardContent>
         </Card>
         <Card>
-          <h3>Swedish Massage</h3>
-          <p>Duration: 90 min</p>
-          <p>Price: $120</p>
+          <CardHeader>
+            <CardTitle>Swedish Massage</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className='text-sm text-gray-600 dark:text-gray-400'>
+              Duration: 90 min
+            </p>
+            <p className='text-sm text-gray-600 dark:text-gray-400'>
+              Price: $120
+            </p>
+          </CardContent>
         </Card>
       </div>
     </div>
@@ -140,25 +232,43 @@ function Services() {
 
 function Appointments() {
   return (
-    <div className='appointments'>
-      <h1>Appointment Management</h1>
-      <div className='appointment-filters'>
+    <div>
+      <h1 className='mb-6 text-2xl font-bold text-gray-900 dark:text-gray-100'>
+        Appointment Management
+      </h1>
+      <div className='flex gap-4 mb-6'>
         <Button variant='secondary'>Today</Button>
         <Button variant='secondary'>This Week</Button>
         <Button variant='secondary'>This Month</Button>
       </div>
-      <div className='appointment-list'>
+      <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
         <Card>
-          <h3>Jane Doe - Hair Cut & Style</h3>
-          <p>Today, 2:00 PM - 3:00 PM</p>
-          <p>Stylist: Sarah Johnson</p>
-          <p>Status: Confirmed</p>
+          <CardHeader>
+            <CardTitle>Jane Doe - Hair Cut & Style</CardTitle>
+            <CardDescription>Today, 2:00 PM - 3:00 PM</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className='text-sm text-gray-600 dark:text-gray-400'>
+              Stylist: Sarah Johnson
+            </p>
+            <p className='text-sm font-medium text-green-600 dark:text-green-400'>
+              Status: Confirmed
+            </p>
+          </CardContent>
         </Card>
         <Card>
-          <h3>John Smith - Swedish Massage</h3>
-          <p>Today, 3:30 PM - 5:00 PM</p>
-          <p>Therapist: Emma Williams</p>
-          <p>Status: Pending</p>
+          <CardHeader>
+            <CardTitle>John Smith - Swedish Massage</CardTitle>
+            <CardDescription>Today, 3:30 PM - 5:00 PM</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className='text-sm text-gray-600 dark:text-gray-400'>
+              Therapist: Emma Williams
+            </p>
+            <p className='text-sm font-medium text-yellow-600 dark:text-yellow-400'>
+              Status: Pending
+            </p>
+          </CardContent>
         </Card>
       </div>
     </div>
@@ -167,40 +277,59 @@ function Appointments() {
 
 function App() {
   return (
-    <div className='app'>
-      <aside className='app-sidebar'>
-        <div className='logo'>
-          <h2>Admin Panel</h2>
+    <div className='flex h-screen bg-gray-50 dark:bg-gray-900'>
+      <EnvironmentBanner environment={import.meta.env.VITE_MODE} />
+      <aside className='w-64 bg-gray-900 dark:bg-gray-950'>
+        <div className='p-6 border-b border-gray-800'>
+          <h2 className='text-2xl font-semibold text-white'>Admin Panel</h2>
         </div>
-        <nav>
-          <Link to='/' className='nav-link'>
+        <nav className='flex-1 p-4'>
+          <Link
+            to='/'
+            className='flex items-center px-4 py-3 mb-2 text-gray-300 transition-colors rounded-lg hover:bg-gray-800 hover:text-white'
+          >
             <span>Dashboard</span>
           </Link>
-          <Link to='/appointments' className='nav-link'>
+          <Link
+            to='/appointments'
+            className='flex items-center px-4 py-3 mb-2 text-gray-300 transition-colors rounded-lg hover:bg-gray-800 hover:text-white'
+          >
             <span>Appointments</span>
           </Link>
-          <Link to='/staff' className='nav-link'>
+          <Link
+            to='/staff'
+            className='flex items-center px-4 py-3 mb-2 text-gray-300 transition-colors rounded-lg hover:bg-gray-800 hover:text-white'
+          >
             <span>Staff</span>
           </Link>
-          <Link to='/services' className='nav-link'>
+          <Link
+            to='/services'
+            className='flex items-center px-4 py-3 mb-2 text-gray-300 transition-colors rounded-lg hover:bg-gray-800 hover:text-white'
+          >
             <span>Services</span>
           </Link>
         </nav>
-        <div className='sidebar-footer'>
-          <p>Environment: {import.meta.env.VITE_MODE}</p>
+        <div className='p-6 border-t border-gray-800'>
+          <p className='text-sm text-gray-500'>
+            Environment: {import.meta.env.VITE_MODE}
+          </p>
         </div>
       </aside>
 
-      <div className='app-content'>
-        <header className='app-header'>
-          <h1>{import.meta.env.VITE_APP_TITLE}</h1>
-          <div className='header-actions'>
-            <Button variant='secondary'>Profile</Button>
-            <Button variant='secondary'>Logout</Button>
+      <div className='flex flex-col flex-1'>
+        <header className='bg-white border-b border-gray-200 shadow-sm dark:bg-gray-800 dark:border-gray-700'>
+          <div className='flex items-center justify-between px-8 py-4'>
+            <h1 className='text-xl font-semibold text-gray-900 dark:text-gray-100'>
+              {import.meta.env.VITE_APP_TITLE}
+            </h1>
+            <div className='flex items-center gap-4'>
+              <Button variant='secondary'>Profile</Button>
+              <Button variant='secondary'>Logout</Button>
+            </div>
           </div>
         </header>
 
-        <main className='app-main'>
+        <main className='flex-1 p-8 overflow-auto'>
           <Routes>
             <Route path='/' element={<Dashboard />} />
             <Route path='/appointments' element={<Appointments />} />

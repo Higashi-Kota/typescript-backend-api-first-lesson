@@ -1,4 +1,11 @@
-import { Button, Card } from '@beauty-salon-frontend/ui'
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  EnvironmentBanner,
+} from '@beauty-salon-frontend/ui'
 import { endOfWeek, format, startOfWeek } from 'date-fns'
 import { NavLink, Route, Routes } from 'react-router-dom'
 import {
@@ -58,90 +65,125 @@ function Overview() {
   }
 
   return (
-    <div className='overview'>
-      <div className='page-header'>
-        <h1>Business Overview</h1>
-        <p className='date-range'>
+    <div className='space-y-6'>
+      <div className='mb-8'>
+        <h1 className='text-3xl font-bold text-gray-900'>Business Overview</h1>
+        <p className='text-sm text-gray-500 mt-1'>
           Week of {currentWeek.start} - {currentWeek.end}
         </p>
       </div>
 
-      <div className='metrics-grid'>
-        <Card className='metric-card primary'>
-          <h3>Total Revenue</h3>
-          <p className='metric-value'>$94,000</p>
-          <p className='metric-change positive'>+18.9% vs last month</p>
+      <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4'>
+        <Card>
+          <CardHeader className='pb-2'>
+            <CardTitle className='text-sm font-medium text-gray-600'>
+              Total Revenue
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className='text-2xl font-bold text-gray-900'>$94,000</p>
+            <p className='text-sm text-green-600 mt-1'>↑ 18.9% vs last month</p>
+          </CardContent>
         </Card>
-        <Card className='metric-card'>
-          <h3>Appointments</h3>
-          <p className='metric-value'>570</p>
-          <p className='metric-change positive'>+12.3% vs last month</p>
+
+        <Card>
+          <CardHeader className='pb-2'>
+            <CardTitle className='text-sm font-medium text-gray-600'>
+              Appointments
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className='text-2xl font-bold text-gray-900'>570</p>
+            <p className='text-sm text-green-600 mt-1'>↑ 12.3% vs last month</p>
+          </CardContent>
         </Card>
-        <Card className='metric-card'>
-          <h3>Average Ticket</h3>
-          <p className='metric-value'>$165</p>
-          <p className='metric-change positive'>+5.8% vs last month</p>
+
+        <Card>
+          <CardHeader className='pb-2'>
+            <CardTitle className='text-sm font-medium text-gray-600'>
+              Average Ticket
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className='text-2xl font-bold text-gray-900'>$165</p>
+            <p className='text-sm text-green-600 mt-1'>↑ 5.8% vs last month</p>
+          </CardContent>
         </Card>
-        <Card className='metric-card'>
-          <h3>Customer Retention</h3>
-          <p className='metric-value'>78%</p>
-          <p className='metric-change positive'>+2.1% vs last month</p>
+
+        <Card>
+          <CardHeader className='pb-2'>
+            <CardTitle className='text-sm font-medium text-gray-600'>
+              Customer Retention
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className='text-2xl font-bold text-gray-900'>78%</p>
+            <p className='text-sm text-green-600 mt-1'>↑ 2.1% vs last month</p>
+          </CardContent>
         </Card>
       </div>
 
-      <div className='chart-grid'>
-        <Card className='chart-card'>
-          <h3>Revenue Trend</h3>
-          <ResponsiveContainer width='100%' height={300}>
-            <AreaChart data={revenueData}>
-              <CartesianGrid strokeDasharray='3 3' />
-              <XAxis dataKey='month' />
-              <YAxis />
-              <Tooltip formatter={(value) => `$${value.toLocaleString()}`} />
-              <Legend />
-              <Area
-                type='monotone'
-                dataKey='revenue'
-                stackId='1'
-                stroke='#e91e63'
-                fill='#e91e63'
-                fillOpacity={0.6}
-                name='This Year'
-              />
-              <Area
-                type='monotone'
-                dataKey='lastYear'
-                stackId='2'
-                stroke='#9c27b0'
-                fill='#9c27b0'
-                fillOpacity={0.4}
-                name='Last Year'
-              />
-            </AreaChart>
-          </ResponsiveContainer>
+      <div className='grid grid-cols-1 xl:grid-cols-2 gap-6'>
+        <Card>
+          <CardHeader>
+            <CardTitle>Revenue Trend</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width='100%' height={300}>
+              <AreaChart data={revenueData}>
+                <CartesianGrid strokeDasharray='3 3' />
+                <XAxis dataKey='month' />
+                <YAxis />
+                <Tooltip formatter={(value) => `$${value.toLocaleString()}`} />
+                <Legend />
+                <Area
+                  type='monotone'
+                  dataKey='revenue'
+                  stackId='1'
+                  stroke='#e91e63'
+                  fill='#e91e63'
+                  fillOpacity={0.6}
+                  name='This Year'
+                />
+                <Area
+                  type='monotone'
+                  dataKey='lastYear'
+                  stackId='2'
+                  stroke='#9c27b0'
+                  fill='#9c27b0'
+                  fillOpacity={0.4}
+                  name='Last Year'
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </CardContent>
         </Card>
 
-        <Card className='chart-card'>
-          <h3>Service Breakdown</h3>
-          <ResponsiveContainer width='100%' height={300}>
-            <PieChart>
-              <Pie
-                data={serviceBreakdown}
-                cx='50%'
-                cy='50%'
-                labelLine={false}
-                label={(entry) => `${entry.name}: ${entry.value}%`}
-                outerRadius={80}
-                fill='#8884d8'
-                dataKey='value'
-              >
-                {serviceBreakdown.map((entry) => (
-                  <Cell key={`cell-${entry.name}`} fill={entry.color} />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
+        <Card>
+          <CardHeader>
+            <CardTitle>Service Breakdown</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width='100%' height={300}>
+              <PieChart>
+                <Pie
+                  data={serviceBreakdown}
+                  cx='50%'
+                  cy='50%'
+                  labelLine={false}
+                  label={(entry) => `${entry.name}: ${entry.value}%`}
+                  outerRadius={80}
+                  fill='#8884d8'
+                  dataKey='value'
+                >
+                  {serviceBreakdown.map((entry) => (
+                    <Cell key={`cell-${entry.name}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </CardContent>
         </Card>
       </div>
     </div>
@@ -150,88 +192,121 @@ function Overview() {
 
 function Analytics() {
   return (
-    <div className='analytics'>
-      <h1>Analytics & Insights</h1>
+    <div className='space-y-6'>
+      <h1 className='text-3xl font-bold text-gray-900 mb-6'>
+        Analytics & Insights
+      </h1>
 
-      <div className='chart-grid'>
-        <Card className='chart-card'>
-          <h3>Weekly Booking Capacity</h3>
-          <ResponsiveContainer width='100%' height={300}>
-            <BarChart data={weeklyBookings}>
-              <CartesianGrid strokeDasharray='3 3' />
-              <XAxis dataKey='day' />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey='bookings' fill='#e91e63' name='Bookings' />
-              <Bar dataKey='capacity' fill='#ddd' name='Capacity' />
-            </BarChart>
-          </ResponsiveContainer>
+      <div className='grid grid-cols-1 xl:grid-cols-2 gap-6'>
+        <Card>
+          <CardHeader>
+            <CardTitle>Weekly Booking Capacity</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width='100%' height={300}>
+              <BarChart data={weeklyBookings}>
+                <CartesianGrid strokeDasharray='3 3' />
+                <XAxis dataKey='day' />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey='bookings' fill='#e91e63' name='Bookings' />
+                <Bar dataKey='capacity' fill='#ddd' name='Capacity' />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
         </Card>
 
-        <Card className='chart-card'>
-          <h3>Top Performing Staff</h3>
-          <div className='staff-performance'>
-            <table>
-              <thead>
-                <tr>
-                  <th>Staff Member</th>
-                  <th>Appointments</th>
-                  <th>Revenue</th>
-                  <th>Rating</th>
-                </tr>
-              </thead>
-              <tbody>
-                {staffPerformance.map((staff) => (
-                  <tr key={staff.name}>
-                    <td>{staff.name}</td>
-                    <td>{staff.appointments}</td>
-                    <td>${staff.revenue.toLocaleString()}</td>
-                    <td>
-                      <span className='rating'>⭐ {staff.satisfaction}</span>
-                    </td>
+        <Card>
+          <CardHeader>
+            <CardTitle>Top Performing Staff</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className='overflow-x-auto'>
+              <table className='w-full'>
+                <thead>
+                  <tr className='border-b'>
+                    <th className='text-left py-2 text-sm font-medium text-gray-600'>
+                      Staff Member
+                    </th>
+                    <th className='text-right py-2 text-sm font-medium text-gray-600'>
+                      Appointments
+                    </th>
+                    <th className='text-right py-2 text-sm font-medium text-gray-600'>
+                      Revenue
+                    </th>
+                    <th className='text-right py-2 text-sm font-medium text-gray-600'>
+                      Rating
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className='divide-y'>
+                  {staffPerformance.map((staff) => (
+                    <tr key={staff.name} className='hover:bg-gray-50'>
+                      <td className='py-3 text-sm'>{staff.name}</td>
+                      <td className='py-3 text-sm text-right'>
+                        {staff.appointments}
+                      </td>
+                      <td className='py-3 text-sm text-right'>
+                        ${staff.revenue.toLocaleString()}
+                      </td>
+                      <td className='py-3 text-sm text-right'>
+                        <span className='inline-flex items-center'>
+                          <span className='text-yellow-500 mr-1'>⭐</span>
+                          {staff.satisfaction}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
         </Card>
       </div>
 
-      <Card className='insights-card'>
-        <h3>Key Insights</h3>
-        <div className='insights-list'>
-          <div className='insight'>
-            <span className='insight-icon'>📈</span>
-            <div>
-              <h4>Revenue Growth</h4>
-              <p>
-                June revenue is on track to exceed $100k, a 20% increase from
-                May.
-              </p>
+      <Card>
+        <CardHeader>
+          <CardTitle>Key Insights</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className='space-y-4'>
+            <div className='flex gap-4 p-4 bg-blue-50 rounded-lg'>
+              <span className='text-2xl'>📈</span>
+              <div>
+                <h4 className='font-semibold text-gray-900'>Revenue Growth</h4>
+                <p className='text-sm text-gray-600 mt-1'>
+                  June revenue is on track to exceed $100k, a 20% increase from
+                  May.
+                </p>
+              </div>
+            </div>
+            <div className='flex gap-4 p-4 bg-orange-50 rounded-lg'>
+              <span className='text-2xl'>🎯</span>
+              <div>
+                <h4 className='font-semibold text-gray-900'>
+                  Capacity Optimization
+                </h4>
+                <p className='text-sm text-gray-600 mt-1'>
+                  Saturday bookings are at 100% capacity. Consider adding staff
+                  or extending hours.
+                </p>
+              </div>
+            </div>
+            <div className='flex gap-4 p-4 bg-green-50 rounded-lg'>
+              <span className='text-2xl'>⭐</span>
+              <div>
+                <h4 className='font-semibold text-gray-900'>
+                  Customer Satisfaction
+                </h4>
+                <p className='text-sm text-gray-600 mt-1'>
+                  Average rating has improved to 4.7/5, with Emma W. leading at
+                  4.9/5.
+                </p>
+              </div>
             </div>
           </div>
-          <div className='insight'>
-            <span className='insight-icon'>🎯</span>
-            <div>
-              <h4>Capacity Optimization</h4>
-              <p>
-                Saturday bookings are at 100% capacity. Consider adding staff or
-                extending hours.
-              </p>
-            </div>
-          </div>
-          <div className='insight'>
-            <span className='insight-icon'>⭐</span>
-            <div>
-              <h4>Customer Satisfaction</h4>
-              <p>
-                Average rating has improved to 4.7/5, with Emma W. leading at
-                4.9/5.
-              </p>
-            </div>
-          </div>
-        </div>
+        </CardContent>
       </Card>
     </div>
   )
@@ -239,62 +314,91 @@ function Analytics() {
 
 function Reports() {
   return (
-    <div className='reports'>
-      <h1>Reports</h1>
+    <div className='space-y-6'>
+      <h1 className='text-3xl font-bold text-gray-900 mb-6'>Reports</h1>
 
-      <div className='report-filters'>
-        <Button variant='secondary'>This Week</Button>
-        <Button variant='secondary'>This Month</Button>
-        <Button variant='secondary'>This Quarter</Button>
-        <Button variant='secondary'>This Year</Button>
-        <Button variant='secondary'>Custom Range</Button>
+      <div className='flex flex-wrap gap-2 mb-6'>
+        <Button variant='outline'>This Week</Button>
+        <Button variant='outline'>This Month</Button>
+        <Button variant='outline'>This Quarter</Button>
+        <Button variant='outline'>This Year</Button>
+        <Button variant='outline'>Custom Range</Button>
       </div>
 
-      <div className='reports-grid'>
-        <Card className='report-card'>
-          <h3>Financial Report</h3>
-          <p>
-            Comprehensive breakdown of revenue, expenses, and profit margins.
-          </p>
-          <Button variant='primary'>Generate Report</Button>
+      <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4'>
+        <Card className='hover:shadow-lg transition-shadow'>
+          <CardHeader>
+            <CardTitle className='text-lg'>Financial Report</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className='text-sm text-gray-600 mb-4'>
+              Comprehensive breakdown of revenue, expenses, and profit margins.
+            </p>
+            <Button className='w-full'>Generate Report</Button>
+          </CardContent>
         </Card>
 
-        <Card className='report-card'>
-          <h3>Staff Performance</h3>
-          <p>
-            Individual staff metrics including bookings, revenue, and customer
-            ratings.
-          </p>
-          <Button variant='primary'>Generate Report</Button>
+        <Card className='hover:shadow-lg transition-shadow'>
+          <CardHeader>
+            <CardTitle className='text-lg'>Staff Performance</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className='text-sm text-gray-600 mb-4'>
+              Individual staff metrics including bookings, revenue, and customer
+              ratings.
+            </p>
+            <Button className='w-full'>Generate Report</Button>
+          </CardContent>
         </Card>
 
-        <Card className='report-card'>
-          <h3>Customer Analytics</h3>
-          <p>
-            Customer acquisition, retention rates, and lifetime value analysis.
-          </p>
-          <Button variant='primary'>Generate Report</Button>
+        <Card className='hover:shadow-lg transition-shadow'>
+          <CardHeader>
+            <CardTitle className='text-lg'>Customer Analytics</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className='text-sm text-gray-600 mb-4'>
+              Customer acquisition, retention rates, and lifetime value
+              analysis.
+            </p>
+            <Button className='w-full'>Generate Report</Button>
+          </CardContent>
         </Card>
 
-        <Card className='report-card'>
-          <h3>Service Analysis</h3>
-          <p>Popular services, pricing optimization, and demand forecasting.</p>
-          <Button variant='primary'>Generate Report</Button>
+        <Card className='hover:shadow-lg transition-shadow'>
+          <CardHeader>
+            <CardTitle className='text-lg'>Service Analysis</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className='text-sm text-gray-600 mb-4'>
+              Popular services, pricing optimization, and demand forecasting.
+            </p>
+            <Button className='w-full'>Generate Report</Button>
+          </CardContent>
         </Card>
 
-        <Card className='report-card'>
-          <h3>Marketing ROI</h3>
-          <p>
-            Campaign performance, customer acquisition costs, and conversion
-            rates.
-          </p>
-          <Button variant='primary'>Generate Report</Button>
+        <Card className='hover:shadow-lg transition-shadow'>
+          <CardHeader>
+            <CardTitle className='text-lg'>Marketing ROI</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className='text-sm text-gray-600 mb-4'>
+              Campaign performance, customer acquisition costs, and conversion
+              rates.
+            </p>
+            <Button className='w-full'>Generate Report</Button>
+          </CardContent>
         </Card>
 
-        <Card className='report-card'>
-          <h3>Inventory Report</h3>
-          <p>Product usage, stock levels, and reorder recommendations.</p>
-          <Button variant='primary'>Generate Report</Button>
+        <Card className='hover:shadow-lg transition-shadow'>
+          <CardHeader>
+            <CardTitle className='text-lg'>Inventory Report</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className='text-sm text-gray-600 mb-4'>
+              Product usage, stock levels, and reorder recommendations.
+            </p>
+            <Button className='w-full'>Generate Report</Button>
+          </CardContent>
         </Card>
       </div>
     </div>
@@ -303,45 +407,75 @@ function Reports() {
 
 function Settings() {
   return (
-    <div className='settings'>
-      <h1>Dashboard Settings</h1>
+    <div className='space-y-6'>
+      <h1 className='text-3xl font-bold text-gray-900 mb-6'>
+        Dashboard Settings
+      </h1>
 
-      <Card className='settings-section'>
-        <h3>Data Refresh</h3>
-        <p>Configure how often dashboard data is updated.</p>
-        <select>
-          <option>Real-time</option>
-          <option>Every 5 minutes</option>
-          <option>Every 15 minutes</option>
-          <option>Every hour</option>
-        </select>
+      <Card>
+        <CardHeader>
+          <CardTitle>Data Refresh</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className='text-sm text-gray-600 mb-3'>
+            Configure how often dashboard data is updated.
+          </p>
+          <select className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary'>
+            <option>Real-time</option>
+            <option>Every 5 minutes</option>
+            <option>Every 15 minutes</option>
+            <option>Every hour</option>
+          </select>
+        </CardContent>
       </Card>
 
-      <Card className='settings-section'>
-        <h3>Export Settings</h3>
-        <p>Default format for report exports.</p>
-        <select>
-          <option>PDF</option>
-          <option>Excel</option>
-          <option>CSV</option>
-        </select>
+      <Card>
+        <CardHeader>
+          <CardTitle>Export Settings</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className='text-sm text-gray-600 mb-3'>
+            Default format for report exports.
+          </p>
+          <select className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary'>
+            <option>PDF</option>
+            <option>Excel</option>
+            <option>CSV</option>
+          </select>
+        </CardContent>
       </Card>
 
-      <Card className='settings-section'>
-        <h3>Notifications</h3>
-        <p>Configure dashboard alerts and notifications.</p>
-        <label>
-          <input type='checkbox' defaultChecked />
-          Revenue milestones
-        </label>
-        <label>
-          <input type='checkbox' defaultChecked />
-          Capacity alerts
-        </label>
-        <label>
-          <input type='checkbox' />
-          Daily summary email
-        </label>
+      <Card>
+        <CardHeader>
+          <CardTitle>Notifications</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className='text-sm text-gray-600 mb-4'>
+            Configure dashboard alerts and notifications.
+          </p>
+          <div className='space-y-3'>
+            <label className='flex items-center'>
+              <input
+                type='checkbox'
+                defaultChecked
+                className='mr-2 h-4 w-4 text-primary'
+              />
+              <span className='text-sm'>Revenue milestones</span>
+            </label>
+            <label className='flex items-center'>
+              <input
+                type='checkbox'
+                defaultChecked
+                className='mr-2 h-4 w-4 text-primary'
+              />
+              <span className='text-sm'>Capacity alerts</span>
+            </label>
+            <label className='flex items-center'>
+              <input type='checkbox' className='mr-2 h-4 w-4 text-primary' />
+              <span className='text-sm'>Daily summary email</span>
+            </label>
+          </div>
+        </CardContent>
       </Card>
     </div>
   )
@@ -349,40 +483,95 @@ function Settings() {
 
 function App() {
   return (
-    <div className='app'>
-      <aside className='app-sidebar'>
-        <div className='logo'>
-          <h2>Analytics Dashboard</h2>
+    <div className='flex h-screen bg-gray-50'>
+      <EnvironmentBanner environment={import.meta.env.VITE_MODE} />
+      {/* Sidebar */}
+      <aside className='w-64 bg-white border-r border-gray-200 flex flex-col'>
+        <div className='p-6 border-b border-gray-200'>
+          <h2 className='text-xl font-bold text-gray-900'>
+            Analytics Dashboard
+          </h2>
         </div>
-        <nav>
-          <NavLink to='/' className='nav-link'>
-            <span>Overview</span>
-          </NavLink>
-          <NavLink to='/analytics' className='nav-link'>
-            <span>Analytics</span>
-          </NavLink>
-          <NavLink to='/reports' className='nav-link'>
-            <span>Reports</span>
-          </NavLink>
-          <NavLink to='/settings' className='nav-link'>
-            <span>Settings</span>
-          </NavLink>
+
+        <nav className='flex-1 p-4'>
+          <div className='space-y-1'>
+            <NavLink
+              to='/'
+              className={({ isActive }) =>
+                `flex items-center px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                  isActive
+                    ? 'bg-primary text-white'
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`
+              }
+            >
+              <span>Overview</span>
+            </NavLink>
+            <NavLink
+              to='/analytics'
+              className={({ isActive }) =>
+                `flex items-center px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                  isActive
+                    ? 'bg-primary text-white'
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`
+              }
+            >
+              <span>Analytics</span>
+            </NavLink>
+            <NavLink
+              to='/reports'
+              className={({ isActive }) =>
+                `flex items-center px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                  isActive
+                    ? 'bg-primary text-white'
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`
+              }
+            >
+              <span>Reports</span>
+            </NavLink>
+            <NavLink
+              to='/settings'
+              className={({ isActive }) =>
+                `flex items-center px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                  isActive
+                    ? 'bg-primary text-white'
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`
+              }
+            >
+              <span>Settings</span>
+            </NavLink>
+          </div>
         </nav>
-        <div className='sidebar-footer'>
-          <p>Environment: {import.meta.env.VITE_MODE}</p>
+
+        <div className='p-4 border-t border-gray-200'>
+          <p className='text-xs text-gray-500'>
+            Environment: {import.meta.env.VITE_MODE}
+          </p>
         </div>
       </aside>
 
-      <div className='app-content'>
-        <header className='app-header'>
-          <h1>{import.meta.env.VITE_APP_TITLE}</h1>
-          <div className='header-actions'>
-            <Button variant='secondary'>Export</Button>
-            <Button variant='secondary'>Share</Button>
+      {/* Main Content */}
+      <div className='flex-1 flex flex-col overflow-hidden'>
+        <header className='bg-white border-b border-gray-200 px-6 py-4'>
+          <div className='flex justify-between items-center'>
+            <h1 className='text-2xl font-semibold text-gray-900'>
+              {import.meta.env.VITE_APP_TITLE}
+            </h1>
+            <div className='flex gap-2'>
+              <Button variant='outline' size='sm'>
+                Export
+              </Button>
+              <Button variant='outline' size='sm'>
+                Share
+              </Button>
+            </div>
           </div>
         </header>
 
-        <main className='app-main'>
+        <main className='flex-1 overflow-auto p-6'>
           <Routes>
             <Route path='/' element={<Overview />} />
             <Route path='/analytics' element={<Analytics />} />

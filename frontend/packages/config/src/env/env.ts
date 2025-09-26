@@ -1,4 +1,9 @@
-export type RuntimeMode = 'production' | 'staging' | 'development' | 'test'
+export type RuntimeMode =
+  | 'production'
+  | 'staging'
+  | 'development'
+  | 'test'
+  | 'localhost'
 
 export const env = {
   VITE_MODE: {

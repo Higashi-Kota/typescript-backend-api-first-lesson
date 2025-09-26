@@ -4,6 +4,7 @@ const isProduction = process.env.NODE_ENV === 'production'
 const isDevelopment = process.env.NODE_ENV === 'development'
 const isTest = process.env.NODE_ENV === 'test'
 const isStaging = process.env.NODE_ENV === 'staging'
+const isLocalhost = process.env.NODE_ENV === 'localhost'
 
 export default defineConfig({
   lib: [
@@ -20,7 +21,7 @@ export default defineConfig({
       bundle: true,
       output: {
         minify: isProduction,
-        sourceMap: isDevelopment || isTest || isStaging,
+        sourceMap: isDevelopment || isTest || isStaging || isLocalhost,
         target: 'node',
         externals: ['@t3-oss/env-core', 'zod'],
       },
