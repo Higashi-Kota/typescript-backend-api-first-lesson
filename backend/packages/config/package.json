@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@t3-oss/env-core": "^0.13.8",
-    "zod": "3.25.76"
+    "zod": "4.1.11"
   },
   "devDependencies": {
     "@beauty-salon-shared/config": "workspace:*",
