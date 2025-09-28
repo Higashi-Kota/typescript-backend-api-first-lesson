@@ -3,7 +3,8 @@ FROM node:24.4.0-alpine AS builder
 
 # Install pnpm and TypeScript globally with specific versions
 ENV PNPM_VERSION=10.13.1
-RUN npm install -g pnpm@${PNPM_VERSION} typescript
+ENV TYPESCRIPT_VERSION=5.9.2
+RUN npm install -g pnpm@${PNPM_VERSION} typescript@${TYPESCRIPT_VERSION}
 
 # Set working directory
 WORKDIR /app
