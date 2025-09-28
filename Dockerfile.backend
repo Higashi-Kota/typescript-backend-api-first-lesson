@@ -34,8 +34,9 @@ RUN pnpm install --frozen-lockfile
 # Copy source code
 COPY . .
 
-# Build backend packages
-RUN pnpm --filter "./backend/**" run build:prod
+# Build backend packages (packages use build:prod, server app uses build)
+RUN pnpm --filter "./backend/packages/**" run build:prod && \
+    pnpm --filter "@beauty-salon-backend/server" run build
 
 # Development stage
 FROM node:24.4.0-alpine AS development
@@ -79,7 +80,8 @@ CMD ["pnpm", "--filter", "@beauty-salon-backend/server", "dev"]
 # Production stage
 FROM node:24.4.0-alpine AS production
 
-# Install pnpm globally and runtime dependencies
+# Set production environment
+ENV NODE_ENV=production
 ENV PNPM_VERSION=10.13.1
 RUN apk add --no-cache bash wget && \
     npm install -g pnpm@${PNPM_VERSION}
@@ -109,12 +111,19 @@ COPY --chown=appuser:appuser backend/apps/server/package.json ./backend/apps/ser
 # Copy specs package.json
 COPY --chown=appuser:appuser specs/package.json ./specs/
 
-# Install production dependencies only
-RUN pnpm install --prod --frozen-lockfile
+# Install production dependencies only (ignore scripts to skip husky)
+RUN pnpm install --prod --frozen-lockfile --ignore-scripts
 
 # Copy built artifacts from builder
-COPY --from=builder --chown=appuser:appuser /app/backend/packages/*/dist ./backend/packages/*/dist/
-COPY --from=builder --chown=appuser:appuser /app/backend/apps/*/dist ./backend/apps/*/dist/
+# Each package needs to maintain its directory structure
+COPY --from=builder --chown=appuser:appuser /app/backend/packages/api/dist ./backend/packages/api/dist/
+COPY --from=builder --chown=appuser:appuser /app/backend/packages/config/dist ./backend/packages/config/dist/
+COPY --from=builder --chown=appuser:appuser /app/backend/packages/database/dist ./backend/packages/database/dist/
+COPY --from=builder --chown=appuser:appuser /app/backend/packages/domain/dist ./backend/packages/domain/dist/
+COPY --from=builder --chown=appuser:appuser /app/backend/packages/generated/dist ./backend/packages/generated/dist/
+COPY --from=builder --chown=appuser:appuser /app/backend/packages/infrastructure/dist ./backend/packages/infrastructure/dist/
+COPY --from=builder --chown=appuser:appuser /app/backend/packages/utility/dist ./backend/packages/utility/dist/
+COPY --from=builder --chown=appuser:appuser /app/backend/apps/server/dist ./backend/apps/server/dist/
 
 # Switch to non-root user
 USER appuser
