@@ -66,12 +66,14 @@ jobs:
           docker run --rm -i hadolint/hadolint < ${{ matrix.dockerfile.file }} || true
 
       - name: Build ${{ matrix.dockerfile.name }} (builder stage)
+        id: docker-build
         uses: docker/build-push-action@v6
         with:
           context: .
           file: ./${{ matrix.dockerfile.file }}
           target: ${{ matrix.dockerfile.target }}
           push: false
+          load: true
           tags: test-${{ matrix.dockerfile.name }}-builder:${{ github.sha }}
           cache-from: |
             type=local,src=/tmp/.buildx-cache
@@ -87,12 +89,17 @@ jobs:
       - name: Move cache
         run: |
           rm -rf /tmp/.buildx-cache
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache || true
 
       - name: Test TypeScript compilation in ${{ matrix.dockerfile.name }}
         run: |
           echo "Testing TypeScript availability in ${{ matrix.dockerfile.name }} image..."
           docker run --rm test-${{ matrix.dockerfile.name }}-builder:${{ github.sha }} sh -c "tsc --version"
+
+      - name: Test pnpm availability in ${{ matrix.dockerfile.name }}
+        run: |
+          echo "Testing pnpm availability in ${{ matrix.dockerfile.name }} image..."
+          docker run --rm test-${{ matrix.dockerfile.name }}-builder:${{ github.sha }} sh -c "pnpm --version"
 
       - name: Report success
         if: success()
