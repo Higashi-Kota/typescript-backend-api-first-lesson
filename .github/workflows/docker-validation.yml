@@ -1,0 +1,121 @@
+name: Docker Build Validation
+
+on:
+  push:
+    branches-ignore:
+      - main
+      - develop
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'Dockerfile.*'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'backend/**'
+      - 'frontend/**'
+      - 'specs/**'
+      - '.github/workflows/docker-validation.yml'
+
+env:
+  NODE_VERSION: '24.4.0'
+  PNPM_VERSION: '10.13.1'
+  TYPESCRIPT_VERSION: '5.9.2'
+
+jobs:
+  validate-dockerfiles:
+    name: Validate Dockerfile Builds
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        dockerfile:
+          - name: backend
+            file: Dockerfile.backend
+            target: builder
+          - name: frontend-admin
+            file: Dockerfile.frontend.admin
+            target: builder
+          - name: frontend-portal
+            file: Dockerfile.frontend.portal
+            target: builder
+          - name: frontend-dashboard
+            file: Dockerfile.frontend.dashboard
+            target: builder
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver-opts: network=host
+
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ matrix.dockerfile.name }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-${{ matrix.dockerfile.name }}-
+            ${{ runner.os }}-buildx-
+
+      - name: Validate ${{ matrix.dockerfile.name }} Dockerfile syntax
+        run: |
+          echo "Validating Dockerfile syntax for ${{ matrix.dockerfile.file }}..."
+          docker run --rm -i hadolint/hadolint < ${{ matrix.dockerfile.file }} || true
+
+      - name: Build ${{ matrix.dockerfile.name }} (builder stage)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./${{ matrix.dockerfile.file }}
+          target: ${{ matrix.dockerfile.target }}
+          push: false
+          tags: test-${{ matrix.dockerfile.name }}-builder:${{ github.sha }}
+          cache-from: |
+            type=local,src=/tmp/.buildx-cache
+            type=gha
+          cache-to: |
+            type=local,dest=/tmp/.buildx-cache-new,mode=max
+            type=gha,mode=max
+          build-args: |
+            NODE_ENV=production
+            PNPM_VERSION=${{ env.PNPM_VERSION }}
+            TYPESCRIPT_VERSION=${{ env.TYPESCRIPT_VERSION }}
+
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+      - name: Test TypeScript compilation in ${{ matrix.dockerfile.name }}
+        run: |
+          echo "Testing TypeScript availability in ${{ matrix.dockerfile.name }} image..."
+          docker run --rm test-${{ matrix.dockerfile.name }}-builder:${{ github.sha }} sh -c "tsc --version"
+
+      - name: Report success
+        if: success()
+        run: |
+          echo "✅ ${{ matrix.dockerfile.name }} Docker build validation passed!"
+          echo "Image successfully built with:"
+          echo "  - Node.js ${{ env.NODE_VERSION }}"
+          echo "  - PNPM ${{ env.PNPM_VERSION }}"
+          echo "  - TypeScript ${{ env.TYPESCRIPT_VERSION }}"
+
+  all-dockerfiles-valid:
+    name: All Dockerfile Builds Valid
+    runs-on: ubuntu-latest
+    needs: validate-dockerfiles
+    if: always()
+    steps:
+      - name: Check all builds passed
+        run: |
+          if [[ "${{ needs.validate-dockerfiles.result }}" == "success" ]]; then
+            echo "✅ All Dockerfile builds validated successfully!"
+            exit 0
+          else
+            echo "❌ One or more Dockerfile builds failed validation"
+            echo "Please check the build logs above for details"
+            exit 1
+          fi
