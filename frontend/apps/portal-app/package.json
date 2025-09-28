@@ -29,6 +29,7 @@
     "react-router-dom": "^7.9.1"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.1.13",
     "@beauty-salon-shared/config": "workspace:*",
     "@biomejs/biome": "^2.2.4",
     "@tanstack/react-query-devtools": "^5.90.2",

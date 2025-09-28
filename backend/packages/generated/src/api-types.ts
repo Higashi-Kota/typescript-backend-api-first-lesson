@@ -1,6 +1,6 @@
 // Generated from TypeSpec/OpenAPI using openapi-typescript
 // DO NOT EDIT MANUALLY
-// Last generated: 2025-09-28T07:34:43.368Z
+// Last generated: 2025-09-28T08:03:31.198Z
 
 // Base types from OpenAPI
 /**

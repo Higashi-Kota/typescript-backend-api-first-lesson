@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "pnpm -r --parallel run dev",
     "dev:backend": "pnpm --filter './backend/**' run dev",
-    "dev:frontend": "pnpm --filter './frontend/**' run dev",
     "dev:watch:admin-app": "node --experimental-strip-types ./scripts/dev-watch.ts admin-app",
     "dev:watch:portal-app": "node --experimental-strip-types ./scripts/dev-watch.ts portal-app",
     "dev:watch:dashboard-app": "node --experimental-strip-types ./scripts/dev-watch.ts dashboard-app",
@@ -19,6 +18,7 @@
     "build:backend:packages": "pnpm --filter './backend/packages/**' --workspace-concurrency=Infinity run build",
     "build:backend:server": "pnpm --filter '@beauty-salon-backend/server' run build",
     "start:backend:prod": "pnpm --filter '@beauty-salon-backend/server' run start",
+    "prepare:frontend": "pnpm --filter './frontend/packages/**' run build:prod",
     "build:frontend": "pnpm --filter './frontend/**' run build:prod",
     "preview:frontend": "pnpm --filter './frontend/apps/**' run preview",
     "test": "pnpm -r run test",
@@ -53,16 +53,10 @@
   "devDependencies": {
     "@beauty-salon-shared/config": "workspace:*",
     "@biomejs/biome": "^2.2.4",
-    "@tailwindcss/postcss": "^4.1.13",
-    "@tailwindcss/vite": "^4.1.13",
-    "autoprefixer": "^10.4.21",
     "concurrently": "^9.2.1",
     "husky": "^9.1.7",
     "knip": "^5.64.0",
     "lint-staged": "^16.2.0",
-    "postcss-import": "^16.1.1",
-    "tailwindcss": "^4.1.13",
-    "tailwindcss-animate": "^1.0.7",
     "taze": "^19.7.0"
   },
   "volta": {

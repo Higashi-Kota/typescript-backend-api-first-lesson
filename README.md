@@ -102,9 +102,14 @@ pnpm dev
 
 ```bash
 # Development
-pnpm dev                 # Start all development servers
-pnpm dev:backend        # Start backend only
-pnpm dev:frontend       # Start frontend only
+pnpm dev                     # Start all development servers
+pnpm dev:backend             # Start backend only
+pnpm prepare:frontend        # Build frontend packages
+pnpm dev:watch:admin-app     # Start frontend for admin
+pnpm dev:watch:portal-app    # Start frontend for portal
+pnpm dev:watch:dashboard-app # Start frontend for dashboard
+pnpm build:frontend          # Build frontend packages + apps
+pnpm preview:frontend        # Serve frontend apps
 
 # Building
 pnpm build              # Build all packages

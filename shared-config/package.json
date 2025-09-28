@@ -11,8 +11,7 @@
     "./nextjs.json": "./tsconfig/nextjs.json",
     "./tsconfig.lib.json": "./tsconfig/tsconfig.lib.json",
     "./tsconfig.app.json": "./tsconfig/tsconfig.app.json",
-    "./biome": "./biome.json",
-    "./postcss": "./postcss.config.js"
+    "./biome": "./biome.json"
   },
   "dependencies": {
     "postcss": "^8.5.6"
