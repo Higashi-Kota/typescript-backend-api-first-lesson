@@ -8,7 +8,8 @@
         backend-start-test backend-start-stg backend-start-prod \
         preview-test preview-stg preview-prod \
         frontend-analyze ci-check ci-check-dockerfile test-backend test-backend-ci check-deps \
-        generate-spec generate-client generate-backend
+        generate-spec generate-client generate-backend \
+        docker-check-quick docker-check-backend docker-check-frontend docker-check-prod
 
 # Default target
 help:
@@ -33,8 +34,14 @@ help:
 	@echo "  make format        - Format code"
 	@echo "  make typecheck     - Run type checking"
 	@echo "  make ci-check      - Run all CI checks locally (matches GitHub Actions)"
-	@echo "  make ci-check-dockerfile - Test Docker builds locally (verifies Dockerfile changes)"
 	@echo "  make check-deps    - Quick dependency check (catches missing deps)"
+	@echo ""
+	@echo "Docker Testing:"
+	@echo "  make ci-check-dockerfile - Full Docker test (all stages + runtime)"
+	@echo "  make docker-check-quick  - Quick Docker check (builder stages only)"
+	@echo "  make docker-check-prod   - Production/runtime stages only"
+	@echo "  make docker-check-backend - Backend Docker all stages"
+	@echo "  make docker-check-frontend - Frontend Docker all apps"
 	@echo ""
 	@echo "Cleanup:"
 	@echo "  make clean         - Clean build artifacts"
@@ -450,39 +457,168 @@ check-deps:
 	@echo ""
 	@echo "✅ Dependency check passed!"
 
-# CI Check for Dockerfiles - Tests all Docker builds locally
+# CI Check for Dockerfiles - Tests all Docker builds locally (including production stages)
 ci-check-dockerfile:
 	@echo "======================================"
 	@echo "Testing Docker builds locally..."
 	@echo "======================================"
 	@echo ""
 	@echo "This will test all Dockerfiles to ensure they build successfully."
-	@echo "Similar to what happens in CI/CD pipeline."
+	@echo "Testing both builder and production stages to catch all issues."
 	@echo ""
-	@echo "Step 1/5: Verifying lockfile integrity first..."
+	@echo "Step 1/15: Verifying lockfile integrity first..."
 	@pnpm install --frozen-lockfile || (echo "❌ Lockfile check failed. Run 'pnpm install' to update." && exit 1)
 	@echo "✅ Lockfile verified"
 	@echo ""
-	@echo "Step 2/5: Building Backend Docker image..."
-	@docker build -f Dockerfile.backend --target builder -t test-backend-builder . || (echo "❌ Backend Docker build failed" && exit 1)
-	@echo "✅ Backend Docker build successful"
+	@echo "━━━ BACKEND DOCKER TESTS ━━━"
+	@echo "Step 2/15: Building Backend builder stage..."
+	@docker build -f Dockerfile.backend --target builder -t test-backend-builder . || (echo "❌ Backend builder stage failed" && exit 1)
+	@echo "✅ Backend builder stage successful"
 	@echo ""
-	@echo "Step 3/5: Building Frontend Admin Docker image..."
-	@docker build -f Dockerfile.frontend.admin --target builder -t test-frontend-admin . || (echo "❌ Frontend Admin Docker build failed" && exit 1)
-	@echo "✅ Frontend Admin Docker build successful"
+	@echo "Step 3/15: Building Backend production stage..."
+	@docker build -f Dockerfile.backend --target production -t test-backend-prod . || (echo "❌ Backend production stage failed" && exit 1)
+	@echo "✅ Backend production stage successful"
 	@echo ""
-	@echo "Step 4/5: Building Frontend Portal Docker image..."
-	@docker build -f Dockerfile.frontend.portal --target builder -t test-frontend-portal . || (echo "❌ Frontend Portal Docker build failed" && exit 1)
-	@echo "✅ Frontend Portal Docker build successful"
+	@echo "Step 4/15: Testing Backend production container startup..."
+	@docker run --rm -d --name test-backend-prod-run test-backend-prod || (echo "❌ Backend production container failed to start" && exit 1)
+	@docker stop test-backend-prod-run 2>/dev/null || true
+	@echo "✅ Backend production container starts successfully"
 	@echo ""
-	@echo "Step 5/5: Building Frontend Dashboard Docker image..."
-	@docker build -f Dockerfile.frontend.dashboard --target builder -t test-frontend-dashboard . || (echo "❌ Frontend Dashboard Docker build failed" && exit 1)
-	@echo "✅ Frontend Dashboard Docker build successful"
+	@echo "━━━ FRONTEND ADMIN DOCKER TESTS ━━━"
+	@echo "Step 5/15: Building Frontend Admin builder stage..."
+	@docker build -f Dockerfile.frontend.admin --target builder -t test-frontend-admin-builder . || (echo "❌ Frontend Admin builder stage failed" && exit 1)
+	@echo "✅ Frontend Admin builder stage successful"
 	@echo ""
-	@echo "======================================"
-	@echo "✅ All Docker builds passed!"
-	@echo "======================================"
+	@echo "Step 6/15: Building Frontend Admin runtime stage..."
+	@docker build -f Dockerfile.frontend.admin --target runtime -t test-frontend-admin-runtime . || (echo "❌ Frontend Admin runtime stage failed" && exit 1)
+	@echo "✅ Frontend Admin runtime stage successful"
 	@echo ""
-	@echo "Cleaning up test images..."
-	@docker rmi test-backend-builder test-frontend-admin test-frontend-portal test-frontend-dashboard 2>/dev/null || true
+	@echo "Step 7/15: Testing Frontend Admin runtime container..."
+	@docker run --rm -d --name test-frontend-admin-run test-frontend-admin-runtime || (echo "❌ Frontend Admin runtime container failed to start" && exit 1)
+	@docker stop test-frontend-admin-run 2>/dev/null || true
+	@echo "✅ Frontend Admin runtime container starts successfully"
+	@echo ""
+	@echo "━━━ FRONTEND PORTAL DOCKER TESTS ━━━"
+	@echo "Step 8/15: Building Frontend Portal builder stage..."
+	@docker build -f Dockerfile.frontend.portal --target builder -t test-frontend-portal-builder . || (echo "❌ Frontend Portal builder stage failed" && exit 1)
+	@echo "✅ Frontend Portal builder stage successful"
+	@echo ""
+	@echo "Step 9/15: Building Frontend Portal runtime stage..."
+	@docker build -f Dockerfile.frontend.portal --target runtime -t test-frontend-portal-runtime . || (echo "❌ Frontend Portal runtime stage failed" && exit 1)
+	@echo "✅ Frontend Portal runtime stage successful"
+	@echo ""
+	@echo "Step 10/15: Testing Frontend Portal runtime container..."
+	@docker run --rm -d --name test-frontend-portal-run test-frontend-portal-runtime || (echo "❌ Frontend Portal runtime container failed to start" && exit 1)
+	@docker stop test-frontend-portal-run 2>/dev/null || true
+	@echo "✅ Frontend Portal runtime container starts successfully"
+	@echo ""
+	@echo "━━━ FRONTEND DASHBOARD DOCKER TESTS ━━━"
+	@echo "Step 11/15: Building Frontend Dashboard builder stage..."
+	@docker build -f Dockerfile.frontend.dashboard --target builder -t test-frontend-dashboard-builder . || (echo "❌ Frontend Dashboard builder stage failed" && exit 1)
+	@echo "✅ Frontend Dashboard builder stage successful"
+	@echo ""
+	@echo "Step 12/15: Building Frontend Dashboard runtime stage..."
+	@docker build -f Dockerfile.frontend.dashboard --target runtime -t test-frontend-dashboard-runtime . || (echo "❌ Frontend Dashboard runtime stage failed" && exit 1)
+	@echo "✅ Frontend Dashboard runtime stage successful"
+	@echo ""
+	@echo "Step 13/15: Testing Frontend Dashboard runtime container..."
+	@docker run --rm -d --name test-frontend-dashboard-run test-frontend-dashboard-runtime || (echo "❌ Frontend Dashboard runtime container failed to start" && exit 1)
+	@docker stop test-frontend-dashboard-run 2>/dev/null || true
+	@echo "✅ Frontend Dashboard runtime container starts successfully"
+	@echo ""
+	@echo "━━━ CLEANUP ━━━"
+	@echo "Step 14/15: Cleaning up test images..."
+	@docker rmi test-backend-builder test-backend-prod 2>/dev/null || true
+	@docker rmi test-frontend-admin-builder test-frontend-admin-runtime 2>/dev/null || true
+	@docker rmi test-frontend-portal-builder test-frontend-portal-runtime 2>/dev/null || true
+	@docker rmi test-frontend-dashboard-builder test-frontend-dashboard-runtime 2>/dev/null || true
 	@echo "✅ Cleanup complete"
+	@echo ""
+	@echo "Step 15/15: Final verification..."
+	@echo "All Docker stages (builder, production/runtime) tested successfully!"
+	@echo ""
+	@echo "======================================"
+	@echo "✅ All Docker builds and runtime tests passed!"
+	@echo "======================================"
+	@echo ""
+	@echo "💡 TIP: Run this before pushing to catch Docker issues early!"
+
+# Quick Docker Check - Faster version for pre-commit hooks (builder stage only)
+docker-check-quick:
+	@echo "======================================"
+	@echo "Quick Docker build check (builder only)..."
+	@echo "======================================"
+	@echo ""
+	@echo "Testing builder stages only for faster verification"
+	@echo ""
+	@echo "Backend builder stage..."
+	@docker build -f Dockerfile.backend --target builder -t test-backend-quick . || (echo "❌ Backend builder failed" && exit 1)
+	@echo "✅ Backend OK"
+	@echo ""
+	@echo "Frontend Admin builder stage..."
+	@docker build -f Dockerfile.frontend.admin --target builder -t test-frontend-admin-quick . || (echo "❌ Frontend Admin builder failed" && exit 1)
+	@echo "✅ Frontend Admin OK"
+	@echo ""
+	@echo "Frontend Portal builder stage..."
+	@docker build -f Dockerfile.frontend.portal --target builder -t test-frontend-portal-quick . || (echo "❌ Frontend Portal builder failed" && exit 1)
+	@echo "✅ Frontend Portal OK"
+	@echo ""
+	@echo "Frontend Dashboard builder stage..."
+	@docker build -f Dockerfile.frontend.dashboard --target builder -t test-frontend-dashboard-quick . || (echo "❌ Frontend Dashboard builder failed" && exit 1)
+	@echo "✅ Frontend Dashboard OK"
+	@echo ""
+	@echo "Cleaning up..."
+	@docker rmi test-backend-quick test-frontend-admin-quick test-frontend-portal-quick test-frontend-dashboard-quick 2>/dev/null || true
+	@echo ""
+	@echo "✅ Quick Docker check passed! (Run 'make ci-check-dockerfile' for full test)"
+
+# Docker Check for Backend only
+docker-check-backend:
+	@echo "Testing Backend Docker build (all stages)..."
+	@docker build -f Dockerfile.backend --target builder -t test-backend-builder . || (echo "❌ Backend builder failed" && exit 1)
+	@echo "✅ Backend builder OK"
+	@docker build -f Dockerfile.backend --target production -t test-backend-prod . || (echo "❌ Backend production failed" && exit 1)
+	@echo "✅ Backend production OK"
+	@docker build -f Dockerfile.backend --target development -t test-backend-dev . || (echo "❌ Backend development failed" && exit 1)
+	@echo "✅ Backend development OK"
+	@docker rmi test-backend-builder test-backend-prod test-backend-dev 2>/dev/null || true
+	@echo "✅ Backend Docker build successful!"
+
+# Docker Check for Frontend only
+docker-check-frontend:
+	@echo "Testing Frontend Docker builds (all apps)..."
+	@docker build -f Dockerfile.frontend.admin --target runtime -t test-admin . || (echo "❌ Admin failed" && exit 1)
+	@echo "✅ Admin OK"
+	@docker build -f Dockerfile.frontend.portal --target runtime -t test-portal . || (echo "❌ Portal failed" && exit 1)
+	@echo "✅ Portal OK"
+	@docker build -f Dockerfile.frontend.dashboard --target runtime -t test-dashboard . || (echo "❌ Dashboard failed" && exit 1)
+	@echo "✅ Dashboard OK"
+	@docker rmi test-admin test-portal test-dashboard 2>/dev/null || true
+	@echo "✅ All Frontend Docker builds successful!"
+
+# Docker production check - Tests only production/runtime stages
+docker-check-prod:
+	@echo "======================================"
+	@echo "Testing production Docker builds..."
+	@echo "======================================"
+	@echo ""
+	@echo "Backend production..."
+	@docker build -f Dockerfile.backend --target production -t test-backend-prod . || (echo "❌ Backend production failed" && exit 1)
+	@echo "✅ Backend production OK"
+	@echo ""
+	@echo "Frontend Admin runtime..."
+	@docker build -f Dockerfile.frontend.admin --target runtime -t test-frontend-admin-prod . || (echo "❌ Frontend Admin runtime failed" && exit 1)
+	@echo "✅ Frontend Admin runtime OK"
+	@echo ""
+	@echo "Frontend Portal runtime..."
+	@docker build -f Dockerfile.frontend.portal --target runtime -t test-frontend-portal-prod . || (echo "❌ Frontend Portal runtime failed" && exit 1)
+	@echo "✅ Frontend Portal runtime OK"
+	@echo ""
+	@echo "Frontend Dashboard runtime..."
+	@docker build -f Dockerfile.frontend.dashboard --target runtime -t test-frontend-dashboard-prod . || (echo "❌ Frontend Dashboard runtime failed" && exit 1)
+	@echo "✅ Frontend Dashboard runtime OK"
+	@echo ""
+	@echo "Cleaning up..."
+	@docker rmi test-backend-prod test-frontend-admin-prod test-frontend-portal-prod test-frontend-dashboard-prod 2>/dev/null || true
+	@echo ""
+	@echo "✅ All production builds successful!"
