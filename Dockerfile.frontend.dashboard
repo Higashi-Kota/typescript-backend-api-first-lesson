@@ -55,7 +55,7 @@ RUN pnpm generate
 RUN pnpm prepare:frontend
 
 # Build dashboard app for production
-RUN pnpm --filter "@beauty-salon/dashboard-app" build:prod
+RUN pnpm --filter "@beauty-salon-frontend/dashboard-app" build:prod
 
 # Stage 2: Production runtime
 FROM node:24.4.0-alpine AS runtime
