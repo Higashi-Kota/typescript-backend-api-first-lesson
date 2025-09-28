@@ -19,7 +19,6 @@
     "build:test": "NODE_ENV=test rslib build && tsc --emitDeclarationOnly",
     "build:stg": "NODE_ENV=staging rslib build && tsc --emitDeclarationOnly",
     "build:prod": "NODE_ENV=production rslib build && tsc --emitDeclarationOnly",
-    "build": "NODE_ENV=production rslib build && tsc --emitDeclarationOnly",
     "build:watch": "NODE_ENV=development rslib build --watch",
     "dev": "NODE_ENV=development rslib build --watch",
     "dev:tsc": "tsc --build --watch",

@@ -23,7 +23,7 @@ RUN pnpm install --frozen-lockfile
 COPY . .
 
 # Build backend packages
-RUN pnpm --filter "./backend/**" run build
+RUN pnpm --filter "./backend/**" run build:prod
 
 # Development stage
 FROM node:24.4.0-alpine AS development
@@ -53,7 +53,7 @@ ENV PNPM_HOME=/usr/local/bin
 RUN npm install -g typescript
 
 # Build all packages in development for tsx to work properly
-RUN pnpm --filter "./backend/packages/**" run build
+RUN pnpm --filter "./backend/packages/**" run build:prod
 
 # Switch to non-root user
 USER appuser
