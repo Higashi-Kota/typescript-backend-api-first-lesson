@@ -2,20 +2,45 @@
 # Stage 1: Build stage
 FROM node:24.4.0-alpine AS builder
 
-# Install pnpm globally with specific version
+# Install pnpm and TypeScript globally with specific versions
 ENV PNPM_VERSION=10.13.1
-RUN npm install -g pnpm@${PNPM_VERSION}
+ENV TYPESCRIPT_VERSION=5.9.2
+RUN npm install -g pnpm@${PNPM_VERSION} typescript@${TYPESCRIPT_VERSION}
 
 # Set working directory
 WORKDIR /app
 
 # Copy package files for better caching
-COPY package.json pnpm-workspace.yaml pnpm-lock.yaml* ./
-COPY backend/packages/*/package.json ./backend/packages/*/
-COPY frontend/packages/*/package.json ./frontend/packages/*/
-COPY frontend/apps/portal-app/package.json ./frontend/apps/portal-app/
-COPY specs/package.json ./specs/
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY shared-config/package.json ./shared-config/
+
+# Copy backend packages needed for type generation
+COPY backend/packages/api/package.json ./backend/packages/api/
+COPY backend/packages/config/package.json ./backend/packages/config/
+COPY backend/packages/database/package.json ./backend/packages/database/
+COPY backend/packages/domain/package.json ./backend/packages/domain/
+COPY backend/packages/generated/package.json ./backend/packages/generated/
+COPY backend/packages/infrastructure/package.json ./backend/packages/infrastructure/
+COPY backend/packages/utility/package.json ./backend/packages/utility/
+
+# Copy frontend packages
+COPY frontend/packages/api-client/package.json ./frontend/packages/api-client/
+COPY frontend/packages/assets/package.json ./frontend/packages/assets/
+COPY frontend/packages/config/package.json ./frontend/packages/config/
+COPY frontend/packages/io/package.json ./frontend/packages/io/
+COPY frontend/packages/message/package.json ./frontend/packages/message/
+COPY frontend/packages/stores/package.json ./frontend/packages/stores/
+COPY frontend/packages/theme/package.json ./frontend/packages/theme/
+COPY frontend/packages/types/package.json ./frontend/packages/types/
+COPY frontend/packages/ui/package.json ./frontend/packages/ui/
+COPY frontend/packages/utils/package.json ./frontend/packages/utils/
+COPY frontend/packages/validations/package.json ./frontend/packages/validations/
+
+# Copy portal app
+COPY frontend/apps/portal-app/package.json ./frontend/apps/portal-app/
+
+# Copy specs
+COPY specs/package.json ./specs/
 
 # Install dependencies
 RUN pnpm install --frozen-lockfile

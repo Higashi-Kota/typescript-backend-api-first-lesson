@@ -7,7 +7,7 @@
         frontend-preview-test frontend-preview-stg frontend-preview-prod \
         backend-start-test backend-start-stg backend-start-prod \
         preview-test preview-stg preview-prod \
-        frontend-analyze ci-check test-backend test-backend-ci check-deps \
+        frontend-analyze ci-check ci-check-dockerfile test-backend test-backend-ci check-deps \
         generate-spec generate-client generate-backend
 
 # Default target
@@ -33,6 +33,7 @@ help:
 	@echo "  make format        - Format code"
 	@echo "  make typecheck     - Run type checking"
 	@echo "  make ci-check      - Run all CI checks locally (matches GitHub Actions)"
+	@echo "  make ci-check-dockerfile - Test Docker builds locally (verifies Dockerfile changes)"
 	@echo "  make check-deps    - Quick dependency check (catches missing deps)"
 	@echo ""
 	@echo "Cleanup:"
@@ -448,3 +449,40 @@ check-deps:
 	@echo "✅ All packages built successfully"
 	@echo ""
 	@echo "✅ Dependency check passed!"
+
+# CI Check for Dockerfiles - Tests all Docker builds locally
+ci-check-dockerfile:
+	@echo "======================================"
+	@echo "Testing Docker builds locally..."
+	@echo "======================================"
+	@echo ""
+	@echo "This will test all Dockerfiles to ensure they build successfully."
+	@echo "Similar to what happens in CI/CD pipeline."
+	@echo ""
+	@echo "Step 1/5: Verifying lockfile integrity first..."
+	@pnpm install --frozen-lockfile || (echo "❌ Lockfile check failed. Run 'pnpm install' to update." && exit 1)
+	@echo "✅ Lockfile verified"
+	@echo ""
+	@echo "Step 2/5: Building Backend Docker image..."
+	@docker build -f Dockerfile.backend --target builder -t test-backend-builder . || (echo "❌ Backend Docker build failed" && exit 1)
+	@echo "✅ Backend Docker build successful"
+	@echo ""
+	@echo "Step 3/5: Building Frontend Admin Docker image..."
+	@docker build -f Dockerfile.frontend.admin --target builder -t test-frontend-admin . || (echo "❌ Frontend Admin Docker build failed" && exit 1)
+	@echo "✅ Frontend Admin Docker build successful"
+	@echo ""
+	@echo "Step 4/5: Building Frontend Portal Docker image..."
+	@docker build -f Dockerfile.frontend.portal --target builder -t test-frontend-portal . || (echo "❌ Frontend Portal Docker build failed" && exit 1)
+	@echo "✅ Frontend Portal Docker build successful"
+	@echo ""
+	@echo "Step 5/5: Building Frontend Dashboard Docker image..."
+	@docker build -f Dockerfile.frontend.dashboard --target builder -t test-frontend-dashboard . || (echo "❌ Frontend Dashboard Docker build failed" && exit 1)
+	@echo "✅ Frontend Dashboard Docker build successful"
+	@echo ""
+	@echo "======================================"
+	@echo "✅ All Docker builds passed!"
+	@echo "======================================"
+	@echo ""
+	@echo "Cleaning up test images..."
+	@docker rmi test-backend-builder test-frontend-admin test-frontend-portal test-frontend-dashboard 2>/dev/null || true
+	@echo "✅ Cleanup complete"
