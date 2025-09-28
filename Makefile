@@ -110,7 +110,7 @@ backend-start:
 
 # Build & Test
 build:
-	pnpm build
+	pnpm build:prod
 
 test:
 	pnpm test
@@ -153,7 +153,6 @@ docker-up:
 	docker-compose up -d
 	@echo "Services started. Backend: http://localhost:3000, Frontend: http://localhost:3001"
 	@echo "MailHog: http://localhost:8025, MinIO: http://localhost:9001"
-	@echo "Prometheus: http://localhost:9090, Grafana: http://localhost:$${GRAFANA_PORT:-3100}"
 
 docker-down:
 	docker-compose down
@@ -410,7 +409,7 @@ ci-check:
 	@echo "✅ Linting passed"
 	@echo ""
 	@echo "Step 9/14: Building all packages (CI mode)..."
-	@pnpm run --recursive --workspace-concurrency=1 build || (echo "❌ Build failed." && exit 1)
+	@pnpm run --recursive --workspace-concurrency=1 build:prod || (echo "❌ Build failed." && exit 1)
 	@echo "✅ Build completed successfully"
 	@echo ""
 	@echo "Step 10/14: Type checking..."
@@ -445,7 +444,7 @@ check-deps:
 	@echo "✅ Lockfile is in sync"
 	@echo ""
 	@echo "2. Building packages sequentially (mimics CI)..."
-	@pnpm run --recursive --workspace-concurrency=1 build || (echo "❌ Build failed" && exit 1)
+	@pnpm run --recursive --workspace-concurrency=1 build:prod || (echo "❌ Build failed" && exit 1)
 	@echo "✅ All packages built successfully"
 	@echo ""
 	@echo "✅ Dependency check passed!"

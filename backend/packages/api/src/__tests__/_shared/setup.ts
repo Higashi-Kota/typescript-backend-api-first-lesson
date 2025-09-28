@@ -15,6 +15,10 @@ let currentTestSchema: TestSchema | null = null
 beforeAll(async () => {
   console.log('🚀 Starting PostgreSQL container...')
 
+  // Set environment variables to bypass Docker credential helpers
+  process.env.TESTCONTAINERS_RYUK_DISABLED = 'true'
+  process.env.DOCKER_CONFIG = '/dev/null'
+
   container = await new PostgreSqlContainer('postgres:15-alpine')
     .withDatabase('testdb')
     .withUsername('testuser')

@@ -50,6 +50,7 @@
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.1.13",
     "@beauty-salon-frontend/theme": "workspace:*",
     "@beauty-salon-frontend/config": "workspace:*",
     "@beauty-salon-shared/config": "workspace:*",

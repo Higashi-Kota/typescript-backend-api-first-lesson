@@ -161,12 +161,6 @@ export const env = createEnv({
       .positive()
       .default(86400),
 
-    // Redis (optional)
-    REDIS_URL: z.string().url().optional(),
-    REDIS_PASSWORD: z.string().optional(),
-    REDIS_DB: z.coerce.number().int().min(0).default(0),
-    REDIS_KEY_PREFIX: z.string().default('beauty_salon:'),
-
     // SMTP Configuration
     SMTP_HOST: z.string().optional(),
     SMTP_PORT: z.coerce.number().int().positive().optional(),
@@ -180,12 +174,6 @@ export const env = createEnv({
     S3_SECRET_ACCESS_KEY: z.string().optional(),
     S3_BUCKET: z.string().optional(),
     S3_REGION: z.string().default('us-east-1'),
-
-    // Sentry Error Monitoring
-    SENTRY_DSN: z.string().url().optional(),
-    SENTRY_ENVIRONMENT: z.string().optional(),
-    SENTRY_RELEASE: z.string().optional(),
-    SENTRY_TRACES_SAMPLE_RATE: z.coerce.number().min(0).max(1).optional(),
   },
   runtimeEnv: process.env,
   emptyStringAsUndefined: true,

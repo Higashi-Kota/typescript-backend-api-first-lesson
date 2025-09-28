@@ -507,7 +507,7 @@ type CustomerId = string;  // UUID validated at DB level
 pnpm lint        # Zero warnings/errors
 pnpm typecheck   # No TypeScript errors
 pnpm test        # All tests green
-pnpm build       # Successful build
+pnpm build:prod  # Successful build
 ```
 
 ### **Biome Configuration (ENFORCED):**
@@ -706,7 +706,6 @@ You MUST strictly adhere to these FOUNDATIONAL documents:
 - `testing-requirements.md` - Test coverage standards
 - `development-workflow.md` - Development process
 - `cleanup-policy.md` - YAGNI and code cleanup
-- `error-tracking-and-monitoring.md` - Observability
 
 ### **Key Architectural Principles:**
 1. **DB-Driven Models**: Database schemas are the source of truth

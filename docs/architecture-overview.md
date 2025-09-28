@@ -795,7 +795,9 @@ pnpm generate:spec         # TypeSpec → OpenAPI
 pnpm generate:backend      # OpenAPI → TypeScript
 
 # Build commands
-pnpm build                 # Development build
+pnpm build:dev            # Development build
+pnpm build:test           # Test build
+pnpm build:stg            # Staging build
 pnpm build:prod           # Production build with optimization
 
 # Quality checks
@@ -850,6 +852,63 @@ pnpm --filter ./backend/packages/* \
 pnpm --filter ./backend/packages/* \
      -r run typecheck
 ```
+
+## Deployment Architecture
+
+### Container Strategy
+The system uses Docker containers for deployment with separate images for each component:
+
+```
+├── Dockerfile.backend           # Backend API server
+├── Dockerfile.frontend.admin    # Admin dashboard (port 4001)
+├── Dockerfile.frontend.portal   # Customer portal (port 4002)
+└── Dockerfile.frontend.dashboard # Main dashboard (port 4003)
+```
+
+### Multi-Stage Builds
+All Dockerfiles use multi-stage builds:
+- **Builder Stage**: Compiles TypeScript and builds assets
+- **Runtime Stage**: Minimal production image with compiled code
+
+### CI/CD Pipeline
+
+#### GitHub Actions Workflows
+1. **CI Pipeline** (`ci.yml`)
+   - Triggered on all pull requests
+   - Runs linting, type checking, and tests
+   - Ensures build integrity
+
+2. **Deploy Pipeline** (`deploy.yml`)
+   - Automatic: Push to main → Staging deployment
+   - Manual: Workflow dispatch → Production deployment
+   - Builds and pushes Docker images to GitHub Container Registry
+
+### Container Registry
+Images are stored in GitHub Container Registry (ghcr.io):
+- `ghcr.io/<repo>-backend:<env>-latest`
+- `ghcr.io/<repo>-frontend-admin:<env>-latest`
+- `ghcr.io/<repo>-frontend-portal:<env>-latest`
+- `ghcr.io/<repo>-frontend-dashboard:<env>-latest`
+
+### Environment-Specific Builds
+```bash
+# Development
+pnpm build:dev
+
+# Test
+pnpm build:test
+
+# Staging
+pnpm build:stg
+
+# Production
+pnpm build:prod
+```
+
+### Health Checks
+All services include health endpoints for monitoring:
+- Backend: `/health` endpoint
+- Frontend: Root path availability
 
 ## Key Design Decisions
 
@@ -908,7 +967,7 @@ pnpm --filter ./backend/packages/* \
 ### Optimization Points
 - Database query optimization
 - Connection pooling
-- Caching strategy (Redis)
+- Caching strategy
 - Response compression
 - Lazy loading
 

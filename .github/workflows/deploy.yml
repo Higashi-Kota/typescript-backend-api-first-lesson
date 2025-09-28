@@ -19,11 +19,11 @@ env:
   PNPM_VERSION: '10.13.1'
 
 jobs:
-  build-and-deploy:
-    name: Build and Deploy
+  build-and-deploy-backend:
+    name: Build and Deploy Backend
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment || 'staging' }}
-    
+
     permissions:
       contents: read
       packages: write
@@ -47,12 +47,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build for ${{ github.event.inputs.environment || 'staging' }}
+      - name: Build backend for ${{ github.event.inputs.environment || 'staging' }}
         run: |
           if [ "${{ github.event.inputs.environment }}" = "production" ]; then
-            pnpm build:prod
+            pnpm --filter "./backend/**" build:prod
           else
-            pnpm build:stg
+            pnpm --filter "./backend/**" build:stg
           fi
 
       - name: Set up Docker Buildx
@@ -69,15 +69,16 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository }}
+          images: ghcr.io/${{ github.repository }}-backend
           tags: |
             type=raw,value=${{ github.event.inputs.environment || 'staging' }}-latest
             type=sha,prefix=${{ github.event.inputs.environment || 'staging' }}-
 
-      - name: Build and push Docker image
+      - name: Build and push Backend Docker image
         uses: docker/build-push-action@v6
         with:
           context: .
+          file: ./Dockerfile.backend
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -87,9 +88,99 @@ jobs:
           build-args: |
             NODE_ENV=${{ github.event.inputs.environment || 'staging' }}
 
-      - name: Deploy notification
+      - name: Deploy notification - Backend
         if: success()
         run: |
-          echo "Deployment successful! 🎉"
+          echo "Backend deployment successful! 🎉"
           echo "Environment: ${{ github.event.inputs.environment || 'staging' }}"
-          echo "Image: ghcr.io/${{ github.repository }}:${{ github.event.inputs.environment || 'staging' }}-latest"
+          echo "Image: ghcr.io/${{ github.repository }}-backend:${{ github.event.inputs.environment || 'staging' }}-latest"
+
+  build-and-deploy-frontend:
+    name: Build and Deploy Frontend Apps
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'staging' }}
+    strategy:
+      matrix:
+        app:
+          - name: admin
+            dockerfile: Dockerfile.frontend.admin
+            port: 4001
+          - name: portal
+            dockerfile: Dockerfile.frontend.portal
+            port: 4002
+          - name: dashboard
+            dockerfile: Dockerfile.frontend.dashboard
+            port: 4003
+
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate API specifications and types
+        run: pnpm generate
+
+      - name: Prepare frontend types
+        run: pnpm prepare:frontend
+
+      - name: Build ${{ matrix.app.name }} app for production
+        run: pnpm --filter "@beauty-salon/${{ matrix.app.name }}-app" build:prod
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata for ${{ matrix.app.name }} app
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}-frontend-${{ matrix.app.name }}
+          tags: |
+            type=raw,value=${{ github.event.inputs.environment || 'staging' }}-latest
+            type=sha,prefix=${{ github.event.inputs.environment || 'staging' }}-
+
+      - name: Build and push ${{ matrix.app.name }} Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./${{ matrix.app.dockerfile }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            NODE_ENV=${{ github.event.inputs.environment || 'staging' }}
+            APP_PORT=${{ matrix.app.port }}
+
+      - name: Deploy notification - ${{ matrix.app.name }}
+        if: success()
+        run: |
+          echo "${{ matrix.app.name }} app deployment successful! 🎉"
+          echo "Environment: ${{ github.event.inputs.environment || 'staging' }}"
+          echo "Image: ghcr.io/${{ github.repository }}-frontend-${{ matrix.app.name }}:${{ github.event.inputs.environment || 'staging' }}-latest"
+          echo "Port: ${{ matrix.app.port }}"

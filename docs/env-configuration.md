@@ -163,25 +163,6 @@ CSRF_SECRET=your-csrf-secret-here
 ### 外部サービス設定
 
 ```env
-# Redis設定（オプション）
-REDIS_URL=redis://localhost:6379
-REDIS_PASSWORD=
-REDIS_DB=0
-REDIS_KEY_PREFIX=beauty_salon:
-
-# Sentryエラー監視（オプション）
-SENTRY_DSN=https://xxx@sentry.io/yyy
-SENTRY_ENVIRONMENT=development
-SENTRY_RELEASE=1.0.0
-SENTRY_TRACES_SAMPLE_RATE=0.1
-
-# モニタリング設定
-PROMETHEUS_PORT=9090
-GRAFANA_PORT=3100
-GRAFANA_USER=admin
-GRAFANA_PASSWORD=admin
-POSTGRES_EXPORTER_PORT=9187
-
 # CDN設定（オプション）
 CDN_BASE_URL=https://cdn.example.com
 CDN_ENABLE=true
@@ -363,10 +344,6 @@ R2_SECRET_ACCESS_KEY=${AWS_SECRET_R2_SECRET_KEY}
 CORS_ORIGIN=https://app.example.com
 CORS_CREDENTIALS=true
 SESSION_COOKIE_SECURE=true
-
-# 監視
-SENTRY_DSN=https://xxx@sentry.io/yyy
-SENTRY_ENVIRONMENT=production
 
 # ロギング
 LOG_LEVEL=warn

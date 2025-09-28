@@ -1,18 +1,17 @@
 # Build stage
 FROM node:24.4.0-alpine AS builder
 
-# Install pnpm globally with specific version
-RUN corepack enable && corepack prepare pnpm@10.13.1 --activate
+# Install pnpm globally with specific version using npm (reliable for Alpine)
+ENV PNPM_VERSION=10.13.1
+RUN npm install -g pnpm@${PNPM_VERSION}
 
 # Set working directory
 WORKDIR /app
 
 # Copy package files for better caching
-COPY pnpm-workspace.yaml pnpm-lock.yaml* ./
-COPY backend/package.json ./backend/
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml* ./
 COPY backend/packages/*/package.json ./backend/packages/*/
 COPY backend/apps/*/package.json ./backend/apps/*/
-COPY frontend/package.json ./frontend/
 COPY frontend/packages/*/package.json ./frontend/packages/*/
 COPY frontend/apps/*/package.json ./frontend/apps/*/
 COPY specs/package.json ./specs/
@@ -24,14 +23,15 @@ RUN pnpm install --frozen-lockfile
 COPY . .
 
 # Build backend packages
-RUN pnpm --filter "./backend/**" run build
+RUN pnpm --filter "./backend/**" run build:prod
 
 # Development stage
 FROM node:24.4.0-alpine AS development
 
 # Install pnpm globally and development tools
+ENV PNPM_VERSION=10.13.1
 RUN apk add --no-cache bash wget && \
-    corepack enable && corepack prepare pnpm@10.13.1 --activate
+    npm install -g pnpm@${PNPM_VERSION}
 
 # Create non-root user
 RUN adduser -D -s /bin/sh appuser
@@ -46,10 +46,14 @@ COPY --chown=appuser:appuser package.json ./
 COPY --chown=appuser:appuser . .
 
 # Install all dependencies (including dev)
-RUN pnpm install
+RUN pnpm install --frozen-lockfile
+
+# Setup pnpm and install TypeScript globally for the build process
+ENV PNPM_HOME=/usr/local/bin
+RUN npm install -g typescript
 
 # Build all packages in development for tsx to work properly
-RUN pnpm --filter "./backend/packages/**" run build
+RUN pnpm --filter "./backend/packages/**" run build:prod
 
 # Switch to non-root user
 USER appuser
@@ -64,8 +68,9 @@ CMD ["pnpm", "--filter", "@beauty-salon-backend/server", "dev"]
 FROM node:24.4.0-alpine AS production
 
 # Install pnpm globally and runtime dependencies
+ENV PNPM_VERSION=10.13.1
 RUN apk add --no-cache bash wget && \
-    corepack enable && corepack prepare pnpm@10.13.1 --activate
+    npm install -g pnpm@${PNPM_VERSION}
 
 # Create non-root user
 RUN adduser -D -s /bin/sh appuser
@@ -74,10 +79,10 @@ RUN adduser -D -s /bin/sh appuser
 WORKDIR /app
 
 # Copy remaining package files
-COPY --chown=appuser:appuser pnpm-workspace.yaml pnpm-lock.yaml* ./
-COPY --chown=appuser:appuser backend/package.json ./backend/
+COPY --chown=appuser:appuser package.json pnpm-workspace.yaml pnpm-lock.yaml* ./
 COPY --chown=appuser:appuser backend/packages/*/package.json ./backend/packages/*/
 COPY --chown=appuser:appuser backend/apps/*/package.json ./backend/apps/*/
+COPY --chown=appuser:appuser specs/package.json ./specs/
 
 # Install production dependencies only
 RUN pnpm install --prod --frozen-lockfile

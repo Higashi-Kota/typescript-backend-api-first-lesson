@@ -198,8 +198,14 @@ pnpm test:integration # Integration tests
 pnpm test:e2e        # End-to-end tests
 
 # Build
-pnpm build           # Development build
+pnpm build:dev       # Development build
+pnpm build:test      # Test build
+pnpm build:stg       # Staging build
 pnpm build:prod      # Production build
+
+# Deployment (GitHub Actions)
+# Push to main     → Automatic staging deployment
+# Manual trigger   → Production deployment via Actions tab
 ```
 
 ## 📚 Documentation References

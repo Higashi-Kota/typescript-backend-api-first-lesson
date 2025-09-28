@@ -38,8 +38,6 @@
 - [Storage Providers](./storage-providers.md) - File storage services
 - [File Upload](./file-upload.md) - File upload handling
 
-## 📊 Monitoring & Operations
-- [Error Tracking and Monitoring](./error-tracking-and-monitoring.md) - Error tracking, monitoring, and observability
 
 ## Quick Links
 
