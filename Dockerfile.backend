@@ -1,19 +1,30 @@
 # Build stage
 FROM node:24.4.0-alpine AS builder
 
-# Install pnpm globally with specific version using npm (reliable for Alpine)
+# Install pnpm and TypeScript globally with specific versions
 ENV PNPM_VERSION=10.13.1
-RUN npm install -g pnpm@${PNPM_VERSION}
+RUN npm install -g pnpm@${PNPM_VERSION} typescript
 
 # Set working directory
 WORKDIR /app
 
 # Copy package files for better caching
-COPY package.json pnpm-workspace.yaml pnpm-lock.yaml* ./
-COPY backend/packages/*/package.json ./backend/packages/*/
-COPY backend/apps/*/package.json ./backend/apps/*/
-COPY frontend/packages/*/package.json ./frontend/packages/*/
-COPY frontend/apps/*/package.json ./frontend/apps/*/
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+COPY shared-config/package.json ./shared-config/
+
+# Copy backend package.json files
+COPY backend/packages/api/package.json ./backend/packages/api/
+COPY backend/packages/config/package.json ./backend/packages/config/
+COPY backend/packages/database/package.json ./backend/packages/database/
+COPY backend/packages/domain/package.json ./backend/packages/domain/
+COPY backend/packages/generated/package.json ./backend/packages/generated/
+COPY backend/packages/infrastructure/package.json ./backend/packages/infrastructure/
+COPY backend/packages/utility/package.json ./backend/packages/utility/
+
+# Copy backend apps package.json files
+COPY backend/apps/server/package.json ./backend/apps/server/
+
+# Copy specs package.json
 COPY specs/package.json ./specs/
 
 # Install dependencies
@@ -79,9 +90,22 @@ RUN adduser -D -s /bin/sh appuser
 WORKDIR /app
 
 # Copy remaining package files
-COPY --chown=appuser:appuser package.json pnpm-workspace.yaml pnpm-lock.yaml* ./
-COPY --chown=appuser:appuser backend/packages/*/package.json ./backend/packages/*/
-COPY --chown=appuser:appuser backend/apps/*/package.json ./backend/apps/*/
+COPY --chown=appuser:appuser package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+COPY --chown=appuser:appuser shared-config/package.json ./shared-config/
+
+# Copy backend package.json files
+COPY --chown=appuser:appuser backend/packages/api/package.json ./backend/packages/api/
+COPY --chown=appuser:appuser backend/packages/config/package.json ./backend/packages/config/
+COPY --chown=appuser:appuser backend/packages/database/package.json ./backend/packages/database/
+COPY --chown=appuser:appuser backend/packages/domain/package.json ./backend/packages/domain/
+COPY --chown=appuser:appuser backend/packages/generated/package.json ./backend/packages/generated/
+COPY --chown=appuser:appuser backend/packages/infrastructure/package.json ./backend/packages/infrastructure/
+COPY --chown=appuser:appuser backend/packages/utility/package.json ./backend/packages/utility/
+
+# Copy backend apps package.json files
+COPY --chown=appuser:appuser backend/apps/server/package.json ./backend/apps/server/
+
+# Copy specs package.json
 COPY --chown=appuser:appuser specs/package.json ./specs/
 
 # Install production dependencies only

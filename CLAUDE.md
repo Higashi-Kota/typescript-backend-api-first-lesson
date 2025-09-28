@@ -203,6 +203,9 @@ pnpm build:test      # Test build
 pnpm build:stg       # Staging build
 pnpm build:prod      # Production build
 
+# CI/CD Local Testing
+make ci-check-dockerfile  # Test all Docker builds locally before pushing
+
 # Deployment (GitHub Actions)
 # Push to main     → Automatic staging deployment
 # Manual trigger   → Production deployment via Actions tab
