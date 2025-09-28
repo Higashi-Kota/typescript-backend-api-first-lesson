@@ -341,7 +341,7 @@ make fresh
 
 # 個別パッケージのビルドを試す
 cd backend/packages/domain
-pnpm build
+pnpm build:prod
 ```
 
 ### 型エラーが解決しない場合
@@ -386,6 +386,128 @@ make frontend-build
 
 # 開発サーバーを起動
 make frontend-dev
+```
+
+## ビルドとデプロイ
+
+### 開発環境でのビルド
+
+```bash
+# 開発ビルド（全パッケージ）
+pnpm build:dev
+
+# バックエンドのみ
+pnpm --filter "./backend/**" build:dev
+
+# フロントエンドアプリ個別
+pnpm --filter "@beauty-salon/admin-app" build:dev
+pnpm --filter "@beauty-salon/portal-app" build:dev
+pnpm --filter "@beauty-salon/dashboard-app" build:dev
+```
+
+### テスト環境向けビルド
+
+```bash
+# 全パッケージ
+pnpm build:test
+
+# バックエンドのみ
+pnpm --filter "./backend/**" build:test
+```
+
+### ステージング環境向けビルド
+
+```bash
+# 全パッケージ
+pnpm build:stg
+
+# バックエンドのみ
+pnpm --filter "./backend/**" build:stg
+
+# フロントエンドアプリ
+pnpm --filter "@beauty-salon/admin-app" build:stg
+```
+
+### 本番環境向けビルド
+
+```bash
+# 全パッケージ
+pnpm build:prod
+
+# バックエンドのみ
+pnpm --filter "./backend/**" build:prod
+
+# フロントエンドアプリ
+pnpm --filter "@beauty-salon/admin-app" build:prod
+```
+
+### Dockerイメージのビルド
+
+```bash
+# バックエンドイメージ
+docker build -f Dockerfile.backend -t beauty-salon-backend:latest .
+
+# フロントエンドイメージ
+docker build -f Dockerfile.frontend.admin -t beauty-salon-admin:latest .
+docker build -f Dockerfile.frontend.portal -t beauty-salon-portal:latest .
+docker build -f Dockerfile.frontend.dashboard -t beauty-salon-dashboard:latest .
+
+# 本番用ビルド（multi-stage）
+docker build -f Dockerfile.backend --target production -t beauty-salon-backend:prod .
+```
+
+### CI/CDパイプライン
+
+#### GitHub Actionsでの自動デプロイ
+
+1. **プルリクエスト時**: CIパイプラインが自動実行
+   - Linting、Type checking
+   - Unit/Integration tests
+   - ビルド確認
+
+2. **mainブランチへのプッシュ**: ステージング環境へ自動デプロイ
+   - Dockerイメージのビルド
+   - GitHub Container Registryへプッシュ
+   - staging-latestタグで更新
+
+3. **本番環境へのデプロイ**: 手動トリガー
+   ```
+   1. GitHubのActionsタブを開く
+   2. "Deploy"ワークフローを選択
+   3. "Run workflow"をクリック
+   4. Environment: "production"を選択
+   5. "Run workflow"で実行
+   ```
+
+### デプロイ済みイメージの確認
+
+```bash
+# GitHub Container Registryのイメージ一覧
+# https://github.com/<org>/<repo>/pkgs/container/<repo>-backend
+# https://github.com/<org>/<repo>/pkgs/container/<repo>-frontend-admin
+# https://github.com/<org>/<repo>/pkgs/container/<repo>-frontend-portal
+# https://github.com/<org>/<repo>/pkgs/container/<repo>-frontend-dashboard
+```
+
+### ポート構成
+
+| サービス | ポート | 説明 |
+|---------|-------|------|
+| Backend API | 3000 | RESTful API |
+| Admin App | 4001 | 管理者用ダッシュボード |
+| Portal App | 4002 | 顧客向けポータル |
+| Dashboard App | 4003 | メインダッシュボード |
+
+### ヘルスチェック
+
+```bash
+# バックエンド
+curl http://localhost:3000/health
+
+# フロントエンドアプリ（静的ファイル）
+curl http://localhost:4001/
+curl http://localhost:4002/
+curl http://localhost:4003/
 ```
 
 

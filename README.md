@@ -112,7 +112,6 @@ pnpm build:frontend          # Build frontend packages + apps
 pnpm preview:frontend        # Serve frontend apps
 
 # Building
-pnpm build              # Build all packages
 pnpm build:prod         # Production build
 
 # Testing

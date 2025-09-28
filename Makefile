@@ -110,7 +110,7 @@ backend-start:
 
 # Build & Test
 build:
-	pnpm build
+	pnpm build:prod
 
 test:
 	pnpm test

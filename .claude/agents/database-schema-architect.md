@@ -327,7 +327,7 @@ After completing migration steps, ensure:
 1. **Types are synced**: Check that TypeScript compiles without errors
 2. **Seed data works**: Verify `pnpm db:seed` runs successfully
 3. **Tests pass**: Run `pnpm test` to validate business logic
-4. **Build succeeds**: Ensure `pnpm build` completes without errors
+4. **Build succeeds**: Ensure `pnpm build:prod` completes without errors
 
 ## DB-Driven Best Practices
 

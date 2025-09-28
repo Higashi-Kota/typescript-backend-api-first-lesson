@@ -507,7 +507,7 @@ type CustomerId = string;  // UUID validated at DB level
 pnpm lint        # Zero warnings/errors
 pnpm typecheck   # No TypeScript errors
 pnpm test        # All tests green
-pnpm build       # Successful build
+pnpm build:prod  # Successful build
 ```
 
 ### **Biome Configuration (ENFORCED):**
