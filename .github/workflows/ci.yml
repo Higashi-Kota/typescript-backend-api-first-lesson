@@ -9,6 +9,7 @@ on:
 env:
   NODE_VERSION: "24.4.0"
   PNPM_VERSION: "10.13.1"
+  TYPESCRIPT_VERSION: "5.9.2"
 
 jobs:
   lint-and-typecheck:
@@ -193,10 +194,59 @@ jobs:
           path: specs/tsp-output/@typespec/openapi3/generated/openapi.yaml
           retention-days: 30
 
+  docker-build-test:
+    name: Docker Build Test
+    runs-on: ubuntu-latest
+    needs: [lint-and-typecheck]
+    strategy:
+      fail-fast: false
+      matrix:
+        dockerfile:
+          - name: backend
+            file: Dockerfile.backend
+            target: builder
+          - name: frontend-admin
+            file: Dockerfile.frontend.admin
+            target: builder
+          - name: frontend-portal
+            file: Dockerfile.frontend.portal
+            target: builder
+          - name: frontend-dashboard
+            file: Dockerfile.frontend.dashboard
+            target: builder
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build ${{ matrix.dockerfile.name }} Docker image (test)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./${{ matrix.dockerfile.file }}
+          target: ${{ matrix.dockerfile.target }}
+          push: false
+          load: true
+          tags: test-${{ matrix.dockerfile.name }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            NODE_ENV=test
+            PNPM_VERSION=${{ env.PNPM_VERSION }}
+            TYPESCRIPT_VERSION=${{ env.TYPESCRIPT_VERSION }}
+
+      - name: Verify ${{ matrix.dockerfile.name }} image built successfully
+        run: |
+          echo "✅ ${{ matrix.dockerfile.name }} Docker image built successfully"
+          docker images | grep test-${{ matrix.dockerfile.name }}
+
   docker-backend:
     name: Docker Build - Backend
     runs-on: ubuntu-latest
-    needs: [lint-and-typecheck, test, build]
+    needs: [lint-and-typecheck, test, build, docker-build-test]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     permissions:
@@ -243,7 +293,7 @@ jobs:
   docker-frontend-apps:
     name: Docker Build - Frontend Apps
     runs-on: ubuntu-latest
-    needs: [lint-and-typecheck, test, build]
+    needs: [lint-and-typecheck, test, build, docker-build-test]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     strategy:
       matrix:

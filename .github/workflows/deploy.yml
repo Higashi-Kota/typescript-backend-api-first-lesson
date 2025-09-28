@@ -17,6 +17,7 @@ on:
 env:
   NODE_VERSION: '24.4.0'
   PNPM_VERSION: '10.13.1'
+  TYPESCRIPT_VERSION: '5.9.2'
 
 jobs:
   build-and-deploy-backend:
