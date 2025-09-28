@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:16-alpine
+    image: postgres:15-alpine
     container_name: beauty-salon-db
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-beauty_salon}
@@ -32,10 +32,10 @@ services:
       NODE_ENV: ${NODE_ENV:-development}
       PORT: ${PORT:-3000}
       DATABASE_URL: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-beauty_salon}
-      
+
       # Email - Use Docker service names
       MAILHOG_HOST: mailhog
-      
+
       # Storage - Use Docker service names
       MINIO_ENDPOINT: http://minio:9000
     ports:
@@ -52,7 +52,15 @@ services:
       minio-init:
         condition: service_completed_successfully
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:3000/health",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -75,7 +83,17 @@ services:
         condition: service_healthy
     networks:
       - beauty-salon-network
-    command: pnpm --filter @beauty-salon-backend/database run migrate
+    command: >
+      sh -c "
+      pnpm --filter @beauty-salon-backend/database run db:reset &&
+      pnpm --filter @beauty-salon-backend/database run db:setup &&
+      pnpm --filter @beauty-salon-backend/database run db:migrate &&
+      pnpm --filter @beauty-salon-backend/database run db:introspect &&
+      pnpm --filter @beauty-salon-backend/database run db:generate-sql &&
+      pnpm --filter @beauty-salon-backend/database run db:truncate &&
+      pnpm --filter @beauty-salon-backend/database run db:seed &&
+      pnpm --filter @beauty-salon-backend/database run format:fix
+      "
 
   mailhog:
     image: mailhog/mailhog:latest
@@ -128,56 +146,6 @@ services:
       exit 0;
       "
 
-  # Prometheus for metrics collection
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: beauty-salon-prometheus
-    ports:
-      - "${PROMETHEUS_PORT:-9090}:9090"
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - prometheus_data:/prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
-      - '--web.console.templates=/usr/share/prometheus/consoles'
-      - '--web.enable-lifecycle'
-    restart: unless-stopped
-    networks:
-      - beauty-salon-network
-
-  # Grafana for metrics visualization (optional)
-  grafana:
-    image: grafana/grafana:latest
-    container_name: beauty-salon-grafana
-    ports:
-      - "${GRAFANA_PORT:-3100}:3000"
-    environment:
-      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER:-admin}
-      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
-      - GF_USERS_ALLOW_SIGN_UP=false
-    volumes:
-      - grafana_data:/var/lib/grafana
-    restart: unless-stopped
-    networks:
-      - beauty-salon-network
-    depends_on:
-      - prometheus
-
-  postgres-exporter:
-    image: prometheuscommunity/postgres-exporter:v0.15.0
-    environment:
-      DATA_SOURCE_NAME: "postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-password}@postgres:5432/${DB_NAME:-beauty_salon}?sslmode=disable"
-      PG_EXPORTER_WEB_LISTEN_ADDRESS: ":9187"
-    ports:
-      - "${POSTGRES_EXPORTER_PORT:-9187}:9187"
-    networks:
-      - beauty-salon-network
-    depends_on:
-      - postgres
-    restart: unless-stopped
-
 networks:
   beauty-salon-network:
     driver: bridge
@@ -187,5 +155,3 @@ volumes:
   minio_data:
   backend_node_modules:
   pnpm_store:
-  prometheus_data:
-  grafana_data:

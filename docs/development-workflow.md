@@ -388,37 +388,5 @@ make frontend-build
 make frontend-dev
 ```
 
-## モニタリングとエラートラッキング
 
-### Sentryのセットアップ
 
-```bash
-# 1. .envファイルにSentry DSNを設定
-SENTRY_DSN=https://xxx@sentry.io/yyy
-SENTRY_ENVIRONMENT=development
-
-# 2. アプリケーションを再起動
-make backend-build
-make backend-start
-```
-
-### Prometheus/Grafanaの利用
-
-```bash
-# 1. モニタリングサービスを起動（通常はmake docker-upで自動起動）
-docker-compose up -d prometheus grafana postgres-exporter
-
-# 2. メトリクスの確認
-# Prometheusダッシュボード: http://localhost:9090
-# Grafanaダッシュボード: http://localhost:3100 (admin/admin)
-# PostgreSQL Exporterメトリクス: http://localhost:9187/metrics
-
-# 3. メトリクスエンドポイントの確認
-curl http://localhost:4010/metrics
-
-# 4. データベースメトリクスの確認
-# PostgreSQL Exporterが自動的にデータベースのパフォーマンスメトリクスを収集
-# Prometheusで pg_ プレフィックスのメトリクスを検索
-```
-
-詳細は[エラートラッキングとモニタリング](./error-tracking-and-monitoring.md)を参照してください。

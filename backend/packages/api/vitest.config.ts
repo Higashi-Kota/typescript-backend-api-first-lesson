@@ -9,6 +9,13 @@ export default defineConfig({
     setupFiles: ['./src/__tests__/_shared/setup.ts'],
     testTimeout: 60000,
     hookTimeout: 60000,
+    // Environment variables to fix testcontainers credential issues
+    env: {
+      TESTCONTAINERS_RYUK_DISABLED: 'true',
+      DOCKER_CONFIG: '/dev/null',
+      TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE: '/var/run/docker.sock',
+      NODE_ENV: 'test',
+    },
     // Single thread for database schema isolation
     poolOptions: {
       threads: {

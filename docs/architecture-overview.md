@@ -908,7 +908,7 @@ pnpm --filter ./backend/packages/* \
 ### Optimization Points
 - Database query optimization
 - Connection pooling
-- Caching strategy (Redis)
+- Caching strategy
 - Response compression
 - Lazy loading
 

@@ -153,7 +153,6 @@ docker-up:
 	docker-compose up -d
 	@echo "Services started. Backend: http://localhost:3000, Frontend: http://localhost:3001"
 	@echo "MailHog: http://localhost:8025, MinIO: http://localhost:9001"
-	@echo "Prometheus: http://localhost:9090, Grafana: http://localhost:$${GRAFANA_PORT:-3100}"
 
 docker-down:
 	docker-compose down
