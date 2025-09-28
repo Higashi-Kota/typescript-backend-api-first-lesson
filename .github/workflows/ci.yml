@@ -36,7 +36,7 @@ jobs:
         run: pnpm generate
 
       - name: Build all packages
-        run: pnpm run --recursive --workspace-concurrency=1 build
+        run: pnpm run --recursive --workspace-concurrency=1 build:prod
 
       - name: Run Biome lint
         run: pnpm lint
@@ -87,7 +87,7 @@ jobs:
         run: pnpm generate
 
       - name: Build packages for tests
-        run: pnpm run --recursive --workspace-concurrency=1 build
+        run: pnpm run --recursive --workspace-concurrency=1 build:prod
 
       - name: Copy test environment variables
         run: cp .env.test.example .env.test

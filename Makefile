@@ -409,7 +409,7 @@ ci-check:
 	@echo "✅ Linting passed"
 	@echo ""
 	@echo "Step 9/14: Building all packages (CI mode)..."
-	@pnpm run --recursive --workspace-concurrency=1 build || (echo "❌ Build failed." && exit 1)
+	@pnpm run --recursive --workspace-concurrency=1 build:prod || (echo "❌ Build failed." && exit 1)
 	@echo "✅ Build completed successfully"
 	@echo ""
 	@echo "Step 10/14: Type checking..."
@@ -444,7 +444,7 @@ check-deps:
 	@echo "✅ Lockfile is in sync"
 	@echo ""
 	@echo "2. Building packages sequentially (mimics CI)..."
-	@pnpm run --recursive --workspace-concurrency=1 build || (echo "❌ Build failed" && exit 1)
+	@pnpm run --recursive --workspace-concurrency=1 build:prod || (echo "❌ Build failed" && exit 1)
 	@echo "✅ All packages built successfully"
 	@echo ""
 	@echo "✅ Dependency check passed!"

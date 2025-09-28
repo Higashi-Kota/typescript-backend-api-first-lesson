@@ -22,7 +22,6 @@
     "build:test": "NODE_ENV=test rslib build",
     "build:stg": "NODE_ENV=staging rslib build",
     "build:prod": "NODE_ENV=production rslib build",
-    "build": "NODE_ENV=production rslib build",
     "build:watch": "NODE_ENV=development rslib build --watch",
     "dev": "NODE_ENV=development rslib build --watch",
     "generate": "tsx scripts/generate-types.ts",
