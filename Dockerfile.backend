@@ -1,5 +1,5 @@
 # Build stage
-FROM node:24.4.0-alpine AS builder
+FROM node:24.9.0-alpine AS builder
 
 # Install pnpm and TypeScript globally with specific versions
 ENV PNPM_VERSION=10.13.1
@@ -39,7 +39,7 @@ RUN pnpm --filter "./backend/packages/**" run build:prod && \
     pnpm --filter "@beauty-salon-backend/server" run build
 
 # Development stage
-FROM node:24.4.0-alpine AS development
+FROM node:24.9.0-alpine AS development
 
 # Install pnpm globally and development tools
 ENV PNPM_VERSION=10.13.1
@@ -78,7 +78,7 @@ EXPOSE 3000
 CMD ["pnpm", "--filter", "@beauty-salon-backend/server", "dev"]
 
 # Production stage
-FROM node:24.4.0-alpine AS production
+FROM node:24.9.0-alpine AS production
 
 # Set production environment
 ENV NODE_ENV=production
