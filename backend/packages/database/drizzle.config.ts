@@ -1,15 +1,16 @@
-import * as path from 'node:path'
-import * as dotenv from 'dotenv'
+import { getDatabaseUrl, loadEnvConfig } from '@beauty-salon-backend/config'
 import type { Config } from 'drizzle-kit'
 
-// Load environment variables from root .env file
-const rootPath = path.resolve(__dirname, '../../../')
-dotenv.config({ path: path.join(rootPath, '.env.localhost') })
+// Load environment-specific configuration
+const environment = loadEnvConfig()
 
-// Parse DATABASE_URL or use individual environment variables
-const databaseUrl =
-  process.env.DATABASE_URL ||
-  `postgres://${process.env.POSTGRES_USER || 'postgres'}:${process.env.POSTGRES_PASSWORD || 'postgres'}@${process.env.DB_HOST || 'localhost'}:${process.env.POSTGRES_PORT || 5432}/${process.env.POSTGRES_DB || 'beauty_salon'}`
+// Get database URL from environment
+const databaseUrl = getDatabaseUrl()
+
+// Log which environment is being used
+console.log(
+  `Using ${environment.toUpperCase()} environment for Drizzle configuration`,
+)
 
 export default {
   schema: './src/schema.ts',

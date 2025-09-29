@@ -30,8 +30,7 @@
     "lint:fix": "biome lint . --write"
   },
   "dependencies": {
-    "@t3-oss/env-core": "^0.13.8",
-    "zod": "3.25.76"
+    "dotenv": "^17.2.2"
   },
   "devDependencies": {
     "@beauty-salon-shared/config": "workspace:*",

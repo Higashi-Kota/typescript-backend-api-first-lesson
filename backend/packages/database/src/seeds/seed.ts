@@ -1,3 +1,4 @@
+import type { Environment } from '@beauty-salon-backend/config'
 import { sql } from 'drizzle-orm'
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
 import * as schema from '../schema'
@@ -18,7 +19,7 @@ export interface SeedOptions {
   /**
    * The environment to seed for
    */
-  environment?: 'development' | 'test' | 'staging'
+  environment?: Environment
   /**
    * Whether to include sample data
    */

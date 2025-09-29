@@ -1,31 +1,21 @@
 #!/usr/bin/env tsx
 
-import * as path from 'node:path'
-import { fileURLToPath } from 'node:url'
-import * as dotenv from 'dotenv'
+import { getDatabaseUrl, loadEnvConfig } from '@beauty-salon-backend/config'
 import { drizzle } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
 import * as schema from '../schema'
 import { truncateAll } from '../seeds/index'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+// Load environment-specific configuration
+const environment = loadEnvConfig()
 
-// Load environment variables from root .env file
-const rootPath = path.resolve(__dirname, '../../../../../')
-dotenv.config({ path: path.join(rootPath, '.env.localhost') })
-
-// Parse DATABASE_URL or use individual environment variables
-const databaseUrl =
-  process.env.DATABASE_URL ||
-  `postgres://${process.env.POSTGRES_USER || 'postgres'}:${
-    process.env.POSTGRES_PASSWORD || 'postgres'
-  }@${process.env.DB_HOST || 'localhost'}:${process.env.POSTGRES_PORT || 5432}/${
-    process.env.POSTGRES_DB || 'beauty_salon'
-  }`
+// Get database URL from environment
+const databaseUrl = getDatabaseUrl()
 
 async function main() {
-  console.log('🗑️  Truncating all database tables...')
+  console.log(
+    `🗑️  Truncating all database tables in ${environment.toUpperCase()} environment...`,
+  )
   console.log('⚠️  This will remove all data but preserve the schema')
   console.log('')
 

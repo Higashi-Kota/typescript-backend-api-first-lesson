@@ -1,36 +1,26 @@
 #!/usr/bin/env tsx
 
-import * as path from 'node:path'
-import { fileURLToPath } from 'node:url'
-import * as dotenv from 'dotenv'
+import { getDatabaseUrl, loadEnvConfig } from '@beauty-salon-backend/config'
 import { drizzle } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
 import * as schema from '../schema'
 import { seed } from '../seeds/index'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-
-// Load environment variables from root .env file
-const rootPath = path.resolve(__dirname, '../../../../../')
-dotenv.config({ path: path.join(rootPath, '.env.localhost') })
+// Load environment-specific configuration
+const environment = loadEnvConfig()
 
 // Parse command line arguments
 const args = process.argv.slice(2)
 const resetIndex = args.findIndex((arg) => arg === '--reset' || arg === '-r')
 const shouldReset = resetIndex !== -1
 
-// Parse DATABASE_URL or use individual environment variables
-const databaseUrl =
-  process.env.DATABASE_URL ||
-  `postgres://${process.env.POSTGRES_USER || 'postgres'}:${
-    process.env.POSTGRES_PASSWORD || 'postgres'
-  }@${process.env.DB_HOST || 'localhost'}:${process.env.POSTGRES_PORT || 5432}/${
-    process.env.POSTGRES_DB || 'beauty_salon'
-  }`
+// Get database URL from environment
+const databaseUrl = getDatabaseUrl()
 
 async function main() {
-  console.log('🌱 Populating database with seed data...')
+  console.log(
+    `🌱 Populating database with seed data in ${environment.toUpperCase()} environment...`,
+  )
   console.log(`🔄 Reset database: ${shouldReset}`)
   console.log('')
 
@@ -39,8 +29,8 @@ async function main() {
 
   try {
     await seed(db, {
-      environment: 'development',
-      includeSampleData: true,
+      environment: environment === 'production' ? 'production' : 'development',
+      includeSampleData: environment !== 'production',
       reset: shouldReset,
     })
 
