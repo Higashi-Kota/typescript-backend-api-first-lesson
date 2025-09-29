@@ -18,6 +18,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "clean": "rm -rf dist *.tsbuildinfo",
+    "build:localhost": "NODE_ENV=localhost rslib build",
     "build:dev": "NODE_ENV=development rslib build",
     "build:test": "NODE_ENV=test rslib build",
     "build:stg": "NODE_ENV=staging rslib build",

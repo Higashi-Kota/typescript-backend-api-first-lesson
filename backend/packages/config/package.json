@@ -15,6 +15,7 @@
   },
   "scripts": {
     "clean": "rm -rf dist *.tsbuildinfo",
+    "build:localhost": "NODE_ENV=localhost rslib build && tsc --emitDeclarationOnly",
     "build:dev": "NODE_ENV=development rslib build && tsc --emitDeclarationOnly",
     "build:test": "NODE_ENV=test rslib build && tsc --emitDeclarationOnly",
     "build:stg": "NODE_ENV=staging rslib build && tsc --emitDeclarationOnly",
@@ -29,8 +30,7 @@
     "lint:fix": "biome lint . --write"
   },
   "dependencies": {
-    "@t3-oss/env-core": "^0.13.8",
-    "zod": "3.25.76"
+    "dotenv": "^17.2.2"
   },
   "devDependencies": {
     "@beauty-salon-shared/config": "workspace:*",

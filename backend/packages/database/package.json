@@ -18,6 +18,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "clean": "rm -rf dist *.tsbuildinfo",
+    "build:localhost": "NODE_ENV=localhost rslib build && tsc --emitDeclarationOnly",
     "build:dev": "NODE_ENV=development rslib build && tsc --emitDeclarationOnly",
     "build:test": "NODE_ENV=test rslib build && tsc --emitDeclarationOnly",
     "build:stg": "NODE_ENV=staging rslib build && tsc --emitDeclarationOnly",
@@ -40,6 +41,7 @@
     "db:truncate": "tsx src/scripts/truncate-seed.ts"
   },
   "dependencies": {
+    "@beauty-salon-backend/config": "workspace:*",
     "@beauty-salon-backend/utility": "workspace:*",
     "drizzle-orm": "^0.44.5",
     "postgres": "^3.4.7"

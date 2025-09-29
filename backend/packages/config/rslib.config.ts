@@ -23,7 +23,7 @@ export default defineConfig({
         minify: isProduction,
         sourceMap: isDevelopment || isTest || isStaging || isLocalhost,
         target: 'node',
-        externals: ['@t3-oss/env-core', 'zod'],
+        externals: ['dotenv'],
       },
     },
   ],

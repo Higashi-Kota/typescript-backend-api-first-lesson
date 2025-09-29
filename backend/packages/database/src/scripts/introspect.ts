@@ -4,7 +4,7 @@ import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { promisify } from 'node:util'
-import * as dotenv from 'dotenv'
+import { getDatabaseUrl, loadEnvConfig } from '@beauty-salon-backend/config'
 
 const execAsync = promisify(exec)
 
@@ -12,19 +12,18 @@ const execAsync = promisify(exec)
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-// Load environment variables from root .env file
-const rootPath = path.resolve(__dirname, '../../../../../')
-dotenv.config({ path: path.join(rootPath, '.env') })
+// Load environment-specific configuration
+const environment = loadEnvConfig()
 
 async function main() {
-  console.log('🔍 Starting database introspection...')
+  console.log(
+    `🔍 Starting database introspection in ${environment.toUpperCase()} environment...`,
+  )
   console.log('This will generate schema.ts and relations.ts from the database')
   console.log('')
 
-  // Parse DATABASE_URL or use individual environment variables
-  const databaseUrl =
-    process.env.DATABASE_URL ||
-    `postgres://${process.env.POSTGRES_USER || 'postgres'}:${process.env.POSTGRES_PASSWORD || 'postgres'}@${process.env.DB_HOST || 'localhost'}:${process.env.POSTGRES_PORT || 5432}/${process.env.POSTGRES_DB || 'beauty_salon'}`
+  // Get database URL from environment
+  const databaseUrl = getDatabaseUrl()
 
   console.log('📊 Database URL:', databaseUrl.replace(/:[^:@]+@/, ':***@')) // Hide password in logs
 

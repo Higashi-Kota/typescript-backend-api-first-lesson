@@ -4,7 +4,7 @@ import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { promisify } from 'node:util'
-import * as dotenv from 'dotenv'
+import { loadEnvConfig } from '@beauty-salon-backend/config'
 
 const execAsync = promisify(exec)
 
@@ -12,12 +12,13 @@ const execAsync = promisify(exec)
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-// Load environment variables from root .env file
-const rootPath = path.resolve(__dirname, '../../../../../')
-dotenv.config({ path: path.join(rootPath, '.env') })
+// Load environment-specific configuration
+const environment = loadEnvConfig()
 
 async function main() {
-  console.log('🏗️ Generating setup.sql from current schema...')
+  console.log(
+    `🏗️ Generating setup.sql from current schema in ${environment.toUpperCase()} environment...`,
+  )
   console.log(
     'This will create sql/setup.sql from the current schema definition',
   )
