@@ -91,7 +91,7 @@ jobs:
         run: pnpm run --recursive --workspace-concurrency=1 build:prod
 
       - name: Copy test environment variables
-        run: cp .env.test .env.test
+        run: cp .env.test.ci .env.test
 
       - name: Setup test database extensions
         run: |
