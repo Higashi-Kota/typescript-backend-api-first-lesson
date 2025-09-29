@@ -83,8 +83,8 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=backend-deploy-buildx
+          cache-to: type=gha,mode=max,scope=backend-deploy-buildx
           target: production
           build-args: |
             NODE_ENV=${{ github.event.inputs.environment || 'staging' }}
@@ -172,8 +172,8 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=frontend-${{ matrix.app.name }}-deploy
+          cache-to: type=gha,mode=max,scope=frontend-${{ matrix.app.name }}-deploy
           build-args: |
             NODE_ENV=${{ github.event.inputs.environment || 'staging' }}
             APP_PORT=${{ matrix.app.port }}

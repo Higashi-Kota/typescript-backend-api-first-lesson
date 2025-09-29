@@ -231,8 +231,8 @@ jobs:
           push: false
           load: true
           tags: test-${{ matrix.dockerfile.name }}:${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=${{ matrix.dockerfile.name }}-buildx
+          cache-to: type=gha,mode=max,scope=${{ matrix.dockerfile.name }}-buildx
           build-args: |
             NODE_ENV=test
             PNPM_VERSION=${{ env.PNPM_VERSION }}
@@ -286,8 +286,8 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=backend-prod-buildx
+          cache-to: type=gha,mode=max,scope=backend-prod-buildx
           target: production
 
   docker-frontend-apps:
@@ -345,8 +345,8 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=frontend-${{ matrix.app.name }}-buildx
+          cache-to: type=gha,mode=max,scope=frontend-${{ matrix.app.name }}-buildx
           build-args: |
             APP_PORT=${{ matrix.app.port }}
 
