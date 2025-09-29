@@ -26,7 +26,7 @@ services:
       target: development
     container_name: beauty-salon-backend
     env_file:
-      - .env
+      - .env.localhost
     environment:
       # Override specific values for Docker networking
       NODE_ENV: ${NODE_ENV:-development}

@@ -199,7 +199,7 @@ db-pull:
 
 # Utility targets
 .env:
-	cp .env.example .env
+	cp .env.example .env.localhost
 	@echo "Created .env file from .env.example"
 	@echo "Please update the values in .env as needed"
 

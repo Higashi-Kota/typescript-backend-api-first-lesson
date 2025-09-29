@@ -4,7 +4,7 @@ import type { Config } from 'drizzle-kit'
 
 // Load environment variables from root .env file
 const rootPath = path.resolve(__dirname, '../../../')
-dotenv.config({ path: path.join(rootPath, '.env') })
+dotenv.config({ path: path.join(rootPath, '.env.localhost') })
 
 // Parse DATABASE_URL or use individual environment variables
 const databaseUrl =

@@ -14,7 +14,7 @@ const __dirname = path.dirname(__filename)
 
 // Load environment variables from root .env file
 const rootPath = path.resolve(__dirname, '../../../../../')
-dotenv.config({ path: path.join(rootPath, '.env') })
+dotenv.config({ path: path.join(rootPath, '.env.localhost') })
 
 async function main() {
   console.log('🏗️ Generating setup.sql from current schema...')
