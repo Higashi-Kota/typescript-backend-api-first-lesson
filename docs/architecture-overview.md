@@ -22,22 +22,23 @@
 ### 2. Clean Architecture Layers
 ```
 ┌─────────────────────────────────────────┐
-│           API Layer (Express)           │ ← HTTP handlers, routing, Zod validation
+│           API Layer (Express)           │ ← HTTP handlers, routing, response formatting
 ├─────────────────────────────────────────┤
-│      Domain Layer (Business Logic)      │ ← Use cases, mappers, business rules
+│      Domain Layer (Business Logic)      │ ← Use cases, validation, mappers, business rules
 ├─────────────────────────────────────────┤
 │   Infrastructure Layer (External I/O)   │ ← Repository implementations, Drizzle
-├─────────────────────────────────────────┤
+├─────────────────────────────────────┤
 │        Database Layer (Schemas)         │ ← Drizzle schemas as source of truth
 └─────────────────────────────────────────┘
 ```
 
 ### 3. Type Safety Patterns
-- **DB-Driven Models**: Drizzle `$inferSelect` and `$inferInsert` as source of truth
+- **DB-Driven Models**: Drizzle `$inferSelect` and `$inferInsert` with `DeepRequired` wrapper
 - **Branded Types**: For entity IDs (e.g., `SalonId`, `CustomerId`)
 - **Result Types**: `Result<T, E>` for all error handling (no exceptions)
 - **Pattern Matching**: ts-pattern for exhaustive handling of Results and sum types
 - **Separate Mappers**: Write (API→DB) and Read (DB→API) transformations
+- **Type Utilities**: `DeepRequired<T>` for non-nullable types, `Omit<T, 'id'>` for inserts
 
 ### 4. Dependency Rules
 - Dependencies point inward (outer layers depend on inner)
@@ -65,13 +66,15 @@ domain/
 │   │   └── salon.ts        # Branded SalonId, API/DB type imports
 │   ├── business-logic/
 │   │   ├── salon/          # Salon use cases
+│   │   │   ├── _shared/
+│   │   │   │   ├── base-salon.usecase.ts
+│   │   │   │   └── dependencies.ts    # SalonUseCaseDependencies interface
 │   │   │   ├── create-salon.usecase.ts
 │   │   │   ├── get-salon.usecase.ts
 │   │   │   ├── update-salon.usecase.ts
 │   │   │   ├── delete-salon.usecase.ts
 │   │   │   ├── list-salons.usecase.ts
-│   │   │   ├── search-salons.usecase.ts
-│   │   │   └── _shared/base-salon.usecase.ts
+│   │   │   └── search-salons.usecase.ts
 │   │   └── _shared/validators/  # Shared validation logic
 │   ├── mappers/
 │   │   ├── write/
@@ -116,8 +119,8 @@ infrastructure/
 **Purpose**: HTTP interface and request handling
 
 **Components**:
-- **Routes**: Express route definitions with typed handlers
-- **Validation**: Zod `z.custom<T>()` for TypeSpec-generated types
+- **Routes**: Modular handler structure with single-responsibility files
+- **Dependency Injection**: Object-based DI via `req.app.locals.database`
 - **Pattern Matching**: ts-pattern for exhaustive Result handling
 - **Error Handling**: Problem Details format for standardized errors
 
@@ -126,13 +129,24 @@ infrastructure/
 api/
 ├── src/
 │   ├── routes/
-│   │   └── salon.routes.ts         # Complete CRUD operations
-│   └── index.ts                   # Express app setup
+│   │   └── salon/
+│   │       ├── _shared/
+│   │       │   ├── index.ts          # Re-exports
+│   │       │   ├── types.ts          # Shared types
+│   │       │   └── utils.ts          # Error handling utilities
+│   │       ├── create-salon.handler.ts
+│   │       ├── update-salon.handler.ts
+│   │       ├── delete-salon.handler.ts
+│   │       ├── get-salon.handler.ts
+│   │       ├── list-salons.handler.ts
+│   │       └── search-salons.handler.ts
+│   └── index.ts                       # Express app setup
 ```
 
 **Route Handler Pattern**:
-- Type-safe request/response handlers using generated types
-- Zod validation with `z.custom<T>()` pattern
+- Type-safe request/response handlers using RequestHandler generics
+- Dependency instantiation from `req.app.locals.database`
+- Use case execution with object-based dependencies
 - ts-pattern for exhaustive Result matching
 - Problem Details format for all errors
 - Standardized response structure with meta/links
@@ -143,15 +157,14 @@ api/
 ```
 HTTP POST /salons
     ↓
-[API Layer: salon.routes.ts]
-  - Express RequestHandler with typed parameters
-  - Zod validation: z.custom<CreateSalonRequest>().safeParse()
-  - Pattern matching on validation result
-    ↓
-  Result<CreateSalonRequest, ValidationError>
+[API Layer: create-salon.handler.ts]
+  - Express RequestHandler<Params, Response, Request>
+  - Get database from req.app.locals.database
+  - Instantiate repository and use case with dependencies
     ↓
 [Domain Layer: CreateSalonUseCase]
-  - Business validation (email uniqueness, etc.)
+  - Request validation using validators
+  - Business rules check (email uniqueness, etc.)
   - Write Mapper: API request → DB insert data
   - Repository.create() with transaction for related data
     ↓
@@ -172,9 +185,9 @@ HTTP POST /salons
 ```
 HTTP GET /salons/:id
     ↓
-[API Layer: salon.routes.ts]
-  - Extract typed path parameters
-  - No validation needed for simple get
+[API Layer: get-salon.handler.ts]
+  - Express RequestHandler with typed parameters
+  - Get database and instantiate repository
     ↓
 [Domain Layer: GetSalonUseCase]
   - Repository.findById() call
@@ -370,7 +383,7 @@ export function toSalonID(raw: string): SalonId {
   return raw as SalonId
 }
 
-// DB-driven types from Drizzle schemas
+// DB-driven types from Drizzle schemas with DeepRequired wrapper
 export type DbSalon = DeepRequired<typeof salons.$inferSelect>
 export type DbNewSalon = DeepRequired<Omit<typeof salons.$inferInsert, 'id'>>
 
@@ -523,32 +536,37 @@ export class SalonRepository implements ISalonRepository {
 
 #### API Route with Pattern Matching
 ```typescript
-// backend/packages/api/src/routes/salon.routes.ts
-const createSalonHandler: RequestHandler<
+// backend/packages/api/src/routes/salon/create-salon.handler.ts
+export const createSalonHandler: RequestHandler<
   Record<string, never>,
   CreateSalonResponse | ErrorResponse,
   CreateSalonRequest
 > = async (req, res, next) => {
   try {
-    // 1. Validate with Zod
-    const validation = createSalonRequestSchema.safeParse(req.body)
-    if (!validation.success) {
-      return res.status(400).json(problemDetailsFromValidation(validation.error))
-    }
+    // 1. Get dependencies from app.locals
+    const db = req.app.locals.database as Database
 
-    // 2. Execute use case
-    const db = getDb()
+    // 2. Instantiate repository and use case
     const salonRepository = new SalonRepository(db)
     const useCase = new CreateSalonUseCase({ salonRepository })
+
+    // 3. Execute use case (validation happens inside)
     const result = await useCase.execute(req.body)
 
-    // 3. Pattern match on Result
+    // 4. Pattern match on Result
     match(result)
       .with({ type: 'success' }, ({ data }) => {
         const response: CreateSalonResponse = {
           data,
-          meta: { correlationId: `req-${Date.now()}`, timestamp: new Date().toISOString() },
-          links: { self: `/salons/${data.id}`, list: '/salons' }
+          meta: {
+            correlationId: `req-${Date.now()}`,
+            timestamp: new Date().toISOString(),
+            version: '1.0.0'
+          },
+          links: {
+            self: `/api/v1/salons/${data.id}`,
+            list: '/api/v1/salons'
+          }
         }
         res.status(201).json(response)
       })

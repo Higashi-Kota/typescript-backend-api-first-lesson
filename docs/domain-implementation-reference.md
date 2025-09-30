@@ -24,11 +24,12 @@ Generated Types      Domain Models   DB Types   Database
 
 ### Key Principles
 
-1. **NO validation in routes** - All validation happens in use cases
-2. **Type extraction from operations** - Use generated types directly
+1. **ALL validation in use cases** - Routes only handle DI and response formatting
+2. **Object-based dependency injection** - Use `SalonUseCaseDependencies` interface
 3. **Result pattern everywhere** - Never throw exceptions
 4. **Exhaustive pattern matching** - Use ts-pattern with `.exhaustive()`
-5. **Clean separation** - Each layer has single responsibility
+5. **DB-driven types** - Use `DeepRequired<typeof table.$inferSelect>` pattern
+6. **Modular handler structure** - One handler per operation
 
 ## API Route Implementation
 
@@ -148,6 +149,74 @@ export const cursorToPage = (
 ```
 
 ### Individual Handler Pattern
+
+#### Create Handler Example (create-salon.handler.ts)
+
+```typescript
+import type { RequestHandler } from 'express'
+import type { Database } from '@beauty-salon-backend/infrastructure'
+import { SalonRepository } from '@beauty-salon-backend/infrastructure'
+import { CreateSalonUseCase } from '@beauty-salon-backend/domain'
+import { match } from 'ts-pattern'
+import { handleDomainError } from './_shared/utils'
+import type {
+  CreateSalonRequest,
+  CreateSalonResponse,
+  ErrorResponse
+} from './_shared/types'
+
+export const createSalonHandler: RequestHandler<
+  Record<string, never>,  // Path params
+  CreateSalonResponse | ErrorResponse,  // Response
+  CreateSalonRequest  // Request body
+> = async (req, res, next) => {
+  try {
+    // 1. Get database from app locals (dependency injection)
+    const db = req.app.locals.database as Database
+
+    // 2. Instantiate repository
+    const salonRepository = new SalonRepository(db)
+
+    // 3. Create use case with object-based dependencies
+    const useCase = new CreateSalonUseCase({ salonRepository })
+
+    // 4. Execute use case (validation happens inside)
+    const result = await useCase.execute(req.body)
+
+    // 5. Pattern match on result
+    match(result)
+      .with({ type: 'success' }, ({ data }) => {
+        const response: CreateSalonResponse = {
+          data,
+          meta: {
+            correlationId: `req-${Date.now()}`,
+            timestamp: new Date().toISOString(),
+            version: '1.0.0'
+          },
+          links: {
+            self: `/api/v1/salons/${data.id}`,
+            list: '/api/v1/salons'
+          }
+        }
+        res.status(201).json(response)
+      })
+      .with({ type: 'error' }, ({ error }) =>
+        handleDomainError(res as Response<ErrorResponse>, error)
+      )
+      .exhaustive()
+  } catch (error) {
+    next(error)
+  }
+}
+```
+
+### Key Implementation Points:
+
+1. **NO validation in handler** - Request is passed directly to use case
+2. **Dependency injection** - Database from `req.app.locals.database`
+3. **Object-based dependencies** - `{ salonRepository }` pattern
+4. **Type-safe handlers** - RequestHandler with generic parameters
+5. **Pattern matching** - Exhaustive handling of Result types
 
 Each handler is in its own file with focused responsibility. Example `create-salon.handler.ts`:
 

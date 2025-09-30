@@ -14,12 +14,12 @@
 
 ```
 ┌─────────────────────────────────────────┐
-│           API Layer (Express)           │ ← HTTPルーティング、NO検証、ts-pattern
+│           API Layer (Express)           │ ← HTTPルーティング、DI、レスポンス整形
 ├─────────────────────────────────────────┤
-│        Domain Layer (Business Logic)    │ ← UseCase（検証実行）、マッパー、リポジトリIF
+│        Domain Layer (Business Logic)    │ ← UseCase（検証・ビジネスルール）、マッパー、リポジトリIF
 ├─────────────────────────────────────────┤
 │   Infrastructure Layer (External I/O)   │ ← Drizzle Repository実装
-├─────────────────────────────────────────┤
+├─────────────────────────────────────┤
 │        Database Layer (Schemas)         │ ← Drizzle スキーマ (真実の源)
 └─────────────────────────────────────────┘
 ```
@@ -28,18 +28,18 @@
 
 | レイヤー | パッケージ | 実装例 | 説明 |
 |----------|------------|--------|------|
-| API | `@beauty-salon-backend/api` | `salon.routes.ts` | Express ハンドラー、型抽出、ts-pattern、**検証なし** |
-| Domain | `@beauty-salon-backend/domain` | `create-salon.usecase.ts`, `salon.mapper.ts` | UseCase（**検証実行**）、分離マッパー、Repository IF |
+| API | `@beauty-salon-backend/api` | `salon/*.handler.ts` | Modular handlers、DI、ts-pattern、レスポンス整形 |
+| Domain | `@beauty-salon-backend/domain` | `create-salon.usecase.ts`, `salon.mapper.ts` | UseCase（検証・ビジネスルール）、分離マッパー、Repository IF |
 | Infrastructure | `@beauty-salon-backend/infrastructure` | `salon.repository.impl.ts` | Drizzle 実装、Result型、トランザクション |
 | Database | `@beauty-salon-backend/database` | `schema.ts` | Drizzle schemas (`$inferSelect` の源泉) |
 | Generated | `@beauty-salon-backend/generated` | `api-types.ts` | TypeSpec生成型（operations, components） |
 | Utility | `@beauty-salon-backend/utility` | `result.ts` | Result型、ブランド型、共通ユーティリティ |
 
 > **重要原則**:
-> - **APIルートで検証しない** - すべての検証はUseCaseで実行
+> - **すべての検証はUseCaseで実行** - APIレイヤーは検証しない
 > - DomainはInfrastructureを知らない
 > - InfrastructureがDomainのインターフェースを実装
-> - API層で依存注入
+> - API層で依存注入（オブジェクトベースDIパターン）
 
 ---
 
@@ -51,7 +51,11 @@ backend/
 │   ├── api/
 │   │   └── src/
 │   │       ├── routes/
-│   │       │   └── salon.routes.ts       # CRUDルート、型抽出、検証なし
+│   │       │   └── salon/
+│   │       │       ├── _shared/          # 共有ユーティリティ
+│   │       │       ├── create-salon.handler.ts
+│   │       │       ├── update-salon.handler.ts
+│   │       │       └── *.handler.ts     # モジュラーハンドラー
 │   │       └── index.ts                  # Express アプリ設定
 │   ├── domain/
 │   │   └── src/

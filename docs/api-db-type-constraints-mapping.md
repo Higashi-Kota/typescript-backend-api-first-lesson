@@ -155,7 +155,7 @@ export const openingHours = pgTable('opening_hours', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
 
-// Drizzle 型推論（実装の源泉）
+// Drizzle 型推論（参考のみ - 実際の実装では以下のDeepRequiredパターンを使用）
 export type Salon = typeof salons.$inferSelect
 export type NewSalon = typeof salons.$inferInsert
 export type OpeningHours = typeof openingHours.$inferSelect
@@ -643,7 +643,7 @@ interface Customer {
   // ...
 }
 
-// ✅ 良い例: DBから推論
+// ✅ 良い例: DBから推論（実装ではDeepRequiredパターンを使用）
 export type Customer = typeof customers.$inferSelect
 ```
 
