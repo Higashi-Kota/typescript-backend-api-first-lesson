@@ -34,6 +34,19 @@ export function loadEnvConfig(environment?: Environment): Environment {
   // Find the root path (where .env files are located)
   // From backend/packages/config/src to root is 4 levels up
   const rootPath = path.resolve(__dirname, '..', '..', '..', '..')
+
+  // Priority 1: Check if .env file exists (highest priority)
+  const baseEnvPath = path.join(rootPath, '.env')
+  if (fs.existsSync(baseEnvPath)) {
+    console.log(`Loading base .env file (priority override)`)
+    dotenv.config({ path: baseEnvPath })
+
+    // Still return the intended environment for consistency
+    // but the values will be from .env file
+    return env
+  }
+
+  // Priority 2: Load environment-specific file
   const envFile = `.env.${env}`
   const envPath = path.join(rootPath, envFile)
 
