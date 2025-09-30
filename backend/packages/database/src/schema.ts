@@ -203,214 +203,6 @@ export const userRole = pgEnum('user_role', [
   'owner',
 ])
 
-export const treatmentPhotos = pgTable(
-  'treatment_photos',
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    treatmentRecordId: uuid().notNull(),
-    photoType: varchar({ length: 20 }).notNull(),
-    photoUrl: varchar({ length: 500 }).notNull(),
-    thumbnailUrl: varchar({ length: 500 }),
-    angle: varchar({ length: 50 }),
-    description: text(),
-    isPublic: boolean().default(false).notNull(),
-    customerConsent: boolean().default(false).notNull(),
-    sortOrder: integer().default(0).notNull(),
-    createdAt: timestamp({ withTimezone: true, mode: 'string' })
-      .defaultNow()
-      .notNull(),
-  },
-  (table) => [
-    index('idx_treatment_photos_photo_type').using(
-      'btree',
-      table.photoType.asc().nullsLast().op('text_ops'),
-    ),
-    index('idx_treatment_photos_treatment_record_id').using(
-      'btree',
-      table.treatmentRecordId.asc().nullsLast().op('uuid_ops'),
-    ),
-    foreignKey({
-      columns: [table.treatmentRecordId],
-      foreignColumns: [treatmentRecords.id],
-      name: 'treatment_photos_treatment_record_id_fk',
-    }).onDelete('cascade'),
-  ],
-)
-
-export const treatmentMaterials = pgTable(
-  'treatment_materials',
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    treatmentRecordId: uuid().notNull(),
-    productId: uuid().notNull(),
-    quantity: numeric({ precision: 10, scale: 2 }).notNull(),
-    unit: varchar({ length: 20 }).notNull(),
-    lotNumber: varchar({ length: 100 }),
-    notes: text(),
-    createdAt: timestamp({ withTimezone: true, mode: 'string' })
-      .defaultNow()
-      .notNull(),
-  },
-  (table) => [
-    index('idx_treatment_materials_product_id').using(
-      'btree',
-      table.productId.asc().nullsLast().op('uuid_ops'),
-    ),
-    index('idx_treatment_materials_treatment_record_id').using(
-      'btree',
-      table.treatmentRecordId.asc().nullsLast().op('uuid_ops'),
-    ),
-    foreignKey({
-      columns: [table.treatmentRecordId],
-      foreignColumns: [treatmentRecords.id],
-      name: 'treatment_materials_treatment_record_id_fk',
-    }).onDelete('cascade'),
-    foreignKey({
-      columns: [table.productId],
-      foreignColumns: [products.id],
-      name: 'treatment_materials_product_id_fk',
-    }).onDelete('restrict'),
-  ],
-)
-
-export const treatmentRecords = pgTable(
-  'treatment_records',
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    bookingId: uuid().notNull(),
-    customerId: uuid().notNull(),
-    staffId: uuid().notNull(),
-    services: jsonb().notNull(),
-    techniques: jsonb().default([]),
-    consultationNotes: text(),
-    scalpCondition: jsonb(),
-    hairCondition: jsonb(),
-    colorFormula: jsonb(),
-    processingTime: integer(),
-    beforePhotos: jsonb().default([]),
-    afterPhotos: jsonb().default([]),
-    resultNotes: text(),
-    nextRecommendedDate: date(),
-    nextRecommendedServices: jsonb().default([]),
-    homeCareSuggestions: text(),
-    customerSatisfaction: integer(),
-    staffEvaluation: text(),
-    createdAt: timestamp({ withTimezone: true, mode: 'string' })
-      .defaultNow()
-      .notNull(),
-    updatedAt: timestamp({ withTimezone: true, mode: 'string' })
-      .defaultNow()
-      .notNull(),
-  },
-  (table) => [
-    index('idx_treatment_records_booking_id').using(
-      'btree',
-      table.bookingId.asc().nullsLast().op('uuid_ops'),
-    ),
-    index('idx_treatment_records_customer_id').using(
-      'btree',
-      table.customerId.asc().nullsLast().op('uuid_ops'),
-    ),
-    index('idx_treatment_records_staff_id').using(
-      'btree',
-      table.staffId.asc().nullsLast().op('uuid_ops'),
-    ),
-    foreignKey({
-      columns: [table.bookingId],
-      foreignColumns: [bookings.id],
-      name: 'treatment_records_booking_id_fk',
-    }).onDelete('restrict'),
-    foreignKey({
-      columns: [table.customerId],
-      foreignColumns: [customers.id],
-      name: 'treatment_records_customer_id_fk',
-    }).onDelete('restrict'),
-    foreignKey({
-      columns: [table.staffId],
-      foreignColumns: [staff.id],
-      name: 'treatment_records_staff_id_fk',
-    }).onDelete('restrict'),
-    unique('treatment_records_booking_unique').on(table.bookingId),
-  ],
-)
-
-export const staffSkills = pgTable(
-  'staff_skills',
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    staffId: uuid().notNull(),
-    serviceId: uuid().notNull(),
-    proficiencyLevel: integer().default(3).notNull(),
-    certificateDate: date(),
-    certificateUrl: varchar({ length: 500 }),
-    notes: text(),
-    createdAt: timestamp({ withTimezone: true, mode: 'string' })
-      .defaultNow()
-      .notNull(),
-    updatedAt: timestamp({ withTimezone: true, mode: 'string' })
-      .defaultNow()
-      .notNull(),
-  },
-  (table) => [
-    index('idx_staff_skills_service_id').using(
-      'btree',
-      table.serviceId.asc().nullsLast().op('uuid_ops'),
-    ),
-    index('idx_staff_skills_staff_id').using(
-      'btree',
-      table.staffId.asc().nullsLast().op('uuid_ops'),
-    ),
-    foreignKey({
-      columns: [table.staffId],
-      foreignColumns: [staff.id],
-      name: 'staff_skills_staff_id_fk',
-    }).onDelete('cascade'),
-    unique('staff_skills_unique').on(table.staffId, table.serviceId),
-  ],
-)
-
-export const staffSchedules = pgTable(
-  'staff_schedules',
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    staffId: uuid().notNull(),
-    dayOfWeek: dayOfWeek(),
-    date: date(),
-    startTime: time().notNull(),
-    endTime: time().notNull(),
-    breakStartTime: time(),
-    breakEndTime: time(),
-    isRecurring: boolean().default(true).notNull(),
-    isAvailable: boolean().default(true).notNull(),
-    notes: text(),
-    createdAt: timestamp({ withTimezone: true, mode: 'string' })
-      .defaultNow()
-      .notNull(),
-    updatedAt: timestamp({ withTimezone: true, mode: 'string' })
-      .defaultNow()
-      .notNull(),
-  },
-  (table) => [
-    index('idx_staff_schedules_date').using(
-      'btree',
-      table.date.asc().nullsLast().op('date_ops'),
-    ),
-    index('idx_staff_schedules_day_of_week').using(
-      'btree',
-      table.dayOfWeek.asc().nullsLast().op('enum_ops'),
-    ),
-    index('idx_staff_schedules_staff_id').using(
-      'btree',
-      table.staffId.asc().nullsLast().op('uuid_ops'),
-    ),
-    foreignKey({
-      columns: [table.staffId],
-      foreignColumns: [staff.id],
-      name: 'staff_schedules_staff_id_fk',
-    }).onDelete('cascade'),
-  ],
-)
-
 export const staffPerformances = pgTable(
   'staff_performances',
   {
@@ -1029,6 +821,137 @@ export const bookingStatusHistories = pgTable(
       foreignColumns: [bookings.id],
       name: 'booking_status_histories_booking_id_fk',
     }).onDelete('cascade'),
+  ],
+)
+
+export const treatmentPhotos = pgTable(
+  'treatment_photos',
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    treatmentRecordId: uuid().notNull(),
+    photoType: varchar({ length: 20 }).notNull(),
+    photoUrl: varchar({ length: 500 }).notNull(),
+    thumbnailUrl: varchar({ length: 500 }),
+    angle: varchar({ length: 50 }),
+    description: text(),
+    isPublic: boolean().default(false).notNull(),
+    customerConsent: boolean().default(false).notNull(),
+    sortOrder: integer().default(0).notNull(),
+    createdAt: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index('idx_treatment_photos_photo_type').using(
+      'btree',
+      table.photoType.asc().nullsLast().op('text_ops'),
+    ),
+    index('idx_treatment_photos_treatment_record_id').using(
+      'btree',
+      table.treatmentRecordId.asc().nullsLast().op('uuid_ops'),
+    ),
+    foreignKey({
+      columns: [table.treatmentRecordId],
+      foreignColumns: [treatmentRecords.id],
+      name: 'treatment_photos_treatment_record_id_fk',
+    }).onDelete('cascade'),
+  ],
+)
+
+export const treatmentMaterials = pgTable(
+  'treatment_materials',
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    treatmentRecordId: uuid().notNull(),
+    productId: uuid().notNull(),
+    quantity: numeric({ precision: 10, scale: 2 }).notNull(),
+    unit: varchar({ length: 20 }).notNull(),
+    lotNumber: varchar({ length: 100 }),
+    notes: text(),
+    createdAt: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index('idx_treatment_materials_product_id').using(
+      'btree',
+      table.productId.asc().nullsLast().op('uuid_ops'),
+    ),
+    index('idx_treatment_materials_treatment_record_id').using(
+      'btree',
+      table.treatmentRecordId.asc().nullsLast().op('uuid_ops'),
+    ),
+    foreignKey({
+      columns: [table.treatmentRecordId],
+      foreignColumns: [treatmentRecords.id],
+      name: 'treatment_materials_treatment_record_id_fk',
+    }).onDelete('cascade'),
+    foreignKey({
+      columns: [table.productId],
+      foreignColumns: [products.id],
+      name: 'treatment_materials_product_id_fk',
+    }).onDelete('restrict'),
+  ],
+)
+
+export const treatmentRecords = pgTable(
+  'treatment_records',
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    bookingId: uuid().notNull(),
+    customerId: uuid().notNull(),
+    staffId: uuid().notNull(),
+    services: jsonb().notNull(),
+    techniques: jsonb().default([]),
+    consultationNotes: text(),
+    scalpCondition: jsonb(),
+    hairCondition: jsonb(),
+    colorFormula: jsonb(),
+    processingTime: integer(),
+    beforePhotos: jsonb().default([]),
+    afterPhotos: jsonb().default([]),
+    resultNotes: text(),
+    nextRecommendedDate: date(),
+    nextRecommendedServices: jsonb().default([]),
+    homeCareSuggestions: text(),
+    customerSatisfaction: integer(),
+    staffEvaluation: text(),
+    createdAt: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index('idx_treatment_records_booking_id').using(
+      'btree',
+      table.bookingId.asc().nullsLast().op('uuid_ops'),
+    ),
+    index('idx_treatment_records_customer_id').using(
+      'btree',
+      table.customerId.asc().nullsLast().op('uuid_ops'),
+    ),
+    index('idx_treatment_records_staff_id').using(
+      'btree',
+      table.staffId.asc().nullsLast().op('uuid_ops'),
+    ),
+    foreignKey({
+      columns: [table.bookingId],
+      foreignColumns: [bookings.id],
+      name: 'treatment_records_booking_id_fk',
+    }).onDelete('restrict'),
+    foreignKey({
+      columns: [table.customerId],
+      foreignColumns: [customers.id],
+      name: 'treatment_records_customer_id_fk',
+    }).onDelete('restrict'),
+    foreignKey({
+      columns: [table.staffId],
+      foreignColumns: [staff.id],
+      name: 'treatment_records_staff_id_fk',
+    }).onDelete('restrict'),
+    unique('treatment_records_booking_unique').on(table.bookingId),
   ],
 )
 
@@ -1735,6 +1658,83 @@ export const customers = pgTable(
     }).onDelete('set null'),
     unique('customers_email_unique').on(table.email),
     unique('customers_referral_code_unique').on(table.referralCode),
+  ],
+)
+
+export const staffSkills = pgTable(
+  'staff_skills',
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    staffId: uuid().notNull(),
+    serviceId: uuid().notNull(),
+    proficiencyLevel: integer().default(3).notNull(),
+    certificateDate: date(),
+    certificateUrl: varchar({ length: 500 }),
+    notes: text(),
+    createdAt: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index('idx_staff_skills_service_id').using(
+      'btree',
+      table.serviceId.asc().nullsLast().op('uuid_ops'),
+    ),
+    index('idx_staff_skills_staff_id').using(
+      'btree',
+      table.staffId.asc().nullsLast().op('uuid_ops'),
+    ),
+    foreignKey({
+      columns: [table.staffId],
+      foreignColumns: [staff.id],
+      name: 'staff_skills_staff_id_fk',
+    }).onDelete('cascade'),
+    unique('staff_skills_unique').on(table.staffId, table.serviceId),
+  ],
+)
+
+export const staffSchedules = pgTable(
+  'staff_schedules',
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    staffId: uuid().notNull(),
+    dayOfWeek: dayOfWeek(),
+    date: date(),
+    startTime: time().notNull(),
+    endTime: time().notNull(),
+    breakStartTime: time(),
+    breakEndTime: time(),
+    isRecurring: boolean().default(true).notNull(),
+    isAvailable: boolean().default(true).notNull(),
+    notes: text(),
+    createdAt: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp({ withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index('idx_staff_schedules_date').using(
+      'btree',
+      table.date.asc().nullsLast().op('date_ops'),
+    ),
+    index('idx_staff_schedules_day_of_week').using(
+      'btree',
+      table.dayOfWeek.asc().nullsLast().op('enum_ops'),
+    ),
+    index('idx_staff_schedules_staff_id').using(
+      'btree',
+      table.staffId.asc().nullsLast().op('uuid_ops'),
+    ),
+    foreignKey({
+      columns: [table.staffId],
+      foreignColumns: [staff.id],
+      name: 'staff_schedules_staff_id_fk',
+    }).onDelete('cascade'),
   ],
 )
 
