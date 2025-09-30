@@ -12,7 +12,7 @@ export class DeleteSalonUseCase extends BaseSalonUseCase {
       )
     }
 
-    const exists = await this.repository.exists(id)
+    const exists = await this.salonRepository.exists(id)
     if (Result.isError(exists)) {
       return exists
     }
@@ -21,7 +21,7 @@ export class DeleteSalonUseCase extends BaseSalonUseCase {
       return Result.error(DomainErrors.notFound('Salon', id))
     }
 
-    const deleteResult = await this.repository.delete(id)
+    const deleteResult = await this.salonRepository.delete(id)
     return deleteResult
   }
 }

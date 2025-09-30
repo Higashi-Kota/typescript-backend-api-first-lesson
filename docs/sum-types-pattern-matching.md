@@ -50,7 +50,9 @@ import { match } from 'ts-pattern'
 
 const createSalonHandler: RequestHandler = async (req, res, next) => {
   try {
-    const useCase = new CreateSalonUseCase(repository)
+    const db = req.app.locals.database as Database
+    const salonRepository = new SalonRepository(db)
+    const useCase = new CreateSalonUseCase({ salonRepository })
     const result = await useCase.execute(req.body)
 
     // Result型の網羅的処理

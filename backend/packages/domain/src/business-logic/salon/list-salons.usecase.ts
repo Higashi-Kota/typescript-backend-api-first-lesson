@@ -12,7 +12,7 @@ export class ListSalonsUseCase extends BaseSalonUseCase {
   ): Promise<Result<PaginatedResult<ApiSalon>, DomainError>> {
     const paginationParams = Pagination.create(page, limit)
 
-    const salonsResult = await this.repository.findAll(paginationParams)
+    const salonsResult = await this.salonRepository.findAll(paginationParams)
     if (Result.isError(salonsResult)) {
       return salonsResult
     }

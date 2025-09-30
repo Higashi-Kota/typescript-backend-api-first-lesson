@@ -24,8 +24,8 @@ export const getSalonHandler: RequestHandler<
 
     // Get dependencies and execute use case
     const db = req.app.locals.database as Database
-    const repository = new SalonRepository(db)
-    const useCase = new GetSalonUseCase(repository)
+    const salonRepository = new SalonRepository(db)
+    const useCase = new GetSalonUseCase({ salonRepository })
 
     const result = await useCase.execute(id)
 

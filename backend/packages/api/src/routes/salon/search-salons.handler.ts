@@ -35,8 +35,8 @@ export const searchSalonsHandler: RequestHandler<
 
     // Get dependencies and execute use case
     const db = req.app.locals.database as Database
-    const repository = new SalonRepository(db)
-    const useCase = new SearchSalonsUseCase(repository)
+    const salonRepository = new SalonRepository(db)
+    const useCase = new SearchSalonsUseCase({ salonRepository })
 
     // Extract first category if array (API expects single category)
     const category = categories?.[0] as ServiceCategoryType | undefined

@@ -14,12 +14,12 @@
 
 ```
 ┌─────────────────────────────────────────┐
-│           API Layer (Express)           │ ← HTTPルーティング、NO検証、ts-pattern
+│           API Layer (Express)           │ ← HTTPルーティング、DI、レスポンス整形
 ├─────────────────────────────────────────┤
-│        Domain Layer (Business Logic)    │ ← UseCase（検証実行）、マッパー、リポジトリIF
+│        Domain Layer (Business Logic)    │ ← UseCase（検証・ビジネスルール）、マッパー、リポジトリIF
 ├─────────────────────────────────────────┤
 │   Infrastructure Layer (External I/O)   │ ← Drizzle Repository実装
-├─────────────────────────────────────────┤
+├─────────────────────────────────────┤
 │        Database Layer (Schemas)         │ ← Drizzle スキーマ (真実の源)
 └─────────────────────────────────────────┘
 ```
@@ -28,18 +28,18 @@
 
 | レイヤー | パッケージ | 実装例 | 説明 |
 |----------|------------|--------|------|
-| API | `@beauty-salon-backend/api` | `salon.routes.ts` | Express ハンドラー、型抽出、ts-pattern、**検証なし** |
-| Domain | `@beauty-salon-backend/domain` | `create-salon.usecase.ts`, `salon.mapper.ts` | UseCase（**検証実行**）、分離マッパー、Repository IF |
+| API | `@beauty-salon-backend/api` | `salon/*.handler.ts` | Modular handlers、DI、ts-pattern、レスポンス整形 |
+| Domain | `@beauty-salon-backend/domain` | `create-salon.usecase.ts`, `salon.mapper.ts` | UseCase（検証・ビジネスルール）、分離マッパー、Repository IF |
 | Infrastructure | `@beauty-salon-backend/infrastructure` | `salon.repository.impl.ts` | Drizzle 実装、Result型、トランザクション |
 | Database | `@beauty-salon-backend/database` | `schema.ts` | Drizzle schemas (`$inferSelect` の源泉) |
 | Generated | `@beauty-salon-backend/generated` | `api-types.ts` | TypeSpec生成型（operations, components） |
 | Utility | `@beauty-salon-backend/utility` | `result.ts` | Result型、ブランド型、共通ユーティリティ |
 
 > **重要原則**:
-> - **APIルートで検証しない** - すべての検証はUseCaseで実行
+> - **すべての検証はUseCaseで実行** - APIレイヤーは検証しない
 > - DomainはInfrastructureを知らない
 > - InfrastructureがDomainのインターフェースを実装
-> - API層で依存注入
+> - API層で依存注入（オブジェクトベースDIパターン）
 
 ---
 
@@ -51,7 +51,11 @@ backend/
 │   ├── api/
 │   │   └── src/
 │   │       ├── routes/
-│   │       │   └── salon.routes.ts       # CRUDルート、型抽出、検証なし
+│   │       │   └── salon/
+│   │       │       ├── _shared/          # 共有ユーティリティ
+│   │       │       ├── create-salon.handler.ts
+│   │       │       ├── update-salon.handler.ts
+│   │       │       └── *.handler.ts     # モジュラーハンドラー
 │   │       └── index.ts                  # Express アプリ設定
 │   ├── domain/
 │   │   └── src/
@@ -223,7 +227,30 @@ export type ApiSalon = components['schemas']['Models.Salon']
 export type ApiCreateSalonRequest = components['schemas']['Models.CreateSalonRequest']
 ```
 
-#### 2. Write/Read マッパー（分離）
+#### 2. 依存性注入パターン（Dependencies オブジェクト）
+
+```typescript
+// backend/packages/domain/src/business-logic/salon/_shared/dependencies.ts
+export interface SalonUseCaseDependencies {
+  salonRepository: ISalonRepository
+  // 将来的に追加される依存:
+  // userRepository?: IUserRepository
+  // bookingRepository?: IBookingRepository
+  // notificationService?: INotificationService
+  // emailService?: IEmailService
+}
+
+// Base UseCase での依存管理
+export abstract class BaseSalonUseCase {
+  protected readonly salonRepository: SalonUseCaseDependencies['salonRepository']
+
+  constructor(protected readonly dependencies: SalonUseCaseDependencies) {
+    this.salonRepository = dependencies.salonRepository
+  }
+}
+```
+
+#### 3. Write/Read マッパー（分離）
 
 ```typescript
 // backend/packages/domain/src/mappers/write/salon.mapper.ts
@@ -283,7 +310,7 @@ export const SalonReadMapper = {
 }
 ```
 
-#### 3. UseCase (検証実行 + Result型パターン)
+#### 4. UseCase (検証実行 + Result型パターン + 依存性注入)
 
 ```typescript
 // backend/packages/domain/src/business-logic/salon/create-salon.usecase.ts
@@ -299,7 +326,7 @@ export class CreateSalonUseCase extends BaseSalonUseCase {
     }
 
     // 2. ビジネスルール（メール重複チェック）
-    const emailExists = await this.repository.existsByEmail(request.contactInfo.email)
+    const emailExists = await this.salonRepository.existsByEmail(request.contactInfo.email)
     if (Result.isError(emailExists)) {
       return emailExists
     }
@@ -313,7 +340,7 @@ export class CreateSalonUseCase extends BaseSalonUseCase {
     const { salon, openingHours } = SalonWriteMapper.fromCreateRequest(request)
 
     // 4. Repository でトランザクション実行
-    const createResult = await this.repository.create(
+    const createResult = await this.salonRepository.create(
       { ...salon, id: toSalonID(createId()) },
       openingHours
     )
@@ -322,7 +349,7 @@ export class CreateSalonUseCase extends BaseSalonUseCase {
     }
 
     // 5. Read Mapper でAPI形式に変換
-    const openingHoursResult = await this.repository.findOpeningHours(
+    const openingHoursResult = await this.salonRepository.findOpeningHours(
       toSalonID(createResult.data.id)
     )
     const apiSalon = SalonReadMapper.toApiSalon(
@@ -500,8 +527,8 @@ const createSalonHandler: RequestHandler<
   try {
     // 1. 依存取得
     const db = req.app.locals.database as Database
-    const repository = new SalonRepository(db)
-    const useCase = new CreateSalonUseCase(repository)
+    const salonRepository = new SalonRepository(db)
+    const useCase = new CreateSalonUseCase({ salonRepository })
 
     // 2. UseCase実行（検証はUseCase内で）
     const result = await useCase.execute(req.body)
@@ -548,7 +575,11 @@ const createSalonHandler: RequestHandler<
 ```typescript
 // backend/packages/domain/src/business-logic/salon/_shared/base-salon.usecase.ts
 export abstract class BaseSalonUseCase {
-  constructor(protected readonly repository: ISalonRepository) {}
+  protected readonly salonRepository: SalonUseCaseDependencies['salonRepository']
+
+  constructor(protected readonly dependencies: SalonUseCaseDependencies) {
+    this.salonRepository = dependencies.salonRepository
+  }
 
   // 共通バリデーションメソッド
   protected validateName(name: string | undefined): string[] {
@@ -602,7 +633,7 @@ export class CreateSalonUseCase extends BaseSalonUseCase {
     }
 
     // ビジネスルール検証
-    const emailExists = await this.repository.existsByEmail(
+    const emailExists = await this.salonRepository.existsByEmail(
       request.contactInfo.email
     )
     if (Result.isError(emailExists)) {

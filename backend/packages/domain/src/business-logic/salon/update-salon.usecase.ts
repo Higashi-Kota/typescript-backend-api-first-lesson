@@ -26,7 +26,7 @@ export class UpdateSalonUseCase extends BaseSalonUseCase {
       return validation
     }
 
-    const exists = await this.repository.exists(id)
+    const exists = await this.salonRepository.exists(id)
     if (Result.isError(exists)) {
       return exists
     }
@@ -36,10 +36,10 @@ export class UpdateSalonUseCase extends BaseSalonUseCase {
     }
 
     if (request.contactInfo?.email) {
-      const currentSalon = await this.repository.findById(id)
+      const currentSalon = await this.salonRepository.findById(id)
       if (Result.isSuccess(currentSalon) && currentSalon.data) {
         if (currentSalon.data.email !== request.contactInfo.email) {
-          const emailExists = await this.repository.existsByEmail(
+          const emailExists = await this.salonRepository.existsByEmail(
             request.contactInfo.email,
           )
           if (Result.isSuccess(emailExists) && emailExists.data) {
@@ -56,23 +56,23 @@ export class UpdateSalonUseCase extends BaseSalonUseCase {
     }
 
     const updates = SalonWriteMapper.fromUpdateRequest(request)
-    const updateResult = await this.repository.update(id, updates)
+    const updateResult = await this.salonRepository.update(id, updates)
     if (Result.isError(updateResult)) {
       return updateResult
     }
 
     if (request.openingHours !== undefined) {
-      await this.repository.deleteOpeningHours(id)
+      await this.salonRepository.deleteOpeningHours(id)
       if (request.openingHours.length > 0) {
         const newOpeningHours = SalonWriteMapper.toDbOpeningHours(
           request.openingHours,
           id,
         )
-        await this.repository.createOpeningHours(newOpeningHours)
+        await this.salonRepository.createOpeningHours(newOpeningHours)
       }
     }
 
-    const openingHoursResult = await this.repository.findOpeningHours(id)
+    const openingHoursResult = await this.salonRepository.findOpeningHours(id)
     const openingHours = Result.isSuccess(openingHoursResult)
       ? openingHoursResult.data
       : []

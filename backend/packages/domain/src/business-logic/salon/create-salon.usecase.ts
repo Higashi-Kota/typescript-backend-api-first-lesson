@@ -19,7 +19,7 @@ export class CreateSalonUseCase extends BaseSalonUseCase {
       return validation
     }
 
-    const emailExists = await this.repository.existsByEmail(
+    const emailExists = await this.salonRepository.existsByEmail(
       request.contactInfo.email,
     )
     if (Result.isError(emailExists)) {
@@ -34,7 +34,7 @@ export class CreateSalonUseCase extends BaseSalonUseCase {
 
     const { salon, openingHours } = SalonWriteMapper.fromCreateRequest(request)
 
-    const createResult = await this.repository.create(
+    const createResult = await this.salonRepository.create(
       { ...salon, id: toSalonID(createId()) },
       openingHours,
     )
@@ -42,7 +42,7 @@ export class CreateSalonUseCase extends BaseSalonUseCase {
       return createResult
     }
 
-    const openingHoursResult = await this.repository.findOpeningHours(
+    const openingHoursResult = await this.salonRepository.findOpeningHours(
       toSalonID(createResult.data.id),
     )
     const apiSalon = SalonReadMapper.toApiSalon(

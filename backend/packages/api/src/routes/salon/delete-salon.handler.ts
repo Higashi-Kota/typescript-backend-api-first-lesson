@@ -25,8 +25,8 @@ export const deleteSalonHandler: RequestHandler<
 
     // Get dependencies and execute use case
     const db = req.app.locals.database as Database
-    const repository = new SalonRepository(db)
-    const useCase = new DeleteSalonUseCase(repository)
+    const salonRepository = new SalonRepository(db)
+    const useCase = new DeleteSalonUseCase({ salonRepository })
 
     const result = await useCase.execute(id)
 

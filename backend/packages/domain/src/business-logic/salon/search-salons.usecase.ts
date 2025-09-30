@@ -25,7 +25,7 @@ export class SearchSalonsUseCase extends BaseSalonUseCase {
       isActive: true,
     }
 
-    const salonsResult = await this.repository.search(
+    const salonsResult = await this.salonRepository.search(
       searchParams,
       paginationParams,
     )

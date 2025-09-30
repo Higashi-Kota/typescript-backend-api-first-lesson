@@ -261,10 +261,16 @@ pnpm package:check  # 更新可能な依存関係を確認
 ```typescript
 // ✅ クリーンな状態の例
 export class TaskService {
-  constructor(
-    private readonly repository: TaskRepository,
-    private readonly eventBus: EventBus
-  ) {}
+  private readonly repository: TaskRepository
+  private readonly eventBus: EventBus
+
+  constructor(dependencies: {
+    repository: TaskRepository
+    eventBus: EventBus
+  }) {
+    this.repository = dependencies.repository
+    this.eventBus = dependencies.eventBus
+  }
 
   async createTask(
     request: CreateTaskRequest,

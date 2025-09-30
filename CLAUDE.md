@@ -238,8 +238,11 @@ The salon domain serves as the reference implementation for all other domains:
 // 1. Database Schema (Source of Truth)
 // backend/packages/database/src/schema.ts
 export const salons = pgTable('salons', {...})
-export type DbSalon = typeof salons.$inferSelect
-export type DbNewSalon = typeof salons.$inferInsert
+
+// backend/packages/domain/src/models/salon.ts
+// Type inference with DeepRequired - NO manual type definitions
+export type DbSalon = DeepRequired<typeof salons.$inferSelect>
+export type DbNewSalon = DeepRequired<Omit<typeof salons.$inferInsert, 'id'>>
 
 // 2. Repository Interface
 // backend/packages/domain/src/repositories/salon.repository.ts
@@ -248,15 +251,28 @@ export interface ISalonRepository {
   findById(id: SalonId): Promise<Result<DbSalon | null, DomainError>>
 }
 
-// 3. Use Case
+// 3. Dependencies Interface (Object-based DI)
+// backend/packages/domain/src/business-logic/salon/_shared/dependencies.ts
+export interface SalonUseCaseDependencies {
+  salonRepository: ISalonRepository
+  // Future dependencies can be added here:
+  // userRepository?: IUserRepository
+  // notificationService?: INotificationService
+}
+
+// 4. Use Case with Dependencies
 // backend/packages/domain/src/business-logic/salon/create-salon.usecase.ts
 export class CreateSalonUseCase extends BaseSalonUseCase {
+  constructor(dependencies: SalonUseCaseDependencies) {
+    super(dependencies)
+  }
+
   async execute(request: ApiCreateSalonRequest): Promise<Result<ApiSalon, DomainError>> {
     // Validate → Check business rules → Map API→DB → Save → Map DB→API → Return
   }
 }
 
-// 4. Mappers
+// 5. Mappers
 // backend/packages/domain/src/mappers/write/salon.mapper.ts
 export const SalonWriteMapper = {
   fromCreateRequest(request: ApiCreateSalonRequest): { salon: DbNewSalon; openingHours: DbNewOpeningHours[] }
@@ -266,14 +282,47 @@ export const SalonReadMapper = {
   toApiSalon(dbSalon: DbSalon, openingHours: DbOpeningHours[]): ApiSalon
 }
 
-// 5. API Route
-// backend/packages/api/src/routes/salon.routes.ts
-const createSalonHandler: RequestHandler = async (req, res, next) => {
-  const result = await useCase.execute(req.body)
-  match(result)
-    .with({ type: 'success' }, ({ data }) => res.status(201).json({data}))
-    .with({ type: 'error' }, ({ error }) => handleDomainError(res, error))
-    .exhaustive()
+// 6. API Route with Dependency Injection (Modular Handler Pattern)
+// backend/packages/api/src/routes/salon/create-salon.handler.ts
+// Note: Each endpoint has its own handler file following [action]-[domain].handler.ts pattern
+// See docs/api-route-modular-structure.md for full modular structure details
+export const createSalonHandler: RequestHandler<
+  Record<string, never>,                    // Path params
+  CreateSalonResponse | ErrorResponse,      // Response body types
+  CreateSalonRequest                        // Request body type
+> = async (req, res, next) => {
+  try {
+    // Instantiate dependencies
+    const db = req.app.locals.database as Database
+    const salonRepository = new SalonRepository(db)
+
+    // Create use case with dependencies object
+    const useCase = new CreateSalonUseCase({ salonRepository })
+
+    const result = await useCase.execute(req.body)
+    match(result)
+      .with({ type: 'success' }, ({ data }) => {
+        const response: CreateSalonResponse = {
+          data,
+          meta: {
+            correlationId: `req-${Date.now()}`,
+            timestamp: new Date().toISOString(),
+            version: '1.0.0',
+          },
+          links: {
+            self: `/salons/${data.id}`,
+            list: '/salons',
+          },
+        }
+        res.status(201).json(response)
+      })
+      .with({ type: 'error' }, ({ error }) =>
+        handleDomainError(res as Response<ErrorResponse>, error)
+      )
+      .exhaustive()
+  } catch (error) {
+    next(error)
+  }
 }
 ```
 
@@ -285,9 +334,10 @@ All Enum types must end with `Type` suffix (e.g., `ServiceCategoryType`, `Paymen
 ### DB-Driven Models
 Database schemas are the source of truth for domain models:
 ```typescript
-// Types are inferred from Drizzle ORM schemas
-type Customer = typeof customers.$inferSelect
-type NewCustomer = typeof customers.$inferInsert
+// Types are inferred from Drizzle ORM schemas with DeepRequired wrapper
+// backend/packages/domain/src/models/customer.ts
+export type DbCustomer = DeepRequired<typeof customers.$inferSelect>
+export type DbNewCustomer = DeepRequired<Omit<typeof customers.$inferInsert, 'id'>>
 ```
 
 ### API-DB Consistency Rules

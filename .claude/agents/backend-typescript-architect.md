@@ -89,6 +89,11 @@ backend/packages/
 │   └── src/
 │       ├── models/              # DB-driven domain models
 │       ├── business-logic/      # Use cases
+│       │   └── <entity>/
+│       │       ├── _shared/
+│       │       │   ├── dependencies.ts  # Object-based DI interface
+│       │       │   └── base-<entity>.usecase.ts
+│       │       └── *.usecase.ts
 │       ├── mappers/
 │       │   ├── write/          # API → Domain → DB
 │       │   └── read/           # DB → Domain → API
@@ -104,6 +109,7 @@ backend/packages/
 - Infrastructure implements Domain interfaces
 - Database schemas are the source of truth for models
 - NO circular dependencies (enforced by madge)
+- Use object-based dependency injection for use cases
 
 ## 📝 **DB-DRIVEN & API-FIRST DEVELOPMENT (REQUIRED WORKFLOW)**
 
@@ -295,12 +301,14 @@ export const createCustomerModel = (dbCustomer: DbCustomer): Customer => {
 
 ## 🚀 **API ROUTE IMPLEMENTATION (EXPRESS PATTERN)**
 
-### **Route Handler Pattern:**
+### **Route Handler Pattern with Object-Based Dependency Injection:**
 ```typescript
-// backend/packages/api/src/routes/salon.routes.ts
-import { match } from 'ts-pattern'
+// backend/packages/api/src/routes/salon/create-salon.handler.ts
+import { CreateSalonUseCase } from '@beauty-salon-backend/domain'
+import type { Database } from '@beauty-salon-backend/infrastructure'
+import { SalonRepository } from '@beauty-salon-backend/infrastructure'
 import type { RequestHandler, Response } from 'express'
-import { z } from 'zod'
+import { match } from 'ts-pattern'
 
 const createSalonHandler: RequestHandler<
   Record<string, never>,
@@ -308,26 +316,14 @@ const createSalonHandler: RequestHandler<
   CreateSalonRequest
 > = async (req, res, next) => {
   try {
-    // 1. Validate request with Zod
-    const validation = createSalonRequestSchema.safeParse(req.body)
-    if (!validation.success) {
-      const errorRes = res as Response<ErrorResponse>
-      const problemDetails: ErrorResponse = {
-        type: 'https://example.com/probs/validation-error',
-        title: 'validation error',
-        status: 400,
-        detail: 'Invalid request body',
-        instance: `urn:error:${Date.now()}`,
-        code: '1001',
-        timestamp: new Date().toISOString(),
-      }
-      return errorRes.status(400).json(problemDetails)
-    }
+    // 1. Get dependencies and instantiate repositories
+    const db = req.app.locals.database as Database
+    const salonRepository = new SalonRepository(db)
 
-    // 2. Get dependencies
-    const db = getDb()
-    const repository = new SalonRepository(db)
-    const useCase = new CreateSalonUseCase(repository)
+    // 2. Create use case with object-based dependencies
+    const useCase = new CreateSalonUseCase({
+      salonRepository  // Object-based DI pattern
+    })
 
     // 3. Execute use case
     const result = await useCase.execute(req.body)
@@ -629,10 +625,34 @@ await db.transaction(async (tx) => {
 4. ✅ No `any` types or type assertions
 5. ✅ DB constraints for data integrity
 
+### **Object-Based Dependency Injection Pattern:**
+```typescript
+// backend/packages/domain/src/business-logic/salon/_shared/dependencies.ts
+export interface SalonUseCaseDependencies {
+  salonRepository: ISalonRepository
+  // Future dependencies can be added without breaking existing code:
+  // userRepository?: IUserRepository
+  // notificationService?: INotificationService
+  // emailService?: IEmailService
+}
+
+// backend/packages/domain/src/business-logic/salon/_shared/base-salon.usecase.ts
+export abstract class BaseSalonUseCase {
+  protected readonly salonRepository: SalonUseCaseDependencies['salonRepository']
+
+  constructor(protected readonly dependencies: SalonUseCaseDependencies) {
+    this.salonRepository = dependencies.salonRepository
+  }
+  // ... validation methods
+}
+```
+
 ### **Use Case Pattern (Actual Implementation):**
 ```typescript
 // backend/packages/domain/src/business-logic/salon/create-salon.usecase.ts
 export class CreateSalonUseCase extends BaseSalonUseCase {
+  // Constructor inherits object-based DI from base class
+
   async execute(
     request: ApiCreateSalonRequest
   ): Promise<Result<ApiSalon, DomainError>> {
@@ -643,7 +663,7 @@ export class CreateSalonUseCase extends BaseSalonUseCase {
     }
 
     // 2. Check business rules (e.g., uniqueness)
-    const emailExists = await this.repository.existsByEmail(
+    const emailExists = await this.salonRepository.existsByEmail(
       request.contactInfo.email
     )
     if (Result.isError(emailExists)) {
@@ -660,7 +680,7 @@ export class CreateSalonUseCase extends BaseSalonUseCase {
     const { salon, openingHours } = SalonWriteMapper.fromCreateRequest(request)
 
     // 4. Save to DB (with transaction for related data)
-    const createResult = await this.repository.create(
+    const createResult = await this.salonRepository.create(
       { ...salon, id: toSalonID(createId()) },
       openingHours
     )
@@ -669,7 +689,7 @@ export class CreateSalonUseCase extends BaseSalonUseCase {
     }
 
     // 5. Fetch complete data for response
-    const openingHoursResult = await this.repository.findOpeningHours(
+    const openingHoursResult = await this.salonRepository.findOpeningHours(
       toSalonID(createResult.data.id)
     )
 
@@ -749,7 +769,14 @@ When your implementation is complete:
 - **NEVER** violate layer dependencies (API → Domain ← Infrastructure)
 - **ALWAYS** implement repository interfaces in infrastructure layer
 - **NEVER** import infrastructure in domain layer
-- **ALWAYS** use dependency injection for external services
+- **ALWAYS** use object-based dependency injection for use cases
+
+### **Dependency Injection Pattern:**
+- **ALWAYS** use object-based DI with dependencies interface
+- **NEVER** pass individual dependencies as constructor arguments
+- **ALWAYS** define dependencies interface in `_shared/dependencies.ts`
+- **NEVER** instantiate repositories inside use cases
+- **ALWAYS** pass all dependencies as single object: `new UseCase({ repo1, repo2 })`
 
 ### **Testing Requirements:**
 - **ALWAYS** test both Write and Read mappers

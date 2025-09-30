@@ -35,7 +35,9 @@ const createHandler: RequestHandler<
   try {
     const db = req.app.locals.database as Database
     const repository = new Repository(db)
-    const useCase = new CreateUseCase(repository)
+
+    // Use object-based dependency injection
+    const useCase = new CreateUseCase({ repository })
 
     // Direct delegation - NO validation here
     const result = await useCase.execute(req.body)
@@ -83,6 +85,29 @@ type ListQuery = NonNullable<ListOperation['parameters']['query']>
 ```
 
 ## Use Case Patterns
+
+### Dependency Injection Pattern
+
+Use cases use object-based dependency injection for maintainability:
+
+```typescript
+// Dependencies interface for the domain
+export interface DomainUseCaseDependencies {
+  repository: IDomainRepository
+  // Future dependencies can be added here:
+  // emailService?: IEmailService
+  // notificationService?: INotificationService
+}
+
+// Base use case with dependencies
+export abstract class BaseDomainUseCase {
+  protected readonly repository: DomainUseCaseDependencies['repository']
+
+  constructor(protected readonly dependencies: DomainUseCaseDependencies) {
+    this.repository = dependencies.repository
+  }
+}
+```
 
 ### Use Case Structure
 

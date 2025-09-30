@@ -87,16 +87,25 @@ export const customers = pgTable('customers', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
 
-// 型推論
-export type Customer = typeof customers.$inferSelect
-export type NewCustomer = typeof customers.$inferInsert
+// 型推論（基本形 - 参考のみ）
+// 実際の実装では以下のDeepRequiredパターンを使用
+export type CustomerSelect = typeof customers.$inferSelect
+export type CustomerInsert = typeof customers.$inferInsert
 ```
 
 ### 2. ドメインモデルの拡張
 
 ```typescript
 // backend/packages/domain/src/models/customer.ts
-import type { Customer as DbCustomer } from '@beauty-salon-backend/database'
+import type { customers } from '@beauty-salon-backend/database'
+import type { DeepRequired, Omit } from '@beauty-salon-backend/utility'
+
+// DeepRequiredパターン：全フィールドを非nullableに
+export type DbCustomer = DeepRequired<typeof customers.$inferSelect>
+export type DbNewCustomer = DeepRequired<Omit<typeof customers.$inferInsert, 'id'>>
+
+// 注意: 実装では、DBから取得したデータの全フィールドが
+// 必ず値を持つことを保証するために DeepRequired を使用
 
 // DBモデルをそのまま使用し、ビジネスロジックを追加
 export type Customer = DbCustomer & {
@@ -461,7 +470,11 @@ type CreateCustomerRequest = components['schemas']['Models.CreateCustomerRequest
 type CustomerResponse = components['schemas']['Models.Customer']
 
 export class CreateCustomerUseCase {
-  constructor(private readonly repository: CustomerRepository) {}
+  private readonly repository: CustomerRepository
+
+  constructor(dependencies: { repository: CustomerRepository }) {
+    this.repository = dependencies.repository
+  }
 
   async execute(
     request: CreateCustomerRequest
@@ -535,7 +548,7 @@ export const products = pgTable('products', {
   // ...
 })
 
-// 型は自動推論
+// 型は自動推論（実際の実装ではDeepRequiredパターンを使用）
 export type Product = typeof products.$inferSelect
 ```
 
