@@ -835,7 +835,8 @@ pnpm test:integration     # Integration tests
 pnpm test:e2e            # End-to-end tests
 
 # Development
-pnpm dev                  # Start development server
+pnpm dev:watch:backend    # Start backend development server
+pnpm dev:watch:admin-app  # Start frontend development server
 pnpm dev:services         # Start Docker services
 ```
 

@@ -917,7 +917,7 @@ jobs:
 {
   "scripts": {
     "generate:watch": "nodemon --watch 'specs/**/*.tsp' --exec 'pnpm generate'",
-    "dev": "concurrently \"pnpm generate:watch\" \"pnpm dev:app\"",
+    "dev": "pnpm dev:watch:admin-app",
     "test:type-compatibility": "tsc --noEmit -p tsconfig.compatibility.json"
   }
 }

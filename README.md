@@ -60,8 +60,11 @@ pnpm db:fresh
 # Generate types from TypeSpec
 pnpm generate
 
-# Start development server
-pnpm dev
+# Start backend development server
+pnpm dev:watch:backend
+
+# Or start frontend development server
+pnpm dev:watch:admin-app
 ```
 
 ## 📁 Project Structure
@@ -102,8 +105,7 @@ pnpm dev
 
 ```bash
 # Development
-pnpm dev                     # Start all development servers
-pnpm dev:backend             # Start backend only
+pnpm dev:watch:backend       # Start backend development server
 pnpm prepare:frontend        # Build frontend packages
 pnpm dev:watch:admin-app     # Start frontend for admin
 pnpm dev:watch:portal-app    # Start frontend for portal

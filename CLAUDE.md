@@ -182,7 +182,8 @@ pnpm format:fix  # Auto-format
 
 ```bash
 # Development
-pnpm dev              # Start all services
+pnpm dev:watch:backend # Start backend development server
+pnpm dev:watch:admin-app # Start admin frontend development
 pnpm generate         # Generate all types
 
 # Database
