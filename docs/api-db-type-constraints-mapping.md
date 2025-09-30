@@ -433,7 +433,11 @@ import { mapDbToApiResponse } from '../../mappers/read/customer.mapper'
 import { match } from 'ts-pattern'
 
 export class CreateCustomerUseCase {
-  constructor(private readonly repository: CustomerRepository) {}
+  private readonly repository: CustomerRepository
+
+  constructor(dependencies: { repository: CustomerRepository }) {
+    this.repository = dependencies.repository
+  }
 
   async execute(request: CreateCustomerRequest) {
     // Write Mapper: API → DB
@@ -502,7 +506,11 @@ type DatabaseConnection = NodePgDatabase
 type Transaction = PgTransaction
 
 export class ReservationUseCase {
-  constructor(private readonly db: DatabaseConnection) {}
+  private readonly db: DatabaseConnection
+
+  constructor(dependencies: { db: DatabaseConnection }) {
+    this.db = dependencies.db
+  }
 
   async createReservation(request: CreateReservationRequest) {
     return await this.db.transaction(async (tx) => {  // 仮引数名: tx（トランザクション専用）

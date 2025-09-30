@@ -248,15 +248,28 @@ export interface ISalonRepository {
   findById(id: SalonId): Promise<Result<DbSalon | null, DomainError>>
 }
 
-// 3. Use Case
+// 3. Dependencies Interface (Object-based DI)
+// backend/packages/domain/src/business-logic/salon/_shared/dependencies.ts
+export interface SalonUseCaseDependencies {
+  salonRepository: ISalonRepository
+  // Future dependencies can be added here:
+  // userRepository?: IUserRepository
+  // notificationService?: INotificationService
+}
+
+// 4. Use Case with Dependencies
 // backend/packages/domain/src/business-logic/salon/create-salon.usecase.ts
 export class CreateSalonUseCase extends BaseSalonUseCase {
+  constructor(dependencies: SalonUseCaseDependencies) {
+    super(dependencies)
+  }
+
   async execute(request: ApiCreateSalonRequest): Promise<Result<ApiSalon, DomainError>> {
     // Validate → Check business rules → Map API→DB → Save → Map DB→API → Return
   }
 }
 
-// 4. Mappers
+// 5. Mappers
 // backend/packages/domain/src/mappers/write/salon.mapper.ts
 export const SalonWriteMapper = {
   fromCreateRequest(request: ApiCreateSalonRequest): { salon: DbNewSalon; openingHours: DbNewOpeningHours[] }
@@ -266,9 +279,16 @@ export const SalonReadMapper = {
   toApiSalon(dbSalon: DbSalon, openingHours: DbOpeningHours[]): ApiSalon
 }
 
-// 5. API Route
+// 6. API Route with Dependency Injection
 // backend/packages/api/src/routes/salon.routes.ts
 const createSalonHandler: RequestHandler = async (req, res, next) => {
+  // Instantiate dependencies
+  const db = req.app.locals.database as Database
+  const salonRepository = new SalonRepository(db)
+
+  // Create use case with dependencies object
+  const useCase = new CreateSalonUseCase({ salonRepository })
+
   const result = await useCase.execute(req.body)
   match(result)
     .with({ type: 'success' }, ({ data }) => res.status(201).json({data}))

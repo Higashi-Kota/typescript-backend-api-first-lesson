@@ -13,7 +13,7 @@ export class GetSalonUseCase extends BaseSalonUseCase {
       )
     }
 
-    const salonResult = await this.repository.findById(id)
+    const salonResult = await this.salonRepository.findById(id)
     if (Result.isError(salonResult)) {
       return salonResult
     }
@@ -22,7 +22,7 @@ export class GetSalonUseCase extends BaseSalonUseCase {
       return Result.error(DomainErrors.notFound('Salon', id))
     }
 
-    const openingHoursResult = await this.repository.findOpeningHours(id)
+    const openingHoursResult = await this.salonRepository.findOpeningHours(id)
     const openingHours = Result.isSuccess(openingHoursResult)
       ? openingHoursResult.data
       : []

@@ -223,7 +223,30 @@ export type ApiSalon = components['schemas']['Models.Salon']
 export type ApiCreateSalonRequest = components['schemas']['Models.CreateSalonRequest']
 ```
 
-#### 2. Write/Read マッパー（分離）
+#### 2. 依存性注入パターン（Dependencies オブジェクト）
+
+```typescript
+// backend/packages/domain/src/business-logic/salon/_shared/dependencies.ts
+export interface SalonUseCaseDependencies {
+  salonRepository: ISalonRepository
+  // 将来的に追加される依存:
+  // userRepository?: IUserRepository
+  // bookingRepository?: IBookingRepository
+  // notificationService?: INotificationService
+  // emailService?: IEmailService
+}
+
+// Base UseCase での依存管理
+export abstract class BaseSalonUseCase {
+  protected readonly salonRepository: SalonUseCaseDependencies['salonRepository']
+
+  constructor(protected readonly dependencies: SalonUseCaseDependencies) {
+    this.salonRepository = dependencies.salonRepository
+  }
+}
+```
+
+#### 3. Write/Read マッパー（分離）
 
 ```typescript
 // backend/packages/domain/src/mappers/write/salon.mapper.ts
@@ -283,7 +306,7 @@ export const SalonReadMapper = {
 }
 ```
 
-#### 3. UseCase (検証実行 + Result型パターン)
+#### 4. UseCase (検証実行 + Result型パターン + 依存性注入)
 
 ```typescript
 // backend/packages/domain/src/business-logic/salon/create-salon.usecase.ts
@@ -299,7 +322,7 @@ export class CreateSalonUseCase extends BaseSalonUseCase {
     }
 
     // 2. ビジネスルール（メール重複チェック）
-    const emailExists = await this.repository.existsByEmail(request.contactInfo.email)
+    const emailExists = await this.salonRepository.existsByEmail(request.contactInfo.email)
     if (Result.isError(emailExists)) {
       return emailExists
     }
@@ -313,7 +336,7 @@ export class CreateSalonUseCase extends BaseSalonUseCase {
     const { salon, openingHours } = SalonWriteMapper.fromCreateRequest(request)
 
     // 4. Repository でトランザクション実行
-    const createResult = await this.repository.create(
+    const createResult = await this.salonRepository.create(
       { ...salon, id: toSalonID(createId()) },
       openingHours
     )
@@ -322,7 +345,7 @@ export class CreateSalonUseCase extends BaseSalonUseCase {
     }
 
     // 5. Read Mapper でAPI形式に変換
-    const openingHoursResult = await this.repository.findOpeningHours(
+    const openingHoursResult = await this.salonRepository.findOpeningHours(
       toSalonID(createResult.data.id)
     )
     const apiSalon = SalonReadMapper.toApiSalon(
@@ -500,8 +523,8 @@ const createSalonHandler: RequestHandler<
   try {
     // 1. 依存取得
     const db = req.app.locals.database as Database
-    const repository = new SalonRepository(db)
-    const useCase = new CreateSalonUseCase(repository)
+    const salonRepository = new SalonRepository(db)
+    const useCase = new CreateSalonUseCase({ salonRepository })
 
     // 2. UseCase実行（検証はUseCase内で）
     const result = await useCase.execute(req.body)
@@ -548,7 +571,11 @@ const createSalonHandler: RequestHandler<
 ```typescript
 // backend/packages/domain/src/business-logic/salon/_shared/base-salon.usecase.ts
 export abstract class BaseSalonUseCase {
-  constructor(protected readonly repository: ISalonRepository) {}
+  protected readonly salonRepository: SalonUseCaseDependencies['salonRepository']
+
+  constructor(protected readonly dependencies: SalonUseCaseDependencies) {
+    this.salonRepository = dependencies.salonRepository
+  }
 
   // 共通バリデーションメソッド
   protected validateName(name: string | undefined): string[] {
@@ -602,7 +629,7 @@ export class CreateSalonUseCase extends BaseSalonUseCase {
     }
 
     // ビジネスルール検証
-    const emailExists = await this.repository.existsByEmail(
+    const emailExists = await this.salonRepository.existsByEmail(
       request.contactInfo.email
     )
     if (Result.isError(emailExists)) {

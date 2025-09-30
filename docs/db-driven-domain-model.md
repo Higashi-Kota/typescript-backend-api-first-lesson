@@ -461,7 +461,11 @@ type CreateCustomerRequest = components['schemas']['Models.CreateCustomerRequest
 type CustomerResponse = components['schemas']['Models.Customer']
 
 export class CreateCustomerUseCase {
-  constructor(private readonly repository: CustomerRepository) {}
+  private readonly repository: CustomerRepository
+
+  constructor(dependencies: { repository: CustomerRepository }) {
+    this.repository = dependencies.repository
+  }
 
   async execute(
     request: CreateCustomerRequest

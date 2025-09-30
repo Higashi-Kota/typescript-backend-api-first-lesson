@@ -180,8 +180,10 @@ export const createSalonHandler: RequestHandler<
   try {
     // Get dependencies and execute use case
     const db = req.app.locals.database as Database
-    const repository = new SalonRepository(db)
-    const useCase = new CreateSalonUseCase(repository)
+    const salonRepository = new SalonRepository(db)
+
+    // Use object-based dependency injection
+    const useCase = new CreateSalonUseCase({ salonRepository })
 
     const result = await useCase.execute(req.body)
 
@@ -292,8 +294,10 @@ export const listSalonsHandler: RequestHandler<
 
     // Get dependencies and execute use case
     const db = req.app.locals.database as Database
-    const repository = new SalonRepository(db)
-    const useCase = new ListSalonsUseCase(repository)
+    const salonRepository = new SalonRepository(db)
+
+    // Use object-based dependency injection
+    const useCase = new ListSalonsUseCase({ salonRepository })
 
     const result = await useCase.execute({ page, limit })
 
@@ -319,13 +323,33 @@ export const listSalonsHandler: RequestHandler<
 
 ## Use Case Layer
 
+### Dependency Injection Pattern
+
+Use cases use object-based dependency injection for better maintainability:
+
+```typescript
+// Dependencies interface for the domain
+export interface SalonUseCaseDependencies {
+  salonRepository: ISalonRepository
+  // Future dependencies can be added here:
+  // userRepository?: IUserRepository
+  // bookingRepository?: IBookingRepository
+  // notificationService?: INotificationService
+  // emailService?: IEmailService
+}
+```
+
 ### Base Use Case Pattern
 
-Create a base use case with shared validation logic:
+Create a base use case with shared validation logic and dependency management:
 
 ```typescript
 export abstract class BaseSalonUseCase {
-  constructor(protected readonly repository: ISalonRepository) {}
+  protected readonly salonRepository: SalonUseCaseDependencies['salonRepository']
+
+  constructor(protected readonly dependencies: SalonUseCaseDependencies) {
+    this.salonRepository = dependencies.salonRepository
+  }
 
   // Shared validation methods
   protected isValidUuid(value: string): boolean {
@@ -394,7 +418,7 @@ export class CreateSalonUseCase extends BaseSalonUseCase {
     }
 
     // 2. Check business rules (e.g., uniqueness)
-    const emailExists = await this.repository.existsByEmail(
+    const emailExists = await this.salonRepository.existsByEmail(
       request.contactInfo.email
     )
     if (Result.isError(emailExists)) {
@@ -411,7 +435,7 @@ export class CreateSalonUseCase extends BaseSalonUseCase {
     const { salon, openingHours } = SalonWriteMapper.fromCreateRequest(request)
 
     // 4. Save to database with generated ID
-    const createResult = await this.repository.create(
+    const createResult = await this.salonRepository.create(
       { ...salon, id: toSalonID(createId()) },
       openingHours
     )
@@ -420,7 +444,7 @@ export class CreateSalonUseCase extends BaseSalonUseCase {
     }
 
     // 5. Fetch related data if needed
-    const openingHoursResult = await this.repository.findOpeningHours(
+    const openingHoursResult = await this.salonRepository.findOpeningHours(
       toSalonID(createResult.data.id)
     )
 
@@ -478,7 +502,7 @@ export class GetSalonUseCase extends BaseSalonUseCase {
     }
 
     // 2. Fetch from repository
-    const salonResult = await this.repository.findById(id)
+    const salonResult = await this.salonRepository.findById(id)
     if (Result.isError(salonResult)) {
       return salonResult
     }
@@ -489,7 +513,7 @@ export class GetSalonUseCase extends BaseSalonUseCase {
     }
 
     // 4. Fetch related data
-    const openingHoursResult = await this.repository.findOpeningHours(id)
+    const openingHoursResult = await this.salonRepository.findOpeningHours(id)
     const openingHours = Result.isSuccess(openingHoursResult)
       ? openingHoursResult.data
       : []
@@ -515,7 +539,7 @@ export class ListSalonsUseCase extends BaseSalonUseCase {
     const paginationParams = Pagination.create(page, limit)
 
     // 2. Fetch paginated data
-    const salonsResult = await this.repository.findAll(paginationParams)
+    const salonsResult = await this.salonRepository.findAll(paginationParams)
     if (Result.isError(salonsResult)) {
       return salonsResult
     }

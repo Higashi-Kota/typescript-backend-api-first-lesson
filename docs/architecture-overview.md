@@ -538,8 +538,8 @@ const createSalonHandler: RequestHandler<
 
     // 2. Execute use case
     const db = getDb()
-    const repository = new SalonRepository(db)
-    const useCase = new CreateSalonUseCase(repository)
+    const salonRepository = new SalonRepository(db)
+    const useCase = new CreateSalonUseCase({ salonRepository })
     const result = await useCase.execute(req.body)
 
     // 3. Pattern match on Result
@@ -661,10 +661,16 @@ export const mapDomainToApi = (
 ### 4. Use Case Pattern
 ```typescript
 export class CreateCustomerUseCase {
-  constructor(
-    private readonly customerRepo: CustomerRepository,
-    private readonly emailService: EmailService
-  ) {}
+  protected readonly customerRepo: CustomerRepository
+  protected readonly emailService: EmailService
+
+  constructor(dependencies: {
+    customerRepo: CustomerRepository
+    emailService: EmailService
+  }) {
+    this.customerRepo = dependencies.customerRepo
+    this.emailService = dependencies.emailService
+  }
 
   async execute(
     request: CreateCustomerRequest

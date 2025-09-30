@@ -98,8 +98,8 @@ const createSalonHandler: RequestHandler<
 > = async (req, res, next) => {
   try {
     const db = req.app.locals.database as Database
-    const repository = new SalonRepository(db)
-    const useCase = new CreateSalonUseCase(repository)
+    const salonRepository = new SalonRepository(db)
+    const useCase = new CreateSalonUseCase({ salonRepository })
 
     // No validation here - use case handles everything
     const result = await useCase.execute(req.body)

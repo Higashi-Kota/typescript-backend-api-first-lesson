@@ -4,7 +4,7 @@
 -- - All tables with columns, constraints, and defaults
 -- - All foreign key relationships
 -- - All indexes
--- Generated on: 2025-09-29T07:18:51.377Z
+-- Generated on: 2025-09-30T10:21:01.955Z
 -- Source: backend/packages/database/src/schema.ts
 
 CREATE TYPE "public"."account_status" AS ENUM('active', 'unverified', 'inactive', 'locked', 'suspended', 'deleted');

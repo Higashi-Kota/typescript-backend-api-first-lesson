@@ -1,11 +1,15 @@
 import type { ApiAddress, ApiUpdateSalonRequest } from '../../../models/salon'
-import type { ISalonRepository } from '../../../repositories/salon.repository'
 import { validateEmail } from '../../_shared/validators/email'
 import { validatePhoneNumber } from '../../_shared/validators/phoneNumber'
 import { validateUuid } from '../../_shared/validators/uuid'
+import type { SalonUseCaseDependencies } from './dependencies'
 
 export abstract class BaseSalonUseCase {
-  constructor(protected readonly repository: ISalonRepository) {}
+  protected readonly salonRepository: SalonUseCaseDependencies['salonRepository']
+
+  constructor(protected readonly dependencies: SalonUseCaseDependencies) {
+    this.salonRepository = dependencies.salonRepository
+  }
 
   protected isValidUuid(value: string): boolean {
     return validateUuid(value)

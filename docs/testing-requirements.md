@@ -182,8 +182,8 @@ const createSalonHandler: RequestHandler<
 > = async (req, res, next) => {
   try {
     const db = req.app.locals.database as Database
-    const repository = new SalonRepository(db)
-    const useCase = new CreateSalonUseCase(repository)
+    const salonRepository = new SalonRepository(db)
+    const useCase = new CreateSalonUseCase({ salonRepository })
 
     // Direct delegation to use case
     const result = await useCase.execute(req.body)

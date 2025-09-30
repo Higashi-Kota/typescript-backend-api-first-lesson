@@ -160,8 +160,8 @@ export const [action][Domain]Handler: RequestHandler<
 
     // Get dependencies and execute use case
     const db = req.app.locals.database as Database
-    const repository = new [Domain]Repository(db)
-    const useCase = new [Action][Domain]UseCase(repository)
+    const [domain]Repository = new [Domain]Repository(db)
+    const useCase = new [Action][Domain]UseCase({ [domain]Repository })
 
     const result = await useCase.execute(/* params */)
 
