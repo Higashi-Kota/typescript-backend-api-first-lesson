@@ -118,45 +118,124 @@ export async function seed(
 export async function truncateAll(
   db: PostgresJsDatabase<typeof schema>,
 ): Promise<void> {
-  // Disable foreign key checks temporarily
-  await db.execute(sql`SET session_replication_role = 'replica'`)
+  try {
+    // Use TRUNCATE with CASCADE which respects foreign keys without needing special privileges
+    // Group tables by dependency levels and truncate in batches
 
-  // Truncate all tables in reverse order of dependencies
-  await db.delete(schema.treatmentPhotos)
-  await db.delete(schema.treatmentMaterials)
-  await db.delete(schema.treatmentRecords)
-  await db.delete(schema.staffSkills)
-  await db.delete(schema.staffSchedules)
-  await db.delete(schema.staffPerformances)
-  await db.delete(schema.sessions)
-  await db.delete(schema.reviews)
-  await db.delete(schema.salesDetails)
-  await db.delete(schema.paymentTransactions)
-  await db.delete(schema.sales)
-  await db.delete(schema.paymentMethods)
-  await db.delete(schema.inventoryTransactions)
-  await db.delete(schema.inventory)
-  await db.delete(schema.products)
-  await db.delete(schema.bookingStatusHistories)
-  await db.delete(schema.bookingServices)
-  await db.delete(schema.bookings)
-  await db.delete(schema.serviceOptions)
-  await db.delete(schema.services)
-  await db.delete(schema.serviceCategories)
-  await db.delete(schema.openingHours)
-  await db.delete(schema.membershipTiers)
-  await db.delete(schema.customerPreferences)
-  await db.delete(schema.customerPoints)
-  await db.delete(schema.customerAllergies)
-  await db.delete(schema.staff)
-  await db.delete(schema.users)
-  await db.delete(schema.customers)
-  await db.delete(schema.dailySummaries)
-  await db.delete(schema.salons)
-  await db.delete(schema.notificationLogs)
+    console.log('Truncating all tables with CASCADE...')
 
-  // Re-enable foreign key checks
-  await db.execute(sql`SET session_replication_role = 'origin'`)
+    // Method 1: Try TRUNCATE CASCADE (fastest if permissions allow)
+    try {
+      await db.execute(sql`
+        TRUNCATE TABLE 
+          treatment_photos,
+          treatment_materials,
+          treatment_records,
+          staff_skills,
+          staff_schedules,
+          staff_performances,
+          sessions,
+          reviews,
+          sales_details,
+          payment_transactions,
+          sales,
+          payment_methods,
+          inventory_transactions,
+          inventory,
+          products,
+          booking_status_histories,
+          booking_services,
+          bookings,
+          service_options,
+          services,
+          service_categories,
+          opening_hours,
+          membership_tiers,
+          customer_preferences,
+          customer_points,
+          customer_allergies,
+          staff,
+          users,
+          customers,
+          daily_summaries,
+          salons,
+          notification_logs
+        CASCADE
+      `)
+      console.log('All tables truncated successfully using CASCADE')
+      return
+    } catch (truncateError) {
+      console.log(
+        'TRUNCATE CASCADE failed, falling back to DELETE method...',
+        truncateError,
+      )
+    }
 
-  console.log('All tables truncated successfully')
+    // Method 2: Delete in dependency order (works without special privileges)
+    // Delete from leaf tables first (those with foreign keys to other tables)
+
+    // Level 1: Tables that depend on others (leaf nodes)
+    await Promise.all([
+      db.delete(schema.treatmentPhotos),
+      db.delete(schema.treatmentMaterials),
+      db.delete(schema.staffSkills),
+      db.delete(schema.salesDetails),
+      db.delete(schema.serviceOptions),
+      db.delete(schema.customerPreferences),
+      db.delete(schema.customerPoints),
+      db.delete(schema.customerAllergies),
+      db.delete(schema.bookingStatusHistories),
+    ])
+
+    // Level 2: Tables that Level 1 tables depend on
+    await Promise.all([
+      db.delete(schema.treatmentRecords),
+      db.delete(schema.staffSchedules),
+      db.delete(schema.staffPerformances),
+      db.delete(schema.paymentTransactions),
+      db.delete(schema.inventoryTransactions),
+      db.delete(schema.bookingServices),
+      db.delete(schema.reviews),
+    ])
+
+    // Level 3: Core transaction tables
+    await Promise.all([
+      db.delete(schema.sessions),
+      db.delete(schema.sales),
+      db.delete(schema.bookings),
+      db.delete(schema.inventory),
+    ])
+
+    // Level 4: Reference data tables
+    await Promise.all([
+      db.delete(schema.paymentMethods),
+      db.delete(schema.products),
+      db.delete(schema.services),
+      db.delete(schema.openingHours),
+      db.delete(schema.membershipTiers),
+      db.delete(schema.dailySummaries),
+    ])
+
+    // Level 5: Category and classification tables
+    await db.delete(schema.serviceCategories)
+
+    // Level 6: Entity tables
+    await Promise.all([db.delete(schema.staff), db.delete(schema.customers)])
+
+    // Level 7: User table
+    await db.delete(schema.users)
+
+    // Level 8: Root tables
+    await Promise.all([
+      db.delete(schema.salons),
+      db.delete(schema.notificationLogs),
+    ])
+
+    console.log('All tables truncated successfully using DELETE')
+  } catch (error) {
+    console.error('Error during truncation:', error)
+    throw new Error(
+      `Failed to truncate tables: ${error instanceof Error ? error.message : String(error)}`,
+    )
+  }
 }
