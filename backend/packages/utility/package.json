@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "@beauty-salon-shared/config": "workspace:*",
-    "@biomejs/biome": "^2.2.4",
+    "@biomejs/biome": "^2.2.5",
     "@rslib/core": "^0.14.0",
     "@types/node": "^24.5.2",
     "@types/uuid": "^10.0.0",
