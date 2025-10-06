@@ -50,7 +50,7 @@
     "@beauty-salon-shared/config": "workspace:*",
     "@biomejs/biome": "^2.2.4",
     "@rslib/core": "^0.14.0",
-    "@types/node": "^24.5.2",
+    "@types/node": "^24.6.2",
     "dotenv": "^17.2.2",
     "drizzle-kit": "^0.31.4",
     "tsx": "^4.20.5",
