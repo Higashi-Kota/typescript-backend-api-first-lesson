@@ -54,7 +54,7 @@
     "@beauty-salon-frontend/theme": "workspace:*",
     "@beauty-salon-frontend/config": "workspace:*",
     "@beauty-salon-shared/config": "workspace:*",
-    "@biomejs/biome": "^2.2.4",
+    "@biomejs/biome": "^2.2.5",
     "@playwright/test": "^1.55.1",
     "@rslib/core": "^0.14.0",
     "@storybook/addon-docs": "^9.1.8",
