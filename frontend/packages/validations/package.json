@@ -4,7 +4,7 @@
     "@beauty-salon-frontend/types": "workspace:*",
     "@beauty-salon-frontend/utils": "workspace:*",
     "neverthrow": "^8.2.0",
-    "zod": "^4.1.11"
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@beauty-salon-shared/config": "workspace:*",
