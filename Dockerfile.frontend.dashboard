@@ -1,6 +1,6 @@
 # Multi-stage build for Dashboard App
 # Stage 1: Build stage
-FROM node:24.4.0-alpine AS builder
+FROM node:24.10.0-alpine AS builder
 
 # Install pnpm and TypeScript globally with specific versions
 ENV PNPM_VERSION=10.13.1
@@ -58,7 +58,7 @@ RUN pnpm prepare:frontend
 RUN pnpm --filter "@beauty-salon-frontend/dashboard-app" build:prod
 
 # Stage 2: Production runtime
-FROM node:24.4.0-alpine AS runtime
+FROM node:24.10.0-alpine AS runtime
 
 # Install serve for static file serving
 RUN npm install -g serve@14 && npm cache clean --force
