@@ -26,7 +26,7 @@ importers:
         version: 9.1.7
       knip:
         specifier: ^5.64.0
-        version: 5.64.0(@types/node@24.5.2)(typescript@5.9.2)
+        version: 5.64.0(@types/node@24.7.2)(typescript@5.9.2)
       lint-staged:
         specifier: ^16.2.0
         version: 16.2.0
@@ -122,8 +122,8 @@ importers:
         specifier: ^5.8.0
         version: 5.8.0
       zod:
-        specifier: 3.25.76
-        version: 3.25.76
+        specifier: 4.1.12
+        version: 4.1.12
     devDependencies:
       '@beauty-salon-shared/config':
         specifier: workspace:*
@@ -254,8 +254,8 @@ importers:
         specifier: ^5.8.0
         version: 5.8.0
       zod:
-        specifier: ^4.1.11
-        version: 4.1.11
+        specifier: ^4.1.12
+        version: 4.1.12
     devDependencies:
       '@beauty-salon-shared/config':
         specifier: workspace:*
@@ -279,8 +279,8 @@ importers:
         specifier: workspace:*
         version: link:../utility
       zod:
-        specifier: ^4.1.11
-        version: 4.1.11
+        specifier: ^4.1.12
+        version: 4.1.12
     devDependencies:
       '@beauty-salon-shared/config':
         specifier: workspace:*
@@ -836,8 +836,8 @@ importers:
         specifier: ^5.8.0
         version: 5.8.0
       zod:
-        specifier: ^4.1.11
-        version: 4.1.11
+        specifier: ^4.1.12
+        version: 4.1.12
     devDependencies:
       '@beauty-salon-shared/config':
         specifier: workspace:*
@@ -1018,8 +1018,8 @@ importers:
         specifier: ^5.8.0
         version: 5.8.0
       zod:
-        specifier: ^4.1.11
-        version: 4.1.11
+        specifier: ^4.1.12
+        version: 4.1.12
     devDependencies:
       '@beauty-salon-shared/config':
         specifier: workspace:*
@@ -1076,8 +1076,8 @@ importers:
         specifier: ^8.2.0
         version: 8.2.0
       zod:
-        specifier: ^4.1.11
-        version: 4.1.11
+        specifier: ^4.1.12
+        version: 4.1.12
     devDependencies:
       '@beauty-salon-shared/config':
         specifier: workspace:*
@@ -1410,6 +1410,10 @@ packages:
 
   '@babel/runtime@7.27.6':
     resolution: {integrity: sha512-vbavdySgbTTrmFE+EsiqUTzlOr5bzlnJtUv9PynGCAKvfQqjIXbvFdumPM/GxMDfyuGMJaJAU6TO4zc1Jf1i8Q==}
+    engines: {node: '>=6.9.0'}
+
+  '@babel/runtime@7.28.4':
+    resolution: {integrity: sha512-Q/N6JNWvIvPnLDvjlE1OUBLPQHH6l3CltCEsHIujp45zQUSSh8K+gHnaEX45yAT1nyngnINhvWtzN+Nb9D8RAQ==}
     engines: {node: '>=6.9.0'}
 
   '@babel/template@7.27.2':
@@ -3351,6 +3355,9 @@ packages:
 
   '@types/node@24.5.2':
     resolution: {integrity: sha512-FYxk1I7wPv3K2XBaoyH2cTnocQEu8AOZ60hPbsyukMPLv5/5qr7V1i8PLHdl6Zf87I+xZXFvPCXYjiTFq+YSDQ==}
+
+  '@types/node@24.7.2':
+    resolution: {integrity: sha512-/NbVmcGTP+lj5oa4yiYxxeBjRivKQ5Ns1eSZeB99ExsEQ6rX5XYU1Zy/gGxY/ilqtD4Etx9mKyrPxZRetiahhA==}
 
   '@types/pg@8.6.1':
     resolution: {integrity: sha512-1Kc4oAGzAl7uqUStZCDvaLFqZrW9qWSjXOmBfdgyBP5La7Us6Mg4GBvRlSoaZMhQF/zSj1C8CtKMBkoiT8eL8w==}
@@ -7098,6 +7105,9 @@ packages:
   undici-types@7.12.0:
     resolution: {integrity: sha512-goOacqME2GYyOZZfb5Lgtu+1IDmAlAEu5xnD3+xTzS10hT0vzpf0SPjkXwAw9Jm+4n/mQGDP3LO8CPbYROeBfQ==}
 
+  undici-types@7.14.0:
+    resolution: {integrity: sha512-QQiYxHuyZ9gQUIrmPo3IA+hUl4KYk8uSA7cHrcKd/l3p1OTpZcM0Tbp9x7FAtXdAYhlasd60ncPpgu6ihG6TOA==}
+
   undici@7.16.0:
     resolution: {integrity: sha512-QEg3HPMll0o3t2ourKwOeUAZ159Kn9mx5pnzHRQO8+Wixmh88YdZRiIwat0iNzNNXn0yoEtXJqFpyW7eM8BV7g==}
     engines: {node: '>=20.18.1'}
@@ -7530,8 +7540,8 @@ packages:
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
-  zod@4.1.11:
-    resolution: {integrity: sha512-WPsqwxITS2tzx1bzhIKsEs19ABD5vmCVa4xBo2tq/SrV4RNZtfws1EnCWQXM6yh8bD08a1idvkB5MZSBiZsjwg==}
+  zod@4.1.12:
+    resolution: {integrity: sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ==}
 
 snapshots:
 
@@ -7874,6 +7884,8 @@ snapshots:
       - supports-color
 
   '@babel/runtime@7.27.6': {}
+
+  '@babel/runtime@7.28.4': {}
 
   '@babel/template@7.27.2':
     dependencies:
@@ -9764,7 +9776,7 @@ snapshots:
   '@testing-library/dom@10.4.1':
     dependencies:
       '@babel/code-frame': 7.27.1
-      '@babel/runtime': 7.27.6
+      '@babel/runtime': 7.28.4
       '@types/aria-query': 5.0.4
       aria-query: 5.3.0
       dom-accessibility-api: 0.5.16
@@ -9951,9 +9963,13 @@ snapshots:
     dependencies:
       undici-types: 7.12.0
 
+  '@types/node@24.7.2':
+    dependencies:
+      undici-types: 7.14.0
+
   '@types/pg@8.6.1':
     dependencies:
-      '@types/node': 24.5.2
+      '@types/node': 24.7.2
       pg-protocol: 1.10.3
       pg-types: 2.2.0
     optional: true
@@ -11957,10 +11973,10 @@ snapshots:
 
   kleur@4.1.5: {}
 
-  knip@5.64.0(@types/node@24.5.2)(typescript@5.9.2):
+  knip@5.64.0(@types/node@24.7.2)(typescript@5.9.2):
     dependencies:
       '@nodelib/fs.walk': 1.2.8
-      '@types/node': 24.5.2
+      '@types/node': 24.7.2
       fast-glob: 3.3.3
       formatly: 0.3.0
       jiti: 2.6.0
@@ -14006,6 +14022,8 @@ snapshots:
 
   undici-types@7.12.0: {}
 
+  undici-types@7.14.0: {}
+
   undici@7.16.0: {}
 
   unicorn-magic@0.1.0: {}
@@ -14513,4 +14531,4 @@ snapshots:
 
   zod@3.25.76: {}
 
-  zod@4.1.11: {}
+  zod@4.1.12: {}

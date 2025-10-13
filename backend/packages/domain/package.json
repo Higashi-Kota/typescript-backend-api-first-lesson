@@ -34,7 +34,7 @@
     "@beauty-salon-backend/utility": "workspace:*",
     "drizzle-orm": "^0.44.5",
     "ts-pattern": "^5.8.0",
-    "zod": "^4.1.11"
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@beauty-salon-shared/config": "workspace:*",
