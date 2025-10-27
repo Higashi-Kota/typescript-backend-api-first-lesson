@@ -147,7 +147,7 @@ jobs:
         run: pnpm run --recursive --workspace-concurrency=1 build:${{ matrix.environment }}
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: build-${{ matrix.environment }}
           path: |
@@ -188,7 +188,7 @@ jobs:
         run: pnpm generate:backend
 
       - name: Upload API specification
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: api-spec
           path: specs/tsp-output/@typespec/openapi3/generated/openapi.yaml
